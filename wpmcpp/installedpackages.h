@@ -78,8 +78,9 @@ private:
      *     manager
      * @param pm [ownership:caller] a 3rd party package manager
      * @param replace should the existing entries be replaced?
+     * @return error message
      */
-    void detect3rdParty(AbstractThirdPartyPM* pm, bool replace=false);
+    QString detect3rdParty(AbstractThirdPartyPM* pm, bool replace=false);
 
     /**
      * @brief saves the information in the Windows registry
