@@ -391,8 +391,10 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 }
 
 PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
-        const QString &guid) const
+        const QString &guid, QString* err) const
 {
+    *err = "";
+
     PackageVersion* r = 0;
 
     QMySqlQuery q;
@@ -400,24 +402,27 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
             "PACKAGE, CONTENT FROM PACKAGE_VERSION "
             "WHERE MSIGUID = :MSIGUID");
     q.bindValue(":MSIGUID", guid);
-    q.exec();
-    if (q.next()) {
-        // TODO: handle error
-        QDomDocument doc;
-        int errorLine, errorColumn;
-        QString err;
-        if (!doc.setContent(q.value(2).toByteArray(),
-                &err, &errorLine, &errorColumn))
-            err = QString(
-                    QApplication::tr("XML parsing failed at line %1, column %2: %3")).
-                    arg(errorLine).arg(errorColumn).arg(err);
+    if (!q.exec())
+        *err = toString(q.lastError());
 
-        QDomElement root = doc.documentElement();
-        PackageVersion* p = PackageVersion::parse(&root, &err);
+    if (err->isEmpty()) {
+        if (q.next()) {
+            QDomDocument doc;
+            int errorLine, errorColumn;
+            if (!doc.setContent(q.value(2).toByteArray(),
+                    err, &errorLine, &errorColumn))
+                *err = QString(
+                        QApplication::tr("XML parsing failed at line %1, column %2: %3")).
+                        arg(errorLine).arg(errorColumn).arg(*err);
 
-        // TODO: handle this error
-        if (err.isEmpty()) {
-            r = p;
+            if (err->isEmpty()) {
+                QDomElement root = doc.documentElement();
+                PackageVersion* p = PackageVersion::parse(&root, err);
+
+                if (err->isEmpty()) {
+                    r = p;
+                }
+            }
         }
     }
 
@@ -491,7 +496,6 @@ void DBRepository::updateF5(Job* job)
     timer.time(0);
     Repository* r = new Repository();
     if (job->shouldProceed(QApplication::tr("Clearing the database"))) {
-        // TODO: error is ignored
         QString err = clear();
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -774,7 +778,8 @@ QString DBRepository::open()
                     "LICENSE TEXT, "
                     "FULLTEXT TEXT, "
                     "STATUS INTEGER, "
-                    "SHORT_NAME TEXT"
+                    "SHORT_NAME TEXT, "
+                    "REPOSITORY INTEGER"
                     ")");
             err = toString(db.lastError());
         }
@@ -849,6 +854,25 @@ QString DBRepository::open()
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE UNIQUE INDEX LICENSE_NAME ON LICENSE(NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        e = tableExists(&db, "REPOSITORY", &err);
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE REPOSITORY(ID INTEGER PRIMARY KEY ASC, "
+                    "URL TEXT)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX REPOSITORY_ID ON REPOSITORY(ID)");
             err = toString(db.lastError());
         }
     }

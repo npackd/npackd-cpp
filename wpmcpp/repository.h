@@ -162,7 +162,7 @@ public:
     QString savePackageVersion(PackageVersion* p);
 
     PackageVersion* findPackageVersionByMSIGUID_(
-            const QString& guid) const;
+            const QString& guid, QString *err) const;
 
     PackageVersion* findPackageVersion_(const QString& package,
             const Version& version, QString* err);

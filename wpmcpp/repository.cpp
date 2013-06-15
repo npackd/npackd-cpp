@@ -451,8 +451,11 @@ QString Repository::savePackageVersion(PackageVersion *p)
     return "";
 }
 
-PackageVersion *Repository::findPackageVersionByMSIGUID_(const QString &guid) const
+PackageVersion *Repository::findPackageVersionByMSIGUID_(
+        const QString &guid, QString* err) const
 {
+    *err = "";
+
     PackageVersion* r = 0;
     for (int i = 0; i < this->packageVersions.count(); i++) {
         PackageVersion* pv = (PackageVersion*) this->packageVersions.at(i);
