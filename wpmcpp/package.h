@@ -49,6 +49,9 @@ public:
     /** name of the license like "org.gnu.GPLv3" or "" if unknown */
     QString license;
 
+    /** PACKAGE.REPOSITORY. ID of the repisotory. */
+    int repository;
+
     Package(const QString& name, const QString& title);
 
     /**

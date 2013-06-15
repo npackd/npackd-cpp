@@ -63,41 +63,16 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
     delete job;
 
     AbstractRepository* r = AbstractRepository::getDefault_();
-    /*
-    for (int i = 0; i < rep.packages.count(); i++) {
-        Package* p = rep.packages.at(i);
-        Package* fp = r->findPackage_(p->name);
-        if (fp)
-            delete fp;
-        else
-            r->savePackage(p); // TODO: handle error
-    }
-    for (int i = 0; i < rep.packageVersions.count(); i++) {
-        PackageVersion* pv = rep.packageVersions.at(i);
-        PackageVersion* fpv = r->findPackageVersion_(pv->package, pv->version);
-        if (fpv)
-            delete fpv;
-        else
-            r->savePackageVersion(pv); // TODO: handle error
-
-        Package* p = r->findPackage_(pv->package);
-        if (!p) {
-            p = new Package(pv->package, pv->package);
-            r->savePackage(p);
-        }
-        delete p;
-    }
-    */
-
     QStringList packagePaths = this->getAllInstalledPackagePaths();
 
     if (err.isEmpty()) {
         QDir d;
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
-            QString err; // TODO: handle error
             QScopedPointer<PackageVersion> pv(
                     r->findPackageVersion_(ipv->package, ipv->version, &err));
+            if (!err.isEmpty())
+                break;
             if (!pv)
                 continue;
 
@@ -121,7 +96,6 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
             if (path.isEmpty()) {
                 Package* p = r->findPackage_(ipv->package);
 
-                // TODO: remove
                 /* if (!p)
                     WPMUtils::outputTextConsole("Cannot find package for " +
                             ipv->package + " " +
