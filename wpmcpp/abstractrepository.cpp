@@ -47,10 +47,10 @@ void AbstractRepository::setDefault_(AbstractRepository* d)
 
 void AbstractRepository::updateNpackdCLEnvVar()
 {
-    QString v = computeNpackdCLEnvVar_();
+    QString err; // TODO: handle error
+    QString v = computeNpackdCLEnvVar_(&err);
 
     // ignore the error for the case NPACKD_CL does not yet exist
-    QString err;
     QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &err);
 
     if (v != cur) {
@@ -157,42 +157,44 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
 {
     QString err;
 
-    QList<PackageVersion*> installed = getInstalled_(&err); // TODO: handle error
+    QList<PackageVersion*> installed = getInstalled_(&err);
     QList<PackageVersion*> newest, newesti;
     QList<bool> used;
 
-    for (int i = 0; i < packages.count(); i++) {
-        Package* p = packages.at(i);
+    if (err.isEmpty()) {
+        for (int i = 0; i < packages.count(); i++) {
+            Package* p = packages.at(i);
 
-        PackageVersion* a = findNewestInstallablePackageVersion_(p->name);
-        if (a == 0) {
-            err = QString(QApplication::tr("No installable version found for the package %1")).
-                    arg(p->title);
-            break;
+            PackageVersion* a = findNewestInstallablePackageVersion_(p->name);
+            if (a == 0) {
+                err = QString(QApplication::tr("No installable version found for the package %1")).
+                        arg(p->title);
+                break;
+            }
+
+            PackageVersion* b = findNewestInstalledPackageVersion_(p->name, &err);
+            if (!err.isEmpty()) {
+                err = QString(QApplication::tr("Cannot find the newest installed version for %1: %2")).
+                        arg(p->title).arg(err);
+                break;
+            }
+
+            if (b == 0) {
+                err = QString(QApplication::tr("No installed version found for the package %1")).
+                        arg(p->title);
+                break;
+            }
+
+            if (a->version.compare(b->version) <= 0) {
+                err = QString(QApplication::tr("The newest version (%1) for the package %2 is already installed")).
+                        arg(b->version.getVersionString()).arg(p->title);
+                break;
+            }
+
+            newest.append(a);
+            newesti.append(b);
+            used.append(false);
         }
-
-        PackageVersion* b = findNewestInstalledPackageVersion_(p->name, &err);
-        if (!err.isEmpty()) {
-            err = QString(QApplication::tr("Cannot find the newest installed version for %1: %2")).
-                    arg(p->title).arg(err);
-            break;
-        }
-
-        if (b == 0) {
-            err = QString(QApplication::tr("No installed version found for the package %1")).
-                    arg(p->title);
-            break;
-        }
-
-        if (a->version.compare(b->version) <= 0) {
-            err = QString(QApplication::tr("The newest version (%1) for the package %2 is already installed")).
-                    arg(b->version.getVersionString()).arg(p->title);
-            break;
-        }
-
-        newest.append(a);
-        newesti.append(b);
-        used.append(false);
     }
 
     if (err.isEmpty()) {
@@ -461,22 +463,23 @@ PackageVersion* AbstractRepository::findNewestInstalledPackageVersion_(
     return r;
 }
 
-QString AbstractRepository::computeNpackdCLEnvVar_() const
+QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
 {
-    // TODO: error message is ignored
+    *err = "";
 
-    QString err;
     QString v;
     PackageVersion* pv;
     if (WPMUtils::is64BitWindows())
         pv = findNewestInstalledPackageVersion_(
-            "com.googlecode.windows-package-manager.NpackdCL64", &err);
+            "com.googlecode.windows-package-manager.NpackdCL64", err);
     else
         pv = 0;
 
-    if (!pv)
-        pv = findNewestInstalledPackageVersion_(
-            "com.googlecode.windows-package-manager.NpackdCL", &err);
+    if (err->isEmpty()) {
+        if (!pv)
+            pv = findNewestInstalledPackageVersion_(
+                "com.googlecode.windows-package-manager.NpackdCL", err);
+    }
 
     if (pv)
         v = pv->getPath();

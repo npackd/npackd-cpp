@@ -57,10 +57,11 @@ private:
      * @brief finds the specified installed package version
      * @param package full package name
      * @param version package version
+     * @param err error message will be stored here
      * @return found or newly created information
      */
     InstalledPackageVersion* findOrCreate(const QString& package,
-            const Version& version);
+            const Version& version, QString* err);
 
     /**
      * @brief finds the specified installed package version

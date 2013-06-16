@@ -67,7 +67,6 @@ private:
 
     QString exec(const QString& sql);
 
-    void addWellKnownPackages();
     QString updateStatus(const QString &package);
 
     /**
