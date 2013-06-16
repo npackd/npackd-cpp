@@ -155,17 +155,17 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
 }
 
 InstalledPackageVersion* InstalledPackages::findOrCreate(const QString& package,
-        const Version& version)
+        const Version& version, QString* err)
 {
+    *err = "";
+
     QString key = PackageVersion::getStringId(package, version);
     InstalledPackageVersion* r = this->data.value(key);
     if (!r) {
         r = new InstalledPackageVersion(package, version, "");
         this->data.insert(key, r);
 
-        // qDebug() << "InstalledPackages::findOrCreate " << package;
-        // TODO: error is not handled
-        saveToRegistry(r);
+        *err = saveToRegistry(r);
         fireStatusChanged(package, version);
     }
     return r;
@@ -197,7 +197,8 @@ void InstalledPackages::setPackageVersionPathIfNotInstalled(
         const Version& version,
         const QString& directory)
 {
-    InstalledPackageVersion* ipv = findOrCreate(package, version);
+    QString err; // TODO: error is ignored
+    InstalledPackageVersion* ipv = findOrCreate(package, version, &err);
     if (!ipv->installed()) {
         ipv->setPath(directory);
 

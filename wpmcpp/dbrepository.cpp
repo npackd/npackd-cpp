@@ -510,15 +510,6 @@ void DBRepository::updateF5(Job* job)
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
-
-        /* TODO
-        PackageVersion* pv = r->findOrCreatePackageVersion(
-                "com.googlecode.windows-package-manager.Npackd",
-                Version(WPMUtils::NPACKD_VERSION));
-        if (!pv->installed()) {
-            pv->setPath(WPMUtils::getExeDir());
-        }
-        */
     }
 
     timer.time(2);
@@ -530,11 +521,6 @@ void DBRepository::updateF5(Job* job)
         delete sub;
     }
     timer.time(3);
-
-    if (job->shouldProceed(QApplication::tr("Adding well-known packages"))) {
-        addWellKnownPackages();
-        job->setProgress(0.8);
-    }
 
     timer.time(4);
     if (job->shouldProceed(QApplication::tr("Refreshing the installation status"))) {
@@ -568,26 +554,6 @@ void DBRepository::updateF5(Job* job)
     // timer.dump();
 
     job->complete();
-}
-
-void DBRepository::addWellKnownPackages()
-{
-    /* TODO: Npackd or NpackdCL depending on the binary
-    Package* p;
-
-    p = findPackage_("com.googlecode.windows-package-manager.Npackd");
-    if (!p) {
-        Package* p = new Package("com.googlecode.windows-package-manager.Npackd",
-                "Npackd");
-        p->url = "http://code.google.com/p/windows-package-manager/";
-        p->description = "package manager";
-
-        // TODO: error message is ignored
-        insertPackage(p);
-    }
-    delete p;
-
-    */
 }
 
 void DBRepository::saveAll(Job* job, Repository* r, bool replace)

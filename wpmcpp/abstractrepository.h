@@ -115,9 +115,10 @@ public:
             const QString& package) const;
 
     /**
+     * @param err error message will be stored here
      * @return new NPACKD_CL value
      */
-    QString computeNpackdCLEnvVar_() const;
+    QString computeNpackdCLEnvVar_(QString *err) const;
 
     /**
      * Changes the value of the system-wide NPACKD_CL variable to point to the
@@ -191,7 +192,6 @@ public:
      * @param version package version
      * @param err error message will be stored here
      * @return [ownership:caller] found package version or 0
-     * TODO: this function now returns an error
      */
     virtual PackageVersion* findPackageVersion_(const QString& package,
             const Version& version, QString* err) = 0;

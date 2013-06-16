@@ -347,6 +347,7 @@ void PackageVersion::uninstall(Job* job)
             Job* sub = job->newSubJob(0.20);
 
             // prepare the environment variables
+            QString err;
             QStringList env;
             env.append("NPACKD_PACKAGE_NAME");
             env.append(this->package);
@@ -354,7 +355,9 @@ void PackageVersion::uninstall(Job* job)
             env.append(this->version.getVersionString());
             env.append("NPACKD_CL");
             env.append(AbstractRepository::getDefault_()->
-                    computeNpackdCLEnvVar_());
+                    computeNpackdCLEnvVar_(&err));
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
 
             addDependencyVars(&env);
 
@@ -989,13 +992,16 @@ void PackageVersion::install(Job* job, const QString& where)
                 d.mkdir(".Npackd");
 
             QStringList env;
+            QString err;
             env.append("NPACKD_PACKAGE_NAME");
             env.append(this->package);
             env.append("NPACKD_PACKAGE_VERSION");
             env.append(this->version.getVersionString());
             env.append("NPACKD_CL");
             env.append(AbstractRepository::getDefault_()->
-                    computeNpackdCLEnvVar_());
+                    computeNpackdCLEnvVar_(&err));
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
 
             addDependencyVars(&env);
 
