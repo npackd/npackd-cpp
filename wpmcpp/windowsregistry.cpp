@@ -2,7 +2,6 @@
 #include <windows.h>
 #include <aclapi.h>
 
-#include <QApplication>
 #include <QString>
 
 #include "windowsregistry.h"
@@ -92,7 +91,7 @@ QString WindowsRegistry::get(QString name, QString* err) const
     err->clear();
 
     if (this->hkey == 0) {
-        err->append(QApplication::tr("No key is open"));
+        err->append(QObject::tr("No key is open"));
         return "";
     }
 
@@ -129,7 +128,7 @@ DWORD WindowsRegistry::getDWORD(QString name, QString* err) const
     err->clear();
 
     if (this->hkey == 0) {
-        err->append(QApplication::tr("No key is open"));
+        err->append(QObject::tr("No key is open"));
         return 0;
     }
 
@@ -142,7 +141,7 @@ DWORD WindowsRegistry::getDWORD(QString name, QString* err) const
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, err);
     } else if (type != REG_DWORD) {
-        *err = QApplication::tr("Wrong registry value type (DWORD expected)");
+        *err = QObject::tr("Wrong registry value type (DWORD expected)");
     }
     return value;
 }
@@ -152,7 +151,7 @@ QString WindowsRegistry::setDWORD(QString name, DWORD value) const
     QString err;
 
     if (this->hkey == 0) {
-        return QApplication::tr("No key is open");
+        return QObject::tr("No key is open");
     }
 
     DWORD valueSize = sizeof(value);
@@ -170,7 +169,7 @@ QString WindowsRegistry::set(QString name, QString value) const
     QString err;
 
     if (this->hkey == 0) {
-        return QApplication::tr("No key is open");
+        return QObject::tr("No key is open");
     }
 
     DWORD valueSize = (value.length() + 1) * 2;
@@ -188,7 +187,7 @@ QString WindowsRegistry::setExpand(QString name, QString value) const
     QString err;
 
     if (this->hkey == 0) {
-        return QApplication::tr("No key is open");
+        return QObject::tr("No key is open");
     }
 
     DWORD valueSize = (value.length() + 1) * 2;
@@ -207,7 +206,7 @@ QStringList WindowsRegistry::list(QString* err) const
 
     QStringList res;
     if (this->hkey == 0) {
-        err->append(QApplication::tr("No key is open"));
+        err->append(QObject::tr("No key is open"));
         return res;
     }
 
@@ -271,7 +270,7 @@ WindowsRegistry WindowsRegistry::createSubKey(QString name, QString* err,
     err->clear();
 
     if (this->hkey == 0) {
-        err->append(QApplication::tr("No key is open"));
+        err->append(QObject::tr("No key is open"));
         return WindowsRegistry();
     }
 

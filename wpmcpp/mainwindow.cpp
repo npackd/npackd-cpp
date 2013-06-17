@@ -142,7 +142,8 @@ ScanHardDrivesThread::ScanHardDrivesThread(Job *job)
 
 void ScanHardDrivesThread::run()
 {
-    QString err; // TODO: handle error
+    /* creating a tag cloud
+    QString err;
     QList<Package*> ps = DBRepository::getDefault()->findPackages(
             Package::INSTALLED, false, "", &err);
     words.clear();
@@ -168,12 +169,13 @@ void ScanHardDrivesThread::run()
             "they this to was will with").split(" ");
     for (int i = 0; i < stopWords.count(); i++)
         words.remove(stopWords.at(i));
+        */
 
-    /* TODO:
+    QString err; // TODO: handle error
     AbstractRepository* r = AbstractRepository::getDefault_();
-    QList<PackageVersion*> s1 = r->getInstalled_();
+    QList<PackageVersion*> s1 = r->getInstalled_(&err);
     r->scanHardDrive(job);
-    QList<PackageVersion*> s2 = r->getInstalled_();
+    QList<PackageVersion*> s2 = r->getInstalled_(&err);
 
     for (int i = 0; i < s2.count(); i++) {
         PackageVersion* pv = s2.at(i);
@@ -184,7 +186,6 @@ void ScanHardDrivesThread::run()
 
     qDeleteAll(s1);
     qDeleteAll(s2);
-    */
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -1360,12 +1361,17 @@ void MainWindow::openLicense(const QString& name, bool select)
     int index = this->findLicenseTab(name);
     if (index < 0) {
         LicenseForm* f = new LicenseForm(this->ui->tabWidget);
-        QString err; // TODO: handle error
+        QString err;
         License* lic =
                 DBRepository::getDefault()->
                 findLicense_(name, &err);
-        f->fillForm(lic);
-        this->ui->tabWidget->addTab(f, lic->title);
+        if (err.isEmpty()) {
+            f->fillForm(lic);
+            this->ui->tabWidget->addTab(f, lic->title);
+        } else {
+            MainWindow::getInstance()->addErrorMessage(err, err, true,
+                    QMessageBox::Critical);
+        }
         index = this->ui->tabWidget->count() - 1;
     }
     if (select)
@@ -1659,6 +1665,7 @@ bool comparesi(const QPair<QString, int>& a, const QPair<QString, int>& b)
 
 void MainWindow::hardDriveScanThreadFinished()
 {
+    /* tag cloud
     QScrollArea* jobsScrollArea = new QScrollArea(this->ui->tabWidget);
     jobsScrollArea->setFrameStyle(0);
 
@@ -1696,8 +1703,8 @@ void MainWindow::hardDriveScanThreadFinished()
     jobsScrollArea->setWidget(window);
     jobsScrollArea->setWidgetResizable(true);
     addTab(jobsScrollArea, genericAppIcon, "Tags");
+    */
 
-    /* TODO: old
     QStringList detected;
     ScanHardDrivesThread* it = (ScanHardDrivesThread*) this->sender();
     for (int i = 0; i < it->detected.count(); i++) {
@@ -1716,7 +1723,6 @@ void MainWindow::hardDriveScanThreadFinished()
 
     this->hardDriveScanRunning = false;
     this->updateActions();
-    */
 }
 
 void MainWindow::addErrorMessage(const QString& msg, const QString& details,
@@ -1788,19 +1794,21 @@ void MainWindow::on_actionInstall_triggered()
         }
     }
 
-    QString err; // TODO: error is not handled
+    QString err;
     QList<InstallOperation*> ops;
     QList<PackageVersion*> installed =
             AbstractRepository::getDefault_()->getInstalled_(&err);
     QList<PackageVersion*> avoid;
 
-    for (int i = 0; i < pvs.count(); i++) {
-        PackageVersion* pv = pvs.at(i);
+    if (err.isEmpty()) {
+        for (int i = 0; i < pvs.count(); i++) {
+            PackageVersion* pv = pvs.at(i);
 
-        avoid.clear();
-        err = pv->planInstallation(installed, ops, avoid);
-        if (!err.isEmpty())
-            break;
+            avoid.clear();
+            err = pv->planInstallation(installed, ops, avoid);
+            if (!err.isEmpty())
+                break;
+        }
     }
 
     if (err.isEmpty())
@@ -1844,16 +1852,16 @@ void MainWindow::on_actionUninstall_triggered()
 
     QString err;
     QList<InstallOperation*> ops;
-
-    // TODO: error is not handled
     QList<PackageVersion*> installed = AbstractRepository::getDefault_()->
             getInstalled_(&err);
 
-    for (int i = 0; i < pvs.count(); i++) {
-        PackageVersion* pv = pvs.at(i);
-        err = pv->planUninstallation(installed, ops);
-        if (!err.isEmpty())
-            break;
+    if (err.isEmpty()) {
+        for (int i = 0; i < pvs.count(); i++) {
+            PackageVersion* pv = pvs.at(i);
+            err = pv->planUninstallation(installed, ops);
+            if (!err.isEmpty())
+                break;
+        }
     }
 
     if (err.isEmpty())
