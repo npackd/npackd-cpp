@@ -62,6 +62,8 @@ wpmcpp-x86_64/
 ^wpmcpp-x86_64-gprof/
 ^npackdcl-i686-gprof/
 \.bak$
+^clu-i686-debug/
+^clu-i686/
 syntax: glob
 ^convert-maven/archetype-catalog.xml
 convert-maven/archetype-catalog.xml

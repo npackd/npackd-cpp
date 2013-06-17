@@ -192,22 +192,6 @@ QString InstalledPackages::setPackageVersionPath(const QString& package,
     return err;
 }
 
-void InstalledPackages::setPackageVersionPathIfNotInstalled(
-        const QString& package,
-        const Version& version,
-        const QString& directory)
-{
-    QString err; // TODO: error is ignored
-    InstalledPackageVersion* ipv = findOrCreate(package, version, &err);
-    if (!ipv->installed()) {
-        ipv->setPath(directory);
-
-        // TODO: error is ignored
-        saveToRegistry(ipv);
-        fireStatusChanged(ipv->package, ipv->version);
-    }
-}
-
 QList<InstalledPackageVersion*> InstalledPackages::getAll() const
 {
     QList<InstalledPackageVersion*> all = this->data.values();
@@ -257,8 +241,9 @@ void InstalledPackages::refresh(Job *job)
                 d.refresh();
                 if (!d.exists()) {
                     ipv->directory = "";
-                    // TODO: error message is not handled
-                    saveToRegistry(ipv);
+                    QString err = saveToRegistry(ipv);
+                    if (!err.isEmpty())
+                        job->setErrorMessage(err);
                     fireStatusChanged(ipv->package, ipv->version);
                 }
             }
@@ -268,17 +253,13 @@ void InstalledPackages::refresh(Job *job)
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         job->setHint(QApplication::tr("Reading registry package database"));
-        readRegistryDatabase();
+        QString err = readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
         job->setProgress(0.5);
     }
 
-    if (!job->shouldProceed(QApplication::tr("Reading the list of packages installed by Npackd"))) {
-        /* TODO
-        job->setHint("Updating NPACKD_CL");
-        AbstractRepository* rep = AbstractRepository::getDefault_();
-        rep->updateNpackdCLEnvVar();
-        job->setProgress(1);
-        */
+    if (job->shouldProceed(QApplication::tr("Reading the list of packages installed by Npackd"))) {
         AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
         job->setErrorMessage(detect3rdParty(pm, false));
         delete pm;
@@ -287,7 +268,17 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.55);
     }
 
-    if (!job->shouldProceed(QApplication::tr("Adding well-known packages"))) {
+    if (job->shouldProceed(QObject::tr("Setting the NPACKD_CL environment variable"))) {
+        job->setHint("Updating NPACKD_CL");
+        AbstractRepository* rep = AbstractRepository::getDefault_();
+        QString err = rep->updateNpackdCLEnvVar();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.57);
+    }
+
+    if (job->shouldProceed(QApplication::tr("Adding well-known packages"))) {
         AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM();
         job->setErrorMessage(detect3rdParty(pm, false));
         delete pm;
@@ -296,7 +287,7 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.6);
     }
 
-    if (!job->shouldProceed(QApplication::tr("Detecting MSI packages"))) {
+    if (job->shouldProceed(QApplication::tr("Detecting MSI packages"))) {
         // MSI package detection should happen before the detection for
         // control panel programs
         AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
@@ -307,7 +298,7 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.65);
     }
 
-    if (!job->shouldProceed(
+    if (job->shouldProceed(
             QApplication::tr("Detecting software control panel packages"))) {
         AbstractThirdPartyPM* pm = new ControlPanelThirdPartyPM();
         job->setErrorMessage(detect3rdParty(pm, true));
@@ -319,8 +310,11 @@ void InstalledPackages::refresh(Job *job)
 
     if (job->shouldProceed(
             QApplication::tr("Clearing information about installed package versions in nested directories"))) {
-        clearPackagesInNestedDirectories();
-        job->setProgress(1);
+        QString err = clearPackagesInNestedDirectories();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(1);
     }
 
     job->complete();
@@ -350,7 +344,9 @@ void InstalledPackages::fireStatusChanged(const QString &package,
     emit statusChanged(package, version);
 }
 
-void InstalledPackages::clearPackagesInNestedDirectories() {
+QString InstalledPackages::clearPackagesInNestedDirectories() {
+    QString err;
+
     QList<InstalledPackageVersion*> pvs = this->getAll();
     qSort(pvs.begin(), pvs.end(), installedPackageVersionLessThan);
 
@@ -368,22 +364,25 @@ void InstalledPackages::clearPackagesInNestedDirectories() {
                                     pv->getDirectory())) {
                         pv2->setPath("");
 
-                        // TODO: error message is ignored
-                        saveToRegistry(pv2);
+                        err = saveToRegistry(pv2);
+                        if (!err.isEmpty())
+                            goto out;
                         fireStatusChanged(pv2->package, pv2->version);
                     }
                 }
             }
         }
     }
+out:
+    return err;
 }
 
-void InstalledPackages::readRegistryDatabase()
+QString InstalledPackages::readRegistryDatabase()
 {
-    // TODO: return error message?
+    QString err;
+
     this->data.clear();
 
-    QString err;
     WindowsRegistry packagesWR;
     err = packagesWR.open(HKEY_LOCAL_MACHINE,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ);
@@ -452,6 +451,8 @@ void InstalledPackages::readRegistryDatabase()
             }
         }
     }
+
+    return err;
 }
 
 QString InstalledPackages::findPath_npackdcl(const Dependency& dep)

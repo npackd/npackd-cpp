@@ -45,18 +45,23 @@ void AbstractRepository::setDefault_(AbstractRepository* d)
     def = d;
 }
 
-void AbstractRepository::updateNpackdCLEnvVar()
+QString AbstractRepository::updateNpackdCLEnvVar()
 {
-    QString err; // TODO: handle error
+    QString err;
     QString v = computeNpackdCLEnvVar_(&err);
 
-    // ignore the error for the case NPACKD_CL does not yet exist
-    QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &err);
+    if (err.isEmpty()) {
+        // ignore the error for the case NPACKD_CL does not yet exist
+        QString e;
+        QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &e);
 
-    if (v != cur) {
-        if (WPMUtils::setSystemEnvVar("NPACKD_CL", v).isEmpty())
-            WPMUtils::fireEnvChanged();
+        if (v != cur) {
+            if (WPMUtils::setSystemEnvVar("NPACKD_CL", v).isEmpty())
+                WPMUtils::fireEnvChanged();
+        }
     }
+
+    return err;
 }
 
 void AbstractRepository::process(Job *job,

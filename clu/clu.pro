@@ -19,6 +19,7 @@ LIBS += -lole32 \
     -lwininet \
     -lpsapi \
     -lversion \
+    -lshlwapi \
     -lmsi
 
 SOURCES += main.cpp \
@@ -36,3 +37,4 @@ HEADERS += \
     ../wpmcpp/wpmutils.h \
     ../wpmcpp/job.h \
     ../wpmcpp/version.h
+

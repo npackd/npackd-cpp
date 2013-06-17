@@ -123,8 +123,10 @@ public:
     /**
      * Changes the value of the system-wide NPACKD_CL variable to point to the
      * newest installed version of NpackdCL.
+     *
+     * @return error message
      */
-    void updateNpackdCLEnvVar();
+    QString updateNpackdCLEnvVar();
 
     /**
      * @brief processes the given operatios

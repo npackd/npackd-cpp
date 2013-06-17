@@ -27,15 +27,16 @@ private:
 
     void detectOneDotNet(const WindowsRegistry& wr, const QString& keyName);
 
-    void clearPackagesInNestedDirectories();
+    /**
+     * @return error message
+     */
+    QString clearPackagesInNestedDirectories();
 
     void detectMicrosoftInstaller();
     void detectMSXML();
     void detectJRE(bool w64bit);
     void detectJDK(bool w64bit);
     void detectWindows();
-    void setPackageVersionPathIfNotInstalled(const QString &package,
-            const Version &version, const QString &directory);
 
     /**
      * @param exact if true, only exact matches to packages from current
@@ -97,8 +98,10 @@ public:
 
     /**
      * Reads the package statuses from the registry.
+     *
+     * @return error message
      */
-    void readRegistryDatabase();
+    QString readRegistryDatabase();
 
     /**
      * @brief searches for a dependency in the list of installed packages. This
