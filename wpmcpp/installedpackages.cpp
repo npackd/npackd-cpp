@@ -273,8 +273,12 @@ void InstalledPackages::refresh(Job *job)
         job->setProgress(0.5);
     }
 
-    if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
-        AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
+    // adding well-known packages should happen before adding packages
+    // determined from the list of installed packages to get better
+    // package descriptions for com.microsoft.Windows64 and similar packages
+    if (job->shouldProceed(QObject::tr("Adding well-known packages"))) {
+        AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
+                this->packageName);
         job->setErrorMessage(detect3rdParty(pm, false));
         delete pm;
 
@@ -292,9 +296,8 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.57);
     }
 
-    if (job->shouldProceed(QObject::tr("Adding well-known packages"))) {
-        AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
-                this->packageName);
+    if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
+        AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
         job->setErrorMessage(detect3rdParty(pm, false));
         delete pm;
 
