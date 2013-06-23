@@ -26,7 +26,7 @@ private:
     /**
      * @brief defines the NPACKD_CL variable and adds the NpackdCL package to
      *     the local repository
-     * @return error message TODO: handle returned error
+     * @return error message
      */
     QString addNpackdCL();
 
@@ -37,7 +37,7 @@ private:
     QString addRepo();
     QString removeRepo();
     QString search();
-    int list();
+    QString list();
     QString info();
     int update();
     int detect();
@@ -45,8 +45,9 @@ private:
     QString which();
     QString check();
 
-    bool confirm(const QList<InstallOperation *> ops, QString *title);
-    void printDependencies(bool onlyInstalled,
+    bool confirm(const QList<InstallOperation *> ops, QString *title,
+            QString *err);
+    QString printDependencies(bool onlyInstalled,
             const QString parentPrefix, int level, PackageVersion *pv);
 
     /**

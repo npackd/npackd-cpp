@@ -21,8 +21,6 @@ class InstalledPackages: public QObject
 private:
     static InstalledPackages def;
 
-    QString packageName;
-
     QMap<QString, InstalledPackageVersion*> data;
 
     InstalledPackages();
@@ -84,6 +82,9 @@ private:
      */
     static QString saveToRegistry(InstalledPackageVersion* ipv);
 public:
+    /** package name for the current application */
+    QString packageName;
+
     /**
      * @return default instance
      */

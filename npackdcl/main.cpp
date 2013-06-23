@@ -9,6 +9,7 @@
 #include "..\wpmcpp\abstractrepository.h"
 #include "..\wpmcpp\dbrepository.h"
 #include "..\wpmcpp\version.h"
+#include "..\wpmcpp\installedpackages.h"
 
 #include "app.h"
 
@@ -23,6 +24,9 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<JobState>("JobState");
     qRegisterMetaType<Version>("Version");
+
+    InstalledPackages::getDefault()->packageName =
+            "com.googlecode.windows-package-manager.NpackdCL";
 
     App app;
 
