@@ -39,6 +39,12 @@ InstalledPackages* InstalledPackages::getDefault()
 
 InstalledPackages::InstalledPackages()
 {
+    /* TODO: Npackd or NpackdCL depending on the binary */
+#if !defined(__x86_64__)
+    packageName = "com.googlecode.windows-package-manager.Npackd";
+#else
+    packageName = "com.googlecode.windows-package-manager.Npackd64";
+#endif
 }
 
 InstalledPackageVersion* InstalledPackages::find(const QString& package,
@@ -48,7 +54,7 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
 }
 
 QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
-        bool replace)
+        bool replace, const QString& detectionInfoPrefix)
 {
     QString err;
 
@@ -132,24 +138,29 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
         }
     }
 
-    qDeleteAll(installed);
+    if (!detectionInfoPrefix.isEmpty()) {
+        QSet<QString> foundDetectionInfos;
+        for (int i = 0; i < installed.count(); i++) {
+            InstalledPackageVersion* ipv = installed.at(i);
+            foundDetectionInfos.insert(ipv->detectionInfo);
+        }
 
-    /* TODO:
-*/
-    /* TODO:
-    // remove uninstalled packages
-    QMapIterator<QString, InstalledPackageVersion*> i(data);
-    while (i.hasNext()) {
-        i.next();
-        InstalledPackageVersion* ipv = i.value();
-        if (ipv->detectionInfo.indexOf("control-panel:") == 0 &&
-                ipv->installed() &&
-                !foundDetectionInfos.contains(ipv->detectionInfo)) {
-            qDebug() << "control-panel package removed: " << ipv->package;
-            ipv->setPath("");
+        // remove uninstalled packages
+        QMapIterator<QString, InstalledPackageVersion*> i(data);
+        while (i.hasNext()) {
+            i.next();
+            InstalledPackageVersion* ipv = i.value();
+            if (ipv->detectionInfo.indexOf(detectionInfoPrefix) == 0 &&
+                    ipv->installed() &&
+                    !foundDetectionInfos.contains(ipv->detectionInfo)) {
+                qDebug() << detectionInfoPrefix <<
+                        " package removed: " << ipv->package;
+                ipv->setPath("");
+            }
         }
     }
-    */
+
+    qDeleteAll(installed);
 
     return err;
 }
@@ -279,7 +290,8 @@ void InstalledPackages::refresh(Job *job)
     }
 
     if (job->shouldProceed(QApplication::tr("Adding well-known packages"))) {
-        AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM();
+        AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
+                this->packageName);
         job->setErrorMessage(detect3rdParty(pm, false));
         delete pm;
 
@@ -291,7 +303,7 @@ void InstalledPackages::refresh(Job *job)
         // MSI package detection should happen before the detection for
         // control panel programs
         AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(pm, true));
+        job->setErrorMessage(detect3rdParty(pm, true, "msi:"));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
@@ -301,7 +313,7 @@ void InstalledPackages::refresh(Job *job)
     if (job->shouldProceed(
             QApplication::tr("Detecting software control panel packages"))) {
         AbstractThirdPartyPM* pm = new ControlPanelThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(pm, true));
+        job->setErrorMessage(detect3rdParty(pm, true, "control-panel:"));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())

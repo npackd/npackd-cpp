@@ -13,6 +13,8 @@
  */
 class WellKnownProgramsThirdPartyPM: public AbstractThirdPartyPM
 {
+    QString packageName;
+
     void scanDotNet(QList<InstalledPackageVersion*>* installed,
             Repository* rep) const;
     void detectOneDotNet(
@@ -46,6 +48,8 @@ class WellKnownProgramsThirdPartyPM: public AbstractThirdPartyPM
     QString detectMicrosoftInstaller(QList<InstalledPackageVersion *> *installed,
             Repository *rep) const;
 public:
+    WellKnownProgramsThirdPartyPM(const QString& packageName);
+
     /**
      * @brief detects packages and versions
      * @param installed information about installed packages will be stored here
