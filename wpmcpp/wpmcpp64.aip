@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="9.2" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="10.0" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="ALLUSERS" Value="2" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName] [|ProductVersion] 64 bit." ValueLocId="*"/>
@@ -28,33 +28,24 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="LICENSE.txt" ComponentId="{154AEDFF-999E-46B8-9FCE-2189FC2E7338}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="QtCore4.dll" ComponentId="{D3ED0807-597D-4D21-A206-AA5A87137A53}" Directory_="APPDIR" Attributes="256" KeyPath="QtCore4.dll"/>
-    <ROW Component="QtGui4.dll" ComponentId="{3A2D8E93-865C-45BD-AB0C-D92AB5F4B321}" Directory_="APPDIR" Attributes="256" KeyPath="QtGui4.dll"/>
-    <ROW Component="QtNetwork4.dll" ComponentId="{7705BAA5-925B-49E3-8609-6DDA62B01B64}" Directory_="APPDIR" Attributes="256" KeyPath="QtNetwork4.dll"/>
-    <ROW Component="QtXml4.dll" ComponentId="{58E79810-1924-4CBA-9882-6E89E2E876B4}" Directory_="APPDIR" Attributes="256" KeyPath="QtXml4.dll"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{5F93B1FD-32DF-4377-9372-FEB113C11C01}" Directory_="SHORTCUTDIR" Attributes="0"/>
     <ROW Component="libgcc_s_sjlj1.dll" ComponentId="{9957CEBA-62C4-4018-9C50-2485DA3352A2}" Directory_="APPDIR" Attributes="256" KeyPath="libgcc_s_sjlj1.dll"/>
     <ROW Component="libstdc6.dll" ComponentId="{F008B972-44E2-425B-AF06-8171E2DE45D4}" Directory_="APPDIR" Attributes="256" KeyPath="libstdc6.dll"/>
-    <ROW Component="quazip.dll" ComponentId="{E1EE1A36-3440-431C-88E7-4064EEAEF109}" Directory_="APPDIR" Attributes="256" KeyPath="quazip.dll"/>
     <ROW Component="wpmcpp.exe" ComponentId="{700D78C5-BF3C-438F-A688-4AC23EDA9929}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
-    <ROW Component="zlib1.dll" ComponentId="{F9F0F489-C7CE-4F79-872A-E79DED8E637D}" Directory_="APPDIR" Attributes="256" KeyPath="zlib1.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt QtCore4.dll QtGui4.dll QtNetwork4.dll QtXml4.dll SHORTCUTDIR libgcc_s_sjlj1.dll libstdc6.dll quazip.dll wpmcpp.exe zlib1.dll"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt SHORTCUTDIR libgcc_s_sjlj1.dll libstdc6.dll wpmcpp.exe"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
     <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="libgcc_s_sjlj1.dll"/>
     <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="LICENSE.txt" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
-    <ROW File="QtCore4.dll" Component_="QtCore4.dll" FileName="QtCore4.dll" Attributes="0" SourcePath="..\..\qt-mingw-64-builder\qt\bin\QtCore4.dll" SelfReg="false" NextFile="zlib1.dll"/>
-    <ROW File="QtGui4.dll" Component_="QtGui4.dll" FileName="QtGui4.dll" Attributes="0" SourcePath="..\..\qt-mingw-64-builder\qt\bin\QtGui4.dll" SelfReg="false" NextFile="QtNetwork4.dll"/>
-    <ROW File="QtNetwork4.dll" Component_="QtNetwork4.dll" FileName="QtNetw~1.dll|QtNetwork4.dll" Attributes="0" SourcePath="..\..\qt-mingw-64-builder\qt\bin\QtNetwork4.dll" SelfReg="false" NextFile="QtXml4.dll"/>
-    <ROW File="QtXml4.dll" Component_="QtXml4.dll" FileName="QtXml4.dll" Attributes="0" SourcePath="..\..\qt-mingw-64-builder\qt\bin\QtXml4.dll" SelfReg="false" NextFile="QtCore4.dll"/>
     <ROW File="libgcc_s_sjlj1.dll" Component_="libgcc_s_sjlj1.dll" FileName="libgcc~2.dll|libgcc_s_sjlj-1.dll" Attributes="0" SourcePath="..\..\..\..\..\ProgramFiles\MinGW-w64\bin\libgcc_s_sjlj-1.dll" SelfReg="false" NextFile="libstdc6.dll"/>
-    <ROW File="libstdc6.dll" Component_="libstdc6.dll" FileName="libstd~1.dll|libstdc++-6.dll" Attributes="0" SourcePath="..\..\..\..\..\ProgramFiles\MinGW-w64\bin\libstdc++-6.dll" SelfReg="false" NextFile="QtGui4.dll"/>
-    <ROW File="quazip.dll" Component_="quazip.dll" FileName="quazip.dll" Attributes="0" SourcePath="..\..\..\..\..\ProgramFiles\QuaZIP-x86_64-w64\quazip\release\quazip.dll" SelfReg="false"/>
+    <ROW File="libstdc6.dll" Component_="libstdc6.dll" FileName="libstd~1.dll|libstdc++-6.dll" Attributes="0" SourcePath="..\..\..\..\..\ProgramFiles\MinGW-w64\bin\libstdc++-6.dll" SelfReg="false" NextFile="wpmcpp_es.qm"/>
     <ROW File="wpmcpp.exe" Component_="wpmcpp.exe" FileName="npackdg.exe" Attributes="0" SourcePath="..\wpmcpp-build-desktop-64\release\wpmcpp.exe" SelfReg="false" NextFile="LICENSE.txt"/>
-    <ROW File="zlib1.dll" Component_="zlib1.dll" FileName="zlib1.dll" Attributes="0" SourcePath="..\..\..\..\..\ProgramFiles\zlib-x86_64-w64\zlib1.dll" SelfReg="false" NextFile="quazip.dll"/>
+    <ROW File="wpmcpp_es.qm" Component_="LICENSE.txt" FileName="npackd~1.qm|npackdg_es.qm" Attributes="0" SourcePath="wpmcpp_es.qm" SelfReg="false" NextFile="wpmcpp_fr.qm"/>
+    <ROW File="wpmcpp_fr.qm" Component_="LICENSE.txt" FileName="npackd~2.qm|npackdg_fr.qm" Attributes="0" SourcePath="wpmcpp_fr.qm" SelfReg="false" NextFile="wpmcpp_ru.qm"/>
+    <ROW File="wpmcpp_ru.qm" Component_="LICENSE.txt" FileName="npackd~3.qm|npackdg_ru.qm" Attributes="0" SourcePath="wpmcpp_ru.qm" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="ai" PackageFileName="wpm64" Languages="en" InstallationType="4" MsiPackageType="x64"/>
