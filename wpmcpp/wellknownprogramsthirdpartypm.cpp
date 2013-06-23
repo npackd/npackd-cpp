@@ -343,6 +343,12 @@ QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
     return err;
 }
 
+WellKnownProgramsThirdPartyPM::WellKnownProgramsThirdPartyPM(
+        const QString &packageName)
+{
+    this->packageName = packageName;
+}
+
 QString WellKnownProgramsThirdPartyPM::scan(
         QList<InstalledPackageVersion *> *installed, Repository *rep) const
 {
@@ -362,15 +368,33 @@ QString WellKnownProgramsThirdPartyPM::scan(
     if (WPMUtils::is64BitWindows())
         detectJDK(installed, rep, true);
 
-    /* TODO: Npackd or NpackdCL depending on the binary */
-    // TODO: 64 bit
-    QString packageName = "com.googlecode.windows-package-manager.Npackd";
-    QString packageTitle = "Npackd";
-
     if (err.isEmpty()) {
-        Package* p = new Package(packageName, packageTitle);
+        Package* p = new Package("com.googlecode.windows-package-manager.Npackd",
+                "Npackd");
         p->url = "http://code.google.com/p/windows-package-manager/";
         p->description = "package manager";
+
+        err = rep->savePackage(p);
+
+        delete p;
+    }
+
+    if (err.isEmpty()) {
+        Package* p = new Package("com.googlecode.windows-package-manager.Npackd64",
+                "Npackd 64 bit");
+        p->url = "http://code.google.com/p/windows-package-manager/";
+        p->description = "package manager";
+
+        err = rep->savePackage(p);
+
+        delete p;
+    }
+
+    if (err.isEmpty()) {
+        Package* p = new Package("com.googlecode.windows-package-manager.NpackdCL",
+                "NpackdCL");
+        p->url = "http://code.google.com/p/windows-package-manager/";
+        p->description = "command line interface to Npackd";
 
         err = rep->savePackage(p);
 
