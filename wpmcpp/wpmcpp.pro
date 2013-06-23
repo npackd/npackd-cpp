@@ -100,7 +100,7 @@ FORMS += mainwindow.ui \
     settingsframe.ui \
     packageframe.ui \
     mainframe.ui
-TRANSLATIONS = wpmcpp_es.ts wpmcpp_ru.ts
+TRANSLATIONS = wpmcpp_es.ts wpmcpp_ru.ts wpmcpp_fr.ts
 LIBS += -lquazip \
     -lole32 \
     -luuid \

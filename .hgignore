@@ -64,6 +64,7 @@ wpmcpp-x86_64/
 \.bak$
 ^clu-i686-debug/
 ^clu-i686/
+\.qm$
 syntax: glob
 ^convert-maven/archetype-catalog.xml
 convert-maven/archetype-catalog.xml

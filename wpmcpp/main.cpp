@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
     // to use a resource: ":/resources/translations"
     QTranslator myappTranslator;
-    bool r = myappTranslator.load(//"wpmcpp_ru",  // for testing
+    bool r = myappTranslator.load(//"wpmcpp_fr",  // for testing
             "npackdg_" + QLocale::system().name(),
             a.applicationDirPath(),
             "_.", ".qm");
