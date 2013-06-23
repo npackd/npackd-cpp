@@ -60,13 +60,23 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
 
     Repository rep;
     QList<InstalledPackageVersion*> installed;
-    pm->scan(&installed, &rep);
 
-    Job* job = new Job();
-    DBRepository::getDefault()->saveAll(job, &rep, replace);
-    if (!job->getErrorMessage().isEmpty())
-        err = job->getErrorMessage();
-    delete job;
+    Job* job;
+    if (err.isEmpty()) {
+        job = new Job();
+        pm->scan(job, &installed, &rep);
+        if (!job->getErrorMessage().isEmpty())
+            err = job->getErrorMessage();
+        delete job;
+    }
+
+    if (err.isEmpty()) {
+        job = new Job();
+        DBRepository::getDefault()->saveAll(job, &rep, replace);
+        if (!job->getErrorMessage().isEmpty())
+            err = job->getErrorMessage();
+        delete job;
+    }
 
     AbstractRepository* r = AbstractRepository::getDefault_();
     QStringList packagePaths = this->getAllInstalledPackagePaths();

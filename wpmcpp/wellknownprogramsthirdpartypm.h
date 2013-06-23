@@ -50,13 +50,7 @@ class WellKnownProgramsThirdPartyPM: public AbstractThirdPartyPM
 public:
     WellKnownProgramsThirdPartyPM(const QString& packageName);
 
-    /**
-     * @brief detects packages and versions
-     * @param installed information about installed packages will be stored here
-     * @param rep information about packages and versions will be stored here
-     * @return error message
-     */
-    QString scan(QList<InstalledPackageVersion*>* installed,
+    void scan(Job *job, QList<InstalledPackageVersion*>* installed,
               Repository* rep) const;
 };
 

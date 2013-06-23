@@ -349,64 +349,85 @@ WellKnownProgramsThirdPartyPM::WellKnownProgramsThirdPartyPM(
     this->packageName = packageName;
 }
 
-QString WellKnownProgramsThirdPartyPM::scan(
+void WellKnownProgramsThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed, Repository *rep) const
 {
-    QString err;
-
     detectWindows(installed, rep);
     scanDotNet(installed, rep);
 
-    err = detectMSXML(installed, rep);
-    if (err.isEmpty())
+    QString err = detectMSXML(installed, rep);
+    if (!err.isEmpty())
+        job->setErrorMessage(err);
+
+    if (job->shouldProceed()) {
         err = detectMicrosoftInstaller(installed, rep);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
-    detectJRE(installed, rep, false);
-    if (WPMUtils::is64BitWindows())
-        detectJRE(installed, rep, true);
-    detectJDK(installed, rep, false);
-    if (WPMUtils::is64BitWindows())
-        detectJDK(installed, rep, true);
+    if (job->shouldProceed())
+        detectJRE(installed, rep, false);
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
+        if (WPMUtils::is64BitWindows())
+            detectJRE(installed, rep, true);
+    }
+
+    if (job->shouldProceed())
+        detectJDK(installed, rep, false);
+
+    if (job->shouldProceed()) {
+        if (WPMUtils::is64BitWindows())
+            detectJDK(installed, rep, true);
+    }
+
+    if (job->shouldProceed()) {
         Package* p = new Package("com.googlecode.windows-package-manager.Npackd",
                 "Npackd");
         p->url = "http://code.google.com/p/windows-package-manager/";
         p->description = "package manager";
 
         err = rep->savePackage(p);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
 
         delete p;
     }
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         Package* p = new Package("com.googlecode.windows-package-manager.Npackd64",
                 "Npackd 64 bit");
         p->url = "http://code.google.com/p/windows-package-manager/";
         p->description = "package manager";
 
         err = rep->savePackage(p);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
 
         delete p;
     }
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         Package* p = new Package("com.googlecode.windows-package-manager.NpackdCL",
                 "NpackdCL");
         p->url = "http://code.google.com/p/windows-package-manager/";
         p->description = "command line interface to Npackd";
 
         err = rep->savePackage(p);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
 
         delete p;
     }
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         Version version(WPMUtils::NPACKD_VERSION);
         PackageVersion* pv = new PackageVersion(
                 packageName,
                 version);
         err = rep->savePackageVersion(pv);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
         delete pv;
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(packageName,
@@ -414,6 +435,8 @@ QString WellKnownProgramsThirdPartyPM::scan(
         installed->append(ipv);
     }
 
-    return err;
+    if (job->shouldProceed())
+        job->setProgress(1);
+    job->complete();
 }
 
