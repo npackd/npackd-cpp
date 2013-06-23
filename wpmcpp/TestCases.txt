@@ -53,4 +53,6 @@ http://localhost:8083/Libs.xml
     - filter the packages to only show the installed
     - remove "Notepad2"
     => the package list should not show "Notepad2" anymore
-   
+13. Package "Windows 64 bit" should have a description
+    => the package com.microsoft.Windows64 should have a non-empty description
+

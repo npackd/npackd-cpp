@@ -343,6 +343,11 @@ QList<Package*> DBRepository::findPackages(Package::Status status, bool filterBy
 
 QString DBRepository::savePackage(Package *p, bool replace)
 {
+    /*
+    if (p->name == "com.microsoft.Windows64")
+        qDebug() << p->name << "->" << p->description;
+        */
+
     QMySqlQuery q;
     QString sql = "INSERT OR ";
     if (replace)
