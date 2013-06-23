@@ -68,7 +68,7 @@ void PackageFrame::fillForm(Package* p)
 
     DBRepository* dbr = DBRepository::getDefault();
 
-    QString licenseTitle = QApplication::tr("unknown");
+    QString licenseTitle = QObject::tr("unknown");
     if (p) {
         QString err;
         License* lic = dbr->findLicense_(p->license, &err);
@@ -89,7 +89,7 @@ void PackageFrame::fillForm(Package* p)
 
         QString hp;
         if (p->url.isEmpty())
-            hp = QApplication::tr("unknown");
+            hp = QObject::tr("unknown");
         else{
             hp = p->url;
             hp = "<a href=\"" + Qt::escape(hp) + "\">" + Qt::escape(hp) +
@@ -105,9 +105,9 @@ void PackageFrame::fillForm(Package* p)
     t->clear();
     t->setColumnCount(2);
     t->setColumnWidth(1, 400);
-    newItem = new QTableWidgetItem(QApplication::tr("Version"));
+    newItem = new QTableWidgetItem(QObject::tr("Version"));
     t->setHorizontalHeaderItem(0, newItem);
-    newItem = new QTableWidgetItem(QApplication::tr("Installation path"));
+    newItem = new QTableWidgetItem(QObject::tr("Installation path"));
     t->setHorizontalHeaderItem(1, newItem);
 
     QString err;
@@ -116,7 +116,7 @@ void PackageFrame::fillForm(Package* p)
 
     if (!err.isEmpty()) {
         MainWindow::getInstance()->addErrorMessage(err,
-                QApplication::tr("Error fetching package versions: %1").
+                QObject::tr("Error fetching package versions: %1").
                 arg(err), true, QMessageBox::Critical);
     }
 

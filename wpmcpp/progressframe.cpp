@@ -42,7 +42,7 @@ ProgressFrame::~ProgressFrame()
 {
     if (!job->getErrorMessage().isEmpty()) {
         MainWindow::getInstance()->addErrorMessage(
-                QApplication::tr("Error") + ": " + this->title +
+                QObject::tr("Error") + ": " + this->title +
                 " / " + job->getHint() +
                 ": " + WPMUtils::getFirstLine(job->getErrorMessage()),
                 job->getHint() + "\n" +

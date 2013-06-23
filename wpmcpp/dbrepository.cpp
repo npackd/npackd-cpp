@@ -2,7 +2,6 @@
 
 #include <shlobj.h>
 
-#include <QApplication>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -157,7 +156,7 @@ PackageVersion* DBRepository::findPackageVersion_(
         if (!doc.setContent(q.value(2).toByteArray(),
                 err, &errorLine, &errorColumn))
             *err = QString(
-                    QApplication::tr("XML parsing failed at line %1, column %2: %3")).
+                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
                     arg(errorLine).arg(errorColumn).arg(*err);
 
         if (err->isEmpty()) {
@@ -195,7 +194,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         if (!doc.setContent(q.value(2).toByteArray(),
                 err, &errorLine, &errorColumn)) {
             *err = QString(
-                    QApplication::tr("XML parsing failed at line %1, column %2: %3")).
+                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
                     arg(errorLine).arg(errorColumn).arg(*err);
         }
 
@@ -234,7 +233,7 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(QString 
         if (!doc.setContent(q.value(0).toByteArray(),
                 err, &errorLine, &errorColumn)) {
             *err = QString(
-                    QApplication::tr("XML parsing failed at line %1, column %2: %3")).
+                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
                     arg(errorLine).arg(errorColumn).arg(*err);
         }
 
@@ -452,7 +451,7 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
             if (!doc.setContent(q.value(2).toByteArray(),
                     err, &errorLine, &errorColumn))
                 *err = QString(
-                        QApplication::tr("XML parsing failed at line %1, column %2: %3")).
+                        QObject::tr("XML parsing failed at line %1, column %2: %3")).
                         arg(errorLine).arg(errorColumn).arg(*err);
 
             if (err->isEmpty()) {
@@ -473,7 +472,7 @@ QString DBRepository::clear()
 {
     Job* job = new Job();
 
-    if (job->shouldProceed(QApplication::tr("Starting an SQL transaction"))) {
+    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -481,7 +480,7 @@ QString DBRepository::clear()
             job->setProgress(0.01);
     }
 
-    if (job->shouldProceed(QApplication::tr("Clearing the packages table"))) {
+    if (job->shouldProceed(QObject::tr("Clearing the packages table"))) {
         QString err = exec("DELETE FROM PACKAGE");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -489,7 +488,7 @@ QString DBRepository::clear()
             job->setProgress(0.1);
     }
 
-    if (job->shouldProceed(QApplication::tr("Clearing the package versions table"))) {
+    if (job->shouldProceed(QObject::tr("Clearing the package versions table"))) {
         QString err = exec("DELETE FROM PACKAGE_VERSION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -497,7 +496,7 @@ QString DBRepository::clear()
             job->setProgress(0.7);
     }
 
-    if (job->shouldProceed(QApplication::tr("Clearing the licenses table"))) {
+    if (job->shouldProceed(QObject::tr("Clearing the licenses table"))) {
         QString err = exec("DELETE FROM LICENSE");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -505,7 +504,7 @@ QString DBRepository::clear()
             job->setProgress(0.96);
     }
 
-    if (job->shouldProceed(QApplication::tr("Commiting the SQL transaction"))) {
+    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
         QString err = exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -535,7 +534,7 @@ void DBRepository::updateF5(Job* job)
      */
     timer.time(0);
     Repository* r = new Repository();
-    if (job->shouldProceed(QApplication::tr("Clearing the database"))) {
+    if (job->shouldProceed(QObject::tr("Clearing the database"))) {
         QString err = clear();
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -544,7 +543,7 @@ void DBRepository::updateF5(Job* job)
     }
 
     timer.time(1);
-    if (job->shouldProceed(QApplication::tr("Downloading the remote repositories"))) {
+    if (job->shouldProceed(QObject::tr("Downloading the remote repositories"))) {
         Job* sub = job->newSubJob(0.69);
         r->load(sub, false);
         if (!sub->getErrorMessage().isEmpty())
@@ -553,7 +552,7 @@ void DBRepository::updateF5(Job* job)
     }
 
     timer.time(2);
-    if (job->shouldProceed(QApplication::tr("Filling the local database"))) {
+    if (job->shouldProceed(QObject::tr("Filling the local database"))) {
         Job* sub = job->newSubJob(0.06);
         saveAll(sub, r, false);
         if (!sub->getErrorMessage().isEmpty())
@@ -563,7 +562,7 @@ void DBRepository::updateF5(Job* job)
     timer.time(3);
 
     timer.time(4);
-    if (job->shouldProceed(QApplication::tr("Refreshing the installation status"))) {
+    if (job->shouldProceed(QObject::tr("Refreshing the installation status"))) {
         Job* sub = job->newSubJob(0.1);
         InstalledPackages::getDefault()->refresh(sub);
         if (!sub->getErrorMessage().isEmpty())
@@ -573,13 +572,13 @@ void DBRepository::updateF5(Job* job)
 
     timer.time(5);
     if (job->shouldProceed(
-            QApplication::tr("Updating the status for installed packages in the database"))) {
+            QObject::tr("Updating the status for installed packages in the database"))) {
         updateStatusForInstalled();
         job->setProgress(0.98);
     }
 
     if (job->shouldProceed(
-            QApplication::tr("Removing packages without versions"))) {
+            QObject::tr("Removing packages without versions"))) {
         QString err = exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
@@ -598,7 +597,7 @@ void DBRepository::updateF5(Job* job)
 
 void DBRepository::saveAll(Job* job, Repository* r, bool replace)
 {
-    if (job->shouldProceed(QApplication::tr("Starting an SQL transaction"))) {
+    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -606,7 +605,7 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
             job->setProgress(0.01);
     }
 
-    if (job->shouldProceed(QApplication::tr("Inserting data in the packages table"))) {
+    if (job->shouldProceed(QObject::tr("Inserting data in the packages table"))) {
         QString err = savePackages(r, replace);
         if (err.isEmpty())
             job->setProgress(0.6);
@@ -614,7 +613,7 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QApplication::tr("Inserting data in the package versions table"))) {
+    if (job->shouldProceed(QObject::tr("Inserting data in the package versions table"))) {
         QString err = savePackageVersions(r, replace);
         if (err.isEmpty())
             job->setProgress(0.95);
@@ -622,7 +621,7 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QApplication::tr("Inserting data in the licenses table"))) {
+    if (job->shouldProceed(QObject::tr("Inserting data in the licenses table"))) {
         QString err = saveLicenses(r, replace);
         if (err.isEmpty())
             job->setProgress(0.98);
@@ -630,7 +629,7 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QApplication::tr("Commiting the SQL transaction"))) {
+    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
         QString err = exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);

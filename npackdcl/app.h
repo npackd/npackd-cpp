@@ -23,7 +23,12 @@ private:
     CommandLine cl;
     CLProgress clp;
 
-    void addNpackdCL();
+    /**
+     * @brief defines the NPACKD_CL variable and adds the NpackdCL package to
+     *     the local repository
+     * @return error message TODO: handle returned error
+     */
+    QString addNpackdCL();
 
     void usage();
     int path();

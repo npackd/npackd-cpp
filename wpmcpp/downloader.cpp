@@ -6,7 +6,6 @@
 
 #include <zlib.h>
 
-#include <QApplication>
 #include <QObject>
 #include <QDebug>
 #include <QWaitCondition>
@@ -23,7 +22,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         QString* mime, QString* contentDisposition,
         HWND parentWindow, QString* sha1, bool useCache)
 {
-    job->setHint(QApplication::tr("Connecting"));
+    job->setHint(QObject::tr("Connecting"));
 
     if (sha1)
         sha1->clear();
@@ -135,14 +134,14 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
             else if (r == ERROR_INTERNET_FORCE_RETRY)
                 ; // nothing
             else if (r == ERROR_CANCELLED) {
-                job->setErrorMessage(QApplication::tr("Cancelled by the user"));
+                job->setErrorMessage(QObject::tr("Cancelled by the user"));
                 break;
             } else if (r == ERROR_INVALID_HANDLE) {
-                job->setErrorMessage(QApplication::tr("Invalid handle"));
+                job->setErrorMessage(QObject::tr("Invalid handle"));
                 break;
             } else {
                 job->setErrorMessage(QString(
-                        QApplication::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
+                        QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
                 break;
             }
         } else {
@@ -158,10 +157,10 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
 
             QString username, password;
             if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
-                WPMUtils::outputTextConsole("\n" + QApplication::tr("The HTTP proxy requires authentication.") + "\n");
-                WPMUtils::outputTextConsole(QApplication::tr("Username") + ": ");
+                WPMUtils::outputTextConsole("\n" + QObject::tr("The HTTP proxy requires authentication.") + "\n");
+                WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
                 username = WPMUtils::inputTextConsole();
-                WPMUtils::outputTextConsole(QApplication::tr("Password") + ": ");
+                WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
                 password = WPMUtils::inputPasswordConsole();
 
                 if (!InternetSetOptionW(hConnectHandle,
@@ -184,11 +183,11 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
                 }
             } else if (dwStatus == HTTP_STATUS_DENIED) {
                 WPMUtils::outputTextConsole("\n" +
-                        QApplication::tr("The HTTP server requires authentication.") +
+                        QObject::tr("The HTTP server requires authentication.") +
                         "\n");
-                WPMUtils::outputTextConsole(QApplication::tr("Username") + ": ");
+                WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
                 username = WPMUtils::inputTextConsole();
-                WPMUtils::outputTextConsole(QApplication::tr("Password") + ": ");
+                WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
                 password = WPMUtils::inputPasswordConsole();
 
                 if (!InternetSetOptionW(hConnectHandle,
@@ -213,7 +212,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
                 break;
             } else {
                 job->setErrorMessage(QString(
-                        QApplication::tr("Cannot handle HTTP status code %1")).
+                        QObject::tr("Cannot handle HTTP status code %1")).
                         arg(dwStatus));
                 break;
             }
@@ -244,7 +243,7 @@ out:
         return;
     }
 
-    job->setHint(QApplication::tr("Downloading"));
+    job->setHint(QObject::tr("Downloading"));
 
     // MIME type
     // qDebug() << "querying MIME type";
@@ -458,7 +457,7 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
             // 15 = maximum buffer size, 32 = zlib and gzip formats are parsed
             int err = inflateInit2(&d_stream, 15 + 32);
             if (err != Z_OK) {
-                job->setErrorMessage(QString(QApplication::tr("zlib error %1")).
+                job->setErrorMessage(QString(QObject::tr("zlib error %1")).
                         arg(err));
                 job->complete();
                 break;
@@ -475,13 +474,13 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
 
             int err = inflate(&d_stream, Z_NO_FLUSH);
             if (err == Z_NEED_DICT) {
-                job->setErrorMessage(QString(QApplication::tr("zlib error %1")).
+                job->setErrorMessage(QString(QObject::tr("zlib error %1")).
                         arg(err));
                 err = Z_DATA_ERROR;
                 inflateEnd(&d_stream);
                 break;
             } else if (err == Z_MEM_ERROR || err == Z_DATA_ERROR) {
-                job->setErrorMessage(QString(QApplication::tr("zlib error %1")).
+                job->setErrorMessage(QString(QObject::tr("zlib error %1")).
                         arg(err));
                 inflateEnd(&d_stream);
                 break;
@@ -501,19 +500,19 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
         alreadyRead += bufferLength;
         if (contentLength > 0) {
             job->setProgress(((double) alreadyRead) / contentLength);
-            job->setHint(QString(QApplication::tr("%L0 of %L1 bytes")).
+            job->setHint(QString(QObject::tr("%L0 of %L1 bytes")).
                     arg(alreadyRead).
                     arg(contentLength));
         } else {
             job->setProgress(0.5);
-            job->setHint(QString(QApplication::tr("%L0 bytes")).
+            job->setHint(QString(QObject::tr("%L0 bytes")).
                     arg(alreadyRead));
         }
     } while (bufferLength != 0 && !job->isCancelled());
 
     err = inflateEnd(&d_stream);
     if (err != Z_OK) {
-        job->setErrorMessage(QString(QApplication::tr("zlib error %1")).
+        job->setErrorMessage(QString(QObject::tr("zlib error %1")).
                 arg(err));
     }
 
@@ -563,12 +562,12 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         alreadyRead += bufferLength;
         if (contentLength > 0) {
             job->setProgress(((double) alreadyRead) / contentLength);
-            job->setHint(QString(QApplication::tr("%L0 of %L1 bytes")).
+            job->setHint(QString(QObject::tr("%L0 of %L1 bytes")).
                     arg(alreadyRead).
                     arg(contentLength));
         } else {
             job->setProgress(0.5);
-            job->setHint(QString(QApplication::tr("%L0 bytes")).
+            job->setHint(QString(QObject::tr("%L0 bytes")).
                     arg(alreadyRead));
         }
     } while (bufferLength != 0 && !job->isCancelled());
@@ -617,7 +616,7 @@ QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
             file = 0;
         }
     } else {
-        job->setErrorMessage(QString(QApplication::tr("Error opening file: %1")).
+        job->setErrorMessage(QString(QObject::tr("Error opening file: %1")).
                 arg(file->fileName()));
         delete file;
         file = 0;

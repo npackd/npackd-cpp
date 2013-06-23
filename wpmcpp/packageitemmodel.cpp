@@ -183,22 +183,22 @@ QVariant PackageItemModel::headerData(int section, Qt::Orientation orientation,
         if (orientation == Qt::Horizontal) {
             switch (section) {
                 case 0:
-                    r = QApplication::tr("Icon");
+                    r = QObject::tr("Icon");
                     break;
                 case 1:
-                    r = QApplication::tr("Title");
+                    r = QObject::tr("Title");
                     break;
                 case 2:
-                    r = QApplication::tr("Description");
+                    r = QObject::tr("Description");
                     break;
                 case 3:
-                    r = QApplication::tr("Available");
+                    r = QObject::tr("Available");
                     break;
                 case 4:
-                    r = QApplication::tr("Installed");
+                    r = QObject::tr("Installed");
                     break;
                 case 5:
-                    r = QApplication::tr("License");
+                    r = QObject::tr("License");
                     break;
             }
         } else {

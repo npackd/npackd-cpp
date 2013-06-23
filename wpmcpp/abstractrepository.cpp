@@ -1,5 +1,3 @@
-#include <QApplication>
-
 #include "abstractrepository.h"
 #include "wpmutils.h"
 #include "windowsregistry.h"
@@ -75,7 +73,7 @@ void AbstractRepository::process(Job *job,
         PackageVersion* pv = op->findPackageVersion(&err);
         if (!err.isEmpty()) {
             job->setErrorMessage(QString(
-                    QApplication::tr("Cannot find the package version %1 %2: %3")).
+                    QObject::tr("Cannot find the package version %1 %2: %3")).
                     arg(op->package).
                     arg(op->version.getVersionString()).
                     arg(err));
@@ -83,7 +81,7 @@ void AbstractRepository::process(Job *job,
         }
         if (!pv) {
             job->setErrorMessage(QString(
-                    QApplication::tr("Cannot find the package version %1 %2")).
+                    QObject::tr("Cannot find the package version %1 %2")).
                     arg(op->package).
                     arg(op->version.getVersionString()));
             break;
@@ -105,10 +103,10 @@ void AbstractRepository::process(Job *job,
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             if (op->install)
-                job->setHint(QString(QApplication::tr("Installing %1")).arg(
+                job->setHint(QString(QObject::tr("Installing %1")).arg(
                         pv->toString()));
             else
-                job->setHint(QString(QApplication::tr("Uninstalling %1")).arg(
+                job->setHint(QString(QObject::tr("Uninstalling %1")).arg(
                         pv->toString()));
             Job* sub = job->newSubJob(1.0 / n);
             if (op->install)
@@ -176,26 +174,26 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 break;
 
             if (a == 0) {
-                err = QString(QApplication::tr("No installable version found for the package %1")).
+                err = QString(QObject::tr("No installable version found for the package %1")).
                         arg(p->title);
                 break;
             }
 
             PackageVersion* b = findNewestInstalledPackageVersion_(p->name, &err);
             if (!err.isEmpty()) {
-                err = QString(QApplication::tr("Cannot find the newest installed version for %1: %2")).
+                err = QString(QObject::tr("Cannot find the newest installed version for %1: %2")).
                         arg(p->title).arg(err);
                 break;
             }
 
             if (b == 0) {
-                err = QString(QApplication::tr("No installed version found for the package %1")).
+                err = QString(QObject::tr("No installed version found for the package %1")).
                         arg(p->title);
                 break;
             }
 
             if (a->version.compare(b->version) <= 0) {
-                err = QString(QApplication::tr("The newest version (%1) for the package %2 is already installed")).
+                err = QString(QObject::tr("The newest version (%1) for the package %2 is already installed")).
                         arg(b->version.getVersionString()).arg(p->title);
                 break;
             }

@@ -58,7 +58,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
 
     Package* p = r->findPackage_(pv->package);
 
-    QString licenseTitle = QApplication::tr("unknown");
+    QString licenseTitle = QObject::tr("unknown");
     if (p) {
         QString err;
         License* lic = r->findLicense_(p->license, &err);
@@ -78,7 +78,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
 
         QString hp;
         if (p->url.isEmpty())
-            hp = QApplication::tr("unknown");
+            hp = QObject::tr("unknown");
         else{
             hp = p->url;
             hp = "<a href=\"" + Qt::escape(hp) + "\">" + Qt::escape(hp) +
@@ -91,7 +91,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
 
     QString dl;
     if (!pv->download.isValid())
-        dl = QApplication::tr("n/a");
+        dl = QObject::tr("n/a");
     else {
         dl = pv->download.toString();        
         dl = "<a href=\"" + Qt::escape(dl) + "\">" + Qt::escape(dl) + "</a>";
@@ -100,7 +100,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
 
     QString sha1;
     if (pv->sha1.isEmpty())
-        sha1 = QApplication::tr("n/a");
+        sha1 = QObject::tr("n/a");
     else
         sha1 = pv->sha1;
     this->ui->lineEditSHA1->setText(sha1);
