@@ -67,8 +67,6 @@ private:
 
     QString exec(const QString& sql);
 
-    QString updateStatus(const QString &package);
-
     /**
      * @brief inserts or updates an existing package version
      * @param p a package version
@@ -105,6 +103,15 @@ public:
      * @return error
      */
     QString open();
+
+    /**
+     * @brief update the status for the specified package
+     *     (see Package::Status)
+     *
+     * @param package full package name
+     * @return error message
+     */
+    QString updateStatus(const QString &package);
 
     /**
      * @brief inserts the data from the given repository

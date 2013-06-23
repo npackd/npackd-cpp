@@ -48,5 +48,9 @@ http://localhost:8083/Libs.xml
     - change column widths
     - restart Npackd
     => the column widths are restored 
-    
+12. Removing an installed package should update the list
+    - install "Notepad2"
+    - filter the packages to only show the installed
+    - remove "Notepad2"
+    => the package list should not show "Notepad2" anymore
    

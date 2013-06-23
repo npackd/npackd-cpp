@@ -868,7 +868,7 @@ void MainWindow::process(QList<InstallOperation*> &install)
         Job* job = new Job();
         InstallThread* it = new InstallThread(0, 1, job);
         it->install = install;
-        install .clear();
+        install.clear();
 
         connect(it, SIGNAL(finished()), this,
                 SLOT(processThreadFinished()),
