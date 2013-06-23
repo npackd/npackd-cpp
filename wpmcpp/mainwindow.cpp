@@ -942,7 +942,7 @@ bool MainWindow::isUpdateEnabled(const QString& package)
     bool res = false;
     AbstractRepository* r = AbstractRepository::getDefault_();
     PackageVersion* newest = r->findNewestInstallablePackageVersion_(
-            package);
+            package, &err);
     PackageVersion* newesti = r->findNewestInstalledPackageVersion_(
             package, &err);
     if (newest != 0 && newesti != 0) {
@@ -1007,8 +1007,9 @@ void MainWindow::updateInstallAction()
                     break;
 
                 Package* p = (Package*) selected.at(i);
+                QString err;
                 PackageVersion* pv  = r->findNewestInstallablePackageVersion_(
-                        p->name);
+                        p->name, &err);
 
                 enabled = enabled &&
                         pv && !pv->isLocked() &&
@@ -1172,8 +1173,9 @@ void MainWindow::updateTestDownloadSiteAction()
             if (!reloadRepositoriesThreadRunning) {
                 for (int i = 0; i < selected.count(); i++) {
                     Package* p = (Package*) selected.at(i);
+                    QString err;
                     PackageVersion* pv = r->findNewestInstallablePackageVersion_(
-                            p->name);
+                            p->name, &err);
                     if (pv && pv->download.isValid()) {
                         enabled = true;
                         delete pv;
@@ -1538,6 +1540,7 @@ void MainWindow::on_actionUpdate_triggered()
 
 void MainWindow::on_actionTest_Download_Site_triggered()
 {
+    QString err;
     Selection* sel = Selection::findCurrent();
     if (sel) {
         QSet<QString> urls;
@@ -1554,21 +1557,29 @@ void MainWindow::on_actionTest_Download_Site_triggered()
             for (int i = 0; i < selected.count(); i++) {
                 Package* p = (Package*) selected.at(i);
                 QScopedPointer<PackageVersion> pv(
-                        r->findNewestInstallablePackageVersion_(p->name));
+                        r->findNewestInstallablePackageVersion_(p->name,
+                        &err));
+                if (!err.isEmpty())
+                    break;
                 if (pv) {
                     urls.insert(pv->download.host());
                 }
             }
         }
 
-        for (QSet<QString>::const_iterator it = urls.begin();
-                it != urls.end(); it++) {
-            QString s = "http://www.urlvoid.com/scan/" + *it;
-            QUrl url(s);
-            if (url.isValid())
-                QDesktopServices::openUrl(url);
+        if (err.isEmpty()) {
+            for (QSet<QString>::const_iterator it = urls.begin();
+                    it != urls.end(); it++) {
+                QString s = "http://www.urlvoid.com/scan/" + *it;
+                QUrl url(s);
+                if (url.isValid())
+                    QDesktopServices::openUrl(url);
+            }
         }
     }
+
+    if (!err.isEmpty())
+        addErrorMessage(err, err, true, QMessageBox::Critical);
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -1783,6 +1794,8 @@ void MainWindow::on_actionFile_an_Issue_triggered()
 
 void MainWindow::on_actionInstall_triggered()
 {
+    QString err;
+
     Selection* selection = Selection::findCurrent();
     QList<void*> selected;
     if (selection)
@@ -1796,7 +1809,10 @@ void MainWindow::on_actionInstall_triggered()
         for (int i = 0; i < selected.count(); i++) {
             Package* p = (Package*) selected.at(i);
             PackageVersion* pv = r->findNewestInstallablePackageVersion_(
-                    p->name);
+                    p->name, &err);
+            if (!err.isEmpty())
+                break;
+
             if (pv)
                 pvs.append(pv);
         }
@@ -1806,11 +1822,13 @@ void MainWindow::on_actionInstall_triggered()
         }
     }
 
-    QString err;
     QList<InstallOperation*> ops;
-    QList<PackageVersion*> installed =
-            AbstractRepository::getDefault_()->getInstalled_(&err);
+    QList<PackageVersion*> installed;
     QList<PackageVersion*> avoid;
+
+    if (err.isEmpty()) {
+        installed = AbstractRepository::getDefault_()->getInstalled_(&err);
+    }
 
     if (err.isEmpty()) {
         for (int i = 0; i < pvs.count(); i++) {

@@ -1193,10 +1193,11 @@ QString PackageVersion::getStatus() const
     QString status;
     bool installed = this->installed();
     AbstractRepository* r = AbstractRepository::getDefault_();
+    QString err;
     PackageVersion* newest = r->findNewestInstallablePackageVersion_(
-            this->package);
+            this->package, &err);
     if (installed) {
-        status = QApplication::tr("installed");
+        status = QApplication::tr(" installed");
     }
     if (installed && newest != 0 && version.compare(newest->version) < 0) {
         if (!newest->installed())
@@ -1204,6 +1205,8 @@ QString PackageVersion::getStatus() const
         else
             status += ", " + QApplication::tr("obsolete");
     }
+    if (!err.isEmpty())
+        status += ", " + err;
 
     if (isLocked()) {
         if (!status.isEmpty())
