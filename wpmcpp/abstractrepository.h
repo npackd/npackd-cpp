@@ -122,8 +122,6 @@ public:
      * @brief processes the given operatios
      * @param job job
      * @param install operations that should be performed
-     *
-     * TODO: this method is not thread-safe
      */
     void process(Job* job, const QList<InstallOperation*> &install);
 
