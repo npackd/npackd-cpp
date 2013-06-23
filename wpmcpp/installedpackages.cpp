@@ -552,10 +552,11 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";
     QString pn = ipv->package + "-" + ipv->version.getVersionString();
 
-    // TODO: remove
+    /*
     WPMUtils::outputTextConsole(
             "InstalledPackages::saveToRegistry " + ipv->directory + " " +
             ipv->package + " " + ipv->version.getVersionString() + "\n");
+            */
 
     if (!ipv->directory.isEmpty()) {
         WindowsRegistry wr = machineWR.createSubKey(keyName + "\\" + pn, &r);

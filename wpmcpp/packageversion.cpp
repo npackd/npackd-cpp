@@ -104,8 +104,8 @@ PackageVersion::PackageVersion()
 
 void PackageVersion::emitStatusChanged()
 {
-    //Repository* r = Repository::getDefault();
-    // TODO: r->fireStatusChanged(this);
+    InstalledPackages::getDefault()->fireStatusChanged(this->package,
+            this->version);
 }
 
 void PackageVersion::lock()
@@ -364,7 +364,6 @@ void PackageVersion::uninstall(Job* job)
             QByteArray output = this->executeFile(sub, d.absolutePath(),
                     uninstallationScript, ".Npackd\\Uninstall.log", env);
             if (!sub->getErrorMessage().isEmpty()) {
-                // TODO: the output should be visible in the GUI also
                 QTemporaryFile of(QDir::tempPath() +
                                   "\\NpackdUninstallXXXXXX.log");
                 of.setAutoRemove(false);
