@@ -98,11 +98,12 @@ public:
      * Find the newest installable package version.
      *
      * @param package name of the package like "org.server.Word"
+     * @param err error message will be stored here
      * @return found package version or 0. The returned object should be
      *     destroyed later.
      */
-    PackageVersion* findNewestInstallablePackageVersion_(
-            const QString& package) const;
+    PackageVersion* findNewestInstallablePackageVersion_(const QString& package,
+            QString *err) const;
 
     /**
      * @param err error message will be stored here

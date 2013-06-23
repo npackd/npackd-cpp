@@ -170,7 +170,11 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
         for (int i = 0; i < packages.count(); i++) {
             Package* p = packages.at(i);
 
-            PackageVersion* a = findNewestInstallablePackageVersion_(p->name);
+            PackageVersion* a = findNewestInstallablePackageVersion_(p->name,
+                    &err);
+            if (!err.isEmpty())
+                break;
+
             if (a == 0) {
                 err = QString(QApplication::tr("No installable version found for the package %1")).
                         arg(p->title);
@@ -384,17 +388,18 @@ QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
 }
 
 PackageVersion* AbstractRepository::findNewestInstallablePackageVersion_(
-        const QString &package) const
+        const QString &package, QString* err) const
 {
     PackageVersion* r = 0;
 
-    QString err; // TODO: the error is not handled
-    QList<PackageVersion*> pvs = this->getPackageVersions_(package, &err);
-    for (int i = 0; i < pvs.count(); i++) {
-        PackageVersion* p = pvs.at(i);
-        if (r == 0 || p->version.compare(r->version) > 0) {
-            if (p->download.isValid())
-                r = p;
+    QList<PackageVersion*> pvs = this->getPackageVersions_(package, err);
+    if (err->isEmpty()) {
+        for (int i = 0; i < pvs.count(); i++) {
+            PackageVersion* p = pvs.at(i);
+            if (r == 0 || p->version.compare(r->version) > 0) {
+                if (p->download.isValid())
+                    r = p;
+            }
         }
     }
 
