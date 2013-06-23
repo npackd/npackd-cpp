@@ -39,8 +39,11 @@ int App::process()
         return 1;
     }
 
-    // TODO: call this function one more time on exit?
-    // addNpackdCL();
+    err = addNpackdCL();
+    if (!err.isEmpty()) {
+        WPMUtils::outputTextConsole("Error: " + err + "\n");
+        return 1;
+    }
 
     cl.add("package", 'p',
             "internal package name (e.g. com.example.Editor or just Editor)",
@@ -151,7 +154,13 @@ int App::process()
                 WPMUtils::outputTextConsole(err + "\n", false);
             }
         } else if (cmd == "list") {
-            r = list();
+            QString err = list();
+            if (err.isEmpty())
+                r = 0;
+            else {
+                r = 1;
+                WPMUtils::outputTextConsole(err + "\n", false);
+            }
         } else if (cmd == "info") {
             QString err = info();
             if (err.isEmpty())
@@ -189,8 +198,9 @@ QString App::addNpackdCL()
         r->savePackageVersion(pv);
     }
     if (!pv->installed()) {
-        pv->setPath(WPMUtils::getExeDir());
-        r->updateNpackdCLEnvVar();
+        err = pv->setPath(WPMUtils::getExeDir());
+        if (err.isEmpty())
+            err = r->updateNpackdCLEnvVar();
     }
     delete pv;
 
@@ -219,7 +229,8 @@ void App::usage()
         "        (e.g. App instead of com.example.App)",
         "    npackdcl list [--status=installed | all] [--bare-format]",
         "        lists package versions sorted by package name and version.",
-        "        Only installed package versions are shown by default.",
+        "        Please note that since 1.18 only installed package versions",
+        "        are listed regardless of the --status switch.",
         "    npackdcl search [--query=<search terms>] [--status=installed | all] [--bare-format]",
         "        lists found packages sorted by package name.",
         "        All packages are shown by default.",
@@ -414,16 +425,14 @@ QString App::addRepo()
 
     delete url_;
 
-    // TODO: updateF5?
-
     return err;
 }
 
-int App::list()
+QString App::list()
 {
-    bool bare = cl.isPresent("bare-format");
+    QString err;
 
-    int r = 0;
+    bool bare = cl.isPresent("bare-format");
 
     Job* job;
     if (bare)
@@ -432,36 +441,18 @@ int App::list()
         job = clp.createJob();
     InstalledPackages::getDefault()->refresh(job);
     if (!job->getErrorMessage().isEmpty()) {
-        WPMUtils::outputTextConsole(job->getErrorMessage() + "\n", false);
-        r = 1;
+        err = job->getErrorMessage();
     }
     delete job;
 
-    bool onlyInstalled = true;
-    if (r == 0) {
-        QString status = cl.get("status");
-        if (!status.isNull()) {
-            if (status == "all")
-                onlyInstalled = false;
-            else if (status == "installed")
-                onlyInstalled = true;
-            else {
-                WPMUtils::outputTextConsole("Wrong status: " + status + "\n", false);
-                r = 1;
-            }
-        }
+    QList<PackageVersion*> list;
+    if (err.isEmpty()) {
+        AbstractRepository* rep = AbstractRepository::getDefault_();
+        list = rep->getInstalled_(&err);
+        qSort(list.begin(), list.end(), packageVersionLessThan);
     }
 
-    if (r == 0) {
-        AbstractRepository* rep = AbstractRepository::getDefault_();
-        QList<PackageVersion*> list;
-        QString err; // TODO: handle error
-        if (onlyInstalled)
-            list = rep->getInstalled_(&err);
-        else
-            /* TODO: list = DBRepository::getDefault()->findPackageVersions(&err) */;
-        qSort(list.begin(), list.end(), packageVersionLessThan);
-
+    if (err.isEmpty()) {
         if (!bare)
             WPMUtils::outputTextConsole(QString("%1 package versions found:\n\n").
                     arg(list.count()));
@@ -476,11 +467,11 @@ int App::list()
                         pv->version.getVersionString() + " " +
                         pv->getPackageTitle() + "\n");
         }
-
-        qDeleteAll(list);
     }
 
-    return r;
+    qDeleteAll(list);
+
+    return err;
 }
 
 QString App::search()
@@ -617,8 +608,6 @@ QString App::removeRepo()
     }
 
     delete url_;
-
-    // TODO: updateF5?
 
     return err;
 }
@@ -795,8 +784,11 @@ int App::update()
 
     if (job->shouldProceed() && !up2date) {
         QString title;
-        if (!confirm(ops, &title))
+        QString err;
+        if (!confirm(ops, &title, &err))
             job->cancel();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
     }
 
     if (job->shouldProceed("Updating") && !up2date) {
@@ -1001,14 +993,19 @@ int App::add()
     return r;
 }
 
-bool App::confirm(const QList<InstallOperation*> install, QString* title)
+bool App::confirm(const QList<InstallOperation*> install, QString* title,
+        QString* err)
 {
+    *err = "";
+
     QString names;
     for (int i = 0; i < install.count(); i++) {
         InstallOperation* op = install.at(i);
         if (!op->install) {
-            QString err; // TODO: handle error
-            QScopedPointer<PackageVersion> pv(op->findPackageVersion(&err));
+            QScopedPointer<PackageVersion> pv(op->findPackageVersion(err));
+            if (!err->isEmpty())
+                break;
+
             if (!names.isEmpty())
                 names.append(", ");
             if (pv.isNull())
@@ -1018,19 +1015,24 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title)
                 names.append(pv->toString());
         }
     }
+
     QString installNames;
-    for (int i = 0; i < install.count(); i++) {
-        InstallOperation* op = install.at(i);
-        if (op->install) {
-            QString err; // TODO: handle error
-            QScopedPointer<PackageVersion> pv(op->findPackageVersion(&err));
-            if (!installNames.isEmpty())
-                installNames.append(", ");
-            if (pv.isNull())
-                installNames.append(op->package + " " +
-                        op->version.getVersionString());
-            else
-                installNames.append(pv->toString());
+    if (err->isEmpty()) {
+        for (int i = 0; i < install.count(); i++) {
+            InstallOperation* op = install.at(i);
+            if (op->install) {
+                QScopedPointer<PackageVersion> pv(op->findPackageVersion(err));
+                if (!err->isEmpty())
+                    break;
+
+                if (!installNames.isEmpty())
+                    installNames.append(", ");
+                if (pv.isNull())
+                    installNames.append(op->package + " " +
+                            op->version.getVersionString());
+                else
+                    installNames.append(pv->toString());
+            }
         }
     }
 
@@ -1045,25 +1047,32 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title)
 
     bool b;
     QString msg;
-    if (installCount == 1 && uninstallCount == 0) {
+    if (!err->isEmpty()) {
+        b = false;
+        *title = "Error";
+    } else if (installCount == 1 && uninstallCount == 0) {
         b = true;
         *title = "Installing";
     } else if (installCount == 0 && uninstallCount == 1) {
         *title = "Uninstalling";
         InstallOperation* op0 = install.at(0);
 
-        QString err; // TODO: handle error
-        QScopedPointer<PackageVersion> pv(op0->findPackageVersion(&err));
-        if (pv.isNull())
-            pv.reset(new PackageVersion(op0->package, op0->version));
+        QScopedPointer<PackageVersion> pv(op0->findPackageVersion(err));
+        if (err->isEmpty()) {
+            if (pv.isNull())
+                pv.reset(new PackageVersion(op0->package, op0->version));
 
-        msg = QString("The package %1 will be uninstalled. "
-                "The corresponding directory %2 "
-                "will be completely deleted. "
-                "There is no way to restore the files. Are you sure (y/n)?:").
-                arg(pv->toString()).
-                arg(pv->getPath());
-        b = WPMUtils::confirmConsole(msg);
+            msg = QString("The package %1 will be uninstalled. "
+                    "The corresponding directory %2 "
+                    "will be completely deleted. "
+                    "There is no way to restore the files. Are you sure (y/n)?:").
+                    arg(pv->toString()).
+                    arg(pv->getPath());
+            b = WPMUtils::confirmConsole(msg);
+        } else {
+            b = false;
+            *title = "Error";
+        }
     } else if (installCount > 0 && uninstallCount == 0) {
         *title = QString("Installing %1 packages").arg(
                 installCount);
@@ -1214,8 +1223,11 @@ int App::remove()
 
     if (job->shouldProceed()) {
         QString title;
-        if (!confirm(ops, &title))
+        QString err;
+        if (!confirm(ops, &title, &err))
             job->cancel();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
     }
 
     if (job->shouldProceed("Removing")) {
@@ -1338,17 +1350,6 @@ QString App::info()
                 details.append(")");
             }
             WPMUtils::outputTextConsole("Important files: " + details + "\n");
-
-            /* TODO: remove?
-            details = "";
-            for (int i = 0; i < pv->dependencies.count(); i++) {
-                if (i != 0)
-                    details.append("; ");
-                Dependency* d = pv->dependencies.at(i);
-                details.append(d->toString());
-            }
-            WPMUtils::outputTextConsole("Dependencies: " + details + "\n");
-            */
         }
 
         if (!pv) {
@@ -1382,10 +1383,13 @@ QString App::info()
             }
             qDeleteAll(ipvs);
         }
+    }
 
+
+    if (r.isEmpty()) {
         if (pv) {
             WPMUtils::outputTextConsole("Dependency tree:\n");
-            printDependencies(pv->installed(), "", 1, pv);
+            r = printDependencies(pv->installed(), "", 1, pv);
         }
     }
 
@@ -1394,9 +1398,11 @@ QString App::info()
     return r;
 }
 
-void App::printDependencies(bool onlyInstalled, const QString parentPrefix,
+QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
         int level, PackageVersion* pv)
 {
+    QString err;
+
     for (int i = 0; i < pv->dependencies.count(); ++i) {
         QString prefix;
         if (i == pv->dependencies.count() - 1)
@@ -1411,14 +1417,17 @@ void App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 
         QString s;
         if (ipv) {
-            QString err; // TODO: handle error
             pvd = AbstractRepository::getDefault_()->
                     findPackageVersion_(ipv->package, ipv->version, &err);
         } else {
-            QString err; // TODO: handle error
             pvd = d->findBestMatchToInstall(QList<PackageVersion*>(), &err);
         }
         delete ipv;
+
+        if (!err.isEmpty()) {
+            delete pvd;
+            break;
+        }
 
         QChar before;
         if (!pvd) {
@@ -1446,12 +1455,17 @@ void App::printDependencies(bool onlyInstalled, const QString parentPrefix,
                 nestedPrefix = parentPrefix + "  ";
             else
                 nestedPrefix = parentPrefix + ((QChar)0x2502) + " ";
-            printDependencies(onlyInstalled,
+            err = printDependencies(onlyInstalled,
                     nestedPrefix,
                     level + 1, pvd);
             delete pvd;
+
+            if (!err.isEmpty())
+                break;
         }
     }
+
+    return err;
 }
 
 int App::detect()

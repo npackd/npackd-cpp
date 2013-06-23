@@ -17,6 +17,7 @@
 #include "fileloader.h"
 #include "abstractrepository.h"
 #include "dbrepository.h"
+#include "installedpackages.h"
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +40,14 @@ int main(int argc, char *argv[])
             QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     app.installTranslator(&qtTranslator);
 */
+
+    QString packageName;
+#if !defined(__x86_64__)
+    packageName = "com.googlecode.windows-package-manager.Npackd";
+#else
+    packageName = "com.googlecode.windows-package-manager.Npackd64";
+#endif
+    InstalledPackages::getDefault()->packageName = packageName;
 
     // to use a resource: ":/resources/translations"
     QTranslator myappTranslator;

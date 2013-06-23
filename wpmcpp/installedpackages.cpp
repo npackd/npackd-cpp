@@ -38,12 +38,6 @@ InstalledPackages* InstalledPackages::getDefault()
 
 InstalledPackages::InstalledPackages()
 {
-    /* TODO: Npackd or NpackdCL depending on the binary */
-#if !defined(__x86_64__)
-    packageName = "com.googlecode.windows-package-manager.Npackd";
-#else
-    packageName = "com.googlecode.windows-package-manager.Npackd64";
-#endif
 }
 
 InstalledPackageVersion* InstalledPackages::find(const QString& package,
