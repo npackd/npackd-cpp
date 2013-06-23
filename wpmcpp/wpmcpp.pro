@@ -50,7 +50,8 @@ SOURCES += main.cpp \
     msithirdpartypm.cpp \
     wellknownprogramsthirdpartypm.cpp \
     installedpackagesthirdpartypm.cpp \
-    flowlayout.cpp
+    flowlayout.cpp \
+    scandiskthirdpartypm.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -91,7 +92,8 @@ HEADERS += mainwindow.h \
     msithirdpartypm.h \
     wellknownprogramsthirdpartypm.h \
     installedpackagesthirdpartypm.h \
-    flowlayout.h
+    flowlayout.h \
+    scandiskthirdpartypm.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \
