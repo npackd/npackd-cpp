@@ -1,5 +1,3 @@
-#include <QApplication>
-
 #include "wellknownprogramsthirdpartypm.h"
 #include "wpmutils.h"
 
@@ -11,7 +9,7 @@ void WellKnownProgramsThirdPartyPM::scanDotNet(
     Package* p = new Package("com.microsoft.DotNetRedistributable",
             ".NET redistributable runtime");
     p->url = "http://msdn.microsoft.com/en-us/netframework/default.aspx";
-    p->description = QApplication::tr(".NET runtime");
+    p->description = QObject::tr(".NET runtime");
 
     QString err = rep->savePackage(p);
     delete p;
@@ -99,9 +97,9 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
 
     QScopedPointer<Package> p(
             new Package("com.microsoft.MSXML",
-            QApplication::tr("Microsoft Core XML Services (MSXML)")));
+            QObject::tr("Microsoft Core XML Services (MSXML)")));
     p->url = "http://www.microsoft.com/downloads/en/details.aspx?FamilyID=993c0bcf-3bcf-4009-be21-27e85e1857b1#Overview";
-    p->description = QApplication::tr("XML library");
+    p->description = QObject::tr("XML library");
     err = rep->savePackage(p.data());
 
     Version v;
@@ -183,7 +181,7 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
 
     QScopedPointer<Package> p(new Package("com.microsoft.Windows",
             "Windows"));
-    p->description = QApplication::tr("operating system");
+    p->description = QObject::tr("operating system");
     p->url = "http://www.microsoft.com/windows/";
     rep->savePackage(p.data());
     QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
@@ -193,8 +191,8 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
 
     if (!WPMUtils::is64BitWindows()) {
         QScopedPointer<Package> p32(new Package("com.microsoft.Windows32",
-                QApplication::tr("Windows 32 bit")));
-        p32->description = QApplication::tr("operating system");
+                QObject::tr("Windows 32 bit")));
+        p32->description = QObject::tr("operating system");
         p32->url = "http://www.microsoft.com/windows/";
         QScopedPointer<PackageVersion> pv32(new PackageVersion(p32->name, v));
         rep->savePackage(p32.data());
@@ -203,8 +201,8 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
                 WPMUtils::getWindowsDir()));
     } else {
         QScopedPointer<Package> p64(new Package("com.microsoft.Windows64",
-                QApplication::tr("Windows 64 bit")));
-        p64->description = QApplication::tr("operating system");
+                QObject::tr("Windows 64 bit")));
+        p64->description = QObject::tr("operating system");
         p64->url = "http://www.microsoft.com/windows/";
         QScopedPointer<PackageVersion> pv64(new PackageVersion(p64->name, v));
         rep->savePackage(p64.data());
@@ -225,8 +223,8 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
             "com.oracle.JRE";
 
     QScopedPointer<Package> p(new Package(package, w64bit ? "JRE 64 bit" :
-            QApplication::tr("JRE")));
-    p->description = QApplication::tr("Java runtime");
+            QObject::tr("JRE")));
+    p->description = QObject::tr("Java runtime");
     p->url = "http://www.java.com/";
     rep->savePackage(p.data());
 
@@ -273,9 +271,9 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
         return;
 
     QScopedPointer<Package> p(new Package(package,
-            w64bit ? QApplication::tr("JDK 64 bit") : QApplication::tr("JDK")));
+            w64bit ? QObject::tr("JDK 64 bit") : QObject::tr("JDK")));
     p->url = "http://www.oracle.com/technetwork/java/javase/overview/index.html";
-    p->description = QApplication::tr("Java development kit");
+    p->description = QObject::tr("Java development kit");
     rep->savePackage(p.data());
 
     WindowsRegistry wr;
@@ -321,9 +319,9 @@ QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
     QString err;
 
     QScopedPointer<Package> p(new Package("com.microsoft.WindowsInstaller",
-            QApplication::tr("Windows Installer")));
+            QObject::tr("Windows Installer")));
     p->url = "http://msdn.microsoft.com/en-us/library/cc185688(VS.85).aspx";
-    p->description = QApplication::tr("Package manager");
+    p->description = QObject::tr("Package manager");
 
     err = rep->savePackage(p.data());
 

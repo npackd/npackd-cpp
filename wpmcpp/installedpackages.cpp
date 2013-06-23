@@ -3,7 +3,6 @@
 #include <windows.h>
 #include <msi.h>
 
-#include <QApplication>
 #include <QDebug>
 
 #include "windowsregistry.h"
@@ -253,7 +252,7 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
 void InstalledPackages::refresh(Job *job)
 {
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QApplication::tr("Detecting directories deleted externally"));
+        job->setHint(QObject::tr("Detecting directories deleted externally"));
         QList<InstalledPackageVersion*> ipvs = this->data.values();
         for (int i = 0; i < ipvs.count(); i++) {
             InstalledPackageVersion* ipv = ipvs.at(i);
@@ -273,14 +272,14 @@ void InstalledPackages::refresh(Job *job)
     }
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QApplication::tr("Reading registry package database"));
+        job->setHint(QObject::tr("Reading registry package database"));
         QString err = readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         job->setProgress(0.5);
     }
 
-    if (job->shouldProceed(QApplication::tr("Reading the list of packages installed by Npackd"))) {
+    if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
         AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
         job->setErrorMessage(detect3rdParty(pm, false));
         delete pm;
@@ -299,7 +298,7 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.57);
     }
 
-    if (job->shouldProceed(QApplication::tr("Adding well-known packages"))) {
+    if (job->shouldProceed(QObject::tr("Adding well-known packages"))) {
         AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
                 this->packageName);
         job->setErrorMessage(detect3rdParty(pm, false));
@@ -309,7 +308,7 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.6);
     }
 
-    if (job->shouldProceed(QApplication::tr("Detecting MSI packages"))) {
+    if (job->shouldProceed(QObject::tr("Detecting MSI packages"))) {
         // MSI package detection should happen before the detection for
         // control panel programs
         AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
@@ -321,7 +320,7 @@ void InstalledPackages::refresh(Job *job)
     }
 
     if (job->shouldProceed(
-            QApplication::tr("Detecting software control panel packages"))) {
+            QObject::tr("Detecting software control panel packages"))) {
         AbstractThirdPartyPM* pm = new ControlPanelThirdPartyPM();
         job->setErrorMessage(detect3rdParty(pm, true, "control-panel:"));
         delete pm;
@@ -331,7 +330,7 @@ void InstalledPackages::refresh(Job *job)
     }
 
     if (job->shouldProceed(
-            QApplication::tr("Clearing information about installed package versions in nested directories"))) {
+            QObject::tr("Clearing information about installed package versions in nested directories"))) {
         QString err = clearPackagesInNestedDirectories();
         if (!err.isEmpty())
             job->setErrorMessage(err);

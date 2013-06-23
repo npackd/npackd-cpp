@@ -174,12 +174,14 @@ int App::process()
     return r;
 }
 
-void App::addNpackdCL()
+QString App::addNpackdCL()
 {
+    QString err;
+
     AbstractRepository* r = AbstractRepository::getDefault_();
     PackageVersion* pv = r->findPackageVersion_(
             "com.googlecode.windows-package-manager.NpackdCL",
-            Version(WPMUtils::NPACKD_VERSION));
+            Version(WPMUtils::NPACKD_VERSION), &err);
     if (!pv) {
         pv = new PackageVersion(
                 "com.googlecode.windows-package-manager.NpackdCL");
@@ -191,6 +193,8 @@ void App::addNpackdCL()
         r->updateNpackdCLEnvVar();
     }
     delete pv;
+
+    return err;
 }
 
 void App::usage()
@@ -329,9 +333,14 @@ QString App::check()
     }
     delete job;
 
+    AbstractRepository* rep = AbstractRepository::getDefault_();
+    QList<PackageVersion*> list;
+
     if (r.isEmpty()) {
-        AbstractRepository* rep = AbstractRepository::getDefault_();
-        QList<PackageVersion*> list = rep->getInstalled_();
+        list = rep->getInstalled_(&r);
+    }
+
+    if (r.isEmpty()) {
         qSort(list.begin(), list.end(), packageVersionLessThan);
 
         int n = 0;
@@ -446,10 +455,11 @@ int App::list()
     if (r == 0) {
         AbstractRepository* rep = AbstractRepository::getDefault_();
         QList<PackageVersion*> list;
+        QString err; // TODO: handle error
         if (onlyInstalled)
-            list = rep->getInstalled_();
+            list = rep->getInstalled_(&err);
         else
-            list = DBRepository::getDefault()->findPackageVersions();
+            /* TODO: list = DBRepository::getDefault()->findPackageVersions(&err) */;
         qSort(list.begin(), list.end(), packageVersionLessThan);
 
         if (!bare)
@@ -505,8 +515,8 @@ QString App::search()
         delete rjob;
     }
 
+    QList<Package*> list;
     if (job->shouldProceed("Searching for packages")) {
-        QList<Package*> list;
         if (onlyInstalled) {
             QStringList keywords = query.toLower().simplified().split(" ",
                     QString::SkipEmptyParts);
@@ -525,8 +535,14 @@ QString App::search()
             }
             qDeleteAll(installed);
         } else {
-            list = rep->findPackages(Package::INSTALLED, false, query);
+            QString err;
+            list = rep->findPackages(Package::INSTALLED, false, query, &err);
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
         }
+    }
+
+    if (job->shouldProceed()) {
         qSort(list.begin(), list.end(), packageLessThan);
 
         if (!bare)
@@ -728,16 +744,24 @@ int App::update()
     PackageVersion* newesti = 0;
     if (job->shouldProceed()) {
         // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
-        newesti = rep->findNewestInstalledPackageVersion_(packages.at(0)->name);
-        if (newesti == 0) {
+        QString err;
+        newesti = rep->findNewestInstalledPackageVersion_(packages.at(0)->name,
+                &err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else if (newesti == 0) {
             job->setErrorMessage("Package is not installed");
         }
     }
 
     PackageVersion* newest = 0;
     if (job->shouldProceed()) {
-        newest = rep->findNewestInstallablePackageVersion_(packages.at(0)->name);
-        if (newest == 0) {
+        QString err;
+        newest = rep->findNewestInstallablePackageVersion_(
+                packages.at(0)->name, &err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else if (newest == 0) {
             job->setErrorMessage("No installable versions found");
         }
     }
@@ -893,14 +917,20 @@ int App::add()
     PackageVersion* pv = 0;
     if (job->shouldProceed()) {
         if (version.isNull()) {
+            QString err;
             pv = rep->findNewestInstallablePackageVersion_(
-                    p->name);
+                    p->name, &err);
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
         } else {
             Version v;
             if (!v.setVersion(version)) {
                 job->setErrorMessage("Cannot parse version: " + version);
             } else {
-                pv = rep->findPackageVersion_(p->name, version);
+                QString err;
+                pv = rep->findPackageVersion_(p->name, version, &err);
+                if (!err.isEmpty())
+                    job->setErrorMessage(err);
             }
         }
     }
@@ -924,10 +954,15 @@ int App::add()
 
     QList<InstallOperation*> ops;
     if (job->shouldProceed() && !alreadyInstalled) {
+        QString err;
         QList<PackageVersion*> installed =
-                AbstractRepository::getDefault_()->getInstalled_();
+                AbstractRepository::getDefault_()->getInstalled_(&err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+
         QList<PackageVersion*> avoid;
-        QString err = pv->planInstallation(installed, ops, avoid);
+        if (job->shouldProceed())
+            err = pv->planInstallation(installed, ops, avoid);
         if (!err.isEmpty()) {
             job->setErrorMessage(err);
         }
@@ -972,7 +1007,8 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title)
     for (int i = 0; i < install.count(); i++) {
         InstallOperation* op = install.at(i);
         if (!op->install) {
-            QScopedPointer<PackageVersion> pv(op->findPackageVersion());
+            QString err; // TODO: handle error
+            QScopedPointer<PackageVersion> pv(op->findPackageVersion(&err));
             if (!names.isEmpty())
                 names.append(", ");
             if (pv.isNull())
@@ -986,7 +1022,8 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title)
     for (int i = 0; i < install.count(); i++) {
         InstallOperation* op = install.at(i);
         if (op->install) {
-            QScopedPointer<PackageVersion> pv(op->findPackageVersion());
+            QString err; // TODO: handle error
+            QScopedPointer<PackageVersion> pv(op->findPackageVersion(&err));
             if (!installNames.isEmpty())
                 installNames.append(", ");
             if (pv.isNull())
@@ -1015,7 +1052,8 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title)
         *title = "Uninstalling";
         InstallOperation* op0 = install.at(0);
 
-        QScopedPointer<PackageVersion> pv(op0->findPackageVersion());
+        QString err; // TODO: handle error
+        QScopedPointer<PackageVersion> pv(op0->findPackageVersion(&err));
         if (pv.isNull())
             pv.reset(new PackageVersion(op0->package, op0->version));
 
@@ -1133,8 +1171,11 @@ int App::remove()
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     PackageVersion* pv = 0;
     if (job->shouldProceed()) {
-        pv = rep->findPackageVersion_(p->name, v);
-        if (!pv) {
+        QString err;
+        pv = rep->findPackageVersion_(p->name, v, &err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else if (!pv) {
             job->setErrorMessage(QString("Package version %1 was not found").
                     arg(v.getVersionString()));
         }
@@ -1151,10 +1192,16 @@ int App::remove()
     AbstractRepository* ar = AbstractRepository::getDefault_();
     QList<InstallOperation*> ops;
     if (job->shouldProceed()) {
-        QList<PackageVersion*> installed = ar->getInstalled_();
-        QString err = pv->planUninstallation(installed, ops);
-        if (!err.isEmpty()) {
+        QString err;
+        QList<PackageVersion*> installed = ar->getInstalled_(&err);
+        if (!err.isEmpty())
             job->setErrorMessage(err);
+
+        if (job->shouldProceed()) {
+            err = pv->planUninstallation(installed, ops);
+            if (!err.isEmpty()) {
+                job->setErrorMessage(err);
+            }
         }
         qDeleteAll(installed);
     }
@@ -1248,8 +1295,8 @@ QString App::info()
     PackageVersion* pv = 0;
     if (r.isEmpty()) {
         if (!version.isNull()) {
-            pv = rep->findPackageVersion_(p->name, v);
-            if (!pv) {
+            pv = rep->findPackageVersion_(p->name, v, &r);
+            if (r.isEmpty() && !pv) {
                 r = QString("Package version %1 not found").
                         arg(v.getVersionString());
             }
@@ -1364,10 +1411,12 @@ void App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 
         QString s;
         if (ipv) {
+            QString err; // TODO: handle error
             pvd = AbstractRepository::getDefault_()->
-                    findPackageVersion_(ipv->package, ipv->version);
+                    findPackageVersion_(ipv->package, ipv->version, &err);
         } else {
-            pvd = d->findBestMatchToInstall(QList<PackageVersion*>());
+            QString err; // TODO: handle error
+            pvd = d->findBestMatchToInstall(QList<PackageVersion*>(), &err);
         }
         delete ipv;
 

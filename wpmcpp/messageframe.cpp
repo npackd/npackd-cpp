@@ -16,10 +16,10 @@ MessageFrame::MessageFrame(QWidget *parent, const QString& msg,
     ui->setupUi(this);
 
     if (seconds == 0)
-        this->ui->pushButtonDismiss->setText(QApplication::tr("Dismiss"));
+        this->ui->pushButtonDismiss->setText(QObject::tr("Dismiss"));
     else
         this->ui->pushButtonDismiss->setText(
-                QString(QApplication::tr("Dismiss (%1 seconds)")).
+                QString(QObject::tr("Dismiss (%1 seconds)")).
                 arg(seconds));
     this->seconds = seconds;
     this->ui->label->setText(msg);
@@ -57,7 +57,7 @@ void MessageFrame::timerTimeout()
     }
 
     this->ui->pushButtonDismiss->setText(
-            QString(QApplication::tr("Dismiss (%1 seconds)")).arg(seconds));
+            QString(QObject::tr("Dismiss (%1 seconds)")).arg(seconds));
     if (active) {
         this->seconds -= 10;
         if (this->seconds <= 0) {

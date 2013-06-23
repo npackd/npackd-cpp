@@ -256,7 +256,7 @@ MainWindow::MainWindow(QWidget *parent) :
             SIGNAL(focusChanged(QWidget*, QWidget*)), this,
             SLOT(applicationFocusChanged(QWidget*, QWidget*)));
 
-    this->ui->tabWidget->addTab(mainFrame, QApplication::tr("Packages"));
+    this->ui->tabWidget->addTab(mainFrame, QObject::tr("Packages"));
     mainFrame->loadColumns();
 
     this->addJobsTab();
@@ -471,7 +471,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         this->mainFrame->saveColumns();
         event->accept();
     } else {
-        addErrorMessage(QApplication::tr("Cannot exit while jobs are running"));
+        addErrorMessage(QObject::tr("Cannot exit while jobs are running"));
         event->ignore();
     }
 }
@@ -564,12 +564,12 @@ void MainWindow::updateProgressTabTitle()
 
     QString title;
     if (n == 0)
-        title = QString(QApplication::tr("0 Jobs"));
+        title = QString(QObject::tr("0 Jobs"));
     else if (n == 1)
-        title = QString(QApplication::tr("1 Job (%1%, %2)")).arg(maxProgress_).
+        title = QString(QObject::tr("1 Job (%1%, %2)")).arg(maxProgress_).
                 arg(rest.toString());
     else
-        title = QString(QApplication::tr("%1 Jobs (%2%, %3)")).
+        title = QString(QObject::tr("%1 Jobs (%2%, %3)")).
                 arg(n).arg(maxProgress_).
                 arg(rest.toString());
 
@@ -744,13 +744,13 @@ void MainWindow::process(QList<InstallOperation*> &install)
         InstallOperation* op = install.at(j);
         QScopedPointer<PackageVersion> pv(op->findPackageVersion(&err));
         if (!err.isEmpty()) {
-            err = QApplication::tr("Cannot find the package version %1: %2").arg(
+            err = QObject::tr("Cannot find the package version %1: %2").arg(
                     pv->toString()).arg(err);
             break;
         }
 
         if (!pv.isNull() && pv->isLocked()) {
-            err = QApplication::tr("The package %1 is locked by a currently running installation/removal.").
+            err = QObject::tr("The package %1 is locked by a currently running installation/removal.").
                     arg(pv->toString());
             break;
         }
@@ -816,9 +816,9 @@ void MainWindow::process(QList<InstallOperation*> &install)
     QString title;
     if (installCount == 1 && uninstallCount == 0) {
         b = true;
-        title = QApplication::tr("Installing");
+        title = QObject::tr("Installing");
     } else if (installCount == 0 && uninstallCount == 1) {
-        title = QApplication::tr("Uninstalling");
+        title = QObject::tr("Uninstalling");
 
         QScopedPointer<PackageVersion> pv(
                 install.at(0)->findPackageVersion(&err));
@@ -830,38 +830,38 @@ void MainWindow::process(QList<InstallOperation*> &install)
         }
 
         if (pv.isNull()) {
-            err = QApplication::tr("Cannot find the package version");
+            err = QObject::tr("Cannot find the package version");
             addErrorMessage(err, err, true, QMessageBox::Critical);
             qDeleteAll(install);
             install.clear();
             return;
         }
 
-        msg = QString(QApplication::tr("The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.")).
+        msg = QString(QObject::tr("The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.")).
                 arg(pv->toString()).
                 arg(pv->getPath());
-        b = UIUtils::confirm(this, QApplication::tr("Uninstall"), msg);
+        b = UIUtils::confirm(this, QObject::tr("Uninstall"), msg);
     } else if (installCount > 0 && uninstallCount == 0) {
-        title = QString(QApplication::tr("Installing %1 packages")).arg(
+        title = QString(QObject::tr("Installing %1 packages")).arg(
                 installCount);
-        msg = QString(QApplication::tr("%1 package(s) will be installed: %2")).
+        msg = QString(QObject::tr("%1 package(s) will be installed: %2")).
                 arg(installCount).arg(installNames);
-        b = UIUtils::confirm(this, QApplication::tr("Install"), msg);
+        b = UIUtils::confirm(this, QObject::tr("Install"), msg);
     } else if (installCount == 0 && uninstallCount > 0) {
-        title = QString(QApplication::tr("Uninstalling %1 packages")).arg(
+        title = QString(QObject::tr("Uninstalling %1 packages")).arg(
                 uninstallCount);
-        msg = QString(QApplication::tr("%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.")).
+        msg = QString(QObject::tr("%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.")).
                 arg(uninstallCount).arg(names);
-        b = UIUtils::confirm(this, QApplication::tr("Uninstall"), msg);
+        b = UIUtils::confirm(this, QObject::tr("Uninstall"), msg);
     } else {
-        title = QString(QApplication::tr("Installing %1 packages, uninstalling %2 packages")).arg(
+        title = QString(QObject::tr("Installing %1 packages, uninstalling %2 packages")).arg(
                 installCount).arg(uninstallCount);
-        msg = QString(QApplication::tr("%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.")).
+        msg = QString(QObject::tr("%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.")).
                 arg(uninstallCount).
                 arg(names).
                 arg(installCount).
                 arg(installNames);
-        b = UIUtils::confirm(this, QApplication::tr("Install/Uninstall"), msg);
+        b = UIUtils::confirm(this, QObject::tr("Install/Uninstall"), msg);
     }
 
     if (b) {
@@ -919,7 +919,7 @@ void MainWindow::on_actionExit_triggered()
     int n = this->runningJobs.count();
 
     if (n > 0)
-        addErrorMessage(QApplication::tr("Cannot exit while jobs are running"));
+        addErrorMessage(QObject::tr("Cannot exit while jobs are running"));
     else
         this->close();
 }
@@ -1062,7 +1062,7 @@ void MainWindow::updateUninstallAction()
                 PackageVersion* pv = r->findNewestInstalledPackageVersion_(
                         p->name, &err);
                 if (!err.isEmpty()) {
-                    err = QApplication::tr("Error finding the newest installed version for %1: %2").
+                    err = QObject::tr("Error finding the newest installed version for %1: %2").
                             arg(p->title).arg(err);
                     addErrorMessage(err, err, true, QMessageBox::Critical);
                 }
@@ -1268,7 +1268,7 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
     this->reloadRepositoriesThreadRunning = true;
     updateActions();
 
-    monitor(job, QApplication::tr("Initializing"), it);
+    monitor(job, QObject::tr("Initializing"), it);
 }
 
 void MainWindow::setMenuAccelerators(){
@@ -1485,7 +1485,7 @@ void MainWindow::on_actionSettings_triggered()
 
         d->setInstallationDirectory(WPMUtils::getInstallationDirectory());
 
-        this->ui->tabWidget->addTab(d, QApplication::tr("Settings"));
+        this->ui->tabWidget->addTab(d, QObject::tr("Settings"));
         this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);
     }
 }
@@ -1584,8 +1584,8 @@ void MainWindow::on_actionTest_Download_Site_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    addTextTab(QApplication::tr("About"), QString(
-            QApplication::tr("<html><body>Npackd %1 - software package manager for Windows (R)<br><a href='http://code.google.com/p/windows-package-manager'>http://code.google.com/p/windows-package-manager</a></body></html>")).
+    addTextTab(QObject::tr("About"), QString(
+            QObject::tr("<html><body>Npackd %1 - software package manager for Windows (R)<br><a href='http://code.google.com/p/windows-package-manager'>http://code.google.com/p/windows-package-manager</a></body></html>")).
             arg(WPMUtils::NPACKD_VERSION), true);
 }
 
@@ -1642,7 +1642,7 @@ void MainWindow::addJobsTab()
     jobsScrollArea->setWidgetResizable(true);
 
     int index = this->ui->tabWidget->addTab(jobsScrollArea,
-            QApplication::tr("Jobs"));
+            QObject::tr("Jobs"));
     this->jobsTab = this->ui->tabWidget->widget(index);
     updateProgressTabTitle();
 }
@@ -1662,7 +1662,7 @@ void MainWindow::on_actionScan_Hard_Drives_triggered()
         return;
     }
     if (locked) {
-        QString msg(QApplication::tr("Cannot start the scan now. The package %1 is locked by a currently running installation/removal."));
+        QString msg(QObject::tr("Cannot start the scan now. The package %1 is locked by a currently running installation/removal."));
         this->addErrorMessage(msg.arg(locked->toString()));
         delete locked;
         return;
@@ -1678,7 +1678,7 @@ void MainWindow::on_actionScan_Hard_Drives_triggered()
     this->hardDriveScanRunning = true;
     this->updateActions();
 
-    monitor(job, QApplication::tr("Install/Uninstall"), it);
+    monitor(job, QObject::tr("Install/Uninstall"), it);
 }
 
 bool comparesi(const QPair<QString, int>& a, const QPair<QString, int>& b)
@@ -1736,12 +1736,12 @@ void MainWindow::hardDriveScanThreadFinished()
     }
 
     detected.append("____________________");
-    detected.append(QString(QApplication::tr("%1 package(s) detected")).
+    detected.append(QString(QObject::tr("%1 package(s) detected")).
             arg(it->detected.count()));
 
     fillList();
 
-    addTextTab(QApplication::tr("Package detection status"),
+    addTextTab(QObject::tr("Package detection status"),
             detected.join("\n"));
 
     this->hardDriveScanRunning = false;
@@ -1764,7 +1764,7 @@ void MainWindow::on_actionReload_Repositories_triggered()
     if (!err.isEmpty())
         addErrorMessage(err, err, true, QMessageBox::Critical);
     if (locked) {
-        QString msg(QApplication::tr("Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal."));
+        QString msg(QObject::tr("Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal."));
         this->addErrorMessage(msg.arg(locked->toString()));
         delete locked;
     } else {
