@@ -6,11 +6,10 @@
 #include "msithirdpartypm.h"
 #include "wpmutils.h"
 
-QString MSIThirdPartyPM::scan(QList<InstalledPackageVersion *> *installed,
+void MSIThirdPartyPM::scan(Job* job,
+        QList<InstalledPackageVersion *> *installed,
         Repository *rep) const
 {
-    QString err;
-
     QStringList all = WPMUtils::findInstalledMSIProducts();
     // qDebug() << all.at(0);
 
@@ -18,8 +17,6 @@ QString MSIThirdPartyPM::scan(QList<InstalledPackageVersion *> *installed,
         QString guid = all.at(i);
 
         QString package = "msi." + guid.mid(1, 36);
-
-        // TODO: rep->findPackageVersionByMSIGUID_(guid)
 
         QString err;
 
@@ -78,22 +75,6 @@ QString MSIThirdPartyPM::scan(QList<InstalledPackageVersion *> *installed,
         installed->append(ipv);
     }
 
-    /* TODO
-    // remove uninstalled MSI packages
-    QMapIterator<QString, InstalledPackageVersion*> i(this->data);
-    while (i.hasNext()) {
-        i.next();
-        InstalledPackageVersion* ipv = i.value();
-        if (ipv->detectionInfo.length() == 4 + 38 &&
-                ipv->detectionInfo.left(4) == "msi:" &&
-                ipv->installed() &&
-                !all.contains(ipv->detectionInfo.right(38))) {
-            // DEBUG qDebug() << "uninstall " << pv->package << " " <<
-            // DEBUG         pv->version.getVersionString();
-            ipv->setPath("");
-        }
-    }
-    */
-
-    return err;
+    job->setProgress(1);
+    job->complete();
 }

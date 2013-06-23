@@ -24,6 +24,8 @@ public:
 
     /**
      * @brief scan scans the 3rd party package manager repository
+     *
+     * @param job job
      * @param installed [ownership:caller] installed package versions. Please
      *     note that this information is from another package manager. It is
      *     possible that some packages are installed in nested directories
@@ -34,9 +36,8 @@ public:
      * @param rep [ownership:caller] packages, package versions and licenses
      *     will be stored here. Package versions with a file named
      *     ".Npackd\Uninstall.bat" will be used to define uninstallers
-     * @return error message
      */
-    virtual QString scan(QList<InstalledPackageVersion*>* installed,
+    virtual void scan(Job* job, QList<InstalledPackageVersion*>* installed,
             Repository* rep) const = 0;
 };
 

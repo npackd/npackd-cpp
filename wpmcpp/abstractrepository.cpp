@@ -330,7 +330,6 @@ void AbstractRepository::setRepositoryURLs(QList<QUrl*>& urls, QString* err)
     }
 }
 
-
 void AbstractRepository::scan(const QString& path, Job* job, int level,
         QStringList& ignore)
 {

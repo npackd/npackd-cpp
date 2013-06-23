@@ -9,11 +9,9 @@ InstalledPackagesThirdPartyPM::InstalledPackagesThirdPartyPM()
 {
 }
 
-QString InstalledPackagesThirdPartyPM::scan(
+void InstalledPackagesThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed, Repository *rep) const
 {
-    QString err;
-
     InstalledPackages* ip = InstalledPackages::getDefault();
     QList<InstalledPackageVersion*> ipvs = ip->getAll();
     QSet<QString> used;
@@ -34,5 +32,6 @@ QString InstalledPackagesThirdPartyPM::scan(
     }
     qDeleteAll(ipvs);
 
-    return err;
+    job->setProgress(1);
+    job->complete();
 }

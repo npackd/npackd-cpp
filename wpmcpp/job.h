@@ -64,7 +64,7 @@ Q_DECLARE_METATYPE(JobState)
  *        .... do some work here
  *        job->setProgress(((double) i) / 100);
  *     }
- *     job->completed();
+ *     job->complete();
  * }
  *
  * The function is called like this:

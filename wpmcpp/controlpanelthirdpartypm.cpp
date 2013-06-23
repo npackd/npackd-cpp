@@ -9,11 +9,10 @@ ControlPanelThirdPartyPM::ControlPanelThirdPartyPM()
 {
 }
 
-QString ControlPanelThirdPartyPM::scan(QList<InstalledPackageVersion*>* installed,
+void ControlPanelThirdPartyPM::scan(Job* job,
+        QList<InstalledPackageVersion*>* installed,
         Repository *rep) const
 {
-    QString err;
-
     detectControlPanelProgramsFrom(installed, rep, HKEY_LOCAL_MACHINE,
             "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
             false
@@ -35,7 +34,8 @@ QString ControlPanelThirdPartyPM::scan(QList<InstalledPackageVersion*>* installe
         );
     }
 
-    return err;
+    job->setProgress(1);
+    job->complete();
 }
 
 void ControlPanelThirdPartyPM::
