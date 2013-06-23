@@ -400,7 +400,15 @@ void PackageVersion::uninstall(Job* job)
             }
             delete rjob;
         }
+    }
 
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->updateStatus(this->package);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
         if (this->package == "com.googlecode.windows-package-manager.NpackdCL" ||
                 this->package == "com.googlecode.windows-package-manager.NpackdCL64") {
             job->setHint("Updating NPACKD_CL");
@@ -1045,6 +1053,12 @@ void PackageVersion::install(Job* job, const QString& where)
 
     if (installationScriptAcquired)
         installationScripts.release();
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->updateStatus(this->package);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         QString err;
