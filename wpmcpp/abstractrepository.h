@@ -27,16 +27,6 @@ private:
      */
     static QStringList getRepositoryURLs(HKEY hk, const QString &path,
             QString *err);
-
-    /**
-     * All paths should be in lower case
-     * and separated with \ and not / and cannot end with \.
-     *
-     * @param path directory
-     * @param ignore ignored directories
-     * @threadsafe
-     */
-    void scan(const QString& path, Job* job, int level, QStringList& ignore);
 public:
     /**
      * @param err error message will be stored here
@@ -136,14 +126,6 @@ public:
      * TODO: this method is not thread-safe
      */
     void process(Job* job, const QList<InstallOperation*> &install);
-
-    /**
-     * Scans the hard drive for existing applications.
-     *
-     * @param job job for this method
-     * @threadsafe
-     */
-    void scanHardDrive(Job* job);
 
     /**
      * Finds all installed package versions.

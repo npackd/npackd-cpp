@@ -52,6 +52,7 @@
 #include "packageitemmodel.h"
 #include "installedpackages.h"
 #include "flowlayout.h"
+#include "scandiskthirdpartypm.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -171,11 +172,22 @@ void ScanHardDrivesThread::run()
         words.remove(stopWords.at(i));
         */
 
-    QString err; // TODO: handle error
+    QString err;
     AbstractRepository* r = AbstractRepository::getDefault_();
     QList<PackageVersion*> s1 = r->getInstalled_(&err);
-    r->scanHardDrive(job);
+    if (!err.isEmpty())
+        job->setErrorMessage(err);
+
+
+    ScanDiskThirdPartyPM* sd = new ScanDiskThirdPartyPM();
+    err = InstalledPackages::getDefault()->detect3rdParty(sd, false);
+    delete sd;
+    if (!err.isEmpty())
+        job->setErrorMessage(err);
+
     QList<PackageVersion*> s2 = r->getInstalled_(&err);
+    if (!err.isEmpty())
+        job->setErrorMessage(err);
 
     for (int i = 0; i < s2.count(); i++) {
         PackageVersion* pv = s2.at(i);

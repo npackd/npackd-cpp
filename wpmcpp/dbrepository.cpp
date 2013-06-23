@@ -215,6 +215,45 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     return r;
 }
 
+QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(QString *err) const
+{
+    *err = "";
+
+    QList<PackageVersion*> r;
+
+    QMySqlQuery q;
+    q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
+            "WHERE DETECT_FILE_COUNT > 0");
+    if (!q.exec()) {
+        *err = toString(q.lastError());
+    }
+
+    while (err->isEmpty() && q.next()) {
+        QDomDocument doc;
+        int errorLine, errorColumn;
+        if (!doc.setContent(q.value(0).toByteArray(),
+                err, &errorLine, &errorColumn)) {
+            *err = QString(
+                    QApplication::tr("XML parsing failed at line %1, column %2: %3")).
+                    arg(errorLine).arg(errorColumn).arg(*err);
+        }
+
+        QDomElement root = doc.documentElement();
+
+        if (err->isEmpty()) {
+            PackageVersion* pv = PackageVersion::parse(&root, err);
+            if (err->isEmpty())
+                r.append(pv);
+        }
+    }
+
+    // qDebug() << vs.count();
+
+    qSort(r.begin(), r.end(), packageVersionLessThan3);
+
+    return r;
+}
+
 License *DBRepository::findLicense_(const QString& name, QString *err)
 {
     *err = "";
@@ -371,12 +410,13 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
     else
         sql += "IGNORE";
     sql += " INTO PACKAGE_VERSION "
-            "(NAME, PACKAGE, CONTENT, MSIGUID)"
-            "VALUES(:NAME, :PACKAGE, :CONTENT, :MSIGUID)";
+            "(NAME, PACKAGE, CONTENT, MSIGUID, DETECT_FILE_COUNT)"
+            "VALUES(:NAME, :PACKAGE, :CONTENT, :MSIGUID, :DETECT_FILE_COUNT)";
     q.prepare(sql);
     q.bindValue(":NAME", p->version.getVersionString());
     q.bindValue(":PACKAGE", p->package);
     q.bindValue(":MSIGUID", p->msiGUID);
+    q.bindValue(":DETECT_FILE_COUNT", p->detectFiles.count());
     QDomDocument doc;
     QDomElement root = doc.createElement("version");
     doc.appendChild(root);
@@ -780,7 +820,7 @@ QString DBRepository::open()
         if (!e) {
             db.exec("CREATE TABLE PACKAGE_VERSION(NAME TEXT, "
                     "PACKAGE TEXT, "
-                    "CONTENT BLOB, MSIGUID TEXT)");
+                    "CONTENT BLOB, MSIGUID TEXT, DETECT_FILE_COUNT INTEGER)");
             err = toString(db.lastError());
         }
     }
@@ -798,6 +838,14 @@ QString DBRepository::open()
             db.exec("CREATE UNIQUE INDEX PACKAGE_VERSION_PACKAGE_NAME ON "
                     "PACKAGE_VERSION("
                     "PACKAGE, NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX PACKAGE_VERSION_DETECT_FILE_COUNT ON PACKAGE_VERSION("
+                    "DETECT_FILE_COUNT)");
             err = toString(db.lastError());
         }
     }
