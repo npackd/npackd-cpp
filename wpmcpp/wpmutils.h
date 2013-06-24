@@ -21,6 +21,8 @@ private:
 public:
     static const char* NPACKD_VERSION;
 
+    static const char* UCS2LE_BOM;
+
     /**
      * Converts the value returned by SHFileOperation to an error message.
      *

@@ -12,6 +12,7 @@
 #include "license.h"
 #include "licenseform.h"
 #include "dbrepository.h"
+#include "installedpackages.h"
 
 PackageVersionForm::PackageVersionForm(QWidget *parent) :
     QWidget(parent),
@@ -41,6 +42,14 @@ void PackageVersionForm::updateStatus()
 {
     this->ui->lineEditStatus->setText(pv->getStatus());
     this->ui->lineEditPath->setText(pv->getPath());
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    InstalledPackageVersion* ipv = ip->find(pv->package, pv->version);
+    if (ipv) {
+        this->ui->lineEditDetectionInfo->setText(ipv->detectionInfo);
+    } else {
+        this->ui->lineEditDetectionInfo->setText("");
+    }
 }
 
 void PackageVersionForm::fillForm(PackageVersion* pv)

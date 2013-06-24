@@ -31,6 +31,8 @@
 
 const char* WPMUtils::NPACKD_VERSION = "1.18";
 
+const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
+
 WPMUtils::WPMUtils()
 {
 }

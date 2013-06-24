@@ -260,7 +260,8 @@ QString WindowsRegistry::open(HKEY hk, QString path, bool useWow6432Node,
     } else {
         QString s;
         WPMUtils::formatMessage(r, &s);
-        return s;
+        return QObject::tr("Error opening registry node %1, using WOW6432 node: %2: %3").
+                arg(path).arg(useWow6432Node).arg(s);
     }
 }
 
@@ -313,8 +314,10 @@ QString WindowsRegistry::remove(const QString& name) const
 {
     QString result;
     LONG r = RegDeleteKeyW(this->hkey, (WCHAR*) name.utf16());
-    if (r != ERROR_SUCCESS) {
+    if (r != ERROR_SUCCESS && r != ERROR_FILE_NOT_FOUND) {
         WPMUtils::formatMessage(r, &result);
+        result = QObject::tr("Error removing registry node %1: %2").
+                arg(name).arg(result);
     }
     return result;
 }
