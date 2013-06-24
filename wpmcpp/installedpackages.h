@@ -65,17 +65,6 @@ private:
             const Version& version, QString* err);
 
     /**
-     * @brief finds the specified installed package version
-     * @param package full package name
-     * @param version package version
-     * @return found information or 0 if the specified package version is not
-     *     installed. The returned object may still represent a not installed
-     *     package version. Please check InstalledPackageVersion::getDirectory()
-     */
-    InstalledPackageVersion* find(const QString& package,
-            const Version& version) const;
-
-    /**
      * @brief saves the information in the Windows registry
      * @param ipv information about an installed package version
      * @return error message
@@ -96,6 +85,17 @@ public:
      * @return error message
      */
     QString readRegistryDatabase();
+
+    /**
+     * @brief finds the specified installed package version
+     * @param package full package name
+     * @param version package version
+     * @return found information or 0 if the specified package version is not
+     *     installed. The returned object may still represent a not installed
+     *     package version. Please check InstalledPackageVersion::getDirectory()
+     */
+    InstalledPackageVersion* find(const QString& package,
+            const Version& version) const;
 
     /**
      * @brief detects packages, package versions etc. from another package

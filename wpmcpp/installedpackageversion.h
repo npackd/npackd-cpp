@@ -15,6 +15,16 @@ public:
 
     QString detectionInfo;
 
+    /** full package version. This value should not be chaged. */
+    QString package;
+
+    /** version number. This value should not be changed. */
+    Version version;
+
+    InstalledPackageVersion(const QString& package,
+            const Version& version,
+            const QString& directory);
+
     /**
      * The value is not empty for externally installed and detected packages.
      * For example, packages detected from the MSI database have here the MSI
@@ -25,16 +35,6 @@ public:
      * @return detection information
      */
     QString getDetectionInfo() const;
-
-    /** full package version. This value should not be chaged. */
-    QString package;
-
-    /** version number. This value should not be changed. */
-    Version version;
-
-    InstalledPackageVersion(const QString& package,
-            const Version& version,
-            const QString& directory);
 
     /**
      * Changes the installation path for this package. The value is not saved

@@ -55,4 +55,9 @@ http://localhost:8083/Libs.xml
     => the package list should not show "Notepad2" anymore
 13. Package "Windows 64 bit" should have a description
     => the package com.microsoft.Windows64 should have a non-empty description
+14. Detection info should be filled
+    - install "AbiWord 2.8.6" without Npackd
+    - start Npackd
+    - open the package version "AbiWord 2.8.6"
+    => detection info should not be empty
 

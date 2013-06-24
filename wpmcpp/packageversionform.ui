@@ -31,7 +31,7 @@
         <x>0</x>
         <y>0</y>
         <width>439</width>
-        <height>507</height>
+        <height>533</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -100,7 +100,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>Internal Name:</string>
@@ -110,14 +110,14 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="7" column="1">
         <widget class="QLineEdit" name="lineEditInternalName">
          <property name="readOnly">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
           <string>Status:</string>
@@ -127,21 +127,21 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="8" column="1">
         <widget class="QLineEdit" name="lineEditStatus">
          <property name="readOnly">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="10" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Download URL:</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="0">
+       <item row="12" column="0">
         <widget class="QLabel" name="label_10">
          <property name="text">
           <string>Type:</string>
@@ -151,14 +151,14 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
+       <item row="12" column="1">
         <widget class="QLineEdit" name="lineEditType">
          <property name="readOnly">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
+       <item row="13" column="0">
         <widget class="QLabel" name="label_9">
          <property name="text">
           <string>SHA1:</string>
@@ -168,14 +168,14 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="13" column="1">
         <widget class="QLineEdit" name="lineEditSHA1">
          <property name="readOnly">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="13" column="0">
+       <item row="14" column="0">
         <widget class="QLabel" name="label_11">
          <property name="text">
           <string>Important Files:</string>
@@ -185,14 +185,14 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="1">
+       <item row="14" column="1">
         <widget class="QTextEdit" name="textEditImportantFiles">
          <property name="readOnly">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="14" column="0">
+       <item row="15" column="0">
         <widget class="QLabel" name="label_12">
          <property name="text">
           <string>Dependencies:</string>
@@ -202,7 +202,7 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="15" column="1">
         <widget class="QTextEdit" name="textEditDependencies">
          <property name="readOnly">
           <bool>true</bool>
@@ -216,7 +216,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="10" column="1">
         <widget class="QLabel" name="labelDownloadURL">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
@@ -266,14 +266,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
+       <item row="11" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>Package Home Page:</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="11" column="1">
         <widget class="QLabel" name="labelHomePage">
          <property name="mouseTracking">
           <bool>true</bool>
@@ -296,6 +296,23 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>Detection Info:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEditDetectionInfo</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="lineEditDetectionInfo">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -303,17 +320,21 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <tabstops>
-  <tabstop>scrollArea</tabstop>
   <tabstop>lineEditTitle</tabstop>
   <tabstop>lineEditVersion</tabstop>
   <tabstop>textEditDescription</tabstop>
+  <tabstop>labelLicense</tabstop>
   <tabstop>lineEditPath</tabstop>
+  <tabstop>lineEditDetectionInfo</tabstop>
   <tabstop>lineEditInternalName</tabstop>
   <tabstop>lineEditStatus</tabstop>
+  <tabstop>labelDownloadURL</tabstop>
+  <tabstop>labelHomePage</tabstop>
   <tabstop>lineEditType</tabstop>
   <tabstop>lineEditSHA1</tabstop>
   <tabstop>textEditImportantFiles</tabstop>
   <tabstop>textEditDependencies</tabstop>
+  <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
  <connections/>

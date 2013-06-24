@@ -362,6 +362,7 @@ void PackageVersion::uninstall(Job* job)
 
             QByteArray output = this->executeFile(sub, d.absolutePath(),
                     uninstallationScript, ".Npackd\\Uninstall.log", env);
+            output.insert(0, WPMUtils::UCS2LE_BOM);
             if (!sub->getErrorMessage().isEmpty()) {
                 QTemporaryFile of(QDir::tempPath() +
                                   "\\NpackdUninstallXXXXXX.log");
@@ -1013,6 +1014,7 @@ void PackageVersion::install(Job* job, const QString& where)
 
             QByteArray output = this->executeFile(exec, d.absolutePath(),
                     installationScript, ".Npackd\\Install.log", env);
+            output.insert(0, WPMUtils::UCS2LE_BOM);
             if (!exec->getErrorMessage().isEmpty()) {
                 QTemporaryFile of(QDir::tempPath() +
                                   "\\NpackdInstallXXXXXX.log");

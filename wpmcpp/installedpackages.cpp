@@ -80,8 +80,10 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
             InstalledPackageVersion* ipv = installed.at(i);
             QScopedPointer<PackageVersion> pv(
                     r->findPackageVersion_(ipv->package, ipv->version, &err));
+
             if (!err.isEmpty())
                 break;
+
             if (!pv)
                 continue;
 
@@ -133,8 +135,21 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
 
                         //qDebug() << "InstalledPackages::detectOneControlPanelProgram "
                         //        "setting path for " << pv->toString() << " to" << dir;
-                        setPackageVersionPath(ipv->package,
-                                ipv->version, path);
+                        InstalledPackageVersion* ipv2 =
+                                this->findOrCreate(ipv->package, ipv->version,
+                                &err);
+
+                        // qDebug() << "detect3rdparty 2: " << err;
+
+                        if (!err.isEmpty())
+                            break;
+
+                        ipv2->detectionInfo = ipv->detectionInfo;
+                        ipv2->setPath(ipv->getDirectory());
+                        err = this->saveToRegistry(ipv2);
+
+                        if (!err.isEmpty())
+                            break;
                     }
                 }
             }
@@ -548,24 +563,23 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";
     QString pn = ipv->package + "-" + ipv->version.getVersionString();
 
-    /*
     WPMUtils::outputTextConsole(
             "InstalledPackages::saveToRegistry " + ipv->directory + " " +
-            ipv->package + " " + ipv->version.getVersionString() + "\n");
-            */
+            ipv->package + " " + ipv->version.getVersionString() + " " +
+            ipv->detectionInfo + "\n");
 
     if (!ipv->directory.isEmpty()) {
         WindowsRegistry wr = machineWR.createSubKey(keyName + "\\" + pn, &r);
         if (r.isEmpty()) {
-            r = wr.set("Path", ipv->directory);
-            if (r.isEmpty())
-                r = wr.set("DetectionInfo", ipv->detectionInfo);
+            wr.set("DetectionInfo", ipv->detectionInfo);
 
             // for compatibility with Npackd 1.16 and earlier. They
             // see all package versions by default as "externally installed"
-            if (r.isEmpty())
-                r = wr.setDWORD("External", 0);
+            wr.setDWORD("External", 0);
+
+            r = wr.set("Path", ipv->directory);
         }
+        // qDebug() << "saveToRegistry 1 " << r;
     } else {
         // qDebug() << "deleting " << pn;
         WindowsRegistry packages;
@@ -573,9 +587,13 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
         if (r.isEmpty()) {
             r = packages.remove(pn);
         }
+        // qDebug() << "saveToRegistry 2 " << r;
     }
     //qDebug() << "InstalledPackageVersion::save " << pn << " " <<
     //        this->directory;
+
+    // qDebug() << "saveToRegistry returns " << r;
+
     return r;
 }
 
