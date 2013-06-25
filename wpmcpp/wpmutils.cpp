@@ -20,7 +20,6 @@
 #include <QFile>
 #include <QCryptographicHash>
 #include <QFile>
-#include <QSettings>
 #include <QVariant>
 #include <QProcessEnvironment>
 
@@ -211,23 +210,39 @@ void WPMUtils::formatMessage(DWORD err, QString* errMsg)
 
 QString WPMUtils::getInstallationDirectory()
 {
-    QSettings s1(QSettings::SystemScope, "Npackd", "Npackd");
-    QString v = s1.value("path", "").toString();
-    if (v.isEmpty()) {
-        QSettings s(QSettings::SystemScope, "WPM", "Windows Package Manager");
-        v = s.value("path", "").toString();
-        if (v.isEmpty()) {
-            v = WPMUtils::getProgramFilesDir();
-        }
-        s1.setValue("path", v);
+    QString v;
+
+    WindowsRegistry npackd;
+    QString err = npackd.open(
+            HKEY_LOCAL_MACHINE, "Software\\Npackd\\Npackd", false, KEY_READ);
+    if (err.isEmpty()) {
+        v = npackd.get("path", &err);
     }
+
+    if (v.isEmpty()) {
+        err = npackd.open(HKEY_LOCAL_MACHINE,
+                "Software\\WPM\\Windows Package Manager", false,
+                KEY_READ);
+        if (err.isEmpty()) {
+            v = npackd.get("path", &err);
+        }
+    }
+
+    if (v.isEmpty())
+        v = WPMUtils::getProgramFilesDir();
+
     return v;
 }
 
 void WPMUtils::setInstallationDirectory(const QString& dir)
 {
-    QSettings s(QSettings::SystemScope, "Npackd", "Npackd");
-    s.setValue("path", dir);
+    WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+    QString err;
+    WindowsRegistry npackd = m.createSubKey("Software\\Npackd\\Npackd", &err,
+            KEY_ALL_ACCESS);
+    if (err.isEmpty()) {
+        npackd.set("path", dir);
+    }
 }
 
 // see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx

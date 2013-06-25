@@ -1,5 +1,6 @@
 #include "scandiskthirdpartypm.h"
 
+#include <QDebug>
 
 #include "wpmutils.h"
 #include "dbrepository.h"
@@ -47,6 +48,9 @@ void ScanDiskThirdPartyPM::scan(const QString& path, Job* job, int level,
     QString err;
     QList<PackageVersion*> packageVersions =
             r->getPackageVersionsWithDetectFiles(&err);
+
+    // qDebug() << "package versions with detect files: " << packageVersions.count();
+
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
