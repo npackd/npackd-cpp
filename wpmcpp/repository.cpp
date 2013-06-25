@@ -3,7 +3,6 @@
 #include <msi.h>
 
 #include <QTemporaryFile>
-#include <QSettings>
 #include <qdom.h>
 #include <QDebug>
 
