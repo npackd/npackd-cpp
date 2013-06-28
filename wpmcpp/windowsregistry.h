@@ -95,6 +95,24 @@ public:
     QString setDWORD(QString name, DWORD value) const;
 
     /**
+     * Reads a BINARY value.
+     *
+     * @param name name of the variable
+     * @param err error message will be stored here
+     * @return the value
+     */
+    QByteArray getBytes(QString name, QString* err) const;
+
+    /**
+     * Writes a BINARY value.
+     *
+     * @param name name of the variable
+     * @return error message
+     * @param value the value
+     */
+    QString setBytes(QString name, const QByteArray &value) const;
+
+    /**
      * Writes a REG_SZ value.
      *
      * @param name name of the variable
