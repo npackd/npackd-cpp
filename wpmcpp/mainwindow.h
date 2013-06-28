@@ -100,6 +100,8 @@ private:
 
     void updateStatusInDetailTabs();
     void updateProgressTabTitle();
+    void saveUISettings();
+    void loadUISettings();
 
     virtual void closeEvent(QCloseEvent *event);
 public:

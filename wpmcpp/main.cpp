@@ -74,6 +74,6 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     w.prepare();
-    w.showMaximized();
+    w.show();
     return QApplication::exec();
 }

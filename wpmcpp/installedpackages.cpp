@@ -194,7 +194,7 @@ InstalledPackageVersion* InstalledPackages::findOrCreate(const QString& package,
         r = new InstalledPackageVersion(package, version, "");
         this->data.insert(key, r);
 
-        *err = saveToRegistry(r);
+        // *err = saveToRegistry(r);
         fireStatusChanged(package, version);
     }
     return r;

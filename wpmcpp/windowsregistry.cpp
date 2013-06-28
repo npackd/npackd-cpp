@@ -164,6 +164,56 @@ QString WindowsRegistry::setDWORD(QString name, DWORD value) const
     return err;
 }
 
+QByteArray WindowsRegistry::getBytes(QString name, QString *err) const
+{
+    err->clear();
+
+    if (this->hkey == 0) {
+        err->append(QObject::tr("No key is open"));
+        return 0;
+    }
+
+    QByteArray value;
+    DWORD valueSize = 0;
+    DWORD type;
+    LONG r = RegQueryValueEx(this->hkey,
+                (WCHAR*) name.utf16(), 0, &type, (BYTE*) value.data(),
+                &valueSize);
+    if (type != REG_BINARY) {
+        *err = QObject::tr("Wrong registry value type (BINARY expected)");
+    } else if (r == ERROR_MORE_DATA) {
+        value.resize(valueSize);
+        LONG r = RegQueryValueEx(this->hkey,
+                    (WCHAR*) name.utf16(), 0, &type, (BYTE*) value.data(),
+                    &valueSize);
+        if (r != ERROR_SUCCESS) {
+            WPMUtils::formatMessage(r, err);
+        }
+    } else {
+        WPMUtils::formatMessage(r, err);
+    }
+    return value;
+}
+
+QString WindowsRegistry::setBytes(QString name, const QByteArray& value) const
+{
+    QString err;
+
+    if (this->hkey == 0) {
+        err = QObject::tr("No key is open");
+    } else {
+        DWORD valueSize = value.length();
+        LONG r = RegSetValueEx(this->hkey,
+                    (WCHAR*) name.utf16(), 0, REG_BINARY, (BYTE*) value.data(),
+                    valueSize);
+        if (r != ERROR_SUCCESS) {
+            WPMUtils::formatMessage(r, &err);
+        }
+    }
+
+    return err;
+}
+
 QString WindowsRegistry::set(QString name, QString value) const
 {
     QString err;

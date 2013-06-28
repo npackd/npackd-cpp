@@ -32,6 +32,7 @@
 #include <QTableWidget>
 #include <QDebug>
 #include <QLabel>
+#include <QDockWidget>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -257,7 +258,7 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(applicationFocusChanged(QWidget*, QWidget*)));
 
     this->ui->tabWidget->addTab(mainFrame, QObject::tr("Packages"));
-    mainFrame->loadColumns();
+    this->loadUISettings();
 
     this->addJobsTab();
     this->mainFrame->getFilterLineEdit()->setFocus();
@@ -463,12 +464,54 @@ MainWindow* MainWindow::getInstance()
     return instance;
 }
 
+void MainWindow::saveUISettings()
+{
+    this->mainFrame->saveColumns();
+    WindowsRegistry r(HKEY_CURRENT_USER, false, KEY_ALL_ACCESS);
+    QString err;
+    WindowsRegistry n = r.createSubKey("SOFTWARE\\Npackd\\Npackd", &err,
+            KEY_ALL_ACCESS);
+    if (err.isEmpty()) {
+        n.setBytes("MainWindowState", this->saveState());
+        n.setBytes("MainWindowGeometry", this->saveGeometry());
+    }
+}
+
+void MainWindow::loadUISettings()
+{
+    mainFrame->loadColumns();
+    WindowsRegistry r(HKEY_CURRENT_USER, false, KEY_ALL_ACCESS);
+    QString err;
+    WindowsRegistry n = r.createSubKey("SOFTWARE\\Npackd\\Npackd", &err,
+            KEY_ALL_ACCESS);
+    // qDebug() << "MainWindow::loadUISettings" << err;
+    if (err.isEmpty()) {
+        QByteArray ba = n.getBytes("MainWindowState", &err);
+        // qDebug() << "MainWindow::loadUISettings error: " << err;
+        if (err.isEmpty()) {
+            // qDebug() << "MainWindow::loadUISettings" << ba.length();
+            this->restoreState(ba);
+        }
+
+        ba = n.getBytes("MainWindowGeometry", &err);
+        // qDebug() << "MainWindow::loadUISettings error: " << err;
+        if (err.isEmpty()) {
+            // qDebug() << "MainWindow::loadUISettings" << ba.length();
+            this->restoreGeometry(ba);
+        } else {
+            this->setWindowState(Qt::WindowMaximized);
+        }
+    } else {
+        this->setWindowState(Qt::WindowMaximized);
+    }
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     int n = this->runningJobs.count();
 
     if (n == 0) {
-        this->mainFrame->saveColumns();
+        this->saveUISettings();
         event->accept();
     } else {
         addErrorMessage(QObject::tr("Cannot exit while jobs are running"));
