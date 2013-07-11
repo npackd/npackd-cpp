@@ -26,22 +26,6 @@ Package::Package(const QString& name, const QString& title)
     this->title = title;
 }
 
-bool Package::matchesFullText(const QStringList& keywords) const
-{
-    bool r = true;
-    for(int i = 0; i < keywords.count(); i++) {
-        const QString& kw = keywords.at(i);
-        bool ok = this->title.contains(kw, Qt::CaseInsensitive) ||
-                this->description.contains(kw, Qt::CaseInsensitive) ||
-                this->name.contains(kw, Qt::CaseInsensitive);
-        if (!ok) {
-            r = false;
-            break;
-        }
-    }
-    return r;
-}
-
 QString Package::getShortName() const
 {
     QString r;
@@ -53,7 +37,7 @@ QString Package::getShortName() const
     return r;
 }
 
-bool Package::isValidName(QString& name)
+bool Package::isValidName(const QString& name)
 {
     bool r = false;
     if (!name.isEmpty() && !name.contains(" ") && !name.contains("..")) {
@@ -73,6 +57,9 @@ void Package::saveTo(QDomElement& e) const {
         XMLUtils::addTextTag(e, "icon", this->icon);
     if (!this->license.isEmpty())
         XMLUtils::addTextTag(e, "license", this->license);
+    for (int i = 0; i < this->categories.count(); i++) {
+        XMLUtils::addTextTag(e, "category", this->categories.at(i));
+    }
 }
 
 Package *Package::clone() const
@@ -82,6 +69,7 @@ Package *Package::clone() const
     np->icon = this->icon;
     np->description = this->description;
     np->license = this->license;
+    np->categories = this->categories;
 
     return np;
 }

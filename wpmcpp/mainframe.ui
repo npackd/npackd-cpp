@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>603</width>
-    <height>349</height>
+    <height>408</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -120,6 +120,40 @@ p, li { white-space: pre-wrap; }
          </layout>
         </widget>
        </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Category:</string>
+         </property>
+         <property name="buddy">
+          <cstring>comboBoxCategory0</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="comboBoxCategory0">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Sub-category:</string>
+         </property>
+         <property name="buddy">
+          <cstring>comboBoxCategory1</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="comboBoxCategory1">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QTableView" name="tableWidget">
@@ -169,6 +203,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>radioButtonAll</tabstop>
   <tabstop>radioButtonInstalled</tabstop>
   <tabstop>radioButtonUpdateable</tabstop>
+  <tabstop>comboBoxCategory0</tabstop>
+  <tabstop>comboBoxCategory1</tabstop>
   <tabstop>tableWidget</tabstop>
  </tabstops>
  <resources/>

@@ -74,12 +74,16 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
     AbstractRepository* r = AbstractRepository::getDefault_();
     QStringList packagePaths = this->getAllInstalledPackagePaths();
 
+    // qDebug() << "InstalledPackages::detect3rdParty.0";
+
     if (err.isEmpty()) {
         QDir d;
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
             QScopedPointer<PackageVersion> pv(
                     r->findPackageVersion_(ipv->package, ipv->version, &err));
+
+            // qDebug() << "InstalledPackages::detect3rdParty 0.5" << ipv->package;
 
             if (!err.isEmpty())
                 break;
@@ -155,6 +159,8 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
             }
         }
     }
+
+    // qDebug() << "InstalledPackages::detect3rdParty.1";
 
     if (!detectionInfoPrefix.isEmpty()) {
         QSet<QString> foundDetectionInfos;
@@ -260,6 +266,8 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
 
 void InstalledPackages::refresh(Job *job)
 {
+    // qDebug() << "InstalledPackages::refresh.0";
+
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Detecting directories deleted externally"));
         QList<InstalledPackageVersion*> ipvs = this->data.values();
@@ -279,6 +287,8 @@ void InstalledPackages::refresh(Job *job)
         }
         job->setProgress(0.2);
     }
+
+    // qDebug() << "InstalledPackages::refresh.1";
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Reading registry package database"));
@@ -311,6 +321,8 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.57);
     }
 
+    // qDebug() << "InstalledPackages::refresh.2";
+
     if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
         AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
         job->setErrorMessage(detect3rdParty(pm, false));
@@ -330,6 +342,8 @@ void InstalledPackages::refresh(Job *job)
         if (job->getErrorMessage().isEmpty())
             job->setProgress(0.65);
     }
+
+    // qDebug() << "InstalledPackages::refresh.3";
 
     if (job->shouldProceed(
             QObject::tr("Detecting software control panel packages"))) {

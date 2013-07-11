@@ -52,6 +52,9 @@ public:
     /** PACKAGE.REPOSITORY. ID of the repisotory. */
     int repository;
 
+    /** categories. Sub-categories are separated by | */
+    QList<QString> categories;
+
     Package(const QString& name, const QString& title);
 
     /**
@@ -60,7 +63,7 @@ public:
      * @param a string that should be checked
      * @return true if name is a valid package name
      */
-    static bool isValidName(QString& name);
+    static bool isValidName(const QString &name);
 
     /**
      * Save the contents as XML.
@@ -79,14 +82,6 @@ public:
      *     part after the last dot.
      */
     QString getShortName() const;
-
-    /**
-     * Checks whether this package matches all of the specified keywords.
-     *
-     * @param keywords list of keywords
-     * @return true if yes
-     */
-    bool matchesFullText(const QStringList &keywords) const;
 };
 
 #endif // PACKAGE_H

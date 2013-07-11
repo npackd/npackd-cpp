@@ -17,6 +17,8 @@ MainFrame::MainFrame(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->categoryCombosEvents = true;
+
     QTableView* t = this->ui->tableWidget;
     t->setModel(new PackageItemModel(QList<Package*>()));
     t->setEditTriggers(QTableWidget::NoEditTriggers);
@@ -89,6 +91,102 @@ void MainFrame::loadColumns() const
             t->setColumnWidth(i, w);
         }
     }
+}
+
+void MainFrame::setCategories(int level, const QList<QStringList> &cats)
+{
+    this->categoryCombosEvents = false;
+
+    QStringList labels;
+    for (int i = 0; i < cats.count(); i++) {
+        QString n;
+        n = cats.at(i).at(2);
+        if (n.isEmpty()) {
+            n = QObject::tr("Uncategorized");
+        }
+        labels.append(n + " (" + cats.at(i).at(1) + ")");
+    }
+
+    if (level == 0) {
+        this->ui->comboBoxCategory0->clear();
+        this->ui->comboBoxCategory0->addItem(QObject::tr("All"));
+        this->ui->comboBoxCategory0->addItems(labels);
+        this->ui->comboBoxCategory0->setEnabled(true); // TODO labels.count() > 0);
+        this->categories0 = cats;
+
+        this->categories1.clear();
+        this->ui->comboBoxCategory1->setEnabled(false);
+    } else if (level == 1) {
+        this->ui->comboBoxCategory1->clear();
+        this->ui->comboBoxCategory1->addItem(QObject::tr("All"));
+        this->ui->comboBoxCategory1->addItems(labels);
+        this->ui->comboBoxCategory1->setEnabled(true); // TODO labels.count() > 0);
+        this->categories1 = cats;
+    }
+
+    this->categoryCombosEvents = true;
+}
+
+int MainFrame::getCategoryFilter(int level) const
+{
+    int r;
+    if (level == 0) {
+        int sel = this->ui->comboBoxCategory0->currentIndex();
+        if (sel <= 0)
+            r = -1;
+        else
+            r = this->categories0.at(sel - 1).at(0).toInt();
+    } else if (level == 1) {
+        int sel = this->ui->comboBoxCategory1->currentIndex();
+        if (sel <= 0)
+            r = -1;
+        else
+            r = this->categories1.at(sel - 1).at(0).toInt();
+    } else
+        r = -1;
+    return r;
+}
+
+void MainFrame::setCategoryFilter(int level, int v)
+{
+    this->categoryCombosEvents = false;
+
+    if (level == 0) {
+        int newCurrentIndex = this->ui->comboBoxCategory0->currentIndex();
+        if (v == -1)
+            newCurrentIndex = 0;
+        else {
+            for (int i = 0; i < this->categories0.count(); i++) {
+                int c = this->categories0.at(i).at(0).toInt();
+                if (c == v) {
+                    newCurrentIndex = i + 1;
+                    break;
+                }
+            }
+        }
+        if (this->ui->comboBoxCategory0->currentIndex() != newCurrentIndex) {
+            this->ui->comboBoxCategory0->setCurrentIndex(newCurrentIndex);
+            this->ui->comboBoxCategory1->clear();
+        }
+    } else if (level == 1) {
+        int newCurrentIndex = this->ui->comboBoxCategory1->currentIndex();
+        if (v == -1)
+            newCurrentIndex = 0;
+        else {
+            for (int i = 0; i < this->categories1.count(); i++) {
+                int c = this->categories1.at(i).at(0).toInt();
+                if (c == v) {
+                    newCurrentIndex = i + 1;
+                    break;
+                }
+            }
+        }
+        if (this->ui->comboBoxCategory1->currentIndex() != newCurrentIndex) {
+            this->ui->comboBoxCategory1->setCurrentIndex(newCurrentIndex);
+        }
+    }
+
+    this->categoryCombosEvents = true;
 }
 
 QTableView * MainFrame::getTableWidget() const
@@ -193,4 +291,18 @@ void MainFrame::on_radioButtonInstalled_toggled(bool checked)
 void MainFrame::on_radioButtonUpdateable_toggled(bool checked)
 {
     fillList();
+}
+
+void MainFrame::on_comboBoxCategory0_currentIndexChanged(int index)
+{
+    if (categoryCombosEvents) {
+        fillList();
+    }
+}
+
+void MainFrame::on_comboBoxCategory1_currentIndexChanged(int index)
+{
+    if (categoryCombosEvents) {
+        fillList();
+    }
 }

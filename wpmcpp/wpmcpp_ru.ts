@@ -76,6 +76,16 @@ p, li { white-space: pre-wrap; }
         <source>&amp;Updateable</source>
         <translation>&amp;Доступны Обновления</translation>
     </message>
+    <message>
+        <location filename="mainframe.ui" line="126"/>
+        <source>Category:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainframe.ui" line="143"/>
+        <source>Sub-category:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -95,165 +105,165 @@ p, li { white-space: pre-wrap; }
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="122"/>
+        <location filename="mainwindow.ui" line="128"/>
         <source>&amp;Exit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="125"/>
+        <location filename="mainwindow.ui" line="131"/>
         <source>Exits the application</source>
         <translation>Выйти из программы</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="134"/>
+        <location filename="mainwindow.ui" line="140"/>
         <source>&amp;Install</source>
         <translation>&amp;Установить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="137"/>
+        <location filename="mainwindow.ui" line="143"/>
         <source>Installs the selected version of a package or the newest is none is selected</source>
         <translation>Установить выбранную версию пакета или самую свежую, если конкретная версия не выбрана</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="140"/>
+        <location filename="mainwindow.ui" line="146"/>
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="149"/>
+        <location filename="mainwindow.ui" line="155"/>
         <source>U&amp;ninstall</source>
         <translation>У&amp;далить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="152"/>
+        <location filename="mainwindow.ui" line="158"/>
         <source>Uninstalls the currently selected version of a package or the newest if none is selected</source>
         <translation>Удалить выбранную версию пакета или самую свежую, если конкретная версия не выбрана</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="155"/>
+        <location filename="mainwindow.ui" line="161"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="164"/>
+        <location filename="mainwindow.ui" line="170"/>
         <source>&amp;Open web site</source>
         <translation>&amp;Открыть веб-сайт</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="167"/>
+        <location filename="mainwindow.ui" line="173"/>
         <source>Open the package web site in browser</source>
         <translation>Открыть веб-сайт пакета в браузере</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="170"/>
+        <location filename="mainwindow.ui" line="176"/>
         <source>Ctrl+G</source>
         <translation>Ctrl+G</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="175"/>
+        <location filename="mainwindow.ui" line="181"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="178"/>
+        <location filename="mainwindow.ui" line="184"/>
         <source>Shows program settings</source>
         <translation>Показать настройки программы</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="181"/>
+        <location filename="mainwindow.ui" line="187"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="190"/>
+        <location filename="mainwindow.ui" line="196"/>
         <source>&amp;Update</source>
         <translation>&amp;Обновить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="193"/>
+        <location filename="mainwindow.ui" line="199"/>
         <source>Updates the currently selected package to the newest available version</source>
         <translation>Обновить выбранный пакет до самой свежей доступной версии</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="196"/>
+        <location filename="mainwindow.ui" line="202"/>
         <source>Ctrl+U</source>
         <translation>Ctrl+U</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="201"/>
+        <location filename="mainwindow.ui" line="207"/>
         <source>&amp;Test download site</source>
         <translation>&amp;Тестировать сайт загрузки</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="204"/>
+        <location filename="mainwindow.ui" line="210"/>
         <source>Test download site for malicious software</source>
         <translation>Тестировать сайт загрузки на вредоносное программное обеспечение</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="207"/>
+        <location filename="mainwindow.ui" line="213"/>
         <source>Ctrl+T</source>
         <translation>Ctrl+T</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="212"/>
+        <location filename="mainwindow.ui" line="218"/>
         <source>About</source>
         <translation>О</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="215"/>
+        <location filename="mainwindow.ui" line="221"/>
         <source>About the program</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="220"/>
-        <location filename="mainwindow.ui" line="223"/>
+        <location filename="mainwindow.ui" line="226"/>
+        <location filename="mainwindow.ui" line="229"/>
         <source>Show details</source>
         <translation>Показать подробности</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="226"/>
+        <location filename="mainwindow.ui" line="232"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="231"/>
-        <location filename="mainwindow.ui" line="234"/>
+        <location filename="mainwindow.ui" line="237"/>
+        <location filename="mainwindow.ui" line="240"/>
         <source>Scan hard drives</source>
         <translation>Сканировать жёсткие диски</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="239"/>
+        <location filename="mainwindow.ui" line="245"/>
         <source>Reload repositories</source>
         <translation>Обновить репозитории</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="242"/>
+        <location filename="mainwindow.ui" line="248"/>
         <source>Reloads the contents of all repositories</source>
         <translation>Обновить содержимое всех репозиториев</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="245"/>
+        <location filename="mainwindow.ui" line="251"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="250"/>
-        <location filename="mainwindow.ui" line="253"/>
+        <location filename="mainwindow.ui" line="256"/>
+        <location filename="mainwindow.ui" line="259"/>
         <source>Close tab</source>
         <translation>Закрыть вкладку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="256"/>
+        <location filename="mainwindow.ui" line="262"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="265"/>
+        <location filename="mainwindow.ui" line="271"/>
         <source>Feedback</source>
         <translation>Обратная сзязь</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="268"/>
+        <location filename="mainwindow.ui" line="274"/>
         <source>Found a bug? Wish a new feature to be added? Your favourite program is not available? File an issue!</source>
         <translation>Нашли ошибку? Желаете добавить новую функцию? Ваша любимая программа отсутствует? Создайте топик!</translation>
     </message>
@@ -441,6 +451,11 @@ p, li { white-space: pre-wrap; }
         <source>Package Home Page:</source>
         <translation>Домашняя Страница Пакета:</translation>
     </message>
+    <message>
+        <location filename="packageversionform.ui" line="302"/>
+        <source>Detection Info:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgressFrame</name>
@@ -481,1230 +496,2289 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="abstractrepository.cpp" line="72"/>
         <source>Cannot find the package version %1 %2</source>
-        <translation>Невозможно найти версию пакета %1 %2</translation>
+        <translation type="obsolete">Невозможно найти версию пакета %1 %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="94"/>
         <source>Installing %1</source>
-        <translation>Установка %1</translation>
+        <translation type="obsolete">Установка %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="97"/>
         <source>Uninstalling %1</source>
-        <translation>Удаление %1</translation>
+        <translation type="obsolete">Удаление %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="156"/>
         <source>No installable version found for the package %1</source>
-        <translation>Ниодной версии для установки не обнаружено для пакета %1</translation>
+        <translation type="obsolete">Ниодной версии для установки не обнаружено для пакета %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="163"/>
         <source>No installed version found for the package %1</source>
-        <translation>Ниодной установленной версии не обнаружено для пакета %1</translation>
+        <translation type="obsolete">Ниодной установленной версии не обнаружено для пакета %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="169"/>
         <source>The newest version (%1) for the package %2 is already installed</source>
-        <translation>Свежая версия (%1)  пакета %2 уже установлена</translation>
+        <translation type="obsolete">Свежая версия (%1)  пакета %2 уже установлена</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="418"/>
         <source>Scanning %1</source>
-        <translation>Сканирование %1</translation>
+        <translation type="obsolete">Сканирование %1</translation>
     </message>
+    <message>
+        <source>Missing option name: %1</source>
+        <translation type="obsolete">Отсутствует параметр имя: %1</translation>
+    </message>
+    <message>
+        <source>Option name expected: %1</source>
+        <translation type="obsolete">Ожидался параметр имя: %1</translation>
+    </message>
+    <message>
+        <source>Option name cannot start with the equality sign: %1</source>
+        <translation type="obsolete">Параметр имя не может начинаться со знака равенства: %1</translation>
+    </message>
+    <message>
+        <source>Only one-letter options can start with a minus sign: %1</source>
+        <translation type="obsolete">Только однобуквенный параметр может начинаться со знака минус: %1</translation>
+    </message>
+    <message>
+        <source>Unknown option: %1</source>
+        <translation type="obsolete">Неизвестная опция %1</translation>
+    </message>
+    <message>
+        <source>Unexpected value for the option %1</source>
+        <translation type="obsolete">Неожиданное значение для параметра %1</translation>
+    </message>
+    <message>
+        <source>Missing value for the option %1</source>
+        <translation type="obsolete">Отсутствует значение для параметра %1</translation>
+    </message>
+    <message>
+        <source>CommandLineToArgvW failed</source>
+        <translation type="obsolete">Функция CommandLineToArgvW потерпела неудачу</translation>
+    </message>
+    <message>
+        <source>XML parsing failed at line %1, column %2: %3</source>
+        <translation type="obsolete">XML-анализатор завершился ошибкой в строке %1, колонке %2: %3</translation>
+    </message>
+    <message>
+        <source>Starting an SQL transaction</source>
+        <translation type="obsolete">Начинается SQL транзакция</translation>
+    </message>
+    <message>
+        <source>Clearing the packages table</source>
+        <translation type="obsolete">Очистка таблицы пакетов</translation>
+    </message>
+    <message>
+        <source>Clearing the package versions table</source>
+        <translation type="obsolete">Очистка таблицы версий пакетов</translation>
+    </message>
+    <message>
+        <source>Clearing the licenses table</source>
+        <translation type="obsolete">Очистка таблицы лицензий</translation>
+    </message>
+    <message>
+        <source>Commiting the SQL transaction</source>
+        <translation type="obsolete">Совершается SQL транзакция</translation>
+    </message>
+    <message>
+        <source>Clearing the database</source>
+        <translation type="obsolete">Очистка базы данных</translation>
+    </message>
+    <message>
+        <source>Downloading the remote repositories</source>
+        <translatorcomment>or Загрузка новых репозиториев, but not Загрузка удалённых репозиториев</translatorcomment>
+        <translation type="obsolete">Загрузка репозиториев</translation>
+    </message>
+    <message>
+        <source>Filling the local database</source>
+        <translation type="obsolete">Заполнение локальной базы данных</translation>
+    </message>
+    <message>
+        <source>Adding well-known packages</source>
+        <translation type="obsolete">Редактирование известных пакетов</translation>
+    </message>
+    <message>
+        <source>Refreshing the installation status</source>
+        <translation type="obsolete">Обновление статуса установки</translation>
+    </message>
+    <message>
+        <source>Updating the status for installed packages in the database</source>
+        <translation type="obsolete">Обновление статуса установленных пакетов в базе данных</translation>
+    </message>
+    <message>
+        <source>Inserting data in the packages table</source>
+        <translation type="obsolete">Вставка данных в таблицу пакетов</translation>
+    </message>
+    <message>
+        <source>Inserting data in the package versions table</source>
+        <translation type="obsolete">Вставка данных в таблицу версий пакетов</translation>
+    </message>
+    <message>
+        <source>Inserting data in the licenses table</source>
+        <translation type="obsolete">Вставка данных в таблицу лицензий</translation>
+    </message>
+    <message>
+        <source>Connecting</source>
+        <translation type="obsolete">Соединение</translation>
+    </message>
+    <message>
+        <source>Cancelled by the user</source>
+        <translation type="obsolete">Отменено пользователем</translation>
+    </message>
+    <message>
+        <source>Invalid handle</source>
+        <translation type="obsolete">Недопустимый дескриптор</translation>
+    </message>
+    <message>
+        <source>Unknown error %1 from InternetErrorDlg</source>
+        <translation type="obsolete">Неизвестная ошибка %1 в InternetErrorDlg</translation>
+    </message>
+    <message>
+        <source>The HTTP proxy requires authentication.</source>
+        <translation type="obsolete">HTTP прокси требует аутентификации.</translation>
+    </message>
+    <message>
+        <source>Username</source>
+        <translation type="obsolete">Имя пользователя</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation type="obsolete">Пароль</translation>
+    </message>
+    <message>
+        <source>The HTTP server requires authentication.</source>
+        <translation type="obsolete">HTTP сервер требует аутентификации.</translation>
+    </message>
+    <message>
+        <source>Cannot handle HTTP status code %1</source>
+        <translation type="obsolete">Невозможно обработать HTTP статус код %1</translation>
+    </message>
+    <message>
+        <source>Downloading</source>
+        <translation type="obsolete">Загрузка</translation>
+    </message>
+    <message>
+        <source>zlib error %1</source>
+        <translation type="obsolete">Ошибка zlib %1</translation>
+    </message>
+    <message>
+        <source>%L0 of %L1 bytes</source>
+        <translation type="obsolete">%L0 из %L1 байт</translation>
+    </message>
+    <message>
+        <source>%L0 bytes</source>
+        <translation type="obsolete">%L0 байт</translation>
+    </message>
+    <message>
+        <source>Error opening file: %1</source>
+        <translation type="obsolete">Ошибка открытия файла %1</translation>
+    </message>
+    <message>
+        <source>Detecting directories deleted externally</source>
+        <translation type="obsolete">Обнаружение директорий, удалённых внешне</translation>
+    </message>
+    <message>
+        <source>Reading registry package database</source>
+        <translation type="obsolete">Чтение реестра базы данных пакетов</translation>
+    </message>
+    <message>
+        <source>Detecting software</source>
+        <translation type="obsolete">Обнаружение программного обеспечения</translation>
+    </message>
+    <message>
+        <source>Clearing information about installed package versions in nested directories</source>
+        <translation type="obsolete">Удаление информации о версиях уставленных пакетов во вложенных директориях</translation>
+    </message>
+    <message>
+        <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
+        <translation type="obsolete">32 битная версия Npackd требует 32 битной операционной системы.</translation>
+    </message>
+    <message>
+        <source>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</source>
+        <translation type="obsolete">Пожалуйста, скачайте 64 битную версию с http://code.google.com/p/windows-package-manager/</translation>
+    </message>
+    <message>
+        <source>Packages</source>
+        <translation type="obsolete">Пакеты</translation>
+    </message>
+    <message>
+        <source>Cannot exit while jobs are running</source>
+        <translation type="obsolete">Невозможно выйти пока запущены задания</translation>
+    </message>
+    <message>
+        <source>0 Jobs</source>
+        <translation type="obsolete">0 Заданий</translation>
+    </message>
+    <message>
+        <source>1 Job (%1%, %2)</source>
+        <translation type="obsolete">1 Задание (%1%, %2)</translation>
+    </message>
+    <message>
+        <source>%1 Jobs (%2%, %3)</source>
+        <translation type="obsolete">%1 Заданий (%2%, %3)</translation>
+    </message>
+    <message>
+        <source>The package %1 is locked by a currently running installation/removal.</source>
+        <translation type="obsolete">Пакет %1 заблокирован текущей установкой/удалением.</translation>
+    </message>
+    <message>
+        <source>Installing</source>
+        <translation type="obsolete">Установка</translation>
+    </message>
+    <message>
+        <source>Uninstalling</source>
+        <translation type="obsolete">Удаление</translation>
+    </message>
+    <message>
+        <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
+        <translation type="obsolete">Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="obsolete">Удаление</translation>
+    </message>
+    <message>
+        <source>Installing %1 packages</source>
+        <translation type="obsolete">Установка %1 пакетов</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be installed: %2</source>
+        <translation type="obsolete">%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation type="obsolete">Установка</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1 packages</source>
+        <translation type="obsolete">Удаление %1 пакетов</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
+        <translation type="obsolete">%1 пакет(ы) будет(ут) удален(ы): %2. Соответствующие директории будут полностью удалены; нет возможности восстановить файлы.</translation>
+    </message>
+    <message>
+        <source>Installing %1 packages, uninstalling %2 packages</source>
+        <translation type="obsolete">Установка %1 пакетов, удаление %2 пакетов</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
+        <translation type="obsolete">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
+    </message>
+    <message>
+        <source>Install/Uninstall</source>
+        <translation type="obsolete">Установка/Удаление</translation>
+    </message>
+    <message>
+        <source>Initializing</source>
+        <translation type="obsolete">Инициализация</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="obsolete">Настройки</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="obsolete">О</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="obsolete">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Jobs</source>
+        <translation type="obsolete">Задания</translation>
+    </message>
+    <message>
+        <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
+        <translation type="obsolete">Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
+    </message>
+    <message>
+        <source>%1 package(s) detected</source>
+        <translation type="obsolete">%1 пакет(ы) обнаружен(ы)</translation>
+    </message>
+    <message>
+        <source>Package detection status</source>
+        <translation type="obsolete">Статус обнаружения пакета</translation>
+    </message>
+    <message>
+        <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
+        <translation type="obsolete">Невозможно обновить репозитории сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
+    </message>
+    <message>
+        <source>Dismiss</source>
+        <translation type="obsolete">Прекратить</translation>
+    </message>
+    <message>
+        <source>Dismiss (%1 seconds)</source>
+        <translation type="obsolete">Прекратить (%1 секунд)</translation>
+    </message>
+    <message>
+        <source>MSI database</source>
+        <translation type="obsolete">MSI база данных</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation type="obsolete">неизвестный(ая)</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation type="obsolete">Версия</translation>
+    </message>
+    <message>
+        <source>Installation path</source>
+        <translation type="obsolete">Путь установки</translation>
+    </message>
+    <message>
+        <source>Icon</source>
+        <translation type="obsolete">Иконка</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="obsolete">Название</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="obsolete">Описание</translation>
+    </message>
+    <message>
+        <source>Available</source>
+        <translation type="obsolete">Доступно</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation type="obsolete">Установлено</translation>
+    </message>
+    <message>
+        <source>License</source>
+        <translation type="obsolete">Лицензия</translation>
+    </message>
+    <message>
+        <source>Error storing the information about an installed package version in the Windows registry: %1</source>
+        <translation type="obsolete">Ошибка сохранения информации о уставленной версии пакета в реестре Windows: %1</translation>
+    </message>
+    <message>
+        <source>Start menu</source>
+        <translation type="obsolete">Меню Пуск</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation type="obsolete">Рабочий стол</translation>
+    </message>
+    <message>
+        <source>Quick launch bar</source>
+        <translation type="obsolete">Панель быстрого запуска</translation>
+    </message>
+    <message>
+        <source>Deleting shortcuts</source>
+        <translation type="obsolete">Удаление ярлыков</translation>
+    </message>
+    <message>
+        <source>Waiting while other (un)installation scripts are running</source>
+        <translation type="obsolete">Ожидание пока другие скрипты установки или удаления запущены</translation>
+    </message>
+    <message>
+        <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
+        <translation type="obsolete">Ожидание пока другие скрипты установки или удаления запущены (%1 минут)</translation>
+    </message>
+    <message>
+        <source>Running the uninstallation script (this may take some time)</source>
+        <translation type="obsolete">Запуск скрипта удаления (это может занять некоторое время)</translation>
+    </message>
+    <message>
+        <source>%1. Full output was saved in %2</source>
+        <translation type="obsolete">%1. Полный вывод был сохранён в %2</translation>
+    </message>
+    <message>
+        <source>Deleting files</source>
+        <translation type="obsolete">Удаление файлов</translation>
+    </message>
+    <message>
+        <source>Cannot change directory to %1</source>
+        <translation type="obsolete">Невозможно изменить директорию на %1</translation>
+    </message>
+    <message>
+        <source>Cannot create directory %0%1</source>
+        <translation type="obsolete">Невозможно создать директорию %0%1</translation>
+    </message>
+    <message>
+        <source>Cannot rename %1 to %2 in %3</source>
+        <translation type="obsolete">Невозможно переименовать %1 в %2 в %3</translation>
+    </message>
+    <message>
+        <source>Unsatisfied dependency: %1</source>
+        <translation type="obsolete">Неудовлетворенные зависимости: %1</translation>
+    </message>
+    <message>
+        <source>No download URL</source>
+        <translation type="obsolete">Нет ссылки URL</translation>
+    </message>
+    <message>
+        <source>Download failed: %1</source>
+        <translation type="obsolete">Загрузка не удалась: %1</translation>
+    </message>
+    <message>
+        <source>Computing SHA1</source>
+        <translation type="obsolete">Вычисление SHA1</translation>
+    </message>
+    <message>
+        <source>Wrong SHA1: %1 was expected, but %2 found</source>
+        <translation type="obsolete">Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
+    </message>
+    <message>
+        <source>Shortcut target %1 does not exist</source>
+        <translation type="obsolete">Объект ярлыка %1 не существует</translation>
+    </message>
+    <message>
+        <source>Shortcut creation from %1 to %2 failed: %3</source>
+        <translation type="obsolete">Создание ялыка с%1 по %2 не удалось: %3</translation>
+    </message>
+    <message>
+        <source>Preparing</source>
+        <translation type="obsolete">Подготовка</translation>
+    </message>
+    <message>
+        <source>Creating directory</source>
+        <translation type="obsolete">Создание директории</translation>
+    </message>
+    <message>
+        <source>Cannot create directory: %0</source>
+        <translation type="obsolete">Не возможно создать директорию: %0</translation>
+    </message>
+    <message>
+        <source>Creating .Npackd sub-directory</source>
+        <translation type="obsolete">Создание поддиректории .Npackd</translation>
+    </message>
+    <message>
+        <source>Waiting for a free HTTP connection</source>
+        <translation type="obsolete">Ожидание свободного HTTP соединения</translation>
+    </message>
+    <message>
+        <source>Waiting for a free HTTP connection (%1 minutes)</source>
+        <translation type="obsolete">Ожидание свободного HTTP соединения (%1 минут)</translation>
+    </message>
+    <message>
+        <source>Downloading &amp; computing hash sum</source>
+        <translation type="obsolete">Загрузка &amp; вычисление хэш суммы</translation>
+    </message>
+    <message>
+        <source>Cannot open the file: %0</source>
+        <translation type="obsolete">Невозможно открыть файл: %0</translation>
+    </message>
+    <message>
+        <source>Downloading &amp; computing hash sum (2nd try)</source>
+        <translation type="obsolete">Загрузка &amp; вычисление хэш суммы (вторая попытка)</translation>
+    </message>
+    <message>
+        <source>Error downloading %1: %2</source>
+        <translation type="obsolete">Ошибка загрузки %1: %2</translation>
+    </message>
+    <message>
+        <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
+        <translation type="obsolete">Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
+    </message>
+    <message>
+        <source>Extracting files</source>
+        <translation type="obsolete">Извлечение файлов</translation>
+    </message>
+    <message>
+        <source>Error unzipping file into directory %0: %1</source>
+        <translation type="obsolete">Ошибка распаковки файла в директорию %0: %1</translation>
+    </message>
+    <message>
+        <source>Renaming the downloaded file</source>
+        <translation type="obsolete">Переименование скаченного файла</translation>
+    </message>
+    <message>
+        <source>Cannot rename %0 to %1</source>
+        <translation type="obsolete">Невозможно переименовать %0 в %1</translation>
+    </message>
+    <message>
+        <source>Running the installation script (this may take some time)</source>
+        <translation type="obsolete">Запуск скрипта установки (это может занять некоторое время)</translation>
+    </message>
+    <message>
+        <source>Deleting start menu, desktop and quick launch shortcuts</source>
+        <translation type="obsolete">Удаление ярлыков  в меню Пуск, Панели быстрого запуска и на Рабочем столе</translation>
+    </message>
+    <message>
+        <source>Opening ZIP file</source>
+        <translation type="obsolete">Открытие ZIP файла</translation>
+    </message>
+    <message>
+        <source>Cannot open the ZIP file %1: %2</source>
+        <translation type="obsolete">Невозможно открыть ZIP файл %1: %2</translation>
+    </message>
+    <message>
+        <source>Extracting</source>
+        <translation type="obsolete">Извлечение</translation>
+    </message>
+    <message>
+        <source>Error unzipping the file %1: Error %2 in %3</source>
+        <translation type="obsolete">Ошибка распаковки файла %1: Ошибка %2 в %3</translation>
+    </message>
+    <message>
+        <source>Cannot create directory %1</source>
+        <translation type="obsolete">Невозможно создать директорию %1</translation>
+    </message>
+    <message>
+        <source>%L1 files</source>
+        <translation type="obsolete">%L1 файлы</translation>
+    </message>
+    <message>
+        <source>Could not create file %1</source>
+        <translation type="obsolete">Невозможно создать файл %1</translation>
+    </message>
+    <message>
+        <source>Could not create directory %1</source>
+        <translation type="obsolete">Невозможно создать директорию %1</translation>
+    </message>
+    <message>
+        <source>installed</source>
+        <translation type="obsolete">уставлено</translation>
+    </message>
+    <message>
+        <source>updateable</source>
+        <translation type="obsolete">доступна свежая версия</translation>
+    </message>
+    <message>
+        <source>obsolete</source>
+        <translation type="obsolete">устаревший</translation>
+    </message>
+    <message>
+        <source>locked</source>
+        <translation type="obsolete">заблокированный</translation>
+    </message>
+    <message>
+        <source>Process %1 exited with the code %2</source>
+        <translation type="obsolete">Процесс %1 завершился кодом %2</translation>
+    </message>
+    <message>
+        <source>%1 minutes</source>
+        <translation type="obsolete">%1 минут</translation>
+    </message>
+    <message>
+        <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
+        <translation type="obsolete">Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
+    </message>
+    <message>
+        <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
+        <translation type="obsolete">Неверная SHA1 у &lt;detect-file&gt;: </translation>
+    </message>
+    <message>
+        <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
+        <translation type="obsolete">Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
+    </message>
+    <message>
+        <source>Not a valid download URL for %1: %2</source>
+        <translation type="obsolete">Нет действительных ссылкок URL для %1: %2</translation>
+    </message>
+    <message>
+        <source>Not a valid version for %1: %2</source>
+        <translation type="obsolete">Нет действительных версиий %1: %2</translation>
+    </message>
+    <message>
+        <source>Invalid SHA1 for %1: </source>
+        <translation type="obsolete">Неверная SHA1 у %1: </translation>
+    </message>
+    <message>
+        <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
+        <translation type="obsolete">Неверное значение атрибута &apos;тип&apos; у %1: %3</translation>
+    </message>
+    <message>
+        <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
+        <translation type="obsolete">Пустое значение атрибута &apos;путь&apos; у &lt;important-file&gt; для %1</translation>
+    </message>
+    <message>
+        <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
+        <translation type="obsolete">Больше чем один &lt;important-file&gt; с таким же атрибутом &apos;путь&apos; %1 для %2</translation>
+    </message>
+    <message>
+        <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
+        <translation type="obsolete">Пустое значение атрибута &apos;название&apos; у &lt;important-file&gt; для %1</translation>
+    </message>
+    <message>
+        <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
+        <translation type="obsolete">Дубликат тэга &lt;file&gt; для %1 в %2</translation>
+    </message>
+    <message>
+        <source>Invalid &lt;detect-file&gt; for %1: </source>
+        <translation type="obsolete">Несуществующий &lt;detect-file&gt; для %1: </translation>
+    </message>
+    <message>
+        <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
+        <translation type="obsolete">Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
+    </message>
+    <message>
+        <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
+        <translation type="obsolete">Дубликат &lt;dependency&gt; для %1 в %2</translation>
+    </message>
+    <message>
+        <source>Wrong MSI GUID for %1: %2</source>
+        <translation type="obsolete">Неверный MSI GUID для %1: %2</translation>
+    </message>
+    <message>
+        <source>n/a</source>
+        <translation type="obsolete">не доступно</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="obsolete">Ошибка</translation>
+    </message>
+    <message>
+        <source>Error in attribute &apos;name&apos; in &lt;package&gt;: </source>
+        <translation type="obsolete">Ошибка в атрибуте &apos;имя&apos; в &lt;package&gt;: </translation>
+    </message>
+    <message>
+        <source>Invalid icon URL for %1: %2</source>
+        <translation type="obsolete">Несуществующая URL иконки у %1: %2</translation>
+    </message>
+    <message>
+        <source>Cannot open %1 for writing</source>
+        <translation type="obsolete">Невозможно открыть %1 для записи</translation>
+    </message>
+    <message>
+        <source>Repository %1 of %2</source>
+        <translation type="obsolete">Репозиторий %1 из %2</translation>
+    </message>
+    <message>
+        <source>Error loading the repository %1: %2</source>
+        <translation type="obsolete">Ошибка загрузки репозитория %1: %2</translation>
+    </message>
+    <message>
+        <source>No repositories defined</source>
+        <translation type="obsolete">Нет заданных репозиториев</translation>
+    </message>
+    <message>
+        <source>Download failed: %2</source>
+        <translation type="obsolete">Загрузка не удалась: %2</translation>
+    </message>
+    <message>
+        <source>Parsing the content</source>
+        <translation type="obsolete">Анализ содержимого</translation>
+    </message>
+    <message>
+        <source>Error loading XML: %2</source>
+        <translation type="obsolete">Ошибка загрузки XML: %2</translation>
+    </message>
+    <message>
+        <source>Opening file</source>
+        <translation type="obsolete">Открытие файла</translation>
+    </message>
+    <message>
+        <source>Cannot open the file</source>
+        <translation type="obsolete">Невозможно открыть файл</translation>
+    </message>
+    <message>
+        <source>Parsing XML</source>
+        <translation type="obsolete">Анализ XML</translation>
+    </message>
+    <message>
+        <source>Analyzing the content</source>
+        <translation type="obsolete">Анализ содержимого</translation>
+    </message>
+    <message>
+        <source>Invalid repository specification version: %1</source>
+        <translation type="obsolete">Несуществующая версия спецификации репозитория: %1</translation>
+    </message>
+    <message>
+        <source>Incompatible repository specification version: %1.</source>
+        <translation type="obsolete">Несовместимая версия спецификации репозитория: %1.</translation>
+    </message>
+    <message>
+        <source>Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/</source>
+        <translation type="obsolete">Пожалуйста, скачайте свежую версию Npackd с http://code.google.com/p/windows-package-manager/</translation>
+    </message>
+    <message>
+        <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
+        <translation type="obsolete">Пакет(ы) не может(гут) быть удален(ы), так как следующие файлы используются (пожалуйста, закройте соответствующие приложения): %1</translation>
+    </message>
+    <message>
+        <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
+        <translation type="obsolete">Пакет %1 не может быть удалён, так как некоторые файлы или папки в %2 используются.</translation>
+    </message>
+    <message>
+        <source>Cannot change settings now. The hard drive scan is running.</source>
+        <translation type="obsolete">Невозможно изменить настройки сейчас. Запущено сканирование жёсткого диска.</translation>
+    </message>
+    <message>
+        <source>Cannot change settings now. The repositories download is running.</source>
+        <translation type="obsolete">Невозможно изменить настройки сейчас. Запущено обновление репозиториев.</translation>
+    </message>
+    <message>
+        <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
+        <translation type="obsolete">Невозможно изменить настройки сейчас. Пакет %1 заблокирован текущей(ем) установкой/удалением.</translation>
+    </message>
+    <message>
+        <source>The installation directory cannot be empty</source>
+        <translation type="obsolete">Установочная директория не может быть пустой</translation>
+    </message>
+    <message>
+        <source>The installation directory does not exist</source>
+        <translation type="obsolete">Установочная директория не существует</translation>
+    </message>
+    <message>
+        <source>%1 is not a valid repository address</source>
+        <translation type="obsolete">%1 - неверный адрес репозитория</translation>
+    </message>
+    <message>
+        <source>.NET runtime</source>
+        <translation type="obsolete">Среда выполнения .NET</translation>
+    </message>
+    <message>
+        <source>Microsoft Core XML Services (MSXML)</source>
+        <translation type="obsolete">Службы Microsoft Core XML (MSXML)</translation>
+    </message>
+    <message>
+        <source>XML library</source>
+        <translation type="obsolete">XML библиотека</translation>
+    </message>
+    <message>
+        <source>operating system</source>
+        <translation type="obsolete">операционная система</translation>
+    </message>
+    <message>
+        <source>Windows 32 bit</source>
+        <translation type="obsolete">Windows 32-битная</translation>
+    </message>
+    <message>
+        <source>Windows 64 bit</source>
+        <translation type="obsolete">Windows 64-битная</translation>
+    </message>
+    <message>
+        <source>JRE</source>
+        <translation type="obsolete">JRE</translation>
+    </message>
+    <message>
+        <source>Java runtime</source>
+        <translation type="obsolete">Среда выполнения Java</translation>
+    </message>
+    <message>
+        <source>JDK 64 bit</source>
+        <translation type="obsolete">JDK 64-битный</translation>
+    </message>
+    <message>
+        <source>JDK</source>
+        <translation type="obsolete">JDK</translation>
+    </message>
+    <message>
+        <source>Java development kit</source>
+        <translation type="obsolete">Java development kit</translation>
+    </message>
+    <message>
+        <source>Windows Installer</source>
+        <translation type="obsolete">Установщик Windows</translation>
+    </message>
+    <message>
+        <source>Package manager</source>
+        <translation type="obsolete">Менеджер пакетов</translation>
+    </message>
+    <message>
+        <source>No key is open</source>
+        <translation type="obsolete">Ни один ключ не открыт</translation>
+    </message>
+    <message>
+        <source>Wrong registry value type (DWORD expected)</source>
+        <translation type="obsolete">Неверный тип значения реестра (DWORD ожидался)</translation>
+    </message>
+    <message>
+        <source>A GUID must be 38 characters long</source>
+        <translation type="obsolete">GUID должен быть 38 символов в длину</translation>
+    </message>
+    <message>
+        <source>Wrong character at position %1</source>
+        <translation type="obsolete">Неверный символ в %1</translation>
+    </message>
+    <message>
+        <source>Error %1</source>
+        <translation type="obsolete">Ошибка %1</translation>
+    </message>
+    <message>
+        <source>Error %1: %2</source>
+        <translation type="obsolete">Ошибка %1: %2</translation>
+    </message>
+    <message>
+        <source>Empty package name</source>
+        <translation type="obsolete">Отсутствует имя пакета</translation>
+    </message>
+    <message>
+        <source>Empty segment at position %1 in %2</source>
+        <translation type="obsolete">Пустой сегмент на позиции %1 в %2</translation>
+    </message>
+    <message>
+        <source>-- at position %1 in %2</source>
+        <translation type="obsolete">-- на позиции %1 в %2</translation>
+    </message>
+    <message>
+        <source>Wrong character at position 1 in %1</source>
+        <translation type="obsolete">Неверный символ на позиции 1 в %1</translation>
+    </message>
+    <message>
+        <source>Wrong character at position %1 in %2</source>
+        <translation type="obsolete">Неверный символ в %1 у %2</translation>
+    </message>
+    <message>
+        <source>Wrong length: %1</source>
+        <translation type="obsolete">Неверная длина: %1</translation>
+    </message>
+    <message>
+        <source>Cannot determine MSI product location for GUID %1</source>
+        <translation type="obsolete">Невозможно установить размещение MSI продукта для GUID %1</translation>
+    </message>
+    <message>
+        <source>The source and destination files are the same file.</source>
+        <translation type="obsolete">Исходный и файл назначения совпадают.</translation>
+    </message>
+    <message>
+        <source>Multiple file paths were specified in the source buffer, but only one destination file path.</source>
+        <translation type="obsolete">Много путей для файлов было специфицировано в исходном буфере, но лишь один целевой путь.</translation>
+    </message>
+    <message>
+        <source>Rename operation was specified but the destination path is a different directory. Use the move operation instead.</source>
+        <translation type="obsolete">Операция по переименованию была специфицирована, но целевой путь это другой директорий. Используйте вместо этого операцию перемещения.</translation>
+    </message>
+    <message>
+        <source>The source is a root directory, which cannot be moved or renamed.</source>
+        <translation type="obsolete">Источник - корневая директория, которая не может быть перемещена или переименована.</translation>
+    </message>
+    <message>
+        <source>The operation was canceled by the user, or silently canceled if the appropriate flags were supplied to SHFileOperation.</source>
+        <translation type="obsolete">Операция была отменена польователем, или тихо отменена, если соответствующие флаги были получены SHFileOperation.</translation>
+    </message>
+    <message>
+        <source>The destination is a subtree of the source.</source>
+        <translation type="obsolete">Путь назначения - поддиректория источника.</translation>
+    </message>
+    <message>
+        <source>Security settings denied access to the source.</source>
+        <translation type="obsolete">Настройки безопастности запрещают доступ к источнику.</translation>
+    </message>
+    <message>
+        <source>The source or destination path exceeded or would exceed MAX_PATH.</source>
+        <translation type="obsolete">Истоник или путь назначения превысили или могли бы превысить  MAX_PATH.</translation>
+    </message>
+    <message>
+        <source>The operation involved multiple destination paths, which can fail in the case of a move operation.</source>
+        <translation type="obsolete">Операция использует много целевых путей, что может привести к ошибке в случае операции перемещения.</translation>
+    </message>
+    <message>
+        <source>The path in the source or destination or both was invalid.</source>
+        <translation type="obsolete">Путь источника или назначения, или оба не существуют.</translation>
+    </message>
+    <message>
+        <source>The source and destination have the same parent folder.</source>
+        <translation type="obsolete">Источник и путь назначения имеют одинаковый родительский каталог</translation>
+    </message>
+    <message>
+        <source>The destination path is an existing file.</source>
+        <translation type="obsolete">Путь назначения - существующий файл.</translation>
+    </message>
+    <message>
+        <source>The destination path is an existing folder.</source>
+        <translation type="obsolete">Путь назначения - существующая директория.</translation>
+    </message>
+    <message>
+        <source>The name of the file exceeds MAX_PATH.</source>
+        <translation type="obsolete">Имя файла превышает MAX_PATH.</translation>
+    </message>
+    <message>
+        <source>The destination is a read-only CD-ROM, possibly unformatted.</source>
+        <translation type="obsolete">Путь назначения - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
+    </message>
+    <message>
+        <source>The destination is a read-only DVD, possibly unformatted.</source>
+        <translation type="obsolete">Путь назначения - DVD, доступный только для чтения, возможно не отформатирован.</translation>
+    </message>
+    <message>
+        <source>The destination is a writable CD-ROM, possibly unformatted.</source>
+        <translation type="obsolete">Путь назначения - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
+    </message>
+    <message>
+        <source>The file involved in the operation is too large for the destination media or file system.</source>
+        <translation type="obsolete">Файл, учавствующий в процессе, - слишком большой для файловой системы или устройства.</translation>
+    </message>
+    <message>
+        <source>The source is a read-only CD-ROM, possibly unformatted.</source>
+        <translation type="obsolete">Источник - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
+    </message>
+    <message>
+        <source>The source is a read-only DVD, possibly unformatted.</source>
+        <translation type="obsolete">Источник - DVD, доступный только для чтения, возможно не отформатирован.</translation>
+    </message>
+    <message>
+        <source>The source is a writable CD-ROM, possibly unformatted.</source>
+        <translation type="obsolete">Источник - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
+    </message>
+    <message>
+        <source>MAX_PATH was exceeded during the operation.</source>
+        <translatorcomment>MAX_PATH был превышен во время процесса.</translatorcomment>
+        <translation type="obsolete">MAX_PATH был превышен во время операции.</translation>
+    </message>
+    <message>
+        <source>An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later.</source>
+        <translation type="obsolete">Случилась неизвестная ошибка. Это, как правило, произходит вследствии неверного пути в источнике или назначении. Эта ошибка не возникает на Windows Vista и более поздних.</translation>
+    </message>
+    <message>
+        <source>An unspecified error occurred on the destination.</source>
+        <translation type="obsolete">Произошла неизвестная ошибка в пути назначения.</translation>
+    </message>
+    <message>
+        <source>Destination is a root directory and cannot be renamed.</source>
+        <translation type="obsolete">Путь назначения - корневая директория и поэтому не может быть переименован.</translation>
+    </message>
+    <message>
+        <source>Error deleting %1: %2</source>
+        <translation type="obsolete">Ошибка удаления %1: %2</translation>
+    </message>
+    <message>
+        <source>Cannot delete the file: %1</source>
+        <translation type="obsolete">Невозможно удалить файл: %1</translation>
+    </message>
+    <message>
+        <source>Cannot delete the directory: %1</source>
+        <translation type="obsolete">Невозможно удалить директорию: %1</translation>
+    </message>
+</context>
+<context>
+    <name>QCoreApplication</name>
     <message>
         <location filename="commandline.cpp" line="42"/>
         <source>Missing option name: %1</source>
-        <translation>Отсутствует параметр имя: %1</translation>
+        <translation type="unfinished">Отсутствует параметр имя: %1</translation>
     </message>
     <message>
         <location filename="commandline.cpp" line="46"/>
         <source>Option name expected: %1</source>
-        <translation>Ожидался параметр имя: %1</translation>
+        <translation type="unfinished">Ожидался параметр имя: %1</translation>
     </message>
     <message>
         <location filename="commandline.cpp" line="61"/>
         <source>Option name cannot start with the equality sign: %1</source>
-        <translation>Параметр имя не может начинаться со знака равенства: %1</translation>
+        <translation type="unfinished">Параметр имя не может начинаться со знака равенства: %1</translation>
     </message>
     <message>
         <location filename="commandline.cpp" line="64"/>
         <location filename="commandline.cpp" line="74"/>
         <source>Only one-letter options can start with a minus sign: %1</source>
-        <translation>Только однобуквенный параметр может начинаться со знака минус: %1</translation>
+        <translation type="unfinished">Только однобуквенный параметр может начинаться со знака минус: %1</translation>
     </message>
     <message>
         <location filename="commandline.cpp" line="92"/>
         <source>Unknown option: %1</source>
-        <translation>Неизвестная опция %1</translation>
+        <translation type="unfinished">Неизвестная опция %1</translation>
     </message>
     <message>
         <location filename="commandline.cpp" line="95"/>
         <source>Unexpected value for the option %1</source>
-        <translation>Неожиданное значение для параметра %1</translation>
+        <translation type="unfinished">Неожиданное значение для параметра %1</translation>
     </message>
     <message>
         <location filename="commandline.cpp" line="105"/>
         <source>Missing value for the option %1</source>
-        <translation>Отсутствует значение для параметра %1</translation>
+        <translation type="unfinished">Отсутствует значение для параметра %1</translation>
     </message>
     <message>
         <location filename="commandline.cpp" line="187"/>
-        <location filename="wpmutils.cpp" line="113"/>
         <source>CommandLineToArgvW failed</source>
-        <translation>Функция CommandLineToArgvW потерпела неудачу</translation>
+        <translation type="unfinished">Функция CommandLineToArgvW потерпела неудачу</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <location filename="abstractrepository.cpp" line="76"/>
+        <source>Cannot find the package version %1 %2: %3</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="151"/>
+        <location filename="abstractrepository.cpp" line="84"/>
+        <source>Cannot find the package version %1 %2</source>
+        <translation type="unfinished">Невозможно найти версию пакета %1 %2</translation>
+    </message>
+    <message>
+        <location filename="abstractrepository.cpp" line="106"/>
+        <source>Installing %1</source>
+        <translation type="unfinished">Установка %1</translation>
+    </message>
+    <message>
+        <location filename="abstractrepository.cpp" line="109"/>
+        <source>Uninstalling %1</source>
+        <translation type="unfinished">Удаление %1</translation>
+    </message>
+    <message>
+        <location filename="abstractrepository.cpp" line="177"/>
+        <source>No installable version found for the package %1</source>
+        <translation type="unfinished">Ниодной версии для установки не обнаружено для пакета %1</translation>
+    </message>
+    <message>
+        <location filename="abstractrepository.cpp" line="184"/>
+        <source>Cannot find the newest installed version for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="abstractrepository.cpp" line="190"/>
+        <source>No installed version found for the package %1</source>
+        <translation type="unfinished">Ниодной установленной версии не обнаружено для пакета %1</translation>
+    </message>
+    <message>
+        <location filename="abstractrepository.cpp" line="196"/>
+        <source>The newest version (%1) for the package %2 is already installed</source>
+        <translation type="unfinished">Свежая версия (%1)  пакета %2 уже установлена</translation>
+    </message>
+    <message>
         <location filename="dbrepository.cpp" line="188"/>
-        <location filename="dbrepository.cpp" line="300"/>
-        <location filename="dbrepository.cpp" line="421"/>
-        <location filename="repository.cpp" line="297"/>
-        <location filename="repository.cpp" line="334"/>
+        <location filename="dbrepository.cpp" line="226"/>
+        <location filename="dbrepository.cpp" line="266"/>
+        <location filename="dbrepository.cpp" line="768"/>
+        <location filename="repository.cpp" line="340"/>
+        <location filename="repository.cpp" line="377"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
-        <translation>XML-анализатор завершился ошибкой в строке %1, колонке %2: %3</translation>
+        <translation type="unfinished">XML-анализатор завершился ошибкой в строке %1, колонке %2: %3</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="440"/>
-        <location filename="dbrepository.cpp" line="599"/>
+        <location filename="dbrepository.cpp" line="791"/>
+        <location filename="dbrepository.cpp" line="930"/>
         <source>Starting an SQL transaction</source>
-        <translation>Начинается SQL транзакция</translation>
+        <translation type="unfinished">Начинается SQL транзакция</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="448"/>
+        <location filename="dbrepository.cpp" line="799"/>
         <source>Clearing the packages table</source>
-        <translation>Очистка таблицы пакетов</translation>
+        <translation type="unfinished">Очистка таблицы пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="456"/>
+        <location filename="dbrepository.cpp" line="807"/>
         <source>Clearing the package versions table</source>
-        <translation>Очистка таблицы версий пакетов</translation>
+        <translation type="unfinished">Очистка таблицы версий пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="464"/>
+        <location filename="dbrepository.cpp" line="815"/>
         <source>Clearing the licenses table</source>
-        <translation>Очистка таблицы лицензий</translation>
+        <translation type="unfinished">Очистка таблицы лицензий</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="472"/>
-        <location filename="dbrepository.cpp" line="631"/>
+        <location filename="dbrepository.cpp" line="823"/>
+        <source>Clearing the categories table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="831"/>
+        <location filename="dbrepository.cpp" line="962"/>
         <source>Commiting the SQL transaction</source>
-        <translation>Совершается SQL транзакция</translation>
+        <translation type="unfinished">Совершается SQL транзакция</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="511"/>
+        <location filename="dbrepository.cpp" line="861"/>
         <source>Clearing the database</source>
-        <translation>Очистка базы данных</translation>
+        <translation type="unfinished">Очистка базы данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="521"/>
+        <location filename="dbrepository.cpp" line="870"/>
         <source>Downloading the remote repositories</source>
-        <translatorcomment>or Загрузка новых репозиториев, but not Загрузка удалённых репозиториев</translatorcomment>
-        <translation>Загрузка репозиториев</translation>
+        <translation type="unfinished">Загрузка репозиториев</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="539"/>
+        <location filename="dbrepository.cpp" line="879"/>
         <source>Filling the local database</source>
-        <translation>Заполнение локальной базы данных</translation>
+        <translation type="unfinished">Заполнение локальной базы данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="548"/>
-        <source>Adding well-known packages</source>
-        <translation>Редактирование известных пакетов</translation>
-    </message>
-    <message>
-        <location filename="dbrepository.cpp" line="554"/>
+        <location filename="dbrepository.cpp" line="891"/>
         <source>Refreshing the installation status</source>
-        <translation>Обновление статуса установки</translation>
+        <translation type="unfinished">Обновление статуса установки</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="564"/>
+        <location filename="dbrepository.cpp" line="903"/>
         <source>Updating the status for installed packages in the database</source>
-        <translation>Обновление статуса установленных пакетов в базе данных</translation>
+        <translation type="unfinished">Обновление статуса установленных пакетов в базе данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="607"/>
+        <location filename="dbrepository.cpp" line="911"/>
+        <source>Removing packages without versions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="938"/>
         <source>Inserting data in the packages table</source>
-        <translation>Вставка данных в таблицу пакетов</translation>
+        <translation type="unfinished">Вставка данных в таблицу пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="615"/>
+        <location filename="dbrepository.cpp" line="946"/>
         <source>Inserting data in the package versions table</source>
-        <translation>Вставка данных в таблицу версий пакетов</translation>
+        <translation type="unfinished">Вставка данных в таблицу версий пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="623"/>
+        <location filename="dbrepository.cpp" line="954"/>
         <source>Inserting data in the licenses table</source>
-        <translation>Вставка данных в таблицу лицензий</translation>
+        <translation type="unfinished">Вставка данных в таблицу лицензий</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="26"/>
+        <location filename="downloader.cpp" line="25"/>
         <source>Connecting</source>
-        <translation>Соединение</translation>
+        <translation type="unfinished">Соединение</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="138"/>
+        <location filename="downloader.cpp" line="137"/>
         <source>Cancelled by the user</source>
-        <translation>Отменено пользователем</translation>
+        <translation type="unfinished">Отменено пользователем</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="141"/>
+        <location filename="downloader.cpp" line="140"/>
         <source>Invalid handle</source>
-        <translation>Недопустимый дескриптор</translation>
+        <translation type="unfinished">Недопустимый дескриптор</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="145"/>
+        <location filename="downloader.cpp" line="144"/>
         <source>Unknown error %1 from InternetErrorDlg</source>
-        <translation>Неизвестная ошибка %1 в InternetErrorDlg</translation>
+        <translation type="unfinished">Неизвестная ошибка %1 в InternetErrorDlg</translation>
+    </message>
+    <message>
+        <location filename="downloader.cpp" line="160"/>
+        <source>The HTTP proxy requires authentication.</source>
+        <translation type="unfinished">HTTP прокси требует аутентификации.</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="161"/>
-        <source>The HTTP proxy requires authentication.</source>
-        <translation>HTTP прокси требует аутентификации.</translation>
-    </message>
-    <message>
-        <location filename="downloader.cpp" line="162"/>
-        <location filename="downloader.cpp" line="189"/>
+        <location filename="downloader.cpp" line="188"/>
         <source>Username</source>
-        <translation>Имя пользователя</translation>
+        <translation type="unfinished">Имя пользователя</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="164"/>
-        <location filename="downloader.cpp" line="191"/>
+        <location filename="downloader.cpp" line="163"/>
+        <location filename="downloader.cpp" line="190"/>
         <source>Password</source>
-        <translation>Пароль</translation>
+        <translation type="unfinished">Пароль</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="187"/>
+        <location filename="downloader.cpp" line="186"/>
         <source>The HTTP server requires authentication.</source>
-        <translation>HTTP сервер требует аутентификации.</translation>
+        <translation type="unfinished">HTTP сервер требует аутентификации.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="216"/>
+        <location filename="downloader.cpp" line="215"/>
         <source>Cannot handle HTTP status code %1</source>
-        <translation>Невозможно обработать HTTP статус код %1</translation>
+        <translation type="unfinished">Невозможно обработать HTTP статус код %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="247"/>
-        <location filename="packageversion.cpp" line="581"/>
-        <location filename="packageversion.cpp" line="645"/>
-        <location filename="repository.cpp" line="275"/>
+        <location filename="downloader.cpp" line="246"/>
+        <location filename="packageversion.cpp" line="603"/>
+        <location filename="packageversion.cpp" line="667"/>
+        <location filename="repository.cpp" line="318"/>
         <source>Downloading</source>
-        <translation>Загрузка</translation>
+        <translation type="unfinished">Загрузка</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="461"/>
-        <location filename="downloader.cpp" line="478"/>
-        <location filename="downloader.cpp" line="484"/>
-        <location filename="downloader.cpp" line="516"/>
+        <location filename="downloader.cpp" line="460"/>
+        <location filename="downloader.cpp" line="477"/>
+        <location filename="downloader.cpp" line="483"/>
+        <location filename="downloader.cpp" line="515"/>
         <source>zlib error %1</source>
-        <translation>Ошибка zlib %1</translation>
+        <translation type="unfinished">Ошибка zlib %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="504"/>
-        <location filename="downloader.cpp" line="566"/>
+        <location filename="downloader.cpp" line="503"/>
+        <location filename="downloader.cpp" line="565"/>
         <source>%L0 of %L1 bytes</source>
-        <translation>%L0 из %L1 байт</translation>
+        <translation type="unfinished">%L0 из %L1 байт</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="509"/>
-        <location filename="downloader.cpp" line="571"/>
+        <location filename="downloader.cpp" line="508"/>
+        <location filename="downloader.cpp" line="570"/>
         <source>%L0 bytes</source>
-        <translation>%L0 байт</translation>
+        <translation type="unfinished">%L0 байт</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="620"/>
+        <location filename="downloader.cpp" line="619"/>
         <source>Error opening file: %1</source>
-        <translation>Ошибка открытия файла %1</translation>
+        <translation type="unfinished">Ошибка открытия файла %1</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="271"/>
+        <location filename="installedpackages.cpp" line="272"/>
         <source>Detecting directories deleted externally</source>
-        <translation>Обнаружение директорий, удалённых внешне</translation>
+        <translation type="unfinished">Обнаружение директорий, удалённых внешне</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="291"/>
+        <location filename="installedpackages.cpp" line="294"/>
         <source>Reading registry package database</source>
-        <translation>Чтение реестра базы данных пакетов</translation>
+        <translation type="unfinished">Чтение реестра базы данных пакетов</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="298"/>
-        <source>Detecting software</source>
-        <translation>Обнаружение программного обеспечения</translation>
+        <location filename="installedpackages.cpp" line="304"/>
+        <source>Adding well-known packages</source>
+        <translation type="unfinished">Редактирование известных пакетов</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="345"/>
+        <location filename="installedpackages.cpp" line="314"/>
+        <source>Setting the NPACKD_CL environment variable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="installedpackages.cpp" line="326"/>
+        <source>Reading the list of packages installed by Npackd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="installedpackages.cpp" line="335"/>
+        <source>Detecting MSI packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="installedpackages.cpp" line="349"/>
+        <source>Detecting software control panel packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="installedpackages.cpp" line="359"/>
         <source>Clearing information about installed package versions in nested directories</source>
-        <translation>Удаление информации о версиях уставленных пакетов во вложенных директориях</translation>
+        <translation type="unfinished">Удаление информации о версиях уставленных пакетов во вложенных директориях</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="40"/>
+        <location filename="main.cpp" line="68"/>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
-        <translation>32 битная версия Npackd требует 32 битной операционной системы.</translation>
+        <translation type="unfinished">32 битная версия Npackd требует 32 битной операционной системы.</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="41"/>
+        <location filename="main.cpp" line="69"/>
         <source>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</source>
-        <translation>Пожалуйста, скачайте 64 битную версию с http://code.google.com/p/windows-package-manager/</translation>
+        <translation type="unfinished">Пожалуйста, скачайте 64 битную версию с http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="214"/>
+        <location filename="mainframe.cpp" line="105"/>
+        <source>Uncategorized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainframe.cpp" line="112"/>
+        <location filename="mainframe.cpp" line="121"/>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="261"/>
         <source>Packages</source>
-        <translation>Пакеты</translation>
+        <translation type="unfinished">Пакеты</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="429"/>
-        <location filename="mainwindow.cpp" line="837"/>
+        <location filename="mainwindow.cpp" line="518"/>
+        <location filename="mainwindow.cpp" line="990"/>
         <source>Cannot exit while jobs are running</source>
-        <translation>Невозможно выйти пока запущены задания</translation>
+        <translation type="unfinished">Невозможно выйти пока запущены задания</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="522"/>
+        <location filename="mainwindow.cpp" line="611"/>
         <source>0 Jobs</source>
-        <translation>0 Заданий</translation>
+        <translation type="unfinished">0 Заданий</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="524"/>
+        <location filename="mainwindow.cpp" line="613"/>
         <source>1 Job (%1%, %2)</source>
-        <translation>1 Задание (%1%, %2)</translation>
+        <translation type="unfinished">1 Задание (%1%, %2)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="527"/>
+        <location filename="mainwindow.cpp" line="616"/>
         <source>%1 Jobs (%2%, %3)</source>
-        <translation>%1 Заданий (%2%, %3)</translation>
+        <translation type="unfinished">%1 Заданий (%2%, %3)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="696"/>
+        <location filename="mainwindow.cpp" line="815"/>
+        <source>Cannot find the package version %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="821"/>
         <source>The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Пакет %1 заблокирован текущей установкой/удалением.</translation>
+        <translation type="unfinished">Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="750"/>
+        <location filename="mainwindow.cpp" line="887"/>
         <source>Installing</source>
-        <translation>Установка</translation>
+        <translation type="unfinished">Установка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="752"/>
+        <location filename="mainwindow.cpp" line="889"/>
         <source>Uninstalling</source>
-        <translation>Удаление</translation>
+        <translation type="unfinished">Удаление</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="755"/>
+        <location filename="mainwindow.cpp" line="901"/>
+        <source>Cannot find the package version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="908"/>
         <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
-        <translation>Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
+        <translation type="unfinished">Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="758"/>
-        <location filename="mainwindow.cpp" line="770"/>
+        <location filename="mainwindow.cpp" line="911"/>
+        <location filename="mainwindow.cpp" line="923"/>
         <source>Uninstall</source>
-        <translation>Удаление</translation>
+        <translation type="unfinished">Удаление</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="760"/>
+        <location filename="mainwindow.cpp" line="913"/>
         <source>Installing %1 packages</source>
-        <translation>Установка %1 пакетов</translation>
+        <translation type="unfinished">Установка %1 пакетов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="762"/>
+        <location filename="mainwindow.cpp" line="915"/>
         <source>%1 package(s) will be installed: %2</source>
-        <translation>%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
+        <translation type="unfinished">%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="764"/>
+        <location filename="mainwindow.cpp" line="917"/>
         <source>Install</source>
-        <translation>Установка</translation>
+        <translation type="unfinished">Установка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="766"/>
+        <location filename="mainwindow.cpp" line="919"/>
         <source>Uninstalling %1 packages</source>
-        <translation>Удаление %1 пакетов</translation>
+        <translation type="unfinished">Удаление %1 пакетов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="768"/>
+        <location filename="mainwindow.cpp" line="921"/>
         <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
-        <translation>%1 пакет(ы) будет(ут) удален(ы): %2. Соответствующие директории будут полностью удалены; нет возможности восстановить файлы.</translation>
+        <translation type="unfinished">%1 пакет(ы) будет(ут) удален(ы): %2. Соответствующие директории будут полностью удалены; нет возможности восстановить файлы.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="772"/>
+        <location filename="mainwindow.cpp" line="925"/>
         <source>Installing %1 packages, uninstalling %2 packages</source>
-        <translation>Установка %1 пакетов, удаление %2 пакетов</translation>
+        <translation type="unfinished">Установка %1 пакетов, удаление %2 пакетов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="774"/>
+        <location filename="mainwindow.cpp" line="927"/>
         <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
-        <translation>%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
+        <translation type="unfinished">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="779"/>
-        <location filename="mainwindow.cpp" line="1561"/>
+        <location filename="mainwindow.cpp" line="932"/>
+        <location filename="mainwindow.cpp" line="1749"/>
         <source>Install/Uninstall</source>
-        <translation>Установка/Удаление</translation>
+        <translation type="unfinished">Установка/Удаление</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1175"/>
+        <location filename="mainwindow.cpp" line="1133"/>
+        <source>Error finding the newest installed version for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1339"/>
         <source>Initializing</source>
-        <translation>Инициализация</translation>
+        <translation type="unfinished">Инициализация</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1383"/>
+        <location filename="mainwindow.cpp" line="1556"/>
         <source>Settings</source>
-        <translation>Настройки</translation>
+        <translation type="unfinished">Настройки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1473"/>
+        <location filename="mainwindow.cpp" line="1655"/>
         <source>About</source>
-        <translation>О</translation>
+        <translation type="unfinished">О</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1474"/>
+        <location filename="mainwindow.cpp" line="1656"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="unfinished">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1531"/>
+        <location filename="mainwindow.cpp" line="1713"/>
         <source>Jobs</source>
-        <translation>Задания</translation>
+        <translation type="unfinished">Задания</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1545"/>
+        <location filename="mainwindow.cpp" line="1733"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
+        <translation type="unfinished">Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1574"/>
+        <location filename="mainwindow.cpp" line="1807"/>
         <source>%1 package(s) detected</source>
-        <translation>%1 пакет(ы) обнаружен(ы)</translation>
+        <translation type="unfinished">%1 пакет(ы) обнаружен(ы)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1579"/>
+        <location filename="mainwindow.cpp" line="1812"/>
         <source>Package detection status</source>
-        <translation>Статус обнаружения пакета</translation>
+        <translation type="unfinished">Статус обнаружения пакета</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1599"/>
+        <location filename="mainwindow.cpp" line="1835"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Невозможно обновить репозитории сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
+        <translation type="unfinished">Невозможно обновить репозитории сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
         <location filename="messageframe.cpp" line="19"/>
         <source>Dismiss</source>
-        <translation>Прекратить</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="messageframe.cpp" line="22"/>
         <location filename="messageframe.cpp" line="60"/>
         <source>Dismiss (%1 seconds)</source>
-        <translation>Прекратить (%1 секунд)</translation>
+        <translation type="unfinished">Прекратить (%1 секунд)</translation>
     </message>
     <message>
-        <location filename="msithirdpartypm.cpp" line="55"/>
+        <location filename="msithirdpartypm.cpp" line="51"/>
         <source>MSI database</source>
-        <translation>MSI база данных</translation>
+        <translation type="unfinished">MSI база данных</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="72"/>
-        <location filename="packageframe.cpp" line="88"/>
-        <location filename="packageversionform.cpp" line="61"/>
-        <location filename="packageversionform.cpp" line="77"/>
+        <location filename="packageframe.cpp" line="71"/>
+        <location filename="packageframe.cpp" line="92"/>
+        <location filename="packageversionform.cpp" line="70"/>
+        <location filename="packageversionform.cpp" line="90"/>
         <source>unknown</source>
-        <translation>неизвестный(ая)</translation>
+        <translation type="unfinished">неизвестный(ая)</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="104"/>
+        <location filename="packageframe.cpp" line="108"/>
         <source>Version</source>
-        <translation>Версия</translation>
+        <translation type="unfinished">Версия</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="106"/>
+        <location filename="packageframe.cpp" line="110"/>
         <source>Installation path</source>
-        <translation>Путь установки</translation>
+        <translation type="unfinished">Путь установки</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="183"/>
-        <source>Icon</source>
-        <translation>Иконка</translation>
+        <location filename="packageframe.cpp" line="119"/>
+        <source>Error fetching package versions: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="186"/>
-        <source>Title</source>
-        <translation>Название</translation>
+        <source>Icon</source>
+        <translation type="unfinished">Иконка</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="189"/>
-        <source>Description</source>
-        <translation>Описание</translation>
+        <source>Title</source>
+        <translation type="unfinished">Название</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="192"/>
-        <source>Available</source>
-        <translation>Доступно</translation>
+        <source>Description</source>
+        <translation type="unfinished">Описание</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="195"/>
-        <source>Installed</source>
-        <translation>Установлено</translation>
+        <source>Available</source>
+        <translation type="unfinished">Доступно</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="198"/>
+        <source>Installed</source>
+        <translation type="unfinished">Установлено</translation>
+    </message>
+    <message>
+        <location filename="packageitemmodel.cpp" line="201"/>
         <source>License</source>
-        <translation>Лицензия</translation>
+        <translation type="unfinished">Лицензия</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="197"/>
+        <location filename="packageversion.cpp" line="198"/>
         <source>Error storing the information about an installed package version in the Windows registry: %1</source>
-        <translation>Ошибка сохранения информации о уставленной версии пакета в реестре Windows: %1</translation>
+        <translation type="unfinished">Ошибка сохранения информации о уставленной версии пакета в реестре Windows: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="252"/>
+        <location filename="packageversion.cpp" line="253"/>
         <source>Start menu</source>
-        <translation>Меню Пуск</translation>
+        <translation type="unfinished">Меню Пуск</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="262"/>
+        <location filename="packageversion.cpp" line="263"/>
         <source>Desktop</source>
-        <translation>Рабочий стол</translation>
+        <translation type="unfinished">Рабочий стол</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="272"/>
+        <location filename="packageversion.cpp" line="273"/>
         <source>Quick launch bar</source>
-        <translation>Панель быстрого запуска</translation>
+        <translation type="unfinished">Панель быстрого запуска</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="296"/>
+        <location filename="packageversion.cpp" line="297"/>
         <source>Deleting shortcuts</source>
-        <translation>Удаление ярлыков</translation>
+        <translation type="unfinished">Удаление ярлыков</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="319"/>
-        <location filename="packageversion.cpp" line="951"/>
+        <location filename="packageversion.cpp" line="320"/>
+        <location filename="packageversion.cpp" line="973"/>
         <source>Waiting while other (un)installation scripts are running</source>
-        <translation>Ожидание пока другие скрипты установки или удаления запущены</translation>
+        <translation type="unfinished">Ожидание пока другие скрипты установки или удаления запущены</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="332"/>
-        <location filename="packageversion.cpp" line="964"/>
+        <location filename="packageversion.cpp" line="333"/>
+        <location filename="packageversion.cpp" line="986"/>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
-        <translation>Ожидание пока другие скрипты установки или удаления запущены (%1 минут)</translation>
+        <translation type="unfinished">Ожидание пока другие скрипты установки или удаления запущены (%1 минут)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="342"/>
+        <location filename="packageversion.cpp" line="343"/>
         <source>Running the uninstallation script (this may take some time)</source>
-        <translation>Запуск скрипта удаления (это может занять некоторое время)</translation>
+        <translation type="unfinished">Запуск скрипта удаления (это может занять некоторое время)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="371"/>
-        <location filename="packageversion.cpp" line="1001"/>
+        <location filename="packageversion.cpp" line="375"/>
+        <location filename="packageversion.cpp" line="1027"/>
         <source>%1. Full output was saved in %2</source>
-        <translation>%1. Полный вывод был сохранён в %2</translation>
+        <translation type="unfinished">%1. Полный вывод был сохранён в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="388"/>
-        <location filename="packageversion.cpp" line="1047"/>
+        <location filename="packageversion.cpp" line="392"/>
+        <location filename="packageversion.cpp" line="1081"/>
         <source>Deleting files</source>
-        <translation>Удаление файлов</translation>
+        <translation type="unfinished">Удаление файлов</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="432"/>
+        <location filename="packageversion.cpp" line="446"/>
         <source>Cannot change directory to %1</source>
-        <translation>Невозможно изменить директорию на %1</translation>
+        <translation type="unfinished">Невозможно изменить директорию на %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="439"/>
+        <location filename="packageversion.cpp" line="453"/>
         <source>Cannot create directory %0%1</source>
-        <translation>Невозможно создать директорию %0%1</translation>
+        <translation type="unfinished">Невозможно создать директорию %0%1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="450"/>
+        <location filename="packageversion.cpp" line="464"/>
         <source>Cannot rename %1 to %2 in %3</source>
-        <translation>Невозможно переименовать %1 в %2 в %3</translation>
+        <translation type="unfinished">Невозможно переименовать %1 в %2 в %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="490"/>
+        <location filename="packageversion.cpp" line="506"/>
+        <source>Error searching for the best dependency match: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="packageversion.cpp" line="512"/>
         <source>Unsatisfied dependency: %1</source>
-        <translation>Неудовлетворенные зависимости: %1</translation>
+        <translation type="unfinished">Неудовлетворенные зависимости: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="574"/>
-        <location filename="packageversion.cpp" line="638"/>
-        <location filename="packageversion.cpp" line="781"/>
+        <location filename="packageversion.cpp" line="596"/>
+        <location filename="packageversion.cpp" line="660"/>
+        <location filename="packageversion.cpp" line="803"/>
         <source>No download URL</source>
-        <translation>Нет ссылки URL</translation>
+        <translation type="unfinished">Нет ссылки URL</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="586"/>
-        <location filename="packageversion.cpp" line="650"/>
+        <location filename="packageversion.cpp" line="608"/>
+        <location filename="packageversion.cpp" line="672"/>
         <source>Download failed: %1</source>
-        <translation>Загрузка не удалась: %1</translation>
+        <translation type="unfinished">Загрузка не удалась: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="591"/>
-        <location filename="packageversion.cpp" line="655"/>
+        <location filename="packageversion.cpp" line="613"/>
+        <location filename="packageversion.cpp" line="677"/>
         <source>Computing SHA1</source>
-        <translation>Вычисление SHA1</translation>
+        <translation type="unfinished">Вычисление SHA1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="597"/>
+        <location filename="packageversion.cpp" line="619"/>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>
-        <translation>Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
+        <translation type="unfinished">Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="705"/>
+        <location filename="packageversion.cpp" line="727"/>
         <source>Shortcut target %1 does not exist</source>
-        <translation>Объект ярлыка %1 не существует</translation>
+        <translation type="unfinished">Объект ярлыка %1 не существует</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="749"/>
+        <location filename="packageversion.cpp" line="771"/>
         <source>Shortcut creation from %1 to %2 failed: %3</source>
-        <translation>Создание ялыка с%1 по %2 не удалось: %3</translation>
-    </message>
-    <message>
-        <location filename="packageversion.cpp" line="772"/>
-        <source>Preparing</source>
-        <translation>Подготовка</translation>
-    </message>
-    <message>
-        <location filename="packageversion.cpp" line="791"/>
-        <source>Creating directory</source>
-        <translation>Создание директории</translation>
+        <translation type="unfinished">Создание ялыка с%1 по %2 не удалось: %3</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="794"/>
-        <location filename="packageversion.cpp" line="805"/>
-        <source>Cannot create directory: %0</source>
-        <translation>Не возможно создать директорию: %0</translation>
+        <source>Preparing</source>
+        <translation type="unfinished">Подготовка</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="802"/>
-        <source>Creating .Npackd sub-directory</source>
-        <translation>Создание поддиректории .Npackd</translation>
+        <location filename="packageversion.cpp" line="813"/>
+        <source>Creating directory</source>
+        <translation type="unfinished">Создание директории</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="815"/>
-        <source>Waiting for a free HTTP connection</source>
-        <translation>Ожидание свободного HTTP соединения</translation>
-    </message>
-    <message>
+        <location filename="packageversion.cpp" line="816"/>
         <location filename="packageversion.cpp" line="827"/>
+        <source>Cannot create directory: %0</source>
+        <translation type="unfinished">Не возможно создать директорию: %0</translation>
+    </message>
+    <message>
+        <location filename="packageversion.cpp" line="824"/>
+        <source>Creating .Npackd sub-directory</source>
+        <translation type="unfinished">Создание поддиректории .Npackd</translation>
+    </message>
+    <message>
+        <location filename="packageversion.cpp" line="837"/>
+        <source>Waiting for a free HTTP connection</source>
+        <translation type="unfinished">Ожидание свободного HTTP соединения</translation>
+    </message>
+    <message>
+        <location filename="packageversion.cpp" line="849"/>
         <source>Waiting for a free HTTP connection (%1 minutes)</source>
-        <translation>Ожидание свободного HTTP соединения (%1 минут)</translation>
+        <translation type="unfinished">Ожидание свободного HTTP соединения (%1 минут)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="839"/>
+        <location filename="packageversion.cpp" line="861"/>
         <source>Downloading &amp; computing hash sum</source>
-        <translation>Загрузка &amp; вычисление хэш суммы</translation>
-    </message>
-    <message>
-        <location filename="packageversion.cpp" line="841"/>
-        <location filename="packageversion.cpp" line="860"/>
-        <source>Cannot open the file: %0</source>
-        <translation>Невозможно открыть файл: %0</translation>
+        <translation type="unfinished">Загрузка &amp; вычисление хэш суммы</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="863"/>
+        <location filename="packageversion.cpp" line="882"/>
+        <source>Cannot open the file: %0</source>
+        <translation type="unfinished">Невозможно открыть файл: %0</translation>
+    </message>
+    <message>
+        <location filename="packageversion.cpp" line="885"/>
         <source>Downloading &amp; computing hash sum (2nd try)</source>
-        <translation>Загрузка &amp; вычисление хэш суммы (вторая попытка)</translation>
+        <translation type="unfinished">Загрузка &amp; вычисление хэш суммы (вторая попытка)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="869"/>
+        <location filename="packageversion.cpp" line="891"/>
         <source>Error downloading %1: %2</source>
-        <translation>Ошибка загрузки %1: %2</translation>
+        <translation type="unfinished">Ошибка загрузки %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="884"/>
+        <location filename="packageversion.cpp" line="906"/>
         <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
-        <translation>Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
+        <translation type="unfinished">Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="896"/>
+        <location filename="packageversion.cpp" line="918"/>
         <source>Extracting files</source>
-        <translation>Извлечение файлов</translation>
+        <translation type="unfinished">Извлечение файлов</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="901"/>
+        <location filename="packageversion.cpp" line="923"/>
         <source>Error unzipping file into directory %0: %1</source>
-        <translation>Ошибка распаковки файла в директорию %0: %1</translation>
+        <translation type="unfinished">Ошибка распаковки файла в директорию %0: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="908"/>
+        <location filename="packageversion.cpp" line="930"/>
         <source>Renaming the downloaded file</source>
-        <translation>Переименование скаченного файла</translation>
+        <translation type="unfinished">Переименование скаченного файла</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="917"/>
+        <location filename="packageversion.cpp" line="939"/>
         <source>Cannot rename %0 to %1</source>
-        <translation>Невозможно переименовать %0 в %1</translation>
+        <translation type="unfinished">Невозможно переименовать %0 в %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="974"/>
+        <location filename="packageversion.cpp" line="996"/>
         <source>Running the installation script (this may take some time)</source>
-        <translation>Запуск скрипта установки (это может занять некоторое время)</translation>
+        <translation type="unfinished">Запуск скрипта установки (это может занять некоторое время)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1042"/>
+        <location filename="packageversion.cpp" line="1076"/>
         <source>Deleting start menu, desktop and quick launch shortcuts</source>
-        <translation>Удаление ярлыков  в меню Пуск, Панели быстрого запуска и на Рабочем столе</translation>
+        <translation type="unfinished">Удаление ярлыков  в меню Пуск, Панели быстрого запуска и на Рабочем столе</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1083"/>
+        <location filename="packageversion.cpp" line="1117"/>
         <source>Opening ZIP file</source>
-        <translation>Открытие ZIP файла</translation>
+        <translation type="unfinished">Открытие ZIP файла</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1086"/>
+        <location filename="packageversion.cpp" line="1120"/>
         <source>Cannot open the ZIP file %1: %2</source>
-        <translation>Невозможно открыть ZIP файл %1: %2</translation>
+        <translation type="unfinished">Невозможно открыть ZIP файл %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1093"/>
+        <location filename="packageversion.cpp" line="1127"/>
         <source>Extracting</source>
-        <translation>Извлечение</translation>
+        <translation type="unfinished">Извлечение</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1103"/>
+        <location filename="packageversion.cpp" line="1137"/>
         <source>Error unzipping the file %1: Error %2 in %3</source>
-        <translation>Ошибка распаковки файла %1: Ошибка %2 в %3</translation>
+        <translation type="unfinished">Ошибка распаковки файла %1: Ошибка %2 в %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1123"/>
+        <location filename="packageversion.cpp" line="1157"/>
         <source>Cannot create directory %1</source>
-        <translation>Невозможно создать директорию %1</translation>
+        <translation type="unfinished">Невозможно создать директорию %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1131"/>
+        <location filename="packageversion.cpp" line="1165"/>
         <source>%L1 files</source>
-        <translation>%L1 файлы</translation>
+        <translation type="unfinished">%L1 файлы</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1159"/>
+        <location filename="packageversion.cpp" line="1193"/>
         <source>Could not create file %1</source>
-        <translation>Невозможно создать файл %1</translation>
+        <translation type="unfinished">Невозможно создать файл %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1164"/>
+        <location filename="packageversion.cpp" line="1198"/>
         <source>Could not create directory %1</source>
-        <translation>Невозможно создать директорию %1</translation>
+        <translation type="unfinished">Невозможно создать директорию %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1180"/>
+        <location filename="packageversion.cpp" line="1215"/>
         <source>installed</source>
-        <translation>уставлено</translation>
+        <translation type="unfinished">уставлено</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1184"/>
+        <location filename="packageversion.cpp" line="1219"/>
         <source>updateable</source>
-        <translation>доступна свежая версия</translation>
+        <translation type="unfinished">доступна свежая версия</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1186"/>
+        <location filename="packageversion.cpp" line="1221"/>
         <source>obsolete</source>
-        <translation>устаревший</translation>
+        <translation type="unfinished">устаревший</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1192"/>
+        <location filename="packageversion.cpp" line="1229"/>
         <source>locked</source>
-        <translation>заблокированный</translation>
+        <translation type="unfinished">заблокированный</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1259"/>
+        <location filename="packageversion.cpp" line="1296"/>
         <source>Process %1 exited with the code %2</source>
-        <translation>Процесс %1 завершился кодом %2</translation>
+        <translation type="unfinished">Процесс %1 завершился кодом %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1276"/>
+        <location filename="packageversion.cpp" line="1313"/>
         <source>%1 minutes</source>
-        <translation>%1 минут</translation>
+        <translation type="unfinished">%1 минут</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1321"/>
+        <location filename="packageversion.cpp" line="1358"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
-        <translation>Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
+        <translation type="unfinished">Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1328"/>
+        <location filename="packageversion.cpp" line="1365"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
-        <translation>Неверная SHA1 у &lt;detect-file&gt;: </translation>
+        <translation type="unfinished">Неверная SHA1 у &lt;detect-file&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1368"/>
+        <location filename="packageversion.cpp" line="1405"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
-        <translation>Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
+        <translation type="unfinished">Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1380"/>
+        <location filename="packageversion.cpp" line="1417"/>
         <source>Not a valid download URL for %1: %2</source>
-        <translation>Нет действительных ссылкок URL для %1: %2</translation>
+        <translation type="unfinished">Нет действительных ссылкок URL для %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1391"/>
+        <location filename="packageversion.cpp" line="1428"/>
         <source>Not a valid version for %1: %2</source>
-        <translation>Нет действительных версиий %1: %2</translation>
+        <translation type="unfinished">Нет действительных версиий %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1401"/>
+        <location filename="packageversion.cpp" line="1438"/>
         <source>Invalid SHA1 for %1: </source>
-        <translation>Неверная SHA1 у %1: </translation>
+        <translation type="unfinished">Неверная SHA1 у %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1415"/>
+        <location filename="packageversion.cpp" line="1452"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
-        <translation>Неверное значение атрибута &apos;тип&apos; у %1: %3</translation>
+        <translation type="unfinished">Неверное значение атрибута &apos;тип&apos; у %1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1430"/>
+        <location filename="packageversion.cpp" line="1467"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
-        <translation>Пустое значение атрибута &apos;путь&apos; у &lt;important-file&gt; для %1</translation>
+        <translation type="unfinished">Пустое значение атрибута &apos;путь&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1437"/>
+        <location filename="packageversion.cpp" line="1474"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
-        <translation>Больше чем один &lt;important-file&gt; с таким же атрибутом &apos;путь&apos; %1 для %2</translation>
+        <translation type="unfinished">Больше чем один &lt;important-file&gt; с таким же атрибутом &apos;путь&apos; %1 для %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1447"/>
+        <location filename="packageversion.cpp" line="1484"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
-        <translation>Пустое значение атрибута &apos;название&apos; у &lt;important-file&gt; для %1</translation>
+        <translation type="unfinished">Пустое значение атрибута &apos;название&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1476"/>
+        <location filename="packageversion.cpp" line="1513"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
-        <translation>Дубликат тэга &lt;file&gt; для %1 в %2</translation>
+        <translation type="unfinished">Дубликат тэга &lt;file&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1494"/>
+        <location filename="packageversion.cpp" line="1531"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
-        <translation>Несуществующий &lt;detect-file&gt; для %1: </translation>
+        <translation type="unfinished">Несуществующий &lt;detect-file&gt; для %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1508"/>
+        <location filename="packageversion.cpp" line="1545"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
-        <translation>Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
+        <translation type="unfinished">Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1535"/>
+        <location filename="packageversion.cpp" line="1572"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
-        <translation>Дубликат &lt;dependency&gt; для %1 в %2</translation>
+        <translation type="unfinished">Дубликат &lt;dependency&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1551"/>
+        <location filename="packageversion.cpp" line="1588"/>
         <source>Wrong MSI GUID for %1: %2</source>
-        <translation>Неверный MSI GUID для %1: %2</translation>
+        <translation type="unfinished">Неверный MSI GUID для %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversionform.cpp" line="90"/>
-        <location filename="packageversionform.cpp" line="99"/>
+        <location filename="packageversionform.cpp" line="103"/>
+        <location filename="packageversionform.cpp" line="112"/>
         <source>n/a</source>
-        <translation>не доступно</translation>
+        <translation type="unfinished">не доступно</translation>
     </message>
     <message>
         <location filename="progressframe.cpp" line="45"/>
         <source>Error</source>
-        <translation>Ошибка</translation>
+        <translation type="unfinished">Ошибка</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="101"/>
+        <location filename="repository.cpp" line="99"/>
         <source>Error in attribute &apos;name&apos; in &lt;package&gt;: </source>
-        <translation>Ошибка в атрибуте &apos;имя&apos; в &lt;package&gt;: </translation>
+        <translation type="unfinished">Ошибка в атрибуте &apos;имя&apos; в &lt;package&gt;: </translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="119"/>
+        <location filename="repository.cpp" line="117"/>
         <source>Invalid icon URL for %1: %2</source>
-        <translation>Несуществующая URL иконки у %1: %2</translation>
+        <translation type="unfinished">Несуществующая URL иконки у %1: %2</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="201"/>
-        <source>Cannot open %1 for writing</source>
-        <translation>Невозможно открыть %1 для записи</translation>
+        <location filename="repository.cpp" line="135"/>
+        <location filename="repository.cpp" line="150"/>
+        <source>Empty category tag for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="repository.cpp" line="142"/>
+        <source>More than one &lt;category&gt; %1 for %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="repository.cpp" line="159"/>
+        <source>Empty sub-category for %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="repository.cpp" line="244"/>
+        <source>Cannot open %1 for writing</source>
+        <translation type="unfinished">Невозможно открыть %1 для записи</translation>
+    </message>
+    <message>
+        <location filename="repository.cpp" line="287"/>
         <source>Repository %1 of %2</source>
-        <translation>Репозиторий %1 из %2</translation>
+        <translation type="unfinished">Репозиторий %1 из %2</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="250"/>
+        <location filename="repository.cpp" line="293"/>
         <source>Error loading the repository %1: %2</source>
-        <translation>Ошибка загрузки репозитория %1: %2</translation>
+        <translation type="unfinished">Ошибка загрузки репозитория %1: %2</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="262"/>
-        <location filename="settingsframe.cpp" line="72"/>
+        <location filename="repository.cpp" line="305"/>
+        <location filename="settingsframe.cpp" line="81"/>
         <source>No repositories defined</source>
-        <translation>Нет заданных репозиториев</translation>
+        <translation type="unfinished">Нет заданных репозиториев</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="283"/>
+        <location filename="repository.cpp" line="326"/>
         <source>Download failed: %2</source>
-        <translation>Загрузка не удалась: %2</translation>
+        <translation type="unfinished">Загрузка не удалась: %2</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="290"/>
+        <location filename="repository.cpp" line="333"/>
         <source>Parsing the content</source>
-        <translation>Анализ содержимого</translation>
+        <translation type="unfinished">Анализ содержимого</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="308"/>
+        <location filename="repository.cpp" line="351"/>
         <source>Error loading XML: %2</source>
-        <translation>Ошибка загрузки XML: %2</translation>
+        <translation type="unfinished">Ошибка загрузки XML: %2</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="321"/>
+        <location filename="repository.cpp" line="364"/>
         <source>Opening file</source>
-        <translation>Открытие файла</translation>
+        <translation type="unfinished">Открытие файла</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="323"/>
+        <location filename="repository.cpp" line="366"/>
         <source>Cannot open the file</source>
-        <translation>Невозможно открыть файл</translation>
+        <translation type="unfinished">Невозможно открыть файл</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="329"/>
+        <location filename="repository.cpp" line="372"/>
         <source>Parsing XML</source>
-        <translation>Анализ XML</translation>
+        <translation type="unfinished">Анализ XML</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="340"/>
+        <location filename="repository.cpp" line="383"/>
         <source>Analyzing the content</source>
-        <translation>Анализ содержимого</translation>
+        <translation type="unfinished">Анализ содержимого</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="362"/>
+        <location filename="repository.cpp" line="405"/>
         <source>Invalid repository specification version: %1</source>
-        <translation>Несуществующая версия спецификации репозитория: %1</translation>
+        <translation type="unfinished">Несуществующая версия спецификации репозитория: %1</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="367"/>
+        <location filename="repository.cpp" line="410"/>
         <source>Incompatible repository specification version: %1.</source>
-        <translation>Несовместимая версия спецификации репозитория: %1.</translation>
+        <translation type="unfinished">Несовместимая версия спецификации репозитория: %1.</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="368"/>
+        <location filename="repository.cpp" line="411"/>
         <source>Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/</source>
-        <translation>Пожалуйста, скачайте свежую версию Npackd с http://code.google.com/p/windows-package-manager/</translation>
+        <translation type="unfinished">Пожалуйста, скачайте свежую версию Npackd с http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="542"/>
+        <location filename="repository.cpp" line="593"/>
         <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
-        <translation>Пакет(ы) не может(гут) быть удален(ы), так как следующие файлы используются (пожалуйста, закройте соответствующие приложения): %1</translation>
+        <translation type="unfinished">Пакет(ы) не может(гут) быть удален(ы), так как следующие файлы используются (пожалуйста, закройте соответствующие приложения): %1</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="553"/>
+        <location filename="repository.cpp" line="606"/>
         <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
-        <translation>Пакет %1 не может быть удалён, так как некоторые файлы или папки в %2 используются.</translation>
+        <translation type="unfinished">Пакет %1 не может быть удалён, так как некоторые файлы или папки в %2 используются.</translation>
+    </message>
+    <message>
+        <location filename="scandiskthirdpartypm.cpp" line="25"/>
+        <source>Scanning %1</source>
+        <translation type="unfinished">Сканирование %1</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="53"/>
         <source>Cannot change settings now. The hard drive scan is running.</source>
-        <translation>Невозможно изменить настройки сейчас. Запущено сканирование жёсткого диска.</translation>
+        <translation type="unfinished">Невозможно изменить настройки сейчас. Запущено сканирование жёсткого диска.</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="58"/>
         <source>Cannot change settings now. The repositories download is running.</source>
-        <translation>Невозможно изменить настройки сейчас. Запущено обновление репозиториев.</translation>
+        <translation type="unfinished">Невозможно изменить настройки сейчас. Запущено обновление репозиториев.</translation>
     </message>
     <message>
-        <location filename="settingsframe.cpp" line="64"/>
+        <location filename="settingsframe.cpp" line="65"/>
+        <source>Cannot find locked package versions: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="settingsframe.cpp" line="73"/>
         <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Невозможно изменить настройки сейчас. Пакет %1 заблокирован текущей(ем) установкой/удалением.</translation>
+        <translation type="unfinished">Невозможно изменить настройки сейчас. Пакет %1 заблокирован текущей(ем) установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="settingsframe.cpp" line="75"/>
+        <location filename="settingsframe.cpp" line="84"/>
         <source>The installation directory cannot be empty</source>
-        <translation>Установочная директория не может быть пустой</translation>
-    </message>
-    <message>
-        <location filename="settingsframe.cpp" line="78"/>
-        <source>The installation directory does not exist</source>
-        <translation>Установочная директория не существует</translation>
+        <translation type="unfinished">Установочная директория не может быть пустой</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="87"/>
+        <source>The installation directory does not exist</source>
+        <translation type="unfinished">Установочная директория не существует</translation>
+    </message>
+    <message>
+        <location filename="settingsframe.cpp" line="96"/>
         <source>%1 is not a valid repository address</source>
-        <translation>%1 - неверный адрес репозитория</translation>
+        <translation type="unfinished">%1 - неверный адрес репозитория</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="14"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="12"/>
         <source>.NET runtime</source>
-        <translation>Среда выполнения .NET</translation>
+        <translation type="unfinished">Среда выполнения .NET</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="96"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="100"/>
         <source>Microsoft Core XML Services (MSXML)</source>
-        <translation>Службы Microsoft Core XML (MSXML)</translation>
+        <translation type="unfinished">Службы Microsoft Core XML (MSXML)</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="98"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="102"/>
         <source>XML library</source>
-        <translation>XML библиотека</translation>
+        <translation type="unfinished">XML библиотека</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="160"/>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="171"/>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="181"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="184"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="195"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="205"/>
         <source>operating system</source>
-        <translation>операционная система</translation>
+        <translation type="unfinished">операционная система</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="170"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="194"/>
         <source>Windows 32 bit</source>
-        <translation>Windows 32-битная</translation>
+        <translation type="unfinished">Windows 32-битная</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="180"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="204"/>
         <source>Windows 64 bit</source>
-        <translation>Windows 64-битная</translation>
+        <translation type="unfinished">Windows 64-битная</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="202"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="226"/>
         <source>JRE</source>
-        <translation>JRE</translation>
+        <translation type="unfinished">JRE</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="203"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="227"/>
         <source>Java runtime</source>
-        <translation>Среда выполнения Java</translation>
+        <translation type="unfinished">Среда выполнения Java</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="250"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="274"/>
         <source>JDK 64 bit</source>
-        <translation>JDK 64-битный</translation>
+        <translation type="unfinished">JDK 64-битный</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="250"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="274"/>
         <source>JDK</source>
-        <translation>JDK</translation>
+        <translation type="unfinished">JDK</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="252"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="276"/>
         <source>Java development kit</source>
-        <translation>Java development kit</translation>
+        <translation type="unfinished">Java development kit</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="299"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="322"/>
         <source>Windows Installer</source>
-        <translation>Установщик Windows</translation>
+        <translation type="unfinished">Установщик Windows</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="301"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="324"/>
         <source>Package manager</source>
-        <translation>Менеджер пакетов</translation>
+        <translation type="unfinished">Менеджер пакетов</translation>
     </message>
     <message>
-        <location filename="windowsregistry.cpp" line="95"/>
-        <location filename="windowsregistry.cpp" line="132"/>
-        <location filename="windowsregistry.cpp" line="155"/>
-        <location filename="windowsregistry.cpp" line="173"/>
-        <location filename="windowsregistry.cpp" line="191"/>
-        <location filename="windowsregistry.cpp" line="210"/>
-        <location filename="windowsregistry.cpp" line="274"/>
+        <location filename="windowsregistry.cpp" line="94"/>
+        <location filename="windowsregistry.cpp" line="131"/>
+        <location filename="windowsregistry.cpp" line="154"/>
+        <location filename="windowsregistry.cpp" line="172"/>
+        <location filename="windowsregistry.cpp" line="203"/>
+        <location filename="windowsregistry.cpp" line="222"/>
+        <location filename="windowsregistry.cpp" line="240"/>
+        <location filename="windowsregistry.cpp" line="259"/>
+        <location filename="windowsregistry.cpp" line="324"/>
         <source>No key is open</source>
-        <translation>Ни один ключ не открыт</translation>
+        <translation type="unfinished">Ни один ключ не открыт</translation>
     </message>
     <message>
-        <location filename="windowsregistry.cpp" line="145"/>
+        <location filename="windowsregistry.cpp" line="144"/>
         <source>Wrong registry value type (DWORD expected)</source>
-        <translation>Неверный тип значения реестра (DWORD ожидался)</translation>
+        <translation type="unfinished">Неверный тип значения реестра (DWORD ожидался)</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="145"/>
+        <location filename="windowsregistry.cpp" line="183"/>
+        <source>Wrong registry value type (BINARY expected)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="windowsregistry.cpp" line="313"/>
+        <source>Error opening registry node %1, using WOW6432 node: %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="windowsregistry.cpp" line="369"/>
+        <source>Error removing registry node %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="wpmutils.cpp" line="114"/>
+        <source>CommandLineToArgvW failed</source>
+        <translation type="unfinished">Функция CommandLineToArgvW потерпела неудачу</translation>
+    </message>
+    <message>
+        <location filename="wpmutils.cpp" line="146"/>
         <source>A GUID must be 38 characters long</source>
-        <translation>GUID должен быть 38 символов в длину</translation>
+        <translation type="unfinished">GUID должен быть 38 символов в длину</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="163"/>
+        <location filename="wpmutils.cpp" line="164"/>
         <source>Wrong character at position %1</source>
-        <translation>Неверный символ в %1</translation>
+        <translation type="unfinished">Неверный символ в %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="201"/>
+        <location filename="wpmutils.cpp" line="202"/>
         <source>Error %1</source>
-        <translation>Ошибка %1</translation>
+        <translation type="unfinished">Ошибка %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="205"/>
+        <location filename="wpmutils.cpp" line="206"/>
         <source>Error %1: %2</source>
-        <translation>Ошибка %1: %2</translation>
+        <translation type="unfinished">Ошибка %1: %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="305"/>
+        <location filename="wpmutils.cpp" line="322"/>
         <source>Empty package name</source>
-        <translation>Отсутствует имя пакета</translation>
+        <translation type="unfinished">Отсутствует имя пакета</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="309"/>
+        <location filename="wpmutils.cpp" line="326"/>
         <source>Empty segment at position %1 in %2</source>
-        <translation>Пустой сегмент на позиции %1 в %2</translation>
+        <translation type="unfinished">Пустой сегмент на позиции %1 в %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="314"/>
-        <location filename="wpmutils.cpp" line="323"/>
+        <location filename="wpmutils.cpp" line="331"/>
+        <location filename="wpmutils.cpp" line="340"/>
         <source>-- at position %1 in %2</source>
-        <translation>-- на позиции %1 в %2</translation>
+        <translation type="unfinished">-- на позиции %1 в %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="333"/>
+        <location filename="wpmutils.cpp" line="350"/>
         <source>Wrong character at position 1 in %1</source>
-        <translation>Неверный символ на позиции 1 в %1</translation>
+        <translation type="unfinished">Неверный символ на позиции 1 в %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="345"/>
-        <location filename="wpmutils.cpp" line="356"/>
-        <location filename="wpmutils.cpp" line="426"/>
+        <location filename="wpmutils.cpp" line="362"/>
+        <location filename="wpmutils.cpp" line="373"/>
+        <location filename="wpmutils.cpp" line="443"/>
         <source>Wrong character at position %1 in %2</source>
-        <translation>Неверный символ в %1 у %2</translation>
+        <translation type="unfinished">Неверный символ в %1 у %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="419"/>
+        <location filename="wpmutils.cpp" line="436"/>
         <source>Wrong length: %1</source>
-        <translation>Неверная длина: %1</translation>
+        <translation type="unfinished">Неверная длина: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="581"/>
+        <location filename="wpmutils.cpp" line="598"/>
         <source>Cannot determine MSI product location for GUID %1</source>
-        <translation>Невозможно установить размещение MSI продукта для GUID %1</translation>
+        <translation type="unfinished">Невозможно установить размещение MSI продукта для GUID %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="732"/>
+        <location filename="wpmutils.cpp" line="749"/>
         <source>The source and destination files are the same file.</source>
-        <translation>Исходный и файл назначения совпадают.</translation>
+        <translation type="unfinished">Исходный и файл назначения совпадают.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="735"/>
+        <location filename="wpmutils.cpp" line="752"/>
         <source>Multiple file paths were specified in the source buffer, but only one destination file path.</source>
-        <translation>Много путей для файлов было специфицировано в исходном буфере, но лишь один целевой путь.</translation>
+        <translation type="unfinished">Много путей для файлов было специфицировано в исходном буфере, но лишь один целевой путь.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="738"/>
+        <location filename="wpmutils.cpp" line="755"/>
         <source>Rename operation was specified but the destination path is a different directory. Use the move operation instead.</source>
-        <translation>Операция по переименованию была специфицирована, но целевой путь это другой директорий. Используйте вместо этого операцию перемещения.</translation>
+        <translation type="unfinished">Операция по переименованию была специфицирована, но целевой путь это другой директорий. Используйте вместо этого операцию перемещения.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="741"/>
+        <location filename="wpmutils.cpp" line="758"/>
         <source>The source is a root directory, which cannot be moved or renamed.</source>
-        <translation>Источник - корневая директория, которая не может быть перемещена или переименована.</translation>
+        <translation type="unfinished">Источник - корневая директория, которая не может быть перемещена или переименована.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="744"/>
+        <location filename="wpmutils.cpp" line="761"/>
         <source>The operation was canceled by the user, or silently canceled if the appropriate flags were supplied to SHFileOperation.</source>
-        <translation>Операция была отменена польователем, или тихо отменена, если соответствующие флаги были получены SHFileOperation.</translation>
+        <translation type="unfinished">Операция была отменена польователем, или тихо отменена, если соответствующие флаги были получены SHFileOperation.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="747"/>
+        <location filename="wpmutils.cpp" line="764"/>
         <source>The destination is a subtree of the source.</source>
-        <translation>Путь назначения - поддиректория источника.</translation>
+        <translation type="unfinished">Путь назначения - поддиректория источника.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="750"/>
+        <location filename="wpmutils.cpp" line="767"/>
         <source>Security settings denied access to the source.</source>
-        <translation>Настройки безопастности запрещают доступ к источнику.</translation>
+        <translation type="unfinished">Настройки безопастности запрещают доступ к источнику.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="753"/>
+        <location filename="wpmutils.cpp" line="770"/>
         <source>The source or destination path exceeded or would exceed MAX_PATH.</source>
-        <translation>Истоник или путь назначения превысили или могли бы превысить  MAX_PATH.</translation>
+        <translation type="unfinished">Истоник или путь назначения превысили или могли бы превысить  MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="756"/>
+        <location filename="wpmutils.cpp" line="773"/>
         <source>The operation involved multiple destination paths, which can fail in the case of a move operation.</source>
-        <translation>Операция использует много целевых путей, что может привести к ошибке в случае операции перемещения.</translation>
+        <translation type="unfinished">Операция использует много целевых путей, что может привести к ошибке в случае операции перемещения.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="759"/>
+        <location filename="wpmutils.cpp" line="776"/>
         <source>The path in the source or destination or both was invalid.</source>
-        <translation>Путь источника или назначения, или оба не существуют.</translation>
+        <translation type="unfinished">Путь источника или назначения, или оба не существуют.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="762"/>
+        <location filename="wpmutils.cpp" line="779"/>
         <source>The source and destination have the same parent folder.</source>
-        <translation>Источник и путь назначения имеют одинаковый родительский каталог</translation>
+        <translation type="unfinished">Источник и путь назначения имеют одинаковый родительский каталог</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="765"/>
+        <location filename="wpmutils.cpp" line="782"/>
         <source>The destination path is an existing file.</source>
-        <translation>Путь назначения - существующий файл.</translation>
+        <translation type="unfinished">Путь назначения - существующий файл.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="768"/>
+        <location filename="wpmutils.cpp" line="785"/>
         <source>The destination path is an existing folder.</source>
-        <translation>Путь назначения - существующая директория.</translation>
+        <translation type="unfinished">Путь назначения - существующая директория.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="771"/>
+        <location filename="wpmutils.cpp" line="788"/>
         <source>The name of the file exceeds MAX_PATH.</source>
-        <translation>Имя файла превышает MAX_PATH.</translation>
+        <translation type="unfinished">Имя файла превышает MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="774"/>
+        <location filename="wpmutils.cpp" line="791"/>
         <source>The destination is a read-only CD-ROM, possibly unformatted.</source>
-        <translation>Путь назначения - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
+        <translation type="unfinished">Путь назначения - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="777"/>
+        <location filename="wpmutils.cpp" line="794"/>
         <source>The destination is a read-only DVD, possibly unformatted.</source>
-        <translation>Путь назначения - DVD, доступный только для чтения, возможно не отформатирован.</translation>
+        <translation type="unfinished">Путь назначения - DVD, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="780"/>
+        <location filename="wpmutils.cpp" line="797"/>
         <source>The destination is a writable CD-ROM, possibly unformatted.</source>
-        <translation>Путь назначения - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
+        <translation type="unfinished">Путь назначения - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="783"/>
+        <location filename="wpmutils.cpp" line="800"/>
         <source>The file involved in the operation is too large for the destination media or file system.</source>
-        <translation>Файл, учавствующий в процессе, - слишком большой для файловой системы или устройства.</translation>
+        <translation type="unfinished">Файл, учавствующий в процессе, - слишком большой для файловой системы или устройства.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="786"/>
+        <location filename="wpmutils.cpp" line="803"/>
         <source>The source is a read-only CD-ROM, possibly unformatted.</source>
-        <translation>Источник - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
+        <translation type="unfinished">Источник - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="789"/>
+        <location filename="wpmutils.cpp" line="806"/>
         <source>The source is a read-only DVD, possibly unformatted.</source>
-        <translation>Источник - DVD, доступный только для чтения, возможно не отформатирован.</translation>
+        <translation type="unfinished">Источник - DVD, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="792"/>
+        <location filename="wpmutils.cpp" line="809"/>
         <source>The source is a writable CD-ROM, possibly unformatted.</source>
-        <translation>Источник - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
+        <translation type="unfinished">Источник - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="795"/>
+        <location filename="wpmutils.cpp" line="812"/>
         <source>MAX_PATH was exceeded during the operation.</source>
-        <translatorcomment>MAX_PATH был превышен во время процесса.</translatorcomment>
-        <translation>MAX_PATH был превышен во время операции.</translation>
+        <translation type="unfinished">MAX_PATH был превышен во время операции.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="798"/>
+        <location filename="wpmutils.cpp" line="815"/>
         <source>An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later.</source>
-        <translation>Случилась неизвестная ошибка. Это, как правило, произходит вследствии неверного пути в источнике или назначении. Эта ошибка не возникает на Windows Vista и более поздних.</translation>
+        <translation type="unfinished">Случилась неизвестная ошибка. Это, как правило, произходит вследствии неверного пути в источнике или назначении. Эта ошибка не возникает на Windows Vista и более поздних.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="801"/>
+        <location filename="wpmutils.cpp" line="818"/>
         <source>An unspecified error occurred on the destination.</source>
-        <translation>Произошла неизвестная ошибка в пути назначения.</translation>
+        <translation type="unfinished">Произошла неизвестная ошибка в пути назначения.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="804"/>
+        <location filename="wpmutils.cpp" line="821"/>
         <source>Destination is a root directory and cannot be renamed.</source>
-        <translation>Путь назначения - корневая директория и поэтому не может быть переименован.</translation>
+        <translation type="unfinished">Путь назначения - корневая директория и поэтому не может быть переименован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="829"/>
+        <location filename="wpmutils.cpp" line="846"/>
         <source>Error deleting %1: %2</source>
-        <translation>Ошибка удаления %1: %2</translation>
+        <translation type="unfinished">Ошибка удаления %1: %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="922"/>
+        <location filename="wpmutils.cpp" line="939"/>
         <source>Cannot delete the file: %1</source>
-        <translation>Невозможно удалить файл: %1</translation>
+        <translation type="unfinished">Невозможно удалить файл: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="937"/>
+        <location filename="wpmutils.cpp" line="954"/>
         <source>Cannot delete the directory: %1</source>
-        <translation>Невозможно удалить директорию: %1</translation>
+        <translation type="unfinished">Невозможно удалить директорию: %1</translation>
     </message>
 </context>
 <context>
