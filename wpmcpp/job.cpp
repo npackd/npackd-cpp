@@ -228,6 +228,7 @@ void Job::setHint(const QString &hint)
 {
     this->mutex.lock();
     this->hint = hint;
+    // qDebug() << hint;
     this->mutex.unlock();
 
     fireChange();

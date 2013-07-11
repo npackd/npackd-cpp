@@ -33,6 +33,7 @@
 #include <QDebug>
 #include <QLabel>
 #include <QDockWidget>
+#include <QTreeWidget>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -754,10 +755,34 @@ void MainWindow::fillList()
             break;
     }
 
+    int cat0 = this->mainFrame->getCategoryFilter(0);
+    int cat1 = this->mainFrame->getCategoryFilter(1);
+
     DBRepository* dbr = DBRepository::getDefault();
     QString err;
     QList<Package*> found = dbr->findPackages(status, statusInclude, query,
-            &err);
+            cat0, cat1, &err);
+
+    QList<QStringList> cats;
+    if (err.isEmpty()) {
+        cats = dbr->findCategories(status, statusInclude, query, 0, -1, -1,
+                &err);
+    }
+    if (err.isEmpty())
+        this->mainFrame->setCategories(0, cats);
+
+    this->mainFrame->setCategoryFilter(0, cat0);
+
+    if (err.isEmpty()) {
+        QList<QStringList> cats1;
+        if (cat0 >= 0) {
+            cats1 = dbr->findCategories(status, statusInclude, query, 1,
+                    cat0, -1, &err);
+        }
+        this->mainFrame->setCategories(1, cats1);
+    }
+
+    this->mainFrame->setCategoryFilter(1, cat1);
 
     if (!err.isEmpty())
         addErrorMessage(err, err, true, QMessageBox::Critical);

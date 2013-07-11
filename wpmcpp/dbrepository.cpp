@@ -120,7 +120,9 @@ Package *DBRepository::findPackage_(const QString &name)
 
     QMySqlQuery q;
     q.prepare("SELECT NAME, TITLE, URL, ICON, "
-            "DESCRIPTION, LICENSE FROM PACKAGE WHERE NAME = :NAME");
+            "DESCRIPTION, LICENSE, CATEGORY0, CATEGORY1, CATEGORY2, "
+            "CATEGORY3, CATEGORY4 "
+            "FROM PACKAGE WHERE NAME = :NAME");
     q.bindValue(":NAME", name);
     q.exec();
     if (q.next()) {
@@ -129,10 +131,37 @@ Package *DBRepository::findPackage_(const QString &name)
         p->icon = q.value(3).toString();
         p->description = q.value(4).toString();
         p->license = q.value(5).toString();
+        int cat0 = q.value(6).toInt();
+        int cat1 = q.value(7).toInt();
+        int cat2 = q.value(8).toInt();
+        int cat3 = q.value(9).toInt();
+        int cat4 = q.value(10).toInt();
+
+        int cat = cat4;
+        if (cat <= 0)
+            cat = cat3;
+        if (cat <= 0)
+            cat = cat2;
+        if (cat <= 0)
+            cat = cat1;
+        if (cat <= 0)
+            cat = cat0;
+
+        if (cat > 0) {
+            QString category = findCategory(cat);
+            if (!category.isEmpty())
+                p->categories.append(category);
+        }
+
         r = p;
     }
 
     return r;
+}
+
+QString DBRepository::findCategory(int cat) const
+{
+    return categories.value(cat);
 }
 
 PackageVersion* DBRepository::findPackageVersion_(
@@ -214,7 +243,8 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     return r;
 }
 
-QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(QString *err) const
+QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
+        QString *err) const
 {
     *err = "";
 
@@ -284,44 +314,203 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     return r;
 }
 
-QList<Package*> DBRepository::findPackages(Package::Status status, bool filterByStatus,
-        const QString& query, QString *err) const
+QList<Package*> DBRepository::findPackages(Package::Status status,
+        bool filterByStatus,
+        const QString& query, int cat0, int cat1, QString *err) const
 {
-    *err = "";
+    // qDebug() << "DBRepository::findPackages.0";
+
+    QString where;
+    QList<QVariant> params;
 
     QStringList keywords = query.toLower().simplified().split(" ",
             QString::SkipEmptyParts);
 
-    QList<Package*> r;
-
-    QMySqlQuery q;
-    QString sql = "SELECT NAME, TITLE, URL, ICON, "
-            "DESCRIPTION, LICENSE FROM PACKAGE";
-    QString where;
     for (int i = 0; i < keywords.count(); i++) {
         if (!where.isEmpty())
             where += " AND ";
         where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
+        params.append(QString("%" + keywords.at(i).toLower() + "%"));
     }
     if (filterByStatus) {
         if (!where.isEmpty())
             where += " AND ";
-        where += "STATUS = :STATUS";
+        if (status == Package::INSTALLED)
+            where += "STATUS >= :STATUS";
+        else
+            where += "STATUS = :STATUS";
+        params.append(QVariant((int) status));
     }
+
+    if (cat0 == 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY0 IS NULL";
+    } else if (cat0 > 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY0 = :CATEGORY0";
+        params.append(QVariant((int) cat0));
+    }
+
+    if (cat1 == 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY1 IS NULL";
+    } else if (cat1 > 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY1 = :CATEGORY1";
+        params.append(QVariant((int) cat1));
+    }
+
     if (!where.isEmpty())
-        sql += " WHERE " + where;
-    sql += " ORDER BY TITLE";
+        where = "WHERE " + where;
+
+    where += " ORDER BY TITLE";
+
+    // qDebug() << "DBRepository::findPackages.1";
+
+    return findPackagesWhere(where, params, err);
+}
+
+QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
+{
+    *err = "";
+
+    QString sql = "SELECT NAME FROM CATEGORY WHERE ID IN (" +
+            ids.join(", ") + ")";
+
+    QMySqlQuery q;
+
+    if (!q.prepare(sql))
+        *err = DBRepository::toString(q.lastError());
+
+    QStringList r;
+    if (err->isEmpty()) {
+        if (!q.exec())
+            *err = toString(q.lastError());
+        else {
+            while (q.next()) {
+                r.append(q.value(0).toString());
+            }
+        }
+    }
+
+    return r;
+}
+
+QList<QStringList> DBRepository::findCategories(Package::Status status,
+        bool filterByStatus,
+        const QString& query, int level, int cat0, int cat1, QString *err) const
+{
+    // qDebug() << "DBRepository::findPackages.0";
+
+    QString where;
+    QList<QVariant> params;
+
+    QStringList keywords = query.toLower().simplified().split(" ",
+            QString::SkipEmptyParts);
+
+    for (int i = 0; i < keywords.count(); i++) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
+        params.append(QString("%" + keywords.at(i).toLower() + "%"));
+    }
+    if (filterByStatus) {
+        if (!where.isEmpty())
+            where += " AND ";
+        if (status == Package::INSTALLED)
+            where += "STATUS >= :STATUS";
+        else
+            where += "STATUS = :STATUS";
+        params.append(QVariant((int) status));
+    }
+
+    if (cat0 == 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY0 IS NULL";
+    } else if (cat0 > 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY0 = :CATEGORY0";
+        params.append(QVariant((int) cat0));
+    }
+
+    if (cat1 == 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY1 IS NULL";
+    } else if (cat1 > 0) {
+        if (!where.isEmpty())
+            where += " AND ";
+        where += "CATEGORY1 = :CATEGORY1";
+        params.append(QVariant((int) cat1));
+    }
+
+    if (!where.isEmpty())
+        where = "WHERE " + where;
+
+    QString sql = QString("SELECT CATEGORY.ID, COUNT(*), CATEGORY.NAME FROM "
+            "PACKAGE LEFT JOIN CATEGORY ON PACKAGE.CATEGORY") +
+            QString::number(level) +
+            " = CATEGORY.ID " +
+            where + " GROUP BY CATEGORY.ID, CATEGORY.NAME";
+
+    QMySqlQuery q;
 
     if (!q.prepare(sql))
         *err = DBRepository::toString(q.lastError());
 
     if (err->isEmpty()) {
-        for (int i = 0; i < keywords.count(); i++) {
-            q.bindValue(":FULLTEXT" + QString::number(i),
-                    "%" + keywords.at(i).toLower() + "%");
+        for (int i = 0; i < params.count(); i++) {
+            q.bindValue(i, params.at(i));
         }
-        if (filterByStatus)
-            q.bindValue(":STATUS", status);
+    }
+
+    QList<QStringList> r;
+    if (err->isEmpty()) {
+        if (!q.exec())
+            *err = toString(q.lastError());
+
+        while (q.next()) {
+            QStringList sl;
+            sl.append(q.value(0).toString());
+            sl.append(q.value(1).toString());
+            sl.append(q.value(2).toString());
+            r.append(sl);
+        }
+    }
+
+    return r;
+}
+
+QList<Package*> DBRepository::findPackagesWhere(const QString& where,
+        const QList<QVariant>& params,
+        QString *err) const
+{
+    *err = "";
+
+    QList<Package*> r;
+
+    QMySqlQuery q;
+    QString sql = "SELECT NAME, TITLE, URL, ICON, "
+            "DESCRIPTION, LICENSE, "
+            "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+            "FROM PACKAGE";
+
+    if (!where.isEmpty())
+        sql += " " + where;
+
+    if (!q.prepare(sql))
+        *err = DBRepository::toString(q.lastError());
+
+    if (err->isEmpty()) {
+        for (int i = 0; i < params.count(); i++) {
+            q.bindValue(i, params.at(i));
+        }
     }
 
     if (err->isEmpty()) {
@@ -334,6 +523,29 @@ QList<Package*> DBRepository::findPackages(Package::Status status, bool filterBy
             p->icon = q.value(3).toString();
             p->description = q.value(4).toString();
             p->license = q.value(5).toString();
+
+            int cat0 = q.value(6).toInt();
+            int cat1 = q.value(7).toInt();
+            int cat2 = q.value(8).toInt();
+            int cat3 = q.value(9).toInt();
+            int cat4 = q.value(10).toInt();
+
+            int cat = cat4;
+            if (cat <= 0)
+                cat = cat3;
+            if (cat <= 0)
+                cat = cat2;
+            if (cat <= 0)
+                cat = cat1;
+            if (cat <= 0)
+                cat = cat0;
+
+            if (cat > 0) {
+                QString category = findCategory(cat);
+                if (!category.isEmpty())
+                    p->categories.append(category);
+            }
+
             r.append(p);
         }
     }
@@ -341,12 +553,83 @@ QList<Package*> DBRepository::findPackages(Package::Status status, bool filterBy
     return r;
 }
 
+int DBRepository::insertCategory(int parent, int level,
+        const QString& category, QString* err)
+{
+    *err = "";
+
+    QMySqlQuery q;
+    QString sql = "SELECT ID FROM CATEGORY WHERE PARENT = :PARENT AND "
+            "LEVEL = :LEVEL AND NAME = :NAME";
+    q.prepare(sql);
+    q.bindValue(":NAME", category);
+    q.bindValue(":PARENT", parent);
+    q.bindValue(":LEVEL", level);
+    q.exec(); // TODO: check result
+
+    int id;
+    if (q.next())
+        id = q.value(0).toInt();
+    else {
+        sql = "INSERT INTO CATEGORY "
+                "(ID, NAME, PARENT, LEVEL) "
+                "VALUES (NULL, :NAME, :PARENT, :LEVEL)";
+        q.prepare(sql); // TODO: test return value in all .prepare() calls
+        q.bindValue(":NAME", category);
+        q.bindValue(":PARENT", parent);
+        q.bindValue(":LEVEL", level);
+        q.exec();
+        id = q.lastInsertId().toInt();
+        *err = toString(q.lastError());
+    }
+
+    return id;
+}
+
 QString DBRepository::savePackage(Package *p, bool replace)
 {
+    QString err;
+
     /*
     if (p->name == "com.microsoft.Windows64")
         qDebug() << p->name << "->" << p->description;
         */
+
+    int cat0 = 0;
+    int cat1 = 0;
+    int cat2 = 0;
+    int cat3 = 0;
+    int cat4 = 0;
+
+    if (p->categories.count() > 0) {
+        QString category = p->categories.at(0);
+        QStringList cats = category.split('|');
+        for (int i = 0; i < cats.length(); i++) {
+            cats[i] = cats.at(i).trimmed();
+        }
+
+        QString c;
+        if (cats.count() > 0) {
+            c = cats.at(0);
+            cat0 = insertCategory(0, 0, c, &err);
+        }
+        if (cats.count() > 1) {
+            c = cats.at(1);
+            cat1 = insertCategory(cat0, 1, c, &err);
+        }
+        if (cats.count() > 2) {
+            c = cats.at(2);
+            cat2 = insertCategory(cat1, 2, c, &err);
+        }
+        if (cats.count() > 3) {
+            c = cats.at(3);
+            cat3 = insertCategory(cat2, 3, c, &err);
+        }
+        if (cats.count() > 4) {
+            c = cats.at(4);
+            cat4 = insertCategory(cat3, 4, c, &err);
+        }
+    }
 
     QMySqlQuery q;
     QString sql = "INSERT OR ";
@@ -356,9 +639,11 @@ QString DBRepository::savePackage(Package *p, bool replace)
         sql += "IGNORE";
     sql += " INTO PACKAGE "
             "(NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE, FULLTEXT, "
-            "STATUS, SHORT_NAME)"
+            "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
+            " CATEGORY4)"
             "VALUES(:NAME, :TITLE, :URL, :ICON, :DESCRIPTION, :LICENSE, "
-            ":FULLTEXT, :STATUS, :SHORT_NAME)";
+            ":FULLTEXT, :STATUS, :SHORT_NAME, "
+            ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
     q.prepare(sql);
     q.bindValue(":NAME", p->name);
     q.bindValue(":TITLE", p->title);
@@ -370,8 +655,30 @@ QString DBRepository::savePackage(Package *p, bool replace)
             p->name).toLower());
     q.bindValue(":STATUS", 0);
     q.bindValue(":SHORT_NAME", p->getShortName());
+    if (cat0 == 0)
+        q.bindValue(":CATEGORY0", QVariant(QVariant::Int));
+    else
+        q.bindValue(":CATEGORY0", cat0);
+    if (cat1 == 0)
+        q.bindValue(":CATEGORY1", QVariant(QVariant::Int));
+    else
+        q.bindValue(":CATEGORY1", cat1);
+    if (cat2 == 0)
+        q.bindValue(":CATEGORY2", QVariant(QVariant::Int));
+    else
+        q.bindValue(":CATEGORY2", cat2);
+    if (cat3 == 0)
+        q.bindValue(":CATEGORY3", QVariant(QVariant::Int));
+    else
+        q.bindValue(":CATEGORY3", cat3);
+    if (cat4 == 0)
+        q.bindValue(":CATEGORY4", QVariant(QVariant::Int));
+    else
+        q.bindValue(":CATEGORY4", cat4);
     q.exec();
-    return toString(q.lastError());
+    err = toString(q.lastError());
+
+    return err;
 }
 
 QString DBRepository::savePackage(Package *p)
@@ -401,6 +708,8 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
         p->license = q.value(5).toString();
         r.append(p);
     }
+
+    // TODO: read category
 
     return r;
 }
@@ -477,6 +786,8 @@ QString DBRepository::clear()
 {
     Job* job = new Job();
 
+    this->categories.clear();
+
     if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
@@ -507,6 +818,14 @@ QString DBRepository::clear()
             job->setErrorMessage(err);
         else
             job->setProgress(0.96);
+    }
+
+    if (job->shouldProceed(QObject::tr("Clearing the categories table"))) {
+        QString err = exec("DELETE FROM CATEGORY");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.97);
     }
 
     if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
@@ -566,6 +885,8 @@ void DBRepository::updateF5(Job* job)
     }
     timer.time(3);
 
+    // qDebug() << "updateF5.0";
+
     timer.time(4);
     if (job->shouldProceed(QObject::tr("Refreshing the installation status"))) {
         Job* sub = job->newSubJob(0.1);
@@ -575,12 +896,16 @@ void DBRepository::updateF5(Job* job)
         delete sub;
     }
 
+    // qDebug() << "updateF5.1";
+
     timer.time(5);
     if (job->shouldProceed(
             QObject::tr("Updating the status for installed packages in the database"))) {
         updateStatusForInstalled();
         job->setProgress(0.98);
     }
+
+    // qDebug() << "updateF5.2";
 
     if (job->shouldProceed(
             QObject::tr("Removing packages without versions"))) {
@@ -780,6 +1105,8 @@ QString DBRepository::open()
 
     if (err.isEmpty()) {
         if (!e) {
+            // NULL should be stored in CATEGORYx if a package is not
+            // categorized
             db.exec("CREATE TABLE PACKAGE(NAME TEXT, "
                     "TITLE TEXT, "
                     "URL TEXT, "
@@ -789,7 +1116,12 @@ QString DBRepository::open()
                     "FULLTEXT TEXT, "
                     "STATUS INTEGER, "
                     "SHORT_NAME TEXT, "
-                    "REPOSITORY INTEGER"
+                    "REPOSITORY INTEGER, "
+                    "CATEGORY0 INTEGER, "
+                    "CATEGORY1 INTEGER, "
+                    "CATEGORY2 INTEGER, "
+                    "CATEGORY3 INTEGER, "
+                    "CATEGORY4 INTEGER"
                     ")");
             err = toString(db.lastError());
         }
@@ -812,6 +1144,25 @@ QString DBRepository::open()
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_SHORT_NAME ON PACKAGE(SHORT_NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        e = tableExists(&db, "CATEGORY", &err);
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE CATEGORY(ID INTEGER PRIMARY KEY ASC, "
+                    "NAME TEXT, PARENT INTEGER, LEVEL INTEGER)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX CATEGORY_ID ON CATEGORY(ID)");
             err = toString(db.lastError());
         }
     }

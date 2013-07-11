@@ -124,6 +124,51 @@ Package* Repository::createPackage(QDomElement* e, QString* err)
         a->license = XMLUtils::getTagContent(*e, "license");
     }
 
+    if (err->isEmpty()) {
+        QDomNodeList categories = e->elementsByTagName("category");
+        for (int i = 0; i < categories.count(); i++) {
+            QDomElement e = categories.at(i).toElement();
+            QString c = e.text().trimmed();
+
+            if (c.isEmpty()) {
+                err->append(QString(
+                        QObject::tr("Empty category tag for %1")).
+                        arg(a->title));
+                break;
+            }
+
+            if (a->categories.contains(c)) {
+                err->append(QString(
+                        QObject::tr("More than one <category> %1 for %2")).
+                        arg(c).arg(a->title));
+                break;
+            }
+
+            QStringList parts = c.split('|', QString::KeepEmptyParts);
+            if (parts.count() == 0) {
+                err->append(QString(
+                        QObject::tr("Empty category tag for %1")).
+                        arg(a->title));
+                break;
+            }
+
+            for (int j = 0; j < parts.count(); j++) {
+                QString part = parts.at(j).trimmed();
+                if (part.isEmpty()) {
+                    err->append(QString(
+                            QObject::tr("Empty sub-category for %1")).
+                            arg(a->title));
+                    goto out;
+                }
+                parts[j] = part;
+            }
+
+            a->categories.append(parts.join("|"));
+        }
+    }
+
+out:
+
     if (err->isEmpty())
         return a;
     else {

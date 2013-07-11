@@ -29,6 +29,16 @@ private:
 
     QCache<QString, License> licenses;
 
+    QMap<int, QString> categories;
+    QMap<QString, int> categories2;
+
+    int insertCategory(int parent, int level,
+            const QString &category, QString *err);
+    QString findCategory(int cat) const;
+
+    QList<Package*> findPackagesWhere(const QString &where,
+            const QList<QVariant> &params, QString *err) const;
+
     /**
      * @brief inserts or updates an existing license
      * @param p a license
@@ -150,11 +160,15 @@ public:
      * @param statusInclude true = only return packages with the given status,
      *     false = return all packages with the status not equal to the given
      * @param query search query (keywords)
+     * @param cat0 filter for the level 0 of categories. -1 means "All",
+     *     0 means "Uncategorized"
+     * @param cat1 filter for the level 1 of categories. -1 means "All",
+     *     0 means "Uncategorized"
      * @param err error message will be stored here
      * @return [ownership:caller] found packages
      */
     QList<Package*> findPackages(Package::Status status, bool filterByStatus,
-            const QString &query, QString* err) const;
+            const QString &query, int cat0, int cat1, QString* err) const;
 
     /**
      * @brief loads does all the necessary updates when F5 is pressed. The
@@ -179,6 +193,32 @@ public:
     QString clear();
 
     QList<Package*> findPackagesByShortName(const QString &name);
+
+    /**
+     * @brief searches for packages that match the specified keywords
+     * @param status filter for the package status if filterByStatus is true
+     * @param statusInclude true = only return packages with the given status,
+     *     false = return all packages with the status not equal to the given
+     * @param query search query (keywords)
+     * @param level level for the categories (0, 1, ...)
+     * @param cat0 filter for the level 0 of categories. -1 means "All",
+     *     0 means "Uncategorized"
+     * @param cat1 filter for the level 1 of categories. -1 means "All",
+     *     0 means "Uncategorized"
+     * @param err error message will be stored here
+     * @return categories for found packages: ID, COUNT, NAME. One category may
+     *     have all values empty showing all un-categorized packages.
+     */
+    QList<QStringList> findCategories(Package::Status status,
+            bool filterByStatus, const QString &query, int level, int cat0, int cat1, QString *err) const;
+
+    /**
+     * @brief converts category IDs in titles
+     * @param ids CATEGORY.ID
+     * @param err error message will be stored here
+     * @return category titles
+     */
+    QStringList getCategories(const QStringList &ids, QString *err);
 };
 
 #endif // DBREPOSITORY_H
