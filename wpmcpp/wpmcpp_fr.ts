@@ -1405,45 +1405,36 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="commandline.cpp" line="42"/>
         <source>Missing option name: %1</source>
-        <translation type="unfinished">Il maque le nom de l&apos;option : %1</translation>
+        <translation type="obsolete">Il maque le nom de l&apos;option : %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="46"/>
         <source>Option name expected: %1</source>
-        <translation type="unfinished">Nom d&apos;option attendu : %1</translation>
+        <translation type="obsolete">Nom d&apos;option attendu : %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="61"/>
         <source>Option name cannot start with the equality sign: %1</source>
-        <translation type="unfinished">Le nom de l&apos;option ne peut pas démarrer avec un signe d&apos;égalité : %1</translation>
+        <translation type="obsolete">Le nom de l&apos;option ne peut pas démarrer avec un signe d&apos;égalité : %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="64"/>
-        <location filename="commandline.cpp" line="74"/>
         <source>Only one-letter options can start with a minus sign: %1</source>
-        <translation type="unfinished">Seuls les options courtes (une seule lettre) peuvent démarrer avec un seul signe moins : %1</translation>
+        <translation type="obsolete">Seuls les options courtes (une seule lettre) peuvent démarrer avec un seul signe moins : %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="92"/>
         <source>Unknown option: %1</source>
-        <translation type="unfinished">Option inconnue : %1</translation>
+        <translation type="obsolete">Option inconnue : %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="95"/>
         <source>Unexpected value for the option %1</source>
-        <translation type="unfinished">Valeur innatendue pour l&apos;option %1</translation>
+        <translation type="obsolete">Valeur innatendue pour l&apos;option %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="105"/>
         <source>Missing value for the option %1</source>
-        <translation type="unfinished">Valeur manquante pour l&apos;option %1</translation>
+        <translation type="obsolete">Valeur manquante pour l&apos;option %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="187"/>
         <source>CommandLineToArgvW failed</source>
-        <translation type="unfinished">Echec de CommandLineToArgvW</translation>
+        <translation type="obsolete">Echec de CommandLineToArgvW</translation>
     </message>
 </context>
 <context>
@@ -1451,176 +1442,176 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="abstractrepository.cpp" line="76"/>
         <source>Cannot find the package version %1 %2: %3</source>
-        <translation type="unfinished">Impossible de trouver la version %2 du paquet %1 : %3</translation>
+        <translation>Impossible de trouver la version %2 du paquet %1 : %3</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="84"/>
         <source>Cannot find the package version %1 %2</source>
-        <translation type="unfinished">Impossible de trouver la version %2 du paquet %1</translation>
+        <translation>Impossible de trouver la version %2 du paquet %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="106"/>
         <source>Installing %1</source>
-        <translation type="unfinished">Installation de %1</translation>
+        <translation>Installation de %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="109"/>
         <source>Uninstalling %1</source>
-        <translation type="unfinished">Désinstallation de %1</translation>
+        <translation>Désinstallation de %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="177"/>
         <source>No installable version found for the package %1</source>
-        <translation type="unfinished">Il ný a pas de version installable trouvée pour le paquet %1</translation>
+        <translation>Il ný a pas de version installable trouvée pour le paquet %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="184"/>
         <source>Cannot find the newest installed version for %1: %2</source>
-        <translation type="unfinished">Impossible de trouver la dernière version installée pour le paquet %1 : %2</translation>
+        <translation>Impossible de trouver la dernière version installée pour le paquet %1 : %2</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="190"/>
         <source>No installed version found for the package %1</source>
-        <translation type="unfinished">Pas de version installée trouvée pour le paquet %1</translation>
+        <translation>Pas de version installée trouvée pour le paquet %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="196"/>
         <source>The newest version (%1) for the package %2 is already installed</source>
-        <translation type="unfinished">La dernière version (%1) du paquet %2 est déjà installée</translation>
+        <translation>La dernière version (%1) du paquet %2 est déjà installée</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="188"/>
         <location filename="dbrepository.cpp" line="226"/>
         <location filename="dbrepository.cpp" line="266"/>
-        <location filename="dbrepository.cpp" line="768"/>
+        <location filename="dbrepository.cpp" line="769"/>
         <location filename="repository.cpp" line="340"/>
         <location filename="repository.cpp" line="377"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
-        <translation type="unfinished">L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
+        <translation>L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="791"/>
-        <location filename="dbrepository.cpp" line="930"/>
+        <location filename="dbrepository.cpp" line="792"/>
+        <location filename="dbrepository.cpp" line="931"/>
         <source>Starting an SQL transaction</source>
-        <translation type="unfinished">Démarrage d&apos;une transaction SQL</translation>
+        <translation>Démarrage d&apos;une transaction SQL</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="799"/>
+        <location filename="dbrepository.cpp" line="800"/>
         <source>Clearing the packages table</source>
-        <translation type="unfinished">Effacement de la table des paquets</translation>
+        <translation>Effacement de la table des paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="807"/>
+        <location filename="dbrepository.cpp" line="808"/>
         <source>Clearing the package versions table</source>
-        <translation type="unfinished">Effacement de la table des versions de paquets</translation>
+        <translation>Effacement de la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="815"/>
+        <location filename="dbrepository.cpp" line="816"/>
         <source>Clearing the licenses table</source>
-        <translation type="unfinished">Effacement de la table des licences</translation>
+        <translation>Effacement de la table des licences</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="823"/>
+        <location filename="dbrepository.cpp" line="824"/>
         <source>Clearing the categories table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="831"/>
-        <location filename="dbrepository.cpp" line="962"/>
+        <location filename="dbrepository.cpp" line="832"/>
+        <location filename="dbrepository.cpp" line="963"/>
         <source>Commiting the SQL transaction</source>
-        <translation type="unfinished">Application de la transaction SQL</translation>
+        <translation>Application de la transaction SQL</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="861"/>
+        <location filename="dbrepository.cpp" line="862"/>
         <source>Clearing the database</source>
-        <translation type="unfinished">Effacement de la base de données</translation>
+        <translation>Effacement de la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="870"/>
+        <location filename="dbrepository.cpp" line="871"/>
         <source>Downloading the remote repositories</source>
-        <translation type="unfinished">Téléchargement des dépôts distants</translation>
+        <translation>Téléchargement des dépôts distants</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="879"/>
+        <location filename="dbrepository.cpp" line="880"/>
         <source>Filling the local database</source>
-        <translation type="unfinished">Remplissage de la base de données locale</translation>
+        <translation>Remplissage de la base de données locale</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="891"/>
+        <location filename="dbrepository.cpp" line="892"/>
         <source>Refreshing the installation status</source>
-        <translation type="unfinished">Rafraîchissement du statut de l&apos;installation</translation>
+        <translation>Rafraîchissement du statut de l&apos;installation</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="903"/>
+        <location filename="dbrepository.cpp" line="904"/>
         <source>Updating the status for installed packages in the database</source>
-        <translation type="unfinished">Mise à jour des paquets installées dans la base de données</translation>
+        <translation>Mise à jour des paquets installées dans la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="911"/>
+        <location filename="dbrepository.cpp" line="912"/>
         <source>Removing packages without versions</source>
-        <translation type="unfinished">Suppression des paquets sans version associée</translation>
+        <translation>Suppression des paquets sans version associée</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="938"/>
+        <location filename="dbrepository.cpp" line="939"/>
         <source>Inserting data in the packages table</source>
-        <translation type="unfinished">Insertion des données dans la table des paquets</translation>
+        <translation>Insertion des données dans la table des paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="946"/>
+        <location filename="dbrepository.cpp" line="947"/>
         <source>Inserting data in the package versions table</source>
-        <translation type="unfinished">Insertion des données dans la table des versions de paquets</translation>
+        <translation>Insertion des données dans la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="954"/>
+        <location filename="dbrepository.cpp" line="955"/>
         <source>Inserting data in the licenses table</source>
-        <translation type="unfinished">Insertion des données dans la table des licences</translation>
+        <translation>Insertion des données dans la table des licences</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="25"/>
         <source>Connecting</source>
-        <translation type="unfinished">Connexion</translation>
+        <translation>Connexion</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="137"/>
         <source>Cancelled by the user</source>
-        <translation type="unfinished">Annulé par l&apos;utilisateur</translation>
+        <translation>Annulé par l&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="140"/>
         <source>Invalid handle</source>
-        <translation type="unfinished">Traitement invalide</translation>
+        <translation>Traitement invalide</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="144"/>
         <source>Unknown error %1 from InternetErrorDlg</source>
-        <translation type="unfinished">Erreur inconnue %1 de InternetErrorDlg</translation>
+        <translation>Erreur inconnue %1 de InternetErrorDlg</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="160"/>
         <source>The HTTP proxy requires authentication.</source>
-        <translation type="unfinished">Le proxy HTTP requiert une authentification.</translation>
+        <translation>Le proxy HTTP requiert une authentification.</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="161"/>
         <location filename="downloader.cpp" line="188"/>
         <source>Username</source>
-        <translation type="unfinished">Nom d&apos;utilisateur</translation>
+        <translation>Nom d&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="163"/>
         <location filename="downloader.cpp" line="190"/>
         <source>Password</source>
-        <translation type="unfinished">Mot de passe</translation>
+        <translation>Mot de passe</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="186"/>
         <source>The HTTP server requires authentication.</source>
-        <translation type="unfinished">Le serveur HTTP requiert une authentification.</translation>
+        <translation>Le serveur HTTP requiert une authentification.</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="215"/>
         <source>Cannot handle HTTP status code %1</source>
-        <translation type="unfinished">Impossible de traiter le code de statut HTTP %1</translation>
+        <translation>Impossible de traiter le code de statut HTTP %1</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="246"/>
@@ -1628,7 +1619,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageversion.cpp" line="667"/>
         <location filename="repository.cpp" line="318"/>
         <source>Downloading</source>
-        <translation type="unfinished">Téléchargement</translation>
+        <translation>Téléchargement</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="460"/>
@@ -1636,39 +1627,39 @@ p, li { white-space: pre-wrap; }
         <location filename="downloader.cpp" line="483"/>
         <location filename="downloader.cpp" line="515"/>
         <source>zlib error %1</source>
-        <translation type="unfinished">Erreur zlib %1</translation>
+        <translation>Erreur zlib %1</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="503"/>
         <location filename="downloader.cpp" line="565"/>
         <source>%L0 of %L1 bytes</source>
-        <translation type="unfinished">%L0 de %L1 octets</translation>
+        <translation>%L0 de %L1 octets</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="508"/>
         <location filename="downloader.cpp" line="570"/>
         <source>%L0 bytes</source>
-        <translation type="unfinished">%L0 octets</translation>
+        <translation>%L0 octets</translation>
     </message>
     <message>
         <location filename="downloader.cpp" line="619"/>
         <source>Error opening file: %1</source>
-        <translation type="unfinished">Erreur lors de l&apos;ouverture du fichier: %1</translation>
+        <translation>Erreur lors de l&apos;ouverture du fichier: %1</translation>
     </message>
     <message>
         <location filename="installedpackages.cpp" line="272"/>
         <source>Detecting directories deleted externally</source>
-        <translation type="unfinished">Détection des dossiers supprimés hors de l&apos;application</translation>
+        <translation>Détection des dossiers supprimés hors de l&apos;application</translation>
     </message>
     <message>
         <location filename="installedpackages.cpp" line="294"/>
         <source>Reading registry package database</source>
-        <translation type="unfinished">Lecture de la base de données de paquets dans le registre</translation>
+        <translation>Lecture de la base de données de paquets dans le registre</translation>
     </message>
     <message>
         <location filename="installedpackages.cpp" line="304"/>
         <source>Adding well-known packages</source>
-        <translation type="unfinished">Ajout des paquets fortement reconnus</translation>
+        <translation>Ajout des paquets fortement reconnus</translation>
     </message>
     <message>
         <location filename="installedpackages.cpp" line="314"/>
@@ -1678,32 +1669,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="installedpackages.cpp" line="326"/>
         <source>Reading the list of packages installed by Npackd</source>
-        <translation type="unfinished">Lecture de la liste des paquets installés par Npackd</translation>
+        <translation>Lecture de la liste des paquets installés par Npackd</translation>
     </message>
     <message>
         <location filename="installedpackages.cpp" line="335"/>
         <source>Detecting MSI packages</source>
-        <translation type="unfinished">Détection des paquets MSI</translation>
+        <translation>Détection des paquets MSI</translation>
     </message>
     <message>
         <location filename="installedpackages.cpp" line="349"/>
         <source>Detecting software control panel packages</source>
-        <translation type="unfinished">Détection des paquets du panneau de configuration des programmes</translation>
+        <translation>Détection des paquets du panneau de configuration des programmes</translation>
     </message>
     <message>
         <location filename="installedpackages.cpp" line="359"/>
         <source>Clearing information about installed package versions in nested directories</source>
-        <translation type="unfinished">Effacement des informations relatives aux versions de paquets installées dans des répertoires imbriqués</translation>
+        <translation>Effacement des informations relatives aux versions de paquets installées dans des répertoires imbriqués</translation>
     </message>
     <message>
         <location filename="main.cpp" line="68"/>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
-        <translation type="unfinished">La version 32-bit de Npackd requiert un système d&apos;exploitation 32-bit.</translation>
+        <translation>La version 32-bit de Npackd requiert un système d&apos;exploitation 32-bit.</translation>
     </message>
     <message>
         <location filename="main.cpp" line="69"/>
         <source>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</source>
-        <translation type="unfinished">Veuillez télécharger la version 64-bit depuis http://code.google.com/p/windows-package-manager/</translation>
+        <translation>Veuillez télécharger la version 64-bit depuis http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
         <location filename="mainframe.cpp" line="105"/>
@@ -1719,140 +1710,140 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.cpp" line="261"/>
         <source>Packages</source>
-        <translation type="unfinished">Paquets</translation>
+        <translation>Paquets</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="518"/>
         <location filename="mainwindow.cpp" line="990"/>
         <source>Cannot exit while jobs are running</source>
-        <translation type="unfinished">Impossible de quitter lorsque des tâches sont en cours</translation>
+        <translation>Impossible de quitter lorsque des tâches sont en cours</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="611"/>
         <source>0 Jobs</source>
-        <translation type="unfinished">0 Tâches</translation>
+        <translation>0 Tâches</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="613"/>
         <source>1 Job (%1%, %2)</source>
-        <translation type="unfinished">1 Tâche (%1, %2)</translation>
+        <translation>1 Tâche (%1, %2)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="616"/>
         <source>%1 Jobs (%2%, %3)</source>
-        <translation type="unfinished">%1 Tâches (%2, %3)</translation>
+        <translation>%1 Tâches (%2, %3)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="815"/>
         <source>Cannot find the package version %1: %2</source>
-        <translation type="unfinished">Impossible de trouver la version de paquet %1 : %2</translation>
+        <translation>Impossible de trouver la version de paquet %1 : %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="821"/>
         <source>The package %1 is locked by a currently running installation/removal.</source>
-        <translation type="unfinished">Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
+        <translation>Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="887"/>
         <source>Installing</source>
-        <translation type="unfinished">Installation</translation>
+        <translation>Installation</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="889"/>
         <source>Uninstalling</source>
-        <translation type="unfinished">Désinstallation</translation>
+        <translation>Désinstallation</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="901"/>
         <source>Cannot find the package version</source>
-        <translation type="unfinished">Impossible de trouver la version du paquet</translation>
+        <translation>Impossible de trouver la version du paquet</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="908"/>
         <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
-        <translation type="unfinished">Le paquet %1 va être désinstallé. Le dossier correspondant %2 va être totalement supprimé. Il n&apos;y a aucun moyen de restaurer les fichiers.</translation>
+        <translation>Le paquet %1 va être désinstallé. Le dossier correspondant %2 va être totalement supprimé. Il n&apos;y a aucun moyen de restaurer les fichiers.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="911"/>
         <location filename="mainwindow.cpp" line="923"/>
         <source>Uninstall</source>
-        <translation type="unfinished">Désinstaller</translation>
+        <translation>Désinstaller</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="913"/>
         <source>Installing %1 packages</source>
-        <translation type="unfinished">Installation de %1 paquets</translation>
+        <translation>Installation de %1 paquets</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="915"/>
         <source>%1 package(s) will be installed: %2</source>
-        <translation type="unfinished">Installation de %1 paquet(s) : %2</translation>
+        <translation>Installation de %1 paquet(s) : %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="917"/>
         <source>Install</source>
-        <translation type="unfinished">Installer</translation>
+        <translation>Installer</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="919"/>
         <source>Uninstalling %1 packages</source>
-        <translation type="unfinished">Désinstallation de %1 paquets</translation>
+        <translation>Désinstallation de %1 paquets</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="921"/>
         <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
-        <translation type="unfinished">Installation de %1 paquet(s) : %2. Les dossiers correspondants vont etre totalement supprimés. Il n&apos;y a aucun moyen de restaurer les fichiers.</translation>
+        <translation>Installation de %1 paquet(s) : %2. Les dossiers correspondants vont etre totalement supprimés. Il n&apos;y a aucun moyen de restaurer les fichiers.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="925"/>
         <source>Installing %1 packages, uninstalling %2 packages</source>
-        <translation type="unfinished">Installation de %1 paquets, désinstallation de %2 paquets</translation>
+        <translation>Installation de %1 paquets, désinstallation de %2 paquets</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="927"/>
         <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
-        <translation type="unfinished">Désinstallation de %1 paquet(s) : %2 (les dossiers correspondants vont etre totalement supprimés; il n&apos;y a aucun moyen de restaurer les fichiers) et installation de %3 paquets : %4.</translation>
+        <translation>Désinstallation de %1 paquet(s) : %2 (les dossiers correspondants vont etre totalement supprimés; il n&apos;y a aucun moyen de restaurer les fichiers) et installation de %3 paquets : %4.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="932"/>
         <location filename="mainwindow.cpp" line="1749"/>
         <source>Install/Uninstall</source>
-        <translation type="unfinished">Installer/Désinstaller</translation>
+        <translation>Installer/Désinstaller</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1133"/>
         <source>Error finding the newest installed version for %1: %2</source>
-        <translation type="unfinished">Erreur lors de la recherche de la dernière version installée pour %1 : %2</translation>
+        <translation>Erreur lors de la recherche de la dernière version installée pour %1 : %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1339"/>
         <source>Initializing</source>
-        <translation type="unfinished">Initialisation</translation>
+        <translation>Initialisation</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1556"/>
         <source>Settings</source>
-        <translation type="unfinished">Paramètres</translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1655"/>
         <source>About</source>
-        <translation type="unfinished">A propos</translation>
+        <translation>A propos</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1656"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;body&gt;Npackd %1 - gestionnaire de paquets pour Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - gestionnaire de paquets pour Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1713"/>
         <source>Jobs</source>
-        <translation type="unfinished">Tâches</translation>
+        <translation>Tâches</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1733"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation type="unfinished">Impossible de démarrer le scan. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
+        <translation>Impossible de démarrer le scan. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1807"/>
@@ -1867,23 +1858,23 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.cpp" line="1835"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation type="unfinished">Impossible de recharger les dépôts. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
+        <translation>Impossible de recharger les dépôts. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
         <location filename="messageframe.cpp" line="19"/>
         <source>Dismiss</source>
-        <translation type="unfinished">Fermer</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <location filename="messageframe.cpp" line="22"/>
         <location filename="messageframe.cpp" line="60"/>
         <source>Dismiss (%1 seconds)</source>
-        <translation type="unfinished">Fermer (%1 seconde(s))</translation>
+        <translation>Fermer (%1 seconde(s))</translation>
     </message>
     <message>
         <location filename="msithirdpartypm.cpp" line="51"/>
         <source>MSI database</source>
-        <translation type="unfinished">Base de données MSI</translation>
+        <translation>Base de données MSI</translation>
     </message>
     <message>
         <location filename="packageframe.cpp" line="71"/>
@@ -1891,7 +1882,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageversionform.cpp" line="70"/>
         <location filename="packageversionform.cpp" line="90"/>
         <source>unknown</source>
-        <translation type="unfinished">inconnu</translation>
+        <translation>inconnu</translation>
     </message>
     <message>
         <location filename="packageframe.cpp" line="108"/>
@@ -1901,22 +1892,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="packageframe.cpp" line="110"/>
         <source>Installation path</source>
-        <translation type="unfinished">Chemin d&apos;installation</translation>
+        <translation>Chemin d&apos;installation</translation>
     </message>
     <message>
         <location filename="packageframe.cpp" line="119"/>
         <source>Error fetching package versions: %1</source>
-        <translation type="unfinished">Erreur lors de la récupération des versions de paquets : %1</translation>
+        <translation>Erreur lors de la récupération des versions de paquets : %1</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="186"/>
         <source>Icon</source>
-        <translation type="unfinished">Icône</translation>
+        <translation>Icône</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="189"/>
         <source>Title</source>
-        <translation type="unfinished">Nom</translation>
+        <translation>Nom</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="192"/>
@@ -1926,362 +1917,362 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="packageitemmodel.cpp" line="195"/>
         <source>Available</source>
-        <translation type="unfinished">Disponible</translation>
+        <translation>Disponible</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="198"/>
         <source>Installed</source>
-        <translation type="unfinished">Installé</translation>
+        <translation>Installé</translation>
     </message>
     <message>
         <location filename="packageitemmodel.cpp" line="201"/>
         <source>License</source>
-        <translation type="unfinished">Licence</translation>
+        <translation>Licence</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="198"/>
         <source>Error storing the information about an installed package version in the Windows registry: %1</source>
-        <translation type="unfinished">Erreur lors de la sauvegarde dans le registre d&apos;information à propos d&apos;un paquet installé : %1</translation>
+        <translation>Erreur lors de la sauvegarde dans le registre d&apos;information à propos d&apos;un paquet installé : %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="253"/>
         <source>Start menu</source>
-        <translation type="unfinished">Menu démarrer</translation>
+        <translation>Menu démarrer</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="263"/>
         <source>Desktop</source>
-        <translation type="unfinished">Bureau</translation>
+        <translation>Bureau</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="273"/>
         <source>Quick launch bar</source>
-        <translation type="unfinished">Barre de lancement rapide</translation>
+        <translation>Barre de lancement rapide</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="297"/>
         <source>Deleting shortcuts</source>
-        <translation type="unfinished">Suppression des raccourcis</translation>
+        <translation>Suppression des raccourcis</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="320"/>
         <location filename="packageversion.cpp" line="973"/>
         <source>Waiting while other (un)installation scripts are running</source>
-        <translation type="unfinished">En attente de la fin des autres scripts d&apos;installation/désinstallation</translation>
+        <translation>En attente de la fin des autres scripts d&apos;installation/désinstallation</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="333"/>
         <location filename="packageversion.cpp" line="986"/>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
-        <translation type="unfinished">En attente de la fin des autres scripts d&apos;installation/désinstallation (%1 minutes)</translation>
+        <translation>En attente de la fin des autres scripts d&apos;installation/désinstallation (%1 minutes)</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="343"/>
         <source>Running the uninstallation script (this may take some time)</source>
-        <translation type="unfinished">Exécution du script de désinstallation (peut durer un certain temps)</translation>
+        <translation>Exécution du script de désinstallation (peut durer un certain temps)</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="375"/>
         <location filename="packageversion.cpp" line="1027"/>
         <source>%1. Full output was saved in %2</source>
-        <translation type="unfinished">%1. La sortie complète a été enregistrée à l&apos;emplacement %2</translation>
+        <translation>%1. La sortie complète a été enregistrée à l&apos;emplacement %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="392"/>
         <location filename="packageversion.cpp" line="1081"/>
         <source>Deleting files</source>
-        <translation type="unfinished">Suppression des fichiers</translation>
+        <translation>Suppression des fichiers</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="446"/>
         <source>Cannot change directory to %1</source>
-        <translation type="unfinished">Impossible de renommer le dossier en %1</translation>
+        <translation>Impossible de renommer le dossier en %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="453"/>
         <source>Cannot create directory %0%1</source>
-        <translation type="unfinished">Impossible de créer de dossier %0%1</translation>
+        <translation>Impossible de créer de dossier %0%1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="464"/>
         <source>Cannot rename %1 to %2 in %3</source>
-        <translation type="unfinished">Impossible de renommer %1 en %2 dans le dossier %3</translation>
+        <translation>Impossible de renommer %1 en %2 dans le dossier %3</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="506"/>
         <source>Error searching for the best dependency match: %1</source>
-        <translation type="unfinished">Erreur lors de la recherche de la dépendance la plus appropriée : %1</translation>
+        <translation>Erreur lors de la recherche de la dépendance la plus appropriée : %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="512"/>
         <source>Unsatisfied dependency: %1</source>
-        <translation type="unfinished">Dépendance non satisfaite : %1</translation>
+        <translation>Dépendance non satisfaite : %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="596"/>
         <location filename="packageversion.cpp" line="660"/>
         <location filename="packageversion.cpp" line="803"/>
         <source>No download URL</source>
-        <translation type="unfinished">Pas de lien de télécharement</translation>
+        <translation>Pas de lien de télécharement</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="608"/>
         <location filename="packageversion.cpp" line="672"/>
         <source>Download failed: %1</source>
-        <translation type="unfinished">Erreur lors du téléchargement : %1</translation>
+        <translation>Erreur lors du téléchargement : %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="613"/>
         <location filename="packageversion.cpp" line="677"/>
         <source>Computing SHA1</source>
-        <translation type="unfinished">Calcul du SHA1</translation>
+        <translation>Calcul du SHA1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="619"/>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>
-        <translation type="unfinished">SHA1 invalide : %1 était attendu mais %2 a été trouvé</translation>
+        <translation>SHA1 invalide : %1 était attendu mais %2 a été trouvé</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="727"/>
         <source>Shortcut target %1 does not exist</source>
-        <translation type="unfinished">La cible du raccourci %1 n&apos;existe pas</translation>
+        <translation>La cible du raccourci %1 n&apos;existe pas</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="771"/>
         <source>Shortcut creation from %1 to %2 failed: %3</source>
-        <translation type="unfinished">Echec de la créaction de raccourci de %1 vers %2 : %3</translation>
+        <translation>Echec de la créaction de raccourci de %1 vers %2 : %3</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="794"/>
         <source>Preparing</source>
-        <translation type="unfinished">Préparation</translation>
+        <translation>Préparation</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="813"/>
         <source>Creating directory</source>
-        <translation type="unfinished">Création du dossier</translation>
+        <translation>Création du dossier</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="816"/>
         <location filename="packageversion.cpp" line="827"/>
         <source>Cannot create directory: %0</source>
-        <translation type="unfinished">Impossible de créer le dossier : %0</translation>
+        <translation>Impossible de créer le dossier : %0</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="824"/>
         <source>Creating .Npackd sub-directory</source>
-        <translation type="unfinished">Création du sous-dossier .Npackd</translation>
+        <translation>Création du sous-dossier .Npackd</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="837"/>
         <source>Waiting for a free HTTP connection</source>
-        <translation type="unfinished">En attente d&apos;une connexion HTTP libre</translation>
+        <translation>En attente d&apos;une connexion HTTP libre</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="849"/>
         <source>Waiting for a free HTTP connection (%1 minutes)</source>
-        <translation type="unfinished">En attente d&apos;une connexion HTTP libre (%1 minutes)</translation>
+        <translation>En attente d&apos;une connexion HTTP libre (%1 minutes)</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="861"/>
         <source>Downloading &amp; computing hash sum</source>
-        <translation type="unfinished">Téléchargement et calcul du checksum</translation>
+        <translation>Téléchargement et calcul du checksum</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="863"/>
         <location filename="packageversion.cpp" line="882"/>
         <source>Cannot open the file: %0</source>
-        <translation type="unfinished">Impossible d&apos;ouvrir le fichier %0</translation>
+        <translation>Impossible d&apos;ouvrir le fichier %0</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="885"/>
         <source>Downloading &amp; computing hash sum (2nd try)</source>
-        <translation type="unfinished">Téléchargement et calcul du checksum (2e essai)</translation>
+        <translation>Téléchargement et calcul du checksum (2e essai)</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="891"/>
         <source>Error downloading %1: %2</source>
-        <translation type="unfinished">Erreur lors du téléchargment de %1 : %2</translation>
+        <translation>Erreur lors du téléchargment de %1 : %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="906"/>
         <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
-        <translation type="unfinished">Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</translation>
+        <translation>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="918"/>
         <source>Extracting files</source>
-        <translation type="unfinished">Extraction des fichiers</translation>
+        <translation>Extraction des fichiers</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="923"/>
         <source>Error unzipping file into directory %0: %1</source>
-        <translation type="unfinished">Error lors de l&apos;extraction du fichier dans le dossier %0 : %1</translation>
+        <translation>Error lors de l&apos;extraction du fichier dans le dossier %0 : %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="930"/>
         <source>Renaming the downloaded file</source>
-        <translation type="unfinished">Renommage du fichier téléchargé</translation>
+        <translation>Renommage du fichier téléchargé</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="939"/>
         <source>Cannot rename %0 to %1</source>
-        <translation type="unfinished">Impossible de renommer %0 en %1</translation>
+        <translation>Impossible de renommer %0 en %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="996"/>
         <source>Running the installation script (this may take some time)</source>
-        <translation type="unfinished">Lancement du script d&apos;installation (peut prendre un certain temps)</translation>
+        <translation>Lancement du script d&apos;installation (peut prendre un certain temps)</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1076"/>
         <source>Deleting start menu, desktop and quick launch shortcuts</source>
-        <translation type="unfinished">Suppression des raccourcis du menu démarrer, du bureau et de la barre de lancement rapide</translation>
+        <translation>Suppression des raccourcis du menu démarrer, du bureau et de la barre de lancement rapide</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1117"/>
         <source>Opening ZIP file</source>
-        <translation type="unfinished">Ouverture du fichier ZIP</translation>
+        <translation>Ouverture du fichier ZIP</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1120"/>
         <source>Cannot open the ZIP file %1: %2</source>
-        <translation type="unfinished">Impossible d&apos;ouvrir le fichier ZIP %1 : %2</translation>
+        <translation>Impossible d&apos;ouvrir le fichier ZIP %1 : %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1127"/>
         <source>Extracting</source>
-        <translation type="unfinished">Extraction</translation>
+        <translation>Extraction</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1137"/>
         <source>Error unzipping the file %1: Error %2 in %3</source>
-        <translation type="unfinished">Erreur lors de l&apos;extraction du fichier %1 : Erreur %2 dans %3</translation>
+        <translation>Erreur lors de l&apos;extraction du fichier %1 : Erreur %2 dans %3</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1157"/>
         <source>Cannot create directory %1</source>
-        <translation type="unfinished">Impossible de créer le dossier %1</translation>
+        <translation>Impossible de créer le dossier %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1165"/>
         <source>%L1 files</source>
-        <translation type="unfinished">%L1 fichiers</translation>
+        <translation>%L1 fichiers</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1193"/>
         <source>Could not create file %1</source>
-        <translation type="unfinished">Impossible de créer le fichier %1</translation>
+        <translation>Impossible de créer le fichier %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1198"/>
         <source>Could not create directory %1</source>
-        <translation type="unfinished">Impossible de créer le dossier %1</translation>
+        <translation>Impossible de créer le dossier %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1215"/>
         <source>installed</source>
-        <translation type="unfinished">installé</translation>
+        <translation>installé</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1219"/>
         <source>updateable</source>
-        <translation type="unfinished">pouvant être mis à jour</translation>
+        <translation>pouvant être mis à jour</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1221"/>
         <source>obsolete</source>
-        <translation type="unfinished">obsolète</translation>
+        <translation>obsolète</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1229"/>
         <source>locked</source>
-        <translation type="unfinished">bloqué</translation>
+        <translation>bloqué</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1296"/>
         <source>Process %1 exited with the code %2</source>
-        <translation type="unfinished">Le processus %1 s&apos;est terminé avec le code de retour %2</translation>
+        <translation>Le processus %1 s&apos;est terminé avec le code de retour %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1313"/>
         <source>%1 minutes</source>
-        <translation type="unfinished">%1 minute(s)</translation>
+        <translation>%1 minute(s)</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1358"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
-        <translation type="unfinished">Etiquette &lt;path&gt; vide dans &lt;detect-file&gt;</translation>
+        <translation>Etiquette &lt;path&gt; vide dans &lt;detect-file&gt;</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1365"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
-        <translation type="unfinished">SHA1 incorrect dans &lt;detect-file&gt; :</translation>
+        <translation>SHA1 incorrect dans &lt;detect-file&gt; :</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1405"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
-        <translation type="unfinished">Erreur de l&apos;attribut &apos;package&apos; dans &lt;version&gt; : </translation>
+        <translation>Erreur de l&apos;attribut &apos;package&apos; dans &lt;version&gt; : </translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1417"/>
         <source>Not a valid download URL for %1: %2</source>
-        <translation type="unfinished">Le lien de téléchargement%1 n&apos;est pas valide : %2</translation>
+        <translation>Le lien de téléchargement%1 n&apos;est pas valide : %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1428"/>
         <source>Not a valid version for %1: %2</source>
-        <translation type="unfinished">La version du paquet %1 est invalide : %2</translation>
+        <translation>La version du paquet %1 est invalide : %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1438"/>
         <source>Invalid SHA1 for %1: </source>
-        <translation type="unfinished">Le SHA1 de %1 est invalide : </translation>
+        <translation>Le SHA1 de %1 est invalide : </translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1452"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
-        <translation type="unfinished">Valeur incorrecte pour l&apos;attribut &apos;type&apos; dans %1 : %3</translation>
+        <translation>Valeur incorrecte pour l&apos;attribut &apos;type&apos; dans %1 : %3</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1467"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
-        <translation type="unfinished">La valeur de l&apos;attribut &apos;path&apos; pour &lt;important-file&gt; est vide pour %1</translation>
+        <translation>La valeur de l&apos;attribut &apos;path&apos; pour &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1474"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
-        <translation type="unfinished">Il y a plus d&apos;un &lt;important-file&gt; avec le même attribut &apos;path&apos; %1 pour %2</translation>
+        <translation>Il y a plus d&apos;un &lt;important-file&gt; avec le même attribut &apos;path&apos; %1 pour %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1484"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
-        <translation type="unfinished">La valeur de l&apos;attribut &apos;title&apos; de &lt;important-file&gt; est vide pour %1</translation>
+        <translation>La valeur de l&apos;attribut &apos;title&apos; de &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1513"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
-        <translation type="unfinished">L&apos;entrée &lt;file&gt; pour %1 dans %2 est dupliquée</translation>
+        <translation>L&apos;entrée &lt;file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1531"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
-        <translation type="unfinished">&lt;detect-file&gt; est invalide pour %1 : </translation>
+        <translation>&lt;detect-file&gt; est invalide pour %1 : </translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1545"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
-        <translation type="unfinished">L&apos;entrée &lt;detect-file&gt; pour %1 dans %2 est dupliquée</translation>
+        <translation>L&apos;entrée &lt;detect-file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1572"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
-        <translation type="unfinished">L&apos;entrée &lt;dependency&gt; pour %1 dans %2 est dupliquée</translation>
+        <translation>L&apos;entrée &lt;dependency&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1588"/>
         <source>Wrong MSI GUID for %1: %2</source>
-        <translation type="unfinished">Le GUID MSI pour %1 est invalide : %2</translation>
+        <translation>Le GUID MSI pour %1 est invalide : %2</translation>
     </message>
     <message>
         <location filename="packageversionform.cpp" line="103"/>
@@ -2292,17 +2283,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="progressframe.cpp" line="45"/>
         <source>Error</source>
-        <translation type="unfinished">Erreur</translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="99"/>
         <source>Error in attribute &apos;name&apos; in &lt;package&gt;: </source>
-        <translation type="unfinished">Erreur dans l&apos;attribut &apos;name&apos; de &lt;package&gt; : </translation>
+        <translation>Erreur dans l&apos;attribut &apos;name&apos; de &lt;package&gt; : </translation>
     </message>
     <message>
         <location filename="repository.cpp" line="117"/>
         <source>Invalid icon URL for %1: %2</source>
-        <translation type="unfinished">L&apos;URL de l&apos;icône de %1 est invalide : %2</translation>
+        <translation>L&apos;URL de l&apos;icône de %1 est invalide : %2</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="135"/>
@@ -2323,123 +2314,123 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="repository.cpp" line="244"/>
         <source>Cannot open %1 for writing</source>
-        <translation type="unfinished">Impossible d&apos;ouvrir %1 en écriture</translation>
+        <translation>Impossible d&apos;ouvrir %1 en écriture</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="287"/>
         <source>Repository %1 of %2</source>
-        <translation type="unfinished">Dépôt %1 de %2</translation>
+        <translation>Dépôt %1 de %2</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="293"/>
         <source>Error loading the repository %1: %2</source>
-        <translation type="unfinished">Erreur lors du chargement du dépôt %1 : %2</translation>
+        <translation>Erreur lors du chargement du dépôt %1 : %2</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="305"/>
         <location filename="settingsframe.cpp" line="81"/>
         <source>No repositories defined</source>
-        <translation type="unfinished">Aucun dépôt défini</translation>
+        <translation>Aucun dépôt défini</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="326"/>
         <source>Download failed: %2</source>
-        <translation type="unfinished">Le téléchargement a échoué : %2</translation>
+        <translation>Le téléchargement a échoué : %2</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="333"/>
         <source>Parsing the content</source>
-        <translation type="unfinished">Extraction du contenu</translation>
+        <translation>Extraction du contenu</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="351"/>
         <source>Error loading XML: %2</source>
-        <translation type="unfinished">Erreur au chargement du XML : %2</translation>
+        <translation>Erreur au chargement du XML : %2</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="364"/>
         <source>Opening file</source>
-        <translation type="unfinished">Ouverture du fichier</translation>
+        <translation>Ouverture du fichier</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="366"/>
         <source>Cannot open the file</source>
-        <translation type="unfinished">Impossible d&apos;ouvrir le fichier</translation>
+        <translation>Impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="372"/>
         <source>Parsing XML</source>
-        <translation type="unfinished">Extraction du XML</translation>
+        <translation>Extraction du XML</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="383"/>
         <source>Analyzing the content</source>
-        <translation type="unfinished">Analyse du contenu</translation>
+        <translation>Analyse du contenu</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="405"/>
         <source>Invalid repository specification version: %1</source>
-        <translation type="unfinished">La version de spécification du dépôt est invalide : %1</translation>
+        <translation>La version de spécification du dépôt est invalide : %1</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="410"/>
         <source>Incompatible repository specification version: %1.</source>
-        <translation type="unfinished">La version de spécification du dépôt est incompatible : %1.</translation>
+        <translation>La version de spécification du dépôt est incompatible : %1.</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="411"/>
         <source>Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/</source>
-        <translation type="unfinished">Veuillez télécharger une version plus récente depuis http://code.google.com/p/windows-package-manager/</translation>
+        <translation>Veuillez télécharger une version plus récente depuis http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="593"/>
         <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
-        <translation type="unfinished">Impossible de désinstaller le(s) paquet(s) car les fichiers suivants sont en cours d&apos;utilisation (veuillez fermer les applications correspondantes): %1</translation>
+        <translation>Impossible de désinstaller le(s) paquet(s) car les fichiers suivants sont en cours d&apos;utilisation (veuillez fermer les applications correspondantes): %1</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="606"/>
         <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
-        <translation type="unfinished">Le paquet %1 ne peut pas être désinstallé car certains fichiers ou répertoires dans le dossier %2 sont en cours d&apos;utilisation.</translation>
+        <translation>Le paquet %1 ne peut pas être désinstallé car certains fichiers ou répertoires dans le dossier %2 sont en cours d&apos;utilisation.</translation>
     </message>
     <message>
         <location filename="scandiskthirdpartypm.cpp" line="25"/>
         <source>Scanning %1</source>
-        <translation type="unfinished">Scan de %1</translation>
+        <translation>Scan de %1</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="53"/>
         <source>Cannot change settings now. The hard drive scan is running.</source>
-        <translation type="unfinished">Il est impossible de modifier les paramètres lors du scan des disques locaux.</translation>
+        <translation>Il est impossible de modifier les paramètres lors du scan des disques locaux.</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="58"/>
         <source>Cannot change settings now. The repositories download is running.</source>
-        <translation type="unfinished">Il est impossible de modifier les paramètres lors du téléchargement des dépôts.</translation>
+        <translation>Il est impossible de modifier les paramètres lors du téléchargement des dépôts.</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="65"/>
         <source>Cannot find locked package versions: %1</source>
-        <translation type="unfinished">Impossible de trouver les versions de paquets bloquées : %1</translation>
+        <translation>Impossible de trouver les versions de paquets bloquées : %1</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="73"/>
         <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation type="unfinished">Il est impossible de modifier les paramètres car le paquet %1 est bloqué par une installation/désinstallation en cours.</translation>
+        <translation>Il est impossible de modifier les paramètres car le paquet %1 est bloqué par une installation/désinstallation en cours.</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="84"/>
         <source>The installation directory cannot be empty</source>
-        <translation type="unfinished">Le dossier d&apos;installation ne peut être vide</translation>
+        <translation>Le dossier d&apos;installation ne peut être vide</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="87"/>
         <source>The installation directory does not exist</source>
-        <translation type="unfinished">Le dossier d&apos;installation n&apos;existe pas</translation>
+        <translation>Le dossier d&apos;installation n&apos;existe pas</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="96"/>
         <source>%1 is not a valid repository address</source>
-        <translation type="unfinished">%1 n&apos;est pas une adresse de dépôt valide</translation>
+        <translation>%1 n&apos;est pas une adresse de dépôt valide</translation>
     </message>
     <message>
         <location filename="wellknownprogramsthirdpartypm.cpp" line="12"/>
@@ -2461,7 +2452,7 @@ p, li { white-space: pre-wrap; }
         <location filename="wellknownprogramsthirdpartypm.cpp" line="195"/>
         <location filename="wellknownprogramsthirdpartypm.cpp" line="205"/>
         <source>operating system</source>
-        <translation type="unfinished">système d&apos;exploitation</translation>
+        <translation>système d&apos;exploitation</translation>
     </message>
     <message>
         <location filename="wellknownprogramsthirdpartypm.cpp" line="194"/>
@@ -2506,7 +2497,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="wellknownprogramsthirdpartypm.cpp" line="324"/>
         <source>Package manager</source>
-        <translation type="unfinished">Gestionnaire de paquets</translation>
+        <translation>Gestionnaire de paquets</translation>
     </message>
     <message>
         <location filename="windowsregistry.cpp" line="94"/>
@@ -2519,12 +2510,12 @@ p, li { white-space: pre-wrap; }
         <location filename="windowsregistry.cpp" line="259"/>
         <location filename="windowsregistry.cpp" line="324"/>
         <source>No key is open</source>
-        <translation type="unfinished">Aucune clé n&apos;est ouverte</translation>
+        <translation>Aucune clé n&apos;est ouverte</translation>
     </message>
     <message>
         <location filename="windowsregistry.cpp" line="144"/>
         <source>Wrong registry value type (DWORD expected)</source>
-        <translation type="unfinished">Valeur de registre incorrecte (DWORD attendu)</translation>
+        <translation>Valeur de registre incorrecte (DWORD attendu)</translation>
     </message>
     <message>
         <location filename="windowsregistry.cpp" line="183"/>
@@ -2542,207 +2533,244 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="commandline.cpp" line="42"/>
+        <source>Missing option name: %1</source>
+        <translation>Il maque le nom de l&apos;option : %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="46"/>
+        <source>Option name expected: %1</source>
+        <translation>Nom d&apos;option attendu : %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="61"/>
+        <source>Option name cannot start with the equality sign: %1</source>
+        <translation>Le nom de l&apos;option ne peut pas démarrer avec un signe d&apos;égalité : %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="64"/>
+        <location filename="commandline.cpp" line="74"/>
+        <source>Only one-letter options can start with a minus sign: %1</source>
+        <translation>Seuls les options courtes (une seule lettre) peuvent démarrer avec un seul signe moins : %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="92"/>
+        <source>Unknown option: %1</source>
+        <translation>Option inconnue : %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="95"/>
+        <source>Unexpected value for the option %1</source>
+        <translation>Valeur innatendue pour l&apos;option %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="105"/>
+        <source>Missing value for the option %1</source>
+        <translation>Valeur manquante pour l&apos;option %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="187"/>
         <location filename="wpmutils.cpp" line="114"/>
         <source>CommandLineToArgvW failed</source>
-        <translation type="unfinished">Echec de CommandLineToArgvW</translation>
+        <translation>Echec de CommandLineToArgvW</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="146"/>
         <source>A GUID must be 38 characters long</source>
-        <translation type="unfinished">Un GUID doit être d&apos;une longueur de 38 caractéres</translation>
+        <translation>Un GUID doit être d&apos;une longueur de 38 caractéres</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="164"/>
         <source>Wrong character at position %1</source>
-        <translation type="unfinished">Caractère invalide à la position %1</translation>
+        <translation>Caractère invalide à la position %1</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="202"/>
         <source>Error %1</source>
-        <translation type="unfinished">Erreur %1</translation>
+        <translation>Erreur %1</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="206"/>
         <source>Error %1: %2</source>
-        <translation type="unfinished">Erreur %1 : %2</translation>
+        <translation>Erreur %1 : %2</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="322"/>
         <source>Empty package name</source>
-        <translation type="unfinished">Nom de paquet vide</translation>
+        <translation>Nom de paquet vide</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="326"/>
         <source>Empty segment at position %1 in %2</source>
-        <translation type="unfinished">Segment vide à la position %1 dans %2</translation>
+        <translation>Segment vide à la position %1 dans %2</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="331"/>
         <location filename="wpmutils.cpp" line="340"/>
         <source>-- at position %1 in %2</source>
-        <translation type="unfinished">-- à la position %1 dans %2</translation>
+        <translation>-- à la position %1 dans %2</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="350"/>
         <source>Wrong character at position 1 in %1</source>
-        <translation type="unfinished">Caractère invalide à la position 1 dans %1</translation>
+        <translation>Caractère invalide à la position 1 dans %1</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="362"/>
         <location filename="wpmutils.cpp" line="373"/>
         <location filename="wpmutils.cpp" line="443"/>
         <source>Wrong character at position %1 in %2</source>
-        <translation type="unfinished">Caractère invalide à la position %1 dans %2</translation>
+        <translation>Caractère invalide à la position %1 dans %2</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="436"/>
         <source>Wrong length: %1</source>
-        <translation type="unfinished">Longueur invalide : %1</translation>
+        <translation>Longueur invalide : %1</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="598"/>
         <source>Cannot determine MSI product location for GUID %1</source>
-        <translation type="unfinished">Impossible de déterminer l&apos;emplacement du MSI pour le GUID %1</translation>
+        <translation>Impossible de déterminer l&apos;emplacement du MSI pour le GUID %1</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="749"/>
         <source>The source and destination files are the same file.</source>
-        <translation type="unfinished">Les fichiers source et de destination sont identiques.</translation>
+        <translation>Les fichiers source et de destination sont identiques.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="752"/>
         <source>Multiple file paths were specified in the source buffer, but only one destination file path.</source>
-        <translation type="unfinished">Plusieurs chemins on été spécifiés dans le tampon source mais un seul chemin de fichier de destination.</translation>
+        <translation>Plusieurs chemins on été spécifiés dans le tampon source mais un seul chemin de fichier de destination.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="755"/>
         <source>Rename operation was specified but the destination path is a different directory. Use the move operation instead.</source>
-        <translation type="unfinished">L&apos;opération de remommage a été spécifiée mais le chemin de destination est un dossier différent. Veuillez plutôt utiliser l&apos;opération de déplacement.</translation>
+        <translation>L&apos;opération de remommage a été spécifiée mais le chemin de destination est un dossier différent. Veuillez plutôt utiliser l&apos;opération de déplacement.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="758"/>
         <source>The source is a root directory, which cannot be moved or renamed.</source>
-        <translation type="unfinished">La source est un dossier racine qui ne peut pas être déplacé ou renommé.</translation>
+        <translation>La source est un dossier racine qui ne peut pas être déplacé ou renommé.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="761"/>
         <source>The operation was canceled by the user, or silently canceled if the appropriate flags were supplied to SHFileOperation.</source>
-        <translation type="unfinished">L&apos;opération a été annulée par l&apos;utilisateur ou silencieusement annnulée si le flag approprié a été fournie à SHFileOperation.</translation>
+        <translation>L&apos;opération a été annulée par l&apos;utilisateur ou silencieusement annnulée si le flag approprié a été fournie à SHFileOperation.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="764"/>
         <source>The destination is a subtree of the source.</source>
-        <translation type="unfinished">La destination est un sous-répertoire de la source.</translation>
+        <translation>La destination est un sous-répertoire de la source.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="767"/>
         <source>Security settings denied access to the source.</source>
-        <translation type="unfinished">Les paramètres de sécurité ont interdit l&apos;accès à la source.</translation>
+        <translation>Les paramètres de sécurité ont interdit l&apos;accès à la source.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="770"/>
         <source>The source or destination path exceeded or would exceed MAX_PATH.</source>
-        <translation type="unfinished">La source ou le dossier de destination excèdent ou pourraient excèder MAX_PATH.</translation>
+        <translation>La source ou le dossier de destination excèdent ou pourraient excèder MAX_PATH.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="773"/>
         <source>The operation involved multiple destination paths, which can fail in the case of a move operation.</source>
-        <translation type="unfinished">L&apos;opération a impliqué des chemins de destination multiples pouvant échouer lors d&apos;un déplacement.</translation>
+        <translation>L&apos;opération a impliqué des chemins de destination multiples pouvant échouer lors d&apos;un déplacement.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="776"/>
         <source>The path in the source or destination or both was invalid.</source>
-        <translation type="unfinished">Le chemin de la source, de la destination ou des deux est invalide.</translation>
+        <translation>Le chemin de la source, de la destination ou des deux est invalide.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="779"/>
         <source>The source and destination have the same parent folder.</source>
-        <translation type="unfinished">La source et la destination on le même dossier parent.</translation>
+        <translation>La source et la destination on le même dossier parent.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="782"/>
         <source>The destination path is an existing file.</source>
-        <translation type="unfinished">Le chemin de destination est un fichier existant.</translation>
+        <translation>Le chemin de destination est un fichier existant.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="785"/>
         <source>The destination path is an existing folder.</source>
-        <translation type="unfinished">Le chemin de destination est un dossier existant.</translation>
+        <translation>Le chemin de destination est un dossier existant.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="788"/>
         <source>The name of the file exceeds MAX_PATH.</source>
-        <translation type="unfinished">Le nom du fichier excède MAX_PATH.</translation>
+        <translation>Le nom du fichier excède MAX_PATH.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="791"/>
         <source>The destination is a read-only CD-ROM, possibly unformatted.</source>
-        <translation type="unfinished">La destination est un CD-ROM en lecture seule, potentiellement non-formaté.</translation>
+        <translation>La destination est un CD-ROM en lecture seule, potentiellement non-formaté.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="794"/>
         <source>The destination is a read-only DVD, possibly unformatted.</source>
-        <translation type="unfinished">La destination est un DVD en lecture seule, potentiellement non-formaté.</translation>
+        <translation>La destination est un DVD en lecture seule, potentiellement non-formaté.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="797"/>
         <source>The destination is a writable CD-ROM, possibly unformatted.</source>
-        <translation type="unfinished">La destination est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
+        <translation>La destination est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="800"/>
         <source>The file involved in the operation is too large for the destination media or file system.</source>
-        <translation type="unfinished">Le fichier impliqué dans l&apos;opération est trop large pour le média ou le système de fichier de destination.</translation>
+        <translation>Le fichier impliqué dans l&apos;opération est trop large pour le média ou le système de fichier de destination.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="803"/>
         <source>The source is a read-only CD-ROM, possibly unformatted.</source>
-        <translation type="unfinished">La source est un CD-ROM, potentiellement non-formaté.</translation>
+        <translation>La source est un CD-ROM, potentiellement non-formaté.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="806"/>
         <source>The source is a read-only DVD, possibly unformatted.</source>
-        <translation type="unfinished">La source est un DVD, potentiellement non-formaté.</translation>
+        <translation>La source est un DVD, potentiellement non-formaté.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="809"/>
         <source>The source is a writable CD-ROM, possibly unformatted.</source>
-        <translation type="unfinished">La source est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
+        <translation>La source est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="812"/>
         <source>MAX_PATH was exceeded during the operation.</source>
-        <translation type="unfinished">MAX_PATH a été dépassé durant l&apos;opération.</translation>
+        <translation>MAX_PATH a été dépassé durant l&apos;opération.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="815"/>
         <source>An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later.</source>
-        <translation type="unfinished">Une erreur inconnue est survenue. Ceci peut-être dû à un chemin invalide dans la source ou la destination. Cette erreur ne se produit pas sous Windows Vista ou supérieur.</translation>
+        <translation>Une erreur inconnue est survenue. Ceci peut-être dû à un chemin invalide dans la source ou la destination. Cette erreur ne se produit pas sous Windows Vista ou supérieur.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="818"/>
         <source>An unspecified error occurred on the destination.</source>
-        <translation type="unfinished">Un erreur non spécifiée est survenue sur la destination.</translation>
+        <translation>Un erreur non spécifiée est survenue sur la destination.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="821"/>
         <source>Destination is a root directory and cannot be renamed.</source>
-        <translation type="unfinished">La destination est un dossier racine est ne peut pas etre renommée.</translation>
+        <translation>La destination est un dossier racine est ne peut pas etre renommée.</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="846"/>
         <source>Error deleting %1: %2</source>
-        <translation type="unfinished">Erreur lors de la suppression de %1 : %2</translation>
+        <translation>Erreur lors de la suppression de %1 : %2</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="939"/>
         <source>Cannot delete the file: %1</source>
-        <translation type="unfinished">Impossible de supprimer le fichier : %1</translation>
+        <translation>Impossible de supprimer le fichier : %1</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="954"/>
         <source>Cannot delete the directory: %1</source>
-        <translation type="unfinished">Impossible de supprimer le dossier : %1</translation>
+        <translation>Impossible de supprimer le dossier : %1</translation>
     </message>
 </context>
 <context>

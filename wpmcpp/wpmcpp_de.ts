@@ -125,7 +125,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="146"/>
         <source>Ctrl+I</source>
-        <translation>Strg+I</translation>
+        <translation>Ctrl+I</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="155"/>
@@ -140,7 +140,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="161"/>
         <source>Ctrl+N</source>
-        <translation>Strg+N</translation>
+        <translation>Ctrl+N</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="170"/>
@@ -155,7 +155,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="176"/>
         <source>Ctrl+G</source>
-        <translation>Strg+G</translation>
+        <translation>Ctrl+G</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="181"/>
@@ -170,7 +170,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="187"/>
         <source>Ctrl+S</source>
-        <translation>Strg+S</translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="196"/>
@@ -185,7 +185,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="202"/>
         <source>Ctrl+U</source>
-        <translation>Strg+U</translation>
+        <translation>Ctrl+U</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="207"/>
@@ -200,7 +200,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="213"/>
         <source>Ctrl+T</source>
-        <translation>Strg+T</translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="218"/>
@@ -221,7 +221,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="232"/>
         <source>Ctrl+O</source>
-        <translation>Strg+O</translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="237"/>
@@ -253,7 +253,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="262"/>
         <source>Ctrl+W</source>
-        <translation>Strg+W</translation>
+        <translation>Ctrl+W</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="271"/>
@@ -490,45 +490,36 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="commandline.cpp" line="42"/>
         <source>Missing option name: %1</source>
-        <translation>Fehlender Optionsname: %1</translation>
+        <translation type="obsolete">Fehlender Optionsname: %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="46"/>
         <source>Option name expected: %1</source>
-        <translation>Optionsname erwartet: %1</translation>
+        <translation type="obsolete">Optionsname erwartet: %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="61"/>
         <source>Option name cannot start with the equality sign: %1</source>
-        <translation>Optionsname darf nicht mit einem Gleichheitszeichen beginnen: %1</translation>
+        <translation type="obsolete">Optionsname darf nicht mit einem Gleichheitszeichen beginnen: %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="64"/>
-        <location filename="commandline.cpp" line="74"/>
         <source>Only one-letter options can start with a minus sign: %1</source>
-        <translation>Nur Optionen mit einem einzigen Zeichen dürfen mit einem Minus-Zeichen beginnen: %1</translation>
+        <translation type="obsolete">Nur Optionen mit einem einzigen Zeichen dürfen mit einem Minus-Zeichen beginnen: %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="92"/>
         <source>Unknown option: %1</source>
-        <translation>Unbekannte Option: %1</translation>
+        <translation type="obsolete">Unbekannte Option: %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="95"/>
         <source>Unexpected value for the option %1</source>
-        <translation>Unerwarteter Wert für die Option %1</translation>
+        <translation type="obsolete">Unerwarteter Wert für die Option %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="105"/>
         <source>Missing value for the option %1</source>
-        <translation>Fehlender Wert für die Option %1</translation>
+        <translation type="obsolete">Fehlender Wert für die Option %1</translation>
     </message>
     <message>
-        <location filename="commandline.cpp" line="187"/>
         <source>CommandLineToArgvW failed</source>
-        <translation>CommandLineToArgvW fehlgeschlagen</translation>
+        <translation type="obsolete">CommandLineToArgvW fehlgeschlagen</translation>
     </message>
 </context>
 <context>
@@ -577,86 +568,86 @@ p, li { white-space: pre-wrap; }
         <location filename="dbrepository.cpp" line="188"/>
         <location filename="dbrepository.cpp" line="226"/>
         <location filename="dbrepository.cpp" line="266"/>
-        <location filename="dbrepository.cpp" line="768"/>
+        <location filename="dbrepository.cpp" line="769"/>
         <location filename="repository.cpp" line="340"/>
         <location filename="repository.cpp" line="377"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="791"/>
-        <location filename="dbrepository.cpp" line="930"/>
+        <location filename="dbrepository.cpp" line="792"/>
+        <location filename="dbrepository.cpp" line="931"/>
         <source>Starting an SQL transaction</source>
         <translation>Beginne SQL-Transaktion</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="799"/>
+        <location filename="dbrepository.cpp" line="800"/>
         <source>Clearing the packages table</source>
         <translation>Leere die Paketetabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="807"/>
+        <location filename="dbrepository.cpp" line="808"/>
         <source>Clearing the package versions table</source>
         <translation>Leere die Paketversionentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="815"/>
+        <location filename="dbrepository.cpp" line="816"/>
         <source>Clearing the licenses table</source>
         <translation>Leere die Lizenzentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="823"/>
+        <location filename="dbrepository.cpp" line="824"/>
         <source>Clearing the categories table</source>
         <translation>Leere die Kategorientabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="831"/>
-        <location filename="dbrepository.cpp" line="962"/>
+        <location filename="dbrepository.cpp" line="832"/>
+        <location filename="dbrepository.cpp" line="963"/>
         <source>Commiting the SQL transaction</source>
         <translation>Commit für die  SQL-Transaktion ausführen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="861"/>
+        <location filename="dbrepository.cpp" line="862"/>
         <source>Clearing the database</source>
         <translation>Leere die Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="870"/>
+        <location filename="dbrepository.cpp" line="871"/>
         <source>Downloading the remote repositories</source>
         <translation>Lade die entfernten Repositories</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="879"/>
+        <location filename="dbrepository.cpp" line="880"/>
         <source>Filling the local database</source>
         <translation>Fülle die lokale Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="891"/>
+        <location filename="dbrepository.cpp" line="892"/>
         <source>Refreshing the installation status</source>
         <translation>Aktualisiere den Installationsstatus</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="903"/>
+        <location filename="dbrepository.cpp" line="904"/>
         <source>Updating the status for installed packages in the database</source>
         <translation>Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="911"/>
+        <location filename="dbrepository.cpp" line="912"/>
         <source>Removing packages without versions</source>
         <translation>Entferne Pakete ohne Versionen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="938"/>
+        <location filename="dbrepository.cpp" line="939"/>
         <source>Inserting data in the packages table</source>
         <translation>Füge Daten in die Paketetabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="946"/>
+        <location filename="dbrepository.cpp" line="947"/>
         <source>Inserting data in the package versions table</source>
         <translation>Füge Daten in die Paketversionentabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="954"/>
+        <location filename="dbrepository.cpp" line="955"/>
         <source>Inserting data in the licenses table</source>
         <translation>Füge Daten in die Lizenzentabelle ein</translation>
     </message>
@@ -1627,6 +1618,43 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler beim Löschen des Registry-Knotens %1: %2</translation>
     </message>
     <message>
+        <location filename="commandline.cpp" line="42"/>
+        <source>Missing option name: %1</source>
+        <translation>Fehlender Optionsname: %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="46"/>
+        <source>Option name expected: %1</source>
+        <translation>Optionsname erwartet: %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="61"/>
+        <source>Option name cannot start with the equality sign: %1</source>
+        <translation>Optionsname darf nicht mit einem Gleichheitszeichen beginnen: %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="64"/>
+        <location filename="commandline.cpp" line="74"/>
+        <source>Only one-letter options can start with a minus sign: %1</source>
+        <translation>Nur Optionen mit einem einzigen Zeichen dürfen mit einem Minus-Zeichen beginnen: %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="92"/>
+        <source>Unknown option: %1</source>
+        <translation>Unbekannte Option: %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="95"/>
+        <source>Unexpected value for the option %1</source>
+        <translation>Unerwarteter Wert für die Option %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="105"/>
+        <source>Missing value for the option %1</source>
+        <translation>Fehlender Wert für die Option %1</translation>
+    </message>
+    <message>
+        <location filename="commandline.cpp" line="187"/>
         <location filename="wpmutils.cpp" line="114"/>
         <source>CommandLineToArgvW failed</source>
         <translation>CommandLineToArgvW fehlgeschlagen</translation>
