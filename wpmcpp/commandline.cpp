@@ -39,11 +39,11 @@ QString CommandLine::processOneParam(QStringList* params)
     QString value;
 
     if (p == "--" || p == "-") {
-        err = QString(QCoreApplication::tr("Missing option name: %1")).arg(p);
+        err = QString(QObject::tr("Missing option name: %1")).arg(p);
     } else if (p.startsWith("--")) {
         int pos = p.indexOf("=");
         if (pos == 2) {
-            err = QString(QCoreApplication::tr("Option name expected: %1")).arg(p);
+            err = QString(QObject::tr("Option name expected: %1")).arg(p);
         } else if (pos >= 0) {
             name = p.mid(2, pos - 2);
             value = p.right(p.length() - pos - 1);
@@ -58,10 +58,10 @@ QString CommandLine::processOneParam(QStringList* params)
     } else if (p.startsWith("-")) {
         int pos = p.indexOf("=");
         if (pos == 1) {
-            err = QString(QCoreApplication::tr("Option name cannot start with the equality sign: %1")).
+            err = QString(QObject::tr("Option name cannot start with the equality sign: %1")).
                     arg(p);
         } else if (pos > 2) {
-            err = QString(QCoreApplication::tr("Only one-letter options can start with a minus sign: %1")).
+            err = QString(QObject::tr("Only one-letter options can start with a minus sign: %1")).
                     arg(p);
         } else if (pos == 2) {
             name = p.mid(1, 1);
@@ -71,7 +71,7 @@ QString CommandLine::processOneParam(QStringList* params)
             params->removeAt(0);
         } else {
             if (p.length() > 2) {
-                err = QString(QCoreApplication::tr("Only one-letter options can start with a minus sign: %1")).
+                err = QString(QObject::tr("Only one-letter options can start with a minus sign: %1")).
                         arg(p);
             } else {
                 name = p.mid(1, 1);
@@ -89,10 +89,10 @@ QString CommandLine::processOneParam(QStringList* params)
             // WPMUtils::outputTextConsole << "Searching: " << name) << std::endl;
             Option* opt = findOption(name);
             if (!opt) {
-                err = QString(QCoreApplication::tr("Unknown option: %1")).arg(name);
+                err = QString(QObject::tr("Unknown option: %1")).arg(name);
             } else {
                 if (opt->valueDescription.isEmpty() && valueFound) {
-                    err = QString(QCoreApplication::tr("Unexpected value for the option %1")).arg(name);
+                    err = QString(QObject::tr("Unexpected value for the option %1")).arg(name);
                 } else {
                     ParsedOption* po = new ParsedOption();
                     po->opt = opt;
@@ -102,7 +102,7 @@ QString CommandLine::processOneParam(QStringList* params)
                     else {
                         if (!opt->valueDescription.isEmpty()) {
                             if (params->count() == 0) {
-                                err = QString(QCoreApplication::tr("Missing value for the option %1")).
+                                err = QString(QObject::tr("Missing value for the option %1")).
                                         arg(name);
                             } else {
                                 po->value = params->at(0);
@@ -184,7 +184,7 @@ QString CommandLine::parse()
     int nArgs;
     LPWSTR* szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
     if (NULL == szArglist) {
-        err = QCoreApplication::tr("CommandLineToArgvW failed");
+        err = QObject::tr("CommandLineToArgvW failed");
     } else {
         for(int i = 1; i < nArgs; i++) {
             QString s;
