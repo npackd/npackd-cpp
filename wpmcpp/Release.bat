@@ -1,3 +1,11 @@
+call Paths.bat
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+rmdir /S /Q build
+
+mkdir build
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 rem copying files
 rem copy "%mingw_path%\bin\libgcc_s_dw2-1.dll" .Build\32\
 rem if %errorlevel% neq 0 exit /b %errorlevel%
