@@ -457,7 +457,8 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
             "PACKAGE LEFT JOIN CATEGORY ON PACKAGE.CATEGORY") +
             QString::number(level) +
             " = CATEGORY.ID " +
-            where + " GROUP BY CATEGORY.ID, CATEGORY.NAME";
+            where + " GROUP BY CATEGORY.ID, CATEGORY.NAME "
+            "ORDER BY CATEGORY.NAME";
 
     QMySqlQuery q;
 
