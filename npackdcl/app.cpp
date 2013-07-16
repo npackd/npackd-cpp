@@ -39,11 +39,8 @@ int App::process()
         return 1;
     }
 
-    err = addNpackdCL();
-    if (!err.isEmpty()) {
-        WPMUtils::outputTextConsole("Error: " + err + "\n");
-        return 1;
-    }
+    /* we ignore the returned error as it should also work for non-admins */
+    addNpackdCL();
 
     cl.add("package", 'p',
             "internal package name (e.g. com.example.Editor or just Editor)",
@@ -508,29 +505,11 @@ QString App::search()
 
     QList<Package*> list;
     if (job->shouldProceed("Searching for packages")) {
-        if (onlyInstalled) {
-            QStringList keywords = query.toLower().simplified().split(" ",
-                    QString::SkipEmptyParts);
-            QList<InstalledPackageVersion*> installed =
-                    InstalledPackages::getDefault()->getAll();
-            QSet<QString> used;
-            for (int i = 0; i < installed.count(); i++) {
-                InstalledPackageVersion* ipv = installed.at(i);
-                if (!used.contains(ipv->package)) {
-                    Package* p = rep->findPackage_(ipv->package);
-                    if (p && p->matchesFullText(keywords)) {
-                        list.append(p);
-                        used.insert(ipv->package);
-                    }
-                }
-            }
-            qDeleteAll(installed);
-        } else {
-            QString err;
-            list = rep->findPackages(Package::INSTALLED, false, query, &err);
-            if (!err.isEmpty())
-                job->setErrorMessage(err);
-        }
+        QString err;
+        list = rep->findPackages(Package::INSTALLED, onlyInstalled,
+                query, -1, -1, &err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
     }
 
     if (job->shouldProceed()) {
