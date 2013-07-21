@@ -177,8 +177,8 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
             if (ipv->detectionInfo.indexOf(detectionInfoPrefix) == 0 &&
                     ipv->installed() &&
                     !foundDetectionInfos.contains(ipv->detectionInfo)) {
-                qDebug() << detectionInfoPrefix <<
-                        " package removed: " << ipv->package;
+                //qDebug() << detectionInfoPrefix <<
+                //        " package removed: " << ipv->package;
                 ipv->setPath("");
             }
         }
@@ -577,10 +577,10 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";
     QString pn = ipv->package + "-" + ipv->version.getVersionString();
 
-    WPMUtils::outputTextConsole(
+    /*WPMUtils::outputTextConsole(
             "InstalledPackages::saveToRegistry " + ipv->directory + " " +
             ipv->package + " " + ipv->version.getVersionString() + " " +
-            ipv->detectionInfo + "\n");
+            ipv->detectionInfo + "\n");*/
 
     if (!ipv->directory.isEmpty()) {
         WindowsRegistry wr = machineWR.createSubKey(keyName + "\\" + pn, &r);
