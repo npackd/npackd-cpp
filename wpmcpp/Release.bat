@@ -1,14 +1,30 @@
-rem set mingw_path=C:/ProgramFiles/MinGW-w64
-rem set qt_path=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-4.8.2
-rem set ai_path=C:/Program Files (x86)/Advanced_Installer_Freeware
-rem set quazip_path=C:/Users/t/projects/library-builder/QuaZIP-static-i686-w32-0.5
-rem set zlib_path=C:/Users/t/projects/library-builder/zlib-i686-w32-1.2.5
-rem set sevenzipa_path=C:/Program Files (x86)/7-ZIP_A
-rem set msi_path=C:/Users/t/projects/library-builder/MSI-i686-w32-5
-rem set gdb_path=C:\Program Files\GDB_64_bit
-rem
-call Paths.bat
+rem this script downloads the source code and prepares everything to start working on Npackd
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.nokia.QtDev-i686-w64-Npackd-Release" "--versions=[4.8.2, 4.8.2)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set qt=%%x
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.nokia.QtDev-x86_64-w64-Npackd-Release" "--versions=[4.8.2, 4.8.2)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set qt64=%%x
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=net.sourceforge.mingw-w64.MinGWW64" "--versions=[4.7.2, 4.7.2)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=net.sourceforge.mingw-w64.MinGWW6464" "--versions=[4.7.2, 4.7.2)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw64=%%x
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 11)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP64" "--versions=[9, 10)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set sevenzip=%%x
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+rem set quazip_path=C:/Users/t/projects/library-builder/QuaZIP-static-i686-w32-0.5
 
 rmdir /S /Q build
 
