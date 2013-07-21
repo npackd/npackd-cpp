@@ -8,7 +8,5 @@
         <file>fileissue.png</file>
         <file>wait.png</file>
     </qresource>
-    <qresource prefix="/translations">
-        <file>wpmcpp_es.qm</file>
-    </qresource>
+    <qresource prefix="/translations"/>
 </RCC>
