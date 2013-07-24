@@ -13,6 +13,9 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set sevenzip=%%x
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.5, 0.5]"
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingwutils=%%x
+
 set quazip_path=%quazip%
 
 mkdir build
@@ -26,16 +29,37 @@ if %errorlevel% neq 0 goto error
 "%mingw%\bin\mingw32-make.exe"
 if %errorlevel% neq 0 goto error
 
-cd ..\..
+"%qt%\bin\lrelease.exe" ..\..\wpmcpp.pro
+if %errorlevel% neq 0 goto error
 
-mkdir build\32\zip
+mkdir zip
+
+copy ..\..\wpmcpp_es.qm zip\npackdg_es.qm
+if %errorlevel% neq 0 goto error
+
+copy ..\..\wpmcpp_ru.qm zip\npackdg_ru.qm
+if %errorlevel% neq 0 goto error
+
+copy ..\..\wpmcpp_fr.qm zip\npackdg_fr.qm
+if %errorlevel% neq 0 goto error
+
+copy ..\..\wpmcpp_de.qm zip\npackdg_de.qm
+if %errorlevel% neq 0 goto error
+
+cd ..\..
 
 copy LICENSE.txt build\32\zip
 
 copy CrystalIcons_LICENSE.txt build\32\zip
 if %errorlevel% neq 0 goto error
 
-copy build\32\release\wpmcpp.exe build\32\zip\Npackdg.exe
+copy build\32\release\wpmcpp.exe build\32\zip\npackdg.exe
+if %errorlevel% neq 0 goto error
+
+"%mingw%\bin\strip.exe" build\32\zip\npackdg.exe
+if %errorlevel% neq 0 goto error
+
+copy "%mingwutils%\bin\exchndl.dll" build\32\zip\
 if %errorlevel% neq 0 goto error
 
 rem creating .zip

@@ -28,8 +28,6 @@ set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP64" "-
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set sevenzip=%%x
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem set quazip_path=C:/Users/t/projects/library-builder/QuaZIP-static-i686-w32-0.5
-
 rmdir /S /Q build
 
 mkdir build
