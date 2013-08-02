@@ -51,7 +51,7 @@
     <ROW File="wpmcpp_ru.qm" Component_="LICENSE.txt" FileName="npackd~3.qm|npackdg_ru.qm" Attributes="0" SourcePath="wpmcpp_ru.qm" SelfReg="false" NextFile="wpmcpp_de.qm"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
-    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="build\32" PackageFileName="Npackd32" Languages="en" InstallationType="4"/>
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="build\32" PackageFileName="Npackd32-[|ProductVersion]" Languages="en" InstallationType="4"/>
     <ATTRIBUTE name="CurrentBuild" value="DefaultBuild"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
