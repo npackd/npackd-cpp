@@ -64,7 +64,7 @@ if %errorlevel% neq 0 goto error
 
 rem creating .zip
 cd build\32\zip
-"%sevenzip%\7z" a ..\NpackdCL32.zip *
+"%sevenzip%\7z" a ..\NpackdCL.zip *
 if %errorlevel% neq 0 goto error
 cd ..\..\..
 

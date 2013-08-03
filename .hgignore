@@ -67,6 +67,7 @@ wpmcpp-x86_64/
 \.qm$
 ^wpmcpp/build/
 ^npackdcl/build/
+^clu/build/
 syntax: glob
 ^convert-maven/archetype-catalog.xml
 convert-maven/archetype-catalog.xml
