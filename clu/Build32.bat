@@ -34,18 +34,6 @@ if %errorlevel% neq 0 goto error
 
 mkdir zip
 
-copy ..\..\..\wpmcpp\wpmcpp_es.qm zip\clu_es.qm
-if %errorlevel% neq 0 goto error
-
-copy ..\..\..\wpmcpp\wpmcpp_ru.qm zip\clu_ru.qm
-if %errorlevel% neq 0 goto error
-
-copy ..\..\..\wpmcpp\wpmcpp_fr.qm zip\clu_fr.qm
-if %errorlevel% neq 0 goto error
-
-copy ..\..\..\wpmcpp\wpmcpp_de.qm zip\clu_de.qm
-if %errorlevel% neq 0 goto error
-
 cd ..\..
 
 copy LICENSE.txt build\32\zip

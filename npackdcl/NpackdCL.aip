@@ -41,14 +41,10 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="build\32\zip\CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="npackcl_de.qm"/>
+    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="build\32\zip\CrystalIcons_LICENSE.txt" SelfReg="false"/>
     <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="LICENSE.txt" SelfReg="false" NextFile="npackdcl.exe"/>
     <ROW File="exchndl.dll" Component_="exchndl.dll" FileName="exchndl.dll" Attributes="0" SourcePath="..\..\..\..\libs\mingw-utils-0.3\bin\exchndl.dll" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
-    <ROW File="npackcl_de.qm" Component_="LICENSE.txt" FileName="npackc~1.qm|npackcl_de.qm" Attributes="0" SourcePath="build\32\zip\npackcl_de.qm" SelfReg="false" NextFile="npackcl_fr.qm"/>
-    <ROW File="npackcl_fr.qm" Component_="LICENSE.txt" FileName="npackc~2.qm|npackcl_fr.qm" Attributes="0" SourcePath="build\32\zip\npackcl_fr.qm" SelfReg="false" NextFile="npackcl_ru.qm"/>
-    <ROW File="npackcl_ru.qm" Component_="LICENSE.txt" FileName="npackc~3.qm|npackcl_ru.qm" Attributes="0" SourcePath="build\32\zip\npackcl_ru.qm" SelfReg="false" NextFile="npackdcl_es.qm"/>
     <ROW File="npackdcl.exe" Component_="npackdcl.exe" FileName="npackdcl.exe" Attributes="0" SourcePath="build\32\release\npackdcl.exe" SelfReg="false" NextFile="exchndl.dll"/>
-    <ROW File="npackdcl_es.qm" Component_="LICENSE.txt" FileName="npackd~1.qm|npackdcl_es.qm" Attributes="0" SourcePath="build\32\zip\npackdcl_es.qm" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="build\32" PackageFileName="NpackdCL-[|ProductVersion]" Languages="en" InstallationType="4" UseLargeSchema="true"/>
