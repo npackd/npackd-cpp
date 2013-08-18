@@ -87,7 +87,7 @@ p, li { white-space: pre-wrap; }
           <string>&amp;Status</string>
          </property>
          <property name="flat">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="checkable">
           <bool>false</bool>
