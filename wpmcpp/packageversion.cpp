@@ -913,6 +913,7 @@ void PackageVersion::install(Job* job, const QString& where)
         }
     }
 
+    QString binary;
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (this->type == 0) {
             job->setHint(QObject::tr("Extracting files"));
@@ -934,6 +935,8 @@ void PackageVersion::install(Job* job, const QString& where)
             QStringList parts = fn.split('/');
             t.append(parts.at(parts.count() - 1));
             t.replace('/', '\\');
+
+            binary = t;
 
             if (!QFile::rename(f->fileName(), t)) {
                 job->setErrorMessage(QString(QObject::tr("Cannot rename %0 to %1")).
@@ -1004,6 +1007,8 @@ void PackageVersion::install(Job* job, const QString& where)
             env.append(this->package);
             env.append("NPACKD_PACKAGE_VERSION");
             env.append(this->version.getVersionString());
+            env.append("NPACKD_PACKAGE_BINARY");
+            env.append(binary);
             env.append("NPACKD_CL");
             env.append(AbstractRepository::getDefault_()->
                     computeNpackdCLEnvVar_(&err));
