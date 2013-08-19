@@ -11,12 +11,15 @@ AbstractRepository *AbstractRepository::getDefault_()
 }
 
 QStringList AbstractRepository::getRepositoryURLs(HKEY hk, const QString& path,
-        QString* err)
+        QString* err, bool* keyExists)
 {
+    *keyExists = false;
+
     WindowsRegistry wr;
     *err = wr.open(hk, path, false, KEY_READ);
     QStringList urls;
     if (err->isEmpty()) {
+        *keyExists = true;
         int size = wr.getDWORD("size", err);
         if (err->isEmpty()) {
             for (int i = 1; i <= size; i++) {
@@ -275,19 +278,20 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
     // if something cannot be done
     QString e;
 
+    bool keyExists;
     QStringList urls = getRepositoryURLs(HKEY_LOCAL_MACHINE,
-            "Software\\Npackd\\Npackd\\Reps", &e);
+            "Software\\Npackd\\Npackd\\Reps", &e, &keyExists);
 
     bool save = false;
 
     // compatibility for Npackd < 1.17
-    if (urls.isEmpty()) {
+    if (!keyExists) {
         urls = getRepositoryURLs(HKEY_CURRENT_USER,
-                "Software\\Npackd\\Npackd\\repositories", &e);
+                "Software\\Npackd\\Npackd\\repositories", &e, &keyExists);
         if (urls.isEmpty())
             urls = getRepositoryURLs(HKEY_CURRENT_USER,
                     "Software\\WPM\\Windows Package Manager\\repositories",
-                    &e);
+                    &e, &keyExists);
 
         if (urls.isEmpty()) {
             urls.append(
