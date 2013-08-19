@@ -96,4 +96,9 @@ http://localhost:8083/Libs.xml
     - uninstall JRE manually
     - npackdcl check
     => "ABC depends on JRE, which is not installed"
+23. "npackdcl remove-repo" should also be able to remove the last one
+    - npackdcl list
+    - remove all defined repositories one by one
+    - npackdcl list
+    => 0 repositories are defined
 

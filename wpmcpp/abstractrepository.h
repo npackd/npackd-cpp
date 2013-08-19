@@ -23,10 +23,11 @@ private:
      * @param hk root key
      * @param path registry path
      * @param err error message will be stored here
+     * @param keyExists true will be stored here if the registry key exists
      * @return list of repositories in the specified registry key
      */
     static QStringList getRepositoryURLs(HKEY hk, const QString &path,
-            QString *err);
+            QString *err, bool* keyExists);
 public:
     /**
      * @param err error message will be stored here
