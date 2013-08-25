@@ -420,3 +420,16 @@ AbstractRepository::AbstractRepository()
 AbstractRepository::~AbstractRepository()
 {
 }
+
+QString AbstractRepository::getPackageTitleAndName(const QString &name)
+{
+    QString res;
+    Package* p = findPackage_(name);
+    if (p)
+        res = p->title + " (" + name + ")";
+    else
+        res = name;
+    delete p;
+
+    return res;
+}

@@ -300,17 +300,8 @@ QString App::which()
     }
 
     if (r.isEmpty()) {
-        InstalledPackageVersion* f = 0;
-        QList<InstalledPackageVersion*> ipvs = ip->getAll();
-        for (int i = 0; i < ipvs.count(); ++i) {
-            InstalledPackageVersion* ipv = ipvs.at(i);
-            QString dir = ipv->getDirectory();
-            if (!dir.isEmpty() && (WPMUtils::WPMUtils::pathEquals(file, dir) ||
-                    WPMUtils::isUnder(file, dir))) {
-                f = ipv;
-                break;
-            }
-        }
+        QFileInfo fi(file);
+        InstalledPackageVersion* f = ip->findOwner(fi.absoluteFilePath());
         if (f) {
             AbstractRepository* rep = AbstractRepository::getDefault_();
             Package* p = rep->findPackage_(f->package);
@@ -320,11 +311,10 @@ QString App::which()
                     arg(title).arg(f->version.getVersionString()).
                     arg(f->package).arg(f->directory));
             delete p;
+            delete f;
         } else
             WPMUtils::outputTextConsole(QString("No package found for \"%1\"\n").
                     arg(file));
-
-        qDeleteAll(ipvs);
     }
 
     return r;
