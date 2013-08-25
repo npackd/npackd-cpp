@@ -6,6 +6,7 @@
 #include "repository.h"
 #include "mainwindow.h"
 #include "wpmutils.h"
+#include "installedpackages.h"
 
 SettingsFrame::SettingsFrame(QWidget *parent) :
     QFrame(parent),
@@ -77,17 +78,31 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     }
 
     QStringList list = getRepositoryURLs();
-    if (list.count() == 0) {
-        QString msg(QObject::tr("No repositories defined"));
-        mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
-    } else if (getInstallationDirectory().isEmpty()) {
-        QString msg(QObject::tr("The installation directory cannot be empty"));
-        mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
-    } else if (!QDir(getInstallationDirectory()).exists()) {
-        QString msg(QObject::tr("The installation directory does not exist"));
-        mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
-    } else {
-        QString err;
+
+    if (err.isEmpty() && list.count() == 0)
+        err = QObject::tr("No repositories defined");
+
+    if (err.isEmpty() && getInstallationDirectory().isEmpty())
+        err = QObject::tr("The installation directory cannot be empty");
+
+    if (err.isEmpty() && !QDir(getInstallationDirectory()).exists())
+        err = QObject::tr("The installation directory does not exist");
+
+    if (err.isEmpty()) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        InstalledPackageVersion* ipv = ip->findOwner(
+                getInstallationDirectory());
+        if (ipv) {
+            AbstractRepository* r = AbstractRepository::getDefault_();
+            err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").arg(
+                    getInstallationDirectory()).
+                    arg(r->getPackageTitleAndName(ipv->package)).
+                    arg(ipv->version.getVersionString());
+            delete ipv;
+        }
+    }
+
+    if (err.isEmpty()) {
         QList<QUrl*> urls;
         for (int i = 0; i < list.count(); i++) {
             QUrl* url = new QUrl(list.at(i));
@@ -98,19 +113,19 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
                 break;
             }
         }
+
         if (err.isEmpty()) {
             WPMUtils::setInstallationDirectory(getInstallationDirectory());
             Repository::setRepositoryURLs(urls, &err);
             if (err.isEmpty()) {
                 mw->closeDetailTabs();
                 mw->recognizeAndLoadRepositories(false);
-            } else {
-                mw->addErrorMessage(err, err, true, QMessageBox::Critical);
             }
-        } else {
-            mw->addErrorMessage(err, err, true, QMessageBox::Critical);
         }
         qDeleteAll(urls);
         urls.clear();
     }
+
+    if (!err.isEmpty())
+        mw->addErrorMessage(err, err, true, QMessageBox::Critical);
 }

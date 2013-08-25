@@ -133,6 +133,13 @@ public:
             const QString& directory);
 
     /**
+     * @param filePath full file or directory path
+     * @return [ownership:caller] installed package version that "owns" the
+     *     specified file or directory or 0
+     */
+    InstalledPackageVersion* findOwner(const QString& filePath) const;
+
+    /**
      * @return [ownership:caller] installed packages
      */
     QList<InstalledPackageVersion*> getAll() const;

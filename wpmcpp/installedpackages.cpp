@@ -227,6 +227,26 @@ QString InstalledPackages::setPackageVersionPath(const QString& package,
     return err;
 }
 
+InstalledPackageVersion *InstalledPackages::findOwner(const QString &filePath) const
+{
+    InstalledPackageVersion* f = 0;
+    QList<InstalledPackageVersion*> ipvs = this->data.values();
+    for (int i = 0; i < ipvs.count(); ++i) {
+        InstalledPackageVersion* ipv = ipvs.at(i);
+        QString dir = ipv->getDirectory();
+        if (!dir.isEmpty() && (WPMUtils::pathEquals(filePath, dir) ||
+                WPMUtils::isUnder(filePath, dir))) {
+            f = ipv;
+            break;
+        }
+    }
+
+    if (f)
+        f = f->clone();
+
+    return f;
+}
+
 QList<InstalledPackageVersion*> InstalledPackages::getAll() const
 {
     QList<InstalledPackageVersion*> all = this->data.values();

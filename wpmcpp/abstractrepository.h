@@ -61,6 +61,12 @@ public:
     virtual ~AbstractRepository();
 
     /**
+     * @param name
+     * @return package title and name. Example: "AbiWord (com.abiword.AbiWord)"
+     */
+    QString getPackageTitleAndName(const QString& name);
+
+    /**
      * @brief searches for a package with the given short name
      * @param name full package name
      * @return [ownership:caller] found packages.
@@ -70,7 +76,7 @@ public:
     /**
      * @brief searches for a package with the given name
      * @param name full package name
-     * @return found package or 0. The returned object should be destroyed later.
+     * @return [ownership:caller] found package or 0.
      */
     virtual Package* findPackage_(const QString& name) = 0;
 
