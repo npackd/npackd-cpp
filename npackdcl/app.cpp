@@ -289,6 +289,13 @@ QString App::check()
     }
     delete job;
 
+    if (!r.isEmpty()) {
+        WPMUtils::outputTextConsole(
+                "Error updating the list of installed packages: " + r + "\n",
+                false);
+        r = "";
+    }
+
     AbstractRepository* rep = AbstractRepository::getDefault_();
     QList<PackageVersion*> list;
 
