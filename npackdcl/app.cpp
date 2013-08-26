@@ -94,86 +94,44 @@ int App::process()
         r = 1;
     } else {
         const QString cmd = fr.at(0);
+        QString err;
         if (cmd == "help") {
             usage();
         } else if (cmd == "path") {
-            r = path();
+            err = path();
         } else if (cmd == "remove" || cmd == "rm") {
-            r = remove();
+            err = remove();
         } else if (cmd == "add") {
-            r = add();
+            err = add();
         } else if (cmd == "add-repo") {
-            QString err = addRepo();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = addRepo();
         } else if (cmd == "remove-repo") {
-            QString err = removeRepo();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = removeRepo();
         } else if (cmd == "list-repos") {
-            QString err = listRepos();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = listRepos();
         } else if (cmd == "search") {
-            QString err = search();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = search();
         } else if (cmd == "check") {
-            QString err = check();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = check();
         } else if (cmd == "which") {
-            QString err = which();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = which();
         } else if (cmd == "list") {
-            QString err = list();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = list();
         } else if (cmd == "info") {
-            QString err = info();
-            if (err.isEmpty())
-                r = 0;
-            else {
-                r = 1;
-                WPMUtils::outputTextConsole(err + "\n", false);
-            }
+            err = info();
         } else if (cmd == "update") {
-            r = update();
+            err = update();
         } else if (cmd == "detect") {
-            r = detect();
+            err = detect();
         } else {
-            WPMUtils::outputTextConsole("Wrong command: " + cmd +
-                    ". Try npackdcl help\n", false);
+            err = "Wrong command: " + cmd + ". Try npackdcl help";
+        }
+
+        if (err.isEmpty())
+            r = 0;
+        else {
             r = 1;
+            WPMUtils::outputTextConsole(err + "\n", false);
         }
     }
 
@@ -581,7 +539,7 @@ QString App::removeRepo()
     return err;
 }
 
-int App::path()
+QString App::path()
 {
     Job* job = new Job();
 
@@ -637,13 +595,7 @@ int App::path()
     }
     job->complete();
 
-    int r;
-    if (!job->getErrorMessage().isEmpty()) {
-        WPMUtils::outputTextConsole(job->getErrorMessage() + "\n", false);
-        r = 1;
-    } else {
-        r = 0;
-    }
+    QString r = job->getErrorMessage();
 
     delete p;
     delete job;
@@ -651,7 +603,7 @@ int App::path()
     return r;
 }
 
-int App::update()
+QString App::update()
 {
     DBRepository* rep = DBRepository::getDefault();
     Job* job = clp.createJob();
@@ -773,20 +725,15 @@ int App::update()
 
     job->complete();
 
-    int r;
+    QString r = job->getErrorMessage();
     if (job->isCancelled()) {
-        WPMUtils::outputTextConsole("The package update was cancelled\n");
-        r = 2;
-    } else if (!job->getErrorMessage().isEmpty()) {
-        WPMUtils::outputTextConsole(job->getErrorMessage() + "\n", false);
-        r = 1;
+        r = "The package update was cancelled";
     } else if (up2date) {
         WPMUtils::outputTextConsole("The package is already up-to-date\n",
                 true);
-        r = 0;
-    } else {
+        r = "";
+    } else if (r.isEmpty()) {
         WPMUtils::outputTextConsole("The package was updated successfully\n");
-        r = 0;
     }
 
     delete newest;
@@ -833,7 +780,7 @@ Package* App::findOnePackage(const QString& package, QString* err)
     return p;
 }
 
-int App::add()
+QString App::add()
 {
     Job* job = clp.createJob();
 
@@ -942,16 +889,12 @@ int App::add()
 
     job->complete();
 
-    int r;
-    if (!job->getErrorMessage().isEmpty()) {
-        WPMUtils::outputTextConsole(job->getErrorMessage() + "\n", false);
-        r = 1;
-    } else {
+    QString r = job->getErrorMessage();
+    if (r.isEmpty()) {
         if (!alreadyInstalled)
             WPMUtils::outputTextConsole(QString(
                     "The package %1 was installed successfully in %2\n").arg(
                     pv->toString()).arg(pv->getPath()));
-        r = 0;
     }
 
     delete pv;
@@ -959,6 +902,7 @@ int App::add()
     delete p;
 
     qDeleteAll(ops);
+
     return r;
 }
 
@@ -1075,7 +1019,7 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
     return b;
 }
 
-int App::remove()
+QString App::remove()
 {
     Job* job = clp.createJob();
 
@@ -1210,16 +1154,11 @@ int App::remove()
 
     job->complete();
 
-    int r;
+    QString r = job->getErrorMessage();
     if (job->isCancelled()) {
-        WPMUtils::outputTextConsole("The package removal was cancelled\n");
-        r = 2;
-    } else if (!job->getErrorMessage().isEmpty()) {
-        WPMUtils::outputTextConsole(job->getErrorMessage() + "\n", false);
-        r = 1;
-    } else {
+        r = "The package removal was cancelled";
+    } else if (r.isEmpty()) {
         WPMUtils::outputTextConsole("The package was removed successfully\n");
-        r = 0;
     }
 
     delete pv;
@@ -1437,19 +1376,15 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
     return err;
 }
 
-int App::detect()
+QString App::detect()
 {
-    int r = 0;
-
     Job* job = clp.createJob();
     job->setHint("Loading repositories and detecting installed software");
 
     DBRepository* rep = DBRepository::getDefault();
     rep->updateF5(job);
-    if (!job->getErrorMessage().isEmpty()) {
-        WPMUtils::outputTextConsole(job->getErrorMessage() + "\n", false);
-        r = 1;
-    } else {
+    QString r = job->getErrorMessage();
+    if (job->getErrorMessage().isEmpty()) {
         WPMUtils::outputTextConsole("Package detection completed successfully\n");
     }
     delete job;

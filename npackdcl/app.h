@@ -31,16 +31,16 @@ private:
     QString addNpackdCL();
 
     void usage();
-    int path();
-    int add();
-    int remove();
+    QString path();
+    QString add();
+    QString remove();
     QString addRepo();
     QString removeRepo();
     QString search();
     QString list();
     QString info();
-    int update();
-    int detect();
+    QString update();
+    QString detect();
     QString listRepos();
     QString which();
     QString check();
