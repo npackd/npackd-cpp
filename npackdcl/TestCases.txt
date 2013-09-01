@@ -101,4 +101,7 @@ http://localhost:8083/Libs.xml
     - remove all defined repositories one by one
     - npackdcl list
     => 0 repositories are defined
+24. "npackdcl check" should work for non-admins
+    - npackdcl check
+    => "all dependencies are OK"
 

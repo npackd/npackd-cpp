@@ -219,6 +219,28 @@ PackageVersion* Dependency::findBestMatchToInstall(
     return res;
 }
 
+QList<PackageVersion*> Dependency::findAllMatchesToInstall(
+        const QList<PackageVersion*>& avoid, QString* err)
+{
+    DBRepository* r = DBRepository::getDefault();
+    QList<PackageVersion*> res;
+
+    QList<PackageVersion*> pvs = r->getPackageVersions_(this->package, err);
+    if (err->isEmpty()) {
+        for (int i = 0; i < pvs.count(); i++) {
+            PackageVersion* pv = pvs.at(i);
+            if (this->test(pv->version) &&
+                    pv->download.isValid() &&
+                    PackageVersion::indexOf(avoid, pv) < 0) {
+                res.append(pv->clone());
+            }
+        }
+    }
+    qDeleteAll(pvs);
+
+    return res;
+}
+
 InstalledPackageVersion* Dependency::findHighestInstalledMatch() const
 {
     QList<InstalledPackageVersion*> list = findAllInstalledMatches();

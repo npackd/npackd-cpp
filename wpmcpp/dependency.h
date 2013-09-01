@@ -61,6 +61,19 @@ public:
             QString *err);
 
     /**
+     * @param avoid list of package versions that should be avoided and cannot
+     *     be considered to be a match
+     * @param err error message will be stored here
+     * @return [ownership:caller] all package versions that matches this
+     *     dependency by
+     *     being installed. Returned objects should be destroyed later.
+     *     The returned objects are sorted by the package version number. The
+     *     first returned object has the highest version number.
+     */
+    QList<PackageVersion *> findAllMatchesToInstall(
+            const QList<PackageVersion *> &avoid, QString *err);
+
+    /**
      * Changes the versions.
      *
      * @param versions something like "[2.12, 3.4)"
