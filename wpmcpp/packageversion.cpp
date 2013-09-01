@@ -499,6 +499,12 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
             }
         }
         if (!depok) {
+            // we cannot just use Dependency->findBestMatchToInstall here as
+            // it is possible that the highest match cannot be installed because
+            // of unsatisfied dependencies. Example: the newest version depends
+            // on Windows Vista, but the current operating system is XP.
+
+            /* old code:
             QString err;
             QScopedPointer<PackageVersion> pv(d->findBestMatchToInstall(avoid,
                     &err));
@@ -517,6 +523,51 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
                 if (!res.isEmpty())
                     break;
             }
+            */
+
+            QString err;
+            QList<PackageVersion*> pvs = d->findAllMatchesToInstall(avoid, &err);
+            if (!err.isEmpty()) {
+                res = QString(QObject::tr("Error searching for the dependency matches: %1")).
+                           arg(err);
+                qDeleteAll(pvs);
+                break;
+            }
+            if (pvs.count() == 0) {
+                res = QString(QObject::tr("Unsatisfied dependency: %1")).
+                           arg(d->toString());
+                break;
+            } else {
+                bool found = false;
+                for (int j = 0; j < pvs.count(); j++) {
+                    PackageVersion* pv = pvs.at(j);
+                    int installedCount = installed.count();
+                    int opsCount = ops.count();
+                    int avoidCount = avoid.count();
+
+                    res = pv->planInstallation(installed, ops, avoid);
+                    if (!res.isEmpty()) {
+                        // rollback
+                        while (installed.count() > installedCount) {
+                            delete installed.takeLast();
+                        }
+                        while (ops.count() > opsCount) {
+                            delete ops.takeLast();
+                        }
+                        while (avoid.count() > avoidCount) {
+                            delete avoid.takeLast();
+                        }
+                    } else {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    res = QString(QObject::tr("Unsatisfied dependency: %1")).
+                               arg(d->toString());
+                }
+            }
+            qDeleteAll(pvs);
         }
     }
 
