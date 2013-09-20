@@ -234,6 +234,11 @@ QStringList CommandLine::getFreeArguments()
     return this->freeArguments;
 }
 
+QList<CommandLine::ParsedOption *> CommandLine::getParsedOptions() const
+{
+    return this->parsedOptions;
+}
+
 QStringList CommandLine::getAll(const QString& name)
 {
     QStringList r;

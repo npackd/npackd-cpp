@@ -44,7 +44,7 @@ int App::process()
 
     cl.add("package", 'p',
             "internal package name (e.g. com.example.Editor or just Editor)",
-            "package", false);
+            "package", true);
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
             "range", false);
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
@@ -171,7 +171,7 @@ void App::usage()
         "Usage:",
         "    npackdcl help",
         "        prints this help",
-        "    npackdcl add --package=<package> [--version=<version>]",
+        "    npackdcl add --package=<package> [--version=<version>] [--package=<package> [--version=<version>] ...]",
         "        installs a package. Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
         "    npackdcl remove|rm --package=<package> --version=<version>",
@@ -800,75 +800,99 @@ QString App::add()
         delete rjob;
     }
 
-    QString package = cl.get("package");
-    QString version = cl.get("version");
+    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
-    if (job->shouldProceed()) {
-        if (package.isNull()) {
-            job->setErrorMessage("Missing option: --package");
-        }
-    }
-
-    if (job->shouldProceed()) {
-        if (!Package::isValidName(package)) {
-            job->setErrorMessage("Invalid package name: " +
-                    package);
-        }
-    }
+    QList<PackageVersion*> toInstall;
 
     AbstractRepository* rep = AbstractRepository::getDefault_();
-    Package* p = 0;
+    for (int i = 0; i < pos.size(); i++) {
+        if (!job->shouldProceed())
+            break;
 
-    if (job->shouldProceed()) {
-        QString err;
-        p = findOnePackage(package, &err);
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else if (!p)
-            job->setErrorMessage(QString("Unknown package: %1").arg(package));
-    }
+        CommandLine::ParsedOption* po = pos.at(i);
+        if (po->opt->nameMathes("package")) {
+            CommandLine::ParsedOption* ponext = 0;
+            if (i + 1 < pos.size())
+                ponext = pos.at(i + 1);
 
-    // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
-    PackageVersion* pv = 0;
-    if (job->shouldProceed()) {
-        if (version.isNull()) {
-            QString err;
-            pv = rep->findNewestInstallablePackageVersion_(
-                    p->name, &err);
-            if (!err.isEmpty())
-                job->setErrorMessage(err);
-        } else {
-            Version v;
-            if (!v.setVersion(version)) {
-                job->setErrorMessage("Cannot parse version: " + version);
-            } else {
+            QString package = po->value;
+            if (!Package::isValidName(package)) {
+                job->setErrorMessage("Invalid package name: " +
+                        package);
+            }
+
+            Package* p = 0;
+            if (job->shouldProceed()) {
                 QString err;
-                pv = rep->findPackageVersion_(p->name, version, &err);
+                p = findOnePackage(package, &err);
                 if (!err.isEmpty())
                     job->setErrorMessage(err);
+                else if (!p)
+                    job->setErrorMessage(
+                            QString("Unknown package: %1").
+                            arg(package));
             }
+
+            PackageVersion* pv = 0;
+            if (job->shouldProceed()) {
+                QString version;
+                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                    version = ponext->value;
+                if (version.isNull()) {
+                    QString err;
+                    pv = rep->findNewestInstallablePackageVersion_(
+                            p->name, &err);
+                    if (!err.isEmpty())
+                        job->setErrorMessage(err);
+                    else {
+                        if (!pv) {
+                            job->setErrorMessage(
+                                    QString("No installable version was found for the package %1 (%2)").
+                                    arg(p->title).arg(p->name));
+                        }
+                    }
+                } else {
+                    i++;
+                    Version v;
+                    if (!v.setVersion(version)) {
+                        job->setErrorMessage(
+                                "Cannot parse version: " + version);
+                    } else {
+                        QString err;
+                        pv = rep->findPackageVersion_(p->name, version,
+                                &err);
+                        if (!err.isEmpty())
+                            job->setErrorMessage(err);
+                        else {
+                            if (!pv) {
+                                job->setErrorMessage(
+                                        QString("Package version not found: %1 (%2) %3").
+                                        arg(p->title).arg(p->name).arg(version));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (job->shouldProceed()) {
+                if (pv->installed()) {
+                    WPMUtils::outputTextConsole(QString(
+                            "%1 is already installed in %2").
+                            arg(pv->toString()).
+                            arg(pv->getPath()) + "\n");
+                }
+            }
+
+            if (pv)
+                toInstall.append(pv);
+
+            delete p;
         }
     }
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
-    if (job->shouldProceed()) {
-        if (!pv) {
-            job->setErrorMessage("Package version not found");
-        }
-    }
-
-    bool alreadyInstalled = false;
-    if (job->shouldProceed()) {
-        if (pv->installed()) {
-            WPMUtils::outputTextConsole(QString(
-                    "%1 is already installed in %2").arg(pv->toString()).
-                    arg(pv->getPath()) + "\n");
-            alreadyInstalled = true;
-        }
-    }
-
     QList<InstallOperation*> ops;
-    if (job->shouldProceed() && !alreadyInstalled) {
+    if (job->shouldProceed()) {
         QString err;
         QList<PackageVersion*> installed =
                 AbstractRepository::getDefault_()->getInstalled_(&err);
@@ -876,20 +900,25 @@ QString App::add()
             job->setErrorMessage(err);
 
         QList<PackageVersion*> avoid;
-        if (job->shouldProceed())
-            err = pv->planInstallation(installed, ops, avoid);
-        if (!err.isEmpty()) {
-            job->setErrorMessage(err);
+        for (int i = 0; i < toInstall.size(); i++) {
+            PackageVersion* pv = toInstall.at(i);
+            if (job->shouldProceed())
+                err = pv->planInstallation(installed, ops, avoid);
+            if (!err.isEmpty()) {
+                job->setErrorMessage(err);
+            }
         }
         qDeleteAll(installed);
     }
 
-    if (!alreadyInstalled && job->shouldProceed("Installing")) {
+    // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
+
+    if (job->shouldProceed("Installing") && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.9);
         rep->process(ijob, ops);
         if (!ijob->getErrorMessage().isEmpty())
-            job->setErrorMessage(QString("Error installing %1: %2").
-                    arg(pv->toString()).arg(ijob->getErrorMessage()));
+            job->setErrorMessage(QString("Error installing: %1").
+                    arg(ijob->getErrorMessage()));
 
         delete ijob;
     }
@@ -898,17 +927,18 @@ QString App::add()
 
     QString r = job->getErrorMessage();
     if (r.isEmpty()) {
-        if (!alreadyInstalled)
+        for (int i = 0; i < toInstall.size(); i++) {
+            PackageVersion* pv = toInstall.at(i);
             WPMUtils::outputTextConsole(QString(
                     "The package %1 was installed successfully in %2\n").arg(
                     pv->toString()).arg(pv->getPath()));
+        }
     }
 
-    delete pv;
     delete job;
-    delete p;
 
     qDeleteAll(ops);
+    qDeleteAll(toInstall);
 
     return r;
 }
