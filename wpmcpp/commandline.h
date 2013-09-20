@@ -10,23 +10,51 @@
  */
 class CommandLine
 {
+public:
+    /**
+     * @brief an option definition
+     */
     class Option {
     public:
+        /** long name of the option or an empty string if there is none */
         QString name;
+
+        /** short name for the option or 0 if not available */
         char name2;
+
+        /**
+         * description for the option value or an empty string if
+         * there should be no value
+         */
         QString valueDescription;
+
+        /** description */
         QString description;
+
+        /** can this option be repeated? */
         bool multiple;
 
+        /**
+         * does this option matches the specified name
+         *
+         * @param name short or long name for an option
+         * @return true if this option matches the specified name
+         */
         bool nameMathes(const QString& name);
     };
 
+    /**
+     * @brief a parsed option
+     */
     class ParsedOption {
     public:
+        /** pointer to the found option */
         Option* opt;
+
+        /** parsed option value */
         QString value;
     };
-
+private:
     QList<Option*> options;
     QList<ParsedOption*> parsedOptions;
     QStringList freeArguments;
@@ -96,6 +124,11 @@ public:
      * @return "free" arguments (those without options)
      */
     QStringList getFreeArguments();
+
+    /**
+     * @return parsed options
+     */
+    QList<ParsedOption*> getParsedOptions() const;
 };
 
 #endif // COMMANDLINE_H

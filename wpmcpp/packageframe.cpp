@@ -161,7 +161,7 @@ void PackageFrame::showDetails()
     for (int i = 0; i < sel.count(); i++) {
         QTableWidgetItem* item = sel.at(i);
         if (item->column() == 0) {
-            PackageVersion* pv = this->pvs.at(i);
+            PackageVersion* pv = this->pvs.at(item->row());
             mw->openPackageVersion(pv->package, pv->version, true);
         }
     }

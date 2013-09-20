@@ -870,7 +870,7 @@ void DBRepository::updateF5(Job* job)
     timer.time(1);
     if (job->shouldProceed(QObject::tr("Downloading the remote repositories"))) {
         Job* sub = job->newSubJob(0.69);
-        r->load(sub, false);
+        r->load(sub, true);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
