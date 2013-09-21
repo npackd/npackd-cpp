@@ -45,6 +45,8 @@ private:
     QString which();
     QString check();
 
+    QList<PackageVersion *> getPackageVersionOptions(const CommandLine &cl,
+            QString *err, bool add);
     bool confirm(const QList<InstallOperation *> ops, QString *title,
             QString *err);
     QString printDependencies(bool onlyInstalled,
