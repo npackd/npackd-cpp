@@ -171,12 +171,16 @@ void App::usage()
         "Usage:",
         "    npackdcl help",
         "        prints this help",
-        "    npackdcl add --package=<package> [--version=<version>] [--package=<package> [--version=<version>] ...]",
-        "        installs packages. The newest available version will be installed, if none is specified.",
-        "        Short package names can be used here (e.g. App instead of com.example.App)",
-        "    npackdcl remove|rm --package=<package> [--version=<version>] [--package=<package> [--version=<version>] ...]",
-        "        removes packages. The version number may be omitted, if only is installed.",
-        "        Short package names can be used here (e.g. App instead of com.example.App)",
+        "    npackdcl add (--package=<package> [--version=<version>])+",
+        "        installs packages. The newest available version will be installed, ",
+        "        if none is specified.",
+        "        Short package names can be used here",
+        "        (e.g. App instead of com.example.App)",
+        "    npackdcl remove|rm (--package=<package> [--version=<version>])+",
+        "        removes packages. The version number may be omitted, ",
+        "        if only is installed.",
+        "        Short package names can be used here",
+        "        (e.g. App instead of com.example.App)",
         "    npackdcl update --package=<package>",
         "        updates a package by uninstalling the currently installed",
         "        and installing the newest version. ",
@@ -186,7 +190,8 @@ void App::usage()
         "        lists package versions sorted by package name and version.",
         "        Please note that since 1.18 only installed package versions",
         "        are listed regardless of the --status switch.",
-        "    npackdcl search [--query=<search terms>] [--status=installed | all] [--bare-format]",
+        "    npackdcl search [--query=<search terms>] [--status=installed | all]",
+        "            [--bare-format]",
         "        lists found packages sorted by package name.",
         "        All packages are shown by default.",
         "    npackdcl info --package=<package> [--version=<version>]",
@@ -624,85 +629,67 @@ QString App::update()
         delete rjob;
     }
 
-    QString package = cl.get("package");
+    QStringList packages_ = cl.getAll("package");
 
     if (job->shouldProceed()) {
-        if (package.isNull()) {
+        if (packages_.size() == 0) {
             job->setErrorMessage("Missing option: --package");
         }
     }
 
     if (job->shouldProceed()) {
-        if (!Package::isValidName(package)) {
-            job->setErrorMessage("Invalid package name: " + package);
+        for (int i = 0; i < packages_.size(); i++) {
+            QString package = packages_.at(i);
+            if (!Package::isValidName(package)) {
+                job->setErrorMessage("Invalid package name: " + package);
+            }
         }
     }
 
-    QList<Package*> packages;
+    QList<Package*> toUpdate;
 
     if (job->shouldProceed()) {
-        if (package.contains('.')) {
-            Package* p = rep->findPackage_(package);
-            if (p)
-                packages.append(p);
-        } else {
-            packages = rep->findPackagesByShortName(package);
+        for (int i = 0; i < packages_.size(); i++) {
+            QString package = packages_.at(i);
+            QList<Package*> packages;
+            if (package.contains('.')) {
+                Package* p = rep->findPackage_(package);
+                if (p)
+                    packages.append(p);
+            } else {
+                packages = rep->findPackagesByShortName(package);
+            }
+
+            if (job->shouldProceed()) {
+                if (packages.count() == 0) {
+                    job->setErrorMessage("Unknown package: " + package);
+                } else if (packages.count() > 1) {
+                    job->setErrorMessage("Ambiguous package name");
+                } else {
+                    toUpdate.append(packages.at(0)->clone());
+                }
+            }
+
+            qDeleteAll(packages);
+
+            if (!job->shouldProceed())
+                break;
         }
-    }
-
-    if (job->shouldProceed()) {
-        if (packages.count() == 0) {
-            job->setErrorMessage("Unknown package: " + package);
-        } else if (packages.count() > 1) {
-            job->setErrorMessage("Ambiguous package name");
-        }
-    }
-
-    PackageVersion* newesti = 0;
-    if (job->shouldProceed()) {
-        // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
-        QString err;
-        newesti = rep->findNewestInstalledPackageVersion_(packages.at(0)->name,
-                &err);
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else if (newesti == 0) {
-            job->setErrorMessage("Package is not installed");
-        }
-    }
-
-    PackageVersion* newest = 0;
-    if (job->shouldProceed()) {
-        QString err;
-        newest = rep->findNewestInstallablePackageVersion_(
-                packages.at(0)->name, &err);
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else if (newest == 0) {
-            job->setErrorMessage("No installable versions found");
-        }
-    }
-
-    bool up2date = false;
-
-    if (job->shouldProceed()) {
-        if (newest->version.compare(newesti->version) <= 0)
-            up2date = true;
-
-        job->setProgress(0.1);
     }
 
     QList<InstallOperation*> ops;
-    if (job->shouldProceed("Planning") && !up2date) {
-        QString err = rep->planUpdates(packages, ops);
+    bool up2date = false;
+    if (job->shouldProceed("Planning")) {
+        QString err = rep->planUpdates(toUpdate, ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
             job->setProgress(0.12);
+            up2date = ops.size() == 0;
+        }
     }
 
-    if (job->shouldProceed("Checking locked files and directories") &&
-            !up2date) {
+    if (job->shouldProceed("Checking locked files and directories") && !up2date) {
         QString msg = Repository::checkLockedFilesForUninstall(ops);
         if (!msg.isEmpty())
             job->setErrorMessage(msg);
@@ -723,8 +710,8 @@ QString App::update()
         Job* ijob = job->newSubJob(0.86);
         rep->process(ijob, ops);
         if (!ijob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(QString("Error updating %1: %2").
-                    arg(packages[0]->title).arg(ijob->getErrorMessage()));
+            job->setErrorMessage(QString("Error updating: %1").
+                    arg(ijob->getErrorMessage()));
         }
         delete ijob;
     }
@@ -736,19 +723,14 @@ QString App::update()
     if (job->isCancelled()) {
         r = "The package update was cancelled";
     } else if (up2date) {
-        WPMUtils::outputTextConsole("The package is already up-to-date\n",
-                true);
-        r = "";
+        WPMUtils::outputTextConsole("The packages are already up-to-date\n");
     } else if (r.isEmpty()) {
-        WPMUtils::outputTextConsole("The package was updated successfully\n");
+        WPMUtils::outputTextConsole("The packages were updated successfully\n");
     }
-
-    delete newest;
-    delete newesti;
 
     delete job;
 
-    qDeleteAll(packages);
+    qDeleteAll(toUpdate);
 
     return r;
 }

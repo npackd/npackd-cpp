@@ -104,4 +104,10 @@ http://localhost:8083/Libs.xml
 24. "npackdcl check" should work for non-admins
     - npackdcl check
     => "all dependencies are OK"
-
+25. installing and removing multiple packages at once
+    - npackdcl add -p AbiWord -p Maven -v 3.1
+    => check the installation directories for files
+    - npackdcl rm -p AbiWord -p Maven -v 3.1
+    => check that the installation directories were removed
+    
+    

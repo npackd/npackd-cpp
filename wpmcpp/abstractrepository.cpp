@@ -195,15 +195,11 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 break;
             }
 
-            if (a->version.compare(b->version) <= 0) {
-                err = QString(QObject::tr("The newest version (%1) for the package %2 is already installed")).
-                        arg(b->version.getVersionString()).arg(p->title);
-                break;
+            if (a->version.compare(b->version) > 0) {
+                newest.append(a);
+                newesti.append(b);
+                used.append(false);
             }
-
-            newest.append(a);
-            newesti.append(b);
-            used.append(false);
         }
     }
 
