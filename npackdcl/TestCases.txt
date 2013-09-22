@@ -5,6 +5,9 @@ http://localhost:8083/Rep64.xml
 http://localhost:8083/RepUnstable.xml
 http://localhost:8083/Libs.xml
 
+All commands should be run as administrator except where it is explicitely
+noted.
+
 1. help
     - npackdcl help
     => help is shown
@@ -97,9 +100,9 @@ http://localhost:8083/Libs.xml
     - npackdcl check
     => "ABC depends on JRE, which is not installed"
 23. "npackdcl remove-repo" should also be able to remove the last one
-    - npackdcl list
+    - npackdcl list-repos
     - remove all defined repositories one by one
-    - npackdcl list
+    - npackdcl list-repos
     => 0 repositories are defined
 24. "npackdcl check" should work for non-admins
     - npackdcl check
@@ -109,5 +112,8 @@ http://localhost:8083/Libs.xml
     => check the installation directories for files
     - npackdcl rm -p AbiWord -p Maven -v 3.1
     => check that the installation directories were removed
-    
+26. npackdcl list as a non-admin
+    - "npackdcl list" as a non-admin
+    => the list of installed package versions should be printed
+
     
