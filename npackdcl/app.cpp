@@ -396,10 +396,10 @@ QString App::list()
         job = new Job();
     else
         job = clp.createJob();
+
+    // ignoring the error as "list" should also be usable for non-admins
     InstalledPackages::getDefault()->refresh(job);
-    if (!job->getErrorMessage().isEmpty()) {
-        err = job->getErrorMessage();
-    }
+
     delete job;
 
     QList<PackageVersion*> list;
