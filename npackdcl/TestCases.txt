@@ -115,5 +115,8 @@ noted.
 26. npackdcl list as a non-admin
     - "npackdcl list" as a non-admin
     => the list of installed package versions should be printed
+27. npackdcl info as a non-admin
+    - "npackdcl info -p AbiWord" as a non-admin
+    => the information about the package is shown
 
     

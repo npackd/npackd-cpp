@@ -1164,10 +1164,11 @@ QString App::info()
     QString r;
 
     Job* job = new Job();
+
+    // ignore the error as "npackdcl info" should be available for non-admins
+    // too
     InstalledPackages::getDefault()->refresh(job);
-    if (!job->getErrorMessage().isEmpty()) {
-        r = job->getErrorMessage();
-    }
+
     delete job;
 
     QString package = cl.get("package");
@@ -1223,8 +1224,15 @@ QString App::info()
         if (pv) {
             WPMUtils::outputTextConsole("Installation path: " +
                     pv->getPath() + "\n");
-            WPMUtils::outputTextConsole("Internal package name: " +
-                    pv->package + "\n");
+
+            InstalledPackages* ip = InstalledPackages::getDefault();
+            InstalledPackageVersion* ipv = ip->find(pv->package, pv->version);
+            WPMUtils::outputTextConsole("Detection info: " +
+                    (ipv ? ipv->detectionInfo : "") + "\n");
+        }
+        WPMUtils::outputTextConsole("Internal package name: " +
+                p->name + "\n");
+        if (pv) {
             WPMUtils::outputTextConsole("Status: " +
                     pv->getStatus() + "\n");
             WPMUtils::outputTextConsole("Download URL: " +
