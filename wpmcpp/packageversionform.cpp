@@ -84,16 +84,6 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
 
     if (p) {
         this->ui->textEditDescription->setText(p->description);
-
-        QString hp;
-        if (p->url.isEmpty())
-            hp = QObject::tr("unknown");
-        else{
-            hp = p->url;
-            hp = "<a href=\"" + Qt::escape(hp) + "\">" + Qt::escape(hp) +
-                    "</a>";
-        }
-        this->ui->labelHomePage->setText(hp);
     }
 
     updateStatus();
