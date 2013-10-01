@@ -55,10 +55,17 @@ void MSIThirdPartyPM::scan(Job* job,
             pv->files.append(pvf);
             rep->savePackageVersion(pv.data());
 
-            // create package
             QString title = WPMUtils::getMSIProductName(guid, &err);
-            if (!err.isEmpty())
-                title = guid;
+
+            // use the directory name for the title if there is no title
+            if (!err.isEmpty() || title.trimmed().isEmpty()) {
+                title = WPMUtils::getMSIProductLocation(guid, &err);
+                title = WPMUtils::normalizePath(title);
+                int pos = title.lastIndexOf('\\');
+                if (pos > 0)
+                    title = title.right(title.length() - pos - 1);
+            }
+
             QScopedPointer<Package> p(new Package(pv->package, title));
             p->description = "[" + QObject::tr("MSI database") +
                     "] " + p->title + " GUID: " + guid;
@@ -83,6 +90,7 @@ void MSIThirdPartyPM::scan(Job* job,
         QString dir = WPMUtils::getMSIProductLocation(guid, &err);
         if (!err.isEmpty())
             dir = "";
+
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);
         ipv->detectionInfo = "msi:" + guid;
