@@ -351,15 +351,6 @@ void InstalledPackages::refresh(Job *job)
 
     // qDebug() << "InstalledPackages::refresh.2";
 
-    if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
-        AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(pm, false));
-        delete pm;
-
-        if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.6);
-    }
-
     if (job->shouldProceed(QObject::tr("Detecting MSI packages"))) {
         // MSI package detection should happen before the detection for
         // control panel programs
@@ -369,6 +360,17 @@ void InstalledPackages::refresh(Job *job)
 
         if (job->getErrorMessage().isEmpty())
             job->setProgress(0.65);
+    }
+
+    if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
+        // detecting from the list of installed packages should happen first
+        // as all other packages consult the list of installed packages
+        AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
+        job->setErrorMessage(detect3rdParty(pm, false));
+        delete pm;
+
+        if (job->getErrorMessage().isEmpty())
+            job->setProgress(0.6);
     }
 
     // qDebug() << "InstalledPackages::refresh.3";
