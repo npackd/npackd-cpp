@@ -80,6 +80,14 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
         QDir d;
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
+
+            // do not detect the same package more than once
+            InstalledPackageVersion* existing = find(ipv->package, ipv->version);
+            if (existing && existing->installed()) {
+                // qDebug() << "existing: " << existing->toString();
+                continue;
+            }
+
             QScopedPointer<PackageVersion> pv(
                     r->findPackageVersion_(ipv->package, ipv->version, &err));
 
@@ -149,7 +157,7 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
                             break;
 
                         ipv2->detectionInfo = ipv->detectionInfo;
-                        ipv2->setPath(ipv->getDirectory());
+                        ipv2->setPath(path);
                         err = this->saveToRegistry(ipv2);
 
                         if (!err.isEmpty())
