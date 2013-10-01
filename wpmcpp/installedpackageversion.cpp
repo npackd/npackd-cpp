@@ -31,6 +31,12 @@ InstalledPackageVersion *InstalledPackageVersion::clone() const
     return r;
 }
 
+QString InstalledPackageVersion::toString() const
+{
+    return this->package + " " + this->version.getVersionString() + " " +
+            this->directory;
+}
+
 QString InstalledPackageVersion::getDetectionInfo() const
 {
     return this->detectionInfo;

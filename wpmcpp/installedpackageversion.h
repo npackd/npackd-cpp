@@ -59,6 +59,11 @@ public:
      * @return [ownership:caller] copy of this object
      */
     InstalledPackageVersion* clone() const;
+
+    /**
+     * @return string representation
+     */
+    QString toString() const;
 };
 
 #endif // INSTALLEDPACKAGEVERSION_H
