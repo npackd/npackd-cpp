@@ -23,6 +23,9 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
             if (pos > 1)
                 title = title.right(title.count() - pos - 1);
             Package* p = new Package(ipv->package, title);
+            p->description = "[" +
+                    QObject::tr("Npackd list of installed packages") +
+                    "] " + p->title;
             rep->packages.append(p);
             used.insert(ipv->package);
         }
