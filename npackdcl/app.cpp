@@ -178,7 +178,7 @@ void App::usage()
         "        (e.g. App instead of com.example.App)",
         "    npackdcl remove|rm (--package=<package> [--version=<version>])+",
         "        removes packages. The version number may be omitted, ",
-        "        if only is installed.",
+        "        if only one is installed.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
         "    npackdcl update --package=<package>",
@@ -697,6 +697,9 @@ QString App::update()
             job->setProgress(0.14);
     }
 
+    /**
+     *confirmation. This is not yet enabled in order to maintain the
+     * compatibility.
     if (job->shouldProceed() && !up2date) {
         QString title;
         QString err;
@@ -705,6 +708,7 @@ QString App::update()
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }
+    */
 
     if (job->shouldProceed("Updating") && !up2date) {
         Job* ijob = job->newSubJob(0.86);
@@ -1124,6 +1128,9 @@ QString App::remove()
             job->setErrorMessage(msg);
     }
 
+    /**
+     *confirmation. This is not yet enabled in order to maintain the
+     * compatibility.
     if (job->shouldProceed()) {
         QString title;
         QString err;
@@ -1132,6 +1139,7 @@ QString App::remove()
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }
+    */
 
     if (job->shouldProceed("Removing")) {
         Job* removeJob = job->newSubJob(0.9);
