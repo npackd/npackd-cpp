@@ -566,22 +566,25 @@ int DBRepository::insertCategory(int parent, int level,
     q.bindValue(":NAME", category);
     q.bindValue(":PARENT", parent);
     q.bindValue(":LEVEL", level);
-    q.exec(); // TODO: check result
+    q.exec();
+    *err = toString(q.lastError());
 
-    int id;
-    if (q.next())
-        id = q.value(0).toInt();
-    else {
-        sql = "INSERT INTO CATEGORY "
-                "(ID, NAME, PARENT, LEVEL) "
-                "VALUES (NULL, :NAME, :PARENT, :LEVEL)";
-        q.prepare(sql); // TODO: test return value in all .prepare() calls
-        q.bindValue(":NAME", category);
-        q.bindValue(":PARENT", parent);
-        q.bindValue(":LEVEL", level);
-        q.exec();
-        id = q.lastInsertId().toInt();
-        *err = toString(q.lastError());
+    int id = -1;
+    if (err->isEmpty()) {
+        if (q.next())
+            id = q.value(0).toInt();
+        else {
+            sql = "INSERT INTO CATEGORY "
+                    "(ID, NAME, PARENT, LEVEL) "
+                    "VALUES (NULL, :NAME, :PARENT, :LEVEL)";
+            q.prepare(sql); // TODO: test return value in all .prepare() calls
+            q.bindValue(":NAME", category);
+            q.bindValue(":PARENT", parent);
+            q.bindValue(":LEVEL", level);
+            q.exec();
+            id = q.lastInsertId().toInt();
+            *err = toString(q.lastError());
+        }
     }
 
     return id;

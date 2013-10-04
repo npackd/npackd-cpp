@@ -111,7 +111,7 @@ void MainFrame::setCategories(int level, const QList<QStringList> &cats)
         this->ui->comboBoxCategory0->clear();
         this->ui->comboBoxCategory0->addItem(QObject::tr("All"));
         this->ui->comboBoxCategory0->addItems(labels);
-        this->ui->comboBoxCategory0->setEnabled(true); // TODO labels.count() > 0);
+        this->ui->comboBoxCategory0->setEnabled(true);
         this->categories0 = cats;
 
         this->categories1.clear();
@@ -120,7 +120,7 @@ void MainFrame::setCategories(int level, const QList<QStringList> &cats)
         this->ui->comboBoxCategory1->clear();
         this->ui->comboBoxCategory1->addItem(QObject::tr("All"));
         this->ui->comboBoxCategory1->addItems(labels);
-        this->ui->comboBoxCategory1->setEnabled(true); // TODO labels.count() > 0);
+        this->ui->comboBoxCategory1->setEnabled(true);
         this->categories1 = cats;
     }
 
