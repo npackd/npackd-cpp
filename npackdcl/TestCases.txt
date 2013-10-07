@@ -118,5 +118,10 @@ noted.
 27. npackdcl info as a non-admin
     - "npackdcl info -p AbiWord" as a non-admin
     => the information about the package is shown
+28. npackdcl which as non-admin
+    - "npackdcl which -f C:\ProgramFiles\MinGW-w64\lib\libgmp.a" as a non-admin
+    => package information is shown
+29. npackd search as non-dmin
+    - npackdcl search -q qt
+    => list of found packages is shown
 
-    
