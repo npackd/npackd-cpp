@@ -181,8 +181,8 @@ void App::usage()
         "        if only one is installed.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    npackdcl update --package=<package>",
-        "        updates a package by uninstalling the currently installed",
+        "    npackdcl update (--package=<package>)+",
+        "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
@@ -192,7 +192,7 @@ void App::usage()
         "        are listed regardless of the --status switch.",
         "    npackdcl search [--query=<search terms>] [--status=installed | all]",
         "            [--bare-format]",
-        "        lists found packages sorted by package name.",
+        "        full text search. Lists found packages sorted by package name.",
         "        All packages are shown by default.",
         "    npackdcl info --package=<package> [--version=<version>]",
         "        shows information about the specified package or package version",
@@ -247,13 +247,17 @@ QString App::which()
 {
     QString r;
 
-    Job* job = new Job();
     InstalledPackages* ip = InstalledPackages::getDefault();
-    ip->refresh(job);
-    if (!job->getErrorMessage().isEmpty()) {
-        r = job->getErrorMessage();
+    r = ip->readRegistryDatabase();
+
+    if (r.isEmpty()) {
+        Job* job = new Job();
+
+        // ignoring the error as this should be available for non-admins
+        ip->refresh(job);
+
+        delete job;
     }
-    delete job;
 
     QString file = cl.get("file");
     if (r.isEmpty()) {
@@ -456,10 +460,11 @@ QString App::search()
 
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.99);
+
+        // ignoring the error message as this should also be available for
+        // non-admins
         InstalledPackages::getDefault()->refresh(rjob);
-        if (!rjob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(rjob->getErrorMessage());
-        }
+
         delete rjob;
     }
 
@@ -1156,7 +1161,7 @@ QString App::remove()
     if (job->isCancelled()) {
         r = "The package removal was cancelled";
     } else if (r.isEmpty()) {
-        WPMUtils::outputTextConsole("The package was removed successfully\n");
+        WPMUtils::outputTextConsole("The packages were removed successfully\n");
     }
 
     delete job;

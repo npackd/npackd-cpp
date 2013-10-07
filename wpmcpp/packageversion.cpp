@@ -1355,6 +1355,7 @@ QByteArray PackageVersion::executeFile(Job* job, const QString& where,
             }
             QFile f(d.absolutePath() + "\\" + outputFile);
             if (f.open(QIODevice::WriteOnly)) {
+                f.write("\xff\xfe");
                 ret = p.readAll();
                 f.write(ret);
                 f.close();
