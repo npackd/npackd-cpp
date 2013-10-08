@@ -77,6 +77,8 @@ QString DBRepository::exec(const QString& sql)
 
 QString DBRepository::saveLicense(License* p, bool replace)
 {
+    QString err;
+
     QMySqlQuery q;
 
     QString sql = "INSERT OR ";
@@ -87,45 +89,65 @@ QString DBRepository::saveLicense(License* p, bool replace)
     sql += " INTO LICENSE "
             "(NAME, TITLE, DESCRIPTION, URL)"
             "VALUES(:NAME, :TITLE, :DESCRIPTION, :URL)";
-    q.prepare(sql);
-    q.bindValue(":NAME", p->name);
-    q.bindValue(":TITLE", p->title);
-    q.bindValue(":DESCRIPTION", p->description);
-    q.bindValue(":URL", p->url);
-    q.exec();
-    return toString(q.lastError());
+    if (!q.prepare(sql))
+        err = toString(q.lastError());
+
+    if (err.isEmpty()) {
+        q.bindValue(":NAME", p->name);
+        q.bindValue(":TITLE", p->title);
+        q.bindValue(":DESCRIPTION", p->description);
+        q.bindValue(":URL", p->url);
+        if (!q.exec())
+            err = toString(q.lastError());
+    }
+
+    return err;
 }
 
 bool DBRepository::tableExists(QSqlDatabase* db,
         const QString& table, QString* err)
 {
     *err = "";
+
     QMySqlQuery q;
-    q.prepare("SELECT name FROM sqlite_master WHERE "
-            "type='table' AND name=:NAME");
-    q.bindValue(":NAME", table);
-    q.exec();
-    *err = toString(q.lastError());
+    if (!q.prepare("SELECT name FROM sqlite_master WHERE "
+            "type='table' AND name=:NAME"))
+        *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        q.bindValue(":NAME", table);
+        if (!q.exec())
+            *err = toString(q.lastError());
+    }
 
     bool e = false;
     if (err->isEmpty()) {
         e = q.next();
     }
+
     return e;
 }
 
 Package *DBRepository::findPackage_(const QString &name)
 {
+    QString err;
+
     Package* r = 0;
 
     QMySqlQuery q;
-    q.prepare("SELECT NAME, TITLE, URL, ICON, "
+    if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, CATEGORY1, CATEGORY2, "
             "CATEGORY3, CATEGORY4 "
-            "FROM PACKAGE WHERE NAME = :NAME");
-    q.bindValue(":NAME", name);
-    q.exec();
-    if (q.next()) {
+            "FROM PACKAGE WHERE NAME = :NAME"))
+        err = toString(q.lastError());
+
+    if (err.isEmpty()) {
+        q.bindValue(":NAME", name);
+        if (!q.exec())
+            err = toString(q.lastError());
+    }
+
+    if (err.isEmpty() && q.next()) {
         Package* p = new Package(q.value(0).toString(), q.value(1).toString());
         p->url = q.value(2).toString();
         p->icon = q.value(3).toString();
@@ -173,13 +195,19 @@ PackageVersion* DBRepository::findPackageVersion_(
     PackageVersion* r = 0;
 
     QMySqlQuery q;
-    q.prepare("SELECT NAME, "
+    if (!q.prepare("SELECT NAME, "
             "PACKAGE, CONTENT, MSIGUID FROM PACKAGE_VERSION "
-            "WHERE NAME = :NAME AND PACKAGE = :PACKAGE");
-    q.bindValue(":NAME", version_);
-    q.bindValue(":PACKAGE", package);
-    q.exec();
-    if (q.next()) {
+            "WHERE NAME = :NAME AND PACKAGE = :PACKAGE"))
+        *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        q.bindValue(":NAME", version_);
+        q.bindValue(":PACKAGE", package);
+        if (!q.exec())
+            *err = toString(q.lastError());
+    }
+
+    if (err->isEmpty() && q.next()) {
         QDomDocument doc;
         int errorLine, errorColumn;
         if (!doc.setContent(q.value(2).toByteArray(),
@@ -209,12 +237,16 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     QList<PackageVersion*> r;
 
     QMySqlQuery q;
-    q.prepare("SELECT NAME, "
+    if (!q.prepare("SELECT NAME, "
             "PACKAGE, CONTENT, MSIGUID FROM PACKAGE_VERSION "
-            "WHERE PACKAGE = :PACKAGE");
-    q.bindValue(":PACKAGE", package);
-    if (!q.exec()) {
+            "WHERE PACKAGE = :PACKAGE"))
         *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        q.bindValue(":PACKAGE", package);
+        if (!q.exec()) {
+            *err = toString(q.lastError());
+        }
     }
 
     while (err->isEmpty() && q.next()) {
@@ -251,10 +283,14 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
     QList<PackageVersion*> r;
 
     QMySqlQuery q;
-    q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
-            "WHERE DETECT_FILE_COUNT > 0");
-    if (!q.exec()) {
+    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
+            "WHERE DETECT_FILE_COUNT > 0"))
         *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        if (!q.exec()) {
+            *err = toString(q.lastError());
+        }
     }
 
     while (err->isEmpty() && q.next()) {
@@ -291,12 +327,17 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     License* cached = this->licenses.object(name);
     if (!cached) {
         QMySqlQuery q;
-        q.prepare("SELECT NAME, TITLE, DESCRIPTION, URL "
+
+        if (!q.prepare("SELECT NAME, TITLE, DESCRIPTION, URL "
                 "FROM LICENSE "
-                "WHERE NAME = :NAME");
-        q.bindValue(":NAME", name);
-        if (!q.exec())
+                "WHERE NAME = :NAME"))
             *err = toString(q.lastError());
+
+        if (err->isEmpty()) {
+            q.bindValue(":NAME", name);
+            if (!q.exec())
+                *err = toString(q.lastError());
+        }
 
         if (err->isEmpty()) {
             if (q.next()) {
@@ -562,12 +603,17 @@ int DBRepository::insertCategory(int parent, int level,
     QMySqlQuery q;
     QString sql = "SELECT ID FROM CATEGORY WHERE PARENT = :PARENT AND "
             "LEVEL = :LEVEL AND NAME = :NAME";
-    q.prepare(sql);
-    q.bindValue(":NAME", category);
-    q.bindValue(":PARENT", parent);
-    q.bindValue(":LEVEL", level);
-    q.exec();
-    *err = toString(q.lastError());
+
+    if (!q.prepare(sql))
+        *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        q.bindValue(":NAME", category);
+        q.bindValue(":PARENT", parent);
+        q.bindValue(":LEVEL", level);
+        if (!q.exec())
+            *err = toString(q.lastError());
+    }
 
     int id = -1;
     if (err->isEmpty()) {
@@ -577,13 +623,18 @@ int DBRepository::insertCategory(int parent, int level,
             sql = "INSERT INTO CATEGORY "
                     "(ID, NAME, PARENT, LEVEL) "
                     "VALUES (NULL, :NAME, :PARENT, :LEVEL)";
-            q.prepare(sql); // TODO: test return value in all .prepare() calls
-            q.bindValue(":NAME", category);
-            q.bindValue(":PARENT", parent);
-            q.bindValue(":LEVEL", level);
-            q.exec();
-            id = q.lastInsertId().toInt();
-            *err = toString(q.lastError());
+            if (!q.prepare(sql))
+                *err = toString(q.lastError());
+
+            if (err->isEmpty()) {
+                q.bindValue(":NAME", category);
+                q.bindValue(":PARENT", parent);
+                q.bindValue(":LEVEL", level);
+                if (!q.exec())
+                    *err = toString(q.lastError());
+                else
+                    id = q.lastInsertId().toInt();
+            }
         }
     }
 
@@ -648,39 +699,43 @@ QString DBRepository::savePackage(Package *p, bool replace)
             "VALUES(:NAME, :TITLE, :URL, :ICON, :DESCRIPTION, :LICENSE, "
             ":FULLTEXT, :STATUS, :SHORT_NAME, "
             ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
-    q.prepare(sql);
-    q.bindValue(":NAME", p->name);
-    q.bindValue(":TITLE", p->title);
-    q.bindValue(":URL", p->url);
-    q.bindValue(":ICON", p->icon);
-    q.bindValue(":DESCRIPTION", p->description);
-    q.bindValue(":LICENSE", p->license);
-    q.bindValue(":FULLTEXT", (p->title + " " + p->description + " " +
-            p->name).toLower());
-    q.bindValue(":STATUS", 0);
-    q.bindValue(":SHORT_NAME", p->getShortName());
-    if (cat0 == 0)
-        q.bindValue(":CATEGORY0", QVariant(QVariant::Int));
-    else
-        q.bindValue(":CATEGORY0", cat0);
-    if (cat1 == 0)
-        q.bindValue(":CATEGORY1", QVariant(QVariant::Int));
-    else
-        q.bindValue(":CATEGORY1", cat1);
-    if (cat2 == 0)
-        q.bindValue(":CATEGORY2", QVariant(QVariant::Int));
-    else
-        q.bindValue(":CATEGORY2", cat2);
-    if (cat3 == 0)
-        q.bindValue(":CATEGORY3", QVariant(QVariant::Int));
-    else
-        q.bindValue(":CATEGORY3", cat3);
-    if (cat4 == 0)
-        q.bindValue(":CATEGORY4", QVariant(QVariant::Int));
-    else
-        q.bindValue(":CATEGORY4", cat4);
-    q.exec();
-    err = toString(q.lastError());
+    if (!q.prepare(sql))
+        err = toString(q.lastError());
+
+    if (err.isEmpty()) {
+        q.bindValue(":NAME", p->name);
+        q.bindValue(":TITLE", p->title);
+        q.bindValue(":URL", p->url);
+        q.bindValue(":ICON", p->icon);
+        q.bindValue(":DESCRIPTION", p->description);
+        q.bindValue(":LICENSE", p->license);
+        q.bindValue(":FULLTEXT", (p->title + " " + p->description + " " +
+                p->name).toLower());
+        q.bindValue(":STATUS", 0);
+        q.bindValue(":SHORT_NAME", p->getShortName());
+        if (cat0 == 0)
+            q.bindValue(":CATEGORY0", QVariant(QVariant::Int));
+        else
+            q.bindValue(":CATEGORY0", cat0);
+        if (cat1 == 0)
+            q.bindValue(":CATEGORY1", QVariant(QVariant::Int));
+        else
+            q.bindValue(":CATEGORY1", cat1);
+        if (cat2 == 0)
+            q.bindValue(":CATEGORY2", QVariant(QVariant::Int));
+        else
+            q.bindValue(":CATEGORY2", cat2);
+        if (cat3 == 0)
+            q.bindValue(":CATEGORY3", QVariant(QVariant::Int));
+        else
+            q.bindValue(":CATEGORY3", cat3);
+        if (cat4 == 0)
+            q.bindValue(":CATEGORY4", QVariant(QVariant::Int));
+        else
+            q.bindValue(":CATEGORY4", cat4);
+        if (!q.exec())
+            err = toString(q.lastError());
+    }
 
     return err;
 }
@@ -697,29 +752,62 @@ QString DBRepository::savePackageVersion(PackageVersion *p)
 
 QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
 {
+    QString err;
+
     QList<Package*> r;
 
     QMySqlQuery q;
-    q.prepare("SELECT NAME, TITLE, URL, ICON, "
-            "DESCRIPTION, LICENSE FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME");
-    q.bindValue(":SHORT_NAME", name);
-    q.exec();
-    while (q.next()) {
+    if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
+            "DESCRIPTION, LICENSE, CATEGORY0, "
+            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+            "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME"))
+        err = toString(q.lastError());
+
+    if (err.isEmpty()) {
+        q.bindValue(":SHORT_NAME", name);
+        if (!q.exec())
+            err = toString(q.lastError());
+    }
+
+    while (err.isEmpty() && q.next()) {
         Package* p = new Package(q.value(0).toString(), q.value(1).toString());
         p->url = q.value(2).toString();
         p->icon = q.value(3).toString();
         p->description = q.value(4).toString();
         p->license = q.value(5).toString();
+
+        int cat0 = q.value(6).toInt();
+        int cat1 = q.value(7).toInt();
+        int cat2 = q.value(8).toInt();
+        int cat3 = q.value(9).toInt();
+        int cat4 = q.value(10).toInt();
+
+        int cat = cat4;
+        if (cat <= 0)
+            cat = cat3;
+        if (cat <= 0)
+            cat = cat2;
+        if (cat <= 0)
+            cat = cat1;
+        if (cat <= 0)
+            cat = cat0;
+
+        if (cat > 0) {
+            QString category = findCategory(cat);
+            if (!category.isEmpty())
+                p->categories.append(category);
+        }
+
         r.append(p);
     }
-
-    // TODO: read category
 
     return r;
 }
 
 QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 {
+    QString err;
+
     QMySqlQuery q;
     QString sql = "INSERT OR ";
     if (replace)
@@ -729,22 +817,28 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
     sql += " INTO PACKAGE_VERSION "
             "(NAME, PACKAGE, CONTENT, MSIGUID, DETECT_FILE_COUNT)"
             "VALUES(:NAME, :PACKAGE, :CONTENT, :MSIGUID, :DETECT_FILE_COUNT)";
-    q.prepare(sql);
-    q.bindValue(":NAME", p->version.getVersionString());
-    q.bindValue(":PACKAGE", p->package);
-    q.bindValue(":MSIGUID", p->msiGUID);
-    q.bindValue(":DETECT_FILE_COUNT", p->detectFiles.count());
-    QDomDocument doc;
-    QDomElement root = doc.createElement("version");
-    doc.appendChild(root);
-    p->toXML(&root);
-    QByteArray file;
-    QTextStream s(&file);
-    doc.save(s, 4);
+    if (!q.prepare(sql))
+        err = toString(q.lastError());
 
-    q.bindValue(":CONTENT", QVariant(file));
-    q.exec();
-    return toString(q.lastError());
+    if (err.isEmpty()) {
+        q.bindValue(":NAME", p->version.getVersionString());
+        q.bindValue(":PACKAGE", p->package);
+        q.bindValue(":MSIGUID", p->msiGUID);
+        q.bindValue(":DETECT_FILE_COUNT", p->detectFiles.count());
+        QDomDocument doc;
+        QDomElement root = doc.createElement("version");
+        doc.appendChild(root);
+        p->toXML(&root);
+        QByteArray file;
+        QTextStream s(&file);
+        doc.save(s, 4);
+
+        q.bindValue(":CONTENT", QVariant(file));
+        if (!q.exec())
+            err = toString(q.lastError());
+    }
+
+    return err;
 }
 
 PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
@@ -755,12 +849,16 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
     PackageVersion* r = 0;
 
     QMySqlQuery q;
-    q.prepare("SELECT NAME, "
+    if (!q.prepare("SELECT NAME, "
             "PACKAGE, CONTENT FROM PACKAGE_VERSION "
-            "WHERE MSIGUID = :MSIGUID");
-    q.bindValue(":MSIGUID", guid);
-    if (!q.exec())
+            "WHERE MSIGUID = :MSIGUID"))
         *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        q.bindValue(":MSIGUID", guid);
+        if (!q.exec())
+            *err = toString(q.lastError());
+    }
 
     if (err->isEmpty()) {
         if (q.next()) {
@@ -1077,13 +1175,17 @@ QString DBRepository::updateStatus(const QString& package)
         }
 
         QMySqlQuery q;
-        q.prepare("UPDATE PACKAGE "
+        if (!q.prepare("UPDATE PACKAGE "
                 "SET STATUS=:STATUS "
-                "WHERE NAME=:NAME");
-        q.bindValue(":STATUS", status);
-        q.bindValue(":NAME", package);
-        q.exec();
-        err = toString(q.lastError());
+                "WHERE NAME=:NAME"))
+            err = toString(q.lastError());
+
+        if (err.isEmpty()) {
+            q.bindValue(":STATUS", status);
+            q.bindValue(":NAME", package);
+            if (!q.exec())
+                err = toString(q.lastError());
+        }
     }
     qDeleteAll(pvs);
 
