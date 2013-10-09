@@ -144,7 +144,7 @@ Package* Repository::createPackage(QDomElement* e, QString* err)
                 break;
             }
 
-            QStringList parts = c.split('|', QString::KeepEmptyParts);
+            QStringList parts = c.split('/', QString::KeepEmptyParts);
             if (parts.count() == 0) {
                 err->append(QString(
                         QObject::tr("Empty category tag for %1")).
@@ -163,7 +163,7 @@ Package* Repository::createPackage(QDomElement* e, QString* err)
                 parts[j] = part;
             }
 
-            a->categories.append(parts.join("|"));
+            a->categories.append(parts.join("/"));
         }
     }
 
