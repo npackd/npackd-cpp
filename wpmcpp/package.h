@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <QDomElement>
+#include <QStringList>
 
 /**
  * A package declaration.
@@ -53,7 +54,7 @@ public:
     int repository;
 
     /** categories. Sub-categories are separated by | */
-    QList<QString> categories;
+    QStringList categories;
 
     Package(const QString& name, const QString& title);
 
