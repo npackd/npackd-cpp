@@ -96,6 +96,7 @@ void PackageFrame::fillForm(Package* p)
                     "</a>";
         }
         this->ui->labelHomePage->setText(hp);
+        this->ui->labelCategory->setText(p->categories.join(", "));
     }
 
     updateIcons();

@@ -30,8 +30,9 @@ private:
     QCache<QString, License> licenses;
 
     QMap<int, QString> categories;
-    QMap<QString, int> categories2;
 
+    QString readCategories();
+    QString getCategoryPath(int c0, int c1, int c2, int c3, int c4) const;
     int insertCategory(int parent, int level,
             const QString &category, QString *err);
     QString findCategory(int cat) const;

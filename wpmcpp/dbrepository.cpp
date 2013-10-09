@@ -153,27 +153,13 @@ Package *DBRepository::findPackage_(const QString &name)
         p->icon = q.value(3).toString();
         p->description = q.value(4).toString();
         p->license = q.value(5).toString();
-        int cat0 = q.value(6).toInt();
-        int cat1 = q.value(7).toInt();
-        int cat2 = q.value(8).toInt();
-        int cat3 = q.value(9).toInt();
-        int cat4 = q.value(10).toInt();
-
-        int cat = cat4;
-        if (cat <= 0)
-            cat = cat3;
-        if (cat <= 0)
-            cat = cat2;
-        if (cat <= 0)
-            cat = cat1;
-        if (cat <= 0)
-            cat = cat0;
-
-        if (cat > 0) {
-            QString category = findCategory(cat);
-            if (!category.isEmpty())
-                p->categories.append(category);
-        }
+        QString path = getCategoryPath(q.value(6).toInt(),
+                q.value(7).toInt(),
+                q.value(8).toInt(),
+                q.value(9).toInt(),
+                q.value(10).toInt());
+        if (!path.isEmpty())
+            p->categories.append(path);
 
         r = p;
     }
@@ -565,27 +551,13 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
             p->icon = q.value(3).toString();
             p->description = q.value(4).toString();
             p->license = q.value(5).toString();
-
-            int cat0 = q.value(6).toInt();
-            int cat1 = q.value(7).toInt();
-            int cat2 = q.value(8).toInt();
-            int cat3 = q.value(9).toInt();
-            int cat4 = q.value(10).toInt();
-
-            int cat = cat4;
-            if (cat <= 0)
-                cat = cat3;
-            if (cat <= 0)
-                cat = cat2;
-            if (cat <= 0)
-                cat = cat1;
-            if (cat <= 0)
-                cat = cat0;
-
-            if (cat > 0) {
-                QString category = findCategory(cat);
-                if (!category.isEmpty())
-                    p->categories.append(category);
+            QString path = getCategoryPath(q.value(6).toInt(),
+                    q.value(7).toInt(),
+                    q.value(8).toInt(),
+                    q.value(9).toInt(),
+                    q.value(10).toInt());
+            if (!path.isEmpty()) {
+                p->categories.append(path);
             }
 
             r.append(p);
@@ -1007,6 +979,14 @@ void DBRepository::updateF5(Job* job)
         job->setProgress(0.98);
     }
 
+    if (job->shouldProceed(QObject::tr("Reading categories"))) {
+        QString err = readCategories();
+        if (err.isEmpty())
+            job->setProgress(0.985);
+        else
+            job->setErrorMessage(err);
+    }
+
     // qDebug() << "updateF5.2";
 
     if (job->shouldProceed(
@@ -1134,6 +1114,57 @@ QString DBRepository::savePackageVersions(Repository* r, bool replace)
 QString DBRepository::toString(const QSqlError& e)
 {
     return e.type() == QSqlError::NoError ? "" : e.text();
+}
+
+QString DBRepository::readCategories()
+{
+    QString err;
+
+    this->categories.clear();
+
+    QString sql = "SELECT ID, NAME FROM CATEGORY";
+
+    QMySqlQuery q;
+
+    if (!q.prepare(sql))
+        err = DBRepository::toString(q.lastError());
+
+    if (err.isEmpty()) {
+        if (!q.exec())
+            err = toString(q.lastError());
+        else {
+            while (q.next()) {
+                categories.insert(q.value(0).toInt(),
+                        q.value(1).toString());
+            }
+        }
+    }
+
+    return err;
+}
+
+QString DBRepository::getCategoryPath(int c0, int c1, int c2, int c3,
+        int c4) const
+{
+    QString r;
+
+    QString cat0 = findCategory(c0);
+    QString cat1 = findCategory(c1);
+    QString cat2 = findCategory(c2);
+    QString cat3 = findCategory(c3);
+    QString cat4 = findCategory(c4);
+
+    r = cat0;
+    if (!cat1.isEmpty())
+        r.append('|').append(cat1);
+    if (!cat2.isEmpty())
+        r.append('|').append(cat2);
+    if (!cat3.isEmpty())
+        r.append('|').append(cat3);
+    if (!cat4.isEmpty())
+        r.append('|').append(cat4);
+
+    return r;
 }
 
 QString DBRepository::updateStatus(const QString& package)
