@@ -630,7 +630,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
 
     if (p->categories.count() > 0) {
         QString category = p->categories.at(0);
-        QStringList cats = category.split('|');
+        QStringList cats = category.split('/');
         for (int i = 0; i < cats.length(); i++) {
             cats[i] = cats.at(i).trimmed();
         }
@@ -1143,13 +1143,13 @@ QString DBRepository::getCategoryPath(int c0, int c1, int c2, int c3,
 
     r = cat0;
     if (!cat1.isEmpty())
-        r.append('|').append(cat1);
+        r.append('/').append(cat1);
     if (!cat2.isEmpty())
-        r.append('|').append(cat2);
+        r.append('/').append(cat2);
     if (!cat3.isEmpty())
-        r.append('|').append(cat3);
+        r.append('/').append(cat3);
     if (!cat4.isEmpty())
-        r.append('|').append(cat4);
+        r.append('/').append(cat4);
 
     return r;
 }
