@@ -57,8 +57,7 @@ int App::process()
             "", false);
     cl.add("query", 'q', "search terms (e.g. editor)",
             "search terms", false);
-    cl.add("rate", 't', "output update rate in seconds "
-            "(use 0 to output everything)", "rate", false);
+    cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("file", 'f', "file or directory", "file", false);
 
     err = cl.parse();
@@ -68,17 +67,9 @@ int App::process()
     }
     // cl.dump();
 
-    QString rate = cl.get("rate");
+    QString rate = cl.get("debug");
     if (!rate.isNull()) {
-        bool ok;
-        int r = rate.toInt(&ok);
-        if (ok && r >= 0)
-            clp.setUpdateRate(r);
-        else {
-            WPMUtils::outputTextConsole("Error: invalid update rate: " + rate +
-                    "\n");
-            return 1;
-        }
+        clp.setUpdateRate(0);
     }
 
     QStringList fr = cl.getFreeArguments();
