@@ -1,0 +1,9 @@
+1. change the version number in wpmcpp\WPMUtils.cpp
+2. change the version number in wpmcpp\wpmcpp.aip
+3. change the version number in wpmcpp\wpmcpp64.aip
+4. change the version number in npackdcl\NpackdCL.aip
+5. start wpmcpp\Build32.bat
+6. start wpmcpp\Build64.bat
+7. start npackdcl\Build32.bat
+8. start clu\Build32.bat
+
