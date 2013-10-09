@@ -748,27 +748,14 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
         p->description = q.value(4).toString();
         p->license = q.value(5).toString();
 
-        int cat0 = q.value(6).toInt();
-        int cat1 = q.value(7).toInt();
-        int cat2 = q.value(8).toInt();
-        int cat3 = q.value(9).toInt();
-        int cat4 = q.value(10).toInt();
-
-        int cat = cat4;
-        if (cat <= 0)
-            cat = cat3;
-        if (cat <= 0)
-            cat = cat2;
-        if (cat <= 0)
-            cat = cat1;
-        if (cat <= 0)
-            cat = cat0;
-
-        if (cat > 0) {
-            QString category = findCategory(cat);
-            if (!category.isEmpty())
-                p->categories.append(category);
-        }
+        QString path = getCategoryPath(
+                q.value(6).toInt(),
+                q.value(7).toInt(),
+                q.value(8).toInt(),
+                q.value(9).toInt(),
+                q.value(10).toInt());
+        if (!path.isEmpty())
+            p->categories.append(path);
 
         r.append(p);
     }
@@ -1381,6 +1368,10 @@ QString DBRepository::open()
             db.exec("CREATE UNIQUE INDEX REPOSITORY_ID ON REPOSITORY(ID)");
             err = toString(db.lastError());
         }
+    }
+
+    if (err.isEmpty()) {
+        err = readCategories();
     }
 
     return err;
