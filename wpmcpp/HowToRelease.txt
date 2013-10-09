@@ -1,9 +1,38 @@
-1. change the version number in wpmcpp\WPMUtils.cpp
-2. change the version number in wpmcpp\wpmcpp.aip
-3. change the version number in wpmcpp\wpmcpp64.aip
-4. change the version number in npackdcl\NpackdCL.aip
-5. start wpmcpp\Build32.bat
-6. start wpmcpp\Build64.bat
-7. start npackdcl\Build32.bat
-8. start clu\Build32.bat
+Change the version number in: 
+- wpmcpp\WPMUtils.cpp
+- wpmcpp\wpmcpp.aip
+- wpmcpp\wpmcpp64.aip
+- npackdcl\NpackdCL.aip
+
+Translations:
+- run lupdate
+- update translations
+- run lrelease
+
+Tag the version in Mercurial, commit, push.
+
+Execute the following scripts:
+- wpmcpp\Build32.bat
+- wpmcpp\Build64.bat
+- npackdcl\Build32.bat
+
+Upload to code.google.com/p/windows-package-manager:
+- wpmcpp\32\Npackd32-X.XX.X.msi
+- wpmcpp\32\Npackd32.zip
+- wpmcpp\32\wpmcpp_release.map
+- wpmcpp\64\Npackd64-X.XX.X.msi
+- wpmcpp\64\Npackd64.zip
+- wpmcpp\64\wpmcpp_release.map
+- npackdcl\32\NpackdCL-X.XX.X.msi
+- npackdcl\32\Npackd32.zip
+- npackdcl\32\npackdcl_release.map
+
+Create the following packages from the repository 
+(hg clone https://tim.lebedkov@code.google.com/p/windows-package-manager.npackd-cpp/):
+- npackd-dev-i686-w64
+- npackd-dev-x86_64-w64
+
+Create the following packages from the uploads:
+- com.googlecode.windows-package-manager.Npackd
+- com.googlecode.windows-package-manager.NpackdCL
 
