@@ -16,7 +16,7 @@ noted.
     => "Missing command. Try npackdcl help"
 3. list
     - npackdcl list
-    => all packages are listed sorted by their title
+    => all installed packages are listed sorted by their title
 4. list --bare-format
     - npackdcl list --bare-format
     => only the data about packages is printed, no header
@@ -41,7 +41,7 @@ noted.
 9. locked files
     - npackdcl add -p Firefox
     - start Firefox
-    - npackdcl remove -p Firefox -v 17
+    - npackdcl remove -p Firefox
     => The package(s) cannot be uninstalled because the following files are in 
         use (please close the corresponding applications): 
         C:\ProgramFiles\Firefox-15\firefox.exe    
@@ -56,12 +56,6 @@ noted.
     - npackdcl info -p MinGWW64
     => information about the package including all available version numbers
         should be shown.
-13. NPACKD_CL for a non-administrator
-    - remove the NPACKD_CL variable definition for the current user and for the
-        system
-    - start npackdcl.exe without parameters and *without* administrator
-        privileges
-    - => NPACKD_CL should be defined
 13. NPACKD_CL for an administrator
     - remove the NPACKD_CL variable definition for the current user and for the
         system
@@ -124,4 +118,7 @@ noted.
 29. npackd search as non-dmin
     - npackdcl search -q qt
     => list of found packages is shown
+31. --debug
+    - npackdcl detect --debug
+    => all messages are outputted
 

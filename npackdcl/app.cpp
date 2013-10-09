@@ -67,8 +67,7 @@ int App::process()
     }
     // cl.dump();
 
-    QString rate = cl.get("debug");
-    if (!rate.isNull()) {
+    if (cl.isPresent("debug")) {
         clp.setUpdateRate(0);
     }
 

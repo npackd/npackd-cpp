@@ -1,9 +1,11 @@
 Repositories:
 -------------
-http://localhost:8083/Rep.xml
-http://localhost:8083/Rep64.xml
-http://localhost:8083/RepUnstable.xml
-http://localhost:8083/Libs.xml
+http://npackd.appspot.com/rep/recent-xml
+http://npackd.appspot.com/rep/xml?tag=libs
+http://npackd.appspot.com/rep/xml?tag=stable64
+http://npackd.appspot.com/rep/xml?tag=stable
+http://npackd.appspot.com/rep/xml?tag=unstable
+http://npackd.appspot.com/rep/xml?tag=vim
 
 1. Start/close
     - close the application
@@ -15,7 +17,7 @@ http://localhost:8083/Libs.xml
     - choose "Installed"
     => only installed packages are shown
 4. Filter for updateable packages
-    - choose "Installed, Updateable"
+    - choose "Updateable"
     => only packages with updates are shown
 5. Install the newest package version
     - select "Notepad2"
@@ -35,7 +37,7 @@ http://localhost:8083/Libs.xml
     => the title of the new tab is "Notepad2"    
 9. Go to
     - select "Notepad2"
-    - choose "Package", "Go to package page"
+    - choose "Package", "Open web site"
     => http://www.flos-freeware.ch/notepad2.html is opened in the browser
 10. Open a package version twice
     - double click on "AbiWord" package in the main table
