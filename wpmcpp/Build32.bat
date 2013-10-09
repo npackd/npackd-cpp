@@ -1,3 +1,5 @@
+rmdir /s /q build\32
+
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.nokia.QtDev-i686-w64-Npackd-Release" "--versions=[4.8.2, 4.8.2]"
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set qt=%%x
 

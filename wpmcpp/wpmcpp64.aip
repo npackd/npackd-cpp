@@ -9,10 +9,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="http://code.google.com/p/windows-package-manager/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{5DD5621A-C0D7-4035-A342-3A32B5D0401E} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{7260C20B-F13C-4FE2-9635-626112FB0FF4} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.18.1" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.18.2" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{EABC4270-7D7F-47BF-B388-AC63606E8DAC}"/>
