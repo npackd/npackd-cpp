@@ -28,10 +28,11 @@ void MSIThirdPartyPM::scan(Job* job,
             version = pv_->version;
             delete pv_;
         } else {
+            package = "msi." + guid.mid(1, 36);
+
             // create package version
             QScopedPointer<PackageVersion> pv(new PackageVersion(package));
 
-            package = "msi." + guid.mid(1, 36);
             QString version_ = WPMUtils::getMSIProductAttribute(guid,
                     INSTALLPROPERTY_VERSIONSTRING, &err);
             if (err.isEmpty()) {
@@ -80,6 +81,8 @@ void MSIThirdPartyPM::scan(Job* job,
                 if (err.isEmpty() && QUrl(url).isValid())
                     p->url = url;
             }
+
+            p->categories.append(QObject::tr("MSI packages"));
 
             // qDebug() << guid << p->title;
 
