@@ -476,6 +476,7 @@ QString Repository::savePackage(Package *p)
     fp->icon = p->icon;
     fp->description = p->description;
     fp->license = p->license;
+    fp->categories = p->categories;
 
     return "";
 }

@@ -161,6 +161,8 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         url = "";
     p->url = url;
 
+    p->categories.append(QObject::tr("Control panel software"));
+
     // qDebug() << "adding package " << p.data()->name;
     rep->savePackage(p.data());
 
