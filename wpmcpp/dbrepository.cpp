@@ -1215,8 +1215,13 @@ QString DBRepository::open()
     QString err;
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    QString path(WPMUtils::getShellDir(CSIDL_COMMON_APPDATA));
-    path.append("\\Npackd\\Data.db");
+    QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
+    QDir d;
+    if (!d.exists(dir))
+        d.mkpath(dir);
+
+    QString path = dir + "\\Data.db";
+
     path = QDir::toNativeSeparators(path);
     db.setDatabaseName(path);
     db.open();
