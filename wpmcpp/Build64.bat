@@ -30,7 +30,7 @@ if %errorlevel% neq 0 goto error
 "%mingw%\bin\mingw32-make.exe"
 if %errorlevel% neq 0 goto error
 
-ren npackdcl_release.map Npackd64-%version%.map
+ren wpmcpp_release.map Npackd64-%version%.map
 if %errorlevel% neq 0 goto error
 
 "%qt%\bin\lrelease.exe" ..\..\wpmcpp.pro

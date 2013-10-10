@@ -8,17 +8,16 @@ Translations:
 Tag the version in Mercurial, commit, push.
 
 Create the following packages from the repository 
-(hg clone https://tim.lebedkov@code.google.com/p/windows-package-manager.npackd-cpp/):
-- npackd-dev-i686-w64
-- npackd-dev-x86_64-w64
+ - hg clone https://tim.lebedkov@code.google.com/p/windows-package-manager.npackd-cpp/ X.XX.X_32
+ - hg clone https://tim.lebedkov@code.google.com/p/windows-package-manager.npackd-cpp/ X.XX.X_64
 
-Execute the following scripts in npackd-dev-i686-w64:
+Execute the following scripts in X.XX.X_32: 
 - wpmcpp\Build32.bat
 - npackdcl\Build32.bat
 - clu\Build32.bat
 
-Execute the following scripts in npackd-dev-x86_64-w64:
-- wpmcpp\Build64.bat
+Execute the following scripts in X.XX.X_64:
+ - wpmcpp\Build64.bat
 
 Upload to code.google.com/p/windows-package-manager:
 - wpmcpp\32\Npackd32-X.XX.X.msi
