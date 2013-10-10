@@ -1654,7 +1654,7 @@ void MainWindow::on_actionAbout_triggered()
 {
     addTextTab(QObject::tr("About"), QString(
             QObject::tr("<html><body>Npackd %1 - software package manager for Windows (R)<br><a href='http://code.google.com/p/windows-package-manager'>http://code.google.com/p/windows-package-manager</a></body></html>")).
-            arg(WPMUtils::NPACKD_VERSION), true);
+            arg(NPACKD_VERSION), true);
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)

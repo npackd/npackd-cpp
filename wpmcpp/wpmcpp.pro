@@ -1,11 +1,5 @@
-# -------------------------------------------------
-# Project created by QtCreator 2010-06-20T15:15:32
-# -------------------------------------------------
-
-# Just a test:
-# SYSTEM_CMD=$$(NPACKD_CL)/npackdcl.exe path --package "net.sourceforge.mingw-w64.MinGWW64"
-# TST = $$system($${SYSTEM_CMD})
-# message(This looks like ($$TST) to me)
+NPACKD_VERSION = $$system(type version.txt)
+DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
 QT += xml sql
 TARGET = wpmcpp

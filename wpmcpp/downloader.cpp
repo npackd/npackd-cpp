@@ -34,7 +34,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         resource.append('?').append(encQuery);
 
     QString agent("Npackd/");
-    agent.append(WPMUtils::NPACKD_VERSION);
+    agent.append(NPACKD_VERSION);
 
     agent += " (compatible; MSIE 9.0)";
 

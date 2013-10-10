@@ -1705,13 +1705,13 @@ p, li { white-space: pre-wrap; }
         <translation>Veuillez télécharger la version 64-bit depuis http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
-        <location filename="mainframe.cpp" line="105"/>
+        <location filename="mainframe.cpp" line="106"/>
         <source>Uncategorized</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainframe.cpp" line="112"/>
-        <location filename="mainframe.cpp" line="121"/>
+        <location filename="mainframe.cpp" line="114"/>
+        <location filename="mainframe.cpp" line="125"/>
         <source>All</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1880,9 +1880,14 @@ p, li { white-space: pre-wrap; }
         <translation>Fermer (%1 seconde(s))</translation>
     </message>
     <message>
-        <location filename="msithirdpartypm.cpp" line="70"/>
+        <location filename="msithirdpartypm.cpp" line="71"/>
         <source>MSI database</source>
         <translation>Base de données MSI</translation>
+    </message>
+    <message>
+        <location filename="msithirdpartypm.cpp" line="85"/>
+        <source>MSI packages</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="packageframe.cpp" line="71"/>
@@ -2395,12 +2400,12 @@ p, li { white-space: pre-wrap; }
         <translation>Veuillez télécharger une version plus récente depuis http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="593"/>
+        <location filename="repository.cpp" line="594"/>
         <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
         <translation>Impossible de désinstaller le(s) paquet(s) car les fichiers suivants sont en cours d&apos;utilisation (veuillez fermer les applications correspondantes): %1</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="606"/>
+        <location filename="repository.cpp" line="607"/>
         <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
         <translation>Le paquet %1 ne peut pas être désinstallé car certains fichiers ou répertoires dans le dossier %2 sont en cours d&apos;utilisation.</translation>
     </message>
@@ -2587,211 +2592,216 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="commandline.cpp" line="187"/>
-        <location filename="wpmutils.cpp" line="114"/>
+        <location filename="wpmutils.cpp" line="112"/>
         <source>CommandLineToArgvW failed</source>
         <translation>Echec de CommandLineToArgvW</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="146"/>
+        <location filename="wpmutils.cpp" line="144"/>
         <source>A GUID must be 38 characters long</source>
         <translation>Un GUID doit être d&apos;une longueur de 38 caractéres</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="164"/>
+        <location filename="wpmutils.cpp" line="162"/>
         <source>Wrong character at position %1</source>
         <translation>Caractère invalide à la position %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="202"/>
+        <location filename="wpmutils.cpp" line="200"/>
         <source>Error %1</source>
         <translation>Erreur %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="206"/>
+        <location filename="wpmutils.cpp" line="204"/>
         <source>Error %1: %2</source>
         <translation>Erreur %1 : %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="322"/>
+        <location filename="wpmutils.cpp" line="320"/>
         <source>Empty package name</source>
         <translation>Nom de paquet vide</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="326"/>
+        <location filename="wpmutils.cpp" line="324"/>
         <source>Empty segment at position %1 in %2</source>
         <translation>Segment vide à la position %1 dans %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="331"/>
-        <location filename="wpmutils.cpp" line="340"/>
+        <location filename="wpmutils.cpp" line="329"/>
+        <location filename="wpmutils.cpp" line="338"/>
         <source>-- at position %1 in %2</source>
         <translation>-- à la position %1 dans %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="350"/>
+        <location filename="wpmutils.cpp" line="348"/>
         <source>Wrong character at position 1 in %1</source>
         <translation>Caractère invalide à la position 1 dans %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="362"/>
-        <location filename="wpmutils.cpp" line="373"/>
-        <location filename="wpmutils.cpp" line="443"/>
+        <location filename="wpmutils.cpp" line="360"/>
+        <location filename="wpmutils.cpp" line="371"/>
+        <location filename="wpmutils.cpp" line="441"/>
         <source>Wrong character at position %1 in %2</source>
         <translation>Caractère invalide à la position %1 dans %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="436"/>
+        <location filename="wpmutils.cpp" line="434"/>
         <source>Wrong length: %1</source>
         <translation>Longueur invalide : %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="598"/>
+        <location filename="wpmutils.cpp" line="596"/>
         <source>Cannot determine MSI product location for GUID %1</source>
         <translation>Impossible de déterminer l&apos;emplacement du MSI pour le GUID %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="749"/>
+        <location filename="wpmutils.cpp" line="747"/>
         <source>The source and destination files are the same file.</source>
         <translation>Les fichiers source et de destination sont identiques.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="752"/>
+        <location filename="wpmutils.cpp" line="750"/>
         <source>Multiple file paths were specified in the source buffer, but only one destination file path.</source>
         <translation>Plusieurs chemins on été spécifiés dans le tampon source mais un seul chemin de fichier de destination.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="755"/>
+        <location filename="wpmutils.cpp" line="753"/>
         <source>Rename operation was specified but the destination path is a different directory. Use the move operation instead.</source>
         <translation>L&apos;opération de remommage a été spécifiée mais le chemin de destination est un dossier différent. Veuillez plutôt utiliser l&apos;opération de déplacement.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="758"/>
+        <location filename="wpmutils.cpp" line="756"/>
         <source>The source is a root directory, which cannot be moved or renamed.</source>
         <translation>La source est un dossier racine qui ne peut pas être déplacé ou renommé.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="761"/>
+        <location filename="wpmutils.cpp" line="759"/>
         <source>The operation was canceled by the user, or silently canceled if the appropriate flags were supplied to SHFileOperation.</source>
         <translation>L&apos;opération a été annulée par l&apos;utilisateur ou silencieusement annnulée si le flag approprié a été fournie à SHFileOperation.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="764"/>
+        <location filename="wpmutils.cpp" line="762"/>
         <source>The destination is a subtree of the source.</source>
         <translation>La destination est un sous-répertoire de la source.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="767"/>
+        <location filename="wpmutils.cpp" line="765"/>
         <source>Security settings denied access to the source.</source>
         <translation>Les paramètres de sécurité ont interdit l&apos;accès à la source.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="770"/>
+        <location filename="wpmutils.cpp" line="768"/>
         <source>The source or destination path exceeded or would exceed MAX_PATH.</source>
         <translation>La source ou le dossier de destination excèdent ou pourraient excèder MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="773"/>
+        <location filename="wpmutils.cpp" line="771"/>
         <source>The operation involved multiple destination paths, which can fail in the case of a move operation.</source>
         <translation>L&apos;opération a impliqué des chemins de destination multiples pouvant échouer lors d&apos;un déplacement.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="776"/>
+        <location filename="wpmutils.cpp" line="774"/>
         <source>The path in the source or destination or both was invalid.</source>
         <translation>Le chemin de la source, de la destination ou des deux est invalide.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="779"/>
+        <location filename="wpmutils.cpp" line="777"/>
         <source>The source and destination have the same parent folder.</source>
         <translation>La source et la destination on le même dossier parent.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="782"/>
+        <location filename="wpmutils.cpp" line="780"/>
         <source>The destination path is an existing file.</source>
         <translation>Le chemin de destination est un fichier existant.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="785"/>
+        <location filename="wpmutils.cpp" line="783"/>
         <source>The destination path is an existing folder.</source>
         <translation>Le chemin de destination est un dossier existant.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="788"/>
+        <location filename="wpmutils.cpp" line="786"/>
         <source>The name of the file exceeds MAX_PATH.</source>
         <translation>Le nom du fichier excède MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="791"/>
+        <location filename="wpmutils.cpp" line="789"/>
         <source>The destination is a read-only CD-ROM, possibly unformatted.</source>
         <translation>La destination est un CD-ROM en lecture seule, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="794"/>
+        <location filename="wpmutils.cpp" line="792"/>
         <source>The destination is a read-only DVD, possibly unformatted.</source>
         <translation>La destination est un DVD en lecture seule, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="797"/>
+        <location filename="wpmutils.cpp" line="795"/>
         <source>The destination is a writable CD-ROM, possibly unformatted.</source>
         <translation>La destination est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="800"/>
+        <location filename="wpmutils.cpp" line="798"/>
         <source>The file involved in the operation is too large for the destination media or file system.</source>
         <translation>Le fichier impliqué dans l&apos;opération est trop large pour le média ou le système de fichier de destination.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="803"/>
+        <location filename="wpmutils.cpp" line="801"/>
         <source>The source is a read-only CD-ROM, possibly unformatted.</source>
         <translation>La source est un CD-ROM, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="806"/>
+        <location filename="wpmutils.cpp" line="804"/>
         <source>The source is a read-only DVD, possibly unformatted.</source>
         <translation>La source est un DVD, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="809"/>
+        <location filename="wpmutils.cpp" line="807"/>
         <source>The source is a writable CD-ROM, possibly unformatted.</source>
         <translation>La source est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="812"/>
+        <location filename="wpmutils.cpp" line="810"/>
         <source>MAX_PATH was exceeded during the operation.</source>
         <translation>MAX_PATH a été dépassé durant l&apos;opération.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="815"/>
+        <location filename="wpmutils.cpp" line="813"/>
         <source>An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later.</source>
         <translation>Une erreur inconnue est survenue. Ceci peut-être dû à un chemin invalide dans la source ou la destination. Cette erreur ne se produit pas sous Windows Vista ou supérieur.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="818"/>
+        <location filename="wpmutils.cpp" line="816"/>
         <source>An unspecified error occurred on the destination.</source>
         <translation>Un erreur non spécifiée est survenue sur la destination.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="821"/>
+        <location filename="wpmutils.cpp" line="819"/>
         <source>Destination is a root directory and cannot be renamed.</source>
         <translation>La destination est un dossier racine est ne peut pas etre renommée.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="846"/>
+        <location filename="wpmutils.cpp" line="844"/>
         <source>Error deleting %1: %2</source>
         <translation>Erreur lors de la suppression de %1 : %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="939"/>
+        <location filename="wpmutils.cpp" line="937"/>
         <source>Cannot delete the file: %1</source>
         <translation>Impossible de supprimer le fichier : %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="954"/>
+        <location filename="wpmutils.cpp" line="952"/>
         <source>Cannot delete the directory: %1</source>
         <translation>Impossible de supprimer le dossier : %1</translation>
     </message>
     <message>
         <location filename="installedpackagesthirdpartypm.cpp" line="27"/>
         <source>Npackd list of installed packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="controlpanelthirdpartypm.cpp" line="164"/>
+        <source>Control panel software</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

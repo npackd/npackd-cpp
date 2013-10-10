@@ -1,3 +1,6 @@
+NPACKD_VERSION = $$system(type ..\\wpmcpp\\version.txt)
+DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
+
 QT += xml sql
 QT -= gui
 TARGET = npackdcl
