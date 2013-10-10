@@ -98,6 +98,7 @@ void MainFrame::setCategories(int level, const QList<QStringList> &cats)
     this->categoryCombosEvents = false;
 
     QStringList labels;
+    int count = 0;
     for (int i = 0; i < cats.count(); i++) {
         QString n;
         n = cats.at(i).at(2);
@@ -105,11 +106,13 @@ void MainFrame::setCategories(int level, const QList<QStringList> &cats)
             n = QObject::tr("Uncategorized");
         }
         labels.append(n + " (" + cats.at(i).at(1) + ")");
+        count += cats.at(i).at(1).toInt();
     }
 
     if (level == 0) {
         this->ui->comboBoxCategory0->clear();
-        this->ui->comboBoxCategory0->addItem(QObject::tr("All"));
+        this->ui->comboBoxCategory0->addItem(QObject::tr("All") +
+                " (" + QString::number(count) + ")");
         this->ui->comboBoxCategory0->addItems(labels);
         this->ui->comboBoxCategory0->setEnabled(true);
         this->categories0 = cats;
@@ -118,9 +121,14 @@ void MainFrame::setCategories(int level, const QList<QStringList> &cats)
         this->ui->comboBoxCategory1->setEnabled(false);
     } else if (level == 1) {
         this->ui->comboBoxCategory1->clear();
-        this->ui->comboBoxCategory1->addItem(QObject::tr("All"));
-        this->ui->comboBoxCategory1->addItems(labels);
-        this->ui->comboBoxCategory1->setEnabled(true);
+        if (labels.count() > 0) {
+            this->ui->comboBoxCategory1->addItem(QObject::tr("All") +
+                    " (" + QString::number(count) + ")");
+            this->ui->comboBoxCategory1->addItems(labels);
+            this->ui->comboBoxCategory1->setEnabled(true);
+        } else {
+            this->ui->comboBoxCategory1->setEnabled(false);
+        }
         this->categories1 = cats;
     }
 
