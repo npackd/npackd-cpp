@@ -135,11 +135,11 @@ QString App::addNpackdCL()
     AbstractRepository* r = AbstractRepository::getDefault_();
     PackageVersion* pv = r->findPackageVersion_(
             "com.googlecode.windows-package-manager.NpackdCL",
-            Version(WPMUtils::NPACKD_VERSION), &err);
+            Version(NPACKD_VERSION), &err);
     if (!pv) {
         pv = new PackageVersion(
                 "com.googlecode.windows-package-manager.NpackdCL");
-        pv->version = Version(WPMUtils::NPACKD_VERSION);
+        pv->version = Version(NPACKD_VERSION);
         r->savePackageVersion(pv);
     }
     if (!pv->installed()) {
@@ -156,7 +156,7 @@ void App::usage()
 {
     WPMUtils::outputTextConsole(QString(
             "NpackdCL %1 - Npackd command line tool\n").
-            arg(WPMUtils::NPACKD_VERSION));
+            arg(NPACKD_VERSION));
     const char* lines[] = {
         "Usage:",
         "    npackdcl help",

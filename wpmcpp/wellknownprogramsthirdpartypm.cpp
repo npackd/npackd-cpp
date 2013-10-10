@@ -419,7 +419,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
     }
 
     if (job->shouldProceed()) {
-        Version version(WPMUtils::NPACKD_VERSION);
+        Version version(NPACKD_VERSION);
         PackageVersion* pv = new PackageVersion(
                 packageName,
                 version);

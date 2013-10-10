@@ -19,8 +19,6 @@ class WPMUtils
 private:
     WPMUtils();
 public:
-    static const char* NPACKD_VERSION;
-
     static const char* UCS2LE_BOM;
 
     /**

@@ -1,3 +1,5 @@
+set /p version=< ..\wpmcpp\version.txt
+
 rmdir /s /q build\32
 
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.nokia.QtDev-i686-w64-Npackd-Release" "--versions=[4.8.2, 4.8.2]"
@@ -31,6 +33,9 @@ if %errorlevel% neq 0 goto error
 "%mingw%\bin\mingw32-make.exe"
 if %errorlevel% neq 0 goto error
 
+ren npackdcl_release.map NpackdCL-%version%.map
+if %errorlevel% neq 0 goto error
+
 "%qt%\bin\lrelease.exe" ..\..\npackdcl.pro
 if %errorlevel% neq 0 goto error
 
@@ -54,11 +59,12 @@ if %errorlevel% neq 0 goto error
 
 rem creating .zip
 cd build\32\zip
-"%sevenzip%\7z" a ..\NpackdCL.zip *
+"%sevenzip%\7z" a ..\NpackdCL-%version%.zip *
 if %errorlevel% neq 0 goto error
 cd ..\..\..
 
 rem creating .msi
+"%ai%\bin\x86\AdvancedInstaller.com" /edit npackdcl.aip /SetVersion %version%
 "%ai%\bin\x86\AdvancedInstaller.com" /build npackdcl.aip
 if %errorlevel% neq 0 goto error
 
