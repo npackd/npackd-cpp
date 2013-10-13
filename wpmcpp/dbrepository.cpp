@@ -12,6 +12,7 @@
 #include <QTextStream>
 #include <QByteArray>
 #include <QDebug>
+#include <QXmlStreamWriter>
 
 #include "package.h"
 #include "repository.h"
@@ -784,13 +785,10 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         q.bindValue(":PACKAGE", p->package);
         q.bindValue(":MSIGUID", p->msiGUID);
         q.bindValue(":DETECT_FILE_COUNT", p->detectFiles.count());
-        QDomDocument doc;
-        QDomElement root = doc.createElement("version");
-        doc.appendChild(root);
-        p->toXML(&root);
         QByteArray file;
-        QTextStream s(&file);
-        doc.save(s, 4);
+        file.reserve(1024);
+        QXmlStreamWriter w(&file);
+        p->toXML(&w);
 
         q.bindValue(":CONTENT", QVariant(file));
         if (!q.exec())
