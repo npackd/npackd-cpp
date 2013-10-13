@@ -1706,6 +1706,53 @@ void PackageVersion::toXML(QDomElement* version) const {
     }
 }
 
+void PackageVersion::toXML(QXmlStreamWriter *w) const
+{
+    w->writeStartElement("version");
+    w->writeAttribute("name", this->version.getVersionString());
+    w->writeAttribute("package", this->package);
+    if (this->type == 1)
+        w->writeAttribute("type", "one-file");
+    for (int i = 0; i < this->importantFiles.count(); i++) {
+        w->writeStartElement("important-file");
+        w->writeAttribute("path", this->importantFiles.at(i));
+        w->writeAttribute("title", this->importantFilesTitles.at(i));
+        w->writeEndElement();
+    }
+    for (int i = 0; i < this->files.count(); i++) {
+        w->writeStartElement("file");
+        w->writeAttribute("path", this->files.at(i)->path);
+        w->writeCharacters(files.at(i)->content);
+        w->writeEndElement();
+    }
+    if (this->download.isValid()) {
+        w->writeTextElement("url", this->download.toString());
+    }
+    if (!this->sha1.isEmpty()) {
+        w->writeTextElement("sha1", this->sha1);
+    }
+    for (int i = 0; i < this->dependencies.count(); i++) {
+        Dependency* d = this->dependencies.at(i);
+        w->writeStartElement("dependency");
+        w->writeAttribute("package", d->package);
+        w->writeAttribute("versions", d->versionsToString());
+        if (!d->var.isEmpty())
+            w->writeTextElement("variable", d->var);
+        w->writeEndElement();
+    }
+    if (!this->msiGUID.isEmpty()) {
+        w->writeTextElement("detect-msi", this->msiGUID);
+    }
+    for (int i = 0; i < detectFiles.count(); i++) {
+        DetectFile* df = this->detectFiles.at(i);
+        w->writeStartElement("detect-file");
+        w->writeTextElement("path", df->path);
+        w->writeTextElement("sha1", df->sha1);
+        w->writeEndElement();
+    }
+    w->writeEndElement();
+}
+
 QString PackageVersion::serialize() const
 {
     QDomDocument doc;

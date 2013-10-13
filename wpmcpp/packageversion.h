@@ -9,6 +9,7 @@
 #include "qstringlist.h"
 #include <QSemaphore>
 #include <QDomElement>
+#include <QXmlStreamWriter>
 
 #include "job.h"
 #include "packageversionfile.h"
@@ -317,6 +318,13 @@ public:
      * @param version <version>
      */
     void toXML(QDomElement* version) const;
+
+    /**
+     * Stores this object as XML <version>.
+     *
+     * @param w output
+     */
+    void toXML(QXmlStreamWriter* w) const;
 
     /**
      * @return a copy
