@@ -37,10 +37,14 @@ void HRTimer::time(int point)
 
 void HRTimer::dump() const
 {
+    LONGLONG sum = 0;
     for (int i = 0; i < this->size; i++) {
         qDebug() << i << ": " <<
                 (this->durations[i] * 1000 / this->frequency) << " ms";
+        sum += this->durations[i];
     }
+    qDebug() << "Sum from 0 to " << this->size - 1 << ": " <<
+            (sum * 1000 / this->frequency) << " ms";
 }
 
 HRTimer::~HRTimer()
