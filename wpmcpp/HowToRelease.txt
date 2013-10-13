@@ -34,3 +34,18 @@ Create the following packages from the uploads:
 - com.googlecode.windows-package-manager.Npackd
 - com.googlecode.windows-package-manager.NpackdCL
 
+Create packages on npackd.appspot.com in the unstable repository for:
+- Npackd 32 bit
+- Npackd 64 bit
+- NpackdCL
+- Npackd dev x86_64 w64
+- Npackd dev i686 w64
+
+Mark all issues with Milestone-X.XX as FixedPleaseTest
+
+Announce the availability of the new alpha version on Twitter and on the Forum.
+
+Create a bit.ly link, e.g. http://bit.ly/npackdcl-1_17_9
+
+Create a "what's new" page in the Wiki.
+

@@ -137,8 +137,9 @@ public:
     /**
      * @brief updates the status for currently installed packages in
      *     PACKAGE.STATUS
+     * @param job job
      */
-    void updateStatusForInstalled();
+    void updateStatusForInstalled(Job *job);
 
     Package* findPackage_(const QString& name);
 

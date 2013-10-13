@@ -49,6 +49,17 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
 QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
         bool replace, const QString& detectionInfoPrefix)
 {
+    /* Example:
+    "msi:"
+    0 :  0  ms
+    1 :  145  ms
+    2 :  124  ms
+    3 :  14  ms
+    4 :  0  ms
+     */
+    HRTimer timer(5);
+    timer.time(0);
+
     QString err;
 
     Repository rep;
@@ -63,6 +74,8 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
         delete job;
     }
 
+    timer.time(1);
+
     if (err.isEmpty()) {
         job = new Job();
         DBRepository::getDefault()->saveAll(job, &rep, replace);
@@ -70,6 +83,8 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
             err = job->getErrorMessage();
         delete job;
     }
+
+    timer.time(2);
 
     AbstractRepository* r = AbstractRepository::getDefault_();
     QStringList packagePaths = this->getAllInstalledPackagePaths();
@@ -168,6 +183,8 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
         }
     }
 
+    timer.time(3);
+
     // qDebug() << "InstalledPackages::detect3rdParty.1";
 
     if (!detectionInfoPrefix.isEmpty()) {
@@ -193,6 +210,12 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
     }
 
     qDeleteAll(installed);
+
+    timer.time(4);
+
+    // qDebug() << detectionInfoPrefix;
+
+    // timer.dump();
 
     return err;
 }
@@ -294,6 +317,20 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
 
 void InstalledPackages::refresh(Job *job)
 {
+    /* Example:
+0 :  0  ms
+1 :  0  ms
+2 :  143  ms
+3 :  31  ms
+4 :  5  ms
+5 :  3365  ms
+6 :  199  ms
+7 :  378  ms
+8 :  644  ms
+     */
+    HRTimer timer(9);
+    timer.time(0);
+
     // qDebug() << "InstalledPackages::refresh.0";
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
@@ -316,7 +353,7 @@ void InstalledPackages::refresh(Job *job)
         job->setProgress(0.2);
     }
 
-    // qDebug() << "InstalledPackages::refresh.1";
+    timer.time(1);
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Reading registry package database"));
@@ -325,6 +362,8 @@ void InstalledPackages::refresh(Job *job)
             job->setErrorMessage(err);
         job->setProgress(0.5);
     }
+
+    timer.time(2);
 
     // adding well-known packages should happen before adding packages
     // determined from the list of installed packages to get better
@@ -339,6 +378,8 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.55);
     }
 
+    timer.time(3);
+
     if (job->shouldProceed(QObject::tr("Setting the NPACKD_CL environment variable"))) {
         job->setHint("Updating NPACKD_CL");
         AbstractRepository* rep = AbstractRepository::getDefault_();
@@ -348,6 +389,8 @@ void InstalledPackages::refresh(Job *job)
         else
             job->setProgress(0.57);
     }
+
+    timer.time(4);
 
     // qDebug() << "InstalledPackages::refresh.2";
 
@@ -362,6 +405,8 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.65);
     }
 
+    timer.time(5);
+
     if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
         // detecting from the list of installed packages should happen first
         // as all other packages consult the list of installed packages
@@ -372,6 +417,8 @@ void InstalledPackages::refresh(Job *job)
         if (job->getErrorMessage().isEmpty())
             job->setProgress(0.6);
     }
+
+    timer.time(6);
 
     // qDebug() << "InstalledPackages::refresh.3";
 
@@ -385,6 +432,8 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.7);
     }
 
+    timer.time(7);
+
     if (job->shouldProceed(
             QObject::tr("Clearing information about installed package versions in nested directories"))) {
         QString err = clearPackagesInNestedDirectories();
@@ -393,6 +442,10 @@ void InstalledPackages::refresh(Job *job)
         else
             job->setProgress(1);
     }
+
+    timer.time(8);
+
+    // timer.dump();
 
     job->complete();
 }

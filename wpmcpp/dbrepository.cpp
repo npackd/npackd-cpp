@@ -906,16 +906,18 @@ QString DBRepository::clear()
 
 void DBRepository::updateF5(Job* job)
 {
-    HRTimer timer(7);
+    HRTimer timer(9);
 
     /*
-     * Example: 0 :  0  ms
-        1 :  127  ms
-        2 :  13975  ms
-        3 :  1665  ms
-        4 :  0  ms
-        5 :  18189  ms
-        6 :  4400  ms
+     * Example:
+    0 :  0  ms
+    1 :  43  ms
+    2 :  3343  ms
+    3 :  1366  ms
+    4 :  2809  ms
+    5 :  5683  ms
+    6 :  0  ms
+    7 :  848  ms
      */
     timer.time(0);
     Repository* r = new Repository();
@@ -924,12 +926,12 @@ void DBRepository::updateF5(Job* job)
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.1);
+            job->setProgress(0.01);
     }
 
     timer.time(1);
     if (job->shouldProceed(QObject::tr("Downloading the remote repositories"))) {
-        Job* sub = job->newSubJob(0.69);
+        Job* sub = job->newSubJob(0.35);
         r->load(sub, true);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
@@ -937,45 +939,49 @@ void DBRepository::updateF5(Job* job)
     }
 
     timer.time(2);
+
     if (job->shouldProceed(QObject::tr("Filling the local database"))) {
-        Job* sub = job->newSubJob(0.06);
+        Job* sub = job->newSubJob(0.1);
         saveAll(sub, r, false);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
     }
+
     timer.time(3);
 
-    // qDebug() << "updateF5.0";
-
     timer.time(4);
+
     if (job->shouldProceed(QObject::tr("Refreshing the installation status"))) {
-        Job* sub = job->newSubJob(0.1);
+        Job* sub = job->newSubJob(0.4);
         InstalledPackages::getDefault()->refresh(sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
     }
 
-    // qDebug() << "updateF5.1";
-
     timer.time(5);
     if (job->shouldProceed(
             QObject::tr("Updating the status for installed packages in the database"))) {
-        updateStatusForInstalled();
-        job->setProgress(0.98);
+        Job* sub = job->newSubJob(0.05);
+        updateStatusForInstalled(sub);
+        if (!sub->getErrorMessage().isEmpty())
+            job->setErrorMessage(sub->getErrorMessage());
+        delete sub;
     }
 
+    timer.time(6);
     if (job->shouldProceed(QObject::tr("Reading categories"))) {
         QString err = readCategories();
         if (err.isEmpty())
-            job->setProgress(0.985);
+            job->setProgress(0.99);
         else
             job->setErrorMessage(err);
     }
 
     // qDebug() << "updateF5.2";
 
+    timer.time(7);
     if (job->shouldProceed(
             QObject::tr("Removing packages without versions"))) {
         QString err = exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
@@ -987,7 +993,7 @@ void DBRepository::updateF5(Job* job)
     }
 
     delete r;
-    timer.time(6);
+    timer.time(8);
 
     // timer.dump();
 
@@ -1041,22 +1047,52 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
     job->complete();
 }
 
-void DBRepository::updateStatusForInstalled()
+void DBRepository::updateStatusForInstalled(Job* job)
 {
-    QList<InstalledPackageVersion*> pvs = InstalledPackages::getDefault()->getAll();
-    QSet<QString> packages;
-    for (int i = 0; i < pvs.count(); i++) {
-        InstalledPackageVersion* pv = pvs.at(i);
-        packages.insert(pv->package);
+    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
+        QString err = exec("BEGIN TRANSACTION");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
     }
-    qDeleteAll(pvs);
-    pvs.clear();
 
-    QList<QString> packages_ = packages.values();
-    for (int i = 0; i < packages_.count(); i++) {
-        QString package = packages_.at(i);
-        updateStatus(package);
+    QSet<QString> packages;
+    if (job->shouldProceed()) {
+        QList<InstalledPackageVersion*> pvs = InstalledPackages::getDefault()->getAll();
+        for (int i = 0; i < pvs.count(); i++) {
+            InstalledPackageVersion* pv = pvs.at(i);
+            packages.insert(pv->package);
+        }
+        qDeleteAll(pvs);
+        pvs.clear();
+        job->setProgress(0.02);
     }
+
+    if (job->shouldProceed(QObject::tr("Updating statuses"))) {
+        QList<QString> packages_ = packages.values();
+        for (int i = 0; i < packages_.count(); i++) {
+            QString package = packages_.at(i);
+            updateStatus(package);
+
+            if (!job->shouldProceed())
+                break;
+
+            job->setProgress(0.02 + 0.9 * (i + 1) / packages_.count());
+        }
+    }
+
+    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
+        QString err = exec("COMMIT");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(1);
+    } else {
+        exec("ROLLBACK");
+    }
+
+    job->complete();
 }
 
 QString DBRepository::savePackages(Repository* r, bool replace)
@@ -1256,12 +1292,14 @@ QString DBRepository::open()
         }
     }
 
+/*
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_FULLTEXT ON PACKAGE(FULLTEXT)");
             err = toString(db.lastError());
         }
     }
+    */
 
     if (err.isEmpty()) {
         if (!e) {
@@ -1324,6 +1362,12 @@ QString DBRepository::open()
                     "PACKAGE, NAME)");
             err = toString(db.lastError());
         }
+    }
+
+    if (err.isEmpty()) {
+        db.exec("CREATE INDEX IF NOT EXISTS PACKAGE_VERSION_MSIGUID ON "
+                "PACKAGE_VERSION(MSIGUID)");
+        err = toString(db.lastError());
     }
 
     if (err.isEmpty()) {
