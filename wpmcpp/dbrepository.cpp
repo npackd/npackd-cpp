@@ -38,10 +38,12 @@ DBRepository DBRepository::def;
 DBRepository::DBRepository()
 {
     savePackageVersionQuery = 0;
+    savePackageQuery = 0;
 }
 
 DBRepository::~DBRepository()
 {
+    delete savePackageQuery;
     delete savePackageVersionQuery;
 }
 
@@ -640,55 +642,59 @@ QString DBRepository::savePackage(Package *p, bool replace)
         }
     }
 
-    MySQLQuery q;
-    QString sql = "INSERT OR ";
-    if (replace)
-        sql += "REPLACE";
-    else
-        sql += "IGNORE";
-    sql += " INTO PACKAGE "
-            "(NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE, FULLTEXT, "
-            "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
-            " CATEGORY4)"
-            "VALUES(:NAME, :TITLE, :URL, :ICON, :DESCRIPTION, :LICENSE, "
-            ":FULLTEXT, :STATUS, :SHORT_NAME, "
-            ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
-    if (!q.prepare(sql))
-        err = toString(q.lastError());
+    if (!savePackageQuery) {
+        savePackageQuery = new MySQLQuery();
+        QString sql = "INSERT OR ";
+        if (replace)
+            sql += "REPLACE";
+        else
+            sql += "IGNORE";
+        sql += " INTO PACKAGE "
+                "(NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE, FULLTEXT, "
+                "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
+                " CATEGORY4)"
+                "VALUES(:NAME, :TITLE, :URL, :ICON, :DESCRIPTION, :LICENSE, "
+                ":FULLTEXT, :STATUS, :SHORT_NAME, "
+                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
+        if (!savePackageQuery->prepare(sql)) {
+            err = toString(savePackageQuery->lastError());
+            delete savePackageQuery;
+        }
+    }
 
     if (err.isEmpty()) {
-        q.bindValue(":NAME", p->name);
-        q.bindValue(":TITLE", p->title);
-        q.bindValue(":URL", p->url);
-        q.bindValue(":ICON", p->icon);
-        q.bindValue(":DESCRIPTION", p->description);
-        q.bindValue(":LICENSE", p->license);
-        q.bindValue(":FULLTEXT", (p->title + " " + p->description + " " +
+        savePackageQuery->bindValue(":NAME", p->name);
+        savePackageQuery->bindValue(":TITLE", p->title);
+        savePackageQuery->bindValue(":URL", p->url);
+        savePackageQuery->bindValue(":ICON", p->icon);
+        savePackageQuery->bindValue(":DESCRIPTION", p->description);
+        savePackageQuery->bindValue(":LICENSE", p->license);
+        savePackageQuery->bindValue(":FULLTEXT", (p->title + " " + p->description + " " +
                 p->name).toLower());
-        q.bindValue(":STATUS", 0);
-        q.bindValue(":SHORT_NAME", p->getShortName());
+        savePackageQuery->bindValue(":STATUS", 0);
+        savePackageQuery->bindValue(":SHORT_NAME", p->getShortName());
         if (cat0 == 0)
-            q.bindValue(":CATEGORY0", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(":CATEGORY0", QVariant(QVariant::Int));
         else
-            q.bindValue(":CATEGORY0", cat0);
+            savePackageQuery->bindValue(":CATEGORY0", cat0);
         if (cat1 == 0)
-            q.bindValue(":CATEGORY1", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(":CATEGORY1", QVariant(QVariant::Int));
         else
-            q.bindValue(":CATEGORY1", cat1);
+            savePackageQuery->bindValue(":CATEGORY1", cat1);
         if (cat2 == 0)
-            q.bindValue(":CATEGORY2", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(":CATEGORY2", QVariant(QVariant::Int));
         else
-            q.bindValue(":CATEGORY2", cat2);
+            savePackageQuery->bindValue(":CATEGORY2", cat2);
         if (cat3 == 0)
-            q.bindValue(":CATEGORY3", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(":CATEGORY3", QVariant(QVariant::Int));
         else
-            q.bindValue(":CATEGORY3", cat3);
+            savePackageQuery->bindValue(":CATEGORY3", cat3);
         if (cat4 == 0)
-            q.bindValue(":CATEGORY4", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(":CATEGORY4", QVariant(QVariant::Int));
         else
-            q.bindValue(":CATEGORY4", cat4);
-        if (!q.exec())
-            err = toString(q.lastError());
+            savePackageQuery->bindValue(":CATEGORY4", cat4);
+        if (!savePackageQuery->exec())
+            err = toString(savePackageQuery->lastError());
     }
 
     return err;
