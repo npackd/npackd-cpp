@@ -34,6 +34,7 @@ private:
 
     MySQLQuery* savePackageVersionQuery;
     MySQLQuery* savePackageQuery;
+    MySQLQuery* selectCategoryQuery;
 
     QString readCategories();
     QString getCategoryPath(int c0, int c1, int c2, int c3, int c4) const;

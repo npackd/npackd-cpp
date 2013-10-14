@@ -39,10 +39,12 @@ DBRepository::DBRepository()
 {
     savePackageVersionQuery = 0;
     savePackageQuery = 0;
+    selectCategoryQuery = 0;
 }
 
 DBRepository::~DBRepository()
 {
+    delete selectCategoryQuery;
     delete savePackageQuery;
     delete savePackageVersionQuery;
 }
@@ -556,27 +558,33 @@ int DBRepository::insertCategory(int parent, int level,
 {
     *err = "";
 
-    MySQLQuery q;
-    QString sql = "SELECT ID FROM CATEGORY WHERE PARENT = :PARENT AND "
-            "LEVEL = :LEVEL AND NAME = :NAME";
+    if (!selectCategoryQuery) {
+        selectCategoryQuery = new MySQLQuery();
 
-    if (!q.prepare(sql))
-        *err = toString(q.lastError());
+        QString sql = "SELECT ID FROM CATEGORY WHERE PARENT = :PARENT AND "
+                "LEVEL = :LEVEL AND NAME = :NAME";
+
+        if (!selectCategoryQuery->prepare(sql)) {
+            *err = toString(selectCategoryQuery->lastError());
+            delete selectCategoryQuery;
+        }
+    }
 
     if (err->isEmpty()) {
-        q.bindValue(":NAME", category);
-        q.bindValue(":PARENT", parent);
-        q.bindValue(":LEVEL", level);
-        if (!q.exec())
-            *err = toString(q.lastError());
+        selectCategoryQuery->bindValue(":NAME", category);
+        selectCategoryQuery->bindValue(":PARENT", parent);
+        selectCategoryQuery->bindValue(":LEVEL", level);
+        if (!selectCategoryQuery->exec())
+            *err = toString(selectCategoryQuery->lastError());
     }
 
     int id = -1;
     if (err->isEmpty()) {
-        if (q.next())
-            id = q.value(0).toInt();
+        if (selectCategoryQuery->next())
+            id = selectCategoryQuery->value(0).toInt();
         else {
-            sql = "INSERT INTO CATEGORY "
+            MySQLQuery q;
+            QString sql = "INSERT INTO CATEGORY "
                     "(ID, NAME, PARENT, LEVEL) "
                     "VALUES (NULL, :NAME, :PARENT, :LEVEL)";
             if (!q.prepare(sql))
