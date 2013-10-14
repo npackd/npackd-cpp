@@ -5,5 +5,6 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
 
 rem use --no-demangle to find out a mangled function name
 rem  -f _ZN12DBRepository8updateF5EP3Job
-%mingw%\bin\gprof.exe -qDBRepository::updateF5(Job*) ..\wpmcpp-x86_64-gprof\release\wpmcpp.exe ..\wpmcpp-x86_64-gprof\gmon.out >> GProf.txt
+rem -qDBRepository::updateF5(Job*) 
+%mingw%\bin\gprof.exe -a -F _ZN12DBRepository8updateF5EP3Job ..\wpmcpp-x86_64-gprof\release\wpmcpp.exe ..\wpmcpp-x86_64-gprof\gmon.out >> GProf.txt
 

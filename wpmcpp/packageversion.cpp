@@ -1384,12 +1384,28 @@ bool PackageVersion::isInWindowsDir() const
 
 PackageVersion* PackageVersion::clone() const
 {
-    QDomDocument doc;
-    QDomElement version = doc.createElement("version");
-    doc.appendChild(version);
-    toXML(&version);
-    QString err;
-    return parse(&version, &err);
+    PackageVersion* r = new PackageVersion(this->package, this->version);
+    r->importantFiles = this->importantFiles;
+    r->importantFilesTitles = this->importantFilesTitles;
+    for (int i = 0; i < this->files.count(); i++) {
+        PackageVersionFile* f = this->files.at(i);
+        r->files.append(f->clone());
+    }
+    for (int i = 0; i < this->detectFiles.count(); i++) {
+        DetectFile* f = this->detectFiles.at(i);
+        r->detectFiles.append(f->clone());
+    }
+    for (int i = 0; i < dependencies.count(); i++) {
+        Dependency* d = this->dependencies.at(i);
+        r->dependencies.append(d->clone());
+    }
+
+    r->type = this->type;
+    r->sha1 = this->sha1;
+    r->download = this->download;
+    r->msiGUID = this->msiGUID;
+
+    return r;
 }
 
 PackageVersionFile* PackageVersion::createPackageVersionFile(QDomElement* e,
