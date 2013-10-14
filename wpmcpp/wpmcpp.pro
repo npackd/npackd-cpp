@@ -45,7 +45,8 @@ SOURCES += main.cpp \
     wellknownprogramsthirdpartypm.cpp \
     installedpackagesthirdpartypm.cpp \
     flowlayout.cpp \
-    scandiskthirdpartypm.cpp
+    scandiskthirdpartypm.cpp \
+    mysqlquery.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -87,7 +88,8 @@ HEADERS += mainwindow.h \
     wellknownprogramsthirdpartypm.h \
     installedpackagesthirdpartypm.h \
     flowlayout.h \
-    scandiskthirdpartypm.h
+    scandiskthirdpartypm.h \
+    mysqlquery.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \

@@ -15,6 +15,7 @@
 #include "packageversion.h"
 #include "license.h"
 #include "abstractrepository.h"
+#include "mysqlquery.h"
 
 /**
  * @brief A repository stored in an SQLite database.
@@ -30,6 +31,8 @@ private:
     QCache<QString, License> licenses;
 
     QMap<int, QString> categories;
+
+    MySQLQuery* savePackageVersionQuery;
 
     QString readCategories();
     QString getCategoryPath(int c0, int c1, int c2, int c3, int c4) const;
