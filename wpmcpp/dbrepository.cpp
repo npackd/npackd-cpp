@@ -993,7 +993,7 @@ void DBRepository::updateF5(Job* job)
     delete r;
     timer.time(8);
 
-    // timer.dump();
+    timer.dump();
 
     job->complete();
 }
