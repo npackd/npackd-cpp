@@ -62,4 +62,8 @@ http://npackd.appspot.com/rep/xml?tag=vim
     - start Npackd
     - open the package version "AbiWord 2.8.6"
     => detection info should not be empty
+15. First start
+    - remove HKLM\SOFTWARE\Npackd
+    - start Npackd
+    => no errors are shown
 

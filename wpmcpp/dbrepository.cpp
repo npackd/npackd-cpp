@@ -960,6 +960,7 @@ void DBRepository::updateF5(Job* job)
     }
 
     timer.time(5);
+
     if (job->shouldProceed(
             QObject::tr("Updating the status for installed packages in the database"))) {
         Job* sub = job->newSubJob(0.05);
@@ -994,7 +995,7 @@ void DBRepository::updateF5(Job* job)
     delete r;
     timer.time(8);
 
-    timer.dump();
+    // timer.dump();
 
     job->complete();
 }
