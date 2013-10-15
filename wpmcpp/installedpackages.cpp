@@ -445,7 +445,7 @@ void InstalledPackages::refresh(Job *job)
 
     timer.time(8);
 
-    // timer.dump();
+    timer.dump();
 
     job->complete();
 }
@@ -514,10 +514,13 @@ QString InstalledPackages::readRegistryDatabase()
     this->data.clear();
 
     WindowsRegistry packagesWR;
+    LONG e;
     err = packagesWR.open(HKEY_LOCAL_MACHINE,
-            "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ);
+            "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
-    if (err.isEmpty()) {
+    if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
+        err = "";
+    } else if (err.isEmpty()) {
         QStringList entries = packagesWR.list(&err);
         for (int i = 0; i < entries.count(); ++i) {
             QString name = entries.at(i);
@@ -591,10 +594,13 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
 
     QString err;
     WindowsRegistry packagesWR;
+    LONG e;
     err = packagesWR.open(HKEY_LOCAL_MACHINE,
-            "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ);
+            "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
-    if (err.isEmpty()) {
+    if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
+        err = "";
+    } else if (err.isEmpty()) {
         Version found = Version::EMPTY;
 
         QStringList entries = packagesWR.list(&err);

@@ -289,8 +289,10 @@ QString WindowsRegistry::open(const WindowsRegistry& wr, QString subkey,
 }
 
 QString WindowsRegistry::open(HKEY hk, QString path, bool useWow6432Node,
-        REGSAM samDesired)
+        REGSAM samDesired, LONG *e)
 {
+    *e = ERROR_SUCCESS;
+
     close();
 
     this->useWow6432Node = useWow6432Node;
@@ -301,15 +303,15 @@ QString WindowsRegistry::open(HKEY hk, QString path, bool useWow6432Node,
                 (useWow6432Node ? KEY_WOW64_32KEY : KEY_WOW64_64KEY);
     }
 
-    LONG r = RegOpenKeyEx(hk,
+    *e = RegOpenKeyEx(hk,
             (WCHAR*) path.utf16(),
             0, samDesired,
             &this->hkey);
-    if (r == ERROR_SUCCESS) {
+    if (*e == ERROR_SUCCESS) {
         return "";
     } else {
         QString s;
-        WPMUtils::formatMessage(r, &s);
+        WPMUtils::formatMessage(*e, &s);
         return QObject::tr("Error opening registry node %1, using WOW6432 node: %2: %3").
                 arg(path).arg(useWow6432Node).arg(s);
     }
