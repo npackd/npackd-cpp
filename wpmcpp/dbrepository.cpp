@@ -21,6 +21,8 @@
 #include "installedpackages.h"
 #include "hrtimer.h"
 #include "mysqlquery.h"
+#include "repositoryxmlhandler.h"
+#include "downloader.h"
 
 static bool packageVersionLessThan3(const PackageVersion* a,
         const PackageVersion* b)
@@ -718,6 +720,11 @@ QString DBRepository::savePackageVersion(PackageVersion *p)
     return savePackageVersion(p, true);
 }
 
+QString DBRepository::saveLicense(License *p)
+{
+    return saveLicense(p, true);
+}
+
 QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
 {
     QString err;
@@ -903,6 +910,74 @@ QString DBRepository::clear()
     return "";
 }
 
+void DBRepository::load(Job* job, bool useCache)
+{
+    QString err;
+    QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
+    if (urls.count() > 0) {
+        for (int i = 0; i < urls.count(); i++) {
+            job->setHint(QString(
+                    QObject::tr("Repository %1 of %2")).arg(i + 1).
+                         arg(urls.count()));
+            Job* s = job->newSubJob(1.0 / urls.count());
+            loadOne(urls.at(i), s, useCache);
+            if (!s->getErrorMessage().isEmpty()) {
+                job->setErrorMessage(QString(
+                        QObject::tr("Error loading the repository %1: %2")).arg(
+                        urls.at(i)->toString()).arg(
+                        s->getErrorMessage()));
+                delete s;
+                break;
+            }
+            delete s;
+
+            if (job->isCancelled())
+                break;
+        }
+    } else {
+        job->setErrorMessage(QObject::tr("No repositories defined"));
+        job->setProgress(1);
+    }
+
+    // qDebug() << "Repository::load.3";
+
+    qDeleteAll(urls);
+    urls.clear();
+
+    job->complete();
+}
+
+void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
+    job->setHint(QObject::tr("Downloading"));
+
+    QTemporaryFile* f = 0;
+    if (job->getErrorMessage().isEmpty() && !job->isCancelled()) {
+        Job* djob = job->newSubJob(0.90);
+        f = Downloader::download(djob, *url, 0, useCache);
+        if (!djob->getErrorMessage().isEmpty())
+            job->setErrorMessage(QString(
+                    QObject::tr("Download failed: %2")).
+                    arg(djob->getErrorMessage()));
+        delete djob;
+    }
+
+    if (job->shouldProceed(QObject::tr("Parsing XML"))) {
+        RepositoryXMLHandler handler(this);
+        QXmlSimpleReader reader;
+        reader.setContentHandler(&handler);
+        reader.setErrorHandler(&handler);
+        QXmlInputSource inputSource(f);
+        if (!reader.parse(inputSource))
+            job->setErrorMessage(handler.errorString());
+        else
+            job->setProgress(1);
+    }
+
+    delete f;
+
+    job->complete();
+}
+
 void DBRepository::updateF5(Job* job)
 {
     HRTimer timer(9);
@@ -919,7 +994,7 @@ void DBRepository::updateF5(Job* job)
     7 :  848  ms
      */
     timer.time(0);
-    Repository* r = new Repository();
+
     if (job->shouldProceed(QObject::tr("Clearing the database"))) {
         QString err = clear();
         if (!err.isEmpty())
@@ -928,10 +1003,19 @@ void DBRepository::updateF5(Job* job)
             job->setProgress(0.01);
     }
 
+    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
+        QString err = exec("BEGIN TRANSACTION");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.02);
+    }
+
     timer.time(1);
-    if (job->shouldProceed(QObject::tr("Downloading the remote repositories"))) {
-        Job* sub = job->newSubJob(0.35);
-        r->load(sub, true);
+    if (job->shouldProceed(
+            QObject::tr("Downloading the remote repositories and filling the local database"))) {
+        Job* sub = job->newSubJob(0.3);
+        load(sub, true);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
@@ -939,12 +1023,14 @@ void DBRepository::updateF5(Job* job)
 
     timer.time(2);
 
-    if (job->shouldProceed(QObject::tr("Filling the local database"))) {
-        Job* sub = job->newSubJob(0.1);
-        saveAll(sub, r, false);
-        if (!sub->getErrorMessage().isEmpty())
-            job->setErrorMessage(sub->getErrorMessage());
-        delete sub;
+    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
+        QString err = exec("COMMIT");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.35);
+    } else {
+        exec("ROLLBACK");
     }
 
     timer.time(3);
@@ -987,15 +1073,14 @@ void DBRepository::updateF5(Job* job)
         QString err = exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
-            job->setProgress(1);
+            job->setProgress(0.995);
         else
             job->setErrorMessage(err);
     }
 
-    delete r;
     timer.time(8);
 
-    // timer.dump();
+    timer.dump();
 
     job->complete();
 }

@@ -26,11 +26,11 @@ private:
     static Repository def;
 
     static Package* createPackage(QDomElement* e, QString* err);
-    static License* createLicense(QDomElement* e);
+    static License* createLicense(QDomElement* e, QString *error);
     static PackageVersion* createPackageVersion(QDomElement* e,
             QString* err);
 
-    void loadOne(QUrl* url, Job* job, bool useCache=true);
+    // TODO: void loadOne(QUrl* url, Job* job, bool useCache=true);
 
     void addWindowsPackage();
 
@@ -88,6 +88,24 @@ public:
     static QMutex mutex;
 
     /**
+     * Checks the specified value in <spec-version></spec-version> to be a valid
+     * and compatible version number
+     *
+     * @param specVersion value in <spec-version></spec-version>
+     * @return error message or ""
+     */
+    static QString checkSpecVersion(const QString& specVersion);
+
+    /**
+     * Checks the content of the tag <category>
+     *
+     * @param category content
+     * @param err error message is stored here
+     * @return improved value of the category, if there were no errors
+     */
+    static QString checkCategory(const QString& category, QString* err);
+
+    /**
      * Checks the directories of packages in the uninstall operations in the
      * given list for locked files.
      *
@@ -104,7 +122,7 @@ public:
      * @param job job for this method
      * @param useCache true = cache will be used
      */
-    void load(Job* job, bool useCache=true);
+    // TODO: void load(Job* job, bool useCache=true);
 
     /**
      * Package versions. All version numbers should be normalized.
@@ -160,6 +178,8 @@ public:
     QString savePackage(Package* p);
 
     QString savePackageVersion(PackageVersion* p);
+
+    QString saveLicense(License *p);
 
     PackageVersion* findPackageVersionByMSIGUID_(
             const QString& guid, QString *err) const;

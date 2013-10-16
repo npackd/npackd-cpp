@@ -5,6 +5,8 @@
 #include <QTemporaryFile>
 #include <qdom.h>
 #include <QDebug>
+#include <QXmlSimpleReader>
+#include <QXmlInputSource>
 
 #include "downloader.h"
 #include "repository.h"
@@ -17,6 +19,7 @@
 #include "wpmutils.h"
 #include "installedpackages.h"
 #include "dbrepository.h"
+#include "repositoryxmlhandler.h"
 
 Repository Repository::def;
 QMutex Repository::mutex;
@@ -128,46 +131,21 @@ Package* Repository::createPackage(QDomElement* e, QString* err)
         QDomNodeList categories = e->elementsByTagName("category");
         for (int i = 0; i < categories.count(); i++) {
             QDomElement e = categories.at(i).toElement();
-            QString c = e.text().trimmed();
-
-            if (c.isEmpty()) {
-                err->append(QString(
-                        QObject::tr("Empty category tag for %1")).
-                        arg(a->title));
+            QString c = checkCategory(e.text().trimmed(), err);
+            if (!err->isEmpty()) {
+                *err = QObject::tr("Error in category tag for %1: %2").
+                        arg(a->title).arg(*err);
                 break;
             }
 
             if (a->categories.contains(c)) {
-                err->append(QString(
-                        QObject::tr("More than one <category> %1 for %2")).
-                        arg(c).arg(a->title));
-                break;
+                *err = QObject::tr("More than one <category> %1 for %2").
+                        arg(c).arg(a->title);
             }
 
-            QStringList parts = c.split('/', QString::KeepEmptyParts);
-            if (parts.count() == 0) {
-                err->append(QString(
-                        QObject::tr("Empty category tag for %1")).
-                        arg(a->title));
-                break;
-            }
-
-            for (int j = 0; j < parts.count(); j++) {
-                QString part = parts.at(j).trimmed();
-                if (part.isEmpty()) {
-                    err->append(QString(
-                            QObject::tr("Empty sub-category for %1")).
-                            arg(a->title));
-                    goto out;
-                }
-                parts[j] = part;
-            }
-
-            a->categories.append(parts.join("/"));
+            a->categories.append(c);
         }
     }
-
-out:
 
     if (err->isEmpty())
         return a;
@@ -177,19 +155,34 @@ out:
     }
 }
 
-License* Repository::createLicense(QDomElement* e)
+License* Repository::createLicense(QDomElement* e, QString* error)
 {
+    License* a = 0;
+    *error = "";
+
     QString name = e->attribute("name");
-    License* a = new License(name, name);
-    QDomNodeList nl = e->elementsByTagName("title");
-    if (nl.count() != 0)
-        a->title = nl.at(0).firstChild().nodeValue();
-    nl = e->elementsByTagName("url");
-    if (nl.count() != 0)
-        a->url = nl.at(0).firstChild().nodeValue();
-    nl = e->elementsByTagName("description");
-    if (nl.count() != 0)
-        a->description = nl.at(0).firstChild().nodeValue();
+    *error = WPMUtils::validateFullPackageName(name);
+    if (!error->isEmpty()) {
+        error->prepend(QObject::tr("Error in attribute 'name' in <package>: "));
+    }
+
+    if (error->isEmpty()) {
+        a = new License(name, name);
+        QDomNodeList nl = e->elementsByTagName("title");
+        if (nl.count() != 0)
+            a->title = nl.at(0).firstChild().nodeValue();
+        nl = e->elementsByTagName("url");
+        if (nl.count() != 0)
+            a->url = nl.at(0).firstChild().nodeValue();
+        nl = e->elementsByTagName("description");
+        if (nl.count() != 0)
+            a->description = nl.at(0).firstChild().nodeValue();
+    }
+
+    if (!error->isEmpty()) {
+        delete a;
+        a = 0;
+    }
 
     return a;
 }
@@ -263,6 +256,59 @@ PackageVersion* Repository::findPackageVersion(const QString& package,
     return r;
 }
 
+QString Repository::checkSpecVersion(const QString &specVersion)
+{
+    QString err;
+
+    Version specVersion_;
+    if (!specVersion_.setVersion(specVersion)) {
+        err = QString(
+                QObject::tr("Invalid repository specification version: %1")).
+                arg(specVersion);
+    } else {
+        if (specVersion_.compare(Version(4, 0)) >= 0)
+            err = QString(
+                    QObject::tr("Incompatible repository specification version: %1.") + " \n" +
+                    QObject::tr("Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/")).
+                    arg(specVersion);
+    }
+
+    return err;
+}
+
+QString Repository::checkCategory(const QString &category, QString *err)
+{
+    *err = "";
+
+    QString c = category.trimmed();
+
+    if (c.isEmpty()) {
+        *err = QObject::tr("Empty category tag");
+    }
+
+    QStringList parts;
+    if (err->isEmpty()) {
+        parts = c.split('/', QString::KeepEmptyParts);
+        if (parts.count() == 0) {
+            *err = QObject::tr("Empty category tag");
+        }
+    }
+
+    if (err->isEmpty()) {
+        for (int j = 0; j < parts.count(); j++) {
+            QString part = parts.at(j).trimmed();
+            if (part.isEmpty()) {
+                *err = QObject::tr("Empty sub-category");
+                goto out;
+            }
+            parts[j] = part;
+        }
+out:;
+    }
+
+    return parts.join("/");
+}
+
 Package *Repository::findPackage_(const QString &name)
 {
     Package* p = findPackage(name);
@@ -271,6 +317,7 @@ Package *Repository::findPackage_(const QString &name)
     return p;
 }
 
+/* TODO
 void Repository::load(Job* job, bool useCache)
 {
     qDeleteAll(this->packages);
@@ -313,7 +360,10 @@ void Repository::load(Job* job, bool useCache)
 
     job->complete();
 }
+*/
 
+/*
+ *TODO
 void Repository::loadOne(QUrl* url, Job* job, bool useCache) {
     job->setHint(QObject::tr("Downloading"));
 
@@ -328,35 +378,21 @@ void Repository::loadOne(QUrl* url, Job* job, bool useCache) {
         delete djob;
     }
 
-    QDomDocument doc;
-    if (job->getErrorMessage().isEmpty() && !job->isCancelled()) {
-        job->setHint(QObject::tr("Parsing the content"));
-        // qDebug() << "Repository::loadOne.2";
-        int errorLine;
-        int errorColumn;
-        QString errMsg;
-        if (!doc.setContent(f, &errMsg, &errorLine, &errorColumn))
-            job->setErrorMessage(QString(
-                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
-                    arg(errorLine).arg(errorColumn).arg(errMsg));
-        else
-            job->setProgress(0.91);
-    }
-
-    if (job->getErrorMessage().isEmpty() && !job->isCancelled()) {
-        Job* djob = job->newSubJob(0.09);
-        loadOne(&doc, djob);
-        if (!djob->getErrorMessage().isEmpty())
-            job->setErrorMessage(QString(
-                    QObject::tr("Error loading XML: %2")).
-                    arg(djob->getErrorMessage()));
-        delete djob;
+    if (job->shouldProceed(QObject::tr("Parsing XML"))) {
+        RepositoryXMLHandler handler(this);
+        QXmlSimpleReader reader;
+        reader.setContentHandler(&handler);
+        reader.setErrorHandler(&handler);
+        QXmlInputSource inputSource(f);
+        if (!reader.parse(inputSource))
+            job->setErrorMessage(handler.errorString());
     }
 
     delete f;
 
     job->complete();
 }
+*/
 
 void Repository::loadOne(const QString& filename, Job* job)
 {
@@ -367,6 +403,7 @@ void Repository::loadOne(const QString& filename, Job* job)
         else
             job->setProgress(0.1);
     }
+
 
     QDomDocument doc;
     if (job->shouldProceed(QObject::tr("Parsing XML"))) {
@@ -398,21 +435,11 @@ void Repository::loadOne(QDomDocument* doc, Job* job)
         root = doc->documentElement();
         QDomNodeList nl = root.elementsByTagName("spec-version");
         if (nl.count() != 0) {
-            QString specVersion = nl.at(0).firstChild().nodeValue();
-            Version specVersion_;
-            if (!specVersion_.setVersion(specVersion)) {
-                job->setErrorMessage(QString(
-                        QObject::tr("Invalid repository specification version: %1")).
-                        arg(specVersion));
-            } else {
-                if (specVersion_.compare(Version(4, 0)) >= 0)
-                    job->setErrorMessage(QString(
-                            QObject::tr("Incompatible repository specification version: %1.") + " \n" +
-                            QObject::tr("Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/")).
-                            arg(specVersion));
-                else
-                    job->setProgress(0.01);
-            }
+            QString err = checkSpecVersion(nl.at(0).firstChild().nodeValue());
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
+            else
+                job->setProgress(0.01);
         } else {
             job->setProgress(0.01);
         }
@@ -450,11 +477,17 @@ void Repository::loadOne(QDomDocument* doc, Job* job)
                         break;
                     }
                 } else if (e.nodeName() == "license") {
-                    License* p = createLicense(&e);
-                    if (this->findLicense(p->name))
-                        delete p;
-                    else
-                        this->licenses.append(p);
+                    QString err;
+                    License* p = createLicense(&e, &err);
+                    if (p) {
+                        if (this->findLicense(p->name))
+                            delete p;
+                        else
+                            this->licenses.append(p);
+                    } else {
+                        job->setErrorMessage(err);
+                        break;
+                    }
                 }
             }
         }
@@ -462,6 +495,20 @@ void Repository::loadOne(QDomDocument* doc, Job* job)
     }
 
     job->complete();
+}
+
+QString Repository::saveLicense(License *p)
+{
+    License* fp = findLicense(p->name);
+    if (!fp) {
+        fp = new License(p->name, p->title);
+        this->licenses.append(fp);
+    }
+    fp->title = p->title;
+    fp->url = p->url;
+    fp->description = p->description;
+
+    return "";
 }
 
 QString Repository::savePackage(Package *p)

@@ -137,7 +137,8 @@ public:
      * @param path path under hk
      * @param useWow6432Node if true, Wow6432Node is used on 64-bit Windows
      * @param samDesired access flags
-     * @param e error code returned by RegOpenKeyEx will be stored here
+     * @param e error code returned by RegOpenKeyEx will be stored here. This
+     *     can be 0.
      * @return error message or ""     
      */
     QString open(HKEY hk, QString path, bool useWow6432Node,

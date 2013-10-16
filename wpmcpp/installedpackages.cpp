@@ -445,7 +445,7 @@ void InstalledPackages::refresh(Job *job)
 
     timer.time(8);
 
-    timer.dump();
+    // timer.dump();
 
     job->complete();
 }

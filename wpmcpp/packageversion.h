@@ -155,9 +155,26 @@ public:
      */
     QString msiGUID;
 
+    /**
+     * unknown/1.0
+     */
     PackageVersion();
+
+    /**
+     * package/1.0
+     *
+     * @param package
+     */
     PackageVersion(const QString& package);
+
+    /**
+     * -
+     *
+     * @param package full internal package name
+     * @param version package version
+     */
     PackageVersion(const QString& package, const Version& version);
+
     virtual ~PackageVersion();
 
     /**

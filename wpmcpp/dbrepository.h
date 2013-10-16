@@ -46,15 +46,6 @@ private:
             const QList<QVariant> &params, QString *err) const;
 
     /**
-     * @brief inserts or updates an existing license
-     * @param p a license
-     * @param replace what to do if an entry already exists:
-     *     true = replace, false = ignore
-     * @return error message
-     */
-    QString saveLicense(License* p, bool replace);
-
-    /**
      * @brief inserts or updates existing packages
      * @param r repository with packages
      * @param replace what to do if an entry already exists:
@@ -84,6 +75,37 @@ private:
     QString exec(const QString& sql);
 
     /**
+     * Loads the content from the URLs. None of the packages has the information
+     * about installation path after this method was called.
+     *
+     * @param job job for this method
+     * @param useCache true = cache will be used
+     */
+    void load(Job *job, bool useCache);
+
+    void loadOne(QUrl *url, Job *job, bool useCache);
+public:
+    /**
+     * @return default repository
+     * @threadsafe
+     */
+    static DBRepository* getDefault();
+
+    /**
+     * @brief -
+     */
+    DBRepository();
+
+    /**
+     * @brief inserts or updates an existing license
+     * @param p a license
+     * @param replace what to do if an entry already exists:
+     *     true = replace, false = ignore
+     * @return error message
+     */
+    QString saveLicense(License* p, bool replace);
+
+    /**
      * @brief inserts or updates an existing package version
      * @param p a package version
      * @param replace what to do if an entry already exists:
@@ -100,17 +122,6 @@ private:
      * @return error message
      */
     QString savePackage(Package *p, bool replace);
-public:
-    /**
-     * @return default repository
-     * @threadsafe
-     */
-    static DBRepository* getDefault();
-
-    /**
-     * @brief -
-     */
-    DBRepository();
 
     virtual ~DBRepository();
 
@@ -188,6 +199,8 @@ public:
     QString savePackage(Package* p);
 
     QString savePackageVersion(PackageVersion* p);
+
+    QString saveLicense(License* p);
 
     PackageVersion* findPackageVersionByMSIGUID_(
             const QString& guid, QString *err) const;
