@@ -167,6 +167,13 @@ public:
     virtual QString savePackageVersion(PackageVersion* p) = 0;
 
     /**
+     * @brief saves (creates or updates) the data about a license
+     * @param p [ownership:caller] license
+     * @return error message
+     */
+    virtual QString saveLicense(License* p) = 0;
+
+    /**
      * @brief searches for a package version by the associated MSI GUID
      * @param guid MSI package GUID
      * @param err error message will be stored here
