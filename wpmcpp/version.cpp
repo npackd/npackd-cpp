@@ -149,7 +149,7 @@ QString Version::getVersionString(int nparts) const
         if (i >= this->nparts)
             r.append('0');
         else
-            r.append(QString("%1").arg(this->parts[i]));
+            r.append(QString::number(this->parts[i]));
     }
     return r;
 }
@@ -159,8 +159,8 @@ QString Version::getVersionString() const
     QString r;
     for (int i = 0; i < this->nparts; i++) {
         if (i != 0)
-            r.append(".");
-        r.append(QString("%1").arg(this->parts[i]));
+            r.append('.');
+        r.append(QString::number(this->parts[i]));
     }
     return r;
 }

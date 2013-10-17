@@ -378,4 +378,13 @@ public:
 
 Q_DECLARE_METATYPE(PackageVersion);
 
+inline QString PackageVersion::getStringId(const QString& package,
+    const Version& version)
+{
+    QString r(package);
+    r.append('/');
+    r.append(version.getVersionString());
+    return r;
+}
+
 #endif // PACKAGEVERSION_H
