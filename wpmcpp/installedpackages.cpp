@@ -480,18 +480,25 @@ QString InstalledPackages::clearPackagesInNestedDirectories() {
     QList<InstalledPackageVersion*> pvs = this->getAll();
     qSort(pvs.begin(), pvs.end(), installedPackageVersionLessThan);
 
+    // performance improvement: normalize the paths first
+    QStringList paths;
+    for (int i = 0; i < pvs.count(); i++) {
+        InstalledPackageVersion* pv = pvs.at(i);
+        QString p = WPMUtils::normalizePath(pv->getDirectory()) + '\\';
+        paths.append(p);
+    }
+
+    QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir()) +
+            '\\';
     for (int j = 0; j < pvs.count(); j++) {
         InstalledPackageVersion* pv = pvs.at(j);
-        if (pv->installed() && !WPMUtils::pathEquals(pv->getDirectory(),
-                WPMUtils::getWindowsDir())) {
+        QString pvdir = paths.at(j);
+        if (pv->installed() && pvdir != windowsDir) {
             for (int i = j + 1; i < pvs.count(); i++) {
                 InstalledPackageVersion* pv2 = pvs.at(i);
-                if (pv2->installed() && !WPMUtils::pathEquals(pv2->getDirectory(),
-                        WPMUtils::getWindowsDir())) {
-                    if (WPMUtils::isUnder(pv2->getDirectory(),
-                            pv->getDirectory()) ||
-                            WPMUtils::pathEquals(pv2->getDirectory(),
-                                    pv->getDirectory())) {
+                QString pv2dir = paths.at(i);
+                if (pv2->installed() && pv2dir != windowsDir) {
+                    if (pv2dir.startsWith(pvdir)) {
                         pv2->setPath("");
 
                         err = saveToRegistry(pv2);

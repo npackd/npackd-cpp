@@ -97,9 +97,11 @@ public:
     /**
      * @param e <version>
      * @param err error message will be stored here
+     * @param validate true = perform all available validations
      * @return created object or 0
      */
-    static PackageVersion* parse(QDomElement* e, QString* err);
+    static PackageVersion* parse(QDomElement* e, QString* err,
+            bool validate=true);
 
     /**
      * @brief searches for a package version only using the package name and

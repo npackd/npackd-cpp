@@ -236,7 +236,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         QDomElement root = doc.documentElement();
 
         if (err->isEmpty()) {
-            PackageVersion* pv = PackageVersion::parse(&root, err);
+            PackageVersion* pv = PackageVersion::parse(&root, err, false);
             if (err->isEmpty())
                 r.append(pv);
         }

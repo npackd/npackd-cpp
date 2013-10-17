@@ -1466,29 +1466,33 @@ Dependency* PackageVersion::createDependency(QDomElement* e)
     }
 }
 
-PackageVersion* PackageVersion::parse(QDomElement* e, QString* err)
+PackageVersion* PackageVersion::parse(QDomElement* e, QString* err, bool validate)
 {
     *err = "";
 
     // qDebug() << "Repository::createPackageVersion.1" << e->attribute("package");
 
     QString packageName = e->attribute("package").trimmed();
-    *err = WPMUtils::validateFullPackageName(packageName);
-    if (!err->isEmpty()) {
-        err->prepend(QObject::tr("Error in the attribute 'package' in <version>: "));
+    if (validate) {
+        *err = WPMUtils::validateFullPackageName(packageName);
+        if (!err->isEmpty()) {
+            err->prepend(QObject::tr("Error in the attribute 'package' in <version>: "));
+        }
     }
 
     PackageVersion* a = new PackageVersion(packageName);
 
     if (err->isEmpty()) {
         QString url = XMLUtils::getTagContent(*e, "url").trimmed();
-        if (!url.isEmpty()) {
-            a->download.setUrl(url, QUrl::StrictMode);
-            QUrl d = a->download;
-            if (!d.isValid() || d.isRelative() ||
-                    (d.scheme() != "http" && d.scheme() != "https")) {
-                err->append(QString(QObject::tr("Not a valid download URL for %1: %2")).
-                        arg(a->package).arg(url));
+        if (validate) {
+            if (!url.isEmpty()) {
+                a->download.setUrl(url, QUrl::StrictMode);
+                QUrl d = a->download;
+                if (!d.isValid() || d.isRelative() ||
+                        (d.scheme() != "http" && d.scheme() != "https")) {
+                    err->append(QString(QObject::tr("Not a valid download URL for %1: %2")).
+                            arg(a->package).arg(url));
+                }
             }
         }
     }
@@ -1505,11 +1509,13 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err)
 
     if (err->isEmpty()) {
         a->sha1 = XMLUtils::getTagContent(*e, "sha1").trimmed().toLower();
-        if (!a->sha1.isEmpty()) {
-            *err = WPMUtils::validateSHA1(a->sha1);
-            if (!err->isEmpty()) {
-                err->prepend(QString(QObject::tr("Invalid SHA1 for %1: ")).
-                        arg(a->toString()));
+        if (validate) {
+            if (!a->sha1.isEmpty()) {
+                *err = WPMUtils::validateSHA1(a->sha1);
+                if (!err->isEmpty()) {
+                    err->prepend(QString(QObject::tr("Invalid SHA1 for %1: ")).
+                            arg(a->toString()));
+                }
             }
         }
     }
@@ -1609,15 +1615,17 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err)
     }
 
     if (err->isEmpty()) {
-        for (int i = 0; i < a->detectFiles.count() - 1; i++) {
-            DetectFile* fi = a->detectFiles.at(i);
-            for (int j = i + 1; j < a->detectFiles.count(); j++) {
-                DetectFile* fj = a->detectFiles.at(j);
-                if (fi->path == fj->path) {
-                    err->append(QString(
-                            QObject::tr("Duplicate <detect-file> entry for %1 in %2")).
-                            arg(fi->path).arg(a->toString()));
-                    goto out2;
+        if (validate) {
+            for (int i = 0; i < a->detectFiles.count() - 1; i++) {
+                DetectFile* fi = a->detectFiles.at(i);
+                for (int j = i + 1; j < a->detectFiles.count(); j++) {
+                    DetectFile* fj = a->detectFiles.at(j);
+                    if (fi->path == fj->path) {
+                        err->append(QString(
+                                QObject::tr("Duplicate <detect-file> entry for %1 in %2")).
+                                arg(fi->path).arg(a->toString()));
+                        goto out2;
+                    }
                 }
             }
         }
@@ -1635,16 +1643,18 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err)
     }
 
     if (err->isEmpty()) {
-        for (int i = 0; i < a->dependencies.count() - 1; i++) {
-            Dependency* fi = a->dependencies.at(i);
-            for (int j = i + 1; j < a->dependencies.count(); j++) {
-                Dependency* fj = a->dependencies.at(j);
-                if (fi->autoFulfilledIf(*fj) ||
-                        fj->autoFulfilledIf(*fi)) {
-                    err->append(QString(
-                            QObject::tr("Duplicate <dependency> for %1 in %2")).
-                            arg(fi->package).arg(a->toString()));
-                    goto out3;
+        if (validate) {
+            for (int i = 0; i < a->dependencies.count() - 1; i++) {
+                Dependency* fi = a->dependencies.at(i);
+                for (int j = i + 1; j < a->dependencies.count(); j++) {
+                    Dependency* fj = a->dependencies.at(j);
+                    if (fi->autoFulfilledIf(*fj) ||
+                            fj->autoFulfilledIf(*fi)) {
+                        err->append(QString(
+                                QObject::tr("Duplicate <dependency> for %1 in %2")).
+                                arg(fi->package).arg(a->toString()));
+                        goto out3;
+                    }
                 }
             }
         }
@@ -1654,12 +1664,14 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err)
     if (err->isEmpty()) {
         a->msiGUID = XMLUtils::getTagContent(*e, "detect-msi").trimmed().
                 toLower();
-        if (!a->msiGUID.isEmpty()) {
-            *err = WPMUtils::validateGUID(a->msiGUID);
-            if (!err->isEmpty())
-                *err = QString(
-                        QObject::tr("Wrong MSI GUID for %1: %2")).
-                        arg(a->toString()).arg(a->msiGUID);
+        if (validate) {
+            if (!a->msiGUID.isEmpty()) {
+                *err = WPMUtils::validateGUID(a->msiGUID);
+                if (!err->isEmpty())
+                    *err = QString(
+                            QObject::tr("Wrong MSI GUID for %1: %2")).
+                            arg(a->toString()).arg(a->msiGUID);
+            }
         }
     }
 
