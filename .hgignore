@@ -70,6 +70,7 @@ wpmcpp-x86_64/
 ^clu/build/
 ^wpmcpp/GProf\.txt$
 ^wpmcpp-i686-gprof/
+^wpmcpp/GProf32\.txt$
 syntax: glob
 ^convert-maven/archetype-catalog.xml
 convert-maven/archetype-catalog.xml

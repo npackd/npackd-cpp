@@ -16,6 +16,32 @@
  */
 class RepositoryXMLHandler: public QXmlDefaultHandler
 {
+    enum WHERE {
+        TAG_VERSION,
+        TAG_VERSION_IMPORTANT_FILE,
+        TAG_VERSION_FILE,
+        TAG_VERSION_DEPENDENCY,
+        TAG_VERSION_DETECT_FILE,
+        TAG_PACKAGE,
+        TAG_LICENSE,
+        TAG_VERSION_URL,
+        TAG_VERSION_SHA1,
+        TAG_VERSION_DETECT_MSI,
+        TAG_VERSION_DEPENDENCY_VARIABLE,
+        TAG_VERSION_DETECT_FILE_PATH,
+        TAG_VERSION_DETECT_FILE_SHA1,
+        TAG_PACKAGE_TITLE,
+        TAG_PACKAGE_URL,
+        TAG_PACKAGE_DESCRIPTION,
+        TAG_PACKAGE_ICON,
+        TAG_PACKAGE_LICENSE,
+        TAG_PACKAGE_CATEGORY,
+        TAG_LICENSE_TITLE,
+        TAG_LICENSE_URL,
+        TAG_LICENSE_DESCRIPTION,
+        TAG_SPEC_VERSION
+    };
+
     DBRepository* rep;
 
     License* lic;
@@ -29,11 +55,7 @@ class RepositoryXMLHandler: public QXmlDefaultHandler
     QString error;
     QStringList tags;
 
-    bool isIn(const QString& first, const QString& second) const;
-    bool isIn(const QString& first, const QString& second,
-            const QString& third) const;
-    bool isIn(const QString& first, const QString& second,
-            const QString& third, const QString& fourth) const;
+    int findWhere();
 public:
     /**
      * -
