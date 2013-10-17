@@ -35,12 +35,6 @@ QSemaphore PackageVersion::installationScripts(1);
 QSet<QString> PackageVersion::lockedPackageVersions;
 QMutex PackageVersion::lockedPackageVersionsMutex(QMutex::Recursive);
 
-QString PackageVersion::getStringId(const QString& package,
-    const Version& version)
-{
-    return package + "/" + version.getVersionString();
-}
-
 int PackageVersion::indexOf(const QList<PackageVersion*> pvs, PackageVersion* f)
 {
     int r = -1;
