@@ -43,6 +43,8 @@ SOURCES += main.cpp \
     ../wpmcpp/controlpanelthirdpartypm.cpp \
     ../wpmcpp/wellknownprogramsthirdpartypm.cpp \
     ../wpmcpp/hrtimer.cpp \
+    ../wpmcpp/repositoryxmlhandler.cpp \
+    ../wpmcpp/mysqlquery.cpp \
     ../wpmcpp/installedpackagesthirdpartypm.cpp
 HEADERS += ../wpmcpp/repository.h \
     ../wpmcpp/version.h \
@@ -70,6 +72,8 @@ HEADERS += ../wpmcpp/repository.h \
     ../wpmcpp/controlpanelthirdpartypm.h \
     ../wpmcpp/wellknownprogramsthirdpartypm.h \
     ../wpmcpp/hrtimer.h \
+    ../wpmcpp/repositoryxmlhandler.h \
+    ../wpmcpp/mysqlquery.h \
     ../wpmcpp/installedpackagesthirdpartypm.h
 FORMS += 
 
@@ -95,4 +99,8 @@ QMAKE_LFLAGS_RELEASE -= -Wl,-s
 gprof {
     QMAKE_CXXFLAGS+=-pg
     QMAKE_LFLAGS+=-pg
+}
+
+test {
+    DEFINES += TEST
 }

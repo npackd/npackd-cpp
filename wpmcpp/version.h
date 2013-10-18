@@ -6,7 +6,17 @@
 class Version
 {
 private:
+    const static int BASIC_PARTS = 4;
+
+    /**
+     * this is used instead of allocating memory on the heap for performance.
+     * Version numbers with more than 4 parts are still stored on the heap.
+     */
+    int basic[BASIC_PARTS];
+
+    /** may point to *basic* */
     int* parts;
+
     int nparts;
 public:
     static const Version EMPTY;
@@ -36,6 +46,7 @@ public:
     bool operator !=(const Version& v) const;
     bool operator ==(const Version& v) const;
     bool operator <(const Version& v) const;
+    bool operator <=(const Version& v) const;
     bool operator >(const Version& v) const;
 
     ~Version();

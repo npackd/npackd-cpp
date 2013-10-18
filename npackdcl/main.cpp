@@ -30,6 +30,10 @@ int main(int argc, char *argv[])
 
     App app;
 
+#ifdef TEST
+    return app.test();
+#else
     return app.process();
+#endif
 }
 

@@ -66,6 +66,15 @@ public:
      * @return exit code
      */
     int process();
+
+    /**
+     * Tests
+     *
+     * @return exit code
+     */
+#ifdef TEST
+    int test();
+#endif
 };
 
 #endif // APP_H

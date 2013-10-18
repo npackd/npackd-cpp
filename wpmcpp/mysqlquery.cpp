@@ -16,3 +16,13 @@ bool MySQLQuery::exec()
     return r;
 }
 
+bool MySQLQuery::prepare(const QString& query)
+{
+    return QSqlQuery::prepare(query);
+}
+
+bool MySQLQuery::next()
+{
+    return QSqlQuery::next();
+}
+

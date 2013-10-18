@@ -19,19 +19,13 @@ void XMLUtils::addTextTag(QDomElement& parent, const QString& name,
 
 QString XMLUtils::getTagContent(const QDomElement& parent, const QString& name)
 {
-    QDomNodeList nl = parent.elementsByTagName(name);
-    if (nl.count() >= 1) {
-        QDomNode child = nl.at(0);
-        QDomNodeList cnl = child.childNodes();
-        if (cnl.count() == 1 && cnl.at(0).nodeType() == QDomNode::TextNode) {
-            return cnl.at(0).nodeValue().trimmed();
-        } else if (cnl.count() == 0) {
-            return "";
-        } else {
-            return QString();
+    QDomNode child = parent.firstChildElement(name);
+    if (!child.isNull()) {
+        QDomNode txt = child.firstChild();
+        if (txt.isText()) {
+            return txt.nodeValue().trimmed();
         }
-    } else {
-        return QString();
     }
+    return QString();
 }
 

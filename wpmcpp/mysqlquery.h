@@ -7,6 +7,8 @@ class MySQLQuery: public QSqlQuery {
 public:
     bool exec(const QString& query);
     bool exec();
+    bool next();
+    bool prepare(const QString &query);
 };
 
 

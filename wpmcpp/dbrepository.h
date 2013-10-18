@@ -26,6 +26,8 @@ private:
     static DBRepository def;
     static bool tableExists(QSqlDatabase* db,
             const QString& table, QString* err);
+    static bool columnExists(QSqlDatabase *db, const QString &table,
+            const QString &column, QString *err);
     static QString toString(const QSqlError& e);
 
     QCache<QString, License> licenses;
@@ -41,6 +43,16 @@ private:
     int insertCategory(int parent, int level,
             const QString &category, QString *err);
     QString findCategory(int cat) const;
+
+    /**
+     * @brief reads all stored package versions from the database
+     * @param package full package name
+     * @param err error will be stored here
+     * @return *unsorted* versions. Only the version number and the URL are
+     *     valid.
+     */
+    QList<PackageVersion*> getPackageVersions2(const QString &package,
+            QString *err) const;
 
     QList<Package*> findPackagesWhere(const QString &where,
             const QList<QVariant> &params, QString *err) const;
