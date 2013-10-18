@@ -1460,7 +1460,8 @@ Dependency* PackageVersion::createDependency(QDomElement* e)
     }
 }
 
-PackageVersion* PackageVersion::parse(QDomElement* e, QString* err, bool validate)
+PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
+        bool validate)
 {
     *err = "";
 

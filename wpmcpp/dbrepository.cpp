@@ -13,6 +13,7 @@
 #include <QByteArray>
 #include <QDebug>
 #include <QXmlStreamWriter>
+#include <QSqlRecord>
 
 #include "package.h"
 #include "repository.h"
@@ -116,6 +117,30 @@ bool DBRepository::tableExists(QSqlDatabase* db,
     return e;
 }
 
+bool DBRepository::columnExists(QSqlDatabase* db,
+        const QString& table, const QString& column, QString* err)
+{
+    *err = "";
+
+    MySQLQuery q;
+    if (!q.exec("PRAGMA table_info(" + table + ")"))
+        *err = toString(q.lastError());
+
+    bool e = false;
+    if (err->isEmpty()) {
+        int index = q.record().indexOf("name");
+        while (q.next()) {
+            QString n = q.value(index).toString();
+            if (QString::compare(n, column, Qt::CaseInsensitive) == 0) {
+                e = true;
+                break;
+            }
+        }
+    }
+
+    return e;
+}
+
 Package *DBRepository::findPackage_(const QString &name)
 {
     QString err;
@@ -211,8 +236,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     QList<PackageVersion*> r;
 
     MySQLQuery q;
-    if (!q.prepare("SELECT NAME, "
-            "PACKAGE, CONTENT, MSIGUID FROM PACKAGE_VERSION "
+    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
             "WHERE PACKAGE = :PACKAGE"))
         *err = toString(q.lastError());
 
@@ -226,7 +250,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     while (err->isEmpty() && q.next()) {
         QDomDocument doc;
         int errorLine, errorColumn;
-        if (!doc.setContent(q.value(2).toByteArray(),
+        if (!doc.setContent(q.value(0).toByteArray(),
                 err, &errorLine, &errorColumn)) {
             *err = QString(
                     QObject::tr("XML parsing failed at line %1, column %2: %3")).
@@ -245,6 +269,43 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     // qDebug() << vs.count();
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
+
+    return r;
+}
+
+QList<PackageVersion *> DBRepository::getPackageVersions2(const QString& package,
+        QString *err) const
+{
+    *err = "";
+
+    QList<PackageVersion*> r;
+
+    MySQLQuery q;
+    if (!q.prepare("SELECT NAME, URL FROM PACKAGE_VERSION "
+            "WHERE PACKAGE = :PACKAGE"))
+        *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        q.bindValue(":PACKAGE", package);
+        if (!q.exec()) {
+            *err = toString(q.lastError());
+        }
+    }
+
+    while (err->isEmpty() && q.next()) {
+        QString v = q.value(0).toString();
+        QString url = q.value(1).toString();
+        Version version;
+        if (!version.setVersion(v)) {
+            *err = QObject::tr("Read invalid package version from the database: %1").
+                    arg(v);
+            break;
+        } else {
+            PackageVersion* pv = new PackageVersion(package, version);
+            pv->download.setUrl(url, QUrl::StrictMode);
+            r.append(pv);
+        }
+    }
 
     return r;
 }
@@ -778,8 +839,9 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         else
             sql += "IGNORE";
         sql += " INTO PACKAGE_VERSION "
-                "(NAME, PACKAGE, CONTENT, MSIGUID, DETECT_FILE_COUNT)"
-                "VALUES(:NAME, :PACKAGE, :CONTENT, :MSIGUID, :DETECT_FILE_COUNT)";
+                "(NAME, PACKAGE, URL, CONTENT, MSIGUID, DETECT_FILE_COUNT)"
+                "VALUES(:NAME, :PACKAGE, :URL, :CONTENT, :MSIGUID, "
+                ":DETECT_FILE_COUNT)";
         if (!savePackageVersionQuery->prepare(sql)) {
             err = toString(savePackageVersionQuery->lastError());
             delete savePackageVersionQuery;
@@ -790,6 +852,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         savePackageVersionQuery->bindValue(":NAME",
                 p->version.getVersionString());
         savePackageVersionQuery->bindValue(":PACKAGE", p->package);
+        savePackageVersionQuery->bindValue(":URL", p->download.toString());
         savePackageVersionQuery->bindValue(":MSIGUID", p->msiGUID);
         savePackageVersionQuery->bindValue(":DETECT_FILE_COUNT",
                 p->detectFiles.count());
@@ -1071,7 +1134,8 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed(
             QObject::tr("Removing packages without versions"))) {
         QString err = exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
-                "(SELECT * FROM PACKAGE_VERSION WHERE PACKAGE = PACKAGE.NAME)");
+                "(SELECT * FROM PACKAGE_VERSION "
+                "WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
             job->setProgress(0.995);
         else
@@ -1155,6 +1219,7 @@ void DBRepository::updateStatusForInstalled(Job* job)
     }
 
     if (job->shouldProceed(QObject::tr("Updating statuses"))) {
+
         QList<QString> packages_ = packages.values();
         for (int i = 0; i < packages_.count(); i++) {
             QString package = packages_.at(i);
@@ -1424,9 +1489,19 @@ QString DBRepository::open()
     }
 
     if (err.isEmpty()) {
+        if (e) {
+            // PACKAGE_VERSION.URL is new in 1.19.4
+            if (!columnExists(&db, "PACKAGE_VERSION", "URL", &err)) {
+                exec("DROP TABLE PACKAGE_VERSION");
+                e = false;
+            }
+        }
+    }
+
+    if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE PACKAGE_VERSION(NAME TEXT, "
-                    "PACKAGE TEXT, "
+                    "PACKAGE TEXT, URL TEXT, "
                     "CONTENT BLOB, MSIGUID TEXT, DETECT_FILE_COUNT INTEGER)");
             err = toString(db.lastError());
         }

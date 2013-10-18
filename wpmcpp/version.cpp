@@ -6,14 +6,14 @@ const Version Version::EMPTY(-1, -1);
 
 Version::Version()
 {
-    this->parts = new int[1];
+    this->parts = &this->basic[0];
     this->parts[0] = 1;
     this->nparts = 1;
 }
 
 Version::Version(const QString &v)
 {
-    this->parts = new int[1];
+    this->parts = &this->basic[0];
     this->parts[0] = 1;
     this->nparts = 1;
 
@@ -22,7 +22,7 @@ Version::Version(const QString &v)
 
 Version::Version(int a, int b)
 {
-    this->parts = new int[2];
+    this->parts = &basic[0];
     this->parts[0] = a;
     this->parts[1] = b;
     this->nparts = 2;
@@ -30,7 +30,10 @@ Version::Version(int a, int b)
 
 Version::Version(const Version &v)
 {
-    this->parts = new int[v.nparts];
+    if (v.nparts <= BASIC_PARTS)
+        this->parts = &basic[0];
+    else
+        this->parts = new int[v.nparts];
     this->nparts = v.nparts;
     memcpy(parts, v.parts, sizeof(parts[0]) * nparts);
 }
@@ -38,8 +41,12 @@ Version::Version(const Version &v)
 Version& Version::operator =(const Version& v)
 {
     if (this != &v) {
-        delete[] this->parts;
-        this->parts = new int[v.nparts];
+        if (this->parts != &basic[0])
+            delete[] this->parts;
+        if (v.nparts <= BASIC_PARTS)
+            this->parts = &basic[0];
+        else
+            this->parts = new int[v.nparts];
         this->nparts = v.nparts;
         memcpy(parts, v.parts, sizeof(parts[0]) * nparts);
     }
@@ -61,6 +68,11 @@ bool Version::operator <(const Version& v) const
     return this->compare(v) < 0;
 }
 
+bool Version::operator <=(const Version& v) const
+{
+    return this->compare(v) <= 0;
+}
+
 bool Version::operator >(const Version& v) const
 {
     return this->compare(v) > 0;
@@ -68,13 +80,15 @@ bool Version::operator >(const Version& v) const
 
 Version::~Version()
 {
-    delete[] this->parts;
+    if (this->parts != this->basic)
+        delete[] this->parts;
 }
 
 void Version::setVersion(int a, int b)
 {
-    delete[] this->parts;
-    this->parts = new int[2];
+    if (this->parts != this->basic)
+        delete[] this->parts;
+    this->parts = basic;
     this->parts[0] = a;
     this->parts[1] = b;
     this->nparts = 2;
@@ -82,8 +96,9 @@ void Version::setVersion(int a, int b)
 
 void Version::setVersion(int a, int b, int c)
 {
-    delete[] this->parts;
-    this->parts = new int[3];
+    if (this->parts != this->basic)
+        delete[] this->parts;
+    this->parts = basic;
     this->parts[0] = a;
     this->parts[1] = b;
     this->parts[2] = c;
@@ -92,8 +107,9 @@ void Version::setVersion(int a, int b, int c)
 
 void Version::setVersion(int a, int b, int c, int d)
 {
-    delete[] this->parts;
-    this->parts = new int[4];
+    if (this->parts != this->basic)
+        delete[] this->parts;
+    this->parts = basic;
     this->parts[0] = a;
     this->parts[1] = b;
     this->parts[2] = c;
@@ -116,10 +132,14 @@ bool Version::setVersion(const QString& v)
             }
 
             if (ok) {
-                delete[] this->parts;
-                this->parts = new int[sl.count()];
+                if (this->parts != basic)
+                    delete[] this->parts;
                 this->nparts = sl.count();
-                for (int i = 0; i < sl.count(); i++) {
+                if (nparts <= BASIC_PARTS)
+                    this->parts = basic;
+                else
+                    this->parts = new int[nparts];
+                for (int i = 0; i < nparts; i++) {
                     this->parts[i] = sl.at(i).toInt();
                 }
                 result = true;
@@ -131,11 +151,16 @@ bool Version::setVersion(const QString& v)
 
 void Version::prepend(int number)
 {
-    int* newParts = new int[this->nparts + 1];
+    int* newParts;
+    if (nparts + 1 <= BASIC_PARTS)
+        newParts = basic;
+    else
+        newParts = new int[nparts + 1];
+
     newParts[0] = number;
-    memmove(newParts + 1, this->parts, sizeof(int) *
-            (this->nparts));
-    delete[] this->parts;
+    memmove(newParts + 1, this->parts, sizeof(parts[0]) * (this->nparts));
+    if (this->parts != basic)
+        delete[] this->parts;
     this->parts = newParts;
     this->nparts = this->nparts + 1;
 }
@@ -181,10 +206,14 @@ void Version::normalize()
     }
 
     if (n > 0) {
-        int* newParts = new int[this->nparts - n];
-        memmove(newParts, this->parts, sizeof(int) *
-                (this->nparts - n));
-        delete[] this->parts;
+        int* newParts;
+        if (this->nparts - n <= BASIC_PARTS)
+            newParts = basic;
+        else
+            newParts = new int[this->nparts - n];
+        memmove(newParts, this->parts, sizeof(parts[0]) * (this->nparts - n));
+        if (this->parts != basic)
+            delete[] this->parts;
         this->parts = newParts;
         this->nparts = this->nparts - n;
     }
