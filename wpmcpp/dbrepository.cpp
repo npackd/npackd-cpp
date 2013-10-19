@@ -1144,7 +1144,7 @@ void DBRepository::updateF5(Job* job)
 
     timer.time(8);
 
-    timer.dump();
+    // timer.dump();
 
     job->complete();
 }
@@ -1219,7 +1219,6 @@ void DBRepository::updateStatusForInstalled(Job* job)
     }
 
     if (job->shouldProceed(QObject::tr("Updating statuses"))) {
-
         QList<QString> packages_ = packages.values();
         for (int i = 0; i < packages_.count(); i++) {
             QString package = packages_.at(i);
@@ -1355,6 +1354,8 @@ QString DBRepository::updateStatus(const QString& package)
                         newestInstalled->version.compare(pv->version) < 0)
                     newestInstalled = pv;
             }
+
+            // qDebug() << pv->download.toString();
 
             if (pv->download.isValid()) {
                 if (!newestInstallable ||

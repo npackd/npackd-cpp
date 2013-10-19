@@ -1,9 +1,11 @@
 Repositories:
 -------------
-http://localhost:8083/Rep.xml
-http://localhost:8083/Rep64.xml
-http://localhost:8083/RepUnstable.xml
-http://localhost:8083/Libs.xml
+http://npackd.appspot.com/rep/recent-xml
+http://npackd.appspot.com/rep/xml?tag=libs
+http://npackd.appspot.com/rep/xml?tag=stable64
+http://npackd.appspot.com/rep/xml?tag=stable
+http://npackd.appspot.com/rep/xml?tag=unstable
+http://npackd.appspot.com/rep/xml?tag=vim
 
 All commands should be run as administrator except where it is explicitely
 noted.

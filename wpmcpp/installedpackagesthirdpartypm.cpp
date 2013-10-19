@@ -13,7 +13,7 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     InstalledPackages* ip = InstalledPackages::getDefault();
-    QList<InstalledPackageVersion*> ipvs = ip->getAll();
+    QList<InstalledPackageVersion*> ipvs = ip->getAllNoCopy();
     QSet<QString> used;
     for (int i = 0; i < ipvs.count(); ++i) {
         InstalledPackageVersion* ipv = ipvs.at(i);
@@ -33,7 +33,6 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
         rep->packageVersions.append(pv);
         rep->package2versions.insert(ipv->package, pv);
     }
-    qDeleteAll(ipvs);
 
     job->setProgress(1);
     job->complete();

@@ -145,6 +145,11 @@ public:
     QList<InstalledPackageVersion*> getAll() const;
 
     /**
+     * @return [ownership:this] installed packages
+     */
+    QList<InstalledPackageVersion*> getAllNoCopy() const;
+
+    /**
      * Searches for installed versions of a package.
      *
      * @return [ownership:caller] installed packages

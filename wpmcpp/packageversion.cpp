@@ -1479,9 +1479,9 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
 
     if (err->isEmpty()) {
         QString url = XMLUtils::getTagContent(*e, "url").trimmed();
-        if (validate) {
-            if (!url.isEmpty()) {
-                a->download.setUrl(url, QUrl::StrictMode);
+        if (!url.isEmpty()) {
+            a->download.setUrl(url, QUrl::StrictMode);
+            if (validate) {
                 QUrl d = a->download;
                 if (!d.isValid() || d.isRelative() ||
                         (d.scheme() != "http" && d.scheme() != "https")) {

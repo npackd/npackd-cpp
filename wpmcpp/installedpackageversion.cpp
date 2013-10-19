@@ -44,7 +44,7 @@ QString InstalledPackageVersion::getDetectionInfo() const
 
 bool InstalledPackageVersion::installed() const
 {
-    return !this->getDirectory().isEmpty();
+    return !this->directory.isEmpty();
 }
 
 void InstalledPackageVersion::setPath(const QString& path)
