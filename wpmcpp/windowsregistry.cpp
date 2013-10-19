@@ -97,15 +97,14 @@ QString WindowsRegistry::get(QString name, QString* err) const
 
     QString value_;
     DWORD valueSize;
+    BYTE small_[256];
+    valueSize = sizeof(small_);
     LONG r = RegQueryValueEx(this->hkey,
-                (WCHAR*) name.utf16(), 0, 0, 0,
+                (WCHAR*) name.utf16(), 0, 0, small_,
                 &valueSize);
-    if (r != ERROR_SUCCESS) {
-        WPMUtils::formatMessage(r, err);
-    } else {
-        // the next line is important
-        // valueSize is sometimes == 0 and the expression (valueSize /2 - 1)
-        // below leads to an AV
+
+    // valueSize may be 0!
+    if (r == ERROR_MORE_DATA) {
         if (valueSize != 0) {
             char* value = new char[valueSize];
             r = RegQueryValueEx(this->hkey,
@@ -118,6 +117,12 @@ QString WindowsRegistry::get(QString name, QString* err) const
             }
             delete[] value;
         }
+    } else if (r == ERROR_SUCCESS) {
+        if (valueSize != 0) {
+            value_.setUtf16((ushort*) small_, valueSize / 2 - 1);
+        }
+    } else {
+        WPMUtils::formatMessage(r, err);
     }
 
     return value_;

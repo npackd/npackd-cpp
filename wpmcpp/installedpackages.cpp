@@ -290,6 +290,18 @@ QList<InstalledPackageVersion*> InstalledPackages::getAll() const
     return r;
 }
 
+QList<InstalledPackageVersion*> InstalledPackages::getAllNoCopy() const
+{
+    QList<InstalledPackageVersion*> all = this->data.values();
+    QList<InstalledPackageVersion*> r;
+    for (int i = 0; i < all.count(); i++) {
+        InstalledPackageVersion* ipv = all.at(i);
+        if (ipv->installed())
+            r.append(ipv);
+    }
+    return r;
+}
+
 QList<InstalledPackageVersion *> InstalledPackages::getByPackage(
         const QString &package) const
 {
@@ -415,7 +427,7 @@ void InstalledPackages::refresh(Job *job)
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.6);
+            job->setProgress(0.7);
     }
 
     timer.time(6);
@@ -429,7 +441,7 @@ void InstalledPackages::refresh(Job *job)
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.7);
+            job->setProgress(0.75);
     }
 
     timer.time(7);
