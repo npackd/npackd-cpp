@@ -1522,7 +1522,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
 
     for (QSet<QUrl>::const_iterator it = urls.begin();
             it != urls.end(); it++) {
-        QDesktopServices::openUrl(*it);
+        openURL(*it);
     }
 }
 
@@ -1641,7 +1641,7 @@ void MainWindow::on_actionTest_Download_Site_triggered()
                 QString s = "http://www.urlvoid.com/scan/" + *it;
                 QUrl url(s);
                 if (url.isValid())
-                    QDesktopServices::openUrl(url);
+                    openURL(url);
             }
         }
     }
@@ -1856,7 +1856,7 @@ void MainWindow::updateActionsSlot()
 
 void MainWindow::on_actionFile_an_Issue_triggered()
 {
-    QDesktopServices::openUrl(QUrl(
+    openURL(QUrl(
             "http://code.google.com/p/windows-package-manager/issues/entry?template=Defect%20report%20from%20user"));
 }
 
@@ -1973,6 +1973,12 @@ void MainWindow::on_actionUninstall_triggered()
 
 void MainWindow::on_actionAdd_package_triggered()
 {
-    QDesktopServices::openUrl(QUrl(
+    openURL(QUrl(
             "https://npackd.appspot.com/package/new"));
+}
+
+void MainWindow::openURL(const QUrl& url) {
+    if (!QDesktopServices::openUrl(url))
+        this->addErrorMessage(QObject::tr("Cannot open the URL %1").
+                arg(url.toString()));
 }
