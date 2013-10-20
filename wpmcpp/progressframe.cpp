@@ -22,6 +22,7 @@ ProgressFrame::ProgressFrame(QWidget *parent, Job* job, const QString& title,
     this->title = title;
     this->job = job;
     this->started = 0;
+    this->modified = 0;
     this->thread = thread;
 
     timer = new QTimer(this);
