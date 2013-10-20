@@ -1970,3 +1970,9 @@ void MainWindow::on_actionUninstall_triggered()
     qDeleteAll(installed);
     qDeleteAll(pvs);
 }
+
+void MainWindow::on_actionAdd_package_triggered()
+{
+    QDesktopServices::openUrl(QUrl(
+            "https://npackd.appspot.com/package/new"));
+}
