@@ -229,7 +229,7 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
         delete pv;
         pv = 0;
     } else if (where == TAG_VERSION_FILE) {
-        pvf->content = chars;
+        pvf->content = chars.trimmed();
         pvf = 0;
     } else if (where == TAG_VERSION_URL) {
         QString url = chars.trimmed();
