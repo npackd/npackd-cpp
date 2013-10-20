@@ -225,6 +225,8 @@ public:
     void openLicense(const QString& name, bool select);
 
     QList<void*> getSelected(const QString& type) const;
+
+    void openURL(const QUrl &url);
 protected:
     void changeEvent(QEvent *e);
 
