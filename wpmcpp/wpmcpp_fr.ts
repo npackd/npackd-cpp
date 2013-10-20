@@ -98,172 +98,197 @@ p, li { white-space: pre-wrap; }
         <translation>Paquet</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="84"/>
+        <location filename="mainwindow.ui" line="85"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="128"/>
+        <location filename="mainwindow.ui" line="130"/>
         <source>&amp;Exit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="131"/>
+        <location filename="mainwindow.ui" line="133"/>
         <source>Exits the application</source>
         <translation>Quitte l&apos;application</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="140"/>
+        <location filename="mainwindow.ui" line="142"/>
         <source>&amp;Install</source>
         <translation>&amp;Installer</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="143"/>
+        <location filename="mainwindow.ui" line="145"/>
         <source>Installs the selected version of a package or the newest is none is selected</source>
         <translation>Installe la version du paquet séléctionnée ou la dernière si aucune n&apos;a été vonlontairement choisie</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="146"/>
+        <location filename="mainwindow.ui" line="148"/>
         <source>Ctrl+I</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="155"/>
+        <location filename="mainwindow.ui" line="157"/>
         <source>U&amp;ninstall</source>
         <translation>&amp;Désinstaller</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="158"/>
+        <location filename="mainwindow.ui" line="160"/>
         <source>Uninstalls the currently selected version of a package or the newest if none is selected</source>
         <translation>Désinstalle la version du paquet sélectionné ou la dernière si aucune n&apos;a été volontairement choisie</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="161"/>
+        <location filename="mainwindow.ui" line="163"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="170"/>
+        <location filename="mainwindow.ui" line="172"/>
         <source>&amp;Open web site</source>
         <translation>&amp;Ouvrir le site web</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="173"/>
+        <location filename="mainwindow.ui" line="175"/>
         <source>Open the package web site in browser</source>
         <translation>Ouvre le site web du paquet dans le navigateur par défaut</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="176"/>
+        <location filename="mainwindow.ui" line="178"/>
         <source>Ctrl+G</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="181"/>
+        <location filename="mainwindow.ui" line="183"/>
         <source>&amp;Settings</source>
         <translation>&amp;Paramètres</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="184"/>
+        <location filename="mainwindow.ui" line="186"/>
         <source>Shows program settings</source>
         <translation>Affiche les paramètres de l&apos;application</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="187"/>
+        <location filename="mainwindow.ui" line="189"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="196"/>
+        <location filename="mainwindow.ui" line="198"/>
         <source>&amp;Update</source>
         <translation>&amp;Mettre à jour</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="199"/>
+        <location filename="mainwindow.ui" line="201"/>
         <source>Updates the currently selected package to the newest available version</source>
         <translation>Met à jour la version du paquet séléctionnée vers la dernière version disponible</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="202"/>
+        <location filename="mainwindow.ui" line="204"/>
         <source>Ctrl+U</source>
         <translation>Ctrl+M</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="207"/>
+        <location filename="mainwindow.ui" line="209"/>
         <source>&amp;Test download site</source>
         <translation>&amp;Tester le site de téléchargement</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="210"/>
+        <location filename="mainwindow.ui" line="212"/>
         <source>Test download site for malicious software</source>
         <translation>Teste le site de téléchargement contre les programmes malveillants</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="213"/>
+        <location filename="mainwindow.ui" line="215"/>
         <source>Ctrl+T</source>
         <translation>Ctrl+T</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="218"/>
+        <location filename="mainwindow.ui" line="220"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="221"/>
+        <location filename="mainwindow.ui" line="223"/>
         <source>About the program</source>
         <translation>A propos de ce logiciel</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="226"/>
-        <location filename="mainwindow.ui" line="229"/>
+        <source>F1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="231"/>
+        <location filename="mainwindow.ui" line="234"/>
         <source>Show details</source>
         <translation>Détails</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="232"/>
+        <location filename="mainwindow.ui" line="237"/>
         <source>Ctrl+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="237"/>
-        <location filename="mainwindow.ui" line="240"/>
+        <location filename="mainwindow.ui" line="242"/>
+        <location filename="mainwindow.ui" line="245"/>
         <source>Scan hard drives</source>
         <translation>Scanner les disques locaux</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="245"/>
+        <location filename="mainwindow.ui" line="250"/>
         <source>Reload repositories</source>
         <translation>Recharcher les dépôts</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="248"/>
+        <location filename="mainwindow.ui" line="253"/>
         <source>Reloads the contents of all repositories</source>
         <translation>Recharge le contenu de tous les dépots</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="251"/>
+        <location filename="mainwindow.ui" line="256"/>
         <source>F5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="256"/>
-        <location filename="mainwindow.ui" line="259"/>
+        <location filename="mainwindow.ui" line="261"/>
+        <location filename="mainwindow.ui" line="264"/>
         <source>Close tab</source>
         <translation>Fermer l&apos;onglet</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="262"/>
+        <location filename="mainwindow.ui" line="267"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+F4</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="271"/>
+        <location filename="mainwindow.ui" line="276"/>
         <source>Feedback</source>
         <translation>Retour d&apos;expérience</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="274"/>
+        <location filename="mainwindow.ui" line="279"/>
         <source>Found a bug? Wish a new feature to be added? Your favourite program is not available? File an issue!</source>
         <translation>Vous avez trouvé un bug ? Souhaiteriez une nouvelle fonctionnalité ? Votre paquet favori n&apos;est pas disponible ? Ouvrez un ticket !</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="282"/>
+        <source>F3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="291"/>
+        <source>Add package</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="294"/>
+        <source>Create a new package in one of the default repositories (Google account is required)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="297"/>
+        <source>F2</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2322,7 +2347,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progressframe.cpp" line="45"/>
+        <location filename="progressframe.cpp" line="46"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
