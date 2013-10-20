@@ -69,6 +69,7 @@
     <addaction name="actionGotoPackageURL"/>
     <addaction name="actionTest_Download_Site"/>
     <addaction name="actionReload_Repositories"/>
+    <addaction name="actionAdd_package"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Tab"/>
     <addaction name="separator"/>
@@ -121,6 +122,7 @@
    <addaction name="actionGotoPackageURL"/>
    <addaction name="separator"/>
    <addaction name="actionFile_an_Issue"/>
+   <addaction name="actionAdd_package"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
@@ -220,6 +222,9 @@
    <property name="toolTip">
     <string>About the program</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="actionShow_Details">
    <property name="text">
@@ -272,6 +277,24 @@
    </property>
    <property name="toolTip">
     <string>Found a bug? Wish a new feature to be added? Your favourite program is not available? File an issue!</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionAdd_package">
+   <property name="icon">
+    <iconset resource="wpmcpp.qrc">
+     <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add package</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new package in one of the default repositories (Google account is required)</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
    </property>
   </action>
  </widget>
