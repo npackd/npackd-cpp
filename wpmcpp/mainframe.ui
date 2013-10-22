@@ -56,11 +56,8 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QWidget" name="layoutWidget">
-      <layout class="QFormLayout" name="formLayout_2">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-       </property>
-       <item row="1" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>S&amp;earch:</string>
@@ -70,8 +67,20 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item>
         <widget class="QLineEdit" name="lineEditText">
+         <property name="minimumSize">
+          <size>
+           <width>180</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="baseSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="toolTip">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -81,7 +90,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>&amp;Status</string>
@@ -120,7 +129,7 @@ p, li { white-space: pre-wrap; }
          </layout>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item>
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Category:</string>
@@ -130,14 +139,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item>
         <widget class="QComboBox" name="comboBoxCategory0">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
           <string>Sub-category:</string>
@@ -147,12 +156,25 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item>
         <widget class="QComboBox" name="comboBoxCategory1">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -199,12 +221,9 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <tabstops>
-  <tabstop>lineEditText</tabstop>
   <tabstop>radioButtonAll</tabstop>
   <tabstop>radioButtonInstalled</tabstop>
   <tabstop>radioButtonUpdateable</tabstop>
-  <tabstop>comboBoxCategory0</tabstop>
-  <tabstop>comboBoxCategory1</tabstop>
   <tabstop>tableWidget</tabstop>
  </tabstops>
  <resources/>

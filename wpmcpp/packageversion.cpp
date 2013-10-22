@@ -368,7 +368,7 @@ void PackageVersion::uninstall(Job* job)
                 job->setErrorMessage(QString(
                         QObject::tr("%1. Full output was saved in %2")).arg(
                         sub->getErrorMessage()).
-                        arg(of.fileName()));
+                        arg(WPMUtils::normalizePath(of.fileName())));
             }
             delete sub;
         }
