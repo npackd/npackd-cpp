@@ -37,12 +37,12 @@
         <translation>Rahmen</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="66"/>
+        <location filename="mainframe.ui" line="63"/>
         <source>S&amp;earch:</source>
         <translation>S&amp;uchen:</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="76"/>
+        <location filename="mainframe.ui" line="85"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -55,32 +55,32 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Geben Sie hier Ihren zu suchenden Text ein. Sie können mehrere Wörter eingeben, falls ein Paket alle davon enthalten soll. Die Suche unterscheidet nicht zwischen Groß- und Kleinschreibung. Sonderzeichen werden nicht ausgefiltert.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="87"/>
+        <location filename="mainframe.ui" line="96"/>
         <source>&amp;Status</source>
         <translation>&amp;Status</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="99"/>
+        <location filename="mainframe.ui" line="108"/>
         <source>&amp;All</source>
         <translation>&amp;Alle</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="109"/>
+        <location filename="mainframe.ui" line="118"/>
         <source>&amp;Installed</source>
         <translation>&amp;Installiert</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="116"/>
+        <location filename="mainframe.ui" line="125"/>
         <source>&amp;Updateable</source>
         <translation>&amp;Aktualisierbar</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="126"/>
+        <location filename="mainframe.ui" line="135"/>
         <source>Category:</source>
         <translation>Kategorie:</translation>
     </message>
     <message>
-        <location filename="mainframe.ui" line="143"/>
+        <location filename="mainframe.ui" line="152"/>
         <source>Sub-category:</source>
         <translation>Unterkategorie:</translation>
     </message>
@@ -995,6 +995,11 @@ p, li { white-space: pre-wrap; }
         <translation>Kann Repository jetzt nicht neu laden. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="1982"/>
+        <source>Cannot open the URL %1</source>
+        <translation>Kann den URL %1 nicht öffnen</translation>
+    </message>
+    <message>
         <location filename="messageframe.cpp" line="19"/>
         <source>Dismiss</source>
         <translation>Ausblenden</translation>
@@ -1344,13 +1349,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="1425"/>
-        <location filename="repositoryxmlhandler.cpp" line="268"/>
+        <location filename="repositoryxmlhandler.cpp" line="269"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Leerer Tag &lt;path&gt; unterhalb von &lt;detect-file&gt;</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1432"/>
-        <location filename="repositoryxmlhandler.cpp" line="274"/>
+        <location filename="repositoryxmlhandler.cpp" line="275"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Falscher SHA1 in &lt;detect-file&gt;:</translation>
     </message>
@@ -1361,13 +1366,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="1488"/>
-        <location filename="repositoryxmlhandler.cpp" line="241"/>
+        <location filename="repositoryxmlhandler.cpp" line="242"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Keine gültige Download-Adresse für %1: %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1500"/>
-        <location filename="repositoryxmlhandler.cpp" line="130"/>
+        <location filename="repositoryxmlhandler.cpp" line="131"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Keine gültige Version für %1: %2</translation>
     </message>
@@ -1378,25 +1383,25 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="1526"/>
-        <location filename="repositoryxmlhandler.cpp" line="144"/>
+        <location filename="repositoryxmlhandler.cpp" line="145"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Falscher Wert für das Attribut &apos;type&apos; für %1: %3</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1541"/>
-        <location filename="repositoryxmlhandler.cpp" line="154"/>
+        <location filename="repositoryxmlhandler.cpp" line="155"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;path&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1548"/>
-        <location filename="repositoryxmlhandler.cpp" line="160"/>
+        <location filename="repositoryxmlhandler.cpp" line="161"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Mehr als ein &lt;important-file&gt; mit demselben &apos;path&apos;-Attribut %1 für %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1558"/>
-        <location filename="repositoryxmlhandler.cpp" line="172"/>
+        <location filename="repositoryxmlhandler.cpp" line="173"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;title&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
@@ -1439,14 +1444,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="repository.cpp" line="102"/>
         <location filename="repository.cpp" line="166"/>
-        <location filename="repositoryxmlhandler.cpp" line="203"/>
-        <location filename="repositoryxmlhandler.cpp" line="211"/>
+        <location filename="repositoryxmlhandler.cpp" line="204"/>
+        <location filename="repositoryxmlhandler.cpp" line="212"/>
         <source>Error in attribute &apos;name&apos; in &lt;package&gt;: </source>
         <translation>Fehler im Attribut &apos;name&apos; in &lt;package&gt;: </translation>
     </message>
     <message>
         <location filename="repository.cpp" line="120"/>
-        <location filename="repositoryxmlhandler.cpp" line="297"/>
+        <location filename="repositoryxmlhandler.cpp" line="298"/>
         <source>Invalid icon URL for %1: %2</source>
         <translation>Falsche Symbol-Adresse für %1: %2</translation>
     </message>
@@ -1525,7 +1530,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="repository.cpp" line="136"/>
-        <location filename="repositoryxmlhandler.cpp" line="307"/>
+        <location filename="repositoryxmlhandler.cpp" line="308"/>
         <source>Error in category tag for %1: %2</source>
         <translation>Fehler in dem Kategorie-Tag für %1: %2</translation>
     </message>
@@ -1956,47 +1961,47 @@ p, li { white-space: pre-wrap; }
         <translation>Programme aus der Systemsteuerung</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="116"/>
+        <location filename="repositoryxmlhandler.cpp" line="117"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: %1</source>
         <translation>Fehler in dem Attribut &apos;package&apos; in &lt;version&gt;: %1</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="191"/>
+        <location filename="repositoryxmlhandler.cpp" line="192"/>
         <source>Error in attribute &apos;versions&apos; in &lt;dependency&gt; in %1</source>
         <translation>Fehler im Attribut &apos;versions&apos; in &lt;dependency&gt; in %1</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="226"/>
+        <location filename="repositoryxmlhandler.cpp" line="227"/>
         <source>Error saving the package version %1 %2: %3</source>
         <translation>Fehler beim Speichern der Paketversion %1 %2: %3</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="250"/>
+        <location filename="repositoryxmlhandler.cpp" line="251"/>
         <source>Invalid SHA1 for %1: %2</source>
         <translation>Ungültiger SHA1 für %1: %2</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="259"/>
+        <location filename="repositoryxmlhandler.cpp" line="260"/>
         <source>Wrong MSI GUID for %1: %2 (%3)</source>
         <translation>Falscher MSI GUID für %1: %2 (%3)</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="280"/>
+        <location filename="repositoryxmlhandler.cpp" line="281"/>
         <source>Error saving the package %1: %2</source>
         <translation>Fehler beim Speichern des Paketes %1: %2</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="310"/>
+        <location filename="repositoryxmlhandler.cpp" line="311"/>
         <source>More than one &lt;category&gt; %1</source>
         <translation>Mehr als eine &lt;category&gt; %1</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="318"/>
+        <location filename="repositoryxmlhandler.cpp" line="319"/>
         <source>Error saving the license %1: %2</source>
         <translation>Fehler beim Speichern der Lizenz %1: %2</translation>
     </message>
     <message>
-        <location filename="repositoryxmlhandler.cpp" line="346"/>
+        <location filename="repositoryxmlhandler.cpp" line="347"/>
         <source>XML parsing error at line %1, column %2: %3</source>
         <translation>Fehler beim Parsen der XML in der Zeile %1, Spalte %2: %3</translation>
     </message>
