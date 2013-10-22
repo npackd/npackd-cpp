@@ -66,7 +66,7 @@ noted.
     - => NPACKD_CL should be defined on the system level
 14. "npackdcl path" must be fast
     - cmd /v:on /c "echo !TIME! & npackdcl path -p com.abisource.AbiWord & echo !TIME!"
-    => the execution time must be less than 5 ms
+    => the execution time must be less than 10 ms
 15. "npackdcl list-repos" should list the currently defined repositories
     - npackdcl list-repos
     => the currently defined repositories should be listed
