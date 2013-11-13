@@ -354,6 +354,21 @@ void PackageVersion::uninstall(Job* job)
 
             addDependencyVars(&env);
 
+            // some uninstallers delete all files in the directory including
+            // the un-installation script. cmd.exe returns an error code in
+            // this case and stops the script execution. We try to prevent
+            // this by locking the Uninstall.bat script
+            QString usfn = d.absolutePath() + "\\" + uninstallationScript;
+            HANDLE ush = CreateFile((LPCWSTR) usfn.utf16(),
+                    GENERIC_READ,
+                    FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
+
+            /* debugging
+            if (ush != INVALID_HANDLE_VALUE) {
+                qDebug() << "file handle is OK";
+            }
+            */
+
             QByteArray output = this->executeFile(sub, d.absolutePath(),
                     uninstallationScript, ".Npackd\\Uninstall.log", env);
             output.insert(0, WPMUtils::UCS2LE_BOM);
@@ -371,6 +386,10 @@ void PackageVersion::uninstall(Job* job)
                         arg(WPMUtils::normalizePath(of.fileName())));
             }
             delete sub;
+
+            if (ush != INVALID_HANDLE_VALUE) {
+                CloseHandle(ush);
+            }
         }
         job->setProgress(0.45);
     }
