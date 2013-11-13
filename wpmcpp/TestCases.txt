@@ -66,4 +66,11 @@ http://npackd.appspot.com/rep/xml?tag=vim
     - remove HKLM\SOFTWARE\Npackd
     - start Npackd
     => no errors are shown
+16. Closing running applications
+    - install AbiWord 2.8.6
+    - start AbiWord and change the new file
+    - start AbiWord un-installation
+    => the AbiWord window caption and taskbar button start flashing
+    - close AbiWord
+    => AbiWord will be removed successfully
 

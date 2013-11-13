@@ -12,6 +12,7 @@
 #include <initguid.h>
 #include <ole2.h>
 #include <wchar.h>
+#include <limits>
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -272,10 +273,20 @@ void WPMUtils::closeProcessesThatUseFiles(const QStringList& files)
                 QString exe = getProcessFile(hProc);
                 if (!exe.isEmpty()) {
                     if (WPMUtils::isUnderOrEquals(exe, files)) {
+                        FLASHWINFO fwi = {};
+                        fwi.cbSize = sizeof(fwi);
+                        fwi.hwnd = tws.at(i);
+                        fwi.dwFlags = FLASHW_ALL | FLASHW_TIMER;
+                        fwi.uCount = std::numeric_limits<UINT>::max();
+                        FlashWindowEx(&fwi);
+
                         DWORD_PTR result;
                         SendMessageTimeout(tws.at(i), WM_CLOSE, 0,
-                                0, SMTO_ABORTIFHUNG, 10000, &result);
-                        WaitForSingleObject(hProc, 10000);
+                                0, SMTO_ABORTIFHUNG, 30000, &result);
+                        WaitForSingleObject(hProc, 30000);
+
+                        fwi.dwFlags = FLASHW_STOP;
+                        FlashWindowEx(&fwi);
                     }
                 }
                 CloseHandle(hProc);
