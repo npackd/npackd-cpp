@@ -612,11 +612,9 @@ QList<Package*> Repository::findPackagesByShortName(const QString &name)
     return r;
 }
 
-QString Repository::checkLockedFilesForUninstall(
+QStringList Repository::findLockedFiles(
         const QList<InstallOperation*> &install)
 {
-    QString err;
-
     InstalledPackages* ip = InstalledPackages::getDefault();
 
     QStringList locked = WPMUtils::getProcessFiles();
@@ -633,6 +631,21 @@ QString Repository::checkLockedFilesForUninstall(
                 }
             }
         }
+    }
+
+    return lockedUninstall;
+}
+
+QString Repository::checkLockedFilesForUninstall(
+        const QList<InstallOperation*> &install, bool close)
+{
+    QString err;
+
+    QStringList lockedUninstall = findLockedFiles(install);
+
+    if (close && lockedUninstall.size() > 0) {
+        WPMUtils::closeProcessesThatUseFiles(lockedUninstall);
+        lockedUninstall = findLockedFiles(install);
     }
 
     if (lockedUninstall.size() > 0) {
