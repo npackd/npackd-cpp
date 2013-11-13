@@ -824,9 +824,6 @@ void MainWindow::process(QList<InstallOperation*> &install)
         }
     }
 
-    if (err.isEmpty())
-        err = Repository::checkLockedFilesForUninstall(install);
-
     QString names;
     if (err.isEmpty()) {
         for (int i = 0; i < install.count(); i++) {
@@ -905,7 +902,7 @@ void MainWindow::process(QList<InstallOperation*> &install)
             return;
         }
 
-        msg = QString(QObject::tr("The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.")).
+        msg = QString(QObject::tr("The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.")).
                 arg(pv->toString()).
                 arg(pv->getPath());
         b = UIUtils::confirm(this, QObject::tr("Uninstall"), msg);
@@ -918,13 +915,13 @@ void MainWindow::process(QList<InstallOperation*> &install)
     } else if (installCount == 0 && uninstallCount > 0) {
         title = QString(QObject::tr("Uninstalling %1 packages")).arg(
                 uninstallCount);
-        msg = QString(QObject::tr("%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.")).
+        msg = QString(QObject::tr("%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.")).
                 arg(uninstallCount).arg(names);
         b = UIUtils::confirm(this, QObject::tr("Uninstall"), msg);
     } else {
         title = QString(QObject::tr("Installing %1 packages, uninstalling %2 packages")).arg(
                 installCount).arg(uninstallCount);
-        msg = QString(QObject::tr("%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.")).
+        msg = QString(QObject::tr("%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files The processes locking the files will be closed.) and %3 package(s) will be installed: %4.")).
                 arg(uninstallCount).
                 arg(names).
                 arg(installCount).

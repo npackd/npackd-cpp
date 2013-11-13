@@ -765,14 +765,6 @@ QString App::update()
         }
     }
 
-    if (job->shouldProceed("Checking locked files and directories") && !up2date) {
-        QString msg = Repository::checkLockedFilesForUninstall(ops);
-        if (!msg.isEmpty())
-            job->setErrorMessage(msg);
-        else
-            job->setProgress(0.14);
-    }
-
     /**
      *confirmation. This is not yet enabled in order to maintain the
      * compatibility.
@@ -1196,12 +1188,6 @@ QString App::remove()
             }
         }
         qDeleteAll(installed);
-    }
-
-    if (job->shouldProceed("Checking locked files and directories")) {
-        QString msg = Repository::checkLockedFilesForUninstall(ops);
-        if (!msg.isEmpty())
-            job->setErrorMessage(msg);
     }
 
     /**

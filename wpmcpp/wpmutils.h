@@ -382,6 +382,30 @@ public:
      * @return true if y was entered
      */
     static bool confirmConsole(const QString &msg);
+
+    /**
+     * @brief running processes
+     * @return the list of process identifiers.
+     */
+    static QVector<DWORD> getProcessIDs();
+
+    /**
+     * @brief returns process executable
+     * @param hProcess process handle
+     * @return process executable path and file name or ""
+     */
+    static QString getProcessFile(HANDLE hProcess);
+
+    /**
+     * @brief close processes that lock the given files or directories
+     * @param files files and directories. The paths should be normalized.
+     */
+    static void closeProcessesThatUseFiles(const QStringList &files);
+
+    /**
+     * @return handles for the top level windows on the desktop
+     */
+    static QVector<HWND> findTopWindows();
 };
 
 #endif // WPMUTILS_H

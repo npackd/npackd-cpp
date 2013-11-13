@@ -243,6 +243,82 @@ void WPMUtils::setInstallationDirectory(const QString& dir)
     }
 }
 
+BOOL CALLBACK myEnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+    QVector<HWND>* p = (QVector<HWND>*) lParam;
+    p->append(hwnd);
+    return TRUE;
+}
+
+QVector<HWND> WPMUtils::findTopWindows()
+{
+    QVector<HWND> r;
+    EnumWindows(myEnumWindowsProc, (LPARAM) &r);
+    return r;
+}
+
+void WPMUtils::closeProcessesThatUseFiles(const QStringList& files)
+{
+    DWORD myProcessID = GetCurrentProcessId();
+
+    QVector<HWND> tws = findTopWindows();
+    for (int i = 0; i < tws.size(); i++) {
+        DWORD pid;
+        if (GetWindowThreadProcessId(tws[i], &pid) != 0 && pid != myProcessID) {
+            // First, get a handle to the process
+            HANDLE hProc = OpenProcess(
+                    PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
+            if (hProc) {
+                QString exe = getProcessFile(hProc);
+                if (!exe.isEmpty()) {
+                    if (WPMUtils::isUnderOrEquals(exe, files)) {
+                        DWORD_PTR result;
+                        SendMessageTimeout(tws.at(i), WM_CLOSE, 0,
+                                0, SMTO_ABORTIFHUNG, 10000, &result);
+                        WaitForSingleObject(hProc, 10000);
+                    }
+                }
+                CloseHandle(hProc);
+            }
+        }
+    }
+}
+
+QString WPMUtils::getProcessFile(HANDLE hProcess)
+{
+    QString res;
+    res.resize(MAX_PATH + 1);
+    DWORD r = GetModuleFileNameEx(hProcess, 0, (LPWSTR) res.data(),
+            res.length());
+    if (r != 0) {
+        res.resize(r);
+    }
+
+    return res;
+}
+
+// see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx
+QVector<DWORD> WPMUtils::getProcessIDs()
+{
+    QVector<DWORD> r;
+
+    r.resize(100);
+    DWORD cb = r.size() * sizeof(DWORD);
+    DWORD cbneeded;
+    WINBOOL ok;
+    ok = EnumProcesses(r.data(), cb, &cbneeded);
+    if (!ok && cb < cbneeded) {
+        r.resize(cbneeded / sizeof(DWORD) + 1);
+        cb = r.size() * sizeof(DWORD);
+        ok = EnumProcesses(r.data(), cb, &cbneeded);
+    }
+    if (ok) {
+        r.resize(cbneeded / sizeof(DWORD));
+    }
+
+    return r;
+}
+
 // see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx
 QStringList WPMUtils::getProcessFiles()
 {

@@ -68,6 +68,12 @@ QString AbstractRepository::updateNpackdCLEnvVar()
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install)
 {
+    if (job->shouldProceed(QObject::tr("Checking locked files and closing processes"))) {
+        QString err = Repository::checkLockedFilesForUninstall(install, true);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
     QList<PackageVersion*> pvs;
     for (int i = 0; i < install.size(); i++) {
         InstallOperation* op = install.at(i);
