@@ -72,5 +72,13 @@ http://npackd.appspot.com/rep/xml?tag=vim
     - start AbiWord un-installation
     => the AbiWord window caption and taskbar button start flashing
     - close AbiWord
-    => AbiWord will be removed successfully
+    => AbiWord will be removed immediately
+17. Killing processes
+    - install AkelPad, start it and change the file
+    - choose "Package", "Settings", check "Close windows", 
+        check "Kill the process"
+    - choose "Package", "Uninstall"
+    => the AkelPad window start flashing
+    => after 30 seconds the process is killed and packages is un-installed
 
+    

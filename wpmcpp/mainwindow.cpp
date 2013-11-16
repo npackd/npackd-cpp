@@ -107,7 +107,8 @@ void InstallThread::run()
         case 0:
         case 1:
         case 2:
-            AbstractRepository::getDefault_()->process(job, install);
+            AbstractRepository::getDefault_()->process(job, install,
+                    WPMUtils::getCloseProcessType());
             break;
         case 3:
         case 4: {
@@ -1549,6 +1550,8 @@ void MainWindow::on_actionSettings_triggered()
         urls.clear();
 
         d->setInstallationDirectory(WPMUtils::getInstallationDirectory());
+
+        d->setCloseProcessType(WPMUtils::getCloseProcessType());
 
         this->ui->tabWidget->addTab(d, QObject::tr("Settings"));
         this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);

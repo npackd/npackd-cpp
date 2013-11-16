@@ -277,7 +277,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
     job->complete();
 }
 
-void PackageVersion::uninstall(Job* job)
+void PackageVersion::uninstall(Job* job, int programCloseType)
 {
     if (!installed()) {
         job->setProgress(1);
@@ -288,7 +288,8 @@ void PackageVersion::uninstall(Job* job)
     QDir d(getPath());
 
     if (job->shouldProceed(QObject::tr("Closing running processes"))) {
-        WPMUtils::closeProcessesThatUseDirectory(this->getPath());
+        WPMUtils::closeProcessesThatUseDirectory(this->getPath(),
+                programCloseType);
         if (isDirectoryLocked()) {
             QString exe = WPMUtils::findFirstExeLockingDirectory(
                     this->getPath());
