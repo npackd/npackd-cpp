@@ -287,9 +287,25 @@ void PackageVersion::uninstall(Job* job)
 
     QDir d(getPath());
 
+    if (job->shouldProceed(QObject::tr("Closing running processes"))) {
+        WPMUtils::closeProcessesThatUseDirectory(this->getPath());
+        if (isDirectoryLocked()) {
+            QString exe = WPMUtils::findFirstExeLockingDirectory(
+                    this->getPath());
+            if (exe.isEmpty())
+                job->setErrorMessage(QObject::tr("Directory %0 is locked").arg(
+                        this->getPath()));
+            else
+                job->setErrorMessage(
+                        QObject::tr("Directory %0 is locked by %1").arg(
+                        this->getPath()).arg(exe));
+        } else
+            job->setProgress(0.05);
+    }
+
     if (job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Deleting shortcuts"));
-        Job* sub = job->newSubJob(0.20);
+        Job* sub = job->newSubJob(0.15);
         deleteShortcuts(d.absolutePath(), sub, true, false, false);
         delete sub;
     }
@@ -1301,21 +1317,6 @@ QString PackageVersion::getStatus() const
     delete newest;
 
     return status;
-}
-
-QStringList PackageVersion::findLockedFiles()
-{
-    QStringList r;
-    if (installed()) {
-        QStringList files = WPMUtils::getProcessFiles();
-        QString dir(getPath());
-        for (int i = 0; i < files.count(); i++) {
-            if (WPMUtils::isUnder(files.at(i), dir)) {
-                r.append(files.at(i));
-            }
-        }
-    }
-    return r;
 }
 
 QByteArray PackageVersion::executeFile(Job* job, const QString& where,

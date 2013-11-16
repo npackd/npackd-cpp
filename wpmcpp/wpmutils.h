@@ -18,6 +18,27 @@ class WPMUtils
 {
 private:
     WPMUtils();
+
+    static bool isProcessRunning(HANDLE process);
+
+    /**
+     * @brief closes the specified process top windows
+     * @param process process handle
+     * @param processWindows all top windows that belong to the same process
+     */
+    static void closeProcessWindows(HANDLE process,
+            const QList<HWND> &processWindows);
+
+    /**
+     * @brief searches for the processes that somehow lock the specified
+     *     directory
+     * @param dir a directory
+     * @return list of handles with PROCESS_ALL_ACCESS permissions. These
+     *     handles should be closed later using CloseHandle()
+     */
+    static QList<HANDLE> getProcessHandlesLockingDirectory(const QString &dir);
+
+    static QList<HWND> findProcessTopWindows(DWORD processID);
 public:
     static const char* UCS2LE_BOM;
 
@@ -397,15 +418,22 @@ public:
     static QString getProcessFile(HANDLE hProcess);
 
     /**
-     * @brief close processes that lock the given files or directories
-     * @param files files and directories. The paths should be normalized.
-     */
-    static void closeProcessesThatUseFiles(const QStringList &files);
-
-    /**
      * @return handles for the top level windows on the desktop
      */
-    static QVector<HWND> findTopWindows();
+    static QList<HWND> findTopWindows();
+
+    /**
+     * @brief closes all processes that lock the specified directory
+     * @param dir a directory
+     */
+    static void closeProcessesThatUseDirectory(const QString& dir);
+
+    /**
+     * @param dir the directory
+     * @return full file path to the executable locking the specified directory
+     *     or ""
+     */
+    static QString findFirstExeLockingDirectory(const QString& dir);
 };
 
 #endif // WPMUTILS_H
