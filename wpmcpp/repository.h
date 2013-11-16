@@ -77,13 +77,6 @@ private:
      */
     PackageVersion* findPackageVersion(const QString& package,
             const Version& version);
-
-    /**
-     * @param install installation operations
-     * @return files and directories locked by the specified operations
-     */
-    static QStringList findLockedFiles(
-            const QList<InstallOperation *> &install);
 public:
     /** full package name -> all defined package versions */
     QMultiMap<QString, PackageVersion*> package2versions;
@@ -111,17 +104,6 @@ public:
      * @return improved value of the category, if there were no errors
      */
     static QString checkCategory(const QString& category, QString* err);
-
-    /**
-     * Checks the directories of packages in the uninstall operations in the
-     * given list for locked files.
-     *
-     * @param close true = try to close the applications that lock the files
-     * @return error message if a file or a directory is locked and cannot be
-     *     uninstalled
-     */
-    static QString checkLockedFilesForUninstall(
-            const QList<InstallOperation*> &install, bool close=false);
 
     /**
      * Loads the content from the URLs. None of the packages has the information

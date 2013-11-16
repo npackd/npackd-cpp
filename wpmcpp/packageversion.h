@@ -317,11 +317,6 @@ public:
     void uninstall(Job* job);
 
     /**
-     * @return files currenly locked in this package directory
-     */
-    QStringList findLockedFiles();
-
-    /**
      * @return status like "locked, installed"
      */
     QString getStatus() const;
