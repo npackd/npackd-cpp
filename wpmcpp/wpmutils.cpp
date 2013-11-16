@@ -244,6 +244,33 @@ void WPMUtils::setInstallationDirectory(const QString& dir)
     }
 }
 
+void WPMUtils::setCloseProcessType(DWORD cpt)
+{
+    WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+    QString err;
+    WindowsRegistry npackd = m.createSubKey("Software\\Npackd\\Npackd", &err,
+            KEY_ALL_ACCESS);
+    if (err.isEmpty()) {
+        npackd.setDWORD("closeProcessType", cpt);
+    }
+}
+
+DWORD WPMUtils::getCloseProcessType()
+{
+    DWORD cpt = CLOSE_WINDOW;
+
+    WindowsRegistry npackd;
+    QString err = npackd.open(
+            HKEY_LOCAL_MACHINE, "Software\\Npackd\\Npackd", false, KEY_READ);
+    if (err.isEmpty()) {
+        DWORD v = npackd.getDWORD("closeProcessType", &err);
+        if (err.isEmpty())
+            cpt = v;
+    }
+
+    return cpt;
+}
+
 BOOL CALLBACK myEnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
     QList<HWND>* p = (QList<HWND>*) lParam;
@@ -287,20 +314,25 @@ bool WPMUtils::isProcessRunning(HANDLE process)
     return r;
 }
 
-void WPMUtils::closeProcessesThatUseDirectory(const QString &dir)
+void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
+        DWORD cpt)
 {
+    if (cpt == 0)
+        return;
+
     QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
 
-    for (int i = 0; i < ps.size(); i++) {
-        HANDLE p = ps.at(i);
-        QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
-        if (ws.size() > 0) {
-            closeProcessWindows(p, ws);
+    if (cpt & CLOSE_WINDOW) {
+        for (int i = 0; i < ps.size(); i++) {
+            HANDLE p = ps.at(i);
+            QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
+            if (ws.size() > 0) {
+                closeProcessWindows(p, ws);
+            }
         }
     }
 
-    bool terminateIfNecessary = false; // TODO
-    if (terminateIfNecessary) {
+    if (cpt & KILL_PROCESS) {
         for (int i = 0; i < ps.size(); i++) {
             HANDLE hProc = ps.at(i);
             if (WPMUtils::isProcessRunning(hProc)) {

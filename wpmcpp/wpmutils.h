@@ -40,6 +40,12 @@ private:
 
     static QList<HWND> findProcessTopWindows(DWORD processID);
 public:
+    /**
+     * @brief how to close a process
+     */
+    static const int CLOSE_WINDOW = 1;
+    static const int KILL_PROCESS = 2;
+
     static const char* UCS2LE_BOM;
 
     /**
@@ -426,7 +432,8 @@ public:
      * @brief closes all processes that lock the specified directory
      * @param dir a directory
      */
-    static void closeProcessesThatUseDirectory(const QString& dir);
+    static void closeProcessesThatUseDirectory(const QString& dir,
+            DWORD cpt=CLOSE_WINDOW);
 
     /**
      * @param dir the directory
@@ -434,6 +441,17 @@ public:
      *     or ""
      */
     static QString findFirstExeLockingDirectory(const QString& dir);
+
+    /**
+     * @brief changes how the programs should be closed
+     * @param cpt new value
+     */
+    static void setCloseProcessType(DWORD cpt);
+
+    /**
+     * @return how the programs should be closed
+     */
+    static DWORD getCloseProcessType();
 };
 
 #endif // WPMUTILS_H

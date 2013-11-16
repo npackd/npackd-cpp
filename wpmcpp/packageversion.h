@@ -313,8 +313,9 @@ public:
      * Uninstalls this package version.
      *
      * @param job job for this method
+     * @param programCloseType how to close running applications
      */
-    void uninstall(Job* job);
+    void uninstall(Job* job, int programCloseType);
 
     /**
      * @return status like "locked, installed"

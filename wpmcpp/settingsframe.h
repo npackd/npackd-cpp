@@ -4,6 +4,8 @@
 #include <QFrame>
 #include <QAbstractButton>
 
+#include "wpmutils.h"
+
 namespace Ui {
     class SettingsFrame;
 }
@@ -35,6 +37,16 @@ public:
      * @param dir installation directory
      */
     void setInstallationDirectory(const QString& dir);
+
+    /**
+     * @return chosen value for how to close programs
+     */
+    DWORD getCloseProcessType();
+
+    /**
+     * @param v how to close programs
+     */
+    void setCloseProcessType(DWORD v);
 private slots:
     void on_buttonBox_accepted();
 

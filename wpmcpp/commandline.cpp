@@ -216,7 +216,7 @@ bool CommandLine::isPresent(const QString& name)
     return r;
 }
 
-QString CommandLine::get(const QString& name)
+QString CommandLine::get(const QString& name) const
 {
     QString r;
     for (int i = 0; i < this->parsedOptions.count(); i++) {

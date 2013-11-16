@@ -30,6 +30,8 @@ private:
      */
     QString addNpackdCL();
 
+    int getProgramCloseType(const CommandLine &cl, QString *err);
+
     void usage();
     QString path();
     QString add();

@@ -140,6 +140,9 @@ int App::process()
             "search terms", false);
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("file", 'f', "file or directory", "file", false);
+    cl.add("end-process", 'e',
+        "comma separated list of ways to close running applications (windows, kill)",
+        "list", false);
 
     err = cl.parse();
     if (!err.isEmpty()) {
@@ -248,11 +251,12 @@ void App::usage()
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
         "    npackdcl remove|rm (--package=<package> [--version=<version>])+",
+        "           [--end-process=<types>]",
         "        removes packages. The version number may be omitted, ",
         "        if only one is installed.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    npackdcl update (--package=<package>)+",
+        "    npackdcl update (--package=<package>)+ [--end-process=<types>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
@@ -705,6 +709,15 @@ QString App::update()
         delete rjob;
     }
 
+    int programCloseType = WPMUtils::CLOSE_WINDOW;
+    if (job->shouldProceed()) {
+        QString err;
+        programCloseType = getProgramCloseType(cl, &err);
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        }
+    }
+
     QStringList packages_ = cl.getAll("package");
 
     if (job->shouldProceed()) {
@@ -780,7 +793,7 @@ QString App::update()
 
     if (job->shouldProceed("Updating") && !up2date) {
         Job* ijob = job->newSubJob(0.86);
-        rep->process(ijob, ops);
+        rep->process(ijob, ops, programCloseType);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
                     arg(ijob->getErrorMessage()));
@@ -1008,7 +1021,7 @@ QString App::add()
     AbstractRepository* rep = AbstractRepository::getDefault_();
     if (job->shouldProceed("Installing") && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.9);
-        rep->process(ijob, ops);
+        rep->process(ijob, ops, WPMUtils::CLOSE_WINDOW);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
                     arg(ijob->getErrorMessage()));
@@ -1149,6 +1162,31 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
     return b;
 }
 
+int App::getProgramCloseType(const CommandLine& cl, QString* err)
+{
+    int r = WPMUtils::CLOSE_WINDOW;
+    QString v = cl.get("end-process");
+    if (!v.isNull()) {
+        r = 0;
+        QStringList sl = v.split(',');
+        if (sl.count() == 0) {
+            *err = "Empty list of program close types";
+        } else {
+            for (int i = 0; i < sl.count(); i++) {
+                QString t = sl.at(i);
+                if (t == "windows")
+                    r |= WPMUtils::CLOSE_WINDOW;
+                else if (t == "kill")
+                    r |= WPMUtils::KILL_PROCESS;
+                else
+                    *err = QString(
+                            "Invalid program close type: %1").arg(t);
+            }
+        }
+    }
+    return r;
+}
+
 QString App::remove()
 {
     Job* job = clp.createJob();
@@ -1162,6 +1200,15 @@ QString App::remove()
             job->setErrorMessage(rjob->getErrorMessage());
         }
         delete rjob;
+    }
+
+    int programCloseType = WPMUtils::CLOSE_WINDOW;
+    if (job->shouldProceed()) {
+        QString err;
+        programCloseType = getProgramCloseType(cl, &err);
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        }
     }
 
     QString err;
@@ -1205,7 +1252,7 @@ QString App::remove()
 
     if (job->shouldProceed("Removing")) {
         Job* removeJob = job->newSubJob(0.9);
-        rep->process(removeJob, ops);
+        rep->process(removeJob, ops, programCloseType);
         if (!removeJob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error removing: %1\n").
                     arg(removeJob->getErrorMessage()));
