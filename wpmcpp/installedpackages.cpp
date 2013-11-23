@@ -171,10 +171,21 @@ void InstalledPackages::processOneInstalled3rdParty(
 
     QString path = ipv->directory;
 
+    // special case: we don't know where the package is installed and we
+    // don't know how to remove it
+    if (err.isEmpty() && ipv->directory.isEmpty() && u == 0 && pv) {
+        u = new PackageVersionFile(".Npackd\\Uninstall.bat",
+                "echo no removal procedure for this package is available"
+                "\r\n"
+                "exit 1"  "\r\n");
+        pv->files.append(u);
+    }
+
     if (err.isEmpty() && path.isEmpty()) {
         Package* p = r->findPackage_(ipv->package);
 
-        path = WPMUtils::getInstallationDirectory() + "\\NpackdDetected\\" +
+        path = WPMUtils::normalizePath(WPMUtils::getInstallationDirectory()) +
+                "\\NpackdDetected\\" +
                 WPMUtils::makeValidFilename(p ? p->title : ipv->package, '_');
         if (d.exists(path)) {
             path = WPMUtils::findNonExistingFile(path + "-" +
