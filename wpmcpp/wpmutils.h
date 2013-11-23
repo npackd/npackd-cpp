@@ -293,6 +293,11 @@ public:
     static QString getExeDir();
 
     /**
+     * @return full .exe path and file name
+     */
+    static QString getExeFile();
+
+    /**
      * @return C:\Windows
      * @threadsafe
      */

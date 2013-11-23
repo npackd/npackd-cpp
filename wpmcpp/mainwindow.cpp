@@ -797,18 +797,6 @@ void MainWindow::process(QList<InstallOperation*> &install)
 {
     QString err;
 
-    // reoder the operations if a package is updated. In this case it is better
-    // to uninstall the old first and then install the new one.
-    if (install.size() == 2) {
-        InstallOperation* first = install.at(0);
-        InstallOperation* second = install.at(1);
-        if (first->package == second->package &&
-                first->install && !second->install) {
-            install.insert(0, second);
-            install.removeAt(2);
-        }
-    }
-
     for (int j = 0; j < install.size(); j++) {
         InstallOperation* op = install.at(j);
         QScopedPointer<PackageVersion> pv(op->findPackageVersion(&err));

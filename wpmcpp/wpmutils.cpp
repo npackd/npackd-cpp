@@ -354,8 +354,10 @@ QString WPMUtils::findFirstExeLockingDirectory(const QString &dir)
 
     QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
 
-    if (ps.size() > 0) {
-        r = WPMUtils::getProcessFile(ps.at(0));
+    for (int i = 0; i < ps.size(); i++) {
+        r = WPMUtils::getProcessFile(ps.at(i));
+        if (!r.isEmpty())
+            break;
     }
 
     for (int i = 0; i < ps.size(); i++) {
@@ -970,6 +972,16 @@ QString WPMUtils::findCmdExe()
         }
     }
     return r;
+}
+
+QString WPMUtils::getExeFile()
+{
+    TCHAR path[MAX_PATH];
+    GetModuleFileName(0, path, sizeof(path) / sizeof(path[0]));
+    QString r;
+    r.setUtf16((ushort*) path, wcslen(path));
+
+    return r.replace('/', '\\');
 }
 
 QString WPMUtils::getExeDir()

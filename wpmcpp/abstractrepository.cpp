@@ -66,8 +66,40 @@ QString AbstractRepository::updateNpackdCLEnvVar()
 }
 
 void AbstractRepository::process(Job *job,
-        const QList<InstallOperation *> &install, DWORD programCloseType)
+        const QList<InstallOperation *> &install_, DWORD programCloseType)
 {
+    QList<InstallOperation *> install = install_;
+
+    // reoder the operations if a package is updated. In this case it is better
+    // to uninstall the old first and then install the new one.
+    if (install.size() == 2) {
+        InstallOperation* first = install.at(0);
+        InstallOperation* second = install.at(1);
+        if (first->package == second->package &&
+                first->install && !second->install) {
+            install.insert(0, second);
+            install.removeAt(2);
+        }
+    }
+
+    // if we have to remove ourself, move this operation to the end
+    if (install.size() > 1) {
+        int index = -1;
+        QString myPackage = InstalledPackages::getDefault()->packageName;
+        Version myVersion(NPACKD_VERSION);
+        for (int i = 0; i < install.size(); i++) {
+            InstallOperation* op = install.at(i);
+            if (!op->install && op->package == myPackage &&
+                    op->version == myVersion) {
+                index = i;
+            }
+        }
+
+        if (index >= 0) {
+            install.append(install.takeAt(index));
+        }
+    }
+
     QList<PackageVersion*> pvs;
     for (int i = 0; i < install.size(); i++) {
         InstallOperation* op = install.at(i);
