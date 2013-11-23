@@ -38,8 +38,7 @@ private:
     void detectJDK(bool w64bit);
     void detectWindows();
 
-    void processOneInstalled3rdParty(InstalledPackageVersion *ipv,
-            const QStringList &packagePaths);
+    void processOneInstalled3rdParty(InstalledPackageVersion *ipv);
 
     /**
      * @param exact if true, only exact matches to packages from current

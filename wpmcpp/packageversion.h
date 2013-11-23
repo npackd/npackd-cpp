@@ -405,7 +405,9 @@ inline QString PackageVersion::getStringId(const QString& package,
 {
     QString r(package);
     r.append('/');
-    r.append(version.getVersionString());
+    Version v = version;
+    v.normalize();
+    r.append(v.getVersionString());
     return r;
 }
 

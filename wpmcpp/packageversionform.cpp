@@ -62,7 +62,9 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     DBRepository* r = DBRepository::getDefault();
 
     this->ui->lineEditTitle->setText(pv->getPackageTitle());
-    this->ui->lineEditVersion->setText(pv->version.getVersionString());
+    Version v = pv->version;
+    v.normalize();
+    this->ui->lineEditVersion->setText(v.getVersionString());
     this->ui->lineEditInternalName->setText(pv->package);
 
     Package* p = r->findPackage_(pv->package);
