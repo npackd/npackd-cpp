@@ -287,6 +287,41 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     QDir d(getPath());
 
+    QString myPackage = InstalledPackages::getDefault()->packageName;
+    Version myVersion(NPACKD_VERSION);
+    if (this->package == myPackage && this->version == myVersion) {
+        if (WPMUtils::pathEquals(WPMUtils::getExeDir(), getPath())) {
+            if (myPackage == "com.googlecode.windows-package-manager.Npackd" ||
+                    myPackage == "com.googlecode.windows-package-manager.Npackd64") {
+                // npackdg
+                // 1. copy .exe to the temporary directory
+                QTemporaryFile of(QDir::tempPath() +
+                                  "\\npackdgXXXXXX.exe");
+                of.setAutoRemove(false);
+                of.close();
+                of.remove(); // TODO: return value
+
+                // TODO: use the actual file name instead of npackdg.exe
+                QFile::copy(WPMUtils::getExeFile(),
+                        of.fileName()); // TODO: return value
+
+                // 2. start the .exe
+                QProcess p(0);
+                QStringList args;
+                p.start(of.fileName(), args);
+                p.waitForStarted(); // TODO: return value
+
+                // 3. exit this process
+                // TODO: is it better to block the UI?
+                exit(0);
+            } else {
+                // npackdcl
+                //
+            }
+        }
+    }
+
+
     if (job->shouldProceed(QObject::tr("Closing running processes"))) {
         WPMUtils::closeProcessesThatUseDirectory(this->getPath(),
                 programCloseType);
@@ -357,15 +392,9 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
             Job* sub = job->newSubJob(0.20);
 
             // prepare the environment variables
-            QString err;
+
             QStringList env;
-            env.append("NPACKD_PACKAGE_NAME");
-            env.append(this->package);
-            env.append("NPACKD_PACKAGE_VERSION");
-            env.append(this->version.getVersionString());
-            env.append("NPACKD_CL");
-            env.append(AbstractRepository::getDefault_()->
-                    computeNpackdCLEnvVar_(&err));
+            QString err = addBasicVars(&env);
             if (!err.isEmpty())
                 job->setErrorMessage(err);
 
@@ -386,22 +415,13 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
             }
             */
 
-            QByteArray output = this->executeFile(sub, d.absolutePath(),
-                    uninstallationScript, ".Npackd\\Uninstall.log", env);
-            output.insert(0, WPMUtils::UCS2LE_BOM);
-            if (!sub->getErrorMessage().isEmpty()) {
-                QTemporaryFile of(QDir::tempPath() +
-                                  "\\NpackdUninstallXXXXXX.log");
-                of.setAutoRemove(false);
-                if (of.open()) {
-                    of.write(output);
-                }
+            this->executeFile2(sub, d.absolutePath(), uninstallationScript,
+                    ".Npackd\\Uninstall.log", "NpackdUninstallXXXXXX.log",
+                    env);
 
-                job->setErrorMessage(QString(
-                        QObject::tr("%1. Full output was saved in %2")).arg(
-                        sub->getErrorMessage()).
-                        arg(WPMUtils::normalizePath(of.fileName())));
-            }
+            if (!sub->getErrorMessage().isEmpty())
+                job->setErrorMessage(sub->getErrorMessage());
+
             delete sub;
 
             if (ush != INVALID_HANDLE_VALUE) {
@@ -1083,37 +1103,19 @@ void PackageVersion::install(Job* job, const QString& where)
                 d.mkdir(".Npackd");
 
             QStringList env;
-            QString err;
-            env.append("NPACKD_PACKAGE_NAME");
-            env.append(this->package);
-            env.append("NPACKD_PACKAGE_VERSION");
-            env.append(this->version.getVersionString());
             env.append("NPACKD_PACKAGE_BINARY");
             env.append(binary);
-            env.append("NPACKD_CL");
-            env.append(AbstractRepository::getDefault_()->
-                    computeNpackdCLEnvVar_(&err));
+            QString err = addBasicVars(&env);
             if (!err.isEmpty())
                 job->setErrorMessage(err);
 
             addDependencyVars(&env);
 
-            QByteArray output = this->executeFile(exec, d.absolutePath(),
-                    installationScript, ".Npackd\\Install.log", env);
-            output.insert(0, WPMUtils::UCS2LE_BOM);
-            if (!exec->getErrorMessage().isEmpty()) {
-                QTemporaryFile of(QDir::tempPath() +
-                                  "\\NpackdInstallXXXXXX.log");
-                of.setAutoRemove(false);
-                if (of.open()) {
-                    of.write(output);
-                }
-
-                job->setErrorMessage(QString(
-                        QObject::tr("%1. Full output was saved in %2")).arg(
-                        exec->getErrorMessage()).
-                        arg(of.fileName()));
-            } else {
+            this->executeFile2(exec, d.absolutePath(), installationScript,
+                    ".Npackd\\Install.log", "NpackdInstallXXXXXX.log", env);
+            if (!exec->getErrorMessage().isEmpty())
+                job->setErrorMessage(exec->getErrorMessage());
+            else {
                 QString path = d.absolutePath();
                 path.replace('/', '\\');
                 QString err = setPath(path);
@@ -1176,6 +1178,20 @@ void PackageVersion::install(Job* job, const QString& where)
     delete f;
 
     job->complete();
+}
+
+QString PackageVersion::addBasicVars(QStringList* env)
+{
+    QString err;
+    env->append("NPACKD_PACKAGE_NAME");
+    env->append(this->package);
+    env->append("NPACKD_PACKAGE_VERSION");
+    env->append(this->version.getVersionString());
+    env->append("NPACKD_CL");
+    env->append(AbstractRepository::getDefault_()->
+            computeNpackdCLEnvVar_(&err));
+
+    return err;
 }
 
 void PackageVersion::addDependencyVars(QStringList* vars)
@@ -1318,6 +1334,30 @@ QString PackageVersion::getStatus() const
     delete newest;
 
     return status;
+}
+
+void PackageVersion::executeFile2(Job* job, const QString& where,
+        const QString& path,
+        const QString& outputFile,
+        const QString& tempFileTemplate,
+        const QStringList& env)
+{
+    QByteArray output = this->executeFile(job, where,
+            path, outputFile, env);
+    output.insert(0, WPMUtils::UCS2LE_BOM);
+    if (!job->getErrorMessage().isEmpty()) {
+        QTemporaryFile of(QDir::tempPath() +
+                          "\\" + tempFileTemplate);
+        of.setAutoRemove(false);
+        if (of.open()) {
+            of.write(output);
+        }
+
+        job->setErrorMessage(QString(
+                QObject::tr("%1. Full output was saved in %2")).arg(
+                job->getErrorMessage()).
+                arg(WPMUtils::normalizePath(of.fileName())));
+    }
 }
 
 QByteArray PackageVersion::executeFile(Job* job, const QString& where,
@@ -1820,3 +1860,61 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
     }
     return r;
 }
+
+void PackageVersion::stop(Job* job, int programCloseType)
+{
+    bool me = false;
+    QString myPackage = InstalledPackages::getDefault()->packageName;
+    Version myVersion(NPACKD_VERSION);
+    if (this->package == myPackage && this->version == myVersion) {
+        if (WPMUtils::pathEquals(WPMUtils::getExeDir(), getPath())) {
+            me = true;
+        }
+    }
+
+    QDir d(getPath());
+    if (me) {
+        job->setProgress(0.5);
+    } else if (QFile::exists(d.absolutePath() + "\\.Npackd\\Stop.bat")) {
+        Job* exec = job->newSubJob(0.5);
+        if (!d.exists(".Npackd"))
+            d.mkdir(".Npackd");
+
+        QStringList env;
+        QString err = addBasicVars(&env);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+
+        addDependencyVars(&env);
+
+        this->executeFile2(exec, d.absolutePath(), ".Npackd\\Stop.bat",
+                ".Npackd\\Stop.log", "NpackdStopXXXXXX.log", env);
+        if (!exec->getErrorMessage().isEmpty()) {
+            job->setErrorMessage(exec->getErrorMessage());
+        } else {
+            QString path = d.absolutePath();
+            path.replace('/', '\\');
+            QString err = setPath(path);
+            if (!err.isEmpty()) {
+                job->setErrorMessage(err);
+            }
+        }
+        delete exec;
+
+        if (this->isDirectoryLocked())
+            WPMUtils::closeProcessesThatUseDirectory(getPath(),
+                    programCloseType);
+    } else {
+        job->setProgress(0.5);
+
+        if (this->isDirectoryLocked())
+            WPMUtils::closeProcessesThatUseDirectory(getPath(),
+                    programCloseType);
+    }
+
+    if (job->getErrorMessage().isEmpty())
+        job->setProgress(1);
+
+    job->complete();
+}
+

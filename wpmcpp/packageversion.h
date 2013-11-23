@@ -50,6 +50,21 @@ private:
     QString saveFiles(const QDir& d);
 
     /**
+     * @brief executes a script like .Npackd\Install.bat
+     * @param job job for monitoring the progress
+     * @param where directory where to start
+     * @param path this is the name of the script like ".Npackd\Install.bat"
+     *     relative to "where"
+     * @param outputFile output file
+     * @param tempFileTemplate template for the temporary file for the script
+     *     output like "NpackdInstallXXXXXX.log"
+     * @param env additional environment variables
+     */
+    void executeFile2(Job *job, const QString &where, const QString &path,
+            const QString &outputFile, const QString &tempFileTemplate,
+            const QStringList &env);
+
+    /**
      * @return program output
      */
     QByteArray executeFile(Job* job, const QString& where,
@@ -69,6 +84,8 @@ private:
     void removeDirectory(Job* job, const QString& dir);
 
     void emitStatusChanged();
+
+    QString addBasicVars(QStringList *env);
     void addDependencyVars(QStringList* vars);
 public:
     /**
@@ -370,6 +387,15 @@ public:
      * @return [ownership:this] found file or 0
      */
     PackageVersionFile *findFile(const QString &path) const;
+
+    /**
+     * @brief stops this package version if it is running. This either executes
+     *     .Npackd\Stop.bat or closes the running applications otherwise.
+     * @param [ownership:callser] job
+     * @param programCloseType how to close running programs. Multiple flags
+     *     may be combined here using OR.
+     */
+    void stop(Job *job, int programCloseType);
 };
 
 Q_DECLARE_METATYPE(PackageVersion);
