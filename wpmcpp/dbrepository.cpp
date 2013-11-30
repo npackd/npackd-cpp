@@ -190,7 +190,9 @@ PackageVersion* DBRepository::findPackageVersion_(
 {
     *err = "";
 
-    QString version_ = version.getVersionString();
+    Version v = version;
+    v.normalize();
+    QString version_ = v.getVersionString();
     PackageVersion* r = 0;
 
     MySQLQuery q;
@@ -849,8 +851,10 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
     }
 
     if (err.isEmpty()) {
+        Version v = p->version;
+        v.normalize();
         savePackageVersionQuery->bindValue(":NAME",
-                p->version.getVersionString());
+                v.getVersionString());
         savePackageVersionQuery->bindValue(":PACKAGE", p->package);
         savePackageVersionQuery->bindValue(":URL", p->download.toString());
         savePackageVersionQuery->bindValue(":MSIGUID", p->msiGUID);
