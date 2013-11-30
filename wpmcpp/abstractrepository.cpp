@@ -66,8 +66,40 @@ QString AbstractRepository::updateNpackdCLEnvVar()
 }
 
 void AbstractRepository::process(Job *job,
-        const QList<InstallOperation *> &install)
+        const QList<InstallOperation *> &install_, DWORD programCloseType)
 {
+    QList<InstallOperation *> install = install_;
+
+    // reoder the operations if a package is updated. In this case it is better
+    // to uninstall the old first and then install the new one.
+    if (install.size() == 2) {
+        InstallOperation* first = install.at(0);
+        InstallOperation* second = install.at(1);
+        if (first->package == second->package &&
+                first->install && !second->install) {
+            install.insert(0, second);
+            install.removeAt(2);
+        }
+    }
+
+    // if we have to remove ourself, move this operation to the end
+    if (install.size() > 1) {
+        int index = -1;
+        QString myPackage = InstalledPackages::getDefault()->packageName;
+        Version myVersion(NPACKD_VERSION);
+        for (int i = 0; i < install.size(); i++) {
+            InstallOperation* op = install.at(i);
+            if (!op->install && op->package == myPackage &&
+                    op->version == myVersion) {
+                index = i;
+            }
+        }
+
+        if (index >= 0) {
+            install.append(install.takeAt(index));
+        }
+    }
+
     QList<PackageVersion*> pvs;
     for (int i = 0; i < install.size(); i++) {
         InstallOperation* op = install.at(i);
@@ -101,6 +133,29 @@ void AbstractRepository::process(Job *job,
 
     int n = install.count();
 
+    if (job->shouldProceed(QObject::tr("Closing running processes"))) {
+        for (int i = 0; i < install.count(); i++) {
+            InstallOperation* op = install.at(i);
+            PackageVersion* pv = pvs.at(i);
+            if (!op->install) {
+                WPMUtils::closeProcessesThatUseDirectory(pv->getPath(),
+                        programCloseType);
+                if (pv->isDirectoryLocked()) {
+                    QString exe = WPMUtils::findFirstExeLockingDirectory(
+                            pv->getPath());
+                    if (exe.isEmpty())
+                        job->setErrorMessage(QObject::tr("Directory %0 is locked").arg(
+                                pv->getPath()));
+                    else
+                        job->setErrorMessage(
+                                QObject::tr("Directory %0 is locked by %1").arg(
+                                pv->getPath()).arg(exe));
+                    break;
+                }
+            }
+        }
+    }
+
     if (job->shouldProceed()) {
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
@@ -115,7 +170,7 @@ void AbstractRepository::process(Job *job,
             if (op->install)
                 pv->install(sub, pv->getPreferredInstallationDirectory());
             else
-                pv->uninstall(sub);
+                pv->uninstall(sub, programCloseType);
             if (!sub->getErrorMessage().isEmpty())
                 job->setErrorMessage(sub->getErrorMessage());
             delete sub;

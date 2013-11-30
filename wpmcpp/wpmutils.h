@@ -18,7 +18,34 @@ class WPMUtils
 {
 private:
     WPMUtils();
+
+    static bool isProcessRunning(HANDLE process);
+
+    /**
+     * @brief closes the specified process top windows
+     * @param process process handle
+     * @param processWindows all top windows that belong to the same process
+     */
+    static void closeProcessWindows(HANDLE process,
+            const QList<HWND> &processWindows);
+
+    /**
+     * @brief searches for the processes that somehow lock the specified
+     *     directory
+     * @param dir a directory
+     * @return list of handles with PROCESS_ALL_ACCESS permissions. These
+     *     handles should be closed later using CloseHandle()
+     */
+    static QList<HANDLE> getProcessHandlesLockingDirectory(const QString &dir);
+
+    static QList<HWND> findProcessTopWindows(DWORD processID);
 public:
+    /**
+     * @brief how to close a process
+     */
+    static const int CLOSE_WINDOW = 1;
+    static const int KILL_PROCESS = 2;
+
     static const char* UCS2LE_BOM;
 
     /**
@@ -266,6 +293,11 @@ public:
     static QString getExeDir();
 
     /**
+     * @return full .exe path and file name
+     */
+    static QString getExeFile();
+
+    /**
      * @return C:\Windows
      * @threadsafe
      */
@@ -382,6 +414,49 @@ public:
      * @return true if y was entered
      */
     static bool confirmConsole(const QString &msg);
+
+    /**
+     * @brief running processes
+     * @return the list of process identifiers.
+     */
+    static QVector<DWORD> getProcessIDs();
+
+    /**
+     * @brief returns process executable
+     * @param hProcess process handle
+     * @return process executable path and file name or ""
+     */
+    static QString getProcessFile(HANDLE hProcess);
+
+    /**
+     * @return handles for the top level windows on the desktop
+     */
+    static QList<HWND> findTopWindows();
+
+    /**
+     * @brief closes all processes that lock the specified directory
+     * @param dir a directory
+     */
+    static void closeProcessesThatUseDirectory(const QString& dir,
+            DWORD cpt=CLOSE_WINDOW);
+
+    /**
+     * @param dir the directory
+     * @return full file path to the executable locking the specified directory
+     *     or ""
+     */
+    static QString findFirstExeLockingDirectory(const QString& dir);
+
+    /**
+     * @brief changes how the programs should be closed
+     * @param cpt new value
+     */
+    static void setCloseProcessType(DWORD cpt);
+
+    /**
+     * @return how the programs should be closed
+     */
+    static DWORD getCloseProcessType();
 };
 
 #endif // WPMUTILS_H

@@ -106,16 +106,6 @@ public:
     static QString checkCategory(const QString& category, QString* err);
 
     /**
-     * Checks the directories of packages in the uninstall operations in the
-     * given list for locked files.
-     *
-     * @return error message if a file or a directory is locked and cannot be
-     *     uninstalled
-     */
-    static QString checkLockedFilesForUninstall(
-            const QList<InstallOperation*> &install);
-
-    /**
      * Loads the content from the URLs. None of the packages has the information
      * about installation path after this method was called.
      *
