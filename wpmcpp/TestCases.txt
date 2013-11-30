@@ -1,0 +1,69 @@
+Repositories:
+-------------
+http://npackd.appspot.com/rep/recent-xml
+http://npackd.appspot.com/rep/xml?tag=libs
+http://npackd.appspot.com/rep/xml?tag=stable64
+http://npackd.appspot.com/rep/xml?tag=stable
+http://npackd.appspot.com/rep/xml?tag=unstable
+http://npackd.appspot.com/rep/xml?tag=vim
+
+1. Start/close
+    - close the application
+    => no errors
+2. Search
+    - enter "adobe" in the search field
+    => only packages with "adobe" are shown
+3. Filter
+    - choose "Installed"
+    => only installed packages are shown
+4. Filter for updateable packages
+    - choose "Updateable"
+    => only packages with updates are shown
+5. Install the newest package version
+    - select "Notepad2"
+    - choose "Package", "Install"
+    => the package will be installed
+6. Uninstall the newest package version
+    - select "Notepad2"
+    - choose "Package", "Install"
+    - choose "Package", "Uninstall"
+    => the package will be uninstalled
+7. Installation directory
+    - install "Notepad2"
+    => the package is installed in "c:\Program Files (x86)\Notepad2"
+8. Tab title for packages
+    - select "Notepad2"
+    - choose "Package", "Show details"
+    => the title of the new tab is "Notepad2"    
+9. Go to
+    - select "Notepad2"
+    - choose "Package", "Open web site"
+    => http://www.flos-freeware.ch/notepad2.html is opened in the browser
+10. Open a package version twice
+    - double click on "AbiWord" package in the main table
+    - double click on the version "2.8.6"
+    - change back to the "AbiWord" package tab
+    - double click on the version "2.8.6"
+    => no new tab is created, the "AbiWord 2.8.6" tab is selected
+11. Changing column widths
+    - start Npackd
+    - change column widths
+    - restart Npackd
+    => the column widths are restored 
+12. Removing an installed package should update the list
+    - install "Notepad2"
+    - filter the packages to only show the installed
+    - remove "Notepad2"
+    => the package list should not show "Notepad2" anymore
+13. Package "Windows 64 bit" should have a description
+    => the package com.microsoft.Windows64 should have a non-empty description
+14. Detection info should be filled
+    - install "AbiWord 2.8.6" without Npackd
+    - start Npackd
+    - open the package version "AbiWord 2.8.6"
+    => detection info should not be empty
+15. First start
+    - remove HKLM\SOFTWARE\Npackd
+    - start Npackd
+    => no errors are shown
+

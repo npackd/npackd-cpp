@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>app.png</file>
+        <file>gotosite.png</file>
+        <file>install.png</file>
+        <file>uninstall.png</file>
+        <file>update.png</file>
+        <file>fileissue.png</file>
+        <file>wait.png</file>
+        <file>add.png</file>
+    </qresource>
+    <qresource prefix="/translations"/>
+</RCC>

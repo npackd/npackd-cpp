@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>625</width>
+    <height>416</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>11</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="documentMode">
+       <bool>true</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>625</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="title">
+     <string>Package</string>
+    </property>
+    <addaction name="actionInstall"/>
+    <addaction name="actionUninstall"/>
+    <addaction name="actionUpdate"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_Details"/>
+    <addaction name="actionGotoPackageURL"/>
+    <addaction name="actionTest_Download_Site"/>
+    <addaction name="actionReload_Repositories"/>
+    <addaction name="actionAdd_package"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose_Tab"/>
+    <addaction name="separator"/>
+    <addaction name="actionScan_Hard_Drives"/>
+    <addaction name="actionSettings"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionFile_an_Issue"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="movable">
+    <bool>true</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllToolBarAreas</set>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionInstall"/>
+   <addaction name="actionUninstall"/>
+   <addaction name="actionUpdate"/>
+   <addaction name="separator"/>
+   <addaction name="actionGotoPackageURL"/>
+   <addaction name="separator"/>
+   <addaction name="actionFile_an_Issue"/>
+   <addaction name="actionAdd_package"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exits the application</string>
+   </property>
+  </action>
+  <action name="actionInstall">
+   <property name="icon">
+    <iconset resource="wpmcpp.qrc">
+     <normaloff>:/images/install.png</normaloff>:/images/install.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Install</string>
+   </property>
+   <property name="toolTip">
+    <string>Installs the selected version of a package or the newest is none is selected</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionUninstall">
+   <property name="icon">
+    <iconset resource="wpmcpp.qrc">
+     <normaloff>:/images/uninstall.png</normaloff>:/images/uninstall.png</iconset>
+   </property>
+   <property name="text">
+    <string>U&amp;ninstall</string>
+   </property>
+   <property name="toolTip">
+    <string>Uninstalls the currently selected version of a package or the newest if none is selected</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionGotoPackageURL">
+   <property name="icon">
+    <iconset resource="wpmcpp.qrc">
+     <normaloff>:/images/gotosite.png</normaloff>:/images/gotosite.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open web site</string>
+   </property>
+   <property name="toolTip">
+    <string>Open the package web site in browser</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>&amp;Settings</string>
+   </property>
+   <property name="toolTip">
+    <string>Shows program settings</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionUpdate">
+   <property name="icon">
+    <iconset resource="wpmcpp.qrc">
+     <normaloff>:/images/update.png</normaloff>:/images/update.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Update</string>
+   </property>
+   <property name="toolTip">
+    <string>Updates the currently selected package to the newest available version</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionTest_Download_Site">
+   <property name="text">
+    <string>&amp;Test download site</string>
+   </property>
+   <property name="toolTip">
+    <string>Test download site for malicious software</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="toolTip">
+    <string>About the program</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionShow_Details">
+   <property name="text">
+    <string>Show details</string>
+   </property>
+   <property name="toolTip">
+    <string>Show details</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionScan_Hard_Drives">
+   <property name="text">
+    <string>Scan hard drives</string>
+   </property>
+   <property name="toolTip">
+    <string>Scan hard drives</string>
+   </property>
+  </action>
+  <action name="actionReload_Repositories">
+   <property name="text">
+    <string>Reload repositories</string>
+   </property>
+   <property name="toolTip">
+    <string>Reloads the contents of all repositories</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionClose_Tab">
+   <property name="text">
+    <string>Close tab</string>
+   </property>
+   <property name="toolTip">
+    <string>Close tab</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionFile_an_Issue">
+   <property name="icon">
+    <iconset resource="wpmcpp.qrc">
+     <normaloff>:/images/fileissue.png</normaloff>:/images/fileissue.png</iconset>
+   </property>
+   <property name="text">
+    <string>Feedback</string>
+   </property>
+   <property name="toolTip">
+    <string>Found a bug? Wish a new feature to be added? Your favourite program is not available? File an issue!</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionAdd_package">
+   <property name="icon">
+    <iconset resource="wpmcpp.qrc">
+     <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add package</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new package in one of the default repositories (Google account is required)</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+ </tabstops>
+ <resources>
+  <include location="wpmcpp.qrc"/>
+ </resources>
+ <connections/>
+ <slots>
+  <slot>install()</slot>
+  <slot>uninstall()</slot>
+  <slot>on_actionReload_repositories_triggered()</slot>
+ </slots>
+</ui>

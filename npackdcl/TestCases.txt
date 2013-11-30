@@ -1,0 +1,126 @@
+Repositories:
+-------------
+http://npackd.appspot.com/rep/recent-xml
+http://npackd.appspot.com/rep/xml?tag=libs
+http://npackd.appspot.com/rep/xml?tag=stable64
+http://npackd.appspot.com/rep/xml?tag=stable
+http://npackd.appspot.com/rep/xml?tag=unstable
+http://npackd.appspot.com/rep/xml?tag=vim
+
+All commands should be run as administrator except where it is explicitely
+noted.
+
+1. help
+    - npackdcl help
+    => help is shown
+2. no args
+    - npackdcl
+    => "Missing command. Try npackdcl help"
+3. list
+    - npackdcl list
+    => all installed packages are listed sorted by their title
+4. list --bare-format
+    - npackdcl list --bare-format
+    => only the data about packages is printed, no header
+5. detect
+    - npackdcl detect
+    => "Package detection completed successfully"
+6. add-repo
+    - npackdcl add-repo --url http://localhost:8083/NonExisting.xml
+    => test via Npackd GUI that the new URL was added
+    - npackdcl remove-repo --url http://localhost:8083/NonExisting.xml
+    => test via Npackd GUI that the new URL was removed
+7. add/remove
+    - npackdcl add -p AbiWord
+    => start AbiWord from the "Start" menu and check that it is OK
+    - npackdcl remove -p AbiWord -v 2.8.6
+    => there should be no entry "AbiWord" in the "Start" menu
+8. add twice
+    - npackdcl add -p AbiWord
+    - npackdcl add -p AbiWord
+    => "Package is already installed in C:\ProgramFiles\AbiWord"
+    => error level is 0
+9. locked files
+    - npackdcl add -p Firefox
+    - start Firefox
+    - npackdcl remove -p Firefox
+    => The package(s) cannot be uninstalled because the following files are in 
+        use (please close the corresponding applications): 
+        C:\ProgramFiles\Firefox-15\firefox.exe    
+10. search for packages
+    - npackdcl search -q "c++"
+    => about 60 packages should be found
+11. search for packages 2
+    - npackdcl search -q "c++" -b
+    => about 60 packages should be found
+    => only the data about packages is printed, no header
+12. info about a package
+    - npackdcl info -p MinGWW64
+    => information about the package including all available version numbers
+        should be shown.
+13. NPACKD_CL for an administrator
+    - remove the NPACKD_CL variable definition for the current user and for the
+        system
+    - start npackdcl.exe without parameters and *with* administrator
+        privileges
+    - => NPACKD_CL should be defined on the system level
+14. "npackdcl path" must be fast
+    - cmd /v:on /c "echo !TIME! & npackdcl path -p com.abisource.AbiWord & echo !TIME!"
+    => the execution time must be less than 10 ms
+15. "npackdcl list-repos" should list the currently defined repositories
+    - npackdcl list-repos
+    => the currently defined repositories should be listed
+16. removing a package without specifying the version number
+    - npackdcl add -p FARManager
+    - npackdcl remove -p FARManager
+    => the package is uninstalled
+17. "npackdcl which"
+    - npackdcl which -f "C:\ProgramFiles\AccessEnum"
+    => AccessEnum 1.32 (com.microsoft.AccessEnum) is installed in C:\ProgramFiles\AccessEnum
+18. "npackdcl which" for a file
+    - npackdcl which -f "C:\ProgramFiles\AccessEnum\Eula.txt"
+    => AccessEnum 1.32 (com.microsoft.AccessEnum) is installed in C:\ProgramFiles\AccessEnum
+19. "npackdcl which" for a non-existing file
+    - npackdcl which -f "C:\ProgramFiles\AccessEnum\ABC.txt"
+    => AccessEnum 1.32 (com.microsoft.AccessEnum) is installed in C:\ProgramFiles\AccessEnum
+20. "npackdcl which" for a non-existing directory
+    - npackdcl which -f "C:\ProgramFiles\AccessEn
+    => No package found for C:\ProgramFiles\AccessEn
+21. "npackdcl info" shows installed versions
+    - npackdcl info -p JDK
+    => information about installed JDK versions is printed
+22. "npackdcl check"
+    - npackdcl check
+    => "all dependencies are installed" should be printed
+    - uninstall JRE manually
+    - npackdcl check
+    => "ABC depends on JRE, which is not installed"
+23. "npackdcl remove-repo" should also be able to remove the last one
+    - npackdcl list-repos
+    - remove all defined repositories one by one
+    - npackdcl list-repos
+    => 0 repositories are defined
+24. "npackdcl check" should work for non-admins
+    - npackdcl check
+    => "all dependencies are OK"
+25. installing and removing multiple packages at once
+    - npackdcl add -p AbiWord -p Maven -v 3.1
+    => check the installation directories for files
+    - npackdcl rm -p AbiWord -p Maven -v 3.1
+    => check that the installation directories were removed
+26. npackdcl list as a non-admin
+    - "npackdcl list" as a non-admin
+    => the list of installed package versions should be printed
+27. npackdcl info as a non-admin
+    - "npackdcl info -p AbiWord" as a non-admin
+    => the information about the package is shown
+28. npackdcl which as non-admin
+    - "npackdcl which -f C:\ProgramFiles\MinGW-w64\lib\libgmp.a" as a non-admin
+    => package information is shown
+29. npackd search as non-dmin
+    - npackdcl search -q qt
+    => list of found packages is shown
+31. --debug
+    - npackdcl detect --debug
+    => all messages are outputted
+
