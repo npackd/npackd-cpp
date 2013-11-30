@@ -922,12 +922,15 @@ QString DBRepository::clear()
 
     this->categories.clear();
 
+    bool transactionStarted = false;
     if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
             job->setProgress(0.01);
+            transactionStarted = true;
+        }
     }
 
     if (job->shouldProceed(QObject::tr("Clearing the packages table"))) {
@@ -969,7 +972,8 @@ QString DBRepository::clear()
         else
             job->setProgress(1);
     } else {
-        exec("ROLLBACK");
+        if (transactionStarted)
+            exec("ROLLBACK");
     }
 
     job->complete();
@@ -1070,12 +1074,15 @@ void DBRepository::updateF5(Job* job)
             job->setProgress(0.01);
     }
 
+    bool transactionStarted = false;
     if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
             job->setProgress(0.02);
+            transactionStarted = true;
+        }
     }
 
     timer.time(1);
@@ -1097,7 +1104,8 @@ void DBRepository::updateF5(Job* job)
         else
             job->setProgress(0.35);
     } else {
-        exec("ROLLBACK");
+        if (transactionStarted)
+            exec("ROLLBACK");
     }
 
     timer.time(3);
@@ -1155,12 +1163,15 @@ void DBRepository::updateF5(Job* job)
 
 void DBRepository::saveAll(Job* job, Repository* r, bool replace)
 {
+    bool transactionStarted = false;
     if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
             job->setProgress(0.01);
+            transactionStarted = true;
+        }
     }
 
     if (job->shouldProceed(QObject::tr("Inserting data in the packages table"))) {
@@ -1194,7 +1205,8 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
         else
             job->setProgress(1);
     } else {
-        exec("ROLLBACK");
+        if (transactionStarted)
+            exec("ROLLBACK");
     }
 
     job->complete();
@@ -1202,12 +1214,15 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
 
 void DBRepository::updateStatusForInstalled(Job* job)
 {
+    bool transactionStarted = false;
     if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
             job->setProgress(0.01);
+            transactionStarted = true;
+        }
     }
 
     QSet<QString> packages;
@@ -1242,7 +1257,8 @@ void DBRepository::updateStatusForInstalled(Job* job)
         else
             job->setProgress(1);
     } else {
-        exec("ROLLBACK");
+        if (transactionStarted)
+            exec("ROLLBACK");
     }
 
     job->complete();
