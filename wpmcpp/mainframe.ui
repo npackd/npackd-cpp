@@ -221,9 +221,12 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <tabstops>
+  <tabstop>lineEditText</tabstop>
   <tabstop>radioButtonAll</tabstop>
   <tabstop>radioButtonInstalled</tabstop>
   <tabstop>radioButtonUpdateable</tabstop>
+  <tabstop>comboBoxCategory0</tabstop>
+  <tabstop>comboBoxCategory1</tabstop>
   <tabstop>tableWidget</tabstop>
  </tabstops>
  <resources/>

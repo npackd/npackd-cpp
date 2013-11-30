@@ -38,6 +38,8 @@ private:
     void detectJDK(bool w64bit);
     void detectWindows();
 
+    void processOneInstalled3rdParty(InstalledPackageVersion *ipv);
+
     /**
      * @param exact if true, only exact matches to packages from current
      *     repositories recognized as existing software (e.g. something like

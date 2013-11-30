@@ -49,14 +49,6 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
 QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
         bool replace, const QString& detectionInfoPrefix)
 {
-    /* Example:
-    "msi:"
-    0 :  0  ms
-    1 :  145  ms
-    2 :  124  ms
-    3 :  14  ms
-    4 :  0  ms
-     */
     HRTimer timer(5);
     timer.time(0);
 
@@ -86,100 +78,40 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
 
     timer.time(2);
 
-    AbstractRepository* r = AbstractRepository::getDefault_();
     QStringList packagePaths = this->getAllInstalledPackagePaths();
 
     // qDebug() << "InstalledPackages::detect3rdParty.0";
 
     if (err.isEmpty()) {
-        QDir d;
+        QString windowsDir = WPMUtils::getWindowsDir();
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
 
-            // do not detect the same package more than once
-            InstalledPackageVersion* existing = find(ipv->package, ipv->version);
+            // qDebug() << ipv->package << ipv->version.getVersionString();
+
+            // if the package version is already installed, we skip it
+            InstalledPackageVersion* existing = find(ipv->package,
+                    ipv->version);
             if (existing && existing->installed()) {
                 // qDebug() << "existing: " << existing->toString();
                 continue;
             }
 
-            QScopedPointer<PackageVersion> pv(
-                    r->findPackageVersion_(ipv->package, ipv->version, &err));
+            // qDebug() << "    0.1";
 
-            // qDebug() << "InstalledPackages::detect3rdParty 0.5" << ipv->package;
-
-            if (!err.isEmpty())
-                break;
-
-            if (!pv)
-                continue;
-
-            QString path = getPath(ipv->package, ipv->version);
-            if (!path.isEmpty()) {
-                continue;
-            }
-
-            PackageVersionFile* u = pv->findFile(".Npackd\\Uninstall.bat");
-            if (!u)
-                continue;
-
-            path = ipv->directory;
-
+            // we cannot handle nested directories or paths under C:\Windows
+            QString path = ipv->directory;
             if (!path.isEmpty()) {
                 path = WPMUtils::normalizePath(path);
-                if (WPMUtils::isUnderOrEquals(path, packagePaths))
-                    continue;
+                if (WPMUtils::isUnderOrEquals(path, packagePaths) ||
+                        WPMUtils::pathEquals(path, windowsDir) ||
+                        WPMUtils::isUnder(path, windowsDir))
+                    ipv->directory = "";
             }
 
-            if (path.isEmpty()) {
-                Package* p = r->findPackage_(ipv->package);
+            // qDebug() << "    0.2";
 
-                /* if (!p)
-                    WPMUtils::outputTextConsole("Cannot find package for " +
-                            ipv->package + " " +
-                            ipv->version.getVersionString() + "\n");
-                            */
-
-                path = WPMUtils::getInstallationDirectory() +
-                        "\\NpackdDetected\\" +
-                WPMUtils::makeValidFilename(p->title, '_');
-                if (d.exists(path)) {
-                    path = WPMUtils::findNonExistingFile(path + "-" +
-                            ipv->version.getVersionString(), "");
-                }
-                d.mkpath(path);
-                delete p;
-            }
-            if (d.exists(path)) {
-                if (d.mkpath(path + "\\.Npackd")) {
-                    QFile file(path + "\\.Npackd\\Uninstall.bat");
-                    if (file.open(QIODevice::WriteOnly |
-                            QIODevice::Truncate)) {
-                        QTextStream stream(&file);
-                        stream.setCodec("UTF-8");
-                        stream << u->content;
-                        file.close();
-
-                        //qDebug() << "InstalledPackages::detectOneControlPanelProgram "
-                        //        "setting path for " << pv->toString() << " to" << dir;
-                        InstalledPackageVersion* ipv2 =
-                                this->findOrCreate(ipv->package, ipv->version,
-                                &err);
-
-                        // qDebug() << "detect3rdparty 2: " << err;
-
-                        if (!err.isEmpty())
-                            break;
-
-                        ipv2->detectionInfo = ipv->detectionInfo;
-                        ipv2->setPath(path);
-                        err = this->saveToRegistry(ipv2);
-
-                        if (!err.isEmpty())
-                            break;
-                    }
-                }
-            }
+            processOneInstalled3rdParty(ipv);
         }
     }
 
@@ -218,6 +150,87 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
     // timer.dump();
 
     return err;
+}
+
+void InstalledPackages::processOneInstalled3rdParty(
+        InstalledPackageVersion* ipv)
+{
+    QString err;
+
+    QDir d;
+
+    AbstractRepository* r = AbstractRepository::getDefault_();
+    QScopedPointer<PackageVersion> pv(
+            r->findPackageVersion_(ipv->package, ipv->version, &err));
+
+    if (err.isEmpty()) {
+        if (!pv) {
+            err = "Cannot find the package version " + ipv->package + " " +
+                    ipv->version.getVersionString();
+        }
+    }
+
+    PackageVersionFile* u = 0;
+    if (err.isEmpty()) {
+        // qDebug() << "    1";
+
+        u = pv->findFile(".Npackd\\Uninstall.bat");
+    }
+
+    QString path = ipv->directory;
+
+    // special case: we don't know where the package is installed and we
+    // don't know how to remove it
+    if (err.isEmpty() && ipv->directory.isEmpty() && u == 0 && pv) {
+        u = new PackageVersionFile(".Npackd\\Uninstall.bat",
+                "echo no removal procedure for this package is available"
+                "\r\n"
+                "exit 1"  "\r\n");
+        pv->files.append(u);
+    }
+
+    if (err.isEmpty() && path.isEmpty()) {
+        // qDebug() << "    2";
+
+        Package* p = r->findPackage_(ipv->package);
+
+        path = WPMUtils::normalizePath(WPMUtils::getInstallationDirectory()) +
+                "\\NpackdDetected\\" +
+                WPMUtils::makeValidFilename(p ? p->title : ipv->package, '_');
+        if (d.exists(path)) {
+            path = WPMUtils::findNonExistingFile(path + "-" +
+                    ipv->version.getVersionString(), "");
+        }
+        d.mkpath(path);
+        delete p;
+    }
+
+    if (err.isEmpty() && u != 0 && d.exists(path)) {
+        // qDebug() << "    3";
+        if (d.mkpath(path + "\\.Npackd")) {
+            QFile file(path + "\\.Npackd\\Uninstall.bat");
+            if (file.open(QIODevice::WriteOnly |
+                    QIODevice::Truncate)) {
+                QTextStream stream(&file);
+                stream.setCodec("UTF-8");
+                stream << u->content;
+                file.close();
+            }
+        }
+    }
+
+    InstalledPackageVersion* ipv2 = 0;
+    if (err.isEmpty()) {
+        // qDebug() << "    4";
+        ipv2 = this->findOrCreate(ipv->package, ipv->version, &err);
+    }
+
+    if (err.isEmpty()) {
+        // qDebug() << "    5";
+        ipv2->detectionInfo = ipv->detectionInfo;
+        ipv2->setPath(path);
+        this->saveToRegistry(ipv2);
+    }
 }
 
 InstalledPackageVersion* InstalledPackages::findOrCreate(const QString& package,
@@ -683,7 +696,9 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
     WindowsRegistry machineWR(HKEY_LOCAL_MACHINE, false);
     QString r;
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";
-    QString pn = ipv->package + "-" + ipv->version.getVersionString();
+    Version v = ipv->version;
+    v.normalize();
+    QString pn = ipv->package + "-" + v.getVersionString();
 
     /*WPMUtils::outputTextConsole(
             "InstalledPackages::saveToRegistry " + ipv->directory + " " +
