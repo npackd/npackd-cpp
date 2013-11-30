@@ -733,4 +733,3 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
 
     return r;
 }
-
