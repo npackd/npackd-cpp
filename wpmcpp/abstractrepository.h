@@ -130,8 +130,10 @@ public:
      * @brief processes the given operatios
      * @param job job
      * @param install operations that should be performed
+     * @param programCloseType how to close running applications
      */
-    void process(Job* job, const QList<InstallOperation*> &install);
+    void process(Job* job, const QList<InstallOperation*> &install,
+            DWORD programCloseType);
 
     /**
      * Finds all installed package versions.

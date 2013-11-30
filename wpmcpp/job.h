@@ -142,7 +142,7 @@ public:
 
     /**
      * This must be called in order to complete the job regardless of
-     * setProgress.
+     * setProgress, errors or cancellation state.
      *
      * @threadsafe
      */

@@ -112,7 +112,7 @@ public:
      * @param name name of the option
      * @return value of the option or QString::Null if not present
      */
-    QString get(const QString& name);
+    QString get(const QString& name) const;
 
     /**
      * @param name name of the option

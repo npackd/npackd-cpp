@@ -46,6 +46,24 @@ void SettingsFrame::on_buttonBox_accepted()
 {
 }
 
+void SettingsFrame::setCloseProcessType(DWORD v)
+{
+    this->ui->checkBoxCloseWindows->setChecked(v &
+            WPMUtils::CLOSE_WINDOW);
+    this->ui->checkBoxKillProcesses->setChecked(v &
+            WPMUtils::KILL_PROCESS);
+}
+
+DWORD SettingsFrame::getCloseProcessType()
+{
+    DWORD cpt = 0;
+    if (this->ui->checkBoxCloseWindows->isChecked())
+        cpt |= WPMUtils::CLOSE_WINDOW;
+    if (this->ui->checkBoxKillProcesses->isChecked())
+        cpt |= WPMUtils::KILL_PROCESS;
+    return cpt;
+}
+
 void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
 {
     MainWindow* mw = MainWindow::getInstance();
@@ -117,6 +135,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         if (err.isEmpty()) {
             WPMUtils::setInstallationDirectory(getInstallationDirectory());
             Repository::setRepositoryURLs(urls, &err);
+            WPMUtils::setCloseProcessType(getCloseProcessType());
             if (err.isEmpty()) {
                 mw->closeDetailTabs();
                 mw->recognizeAndLoadRepositories(false);

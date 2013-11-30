@@ -12,6 +12,7 @@
 #include <initguid.h>
 #include <ole2.h>
 #include <wchar.h>
+#include <limits>
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -241,6 +242,296 @@ void WPMUtils::setInstallationDirectory(const QString& dir)
     if (err.isEmpty()) {
         npackd.set("path", dir);
     }
+}
+
+void WPMUtils::setCloseProcessType(DWORD cpt)
+{
+    WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+    QString err;
+    WindowsRegistry npackd = m.createSubKey("Software\\Npackd\\Npackd", &err,
+            KEY_ALL_ACCESS);
+    if (err.isEmpty()) {
+        npackd.setDWORD("closeProcessType", cpt);
+    }
+}
+
+DWORD WPMUtils::getCloseProcessType()
+{
+    DWORD cpt = CLOSE_WINDOW;
+
+    WindowsRegistry npackd;
+    QString err = npackd.open(
+            HKEY_LOCAL_MACHINE, "Software\\Npackd\\Npackd", false, KEY_READ);
+    if (err.isEmpty()) {
+        DWORD v = npackd.getDWORD("closeProcessType", &err);
+        if (err.isEmpty())
+            cpt = v;
+    }
+
+    return cpt;
+}
+
+BOOL CALLBACK myEnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+    QList<HWND>* p = (QList<HWND>*) lParam;
+    p->append(hwnd);
+    return TRUE;
+}
+
+QList<HWND> WPMUtils::findTopWindows()
+{
+    QList<HWND> r;
+    EnumWindows(myEnumWindowsProc, (LPARAM) &r);
+    return r;
+}
+
+QList<HWND> WPMUtils::findProcessTopWindows(DWORD processID)
+{
+    QList<HWND> r;
+
+    QList<HWND> tws = findTopWindows();
+
+    for (int i = 0; i < tws.size(); i++) {
+        DWORD pid;
+        if (GetWindowThreadProcessId(tws[i], &pid) && pid == processID) {
+            r.append(tws.at(i));
+        }
+    }
+
+    return r;
+}
+
+bool WPMUtils::isProcessRunning(HANDLE process)
+{
+    bool r = false;
+    DWORD ec;
+    if (GetExitCodeProcess(process, &ec)) {
+        // qDebug() << "exit code" << ec << STILL_ACTIVE;
+        if (ec == STILL_ACTIVE) {
+            r = true;
+        }
+    }
+    return r;
+}
+
+void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
+        DWORD cpt)
+{
+    if (cpt == 0)
+        return;
+
+    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
+
+    if (cpt & CLOSE_WINDOW) {
+        for (int i = 0; i < ps.size(); i++) {
+            HANDLE p = ps.at(i);
+            QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
+            if (ws.size() > 0) {
+                closeProcessWindows(p, ws);
+            }
+        }
+    }
+
+    if (cpt & KILL_PROCESS) {
+        for (int i = 0; i < ps.size(); i++) {
+            HANDLE hProc = ps.at(i);
+            if (WPMUtils::isProcessRunning(hProc)) {
+                // TerminateProcess is asynchronous
+                if (TerminateProcess(hProc, 1000))
+                    WaitForSingleObject(hProc, 30000);
+            }
+        }
+    }
+
+    for (int i = 0; i < ps.size(); i++) {
+        CloseHandle(ps[i]);
+    }
+}
+
+QString WPMUtils::findFirstExeLockingDirectory(const QString &dir)
+{
+    QString r;
+
+    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
+
+    for (int i = 0; i < ps.size(); i++) {
+        r = WPMUtils::getProcessFile(ps.at(i));
+        if (!r.isEmpty())
+            break;
+    }
+
+    for (int i = 0; i < ps.size(); i++) {
+        CloseHandle(ps[i]);
+    }
+
+    return r;
+}
+
+void WPMUtils::closeProcessWindows(HANDLE process,
+        const QList<HWND>& processWindows)
+{
+    // start flashing
+    for (int i = 0; i < processWindows.size(); i++) {
+        HWND w = processWindows.at(i);
+        if (w != 0 && IsWindow(w) &&
+                GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
+                IsWindowVisible(w)) {
+            FLASHWINFO fwi = {};
+            fwi.cbSize = sizeof(fwi);
+            fwi.hwnd = w;
+            fwi.dwFlags = FLASHW_ALL | FLASHW_TIMER;
+            fwi.uCount = std::numeric_limits<UINT>::max();
+            // qDebug() << "flash!";
+            FlashWindowEx(&fwi);
+        }
+    }
+
+    QList<HWND> ws = processWindows;
+    int old = ws.size();
+    while (true) {
+        int c = 0;
+        for (int i = 0; i < ws.size(); i++) {
+            HWND w = ws.at(i);
+            if (w) {
+                if (!IsWindow(w) ||
+                        GetAncestor(w, GA_PARENT) != GetDesktopWindow() ||
+                        !IsWindowVisible(w)) {
+                    ws[i] = 0;
+                } else {
+                    c++;
+                    if ((GetWindowLong(w, GWL_STYLE) & WS_DISABLED) == 0) {
+                        PostMessage(w, WM_CLOSE, 0, 0);
+                    }
+                }
+            }
+        }
+
+        if (old == c)
+            break;
+
+        old = c;
+    }
+
+    if (WPMUtils::isProcessRunning(process)) {
+        WaitForSingleObject(process, 30000);
+    }
+
+    // stop flashing
+    for (int i = 0; i < processWindows.size(); i++) {
+        HWND w = processWindows.at(i);
+        if (w != 0 && IsWindow(w) &&
+                GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
+                IsWindowVisible(w)) {
+            FLASHWINFO fwi = {};
+            fwi.cbSize = sizeof(fwi);
+            fwi.hwnd = w;
+            fwi.dwFlags = FLASHW_STOP;
+            fwi.uCount = std::numeric_limits<UINT>::max();
+            // qDebug() << "flash!";
+            FlashWindowEx(&fwi);
+        }
+    }
+}
+
+QString WPMUtils::getProcessFile(HANDLE hProcess)
+{
+    QString res;
+    res.resize(MAX_PATH + 1);
+    DWORD r = GetModuleFileNameEx(hProcess, 0, (LPWSTR) res.data(),
+            res.length());
+    if (r != 0) {
+        res.resize(r);
+    }
+
+    return res;
+}
+
+// see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx
+QVector<DWORD> WPMUtils::getProcessIDs()
+{
+    QVector<DWORD> r;
+
+    r.resize(100);
+    DWORD cb = r.size() * sizeof(DWORD);
+    DWORD cbneeded;
+    WINBOOL ok;
+    ok = EnumProcesses(r.data(), cb, &cbneeded);
+    if (!ok && cb < cbneeded) {
+        r.resize(cbneeded / sizeof(DWORD) + 1);
+        cb = r.size() * sizeof(DWORD);
+        ok = EnumProcesses(r.data(), cb, &cbneeded);
+    }
+    if (ok) {
+        r.resize(cbneeded / sizeof(DWORD));
+    }
+
+    return r;
+}
+
+QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
+{
+    QList<HANDLE> r;
+
+    OSVERSIONINFO osvi;
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    GetVersionEx(&osvi);
+
+    // >= Windows Vista
+    if (osvi.dwMajorVersion >= 6) {
+        BOOL WINAPI (*lpfQueryFullProcessImageName)(
+                HANDLE, DWORD, LPTSTR, PDWORD);
+
+        HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
+        lpfQueryFullProcessImageName =
+                (BOOL (WINAPI*) (HANDLE, DWORD, LPTSTR, PDWORD))
+                GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
+
+        DWORD aiPID[1000], iCb = 1000;
+        DWORD iCbneeded;
+        if (!EnumProcesses(aiPID, iCb, &iCbneeded)) {
+            FreeLibrary(hInstLib);
+            return r;
+        }
+
+        // How many processes are there?
+        int iNumProc = iCbneeded / sizeof(DWORD);
+
+        // Get and match the name of each process
+        for (int i = 0; i < iNumProc; i++) {
+            // First, get a handle to the process
+            HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, aiPID[i]);
+
+            // Now, get the process name
+            if (hProc) {
+                HMODULE hMod;
+                if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
+                    if (iCbneeded != 0) {
+                        HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
+                        if (EnumProcessModules(hProc, modules, iCbneeded,
+                                &iCbneeded)) {
+                            DWORD len = MAX_PATH;
+                            WCHAR szName[MAX_PATH];
+                            if (lpfQueryFullProcessImageName(hProc, 0, szName,
+                                    &len)) {
+                                QString s;
+                                s.setUtf16((ushort*) szName, len);
+                                if (WPMUtils::pathEquals(s, dir) ||
+                                        WPMUtils::isUnder(s, dir)) {
+                                    r.append(hProc);
+                                    hProc = 0;
+                                }
+                            }
+                        }
+                        delete[] modules;
+                    }
+                }
+                if (hProc)
+                    CloseHandle(hProc);
+            }
+        }
+        FreeLibrary(hInstLib);
+    }
+    return r;
 }
 
 // see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx
@@ -681,6 +972,16 @@ QString WPMUtils::findCmdExe()
         }
     }
     return r;
+}
+
+QString WPMUtils::getExeFile()
+{
+    TCHAR path[MAX_PATH];
+    GetModuleFileName(0, path, sizeof(path) / sizeof(path[0]));
+    QString r;
+    r.setUtf16((ushort*) path, wcslen(path));
+
+    return r.replace('/', '\\');
 }
 
 QString WPMUtils::getExeDir()
