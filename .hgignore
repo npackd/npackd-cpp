@@ -73,6 +73,7 @@ wpmcpp-x86_64/
 ^wpmcpp/GProf32\.txt$
 ^npackdcl-i686-test/
 ^npackdgo/
+^wpmcpp/#wpmutils\.h#$
 syntax: glob
 ^convert-maven/archetype-catalog.xml
 convert-maven/archetype-catalog.xml
