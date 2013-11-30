@@ -1097,7 +1097,8 @@ void DBRepository::updateF5(Job* job)
         else
             job->setProgress(0.35);
     } else {
-        exec("ROLLBACK");
+        QString err = exec("ROLLBACK");
+        qDebug() << err;
     }
 
     timer.time(3);
