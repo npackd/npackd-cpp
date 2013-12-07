@@ -1441,6 +1441,9 @@ QString DBRepository::open()
     db.open();
     err = toString(db.lastError());
 
+    if (err.isEmpty())
+        err = exec("PRAGMA busy_timeout = 30000");
+
     bool e = false;
     if (err.isEmpty()) {
         e = tableExists(&db, "PACKAGE", &err);

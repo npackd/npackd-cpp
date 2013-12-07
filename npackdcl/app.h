@@ -30,8 +30,6 @@ private:
      */
     QString addNpackdCL();
 
-    int getProgramCloseType(const CommandLine &cl, QString *err);
-
     void usage();
     QString path();
     QString add();
@@ -47,20 +45,10 @@ private:
     QString which();
     QString check();
 
-    QList<PackageVersion *> getPackageVersionOptions(const CommandLine &cl,
-            QString *err, bool add);
     bool confirm(const QList<InstallOperation *> ops, QString *title,
             QString *err);
     QString printDependencies(bool onlyInstalled,
             const QString parentPrefix, int level, PackageVersion *pv);
-
-    /**
-     * @param package full or short package name
-     * @param err error message will be stored here
-     * @return [ownership:caller] found package or 0. The returned value is
-     *     only 0 if the error is not empty
-     */
-    Package *findOnePackage(const QString &package, QString *err);
 public:
     /**
      * Process the command line.

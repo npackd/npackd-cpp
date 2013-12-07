@@ -13,7 +13,6 @@
 #include <QDomDocument>
 #include <QMutex>
 #include <zlib.h>
-#include <QApplication>
 
 #include "quazip.h"
 #include "quazipfile.h"
@@ -292,36 +291,48 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
     Version myVersion(NPACKD_VERSION);
     if (this->package == myPackage && this->version == myVersion) {
         if (WPMUtils::pathEquals(WPMUtils::getExeDir(), getPath())) {
+            // 1. copy .exe to the temporary directory
+            QTemporaryFile of(QDir::tempPath() +
+                              "\\npackdgXXXXXX.exe");
+            // qDebug() << "1";
+            of.setAutoRemove(false);
+            // qDebug() << "2";
+            of.open(); // TODO: return value
+            QString newExe = of.fileName();
+            // qDebug() << "3";
+            of.remove(); // TODO: return value
+            //qDebug() << "4";
+            of.close();
+            // qDebug() << "5" << WPMUtils::getExeFile() << newExe;
+
+            // TODO: use the actual file name instead of npackdg.exe
+            QFile::copy(WPMUtils::getExeFile(),
+                    newExe); // TODO: return value
+            // qDebug() << "6";
+
             if (myPackage == "com.googlecode.windows-package-manager.Npackd" ||
                     myPackage == "com.googlecode.windows-package-manager.Npackd64") {
                 // npackdg
-                // 1. copy .exe to the temporary directory
-                QTemporaryFile of(QDir::tempPath() +
-                                  "\\npackdgXXXXXX.exe");
-                qDebug() << "1";
-                of.setAutoRemove(false);
-                qDebug() << "2";
-                of.open(); // TODO: return value
-                QString newExe = of.fileName();
-                qDebug() << "3";
-                of.remove(); // TODO: return value
-                qDebug() << "4";
-                of.close();
-                qDebug() << "5" << WPMUtils::getExeFile() << newExe;
-
-                // TODO: use the actual file name instead of npackdg.exe
-                QFile::copy(WPMUtils::getExeFile(),
-                        newExe); // TODO: return value
-                qDebug() << "6";
-                qDebug() << "7";
-
-                // 2. start the .exe
-                QProcess::startDetached(newExe);
+                QStringList args;
+                args.append("remove");
+                args.append("--package");
+                args.append(myPackage);
+                args.append("--version");
+                args.append(myVersion.getVersionString());
+                QProcess::startDetached(newExe, args);
 
                 return;
             } else {
                 // npackdcl
-                // TODO
+                QStringList args;
+                args.append("remove");
+                args.append("--package");
+                args.append(myPackage);
+                args.append("--version");
+                args.append(myVersion.getVersionString());
+                QProcess::startDetached(newExe, args);
+
+                return;
             }
         }
     }

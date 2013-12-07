@@ -10,6 +10,9 @@
 
 #include "job.h"
 #include "version.h"
+#include "commandline.h"
+#include "packageversion.h"
+#include "package.h"
 
 /**
  * Some utility methods.
@@ -458,6 +461,33 @@ public:
      * @return how the programs should be closed
      */
     static DWORD getCloseProcessType();
+
+    /**
+     * @brief parses the command line and returns the chosen program close type
+     * @param cl command line
+     * @param err error message will be stored here
+     * @return program close type
+     */
+    static int getProgramCloseType(const CommandLine &cl, QString *err);
+
+    /**
+     * @brief parses the command line and returns the list of chosen package
+     *     versions
+     * @param cl command line
+     * @param err errors will be stored here
+     * @param add true = installing packages, false = removing packages
+     * @return [owner:caller] list of package versions
+     */
+    static QList<PackageVersion *> getPackageVersionOptions(
+            const CommandLine &cl, QString *err, bool add);
+
+    /**
+     * @param package full or short package name
+     * @param err error message will be stored here
+     * @return [ownership:caller] found package or 0. The returned value is
+     *     only 0 if the error is not empty
+     */
+    static Package *findOnePackage(const QString &package, QString *err);
 };
 
 #endif // WPMUTILS_H

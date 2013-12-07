@@ -211,6 +211,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
+    commandLineProcessed = false;
+
     this->setMenuAccelerators();
     this->setActionAccelerators(this);
 
@@ -585,6 +587,46 @@ void MainWindow::prepare()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(onShow()));
 
     pTimer->start(0);
+
+    cl.add("package", 'p',
+            "internal package name (e.g. com.example.Editor or just Editor)",
+            "package", true);
+    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
+            "range", false);
+    cl.add("version", 'v', "version number (e.g. 1.5.12)",
+            "version", false);
+    cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
+            "repository", false);
+    cl.add("status", 's', "filters package versions by status",
+            "status", false);
+    cl.add("bare-format", 'b', "bare format (no heading or summary)",
+            "", false);
+    cl.add("query", 'q', "search terms (e.g. editor)",
+            "search terms", false);
+    cl.add("debug", 'd', "turn on the debug output", "", false);
+    cl.add("file", 'f', "file or directory", "file", false);
+    cl.add("end-process", 'e',
+        "comma separated list of ways to close running applications (windows, kill)",
+        "list", false);
+
+    commandLineParsingError = cl.parse();
+
+    // cl.dump();
+
+    /* TODO
+    if (cl.isPresent("debug")) {
+        clp.setUpdateRate(0);
+    }
+    */
+
+    QStringList fr = cl.getFreeArguments();
+
+    if (fr.count() == 1) {
+        commandLineCommand = fr.at(0);
+    } else if (fr.count() > 1) {
+        commandLineParsingError = QObject::tr("Unexpected argument: %1").
+                arg(fr.at(1));
+    }
 }
 
 void MainWindow::updateProgressTabTitle()
@@ -682,7 +724,7 @@ void MainWindow::onShow()
     DBRepository* dbr = DBRepository::getDefault();
     QString err = dbr->open();
     if (err.isEmpty())
-        recognizeAndLoadRepositories(false);
+        recognizeAndLoadRepositories(true);
     else
         this->addErrorMessage(err, err, true, QMessageBox::Critical);
 }
@@ -1410,6 +1452,63 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 
     this->reloadRepositoriesThreadRunning = false;
     updateActions();
+
+
+    if (!commandLineProcessed) {
+        commandLineProcessed = true;
+
+        if (commandLineParsingError.isEmpty()) {
+            if (commandLineCommand == "remove" || commandLineCommand == "rm") {
+                remove();
+            }
+
+            /* TODO
+            const QString cmd = fr.at(0);
+            QString err;
+            if (cmd == "remove") {
+                QMessageBox::critical(this, "Error", "Removing!");
+            * TODO:
+            if (cmd == "help") {
+                usage();
+            } else if (cmd == "path") {
+                err = path();
+            } else if (cmd == "remove" || cmd == "rm") {
+                err = remove();
+            } else if (cmd == "add") {
+                err = add();
+            } else if (cmd == "add-repo") {
+                err = addRepo();
+            } else if (cmd == "remove-repo") {
+                err = removeRepo();
+            } else if (cmd == "list-repos") {
+                err = listRepos();
+            } else if (cmd == "search") {
+                err = search();
+            } else if (cmd == "check") {
+                err = check();
+            } else if (cmd == "which") {
+                err = which();
+            } else if (cmd == "list") {
+                err = list();
+            } else if (cmd == "info") {
+                err = info();
+            } else if (cmd == "update") {
+                err = update();
+            } else if (cmd == "detect") {
+                err = detect();
+            } else {
+                err = "Wrong command: " + cmd + ". Try npackdcl help";
+            }
+
+            if (!err.isEmpty())
+                QMessageBox::critical(this, "Error", err);
+                */
+        } else {
+            QString msg = QObject::tr("Error parsing the command line: %1").
+                    arg(commandLineParsingError);
+            addErrorMessage(msg, msg, true, QMessageBox::Critical);
+        }
+    }
 }
 
 QList<void*> MainWindow::getSelected(const QString& type) const
@@ -1969,4 +2068,71 @@ void MainWindow::openURL(const QUrl& url) {
     if (!QDesktopServices::openUrl(url))
         this->addErrorMessage(QObject::tr("Cannot open the URL %1").
                 arg(url.toString()));
+}
+
+QString MainWindow::remove()
+{
+    QString err;
+
+    /* TODO:
+    int programCloseType = WPMUtils::CLOSE_WINDOW;
+
+    programCloseType = WPMUtils::getProgramCloseType(cl, &err);
+    */
+
+    QList<PackageVersion*> toRemove;
+    if (err.isEmpty()) {
+        toRemove =
+                WPMUtils::getPackageVersionOptions(cl, &err, false);
+    }
+
+    QList<PackageVersion*> installed;
+    if (err.isEmpty()) {
+        installed = AbstractRepository::getDefault_()->getInstalled_(&err);
+    }
+
+    QList<InstallOperation*> ops;
+    if (err.isEmpty()) {
+        for (int i = 0; i < toRemove.count(); i++) {
+            PackageVersion* pv = toRemove.at(i);
+            err = pv->planUninstallation(installed, ops);
+            if (!err.isEmpty())
+                break;
+        }
+    }
+
+    if (err.isEmpty())
+        process(ops);
+    else
+        addErrorMessage(err, err, true, QMessageBox::Critical);
+
+    qDeleteAll(installed);
+    qDeleteAll(toRemove);
+
+    /* TODO
+     *confirmation. This is not yet enabled in order to maintain the
+     * compatibility.
+    if (job->shouldProceed()) {
+        QString title;
+        QString err;
+        if (!confirm(ops, &title, &err))
+            job->cancel();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+    */
+
+
+/* TODO: command line removing
+    if (job->shouldProceed("Removing")) {
+        Job* removeJob = job->newSubJob(0.9);
+        rep->process(removeJob, ops, programCloseType);
+        if (!removeJob->getErrorMessage().isEmpty())
+            job->setErrorMessage(QString("Error removing: %1\n").
+                    arg(removeJob->getErrorMessage()));
+        delete removeJob;
+    }
+*/
+
+    return err;
 }
