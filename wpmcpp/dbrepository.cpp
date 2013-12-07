@@ -667,6 +667,8 @@ int DBRepository::insertCategory(int parent, int level,
         }
     }
 
+    selectCategoryQuery->finish();
+
     return id;
 }
 
@@ -768,7 +770,10 @@ QString DBRepository::savePackage(Package *p, bool replace)
             savePackageQuery->bindValue(":CATEGORY4", cat4);
         if (!savePackageQuery->exec())
             err = toString(savePackageQuery->lastError());
+
     }
+
+    savePackageQuery->finish();
 
     return err;
 }
@@ -869,6 +874,8 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         if (!savePackageVersionQuery->exec())
             err = toString(savePackageVersionQuery->lastError());
     }
+
+    savePackageVersionQuery->finish();
 
     return err;
 }

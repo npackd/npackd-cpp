@@ -322,12 +322,16 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
 
+    DWORD me = GetCurrentProcessId();
+
     if (cpt & CLOSE_WINDOW) {
         for (int i = 0; i < ps.size(); i++) {
             HANDLE p = ps.at(i);
-            QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
-            if (ws.size() > 0) {
-                closeProcessWindows(p, ws);
+            if (GetProcessId(p) != me) {
+                QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
+                if (ws.size() > 0) {
+                    closeProcessWindows(p, ws);
+                }
             }
         }
     }
@@ -335,7 +339,8 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     if (cpt & KILL_PROCESS) {
         for (int i = 0; i < ps.size(); i++) {
             HANDLE hProc = ps.at(i);
-            if (WPMUtils::isProcessRunning(hProc)) {
+            if (GetProcessId(hProc) != me &&
+                    WPMUtils::isProcessRunning(hProc)) {
                 // TerminateProcess is asynchronous
                 if (TerminateProcess(hProc, 1000))
                     WaitForSingleObject(hProc, 30000);

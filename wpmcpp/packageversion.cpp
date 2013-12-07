@@ -13,6 +13,7 @@
 #include <QDomDocument>
 #include <QMutex>
 #include <zlib.h>
+#include <QApplication>
 
 #include "quazip.h"
 #include "quazipfile.h"
@@ -297,26 +298,30 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
                 // 1. copy .exe to the temporary directory
                 QTemporaryFile of(QDir::tempPath() +
                                   "\\npackdgXXXXXX.exe");
+                qDebug() << "1";
                 of.setAutoRemove(false);
-                of.close();
+                qDebug() << "2";
+                of.open(); // TODO: return value
+                QString newExe = of.fileName();
+                qDebug() << "3";
                 of.remove(); // TODO: return value
+                qDebug() << "4";
+                of.close();
+                qDebug() << "5" << WPMUtils::getExeFile() << newExe;
 
                 // TODO: use the actual file name instead of npackdg.exe
                 QFile::copy(WPMUtils::getExeFile(),
-                        of.fileName()); // TODO: return value
+                        newExe); // TODO: return value
+                qDebug() << "6";
+                qDebug() << "7";
 
                 // 2. start the .exe
-                QProcess p(0);
-                QStringList args;
-                p.start(of.fileName(), args);
-                p.waitForStarted(); // TODO: return value
+                QProcess::startDetached(newExe);
 
-                // 3. exit this process
-                // TODO: is it better to block the UI?
-                exit(0);
+                return;
             } else {
                 // npackdcl
-                //
+                // TODO
             }
         }
     }
