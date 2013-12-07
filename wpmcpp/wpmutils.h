@@ -434,7 +434,8 @@ public:
     static QList<HWND> findTopWindows();
 
     /**
-     * @brief closes all processes that lock the specified directory
+     * @brief closes all processes that lock the specified directory. This
+     *     function ignores the current process.
      * @param dir a directory
      */
     static void closeProcessesThatUseDirectory(const QString& dir,
