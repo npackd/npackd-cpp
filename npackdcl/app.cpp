@@ -654,7 +654,7 @@ QString App::path()
 
     if (job->shouldProceed()) {
         QString err;
-        p = findOnePackage(package, &err);
+        p = WPMUtils::findOnePackage(package, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else if (!p)
@@ -712,7 +712,7 @@ QString App::update()
     int programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
-        programCloseType = getProgramCloseType(cl, &err);
+        programCloseType = WPMUtils::getProgramCloseType(cl, &err);
         if (!err.isEmpty()) {
             job->setErrorMessage(err);
         }
@@ -820,163 +820,6 @@ QString App::update()
     return r;
 }
 
-Package* App::findOnePackage(const QString& package, QString* err)
-{
-    Package* p = 0;
-
-    AbstractRepository* rep = AbstractRepository::getDefault_();
-    if (package.contains('.')) {
-        p = rep->findPackage_(package);
-        if (!p) {
-            *err = "Unknown package: " + package;
-        }
-    } else {
-        QList<Package*> packages = rep->findPackagesByShortName(package);
-
-        if (packages.count() == 0) {
-            *err = "Unknown package: " + package;
-        } else if (packages.count() > 1) {
-            QString names;
-            for (int i = 0; i < packages.count(); ++i) {
-                if (i != 0)
-                    names.append(", ");
-                Package* pi = packages.at(i);
-                names.append(pi->title).append(" (").append(pi->name).
-                        append(")");
-            }
-            *err = QString("Move than one package was found: %1").arg(names);
-            qDeleteAll(packages);
-        } else {
-            p = packages.at(0);
-        }
-    }
-
-    return p;
-}
-
-QList<PackageVersion*> App::getPackageVersionOptions(const CommandLine& cl,
-        QString* err, bool add)
-{
-    QList<PackageVersion*> ret;
-    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
-
-    AbstractRepository* rep = AbstractRepository::getDefault_();
-
-    for (int i = 0; i < pos.size(); i++) {
-        if (!err->isEmpty())
-            break;
-
-        CommandLine::ParsedOption* po = pos.at(i);
-        if (po->opt->nameMathes("package")) {
-            CommandLine::ParsedOption* ponext = 0;
-            if (i + 1 < pos.size())
-                ponext = pos.at(i + 1);
-
-            QString package = po->value;
-            if (!Package::isValidName(package)) {
-                *err = "Invalid package name: " + package;
-            }
-
-            Package* p = 0;
-            if (err->isEmpty()) {
-                p = findOnePackage(package, err);
-                if (err->isEmpty()) {
-                    if (!p)
-                        *err = QString("Unknown package: %1").arg(package);
-                }
-            }
-
-            PackageVersion* pv = 0;
-            if (err->isEmpty()) {
-                QString version;
-                if (ponext != 0 && ponext->opt->nameMathes("version"))
-                    version = ponext->value;
-                if (version.isNull()) {
-                    if (add) {
-                        pv = rep->findNewestInstallablePackageVersion_(
-                                p->name, err);
-                        if (err->isEmpty()) {
-                            if (!pv) {
-                                *err = QString("No installable version was found for the package %1 (%2)").
-                                        arg(p->title).arg(p->name);
-                            }
-                        }
-                    } else {
-                        QList<InstalledPackageVersion*> ipvs =
-                                InstalledPackages::getDefault()->getByPackage(p->name);
-                        if (ipvs.count() == 0) {
-                            *err = QString(
-                                    "Package %1 (%2) is not installed").
-                                    arg(p->title).arg(p->name);
-                        } else if (ipvs.count() > 1) {
-                            QString vns;
-                            for (int i = 0; i < ipvs.count(); i++) {
-                                InstalledPackageVersion* ipv = ipvs.at(i);
-                                if (!vns.isEmpty())
-                                    vns.append(", ");
-                                vns.append(ipv->version.getVersionString());
-                            }
-                            *err = QString(
-                                    "More than one version of the package %1 (%2) "
-                                    "is installed: %3").arg(p->title).arg(p->name).
-                                    arg(vns);
-                        } else {
-                            pv = rep->findPackageVersion_(p->name,
-                                    ipvs.at(0)->version, err);
-                            if (err->isEmpty()) {
-                                if (!pv) {
-                                    *err = QString("Package version not found: %1 (%2) %3").
-                                            arg(p->title).arg(p->name).arg(version);
-                                }
-                            }
-                        }
-                        qDeleteAll(ipvs);
-                    }
-                } else {
-                    i++;
-                    Version v;
-                    if (!v.setVersion(version)) {
-                        *err = "Cannot parse version: " + version;
-                    } else {
-                        pv = rep->findPackageVersion_(p->name, version,
-                                err);
-                        if (err->isEmpty()) {
-                            if (!pv) {
-                                *err = QString("Package version not found: %1 (%2) %3").
-                                        arg(p->title).arg(p->name).arg(version);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (err->isEmpty()) {
-                if (add) {
-                    if (pv->installed()) {
-                        WPMUtils::outputTextConsole(QString(
-                                "%1 is already installed in %2").
-                                arg(pv->toString()).
-                                arg(pv->getPath()) + "\n");
-                    }
-                } else {
-                    if (!pv->installed()) {
-                        WPMUtils::outputTextConsole(QString(
-                                "%1 is not installed").
-                                arg(pv->toString()) + "\n");
-                    }
-                }
-            }
-
-            if (pv)
-                ret.append(pv);
-
-            delete p;
-        }
-    }
-
-    return ret;
-}
-
 QString App::add()
 {
     Job* job = clp.createJob();
@@ -991,7 +834,8 @@ QString App::add()
     }
 
     QString err;
-    QList<PackageVersion*> toInstall = getPackageVersionOptions(cl, &err, true);
+    QList<PackageVersion*> toInstall =
+            WPMUtils::getPackageVersionOptions(cl, &err, true);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
@@ -1162,31 +1006,6 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
     return b;
 }
 
-int App::getProgramCloseType(const CommandLine& cl, QString* err)
-{
-    int r = WPMUtils::CLOSE_WINDOW;
-    QString v = cl.get("end-process");
-    if (!v.isNull()) {
-        r = 0;
-        QStringList sl = v.split(',');
-        if (sl.count() == 0) {
-            *err = "Empty list of program close types";
-        } else {
-            for (int i = 0; i < sl.count(); i++) {
-                QString t = sl.at(i);
-                if (t == "windows")
-                    r |= WPMUtils::CLOSE_WINDOW;
-                else if (t == "kill")
-                    r |= WPMUtils::KILL_PROCESS;
-                else
-                    *err = QString(
-                            "Invalid program close type: %1").arg(t);
-            }
-        }
-    }
-    return r;
-}
-
 QString App::remove()
 {
     Job* job = clp.createJob();
@@ -1205,14 +1024,15 @@ QString App::remove()
     int programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
-        programCloseType = getProgramCloseType(cl, &err);
+        programCloseType = WPMUtils::getProgramCloseType(cl, &err);
         if (!err.isEmpty()) {
             job->setErrorMessage(err);
         }
     }
 
     QString err;
-    QList<PackageVersion*> toRemove = getPackageVersionOptions(cl, &err, false);
+    QList<PackageVersion*> toRemove =
+            WPMUtils::getPackageVersionOptions(cl, &err, false);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
@@ -1306,7 +1126,7 @@ QString App::info()
     DBRepository* rep = DBRepository::getDefault();
     Package* p = 0;
     if (r.isEmpty()) {
-        p = this->findOnePackage(package, &r);
+        p = WPMUtils::findOnePackage(package, &r);
     }
 
     Version v;

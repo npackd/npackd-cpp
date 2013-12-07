@@ -28,6 +28,9 @@
 #include "version.h"
 #include "windowsregistry.h"
 #include "mstask.h"
+#include "abstractrepository.h"
+#include "package.h"
+#include "installedpackages.h"
 
 const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
 
@@ -1486,5 +1489,189 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
         }
         psl->Release();
     }
+}
+
+int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
+{
+    int r = WPMUtils::CLOSE_WINDOW;
+    QString v = cl.get("end-process");
+    if (!v.isNull()) {
+        r = 0;
+        QStringList sl = v.split(',');
+        if (sl.count() == 0) {
+            *err = QObject::tr("Empty list of program close types");
+        } else {
+            for (int i = 0; i < sl.count(); i++) {
+                QString t = sl.at(i);
+                if (t == "windows")
+                    r |= WPMUtils::CLOSE_WINDOW;
+                else if (t == "kill")
+                    r |= WPMUtils::KILL_PROCESS;
+                else
+                    *err = QObject::tr(
+                            "Invalid program close type: %1").arg(t);
+            }
+        }
+    }
+    return r;
+}
+
+QList<PackageVersion*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
+        QString* err, bool add)
+{
+    QList<PackageVersion*> ret;
+    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
+
+    AbstractRepository* rep = AbstractRepository::getDefault_();
+
+    for (int i = 0; i < pos.size(); i++) {
+        if (!err->isEmpty())
+            break;
+
+        CommandLine::ParsedOption* po = pos.at(i);
+        if (po->opt->nameMathes("package")) {
+            CommandLine::ParsedOption* ponext = 0;
+            if (i + 1 < pos.size())
+                ponext = pos.at(i + 1);
+
+            QString package = po->value;
+            if (!Package::isValidName(package)) {
+                *err = QObject::tr("Invalid package name: %1").arg(package);
+            }
+
+            Package* p = 0;
+            if (err->isEmpty()) {
+                p = findOnePackage(package, err);
+                if (err->isEmpty()) {
+                    if (!p)
+                        *err = QObject::tr("Unknown package: %1").arg(package);
+                }
+            }
+
+            PackageVersion* pv = 0;
+            if (err->isEmpty()) {
+                QString version;
+                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                    version = ponext->value;
+                if (version.isNull()) {
+                    if (add) {
+                        pv = rep->findNewestInstallablePackageVersion_(
+                                p->name, err);
+                        if (err->isEmpty()) {
+                            if (!pv) {
+                                *err = QObject::tr("No installable version was found for the package %1 (%2)").
+                                        arg(p->title).arg(p->name);
+                            }
+                        }
+                    } else {
+                        QList<InstalledPackageVersion*> ipvs =
+                                InstalledPackages::getDefault()->getByPackage(p->name);
+                        if (ipvs.count() == 0) {
+                            *err = QObject::tr(
+                                    "Package %1 (%2) is not installed").
+                                    arg(p->title).arg(p->name);
+                        } else if (ipvs.count() > 1) {
+                            QString vns;
+                            for (int i = 0; i < ipvs.count(); i++) {
+                                InstalledPackageVersion* ipv = ipvs.at(i);
+                                if (!vns.isEmpty())
+                                    vns.append(", ");
+                                vns.append(ipv->version.getVersionString());
+                            }
+                            *err = QObject::tr(
+                                    "More than one version of the package %1 (%2) "
+                                    "is installed: %3").arg(p->title).arg(p->name).
+                                    arg(vns);
+                        } else {
+                            pv = rep->findPackageVersion_(p->name,
+                                    ipvs.at(0)->version, err);
+                            if (err->isEmpty()) {
+                                if (!pv) {
+                                    *err = QObject::tr("Package version not found: %1 (%2) %3").
+                                            arg(p->title).arg(p->name).arg(version);
+                                }
+                            }
+                        }
+                        qDeleteAll(ipvs);
+                    }
+                } else {
+                    i++;
+                    Version v;
+                    if (!v.setVersion(version)) {
+                        *err = QObject::tr("Cannot parse version: %1").
+                                arg(version);
+                    } else {
+                        pv = rep->findPackageVersion_(p->name, version,
+                                err);
+                        if (err->isEmpty()) {
+                            if (!pv) {
+                                *err = QObject::tr("Package version not found: %1 (%2) %3").
+                                        arg(p->title).arg(p->name).arg(version);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (err->isEmpty()) {
+                if (add) {
+                    if (pv->installed()) {
+                        WPMUtils::outputTextConsole(QObject::tr(
+                                "%1 is already installed in %2").
+                                arg(pv->toString()).
+                                arg(pv->getPath()) + "\n");
+                    }
+                } else {
+                    if (!pv->installed()) {
+                        WPMUtils::outputTextConsole(QObject::tr(
+                                "%1 is not installed").
+                                arg(pv->toString()) + "\n");
+                    }
+                }
+            }
+
+            if (pv)
+                ret.append(pv);
+
+            delete p;
+        }
+    }
+
+    return ret;
+}
+
+Package* WPMUtils::findOnePackage(const QString& package, QString* err)
+{
+    Package* p = 0;
+
+    AbstractRepository* rep = AbstractRepository::getDefault_();
+    if (package.contains('.')) {
+        p = rep->findPackage_(package);
+        if (!p) {
+            *err = QObject::tr("Unknown package: %1").arg(package);
+        }
+    } else {
+        QList<Package*> packages = rep->findPackagesByShortName(package);
+
+        if (packages.count() == 0) {
+            *err = QObject::tr("Unknown package: %1").arg(package);
+        } else if (packages.count() > 1) {
+            QString names;
+            for (int i = 0; i < packages.count(); ++i) {
+                if (i != 0)
+                    names.append(", ");
+                Package* pi = packages.at(i);
+                names.append(pi->title).append(" (").append(pi->name).
+                        append(")");
+            }
+            *err = QObject::tr("Move than one package was found: %1").
+                    arg(names);
+            qDeleteAll(packages);
+        } else {
+            p = packages.at(0);
+        }
+    }
+
+    return p;
 }
 
