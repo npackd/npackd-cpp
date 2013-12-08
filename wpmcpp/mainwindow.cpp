@@ -681,7 +681,7 @@ void MainWindow::onShow()
     DBRepository* dbr = DBRepository::getDefault();
     QString err = dbr->open();
     if (err.isEmpty())
-        recognizeAndLoadRepositories(false);
+        recognizeAndLoadRepositories(true);
     else
         this->addErrorMessage(err, err, true, QMessageBox::Critical);
 }
