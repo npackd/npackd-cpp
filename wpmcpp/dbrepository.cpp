@@ -667,6 +667,8 @@ int DBRepository::insertCategory(int parent, int level,
         }
     }
 
+    selectCategoryQuery->finish();
+
     return id;
 }
 
@@ -770,6 +772,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
             err = toString(savePackageQuery->lastError());
     }
 
+    savePackageQuery->finish();
+
     return err;
 }
 
@@ -869,6 +873,8 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         if (!savePackageVersionQuery->exec())
             err = toString(savePackageVersionQuery->lastError());
     }
+
+    savePackageVersionQuery->finish();
 
     return err;
 }
@@ -1433,6 +1439,9 @@ QString DBRepository::open()
     db.setDatabaseName(path);
     db.open();
     err = toString(db.lastError());
+
+    if (err.isEmpty())
+        err = exec("PRAGMA busy_timeout = 30000");
 
     bool e = false;
     if (err.isEmpty()) {
