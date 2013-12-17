@@ -1547,7 +1547,7 @@ p, li { white-space: pre-wrap; }
         <location filename="dbrepository.cpp" line="217"/>
         <location filename="dbrepository.cpp" line="258"/>
         <location filename="dbrepository.cpp" line="339"/>
-        <location filename="dbrepository.cpp" line="902"/>
+        <location filename="dbrepository.cpp" line="908"/>
         <location filename="repository.cpp" line="414"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>XML-анализатор завершился ошибкой в строке %1, колонке %2: %3</translation>
@@ -1558,53 +1558,53 @@ p, li { white-space: pre-wrap; }
         <translation>Прочёл испорченную версию пакета из базы данных: %1</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="926"/>
-        <location filename="dbrepository.cpp" line="1078"/>
-        <location filename="dbrepository.cpp" line="1167"/>
-        <location filename="dbrepository.cpp" line="1218"/>
+        <location filename="dbrepository.cpp" line="932"/>
+        <location filename="dbrepository.cpp" line="1084"/>
+        <location filename="dbrepository.cpp" line="1173"/>
+        <location filename="dbrepository.cpp" line="1224"/>
         <source>Starting an SQL transaction</source>
         <translation>Начинается SQL транзакция</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="936"/>
+        <location filename="dbrepository.cpp" line="942"/>
         <source>Clearing the packages table</source>
         <translation>Очистка таблицы пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="944"/>
+        <location filename="dbrepository.cpp" line="950"/>
         <source>Clearing the package versions table</source>
         <translation>Очистка таблицы версий пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="952"/>
+        <location filename="dbrepository.cpp" line="958"/>
         <source>Clearing the licenses table</source>
         <translation>Очистка таблицы лицензий</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="960"/>
+        <location filename="dbrepository.cpp" line="966"/>
         <source>Clearing the categories table</source>
         <translation>Очищаю таблицу с категориями</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="968"/>
-        <location filename="dbrepository.cpp" line="1100"/>
-        <location filename="dbrepository.cpp" line="1201"/>
-        <location filename="dbrepository.cpp" line="1253"/>
+        <location filename="dbrepository.cpp" line="974"/>
+        <location filename="dbrepository.cpp" line="1106"/>
+        <location filename="dbrepository.cpp" line="1207"/>
+        <location filename="dbrepository.cpp" line="1259"/>
         <source>Commiting the SQL transaction</source>
         <translation>Совершается SQL транзакция</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1069"/>
+        <location filename="dbrepository.cpp" line="1075"/>
         <source>Clearing the database</source>
         <translation>Очистка базы данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1090"/>
+        <location filename="dbrepository.cpp" line="1096"/>
         <source>Downloading the remote repositories and filling the local database</source>
         <translation>Загружаю удаленные репозитории и заполняю локальную базу данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1240"/>
+        <location filename="dbrepository.cpp" line="1246"/>
         <source>Updating statuses</source>
         <translation>Обновляю статус</translation>
     </message>
@@ -1617,37 +1617,37 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Заполнение локальной базы данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1115"/>
+        <location filename="dbrepository.cpp" line="1121"/>
         <source>Refreshing the installation status</source>
         <translation>Обновление статуса установки</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1126"/>
+        <location filename="dbrepository.cpp" line="1132"/>
         <source>Updating the status for installed packages in the database</source>
         <translation>Обновление статуса установленных пакетов в базе данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1135"/>
+        <location filename="dbrepository.cpp" line="1141"/>
         <source>Reading categories</source>
         <translation>Читаю категории</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1147"/>
+        <location filename="dbrepository.cpp" line="1153"/>
         <source>Removing packages without versions</source>
         <translation>Удаляю пакеты без версий</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1177"/>
+        <location filename="dbrepository.cpp" line="1183"/>
         <source>Inserting data in the packages table</source>
         <translation>Вставка данных в таблицу пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1185"/>
+        <location filename="dbrepository.cpp" line="1191"/>
         <source>Inserting data in the package versions table</source>
         <translation>Вставка данных в таблицу версий пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1193"/>
+        <location filename="dbrepository.cpp" line="1199"/>
         <source>Inserting data in the licenses table</source>
         <translation>Вставка данных в таблицу лицензий</translation>
     </message>
@@ -1699,7 +1699,7 @@ p, li { white-space: pre-wrap; }
         <translation>Невозможно обработать HTTP статус код %1</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1022"/>
+        <location filename="dbrepository.cpp" line="1028"/>
         <location filename="downloader.cpp" line="246"/>
         <location filename="packageversion.cpp" line="667"/>
         <location filename="packageversion.cpp" line="731"/>
@@ -2425,23 +2425,23 @@ p, li { white-space: pre-wrap; }
         <translation>Невозможно открыть %1 для записи</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="991"/>
+        <location filename="dbrepository.cpp" line="997"/>
         <source>Repository %1 of %2</source>
         <translation>Репозиторий %1 из %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="997"/>
+        <location filename="dbrepository.cpp" line="1003"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Ошибка загрузки репозитория %1: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1009"/>
+        <location filename="dbrepository.cpp" line="1015"/>
         <location filename="settingsframe.cpp" line="83"/>
         <source>No repositories defined</source>
         <translation>Нет заданных репозиториев</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1030"/>
+        <location filename="dbrepository.cpp" line="1036"/>
         <source>Download failed: %2</source>
         <translation>Загрузка не удалась: %2</translation>
     </message>
@@ -2464,7 +2464,7 @@ p, li { white-space: pre-wrap; }
         <translation>Невозможно открыть файл</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1035"/>
+        <location filename="dbrepository.cpp" line="1041"/>
         <location filename="repository.cpp" line="409"/>
         <source>Parsing XML</source>
         <translation>Анализ XML</translation>
