@@ -878,6 +878,11 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
             desc = p->description;
         if (desc.isEmpty())
             desc = this->package;
+
+        desc = WPMUtils::getFirstLine(desc);
+        if (desc.length() > 258)
+            desc = desc.left(255) + "...";
+
         QString r = WPMUtils::createLink(
                 (WCHAR*) path.replace('/', '\\').utf16(),
                 (WCHAR*) from.utf16(),
