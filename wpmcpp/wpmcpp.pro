@@ -47,7 +47,8 @@ SOURCES += main.cpp \
     flowlayout.cpp \
     scandiskthirdpartypm.cpp \
     mysqlquery.cpp \
-    repositoryxmlhandler.cpp
+    repositoryxmlhandler.cpp \
+    cbsthirdpartypm.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -91,7 +92,8 @@ HEADERS += mainwindow.h \
     flowlayout.h \
     scandiskthirdpartypm.h \
     mysqlquery.h \
-    repositoryxmlhandler.h
+    repositoryxmlhandler.h \
+    cbsthirdpartypm.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \

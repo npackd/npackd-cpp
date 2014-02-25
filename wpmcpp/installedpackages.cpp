@@ -17,6 +17,7 @@
 #include "hrtimer.h"
 #include "installedpackagesthirdpartypm.h"
 #include "dbrepository.h"
+#include "cbsthirdpartypm.h"
 
 InstalledPackages InstalledPackages::def;
 
@@ -430,6 +431,16 @@ void InstalledPackages::refresh(Job *job)
             job->setProgress(0.65);
     }
 
+    if (job->shouldProceed(
+            QObject::tr("Detecting Component Based Servicing packages"))) {
+        AbstractThirdPartyPM* pm = new CBSThirdPartyPM();
+        job->setErrorMessage(detect3rdParty(pm, true, "cbs:"));
+        delete pm;
+
+        if (job->getErrorMessage().isEmpty())
+            job->setProgress(0.69);
+    }
+
     timer.time(5);
 
     if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
@@ -454,7 +465,7 @@ void InstalledPackages::refresh(Job *job)
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.75);
+            job->setProgress(0.72);
     }
 
     timer.time(7);

@@ -251,6 +251,21 @@ public:
      * @return category titles
      */
     QStringList getCategories(const QStringList &ids, QString *err);
+
+    /**
+     * @brief reads the list of repositories
+     * @param err error message will be stored here
+     * @return list of URLs
+     */
+    QStringList readRepositories(QString *err);
+
+    /**
+     * @brief saves the list of given repository URLs. The repositories will
+     *     get the IDs 1, 2, 3, ...
+     * @param reps URLs
+     * @return error message
+     */
+    QString saveRepositories(const QStringList& reps);
 };
 
 #endif // DBREPOSITORY_H
