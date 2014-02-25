@@ -993,7 +993,21 @@ void DBRepository::load(Job* job, bool useCache)
     QString err;
     QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
     if (urls.count() > 0) {
+        QStringList reps;
+        for (int i = 0; i < urls.size(); i++) {
+            reps.append(urls.at(i)->toString());
+        }
+
+        err = saveRepositories(reps);
+        if (!err.isEmpty())
+            job->setErrorMessage(
+                    QObject::tr("Error saving the list of repositories in the database: %1").arg(
+                    err));
+
         for (int i = 0; i < urls.count(); i++) {
+            if (!job->shouldProceed())
+                break;
+
             job->setHint(QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
                          arg(urls.count()));
@@ -1008,9 +1022,6 @@ void DBRepository::load(Job* job, bool useCache)
                 break;
             }
             delete s;
-
-            if (job->isCancelled())
-                break;
         }
     } else {
         job->setErrorMessage(QObject::tr("No repositories defined"));
@@ -1342,6 +1353,58 @@ QString DBRepository::readCategories()
     return err;
 }
 
+QStringList DBRepository::readRepositories(QString* err)
+{
+    QStringList r;
+
+    *err = "";
+
+    QString sql = "SELECT ID, URL FROM REPOSITORY ORDER BY ID";
+
+    MySQLQuery q;
+
+    if (!q.prepare(sql))
+        *err = DBRepository::toString(q.lastError());
+
+    if (err->isEmpty()) {
+        if (!q.exec())
+            *err = toString(q.lastError());
+        else {
+            while (q.next()) {
+                r.append(q.value(1).toString());
+            }
+        }
+    }
+
+    return r;
+}
+
+QString DBRepository::saveRepositories(const QStringList &reps)
+{
+    QString err = exec("DELETE FROM REPOSITORY");
+
+    MySQLQuery q;
+
+    if (err.isEmpty()) {
+        QString sql = "INSERT INTO REPOSITORY "
+                "(ID, URL)"
+                "VALUES(:ID, :URL)";
+        if (!q.prepare(sql))
+            err = toString(q.lastError());
+    }
+
+    if (err.isEmpty()) {
+        for (int i = 0; i < reps.size(); i++) {
+            q.bindValue(":ID", i + 1);
+            q.bindValue(":URL", reps.at(i));
+            if (!q.exec())
+                err = toString(q.lastError());
+        }
+    }
+
+    return err;
+}
+
 QString DBRepository::getCategoryPath(int c0, int c1, int c2, int c3,
         int c4) const
 {
@@ -1445,6 +1508,7 @@ QString DBRepository::open()
         err = exec("PRAGMA busy_timeout = 30000");
 
     bool e = false;
+
     if (err.isEmpty()) {
         e = tableExists(&db, "PACKAGE", &err);
     }
@@ -1497,6 +1561,26 @@ QString DBRepository::open()
     }
 
     if (err.isEmpty()) {
+        e = tableExists(&db, "REPOSITORY", &err);
+    }
+
+    // REPOSITORY is new in Npackd 1.19
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE REPOSITORY(ID INTEGER PRIMARY KEY ASC, "
+                    "URL TEXT)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX REPOSITORY_ID ON REPOSITORY(ID)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
         e = tableExists(&db, "CATEGORY", &err);
     }
 
@@ -1521,7 +1605,7 @@ QString DBRepository::open()
 
     if (err.isEmpty()) {
         if (e) {
-            // PACKAGE_VERSION.URL is new in 1.19.4
+            // PACKAGE_VERSION.URL is new in 1.18.4
             if (!columnExists(&db, "PACKAGE_VERSION", "URL", &err)) {
                 exec("DROP TABLE PACKAGE_VERSION");
                 e = false;
