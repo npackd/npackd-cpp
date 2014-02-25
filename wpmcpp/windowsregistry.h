@@ -180,6 +180,12 @@ public:
     QStringList list(QString* err) const;
 
     /**
+     * @param err the error message will be stored here
+     * @return list of values
+     */
+    QStringList listValues(QString* err) const;
+
+    /**
      * @brief loads QStringList from this key
      * @param err error message
      * @return data from the registry

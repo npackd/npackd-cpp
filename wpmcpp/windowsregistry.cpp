@@ -287,6 +287,46 @@ QStringList WindowsRegistry::list(QString* err) const
     return res;
 }
 
+QStringList WindowsRegistry::listValues(QString *err) const
+{
+    err->clear();
+
+    QStringList res;
+    if (this->hkey == 0) {
+        err->append(QObject::tr("No key is open"));
+        return res;
+    }
+
+    int nameReserved = 255;
+    WCHAR* name = new WCHAR[nameReserved];
+
+    int index = 0;
+    while (true) {
+        DWORD nameSize = nameReserved;
+        LONG r = RegEnumValue(this->hkey, index, name, &nameSize,
+                0, 0, 0, 0);
+        if (r == ERROR_SUCCESS) {
+            QString v_;
+            v_.setUtf16((ushort*) name, nameSize);
+            res.append(v_);
+            index++;
+        } else if (r == ERROR_NO_MORE_ITEMS) {
+            break;
+        } else if (r == ERROR_MORE_DATA) {
+            delete[] name;
+            nameReserved = nameSize;
+            name = new WCHAR[nameReserved];
+        } else {
+            WPMUtils::formatMessage(r, err);
+            break;
+        }
+    }
+
+    delete[] name;
+
+    return res;
+}
+
 QString WindowsRegistry::open(const WindowsRegistry& wr, QString subkey,
         REGSAM samDesired)
 {
