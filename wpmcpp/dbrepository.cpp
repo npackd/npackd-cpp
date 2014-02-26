@@ -41,14 +41,16 @@ DBRepository DBRepository::def;
 DBRepository::DBRepository()
 {
     savePackageVersionQuery = 0;
-    savePackageQuery = 0;
+    insertPackageQuery = 0;
+    replacePackageQuery = 0;
     selectCategoryQuery = 0;
 }
 
 DBRepository::~DBRepository()
 {
     delete selectCategoryQuery;
-    delete savePackageQuery;
+    delete insertPackageQuery;
+    delete replacePackageQuery;
     delete savePackageVersionQuery;
 }
 
@@ -717,26 +719,44 @@ QString DBRepository::savePackage(Package *p, bool replace)
         }
     }
 
-    if (!savePackageQuery) {
-        savePackageQuery = new MySQLQuery();
-        QString sql = "INSERT OR ";
-        if (replace)
-            sql += "REPLACE";
-        else
-            sql += "IGNORE";
-        sql += " INTO PACKAGE "
+    if (!insertPackageQuery) {
+        insertPackageQuery = new MySQLQuery();
+        replacePackageQuery = new MySQLQuery();
+
+        QString insertSQL = "INSERT OR IGNORE";
+        QString replaceSQL = "INSERT OR REPLACE";
+
+        QString add = " INTO PACKAGE "
                 "(NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
                 " CATEGORY4)"
                 "VALUES(:NAME, :TITLE, :URL, :ICON, :DESCRIPTION, :LICENSE, "
                 ":FULLTEXT, :STATUS, :SHORT_NAME, "
                 ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
-        if (!savePackageQuery->prepare(sql)) {
-            err = toString(savePackageQuery->lastError());
-            delete savePackageQuery;
+
+        insertSQL += add;
+        replaceSQL += add;
+
+        if (!insertPackageQuery->prepare(insertSQL)) {
+            err = toString(insertPackageQuery->lastError());
+            delete insertPackageQuery;
+            delete replacePackageQuery;
+        }
+
+        if (err.isEmpty()) {
+            if (!replacePackageQuery->prepare(replaceSQL)) {
+                err = toString(replacePackageQuery->lastError());
+                delete insertPackageQuery;
+                delete replacePackageQuery;
+            }
         }
     }
 
+    MySQLQuery* savePackageQuery;
+    if (replace)
+        savePackageQuery = replacePackageQuery;
+    else
+        savePackageQuery = insertPackageQuery;
     if (err.isEmpty()) {
         savePackageQuery->bindValue(":NAME", p->name);
         savePackageQuery->bindValue(":TITLE", p->title);
@@ -770,7 +790,6 @@ QString DBRepository::savePackage(Package *p, bool replace)
             savePackageQuery->bindValue(":CATEGORY4", cat4);
         if (!savePackageQuery->exec())
             err = toString(savePackageQuery->lastError());
-
     }
 
     savePackageQuery->finish();

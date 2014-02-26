@@ -163,7 +163,8 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
 
     p->categories.append(QObject::tr("Control panel software"));
 
-    // qDebug() << "adding package " << p.data()->name;
+    //qDebug() << "CP: adding package " << p.data()->name << p.data()->title;
+
     rep->savePackage(p.data());
 
     QDir d;
