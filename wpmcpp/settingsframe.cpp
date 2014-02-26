@@ -1,3 +1,5 @@
+#include <shlobj.h>
+
 #include "settingsframe.h"
 #include "ui_settingsframe.h"
 
@@ -13,6 +15,22 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     ui(new Ui::SettingsFrame)
 {
     ui->setupUi(this);
+
+    WindowsRegistry wr;
+    QString err = wr.open(HKEY_LOCAL_MACHINE,
+            "Software\\Npackd\\Npackd\\InstallationDirs", false, KEY_READ);
+    QStringList dirs;
+    if (err.isEmpty()) {
+        dirs = wr.loadStringList(&err);
+    }
+
+    dirs.append(WPMUtils::getInstallationDirectory());
+    dirs.append(WPMUtils::getProgramFilesDir());
+    if (WPMUtils::is64BitWindows())
+        dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
+
+    dirs.removeDuplicates();
+    this->ui->comboBoxDir->addItems(dirs);
 }
 
 SettingsFrame::~SettingsFrame()
@@ -29,12 +47,12 @@ QStringList SettingsFrame::getRepositoryURLs()
 
 QString SettingsFrame::getInstallationDirectory()
 {
-    return this->ui->lineEditDir->text();
+    return this->ui->comboBoxDir->currentText();
 }
 
 void SettingsFrame::setInstallationDirectory(const QString& dir)
 {
-    this->ui->lineEditDir->setText(dir);
+    this->ui->comboBoxDir->setEditText(dir);
 }
 
 void SettingsFrame::setRepositoryURLs(const QStringList &urls)
@@ -143,6 +161,23 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         }
         qDeleteAll(urls);
         urls.clear();
+    }
+
+    if (err.isEmpty()) {
+        WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+        WindowsRegistry wr = m.createSubKey(
+                "Software\\Npackd\\Npackd\\InstallationDirs", &err,
+                KEY_ALL_ACCESS);
+
+        QStringList dirs;
+        for (int i = 0; i < this->ui->comboBoxDir->count(); i++)
+            dirs.append(this->ui->comboBoxDir->itemText(i));
+        if (err.isEmpty()) {
+            wr.saveStringList(dirs);
+        }
+
+        // it is not important, whether the list of directories is saved or not
+        err = "";
     }
 
     if (!err.isEmpty())
