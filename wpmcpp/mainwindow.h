@@ -88,6 +88,7 @@ private:
     void updateCloseTabAction();
     void updateReloadRepositoriesAction();
     void updateScanHardDrivesAction();
+    void updateShowFolderAction();
 
     /**
      * @param ps selected packages
@@ -269,6 +270,7 @@ private slots:
     void on_actionInstall_triggered();
     void on_actionUninstall_triggered();
     void on_actionAdd_package_triggered();
+    void on_actionOpen_folder_triggered();
 };
 
 #endif // MAINWINDOW_H
