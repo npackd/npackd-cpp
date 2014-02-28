@@ -66,6 +66,7 @@
     <addaction name="actionUpdate"/>
     <addaction name="separator"/>
     <addaction name="actionShow_Details"/>
+    <addaction name="actionOpen_folder"/>
     <addaction name="actionGotoPackageURL"/>
     <addaction name="actionTest_Download_Site"/>
     <addaction name="actionReload_Repositories"/>
@@ -295,6 +296,17 @@
    </property>
    <property name="shortcut">
     <string>F2</string>
+   </property>
+  </action>
+  <action name="actionOpen_folder">
+   <property name="text">
+    <string>Open folder</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the content of the program folder</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
  </widget>

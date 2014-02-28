@@ -32,6 +32,7 @@ PackageFrame::PackageFrame(QWidget *parent) :
     t->addAction(mw->findChild<QAction*>("actionUpdate"));
     t->addAction(mw->findChild<QAction*>("actionShow_Details"));
     t->addAction(mw->findChild<QAction*>("actionTest_Download_Site"));
+    t->addAction(mw->findChild<QAction*>("actionOpen_folder"));
 }
 
 PackageFrame::~PackageFrame()

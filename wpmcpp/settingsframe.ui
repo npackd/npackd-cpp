@@ -58,6 +58,9 @@
         <property name="text">
          <string>Repositories:</string>
         </property>
+        <property name="buddy">
+         <cstring>plainTextEditReps</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
@@ -95,6 +98,9 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Installation Directory:</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxDir</cstring>
         </property>
        </widget>
       </item>
@@ -159,6 +165,9 @@ p, li { white-space: pre-wrap; }
  </widget>
  <tabstops>
   <tabstop>plainTextEditReps</tabstop>
+  <tabstop>comboBoxDir</tabstop>
+  <tabstop>checkBoxCloseWindows</tabstop>
+  <tabstop>checkBoxKillProcesses</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
