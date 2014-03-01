@@ -23,6 +23,9 @@
 #include <QFile>
 #include <QVariant>
 #include <QProcessEnvironment>
+#include <QPixmap>
+#include <QBuffer>
+#include <QByteArray>
 
 #include "wpmutils.h"
 #include "version.h"
@@ -258,6 +261,43 @@ QString WPMUtils::getInstallationDirectory()
         v = WPMUtils::getProgramFilesDir();
 
     return v;
+}
+
+QString WPMUtils::extractIconURL(const QString& iconFile)
+{
+    QString res;
+    QString icon = iconFile.trimmed();
+    if (!icon.isEmpty()) {
+        UINT iconIndex = 0;
+        int index = icon.lastIndexOf(',');
+        if (index > 0) {
+            QString number = icon.mid(index + 1);
+            bool ok;
+            int v = number.toInt(&ok);
+            if (ok) {
+                iconIndex = (UINT) v;
+                icon = icon.left(index);
+            }
+        }
+
+        HICON ic = ExtractIcon(GetModuleHandle(NULL),
+                (LPCWSTR) icon.utf16(), iconIndex);
+        if (((UINT_PTR) ic) > 1) {
+            QPixmap pm = QPixmap::fromWinHICON(ic);
+            if (!pm.isNull() && pm.width() > 0 &&
+                    pm.height() > 0) {
+                QByteArray bytes;
+                QBuffer buffer(&bytes);
+                buffer.open(QIODevice::WriteOnly);
+                pm.save(&buffer, "PNG");
+                res = QString("data:image/png;base64,") +
+                        bytes.toBase64();
+            }
+            DestroyIcon(ic);
+        }
+    }
+
+    return res;
 }
 
 QString WPMUtils::setInstallationDirectory(const QString& dir)

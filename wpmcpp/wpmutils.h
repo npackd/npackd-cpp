@@ -497,6 +497,15 @@ public:
      *     only 0 if the error is not empty
      */
     static Package *findOnePackage(const QString &package, QString *err);
+
+    /**
+     * @brief extracts an icon from a file using the Windows API ExtractIcon()
+     * @param iconFile .ico, .exe, etc. Additionally to what is supported by
+     *     ExtractIcon() also ",0" and similar at the end of the path name is
+     *     supported to load different icons from the same file
+     * @return "data:..." or an empty string if the icon cannot be extracted
+     */
+    static QString extractIconURL(const QString &iconFile);
 };
 
 #endif // WPMUTILS_H
