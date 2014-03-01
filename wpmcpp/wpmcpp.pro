@@ -93,7 +93,8 @@ HEADERS += mainwindow.h \
     scandiskthirdpartypm.h \
     mysqlquery.h \
     repositoryxmlhandler.h \
-    cbsthirdpartypm.h
+    cbsthirdpartypm.h \
+    msoav2.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \
