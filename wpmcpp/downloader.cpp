@@ -607,8 +607,17 @@ QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
     if (file->open()) {
         QString mime;
         QString contentDisposition;
-        downloadWin(job, url, file, &mime, &contentDisposition,
-                defaultPasswordWindow, sha1, useCache);
+
+        if (url.scheme() == "https" || url.scheme() == "http")
+            downloadWin(job, url, file, &mime, &contentDisposition,
+                    defaultPasswordWindow, sha1, useCache);
+        else if (url.toString().startsWith("data:image/png;base64,")) {
+            QString dataURL_ = url.toString().mid(22);
+            QByteArray ba = QByteArray::fromBase64(dataURL_.toAscii());
+            if (file->write(ba) < 0)
+                job->setErrorMessage(file->errorString());
+        }
+
         file->close();
 
         if (job->isCancelled() || !job->getErrorMessage().isEmpty()) {

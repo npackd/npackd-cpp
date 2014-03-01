@@ -49,7 +49,8 @@ class Downloader: QObject
 public:
     /**
      * @param job job for this method
-     * @param url this URL will be downloaded
+     * @param url this URL will be downloaded. http://, https:// and
+     *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @return temporary file or 0 if an error occured
      * @param useCache true = use Windows Internet cache on the local disk
@@ -61,7 +62,8 @@ public:
      * Downloads a file.
      *
      * @param job job for this method
-     * @param url this URL will be downloaded
+     * @param url this URL will be downloaded. http://, https:// and
+     *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param file the content will be stored here
      */
