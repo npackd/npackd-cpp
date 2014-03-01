@@ -197,6 +197,10 @@ int App::process()
             err = update();
         } else if (cmd == "detect") {
             err = detect();
+        } else if (cmd == "set-install-dir") {
+            err = setInstallPath();
+        } else if (cmd == "get-install-dir") {
+            err = getInstallPath();
         } else {
             err = "Wrong command: " + cmd + ". Try npackdcl help";
         }
@@ -285,6 +289,10 @@ void App::usage()
         "        checks the installed packages for missing dependencies",
         "    npackdcl which --file=<file>",
         "        finds the package that owns the specified file or directory",
+        "    npackdcl set-install-dir --file=<directory>",
+        "        changes the directory where packages will be installed",
+        "    npackdcl get-install-dir",
+        "        prints the directory where packages will be installed",
         "Options:",
     };
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
@@ -295,7 +303,9 @@ void App::usage()
         "",
         "The process exits with the code unequal to 0 if an error occures.",
         "If the output is redirected, the texts will be encoded as UTF-8.",
-    };    
+        "",
+        "See https://code.google.com/p/windows-package-manager/wiki/CommandLine for more details.",
+    };
     for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
         WPMUtils::outputTextConsole(QString(lines2[i]) + "\n");
     }
@@ -314,6 +324,15 @@ QString App::listRepos()
         }
     }
     qDeleteAll(urls);
+
+    return err;
+}
+
+QString App::getInstallPath()
+{
+    QString err;
+
+    WPMUtils::outputTextConsole(WPMUtils::getInstallationDirectory());
 
     return err;
 }
@@ -357,6 +376,47 @@ QString App::which()
         } else
             WPMUtils::outputTextConsole(QString("No package found for \"%1\"\n").
                     arg(file));
+    }
+
+    return r;
+}
+
+QString App::setInstallPath()
+{
+    QString r;
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    r = ip->readRegistryDatabase();
+
+    if (r.isEmpty()) {
+        Job* job = new Job();
+
+        ip->refresh(job);
+
+        if (!job->getErrorMessage().isEmpty())
+            r = job->getErrorMessage();
+
+        delete job;
+    }
+
+    QString file = cl.get("file");
+    if (r.isEmpty()) {
+        if (file.isNull()) {
+            r = "Missing option: --file";
+        }
+    }
+
+    if (r.isEmpty()) {
+        QFileInfo fi(file);
+        file = fi.absoluteFilePath();
+    }
+
+    if (r.isEmpty()) {
+        r = WPMUtils::checkInstallationDirectory(file);
+    }
+
+    if (r.isEmpty()) {
+        r = WPMUtils::setInstallationDirectory(file);
     }
 
     return r;

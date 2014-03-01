@@ -192,6 +192,13 @@ public:
     static bool isUnder(const QString& file, const QString& dir);
 
     /**
+     * @brief checks a value for the installation directory
+     * @param dir a directory
+     * @return error message or ""
+     */
+    static QString checkInstallationDirectory(const QString& dir);
+
+    /**
      * @return directory where the packages will be installed. Typically
      *     c:\program files\Npackd
      */
@@ -199,8 +206,10 @@ public:
 
     /**
      * see getInstallationDirectory()
+     *
+     * @return error message or ""
      */
-    static void setInstallationDirectory(const QString& dir);
+    static QString setInstallationDirectory(const QString& dir);
 
     /**
      * @return full paths to files locked because of running processes
