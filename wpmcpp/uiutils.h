@@ -17,9 +17,12 @@ public:
      *
      * @param parent parent widget
      * @param title dialog title
-     * @param text message (may contain multiple lines separated by \n)
+     * @param text message (may contain multiple lines separated by \n or HTML)
+     * @param detailedText detailed plain text (may contain multiple lines, but
+     *     not HTML)
      */
-    static bool confirm(QWidget* parent, QString title, QString text);
+    static bool confirm(QWidget* parent, QString title, QString text,
+            QString detailedText);
 };
 
 #endif // UIUTILS_H
