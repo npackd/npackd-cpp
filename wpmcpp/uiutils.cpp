@@ -6,8 +6,10 @@ UIUtils::UIUtils()
 {
 }
 
-bool UIUtils::confirm(QWidget* parent, QString title, QString text)
+bool UIUtils::confirm(QWidget* parent, QString title, QString text,
+        QString detailedText)
 {
+    /*
     QStringList lines = text.split("\n", QString::SkipEmptyParts);
     int max;
     if (lines.count() > 20) {
@@ -32,14 +34,15 @@ bool UIUtils::confirm(QWidget* parent, QString title, QString text)
     } else {
         shortText = text;
     }
+    */
 
     QMessageBox mb(parent);
     mb.setWindowTitle(title);
-    mb.setText(shortText);
+    mb.setText(text);
     mb.setIcon(QMessageBox::Warning);
     mb.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     mb.setDefaultButton(QMessageBox::Ok);
-    mb.setDetailedText(text);
+    mb.setDetailedText(detailedText);
     return ((QMessageBox::StandardButton) mb.exec()) == QMessageBox::Ok;
 }
 

@@ -237,6 +237,7 @@ public:
     QList<void*> getSelected(const QString& type) const;
 
     void openURL(const QUrl &url);
+    static QString createPackageVersionsHTML(const QStringList &names);
 protected:
     void changeEvent(QEvent *e);
 
