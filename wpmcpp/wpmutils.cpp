@@ -184,6 +184,30 @@ bool WPMUtils::isUnder(const QString &file, const QString &dir)
     return f.startsWith(d);
 }
 
+QString WPMUtils::checkInstallationDirectory(const QString &dir)
+{
+    QString err;
+    if (err.isEmpty() && dir.isEmpty())
+        err = QObject::tr("The installation directory cannot be empty");
+
+    if (err.isEmpty() && !QDir(dir).exists())
+        err = QObject::tr("The installation directory does not exist");
+
+    if (err.isEmpty()) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        InstalledPackageVersion* ipv = ip->findOwner(dir);
+        if (ipv) {
+            AbstractRepository* r = AbstractRepository::getDefault_();
+            err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").arg(
+                    dir).
+                    arg(r->getPackageTitleAndName(ipv->package)).
+                    arg(ipv->version.getVersionString());
+            delete ipv;
+        }
+    }
+    return err;
+}
+
 void WPMUtils::formatMessage(DWORD err, QString* errMsg)
 {
     HLOCAL pBuffer;
@@ -236,7 +260,7 @@ QString WPMUtils::getInstallationDirectory()
     return v;
 }
 
-void WPMUtils::setInstallationDirectory(const QString& dir)
+QString WPMUtils::setInstallationDirectory(const QString& dir)
 {
     WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
     QString err;
@@ -245,6 +269,8 @@ void WPMUtils::setInstallationDirectory(const QString& dir)
     if (err.isEmpty()) {
         npackd.set("path", dir);
     }
+
+    return err;
 }
 
 void WPMUtils::setCloseProcessType(DWORD cpt)

@@ -963,7 +963,7 @@ void MainWindow::process(QList<InstallOperation*> &install)
         dialogTitle = QObject::tr("Uninstall");
         msg = QString("<html><head/><body><h2>") +
                 Qt::escape(QObject::tr("The package %1 will be uninstalled.").
-                arg("<b>" + pv->toString() + "</b>")) +
+                arg(pv->toString())) +
                 "</h2>" +
                 Qt::escape(QObject::tr("The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
                 arg(pv->getPath())) +

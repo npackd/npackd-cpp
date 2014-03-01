@@ -44,6 +44,8 @@ private:
     QString listRepos();
     QString which();
     QString check();
+    QString getInstallPath();
+    QString setInstallPath();
 
     bool confirm(const QList<InstallOperation *> ops, QString *title,
             QString *err);

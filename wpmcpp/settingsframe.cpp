@@ -118,24 +118,8 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     if (err.isEmpty() && list.count() == 0)
         err = QObject::tr("No repositories defined");
 
-    if (err.isEmpty() && getInstallationDirectory().isEmpty())
-        err = QObject::tr("The installation directory cannot be empty");
-
-    if (err.isEmpty() && !QDir(getInstallationDirectory()).exists())
-        err = QObject::tr("The installation directory does not exist");
-
     if (err.isEmpty()) {
-        InstalledPackages* ip = InstalledPackages::getDefault();
-        InstalledPackageVersion* ipv = ip->findOwner(
-                getInstallationDirectory());
-        if (ipv) {
-            AbstractRepository* r = AbstractRepository::getDefault_();
-            err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").arg(
-                    getInstallationDirectory()).
-                    arg(r->getPackageTitleAndName(ipv->package)).
-                    arg(ipv->version.getVersionString());
-            delete ipv;
-        }
+        err = WPMUtils::checkInstallationDirectory(getInstallationDirectory());
     }
 
     if (err.isEmpty()) {
