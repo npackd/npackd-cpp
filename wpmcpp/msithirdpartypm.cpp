@@ -1,14 +1,13 @@
 #include <windows.h>
 #include <msi.h>
 #include <QDebug>
-#include <QApplication>
-#include <QPixmap>
 #include <QBuffer>
 #include <QByteArray>
 
 #include "msithirdpartypm.h"
 #include "wpmutils.h"
 #include "dbrepository.h"
+#include "uiutils.h"
 
 void MSIThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed,
@@ -92,7 +91,7 @@ void MSIThirdPartyPM::scan(Job* job,
                 QString icon = WPMUtils::getMSIProductAttribute(guid,
                         INSTALLPROPERTY_PRODUCTICON, &err);
                 if (err.isEmpty()) {
-                    p->icon = WPMUtils::extractIconURL(icon);
+                    p->icon = UIUtils::extractIconURL(icon);
                 } else {
                     err = "";
                 }

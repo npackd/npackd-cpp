@@ -1,9 +1,50 @@
+#include <windows.h>
+
+#include <QMessageBox>
+#include <QBuffer>
+
 #include "uiutils.h"
 
-#include "qmessagebox.h"
 
 UIUtils::UIUtils()
 {
+}
+
+QString UIUtils::extractIconURL(const QString& iconFile)
+{
+    QString res;
+    QString icon = iconFile.trimmed();
+    if (!icon.isEmpty()) {
+        UINT iconIndex = 0;
+        int index = icon.lastIndexOf(',');
+        if (index > 0) {
+            QString number = icon.mid(index + 1);
+            bool ok;
+            int v = number.toInt(&ok);
+            if (ok) {
+                iconIndex = (UINT) v;
+                icon = icon.left(index);
+            }
+        }
+
+        HICON ic = ExtractIcon(GetModuleHandle(NULL),
+                (LPCWSTR) icon.utf16(), iconIndex);
+        if (((UINT_PTR) ic) > 1) {
+            QPixmap pm = QPixmap::fromWinHICON(ic);
+            if (!pm.isNull() && pm.width() > 0 &&
+                    pm.height() > 0) {
+                QByteArray bytes;
+                QBuffer buffer(&bytes);
+                buffer.open(QIODevice::WriteOnly);
+                pm.save(&buffer, "PNG");
+                res = QString("data:image/png;base64,") +
+                        bytes.toBase64();
+            }
+            DestroyIcon(ic);
+        }
+    }
+
+    return res;
 }
 
 bool UIUtils::confirm(QWidget* parent, QString title, QString text,
