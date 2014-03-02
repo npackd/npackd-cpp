@@ -2,7 +2,6 @@ NPACKD_VERSION = $$system(type ..\\wpmcpp\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
 QT += xml sql
-QT -= gui
 TARGET = npackdcl
 CONFIG += console
 CONFIG -= app_bundle
@@ -46,7 +45,8 @@ SOURCES += main.cpp \
     ../wpmcpp/repositoryxmlhandler.cpp \
     ../wpmcpp/mysqlquery.cpp \
     ../wpmcpp/installedpackagesthirdpartypm.cpp \
-    ../wpmcpp/cbsthirdpartypm.cpp
+    ../wpmcpp/cbsthirdpartypm.cpp \
+    ../wpmcpp/uiutils.cpp
 HEADERS += ../wpmcpp/repository.h \
     ../wpmcpp/version.h \
     ../wpmcpp/packageversionfile.h \
@@ -76,7 +76,8 @@ HEADERS += ../wpmcpp/repository.h \
     ../wpmcpp/repositoryxmlhandler.h \
     ../wpmcpp/mysqlquery.h \
     ../wpmcpp/installedpackagesthirdpartypm.h \
-    ../wpmcpp/cbsthirdpartypm.h
+    ../wpmcpp/cbsthirdpartypm.h \
+    ../wpmcpp/uiutils.h
 FORMS += 
 
 CONFIG += static

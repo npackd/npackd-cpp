@@ -17,7 +17,6 @@
 #include <QDomDocument>
 #include <QMutex>
 #include <zlib.h>
-#include <QApplication>
 
 #include "msoav2.h"
 #include "quazip.h"
