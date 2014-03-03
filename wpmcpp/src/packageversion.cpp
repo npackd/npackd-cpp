@@ -40,8 +40,9 @@ QSemaphore PackageVersion::installationScripts(1);
 QSet<QString> PackageVersion::lockedPackageVersions;
 QMutex PackageVersion::lockedPackageVersionsMutex(QMutex::Recursive);
 
-
-// Creates an instance of IAttachmentExecute
+/**
+ * Creates an instance of IAttachmentExecute
+ */
 HRESULT CreateAttachmentServices(IAttachmentExecute **ppae)
 {
     // Assume that CoInitialize has already been called for this thread.
