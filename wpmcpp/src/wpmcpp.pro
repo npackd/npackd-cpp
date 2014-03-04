@@ -1,4 +1,4 @@
-NPACKD_VERSION = $$system(type version.txt)
+NPACKD_VERSION = $$system(type ..\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
 QT += xml sql

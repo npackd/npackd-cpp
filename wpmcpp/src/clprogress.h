@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QString>
 
-#include "..\wpmcpp\job.h"
+#include "job.h"
 
 /**
  * Command line job progress monitor.
