@@ -4,5 +4,5 @@ How to Build Npackd
 1. install https://npackd.appspot.com/p/npackd-dev-i686-w64 for 32 bit builds or
     https://npackd.appspot.com/p/npackd-dev-x86_64-w64 for 64 bit builds from
     the libraries repository (see http://code.google.com/p/windows-package-manager/wiki/LibrariesRepository)
-2. start wpmcpp\Build32.bat for a 32 bit build or wpmcpp\Build64.bat for a 64 bit build
+2. start mingw32-make.exe to build both 32 bit and 64 versions
 
