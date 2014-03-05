@@ -5,7 +5,6 @@
 \.conflict\~$
 \.o$
 \.exe$
-^wpmcpp/Makefile
 \.pro\.user$
 ^wpmcpp/ai/
 \.back\.

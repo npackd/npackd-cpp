@@ -130,7 +130,7 @@ QMAKE_LFLAGS_RELEASE -= -Wl,-s
 QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror
 QMAKE_LFLAGS += -static
 
-QMAKE_LFLAGS_RELEASE += -Wl,-Map,wpmcpp_release.map
+QMAKE_LFLAGS_RELEASE += -Wl,-Map,$(DESTDIR)\\wpmcpp_release.map
 
 gprof {
     QMAKE_CXXFLAGS_RELEASE -= -O2
