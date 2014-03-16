@@ -32,3 +32,4 @@
 syntax: regexp
 \.pro\.user
 ^npackd_lazarus/
+^npackdcl-i686-test/

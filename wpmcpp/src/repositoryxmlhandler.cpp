@@ -39,6 +39,8 @@ int RepositoryXMLHandler::findWhere()
                     r = TAG_VERSION_URL;
                 else if (tag2 == "sha1")
                     r = TAG_VERSION_SHA1;
+                else if (tag2 == "hash-sum")
+                    r = TAG_VERSION_HASH_SUM;
                 else if (tag2 == "detect-msi")
                     r = TAG_VERSION_DETECT_MSI;
             } else if (tag1 == "package") {
@@ -245,10 +247,21 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
         }
     } else if (where == TAG_VERSION_SHA1) {
         pv->sha1 = chars.trimmed().toLower();
+        pv->hashSumType = QCryptographicHash::Sha1;
         if (!pv->sha1.isEmpty()) {
             error = WPMUtils::validateSHA1(pv->sha1);
             if (!error.isEmpty()) {
                 error = QObject::tr("Invalid SHA1 for %1: %2").
+                        arg(pv->toString()).arg(error);
+            }
+        }
+    } else if (where == TAG_VERSION_HASH_SUM) {
+        pv->sha1 = chars.trimmed().toLower();
+        pv->hashSumType = QCryptographicHash::Sha256;
+        if (!pv->sha1.isEmpty()) {
+            error = WPMUtils::validateSHA256(pv->sha1);
+            if (!error.isEmpty()) {
+                error = QObject::tr("Invalid SHA-256 for %1: %2").
                         arg(pv->toString()).arg(error);
             }
         }

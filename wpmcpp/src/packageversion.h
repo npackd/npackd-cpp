@@ -12,6 +12,7 @@
 #include <QSemaphore>
 #include <QDomElement>
 #include <QXmlStreamWriter>
+#include <QCryptographicHash>
 
 #include "job.h"
 #include "packageversionfile.h"
@@ -165,8 +166,14 @@ public:
     /** 0 = zip file, 1 = one file */
     int type;
 
-    /** SHA1 for the installation file or empty if not defined */
+    /**
+     * SHA-1 or SHA-256 hash sum for the installation file or empty if not
+     * defined
+     */
     QString sha1;
+
+    /** 0 = SHA-1, 1 = SHA-256 */
+    QCryptographicHash::Algorithm hashSumType;
 
     /**
      * .zip file for downloading
@@ -254,13 +261,6 @@ public:
      * @return e.g. ".exe" or ".zip". Never returns an empty string
      */
     QString getFileExtension();
-
-    /**
-     * Downloads the package.
-     *
-     * @param filename target file
-     */
-    void downloadTo(Job* job, QString filename);
 
     /**
      * Plans installation of this package and all the dependencies recursively.

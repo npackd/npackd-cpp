@@ -774,6 +774,25 @@ QString WPMUtils::validateSHA1(const QString& sha1)
     return "";
 }
 
+QString WPMUtils::validateSHA256(const QString &sha256)
+{
+    if (sha256.length() != 64) {
+        return QString(QObject::tr("Wrong length: %1")).arg(sha256);
+    } else {
+        for (int i = 0; i < sha256.length(); i++) {
+            QChar c = sha256.at(i);
+            if (!((c >= '0' && c <= '9') ||
+                (c >= 'a' && c <= 'f') ||
+                (c >= 'A' && c <= 'F'))) {
+                return QString(QObject::tr("Wrong character at position %1 in %2")).
+                        arg(i + 1).arg(sha256);
+            }
+        }
+    }
+
+    return "";
+}
+
 QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
         bool expandVars)
 {
@@ -1050,22 +1069,33 @@ QString WPMUtils::regQueryValue(HKEY hk, const QString &var)
 
 QString WPMUtils::sha1(const QString& filename)
 {
+    return WPMUtils::hashSum(filename, QCryptographicHash::Sha1);
+}
+
+QString WPMUtils::hashSum(const QString& filename,
+        QCryptographicHash::Algorithm alg)
+{
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly))
          return "";
 
-    QCryptographicHash hash(QCryptographicHash::Sha1);
-    char buffer[8192];
+    QCryptographicHash hash(alg);
+
+    const int SIZE = 512 * 1024;
+    char* buffer = new char[SIZE];
+
     bool err = false;
     while (!file.atEnd()) {
-        qint64 r = file.read(buffer, sizeof(buffer));
+        qint64 r = file.read(buffer, SIZE);
         if (r < 0) {
             err = true;
             break;
         }
         hash.addData(buffer, r);
     }
-    file.close(); // when your done.
+    file.close();
+
+    delete[] buffer;
 
     if (err)
         return "";

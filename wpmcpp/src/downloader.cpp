@@ -20,7 +20,8 @@ HWND defaultPasswordWindow = 0;
 
 void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         QString* mime, QString* contentDisposition,
-        HWND parentWindow, QString* sha1, bool useCache)
+        HWND parentWindow, QString* sha1, bool useCache,
+        QCryptographicHash::Algorithm alg)
 {
     job->setHint(QObject::tr("Connecting"));
 
@@ -303,7 +304,7 @@ out:
     job->setProgress(0.05);
 
     Job* sub = job->newSubJob(0.95);
-    readData(sub, hResourceHandle, file, sha1, gzip, contentLength);
+    readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
     if (!sub->getErrorMessage().isEmpty())
         job->setErrorMessage(sub->getErrorMessage());
     delete sub;
@@ -344,10 +345,10 @@ bool Downloader::internetReadFileFully(HINTERNET resourceHandle,
 }
 
 void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
-        QString* sha1, int64_t contentLength)
+        QString* sha1, int64_t contentLength, QCryptographicHash::Algorithm alg)
 {
     // download/compute SHA1 loop
-    QCryptographicHash hash(QCryptographicHash::Sha1);
+    QCryptographicHash hash(alg);
     const int bufferSize = 512 * 1024;
     unsigned char* buffer = new unsigned char[bufferSize];
     const int buffer2Size = 512 * 1024;
@@ -530,10 +531,10 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
 }
 
 void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
-        QString* sha1, int64_t contentLength)
+        QString* sha1, int64_t contentLength, QCryptographicHash::Algorithm alg)
 {
     // download/compute SHA1 loop
-    QCryptographicHash hash(QCryptographicHash::Sha1);
+    QCryptographicHash hash(alg);
     const int bufferSize = 512 * 1024;
     unsigned char* buffer = new unsigned char[bufferSize];
 
@@ -582,21 +583,22 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
 }
 
 void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,
-        QString* sha1, bool gzip, int64_t contentLength)
+        QString* sha1, bool gzip, int64_t contentLength,
+        QCryptographicHash::Algorithm alg)
 {
     if (gzip)
-        readDataGZip(job, hResourceHandle, file, sha1, contentLength);
+        readDataGZip(job, hResourceHandle, file, sha1, contentLength, alg);
     else
-        readDataFlat(job, hResourceHandle, file, sha1, contentLength);
+        readDataFlat(job, hResourceHandle, file, sha1, contentLength, alg);
 }
 
 void Downloader::download(Job* job, const QUrl& url, QFile* file,
-        QString* sha1)
+        QString* sha1, QCryptographicHash::Algorithm alg)
 {
     QString mime;
     QString contentDisposition;
     downloadWin(job, url, file, &mime, &contentDisposition,
-            defaultPasswordWindow, sha1);
+            defaultPasswordWindow, sha1, false, alg);
 }
 
 QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,

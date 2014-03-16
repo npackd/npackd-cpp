@@ -4,9 +4,10 @@
 #include <windows.h>
 #include <time.h>
 
-#include "qstring.h"
-#include "qdir.h"
-#include "QTime"
+#include <QString>
+#include <QDir>
+#include <QTime>
+#include <QCryptographicHash>
 
 #include "job.h"
 #include "version.h"
@@ -162,6 +163,14 @@ public:
     static QString validateSHA1(const QString& sha1);
 
     /**
+     * Validates an SHA-256.
+     *
+     * @param sha256 a SHA-256 value
+     * @return an error message or an empty string
+     */
+    static QString validateSHA256(const QString& sha256);
+
+    /**
      * Validates a full package name.
      *
      * @param n a package name
@@ -223,6 +232,16 @@ public:
      * @return SHA1 or "" in case of an error or SHA1 in lower case
      */
     static QString sha1(const QString& filename);
+
+    /**
+     * Computes hash for a file
+     *
+     * @param filename name of the file
+     * @param alg hash sum algorithm
+     * @return hash sum in lower case or "" in case of an error
+     */
+    static QString hashSum(const QString &filename,
+            QCryptographicHash::Algorithm alg);
 
     /**
      * Scans all files in a directory and deletes all links (.lnk) to files
