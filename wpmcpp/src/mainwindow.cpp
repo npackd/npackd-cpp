@@ -1,4 +1,4 @@
-#include <math.h>
+﻿#include <math.h>
 
 #include <qabstractitemview.h>
 #include <qmessagebox.h>
@@ -273,7 +273,7 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(repositoryStatusChanged(const QString&, const Version&)),
             Qt::QueuedConnection);
 
-    defaultPasswordWindow = this->winId();
+    defaultPasswordWindow = (HWND) this->winId();
 
     this->taskbarMessageId = RegisterWindowMessage(L"TaskbarButtonCreated");
     // qDebug() << "id " << taskbarMessageId;
@@ -286,7 +286,7 @@ MainWindow::MainWindow(QWidget *parent) :
             (BOOL (WINAPI*) (HWND, UINT, DWORD, void*))
             GetProcAddress(hInstLib, "ChangeWindowMessageFilterEx");
     if (lpfChangeWindowMessageFilterEx)
-        lpfChangeWindowMessageFilterEx(winId(), taskbarMessageId, 1, 0);
+        lpfChangeWindowMessageFilterEx((HWND) winId(), taskbarMessageId, 1, 0);
     FreeLibrary(hInstLib);
 }
 
@@ -545,7 +545,7 @@ void MainWindow::repositoryStatusChanged(const QString& package,
         grayscales.push_back(qRgb(i,i,i));
     img_gray.setColorTable(grayscales);
 
-    // farben �bertragen
+    // farben übertragen
     for (int y=0; y<img.height(); ++y) {
         for (int x=0; x<img.width(); ++x) {
             // farbwert holen
@@ -666,10 +666,10 @@ void MainWindow::updateProgressTabTitle()
 
     if (this->taskbarInterface) {
         if (n == 0)
-            taskbarInterface->SetProgressState(winId(), TBPF_NOPROGRESS);
+            taskbarInterface->SetProgressState((HWND) winId(), TBPF_NOPROGRESS);
         else {
-            taskbarInterface->SetProgressState(winId(), TBPF_NORMAL);
-            taskbarInterface->SetProgressValue(winId(),
+            taskbarInterface->SetProgressState((HWND) winId(), TBPF_NORMAL);
+            taskbarInterface->SetProgressValue((HWND) winId(),
                     lround(maxProgress * 10000), 10000);
         }
     }
@@ -846,7 +846,7 @@ QString MainWindow::createPackageVersionsHTML(const QStringList& names)
         allNames = names;
     }
     for (int i = 0; i < allNames.count(); i++) {
-        allNames[i] = Qt::escape(allNames[i]);
+        allNames[i] = allNames[i].toHtmlEscaped();
     }
     return allNames.join("<br>");
 }
@@ -962,11 +962,11 @@ void MainWindow::process(QList<InstallOperation*> &install)
 
         dialogTitle = QObject::tr("Uninstall");
         msg = QString("<html><head/><body><h2>") +
-                Qt::escape(QObject::tr("The package %1 will be uninstalled.").
-                arg(pv->toString())) +
+                QObject::tr("The package %1 will be uninstalled.").
+                arg(pv->toString()).toHtmlEscaped() +
                 "</h2>" +
-                Qt::escape(QObject::tr("The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
-                arg(pv->getPath())) +
+                QObject::tr("The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
+                arg(pv->getPath()).toHtmlEscaped() +
                 "</body>";
         detailedMessage = QObject::tr("The package %1 will be uninstalled.").
                 arg(pv->toString());
@@ -976,8 +976,8 @@ void MainWindow::process(QList<InstallOperation*> &install)
                 installNames.count());
         dialogTitle = QObject::tr("Install");
         msg = QString("<html><head/><body><h2>") +
-                Qt::escape(QObject::tr("%1 package(s) will be installed:").
-                arg(installNames.count())) +
+                QObject::tr("%1 package(s) will be installed:").
+                arg(installNames.count()).toHtmlEscaped() +
                 "</h2><br><b>" +
                 createPackageVersionsHTML(installNames) +
                 "</b></body>";
@@ -990,12 +990,13 @@ void MainWindow::process(QList<InstallOperation*> &install)
                 uninstallNames.count());
         dialogTitle = QObject::tr("Uninstall");
         msg = QString("<html><head/><body><h2>") +
-                Qt::escape(QObject::tr("%1 package(s) will be uninstalled:").
-                arg(uninstallNames.count())) +
+                QObject::tr("%1 package(s) will be uninstalled:").
+                arg(uninstallNames.count()).toHtmlEscaped() +
                 "</h2><br><b>" +
                 createPackageVersionsHTML(uninstallNames) +
                 "</b>.<br><br>" +
-                Qt::escape(QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.")) +
+                QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
+                toHtmlEscaped() +
                 "</body>";
         detailedMessage = QObject::tr("%1 package(s) will be uninstalled:").
                 arg(uninstallNames.count()) + "\n" +
@@ -1009,8 +1010,8 @@ void MainWindow::process(QList<InstallOperation*> &install)
         msg = "<html><head/><body>";
         if (updateNames.count() > 0) {
             msg += "<h2>" +
-                    Qt::escape(QObject::tr("%3 package(s) will be updated:").
-                    arg(updateNames.count())) +
+                    QObject::tr("%3 package(s) will be updated:").
+                    arg(updateNames.count()).toHtmlEscaped() +
                     "</h2><br><b>" +
                     createPackageVersionsHTML(updateNames) +
                     "</b>";
@@ -1022,8 +1023,8 @@ void MainWindow::process(QList<InstallOperation*> &install)
         }
         if (uninstallNames.count() > 0) {
             msg += "<h2>" +
-                    Qt::escape(QObject::tr("%1 package(s) will be uninstalled:").
-                    arg(uninstallNames.count())) +
+                    QObject::tr("%1 package(s) will be uninstalled:").
+                    arg(uninstallNames.count()).toHtmlEscaped() +
                     "</h2><br><b>" +
                     createPackageVersionsHTML(uninstallNames) +
                     "</b>";
@@ -1035,8 +1036,8 @@ void MainWindow::process(QList<InstallOperation*> &install)
         }
         if (installNames.count() > 0) {
             msg += "<h2>" +
-                    Qt::escape(QObject::tr("%3 package(s) will be installed:").
-                    arg(installNames.count())) +
+                    QObject::tr("%3 package(s) will be installed:").
+                    arg(installNames.count()).toHtmlEscaped() +
                     "</h2><br><b>" +
                     createPackageVersionsHTML(installNames) +
                     "</b>";
@@ -1047,7 +1048,8 @@ void MainWindow::process(QList<InstallOperation*> &install)
                     installNames.join("\n");
         }
         msg += "<br><br>" +
-                Qt::escape(QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed."));
+                QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
+                toHtmlEscaped();
         msg += "</body>";
     }
 

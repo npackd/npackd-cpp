@@ -2,6 +2,7 @@
 
 #include <QMessageBox>
 #include <QBuffer>
+#include <qwinfunctions.h>
 
 #include "uiutils.h"
 
@@ -30,7 +31,7 @@ QString UIUtils::extractIconURL(const QString& iconFile)
         HICON ic = ExtractIcon(GetModuleHandle(NULL),
                 (LPCWSTR) icon.utf16(), iconIndex);
         if (((UINT_PTR) ic) > 1) {
-            QPixmap pm = QPixmap::fromWinHICON(ic);
+            QPixmap pm = QtWin::fromHICON(ic);
             if (!pm.isNull() && pm.width() > 0 &&
                     pm.height() > 0) {
                 QByteArray bytes;

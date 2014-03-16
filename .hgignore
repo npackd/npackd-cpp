@@ -31,3 +31,4 @@
 ^npackdgo/
 syntax: regexp
 \.pro\.user
+^npackd_lazarus/

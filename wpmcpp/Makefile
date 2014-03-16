@@ -10,13 +10,13 @@ PROFILE=release32
 
 ifeq (32,$(findstring 32,$(PROFILE)))
 QT=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=com.nokia.QtDev-i686-w64-Npackd-Release" "--versions=[4.8.2, 4.8.2]")
-MINGW=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=net.sourceforge.mingw-w64.MinGWW64" "--versions=[4.7.2, 4.7.2]")
+MINGW=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=net.sourceforge.mingw-w64.MinGWW64" "--versions=[4.8.2, 4.8.2]")
 QUAZIP=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.5, 0.5]")
 BITS=32
 else
-QT=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=com.nokia.QtDev-x86_64-w64-Npackd-Release" "--versions=[4.8.2, 4.8.2]")
-MINGW=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=net.sourceforge.mingw-w64.MinGWW6464" "--versions=[4.7.2, 4.7.2]")
-QUAZIP=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.5, 0.5]")
+QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.2.1
+MINGW=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.8.2, 4.8.2]")
+QUAZIP=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.6.2, 0.6.2]")
 BITS=64
 endif
 ifeq ($(PROFILE),release32)
@@ -58,7 +58,6 @@ printvars:
 	@echo MINGW=$(MINGW)
 	@echo QUAZIP=$(QUAZIP)
 	@echo QT=$(QT)
-	@echo MINGW=$(MINGW)
 	@echo AI=$(AI)
 	@echo SEVENZIP=$(SEVENZIP)
 	@echo QUAZIP=$(QUAZIP)
@@ -93,19 +92,19 @@ ifndef MINGWUTILS
 	$(error MINGWUTILS is not defined)
 endif
 
-clean:
+clean: printvars
 	-rmdir /s /q $(WHERE)
 
 compile: printvars
 	-mkdir $(WHERE)
 	rem note how && directly follows \bin. Otherwise the path would contain a space
-	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qmake\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
+	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
 
 prep: compile
 	-mkdir $(WHERE)\zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map zip\Npackd-$(VERSION).map
-	set path=$(MINGW)\bin&& "$(QT)\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
+	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
 	copy src\wpmcpp_es.qm $(WHERE)\zip\npackdg_es.qm
 	copy src\wpmcpp_ru.qm $(WHERE)\zip\npackdg_ru.qm
 	copy src\wpmcpp_fr.qm $(WHERE)\zip\npackdg_fr.qm
