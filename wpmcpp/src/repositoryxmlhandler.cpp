@@ -184,6 +184,15 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         QString path = atts.value("path");
         pvf = new PackageVersionFile(path, "");
         pv->files.append(pvf);
+    } else if (where == TAG_VERSION_HASH_SUM) {
+        QString type = atts.value("type").trimmed();
+        if (type.isEmpty() || type == "SHA-256")
+            pv->hashSumType = QCryptographicHash::Sha256;
+        else if (type == "SHA-1")
+            pv->hashSumType = QCryptographicHash::Sha1;
+        else
+            error = QObject::tr("Error in attribute 'type' in <hash-sum> in %1").
+                    arg(pv->toString());
     } else if (where == TAG_VERSION_DEPENDENCY) {
         QString package = atts.value("package");
         QString versions = atts.value("versions");
@@ -257,7 +266,6 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
         }
     } else if (where == TAG_VERSION_HASH_SUM) {
         pv->sha1 = chars.trimmed().toLower();
-        pv->hashSumType = QCryptographicHash::Sha256;
         if (!pv->sha1.isEmpty()) {
             error = WPMUtils::validateSHA256(pv->sha1);
             if (!error.isEmpty()) {

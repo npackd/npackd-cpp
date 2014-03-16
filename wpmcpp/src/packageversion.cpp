@@ -1740,8 +1740,10 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
     }
 
     QString hashSum;
+    QString hashSumType;
     if (err->isEmpty()) {
         hashSum = XMLUtils::getTagContent(*e, "hash-sum").trimmed().toLower();
+        hashSumType = e->attribute("type", "SHA-256").trimmed();
         if (!a->sha1.isEmpty() && !hashSum.isEmpty()) {
             *err = QObject::tr(
                     "SHA-1 and SHA-256 cannot be defined both for the same package version %1").
@@ -1749,9 +1751,22 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
         }
     }
 
+    QCryptographicHash::Algorithm alg = QCryptographicHash::Sha1;
+
+    if (err->isEmpty() && !hashSum.isEmpty()) {
+        if (hashSumType == "SHA-1")
+            alg = QCryptographicHash::Sha1;
+        else if (hashSumType == "SHA-256" || hashSumType.isEmpty())
+            alg = QCryptographicHash::Sha256;
+        else
+            *err = QObject::tr(
+                    "Unknown hash sum type %1 for %2").arg(hashSumType).
+                    arg(a->toString());
+    }
+
     if (err->isEmpty() && !hashSum.isEmpty()) {
         a->sha1 = hashSum;
-        a->hashSumType = QCryptographicHash::Sha256;
+        a->hashSumType = alg;
         if (validate) {
             if (!a->sha1.isEmpty()) {
                 *err = WPMUtils::validateSHA256(a->sha1);
