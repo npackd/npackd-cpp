@@ -1,4 +1,4 @@
-# This is the main build file for Npackd. It build both 32 bit and 64 bit
+# This is the main build file for Npackd. It builds both 32 bit and 64 bit
 # versions.
 
 # Parameter: release32, gprof32, release64, gprof64
@@ -95,14 +95,20 @@ endif
 clean: printvars
 	-rmdir /s /q $(WHERE)
 
-compile: printvars
+$(WHERE)/zip:
+	-mkdir $(WHERE)\zip
+
+$(WHERE):
 	-mkdir $(WHERE)
+
+$(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE) 
 	rem note how && directly follows \bin. Otherwise the path would contain a space
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
+
+compile: printvars $(WHERE) $(WHERE)/../Makefile
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
 
-prep: compile
-	-mkdir $(WHERE)\zip
+prep: compile $(WHERE)/zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map zip\Npackd-$(VERSION).map
 	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
 	copy src\wpmcpp_es.qm $(WHERE)\zip\npackdg_es.qm
