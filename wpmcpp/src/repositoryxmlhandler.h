@@ -26,6 +26,7 @@ class RepositoryXMLHandler: public QXmlDefaultHandler
         TAG_LICENSE,
         TAG_VERSION_URL,
         TAG_VERSION_SHA1,
+        TAG_VERSION_HASH_SUM,
         TAG_VERSION_DETECT_MSI,
         TAG_VERSION_DEPENDENCY_VARIABLE,
         TAG_VERSION_DETECT_FILE_PATH,

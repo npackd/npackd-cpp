@@ -237,6 +237,7 @@ PackageVersion::PackageVersion(const QString& package)
 {
     this->package = package;
     this->type = 0;
+    this->hashSumType = QCryptographicHash::Sha1;
 }
 
 PackageVersion::PackageVersion(const QString &package, const Version &version)
@@ -244,12 +245,14 @@ PackageVersion::PackageVersion(const QString &package, const Version &version)
     this->package = package;
     this->version = version;
     this->type = 0;
+    this->hashSumType = QCryptographicHash::Sha1;
 }
 
 PackageVersion::PackageVersion()
 {
     this->package = "unknown";
     this->type = 0;
+    this->hashSumType = QCryptographicHash::Sha1;
 }
 
 void PackageVersion::emitStatusChanged()
@@ -312,6 +315,7 @@ void PackageVersion::fillFrom(PackageVersion *pv)
     this->importantFilesTitles = pv->importantFilesTitles;
     this->type = pv->type;
     this->sha1 = pv->sha1;
+    this->hashSumType = pv->hashSumType;
     this->download = pv->download;
     this->msiGUID = pv->msiGUID;
 
@@ -864,54 +868,6 @@ QString PackageVersion::planUninstallation(QList<PackageVersion*>& installed,
     return res;
 }
 
-void PackageVersion::downloadTo(Job* job, QString filename)
-{
-    if (!this->download.isValid()) {
-        job->setErrorMessage(QObject::tr("No download URL"));
-        job->complete();
-        return;
-    }
-
-    QString r;
-
-    job->setHint(QObject::tr("Downloading"));
-    QTemporaryFile* f = 0;
-    Job* djob = job->newSubJob(0.9);
-    f = Downloader::download(djob, this->download);
-    if (!djob->getErrorMessage().isEmpty())
-        job->setErrorMessage(QString(QObject::tr("Download failed: %1")).arg(
-                djob->getErrorMessage()));
-    delete djob;
-
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Computing SHA1"));
-        r = WPMUtils::sha1(f->fileName());
-        job->setProgress(0.95);
-
-        if (!this->sha1.isEmpty() && this->sha1.toLower() != r.toLower()) {
-            job->setErrorMessage(QString(
-                    QObject::tr("Wrong SHA1: %1 was expected, but %2 found")).
-                    arg(this->sha1).arg(r));
-        }
-    }
-
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        QString errMsg;
-        QString t = filename.replace('/', '\\');
-        if (!CopyFileW((WCHAR*) f->fileName().utf16(),
-                       (WCHAR*) t.utf16(), false)) {
-            WPMUtils::formatMessage(GetLastError(), &errMsg);
-            job->setErrorMessage(errMsg);
-        } else {
-            job->setProgress(1);
-        }
-    }
-
-    delete f;
-
-    job->complete();
-}
-
 QString PackageVersion::getFileExtension()
 {
     if (this->download.isValid()) {
@@ -1144,7 +1100,7 @@ void PackageVersion::install(Job* job, const QString& where)
         } else {
             Job* djob = job->newSubJob(0.58);
             Downloader::download(djob, this->download, f,
-                    this->sha1.isEmpty() ? 0 : &dsha1);
+                    this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
             downloadOK = !djob->isCancelled() &&
                     djob->getErrorMessage().isEmpty();
             f->close();
@@ -1165,7 +1121,7 @@ void PackageVersion::install(Job* job, const QString& where)
                 double rest = 0.63 - job->getProgress();
                 Job* djob = job->newSubJob(rest);
                 Downloader::download(djob, this->download, f,
-                        this->sha1.isEmpty() ? 0 : &dsha1);
+                        this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
                 if (!djob->getErrorMessage().isEmpty())
                     job->setErrorMessage(QString(QObject::tr("Error downloading %1: %2")).
                         arg(this->download.toString()).arg(
@@ -1182,7 +1138,7 @@ void PackageVersion::install(Job* job, const QString& where)
         if (!this->sha1.isEmpty()) {
             if (dsha1.toLower() != this->sha1.toLower()) {
                 job->setErrorMessage(QString(
-                        QObject::tr("Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.")).arg(dsha1).
+                        QObject::tr("Hash sum %1 found, but %2 was expected. The file has changed.")).arg(dsha1).
                         arg(this->sha1));
             } else {
                 job->setProgress(0.64);
@@ -1662,6 +1618,7 @@ PackageVersion* PackageVersion::clone() const
 
     r->type = this->type;
     r->sha1 = this->sha1;
+    r->hashSumType = this->hashSumType;
     r->download = this->download;
     r->msiGUID = this->msiGUID;
 
@@ -1770,11 +1727,36 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
 
     if (err->isEmpty()) {
         a->sha1 = XMLUtils::getTagContent(*e, "sha1").trimmed().toLower();
+        a->hashSumType = QCryptographicHash::Sha1;
         if (validate) {
             if (!a->sha1.isEmpty()) {
                 *err = WPMUtils::validateSHA1(a->sha1);
                 if (!err->isEmpty()) {
                     err->prepend(QString(QObject::tr("Invalid SHA1 for %1: ")).
+                            arg(a->toString()));
+                }
+            }
+        }
+    }
+
+    QString hashSum;
+    if (err->isEmpty()) {
+        hashSum = XMLUtils::getTagContent(*e, "hash-sum").trimmed().toLower();
+        if (!a->sha1.isEmpty() && !hashSum.isEmpty()) {
+            *err = QObject::tr(
+                    "SHA-1 and SHA-256 cannot be defined both for the same package version %1").
+                    arg(a->toString());
+        }
+    }
+
+    if (err->isEmpty() && !hashSum.isEmpty()) {
+        a->sha1 = hashSum;
+        a->hashSumType = QCryptographicHash::Sha256;
+        if (validate) {
+            if (!a->sha1.isEmpty()) {
+                *err = WPMUtils::validateSHA256(a->sha1);
+                if (!err->isEmpty()) {
+                    err->prepend(QString(QObject::tr("Invalid SHA-256 for %1: ")).
                             arg(a->toString()));
                 }
             }
@@ -1972,7 +1954,10 @@ void PackageVersion::toXML(QDomElement* version) const {
         XMLUtils::addTextTag(*version, "url", this->download.toString());
     }
     if (!this->sha1.isEmpty()) {
-        XMLUtils::addTextTag(*version, "sha1", this->sha1);
+        if (this->hashSumType == QCryptographicHash::Sha1)
+            XMLUtils::addTextTag(*version, "sha1", this->sha1);
+        else
+            XMLUtils::addTextTag(*version, "hash-sum", this->sha1);
     }
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
@@ -2018,7 +2003,10 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeTextElement("url", this->download.toString());
     }
     if (!this->sha1.isEmpty()) {
-        w->writeTextElement("sha1", this->sha1);
+        if (this->hashSumType == QCryptographicHash::Sha1)
+            w->writeTextElement("sha1", this->sha1);
+        else
+            w->writeTextElement("hash-sum", this->sha1);
     }
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);

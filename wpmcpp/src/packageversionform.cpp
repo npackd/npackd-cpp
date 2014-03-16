@@ -103,8 +103,13 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     QString sha1;
     if (pv->sha1.isEmpty())
         sha1 = QObject::tr("n/a");
-    else
+    else {
         sha1 = pv->sha1;
+        if (pv->hashSumType == QCryptographicHash::Sha1)
+            sha1.prepend("SHA-1: ");
+        else
+            sha1.prepend("SHA-256: ");
+    }
     this->ui->lineEditSHA1->setText(sha1);
 
     this->ui->lineEditType->setText(pv->type == 0 ? "zip" : "one-file");

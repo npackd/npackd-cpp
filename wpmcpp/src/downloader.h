@@ -5,11 +5,12 @@
 #include <wininet.h>
 #include <stdint.h>
 
-#include "qtemporaryfile.h"
-#include "qurl.h"
-#include "qmetatype.h"
-#include "qobject.h"
-#include "qwaitcondition.h"
+#include <QTemporaryFile>
+#include <QUrl>
+#include <QMetaType>
+#include <QObject>
+#include <QWaitCondition>
+#include <QCryptographicHash>
 
 #include "job.h"
 
@@ -21,11 +22,14 @@ class Downloader: QObject
     Q_OBJECT
 
     static void readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
-            QString* sha1, int64_t contentLength);
+            QString* sha1, int64_t contentLength,
+            QCryptographicHash::Algorithm alg);
     static void readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
-            QString* sha1, int64_t contentLength);
+            QString* sha1, int64_t contentLength,
+            QCryptographicHash::Algorithm alg);
     static void readData(Job* job, HINTERNET hResourceHandle, QFile* file,
-            QString* sha1, bool gzip, int64_t contentLength);
+            QString* sha1, bool gzip, int64_t contentLength,
+            QCryptographicHash::Algorithm alg);
 
     static bool internetReadFileFully(HINTERNET resourceHandle,
             PVOID buffer, DWORD bufferSize, PDWORD bufferLength);
@@ -42,10 +46,12 @@ class Downloader: QObject
      * @param parentWindow window handle or 0 if not UI is required
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param useCache true = use Windows Internet cache on the local disk
+     * @param alg algorithm that should be used to compute the hash sum
      */
     static void downloadWin(Job* job, const QUrl& url, QFile* file,
             QString* mime, QString* contentDisposition,
-            HWND parentWindow=0, QString* sha1=0, bool useCache=false);
+            HWND parentWindow=0, QString* sha1=0, bool useCache=false,
+            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
 public:
     /**
      * @param job job for this method
@@ -66,9 +72,11 @@ public:
      *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param file the content will be stored here
+     * @param alg algorithm that should be used for computing the hash sum
      */
     static void download(Job* job, const QUrl& url, QFile* file,
-            QString* sha1=0);
+            QString* sha1=0,
+            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
 };
 
 #endif // DOWNLOADER_H
