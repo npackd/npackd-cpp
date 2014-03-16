@@ -20,7 +20,7 @@ void FileLoader::addWork(const FileLoaderItem &item)
 void FileLoader::run()
 {
     CoInitialize(NULL);
-    while (this->terminated != 1) {
+    while (this->terminated.load() != 1) {
         FileLoaderItem it;
         this->mutex.lock();
         if (!this->work.isEmpty())

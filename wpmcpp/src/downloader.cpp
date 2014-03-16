@@ -29,7 +29,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
 
     QString server = url.host();
     QString resource = url.path();
-    QString encQuery = url.encodedQuery();
+    QString encQuery = url.query(QUrl::FullyEncoded);
     if (!encQuery.isEmpty())
         resource.append('?').append(encQuery);
 
@@ -613,7 +613,7 @@ QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
                     defaultPasswordWindow, sha1, useCache);
         else if (url.toString().startsWith("data:image/png;base64,")) {
             QString dataURL_ = url.toString().mid(22);
-            QByteArray ba = QByteArray::fromBase64(dataURL_.toAscii());
+            QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
             if (file->write(ba) < 0)
                 job->setErrorMessage(file->errorString());
         }

@@ -79,7 +79,7 @@ void PackageFrame::fillForm(Package* p)
         }
         if (lic) {
             licenseTitle = "<a href=\"http://www.example.com\">" +
-                    Qt::escape(lic->title) + "</a>";
+                    lic->title.toHtmlEscaped() + "</a>";
             delete lic;
         }
     }
@@ -93,8 +93,8 @@ void PackageFrame::fillForm(Package* p)
             hp = QObject::tr("unknown");
         else{
             hp = p->url;
-            hp = "<a href=\"" + Qt::escape(hp) + "\">" + Qt::escape(hp) +
-                    "</a>";
+            hp = "<a href=\"" + hp.toHtmlEscaped() + "\">" +
+                    hp.toHtmlEscaped() + "</a>";
         }
         this->ui->labelHomePage->setText(hp);
         this->ui->labelCategory->setText(p->categories.join(", "));

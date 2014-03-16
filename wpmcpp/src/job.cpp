@@ -17,7 +17,7 @@ JobState::JobState()
     this->started = 0;
 }
 
-JobState::JobState(const JobState& s)
+JobState::JobState(const JobState& s) : QObject()
 {
     this->cancelRequested = s.cancelRequested;
     this->completed = s.completed;

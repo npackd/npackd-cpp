@@ -1,13 +1,16 @@
+// IE 6 SP2
+#define _WIN32_IE 0x0603
+
+#include <shobjidl.h>
 #include <windows.h>
+#include <initguid.h>
 #include <shellapi.h>
 #include <shlobj.h>
 #include <wininet.h>
 #include <stdlib.h>
 #include <time.h>
-#include <shobjidl.h>
 #include <ole2.h>
 #include <comcat.h>
-#include <initguid.h>
 
 #include <QUrl>
 #include <QDebug>
@@ -18,7 +21,7 @@
 #include <QMutex>
 #include <zlib.h>
 
-#include "msoav2.h"
+//#include "msoav2.h"
 #include "quazip.h"
 #include "quazipfile.h"
 

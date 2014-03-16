@@ -78,7 +78,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
                     QMessageBox::Critical);
         if (lic) {
             licenseTitle = "<a href=\"http://www.example.com\">" +
-                    Qt::escape(lic->title) + "</a>";
+                    lic->title.toHtmlEscaped() + "</a>";
             delete lic;
         }
     }
@@ -95,7 +95,8 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
         dl = QObject::tr("n/a");
     else {
         dl = pv->download.toString();        
-        dl = "<a href=\"" + Qt::escape(dl) + "\">" + Qt::escape(dl) + "</a>";
+        dl = "<a href=\"" + dl.toHtmlEscaped() + "\">" +
+                dl.toHtmlEscaped() + "</a>";
     }
     this->ui->labelDownloadURL->setText(dl);
 

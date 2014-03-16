@@ -1,7 +1,7 @@
 NPACKD_VERSION = $$system(type ..\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
-QT += xml sql
+QT += xml sql widgets winextras
 TARGET = wpmcpp
 TEMPLATE = app
 SOURCES += main.cpp \
@@ -105,6 +105,7 @@ FORMS += mainwindow.ui \
     mainframe.ui
 TRANSLATIONS = wpmcpp_es.ts wpmcpp_ru.ts wpmcpp_fr.ts wpmcpp_de.ts
 LIBS += -lquazip \
+    -lz \
     -lole32 \
     -luuid \
     -lwininet \
@@ -115,22 +116,23 @@ LIBS += -lquazip \
     -lmsi
 CONFIG += embed_manifest_exe
 CONFIG += static
+CONFIG += qt
 RC_FILE = wpmcpp.rc
 RESOURCES += wpmcpp.qrc
-DEFINES+=QUAZIP_STATIC=1
-INCLUDEPATH+=$$[QT_INSTALL_PREFIX]/src/3rdparty/zlib
-INCLUDEPATH+=$$(QUAZIP_PATH)/quazip
-QMAKE_LIBDIR+=$$(QUAZIP_PATH)/quazip/release
+DEFINES += QUAZIP_STATIC=1
+INCLUDEPATH += $$(QUAZIP_PATH)/quazip
+QMAKE_LIBDIR += $$(QUAZIP_PATH)/quazip/release
 
 # these 2 options can be used to add the debugging information to the "release"
 # build
 QMAKE_CXXFLAGS_RELEASE += -g
 QMAKE_LFLAGS_RELEASE -= -Wl,-s
 
-QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror
+QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
+    -Wno-missing-field-initializers -Wno-unused-parameter
 QMAKE_LFLAGS += -static
 
-QMAKE_LFLAGS_RELEASE += -Wl,-Map,$(DESTDIR)\\wpmcpp_release.map
+QMAKE_LFLAGS_RELEASE += -Wl,-Map,wpmcpp_release.map
 
 gprof {
     QMAKE_CXXFLAGS_RELEASE -= -O2
