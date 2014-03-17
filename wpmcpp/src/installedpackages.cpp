@@ -428,9 +428,10 @@ void InstalledPackages::refresh(Job *job)
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.65);
+            job->setProgress(0.69);
     }
 
+    /*
     if (job->shouldProceed(
             QObject::tr("Detecting Component Based Servicing packages"))) {
         AbstractThirdPartyPM* pm = new CBSThirdPartyPM();
@@ -440,6 +441,7 @@ void InstalledPackages::refresh(Job *job)
         if (job->getErrorMessage().isEmpty())
             job->setProgress(0.69);
     }
+    */
 
     timer.time(5);
 

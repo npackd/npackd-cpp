@@ -15,6 +15,12 @@ void MSIThirdPartyPM::scan(Job* job,
 {
     QStringList all = WPMUtils::findInstalledMSIProducts();
 
+    QStringList components = WPMUtils::findInstalledMSIComponents();
+    QMultiMap<QString, QString> p2c =
+            WPMUtils::mapMSIComponentsToProducts(components);
+
+    QString windowsDir = WPMUtils::getWindowsDir();
+
     DBRepository* dbr = DBRepository::getDefault();
     // qDebug() << all.at(0);
 
@@ -107,6 +113,33 @@ void MSIThirdPartyPM::scan(Job* job,
         QString dir = WPMUtils::getMSIProductLocation(guid, &err);
         if (!err.isEmpty())
             dir = "";
+
+        if (dir.isEmpty()) {
+            QList<QString> cmps = p2c.values(guid);
+            for (int i = 0; i < cmps.size(); i++) {
+                dir = WPMUtils::getMSIComponentPath(guid, cmps.at(i), &err);
+                if (err.isEmpty() && !dir.isEmpty() && !dir.at(0).isDigit()) {
+                    QFileInfo fi(dir);
+                    if (fi.isAbsolute() && fi.exists()) {
+                        QDir d;
+                        if (fi.isFile())
+                            d = fi.absoluteDir();
+                        else
+                            d = QDir(fi.absoluteFilePath());
+
+                        if (!d.isRoot() && !WPMUtils::isUnder(
+                                d.absolutePath(), windowsDir) &&
+                                !WPMUtils::pathEquals(d.absolutePath(),
+                                windowsDir)) {
+                            dir = d.absolutePath();
+                            // qDebug() << dir;
+                            break;
+                        }
+                    }
+                }
+                dir = "";
+            }
+        }
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);

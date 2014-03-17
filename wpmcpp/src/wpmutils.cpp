@@ -945,6 +945,29 @@ QString WPMUtils::getMSIProductAttribute(const QString &guid,
     return p;
 }
 
+QString WPMUtils::getMSIComponentPath(const QString& product,
+        const QString &guid,
+        QString *err)
+{
+    WCHAR value[MAX_PATH];
+    DWORD len;
+
+    len = sizeof(value) / sizeof(value[0]);
+    UINT r = MsiGetComponentPath(
+            (WCHAR*) product.utf16(),
+            (WCHAR*) guid.utf16(),
+            value, &len);
+    QString p;
+    if (r == INSTALLSTATE_LOCAL) {
+        p.setUtf16((ushort*) value, len);
+        err->clear();
+    } else {
+        *err = QObject::tr("Cannot determine MSI component location for GUID %1").
+                arg(guid);
+    }
+    return p;
+}
+
 bool WPMUtils::pathEquals(const QString& patha, const QString& pathb)
 {
     QString a = patha;
@@ -1007,6 +1030,39 @@ QStringList WPMUtils::findInstalledMSIProducts()
         index++;
     }
     return result;
+}
+
+QStringList WPMUtils::findInstalledMSIComponents()
+{
+    QStringList result;
+    WCHAR buf[39];
+    int index = 0;
+    while (true) {
+        UINT r = MsiEnumComponents(index, buf);
+        if (r != ERROR_SUCCESS)
+            break;
+        QString v;
+        v.setUtf16((ushort*) buf, 38);
+        result.append(v.toLower());
+        index++;
+    }
+    return result;
+}
+
+QMultiMap<QString, QString> WPMUtils::mapMSIComponentsToProducts(
+        const QStringList& components)
+{
+    QMultiMap<QString, QString> map;
+    WCHAR buf[39];
+    for (int i = 0; i < components.count(); i++) {
+        QString c = components.at(i);
+        if (MsiGetProductCode((LPCWSTR) c.utf16(), buf) == ERROR_SUCCESS) {
+            QString v;
+            v.setUtf16((ushort*) buf, 38);
+            map.insert(v.toLower(), c);
+        }
+    }
+    return map;
 }
 
 QString WPMUtils::getWindowsDir()
@@ -1722,7 +1778,7 @@ Package* WPMUtils::findOnePackage(const QString& package, QString* err)
                 names.append(pi->title).append(" (").append(pi->name).
                         append(")");
             }
-            *err = QObject::tr("Move than one package was found: %1").
+            *err = QObject::tr("More than one package was found: %1").
                     arg(names);
             qDeleteAll(packages);
         } else {

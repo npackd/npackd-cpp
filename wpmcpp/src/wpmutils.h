@@ -347,6 +347,11 @@ public:
     static QStringList findInstalledMSIProducts();
 
     /**
+     * @return GUIDs for installed components (MSI) in lower case
+     */
+    static QStringList findInstalledMSIComponents();
+
+    /**
      * Finds location of an installed MSI product.
      *
      * @param guid product GUID
@@ -516,6 +521,25 @@ public:
      *     only 0 if the error is not empty
      */
     static Package *findOnePackage(const QString &package, QString *err);
+
+    /**
+     * @brief maps MSI components to the corresponding products
+     * @param components MSI GUIDs of the components in lower case
+     * @return Product GUID -> Component GUID. All GUIDs are in lower case
+     */
+    static QMultiMap<QString, QString> mapMSIComponentsToProducts(
+            const QStringList &components);
+
+    /**
+     * @brief determines the location of an installed MSI component on disk
+     * @param product product GUID
+     * @param guid component GUID
+     * @param err error message or "" will be stored here
+     * @return component path on disk or in the Windows registry. See
+     *     MsiGetComponentPath documentation for more details
+     */
+    static QString getMSIComponentPath(const QString &product,
+            const QString &guid, QString *err);
 };
 
 #endif // WPMUTILS_H
