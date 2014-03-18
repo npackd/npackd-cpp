@@ -115,6 +115,7 @@ void MSIThirdPartyPM::scan(Job* job,
             dir = "";
 
         if (dir.isEmpty()) {
+            // TODO: it would be better to search for a common ancestor here
             QList<QString> cmps = p2c.values(guid);
             for (int i = 0; i < cmps.size(); i++) {
                 dir = WPMUtils::getMSIComponentPath(guid, cmps.at(i), &err);
@@ -132,7 +133,7 @@ void MSIThirdPartyPM::scan(Job* job,
                                 !WPMUtils::pathEquals(d.absolutePath(),
                                 windowsDir)) {
                             dir = d.absolutePath();
-                            // qDebug() << dir;
+                            // TODO: qDebug() << dir;
                             break;
                         }
                     }
