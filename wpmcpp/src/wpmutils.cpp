@@ -143,6 +143,12 @@ bool WPMUtils::isUnderOrEquals(const QString& file, const QStringList& dirs)
     return r;
 }
 
+bool WPMUtils::isUnderOrEquals(const QString& file, const QString& dir)
+{
+    return WPMUtils::pathEquals(file, dir) ||
+                WPMUtils::isUnder(file, dir);
+}
+
 QString WPMUtils::validateGUID(const QString& guid)
 {
     QString err;

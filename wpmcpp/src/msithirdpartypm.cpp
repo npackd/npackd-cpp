@@ -19,7 +19,7 @@ void MSIThirdPartyPM::scan(Job* job,
     QMultiMap<QString, QString> p2c =
             WPMUtils::mapMSIComponentsToProducts(components);
 
-    QString windowsDir = WPMUtils::getWindowsDir();
+    QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir());
 
     DBRepository* dbr = DBRepository::getDefault();
     // qDebug() << all.at(0);
@@ -106,6 +106,8 @@ void MSIThirdPartyPM::scan(Job* job,
 
             // qDebug() << guid << p->title;
 
+            qDebug() << p->title; // TODO: remove
+
             rep->savePackage(p.data());
         }
 
@@ -119,28 +121,33 @@ void MSIThirdPartyPM::scan(Job* job,
             QList<QString> cmps = p2c.values(guid);
             for (int i = 0; i < cmps.size(); i++) {
                 dir = WPMUtils::getMSIComponentPath(guid, cmps.at(i), &err);
-                if (err.isEmpty() && !dir.isEmpty() && !dir.at(0).isDigit()) {
-                    QFileInfo fi(dir);
-                    if (fi.isAbsolute() && fi.exists()) {
-                        QDir d;
-                        if (fi.isFile())
-                            d = fi.absoluteDir();
-                        else
-                            d = QDir(fi.absoluteFilePath());
+                if (err.isEmpty() && !dir.isEmpty()) {
+                    if (!dir.at(0).isDigit()) {
+                        QFileInfo fi(dir);
+                        if (fi.isAbsolute() && fi.exists()) {
+                            QDir d;
+                            if (fi.isFile())
+                                d = fi.absoluteDir();
+                            else
+                                d = QDir(fi.absoluteFilePath());
 
-                        if (!d.isRoot() && !WPMUtils::isUnder(
-                                d.absolutePath(), windowsDir) &&
-                                !WPMUtils::pathEquals(d.absolutePath(),
-                                windowsDir)) {
-                            dir = d.absolutePath();
-                            // TODO: qDebug() << dir;
-                            break;
+                            if (!d.isRoot() && !WPMUtils::isUnderOrEquals(
+                                    WPMUtils::normalizePath(d.absolutePath()),
+                                    windowsDir)) {
+                                dir = d.absolutePath();
+                                qDebug() << "cmp" << dir; // TODO: remove
+                                break;
+                            }
                         }
+                    } else {
+                        qDebug() << "cmp reg" << dir; // TODO: remove
                     }
                 }
                 dir = "";
             }
         }
+
+        qDebug() << "dir" << dir; // TODO: remove
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);

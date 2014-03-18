@@ -69,6 +69,35 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
 
     timer.time(1);
 
+    // remove packages and versions that are not installed
+    if (err.isEmpty()) {
+        QSet<QString> packages;
+        for (int i = 0; i < installed.size();i++) {
+            InstalledPackageVersion* ipv = installed.at(i);
+            packages.insert(ipv->package);
+        }
+
+        for (int i = 0; i < rep.packages.size(); ) {
+            Package* p = rep.packages.at(i);
+            if (!packages.contains(p->name)) {
+                //qDebug() << "removing" << p->name; // TODO: remove
+                rep.packages.removeAt(i);
+                rep.package2versions.remove(p->name);
+                delete p;
+            } else
+                i++;
+        }
+
+        for (int i = 0; i < rep.packageVersions.size(); ) {
+            PackageVersion* pv = rep.packageVersions.at(i);
+            if (!packages.contains(pv->package)) {
+                rep.packageVersions.removeAt(i);
+                delete pv;
+            } else
+                i++;
+        }
+    }
+
     if (err.isEmpty()) {
         job = new Job();
         DBRepository::getDefault()->saveAll(job, &rep, replace);
@@ -80,11 +109,14 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
     timer.time(2);
 
     QStringList packagePaths = this->getAllInstalledPackagePaths();
+    for (int i = 0; i < packagePaths.size(); i++) {
+        packagePaths[i] = WPMUtils::normalizePath(packagePaths.at(i));
+    }
 
     // qDebug() << "InstalledPackages::detect3rdParty.0";
 
     if (err.isEmpty()) {
-        QString windowsDir = WPMUtils::getWindowsDir();
+        QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir());
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
 
@@ -104,9 +136,10 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
             QString path = ipv->directory;
             if (!path.isEmpty()) {
                 path = WPMUtils::normalizePath(path);
-                if (WPMUtils::isUnderOrEquals(path, packagePaths) ||
-                        WPMUtils::pathEquals(path, windowsDir) ||
-                        WPMUtils::isUnder(path, windowsDir))
+                if (WPMUtils::isUnderOrEquals(path, packagePaths))
+                    continue;
+
+                if (WPMUtils::isUnderOrEquals(path, windowsDir))
                     ipv->directory = "";
             }
 
