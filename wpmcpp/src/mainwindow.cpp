@@ -724,9 +724,10 @@ void MainWindow::onShow()
 {
     DBRepository* dbr = DBRepository::getDefault();
     QString err = dbr->open();
-    if (err.isEmpty())
+    if (err.isEmpty()) {
+        fillList();
         recognizeAndLoadRepositories(true);
-    else
+    } else
         this->addErrorMessage(err, err, true, QMessageBox::Critical);
 }
 
@@ -1511,10 +1512,12 @@ void MainWindow::closeDetailTabs()
 
 void MainWindow::recognizeAndLoadRepositories(bool useCache)
 {
+    /* TODO
     QTableView* t = this->mainFrame->getTableWidget();
     PackageItemModel* m = (PackageItemModel*) t->model();
     m->setPackages(QList<Package*>());
     m->clearCache();
+    */
 
     Job* job = new Job();
     InstallThread* it = new InstallThread(0, 3, job);
@@ -2086,7 +2089,7 @@ void MainWindow::on_actionReload_Repositories_triggered()
         this->addErrorMessage(msg.arg(locked->toString()));
         delete locked;
     } else {
-        closeDetailTabs();
+        // TODO: closeDetailTabs();
         recognizeAndLoadRepositories(true);
     }
 }
