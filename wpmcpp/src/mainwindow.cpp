@@ -1512,13 +1512,6 @@ void MainWindow::closeDetailTabs()
 
 void MainWindow::recognizeAndLoadRepositories(bool useCache)
 {
-    /* TODO
-    QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = (PackageItemModel*) t->model();
-    m->setPackages(QList<Package*>());
-    m->clearCache();
-    */
-
     Job* job = new Job();
     InstallThread* it = new InstallThread(0, 3, job);
     it->useCache = useCache;
@@ -1614,6 +1607,11 @@ void MainWindow::setActionAccelerators(QWidget* w) {
 
 void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 {
+    QTableView* t = this->mainFrame->getTableWidget();
+    PackageItemModel* m = (PackageItemModel*) t->model();
+    m->setPackages(QList<Package*>());
+    m->clearCache();
+
     fillList();
 
     this->reloadRepositoriesThreadRunning = false;

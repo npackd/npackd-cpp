@@ -140,6 +140,15 @@ public:
     static bool isUnderOrEquals(const QString& file, const QStringList& dirs);
 
     /**
+     * Checks if a file or a directory is under the specified directory or
+     * equals to it.
+     *
+     * @param file file or directory. The path should be normalized.
+     * @param dir directory. The path should be normalized
+     */
+    static bool isUnderOrEquals(const QString &file, const QString &dir);
+
+    /**
      * Validates a GUID
      *
      * @param guid a GUID
@@ -539,7 +548,7 @@ public:
      *     MsiGetComponentPath documentation for more details
      */
     static QString getMSIComponentPath(const QString &product,
-            const QString &guid, QString *err);
+                                       const QString &guid, QString *err);
 };
 
 #endif // WPMUTILS_H
