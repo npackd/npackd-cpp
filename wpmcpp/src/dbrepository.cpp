@@ -948,17 +948,6 @@ QString DBRepository::clear()
 
     this->categories.clear();
 
-    bool transactionStarted = false;
-    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
-        QString err = exec("BEGIN TRANSACTION");
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else {
-            job->setProgress(0.01);
-            transactionStarted = true;
-        }
-    }
-
     if (job->shouldProceed(QObject::tr("Clearing the packages table"))) {
         QString err = exec("DELETE FROM PACKAGE");
         if (!err.isEmpty())
@@ -988,18 +977,7 @@ QString DBRepository::clear()
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.97);
-    }
-
-    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
-        QString err = exec("COMMIT");
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
             job->setProgress(1);
-    } else {
-        if (transactionStarted)
-            exec("ROLLBACK");
     }
 
     job->complete();
@@ -1103,23 +1081,23 @@ void DBRepository::updateF5(Job* job)
      */
     timer.time(0);
 
-    if (job->shouldProceed(QObject::tr("Clearing the database"))) {
-        QString err = clear();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
-            job->setProgress(0.01);
-    }
-
     bool transactionStarted = false;
     if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
-            job->setProgress(0.02);
+            job->setProgress(0.01);
             transactionStarted = true;
         }
+    }
+
+    if (job->shouldProceed(QObject::tr("Clearing the database"))) {
+        QString err = clear();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.02);
     }
 
     timer.time(1);
