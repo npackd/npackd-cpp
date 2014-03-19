@@ -106,7 +106,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
             // qDebug() << guid << p->title;
 
-            qDebug() << p->title; // TODO: remove
+            // qDebug() << p->title; // TODO: remove
 
             rep->savePackage(p.data());
         }

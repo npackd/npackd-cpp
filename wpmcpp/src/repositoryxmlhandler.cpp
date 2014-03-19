@@ -203,7 +203,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
             error = QObject::tr("Error in attribute 'versions' in <dependency> in %1").
                     arg(pv->toString());
     } else if (where == TAG_VERSION_DETECT_FILE) {
-        qDebug() << pv->toString();
+        // qDebug() << pv->toString();
         df = new DetectFile();
         pv->detectFiles.append(df);
     } else if (where == TAG_PACKAGE) {

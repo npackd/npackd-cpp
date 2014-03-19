@@ -99,6 +99,8 @@ private:
     void load(Job *job, bool useCache);
 
     void loadOne(QUrl *url, Job *job, bool useCache);
+
+    int count(const QString &sql, QString *err);
 public:
     /**
      * @return default repository
@@ -142,9 +144,11 @@ public:
 
     /**
      * @brief opens the database
+     * @param connectionName name for the database connection
+     * @param file database file
      * @return error
      */
-    QString open();
+    QString open(const QString &connectionName, const QString &file);
 
     /**
      * @brief update the status for the specified package
