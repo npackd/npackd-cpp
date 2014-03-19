@@ -47,7 +47,8 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
     return this->data.value(PackageVersion::getStringId(package, version));
 }
 
-QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
+QString InstalledPackages::detect3rdParty(DBRepository* r,
+        AbstractThirdPartyPM *pm,
         bool replace, const QString& detectionInfoPrefix)
 {
     HRTimer timer(5);
@@ -100,7 +101,7 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
 
     if (err.isEmpty()) {
         job = new Job();
-        DBRepository::getDefault()->saveAll(job, &rep, replace);
+        r->saveAll(job, &rep, replace);
         if (!job->getErrorMessage().isEmpty())
             err = job->getErrorMessage();
         delete job;
@@ -145,7 +146,7 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
 
             // qDebug() << "    0.2";
 
-            processOneInstalled3rdParty(ipv);
+            processOneInstalled3rdParty(r, ipv);
         }
     }
 
@@ -186,14 +187,13 @@ QString InstalledPackages::detect3rdParty(AbstractThirdPartyPM *pm,
     return err;
 }
 
-void InstalledPackages::processOneInstalled3rdParty(
+void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         InstalledPackageVersion* ipv)
 {
     QString err;
 
     QDir d;
 
-    AbstractRepository* r = AbstractRepository::getDefault_();
     QScopedPointer<PackageVersion> pv(
             r->findPackageVersion_(ipv->package, ipv->version, &err));
 
@@ -374,7 +374,7 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
     return r;
 }
 
-void InstalledPackages::refresh(Job *job)
+void InstalledPackages::refresh(DBRepository *rep, Job *job)
 {
     /* Example:
 0 :  0  ms
@@ -430,7 +430,7 @@ void InstalledPackages::refresh(Job *job)
     if (job->shouldProceed(QObject::tr("Adding well-known packages"))) {
         AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
                 this->packageName);
-        job->setErrorMessage(detect3rdParty(pm, false));
+        job->setErrorMessage(detect3rdParty(rep, pm, false));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
@@ -441,7 +441,6 @@ void InstalledPackages::refresh(Job *job)
 
     if (job->shouldProceed(QObject::tr("Setting the NPACKD_CL environment variable"))) {
         job->setHint("Updating NPACKD_CL");
-        AbstractRepository* rep = AbstractRepository::getDefault_();
         QString err = rep->updateNpackdCLEnvVar();
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -457,7 +456,7 @@ void InstalledPackages::refresh(Job *job)
         // MSI package detection should happen before the detection for
         // control panel programs
         AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(pm, true, "msi:"));
+        job->setErrorMessage(detect3rdParty(rep, pm, true, "msi:"));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
@@ -482,7 +481,7 @@ void InstalledPackages::refresh(Job *job)
         // detecting from the list of installed packages should happen first
         // as all other packages consult the list of installed packages
         AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(pm, false));
+        job->setErrorMessage(detect3rdParty(rep, pm, false));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
@@ -496,7 +495,7 @@ void InstalledPackages::refresh(Job *job)
     if (job->shouldProceed(
             QObject::tr("Detecting software control panel packages"))) {
         AbstractThirdPartyPM* pm = new ControlPanelThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(pm, true, "control-panel:"));
+        job->setErrorMessage(detect3rdParty(rep, pm, true, "control-panel:"));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())

@@ -66,6 +66,31 @@ QString DBRepository::exec(const QString& sql)
     return toString(q.lastError());
 }
 
+int DBRepository::count(const QString& sql, QString* err)
+{
+    int n = 0;
+
+    *err = "";
+
+    MySQLQuery q(db);
+    if (!q.exec(sql))
+        *err = toString(q.lastError());
+
+    if (err->isEmpty()) {
+        if (!q.next())
+            *err = QObject::tr("No records found");
+    }
+
+    if (err->isEmpty()) {
+        bool ok;
+        n = q.value(0).toInt(&ok);
+        if (!ok)
+            *err = QObject::tr("Not a number");
+    }
+
+    return n;
+}
+
 QString DBRepository::saveLicense(License* p, bool replace)
 {
     QString err;
@@ -1066,112 +1091,186 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
 
 void DBRepository::updateF5(Job* job)
 {
-    HRTimer timer(9);
+    DBRepository temp;
+    QTemporaryFile tempFile;
+    bool tempDatabaseOpen = false;
+    if (job->shouldProceed(QObject::tr("Creating a temporary file"))) {
+        if (!tempFile.open()) {
+            job->setErrorMessage(QObject::tr("Error creating a temporary file"));
+        } else {
+            tempFile.close();
+            job->setProgress(0.01);
+        }
+    }
 
-    /*
-     * Example:
-    0 :  0  ms
-    1 :  43  ms
-    2 :  3343  ms
-    3 :  1366  ms
-    4 :  2809  ms
-    5 :  5683  ms
-    6 :  0  ms
-    7 :  848  ms
-     */
-    timer.time(0);
-
-    bool transactionStarted = false;
-    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
-        QString err = exec("BEGIN TRANSACTION");
+    if (job->shouldProceed(QObject::tr("Creating a temporary database"))) {
+        QString err = temp.open("tempdb", tempFile.fileName());
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
-            job->setProgress(0.01);
+            tempDatabaseOpen = true;
+            job->setProgress(0.02);
+        }
+    }
+
+    bool transactionStarted = false;
+    if (job->shouldProceed(QObject::tr("Starting an SQL transaction (tempdb)"))) {
+        QString err = temp.exec("BEGIN TRANSACTION");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else {
+            job->setProgress(0.03);
             transactionStarted = true;
         }
     }
 
-    if (job->shouldProceed(QObject::tr("Clearing the database"))) {
-        QString err = clear();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
-            job->setProgress(0.02);
-    }
-
-    timer.time(1);
     if (job->shouldProceed(
-            QObject::tr("Downloading the remote repositories and filling the local database"))) {
+            QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"))) {
         Job* sub = job->newSubJob(0.3);
-        load(sub, true);
+        temp.load(sub, true);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
     }
 
-    timer.time(2);
-
-    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
-        QString err = exec("COMMIT");
+    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction (tempdb)"))) {
+        QString err = temp.exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
             job->setProgress(0.35);
     } else {
         if (transactionStarted)
-            exec("ROLLBACK");
+            temp.exec("ROLLBACK");
     }
 
-    timer.time(3);
-
-    timer.time(4);
-
-    if (job->shouldProceed(QObject::tr("Refreshing the installation status"))) {
+    if (job->shouldProceed(QObject::tr("Refreshing the installation status (tempdb)"))) {
         Job* sub = job->newSubJob(0.4);
-        InstalledPackages::getDefault()->refresh(sub);
+        InstalledPackages::getDefault()->refresh(&temp, sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
     }
-
-    timer.time(5);
 
     if (job->shouldProceed(
-            QObject::tr("Updating the status for installed packages in the database"))) {
+            QObject::tr("Updating the status for installed packages in the database (tempdb)"))) {
         Job* sub = job->newSubJob(0.05);
-        updateStatusForInstalled(sub);
+        temp.updateStatusForInstalled(sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
         delete sub;
     }
 
-    timer.time(6);
-    if (job->shouldProceed(QObject::tr("Reading categories"))) {
-        QString err = readCategories();
-        if (err.isEmpty())
-            job->setProgress(0.99);
-        else
-            job->setErrorMessage(err);
-    }
-
-    // qDebug() << "updateF5.2";
-
-    timer.time(7);
     if (job->shouldProceed(
             QObject::tr("Removing packages without versions"))) {
-        QString err = exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
+        QString err = temp.exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION "
                 "WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
-            job->setProgress(0.995);
+            job->setProgress(0.85);
         else
             job->setErrorMessage(err);
     }
 
-    timer.time(8);
+    if (job->shouldProceed(
+            QObject::tr("Attaching the temporary database"))) {
+        QString err = exec("ATTACH '" + tempFile.fileName() + "' as tempdb");
+        if (err.isEmpty())
+            job->setProgress(0.90);
+        else
+            job->setErrorMessage(err);
+    }
 
-    // timer.dump();
+    /*QString error;
+    //tempFile.setAutoRemove(false);
+    qDebug() << "packages in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE", &error);
+    qDebug() << error;
+    qDebug() << "package versions in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE_VERSION", &error);
+    qDebug() << error;
+    qDebug() << tempFile.fileName();
+    */
+
+    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
+        QString err = exec("BEGIN TRANSACTION");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else {
+            job->setProgress(0.91);
+            transactionStarted = true;
+        }
+    }
+
+    if (job->shouldProceed(
+            QObject::tr("Clearing the database"))) {
+        QString err = clear();
+        if (err.isEmpty())
+            job->setProgress(0.92);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed(
+            QObject::tr("Transferring the data from the temporary database"))) {
+        // exec("DROP INDEX PACKAGE_VERSION_PACKAGE_NAME");
+        QString err = exec("INSERT INTO PACKAGE SELECT * FROM tempdb.PACKAGE");
+        if (err.isEmpty())
+            err = exec("INSERT INTO PACKAGE_VERSION SELECT * FROM tempdb.PACKAGE_VERSION");
+        if (err.isEmpty())
+            err = exec("INSERT INTO LICENSE SELECT * FROM tempdb.LICENSE");
+        if (err.isEmpty())
+            err = exec("INSERT INTO CATEGORY SELECT * FROM tempdb.CATEGORY");
+        if (err.isEmpty())
+            job->setProgress(0.95);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
+        QString err = exec("COMMIT");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.99);
+    } else {
+        if (transactionStarted)
+            exec("ROLLBACK");
+    }
+
+    /*
+    qDebug() << "packages in db" << count("SELECT COUNT(*) FROM PACKAGE", &error);
+    qDebug() << error;
+    qDebug() << "package versions in db" << count("SELECT COUNT(*) FROM PACKAGE_VERSION", &error);
+    qDebug() << error;
+    qDebug() << tempFile.fileName();
+    */
+
+    if (job->shouldProceed(
+            QObject::tr("Detaching the temporary database"))) {
+        QString err;
+        for (int i = 0; i < 10; i++) {
+            err = exec("DETACH tempdb");
+            if (err.isEmpty())
+                break;
+            else
+                Sleep(1000);
+        }
+
+        if (err.isEmpty())
+            job->setProgress(0.90);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed(QObject::tr("Reading categories"))) {
+        QString err = readCategories();
+        if (err.isEmpty())
+            job->setProgress(1);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (tempDatabaseOpen)
+        temp.db.close();
 
     job->complete();
 }
@@ -1484,20 +1583,12 @@ QString DBRepository::updateStatus(const QString& package)
     return err;
 }
 
-QString DBRepository::open()
+QString DBRepository::open(const QString& connectionName, const QString& file)
 {
     QString err;
 
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
-    QDir d;
-    if (!d.exists(dir))
-        d.mkpath(dir);
-
-    QString path = dir + "\\Data.db";
-
-    path = QDir::toNativeSeparators(path);
-    db.setDatabaseName(path);
+    db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+    db.setDatabaseName(file);
     db.open();
     err = toString(db.lastError());
 

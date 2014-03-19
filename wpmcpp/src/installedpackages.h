@@ -11,6 +11,7 @@
 #include "windowsregistry.h"
 #include "job.h"
 #include "abstractthirdpartypm.h"
+#include "dbrepository.h"
 
 /**
  * @brief information about installed packages
@@ -38,7 +39,8 @@ private:
     void detectJDK(bool w64bit);
     void detectWindows();
 
-    void processOneInstalled3rdParty(InstalledPackageVersion *ipv);
+    void processOneInstalled3rdParty(DBRepository *r,
+            InstalledPackageVersion *ipv);
 
     /**
      * @param exact if true, only exact matches to packages from current
@@ -118,6 +120,7 @@ public:
      *         "Uninstall.bat" will be stored in the package directory, if
      *         it does not already exist.
      *
+     * @param r [ownership:caller] repository where all the data will be stored
      * @param pm [ownership:caller] a 3rd party package manager
      * @param replace should the existing entries be replaced?
      * @param detectionInfoPrefix prefix for all detection info values
@@ -129,7 +132,8 @@ public:
      *     be not installed anymore.
      * @return error message
      */
-    QString detect3rdParty(AbstractThirdPartyPM* pm, bool replace=false,
+    QString detect3rdParty(DBRepository *r,
+            AbstractThirdPartyPM* pm, bool replace=false,
             const QString &detectionInfoPrefix="");
 
     /**
@@ -186,9 +190,10 @@ public:
      * and "Software" control panel. Checks also that the package versions
      * directories are still present.
      *
+     * @param rep repository that should be used
      * @param job job for this method
      */
-    void refresh(Job* job);
+    void refresh(DBRepository *rep, Job* job);
 
     /**
      * @brief returns the path of an installed package version

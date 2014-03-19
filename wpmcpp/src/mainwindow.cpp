@@ -176,14 +176,14 @@ void ScanHardDrivesThread::run()
         */
 
     QString err;
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     QList<PackageVersion*> s1 = r->getInstalled_(&err);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
 
     ScanDiskThirdPartyPM* sd = new ScanDiskThirdPartyPM();
-    err = InstalledPackages::getDefault()->detect3rdParty(sd, false);
+    err = InstalledPackages::getDefault()->detect3rdParty(r, sd, false);
     delete sd;
     if (!err.isEmpty())
         job->setErrorMessage(err);
@@ -723,7 +723,22 @@ void MainWindow::monitor(Job* job, const QString& title, QThread* thread)
 void MainWindow::onShow()
 {
     DBRepository* dbr = DBRepository::getDefault();
-    QString err = dbr->open();
+
+    QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
+    QDir d;
+    if (!d.exists(dir))
+        d.mkpath(dir);
+
+    QString path = dir + "\\Data.db";
+
+    path = QDir::toNativeSeparators(path);
+
+    QString err = dbr->open("default", path);
+
+    if (err.isEmpty()) {
+        err = InstalledPackages::getDefault()->readRegistryDatabase();
+    }
+
     if (err.isEmpty()) {
         fillList();
         recognizeAndLoadRepositories(true);
