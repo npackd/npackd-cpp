@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <paths>
+        <dir name="C:/Users/t/projects/windows-package-manager/1.19/wpmcpp/src"/>
+    </paths>
+    <libraries>
+        <library>qt</library>
+        <library>windows</library>
+    </libraries>
+</project>

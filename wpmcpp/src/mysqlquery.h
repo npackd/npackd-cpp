@@ -2,9 +2,11 @@
 #define MYSQLQUERY_H
 
 #include <QSqlQuery>
+#include <QSqlDatabase>
 
 class MySQLQuery: public QSqlQuery {
 public:
+    explicit MySQLQuery(QSqlDatabase db);
     bool exec(const QString& query);
     bool exec();
     bool next();

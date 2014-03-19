@@ -246,7 +246,7 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_VERSION_URL) {
         QString url = chars.trimmed();
         if (!url.isEmpty()) {
-            pv->download.setUrl(url, QUrl::StrictMode);
+            pv->download.setUrl(url);
             QUrl d = pv->download;
             if (!d.isValid() || d.isRelative() ||
                     (d.scheme() != "http" && d.scheme() != "https")) {

@@ -1703,7 +1703,7 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
     if (err->isEmpty()) {
         QString url = XMLUtils::getTagContent(*e, "url").trimmed();
         if (!url.isEmpty()) {
-            a->download.setUrl(url, QUrl::StrictMode);
+            a->download.setUrl(url);
             if (validate) {
                 QUrl d = a->download;
                 if (!d.isValid() || d.isRelative() ||
