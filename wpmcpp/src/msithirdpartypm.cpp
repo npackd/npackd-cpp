@@ -135,19 +135,19 @@ void MSIThirdPartyPM::scan(Job* job,
                                     WPMUtils::normalizePath(d.absolutePath()),
                                     windowsDir)) {
                                 dir = d.absolutePath();
-                                qDebug() << "cmp" << dir; // TODO: remove
+                                // qDebug() << "cmp" << dir; // TODO: remove
                                 break;
                             }
                         }
                     } else {
-                        qDebug() << "cmp reg" << dir; // TODO: remove
+                        // qDebug() << "cmp reg" << dir; // TODO: remove
                     }
                 }
                 dir = "";
             }
         }
 
-        qDebug() << "dir" << dir; // TODO: remove
+        // qDebug() << "dir" << dir; // TODO: remove
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);

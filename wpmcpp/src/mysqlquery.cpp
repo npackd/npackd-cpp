@@ -1,5 +1,9 @@
 #include "mysqlquery.h"
 
+MySQLQuery::MySQLQuery(QSqlDatabase db) : QSqlQuery(db)
+{
+}
+
 bool MySQLQuery::exec(const QString &query)
 {
     //DWORD start = GetTickCount();

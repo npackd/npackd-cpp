@@ -61,7 +61,7 @@ DBRepository* DBRepository::getDefault()
 
 QString DBRepository::exec(const QString& sql)
 {
-    MySQLQuery q;
+    MySQLQuery q(db);
     q.exec(sql);
     return toString(q.lastError());
 }
@@ -70,7 +70,7 @@ QString DBRepository::saveLicense(License* p, bool replace)
 {
     QString err;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
 
     QString sql = "INSERT OR ";
     if (replace)
@@ -100,7 +100,7 @@ bool DBRepository::tableExists(QSqlDatabase* db,
 {
     *err = "";
 
-    MySQLQuery q;
+    MySQLQuery q(*db);
     if (!q.prepare("SELECT name FROM sqlite_master WHERE "
             "type='table' AND name=:NAME"))
         *err = toString(q.lastError());
@@ -124,7 +124,7 @@ bool DBRepository::columnExists(QSqlDatabase* db,
 {
     *err = "";
 
-    MySQLQuery q;
+    MySQLQuery q(*db);
     if (!q.exec("PRAGMA table_info(" + table + ")"))
         *err = toString(q.lastError());
 
@@ -149,7 +149,7 @@ Package *DBRepository::findPackage_(const QString &name)
 
     Package* r = 0;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, CATEGORY1, CATEGORY2, "
             "CATEGORY3, CATEGORY4 "
@@ -197,7 +197,7 @@ PackageVersion* DBRepository::findPackageVersion_(
     QString version_ = v.getVersionString();
     PackageVersion* r = 0;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, "
             "PACKAGE, CONTENT, MSIGUID FROM PACKAGE_VERSION "
             "WHERE NAME = :NAME AND PACKAGE = :PACKAGE"))
@@ -239,7 +239,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
 
     QList<PackageVersion*> r;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
             "WHERE PACKAGE = :PACKAGE"))
         *err = toString(q.lastError());
@@ -284,7 +284,7 @@ QList<PackageVersion *> DBRepository::getPackageVersions2(const QString& package
 
     QList<PackageVersion*> r;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, URL FROM PACKAGE_VERSION "
             "WHERE PACKAGE = :PACKAGE"))
         *err = toString(q.lastError());
@@ -306,7 +306,7 @@ QList<PackageVersion *> DBRepository::getPackageVersions2(const QString& package
             break;
         } else {
             PackageVersion* pv = new PackageVersion(package, version);
-            pv->download.setUrl(url, QUrl::StrictMode);
+            pv->download.setUrl(url);
             r.append(pv);
         }
     }
@@ -321,7 +321,7 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
 
     QList<PackageVersion*> r;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
             "WHERE DETECT_FILE_COUNT > 0"))
         *err = toString(q.lastError());
@@ -365,7 +365,7 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     License* r = 0;
     License* cached = this->licenses.object(name);
     if (!cached) {
-        MySQLQuery q;
+        MySQLQuery q(db);
 
         if (!q.prepare("SELECT NAME, TITLE, DESCRIPTION, URL "
                 "FROM LICENSE "
@@ -461,7 +461,7 @@ QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
     QString sql = "SELECT NAME FROM CATEGORY WHERE ID IN (" +
             ids.join(", ") + ")";
 
-    MySQLQuery q;
+    MySQLQuery q(db);
 
     if (!q.prepare(sql))
         *err = DBRepository::toString(q.lastError());
@@ -540,7 +540,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
             where + " GROUP BY CATEGORY.ID, CATEGORY.NAME "
             "ORDER BY CATEGORY.NAME";
 
-    MySQLQuery q;
+    MySQLQuery q(db);
 
     if (!q.prepare(sql))
         *err = DBRepository::toString(q.lastError());
@@ -576,7 +576,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
 
     QList<Package*> r;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     QString sql = "SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, "
             "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
@@ -626,7 +626,7 @@ int DBRepository::insertCategory(int parent, int level,
     *err = "";
 
     if (!selectCategoryQuery) {
-        selectCategoryQuery = new MySQLQuery();
+        selectCategoryQuery = new MySQLQuery(db);
 
         QString sql = "SELECT ID FROM CATEGORY WHERE PARENT = :PARENT AND "
                 "LEVEL = :LEVEL AND NAME = :NAME";
@@ -650,7 +650,7 @@ int DBRepository::insertCategory(int parent, int level,
         if (selectCategoryQuery->next())
             id = selectCategoryQuery->value(0).toInt();
         else {
-            MySQLQuery q;
+            MySQLQuery q(db);
             QString sql = "INSERT INTO CATEGORY "
                     "(ID, NAME, PARENT, LEVEL) "
                     "VALUES (NULL, :NAME, :PARENT, :LEVEL)";
@@ -720,8 +720,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
     }
 
     if (!insertPackageQuery) {
-        insertPackageQuery = new MySQLQuery();
-        replacePackageQuery = new MySQLQuery();
+        insertPackageQuery = new MySQLQuery(db);
+        replacePackageQuery = new MySQLQuery(db);
 
         QString insertSQL = "INSERT OR IGNORE";
         QString replaceSQL = "INSERT OR REPLACE";
@@ -818,7 +818,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
 
     QList<Package*> r;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
             "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
@@ -858,7 +858,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
     QString err;
 
     if (!savePackageVersionQuery) {
-        savePackageVersionQuery = new MySQLQuery();
+        savePackageVersionQuery = new MySQLQuery(db);
         QString sql = "INSERT OR ";
         if (replace)
             sql += "REPLACE";
@@ -906,7 +906,7 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
 
     PackageVersion* r = 0;
 
-    MySQLQuery q;
+    MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, "
             "PACKAGE, CONTENT FROM PACKAGE_VERSION "
             "WHERE MSIGUID = :MSIGUID"))
@@ -1331,7 +1331,7 @@ QString DBRepository::readCategories()
 
     QString sql = "SELECT ID, NAME FROM CATEGORY";
 
-    MySQLQuery q;
+    MySQLQuery q(db);
 
     if (!q.prepare(sql))
         err = DBRepository::toString(q.lastError());
@@ -1358,7 +1358,7 @@ QStringList DBRepository::readRepositories(QString* err)
 
     QString sql = "SELECT ID, URL FROM REPOSITORY ORDER BY ID";
 
-    MySQLQuery q;
+    MySQLQuery q(db);
 
     if (!q.prepare(sql))
         *err = DBRepository::toString(q.lastError());
@@ -1380,7 +1380,7 @@ QString DBRepository::saveRepositories(const QStringList &reps)
 {
     QString err = exec("DELETE FROM REPOSITORY");
 
-    MySQLQuery q;
+    MySQLQuery q(db);
 
     if (err.isEmpty()) {
         QString sql = "INSERT INTO REPOSITORY "
@@ -1466,7 +1466,7 @@ QString DBRepository::updateStatus(const QString& package)
             status = Package::NOT_INSTALLED;
         }
 
-        MySQLQuery q;
+        MySQLQuery q(db);
         if (!q.prepare("UPDATE PACKAGE "
                 "SET STATUS=:STATUS "
                 "WHERE NAME=:NAME"))
@@ -1488,7 +1488,7 @@ QString DBRepository::open()
 {
     QString err;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db = QSqlDatabase::addDatabase("QSQLITE");
     QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
     QDir d;
     if (!d.exists(dir))

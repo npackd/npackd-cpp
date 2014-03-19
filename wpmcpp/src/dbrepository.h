@@ -39,6 +39,8 @@ private:
     MySQLQuery* replacePackageQuery;
     MySQLQuery* selectCategoryQuery;
 
+    QSqlDatabase db;
+
     QString readCategories();
     QString getCategoryPath(int c0, int c1, int c2, int c3, int c4) const;
     int insertCategory(int parent, int level,
