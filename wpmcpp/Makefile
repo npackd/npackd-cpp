@@ -9,14 +9,15 @@ PROFILE=release32
 .PHONY: all printvars clean compile prep zip msi gprof drmemory
 
 ifeq (32,$(findstring 32,$(PROFILE)))
-QT=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=com.nokia.QtDev-i686-w64-Npackd-Release" "--versions=[4.8.2, 4.8.2]")
-MINGW=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=net.sourceforge.mingw-w64.MinGWW64" "--versions=[4.8.2, 4.8.2]")
-QUAZIP=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.5, 0.5]")
+QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.2.1
+MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.8.2, 4.8.2]")
+#QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.6.2, 0.6.2]")
+QUAZIP=C:\windows-package-manager.npackd-scripts\build-packages\quazip-dev-i686-w64-static-0.6.2
 BITS=32
 else
 QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.2.1
-MINGW=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.8.2, 4.8.2]")
-QUAZIP=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.6.2, 0.6.2]")
+MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.8.2, 4.8.2]")
+QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.6.2, 0.6.2]")
 BITS=64
 endif
 ifeq ($(PROFILE),release32)
@@ -37,9 +38,9 @@ WHERE=build\64\gprof
 endif
 
 RPAREN=)
-AI=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 11$(RPAREN)")
-SEVENZIP=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 10$(RPAREN)")
-MINGWUTILS=$(shell "%npackd_cl%\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
+AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 11$(RPAREN)")
+SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 10$(RPAREN)")
+MINGWUTILS=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
 VERSION=$(shell type version.txt)
 
 all:
@@ -56,7 +57,6 @@ printvars:
 	@echo BITS=$(BITS)
 	@echo VERSION=$(VERSION)
 	@echo MINGW=$(MINGW)
-	@echo QUAZIP=$(QUAZIP)
 	@echo QT=$(QT)
 	@echo AI=$(AI)
 	@echo SEVENZIP=$(SEVENZIP)
