@@ -49,7 +49,9 @@ SOURCES += main.cpp \
     mysqlquery.cpp \
     repositoryxmlhandler.cpp \
     cbsthirdpartypm.cpp \
-    installthread.cpp
+    installthread.cpp \
+    updaterepositorythread.cpp \
+    scanharddrivesthread.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -96,7 +98,9 @@ HEADERS += mainwindow.h \
     repositoryxmlhandler.h \
     cbsthirdpartypm.h \
     msoav2.h \
-    installthread.h
+    installthread.h \
+    updaterepositorythread.h \
+    scanharddrivesthread.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \

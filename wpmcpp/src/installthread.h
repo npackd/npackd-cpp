@@ -26,6 +26,12 @@ public:
     QList<InstallOperation*> install;
 
     /**
+     * how the programs should be closed. The value is automatically
+     * initialized to the current defaults.
+     */
+    DWORD programCloseType;
+
+    /**
      * type = 3 or 4
      * true (default value) = the HTTP cache will be used
      */

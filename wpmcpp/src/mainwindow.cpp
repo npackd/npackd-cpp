@@ -56,6 +56,8 @@
 #include "flowlayout.h"
 #include "scandiskthirdpartypm.h"
 #include "installthread.h"
+#include "updaterepositorythread.h"
+#include "scanharddrivesthread.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -63,86 +65,6 @@ QMap<QString, QIcon> MainWindow::icons;
 QIcon MainWindow::genericAppIcon;
 QIcon MainWindow::waitAppIcon;
 MainWindow* MainWindow::instance = 0;
-
-/**
- * Scan hard drives.
- */
-class ScanHardDrivesThread: public QThread
-{
-    Job* job;
-public:
-    QMap<QString, int> words;
-
-    QList<PackageVersion*> detected;
-
-    ScanHardDrivesThread(Job* job);
-
-    void run();
-};
-
-ScanHardDrivesThread::ScanHardDrivesThread(Job *job)
-{
-    this->job = job;
-}
-
-void ScanHardDrivesThread::run()
-{
-    /* creating a tag cloud
-    QString err;
-    QList<Package*> ps = DBRepository::getDefault()->findPackages(
-            Package::INSTALLED, false, "", &err);
-    words.clear();
-    QRegExp re("\\W+", Qt::CaseInsensitive);
-    for (int i = 0; i < ps.count(); i++) {
-        Package* p = ps.at(i);
-        QString txt = p->title + " " + p->description;
-        QStringList sl = txt.toLower().split(re, QString::SkipEmptyParts);
-        sl.removeDuplicates();
-        for (int j = 0; j < sl.count(); j++) {
-            QString w = sl.at(j);
-            if (w.length() > 3) {
-                int n = words.value(w);
-                n++;
-                words.insert(w, n);
-            }
-        }
-    }
-    qDeleteAll(ps);
-
-    QStringList stopWords = QString("a an and are as at be but by for if in "
-            "into is it no not of on or such that the their then there these "
-            "they this to was will with").split(" ");
-    for (int i = 0; i < stopWords.count(); i++)
-        words.remove(stopWords.at(i));
-        */
-
-    QString err;
-    DBRepository* r = DBRepository::getDefault();
-    QList<PackageVersion*> s1 = r->getInstalled_(&err);
-    if (!err.isEmpty())
-        job->setErrorMessage(err);
-
-
-    ScanDiskThirdPartyPM* sd = new ScanDiskThirdPartyPM();
-    err = InstalledPackages::getDefault()->detect3rdParty(r, sd, false);
-    delete sd;
-    if (!err.isEmpty())
-        job->setErrorMessage(err);
-
-    QList<PackageVersion*> s2 = r->getInstalled_(&err);
-    if (!err.isEmpty())
-        job->setErrorMessage(err);
-
-    for (int i = 0; i < s2.count(); i++) {
-        PackageVersion* pv = s2.at(i);
-        if (!PackageVersion::contains(s1, pv)) {
-            detected.append(pv);
-        }
-    }
-
-    qDeleteAll(s1);
-    qDeleteAll(s2);
-}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -732,11 +654,10 @@ void MainWindow::processCommandLine()
         err = detect();
     } else {
         err = "Wrong command: " + cmd + ". Try npackdcl help";
-    }
+    }*/
 
     if (!err.isEmpty())
-        QMessageBox::critical(this, "Error", err);
-        */
+        addErrorMessage(err, err, true, QMessageBox::Critical);
 }
 
 void MainWindow::selectPackages(QList<Package*> ps)
@@ -860,7 +781,8 @@ QString MainWindow::createPackageVersionsHTML(const QStringList& names)
     return allNames.join("<br>");
 }
 
-void MainWindow::process(QList<InstallOperation*> &install)
+void MainWindow::process(QList<InstallOperation*> &install,
+        int programCloseType)
 {
     QString err;
 
@@ -1072,6 +994,7 @@ void MainWindow::process(QList<InstallOperation*> &install)
             Job* job = new Job();
             InstallThread* it = new InstallThread(0, 1, job);
             it->install = install;
+            it->programCloseType = programCloseType;
             install.clear();
 
             connect(it, SIGNAL(finished()), this,
@@ -1521,8 +1444,7 @@ void MainWindow::closeDetailTabs()
 void MainWindow::recognizeAndLoadRepositories(bool useCache)
 {
     Job* job = new Job();
-    InstallThread* it = new InstallThread(0, 3, job);
-    it->useCache = useCache;
+    UpdateRepositoryThread* it = new UpdateRepositoryThread(job);
 
     connect(it, SIGNAL(finished()), this,
             SLOT(recognizeAndLoadRepositoriesThreadFinished()),
@@ -1536,7 +1458,7 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
 
 void MainWindow::setMenuAccelerators(){
     QMenuBar* mb = this->menuBar();
-    QList<QChar> used;
+
     QStringList titles;
     for (int i = 0; i < mb->children().count(); i++) {
         QMenu* m = dynamic_cast<QMenu*>(mb->children().at(i));
@@ -1800,7 +1722,7 @@ void MainWindow::on_actionUpdate_triggered()
         QString err = r->planUpdates(packages, ops);
 
         if (err.isEmpty()) {
-            process(ops);
+            process(ops, WPMUtils::getCloseProcessType());
         } else
             addErrorMessage(err, err, true, QMessageBox::Critical);
     }
@@ -2112,7 +2034,7 @@ void MainWindow::on_actionInstall_triggered()
     }
 
     if (err.isEmpty())
-        process(ops);
+        process(ops, WPMUtils::getCloseProcessType());
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
@@ -2165,7 +2087,7 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     if (err.isEmpty())
-        process(ops);
+        process(ops, WPMUtils::getCloseProcessType());
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
@@ -2189,11 +2111,7 @@ QString MainWindow::remove()
 {
     QString err;
 
-/* TODO
-    int programCloseType = WPMUtils::CLOSE_WINDOW;
-
-    programCloseType = WPMUtils::getProgramCloseType(cl, &err);
-    */
+    int programCloseType = WPMUtils::getProgramCloseType(cl, &err);
 
     QList<PackageVersion*> toRemove;
     if (err.isEmpty()) {
@@ -2217,9 +2135,7 @@ QString MainWindow::remove()
     }
 
     if (err.isEmpty())
-        process(ops);
-    else
-        addErrorMessage(err, err, true, QMessageBox::Critical);
+        process(ops, programCloseType);
 
     qDeleteAll(installed);
     qDeleteAll(toRemove);
