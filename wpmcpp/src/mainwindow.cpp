@@ -694,211 +694,12 @@ void MainWindow::process(QList<InstallOperation*> &install,
 {
     QString err;
 
-    QList<PackageVersion*> pvs;
-
-    // fetch package versions
-    for (int j = 0; j < install.size(); j++) {
-        InstallOperation* op = install.at(j);
-        PackageVersion* pv = op->findPackageVersion(&err);
-        if (!err.isEmpty()) {
-            err = QObject::tr("Cannot find the package version %1: %2").arg(
-                    pv->toString()).arg(err);
-            break;
-        }
-        pvs.append(pv);
-    }
-
-    // check for locked package versions
-    if (err.isEmpty()) {
-        for (int j = 0; j < pvs.size(); j++) {
-            PackageVersion* pv = pvs.at(j);
-            if (pv->isLocked()) {
-                err = QObject::tr("The package %1 is locked by a currently running installation/removal.").
-                        arg(pv->toString());
-                break;
-            }
-        }
-    }
-
-    // list of used package versions
-    QList<bool> used;
-    used.reserve(install.count());
-    for (int i = 0; i < install.count(); i++) {
-        used.append(false);
-    }
-
-    // find updates
-    QStringList updateNames;
-    if (err.isEmpty()) {
-        for (int i = 0; i < install.count(); i++) {
-            if (used[i])
-                continue;
-
-            InstallOperation* op = install.at(i);
-            if (!op->install) {
-                for (int j = 0; j < install.count(); j++) {
-                    if (used[j] || j == i)
-                        continue;
-
-                    InstallOperation* op2 = install.at(j);
-                    if (op2->install && op->package == op2->package &&
-                            op->version < op2->version) {
-                        used[i] = used[j] = true;
-
-                        PackageVersion* pv = pvs.at(i);
-                        updateNames.append(pv->toString() + " -> " +
-                                op2->version.getVersionString());
-                    }
-                }
-            }
-        }
-    }
-
-    // find uninstalls
-    QStringList uninstallNames;
-    if (err.isEmpty()) {
-        for (int i = 0; i < install.count(); i++) {
-            if (used[i])
-                continue;
-
-            InstallOperation* op = install.at(i);
-            PackageVersion* pv = pvs.at(i);
-            if (!op->install) {
-                uninstallNames.append(pv->toString());
-            }
-        }
-    }
-
-    // find installs
-    QStringList installNames;
-    if (err.isEmpty()) {
-        for (int i = 0; i < install.count(); i++) {
-            if (used[i])
-                continue;
-
-            InstallOperation* op = install.at(i);
-            PackageVersion* pv = pvs.at(i);
-            if (op->install) {
-                installNames.append(pv->toString());
-            }
-        }
-    }
-
-    bool b = false;
-    QString msg;
-    QString title;
-    QString dialogTitle;
-    QString detailedMessage;
-    if (installNames.count() == 1 && uninstallNames.count() == 0 &&
-            updateNames.count() == 0) {
-        b = true;
-        title = QObject::tr("Installing");
-    } else if (installNames.count() == 0 && uninstallNames.count() == 1 &&
-            updateNames.count() == 0) {
-        title = QObject::tr("Uninstalling");
-
-        PackageVersion* pv = pvs.at(0);
-
-        dialogTitle = QObject::tr("Uninstall");
-        msg = QString("<html><head/><body><h2>") +
-                QObject::tr("The package %1 will be uninstalled.").
-                arg(pv->toString()).toHtmlEscaped() +
-                "</h2>" +
-                QObject::tr("The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
-                arg(pv->getPath()).toHtmlEscaped() +
-                "</body>";
-        detailedMessage = QObject::tr("The package %1 will be uninstalled.").
-                arg(pv->toString());
-    } else if (installNames.count() > 0 && uninstallNames.count() == 0 &&
-            updateNames.count() == 0) {
-        title = QString(QObject::tr("Installing %1 packages")).arg(
-                installNames.count());
-        dialogTitle = QObject::tr("Install");
-        msg = QString("<html><head/><body><h2>") +
-                QObject::tr("%1 package(s) will be installed:").
-                arg(installNames.count()).toHtmlEscaped() +
-                "</h2><br><b>" +
-                createPackageVersionsHTML(installNames) +
-                "</b></body>";
-        detailedMessage = QObject::tr("%1 package(s) will be installed:").
-                arg(installNames.count()) + "\n" +
-                installNames.join("\n");
-    } else if (installNames.count() == 0 && uninstallNames.count() > 0 &&
-            updateNames.count() == 0) {
-        title = QString(QObject::tr("Uninstalling %1 packages")).arg(
-                uninstallNames.count());
-        dialogTitle = QObject::tr("Uninstall");
-        msg = QString("<html><head/><body><h2>") +
-                QObject::tr("%1 package(s) will be uninstalled:").
-                arg(uninstallNames.count()).toHtmlEscaped() +
-                "</h2><br><b>" +
-                createPackageVersionsHTML(uninstallNames) +
-                "</b>.<br><br>" +
-                QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
-                toHtmlEscaped() +
-                "</body>";
-        detailedMessage = QObject::tr("%1 package(s) will be uninstalled:").
-                arg(uninstallNames.count()) + "\n" +
-                uninstallNames.join("\n");
-    } else {
-        title = QObject::tr("Installing %1 packages, uninstalling %2 packages, updating %3 packages").
-                arg(installNames.count()).
-                arg(uninstallNames.count()).
-                arg(updateNames.count());
-        dialogTitle = QObject::tr("Install/Uninstall");
-        msg = "<html><head/><body>";
-        if (updateNames.count() > 0) {
-            msg += "<h2>" +
-                    QObject::tr("%3 package(s) will be updated:").
-                    arg(updateNames.count()).toHtmlEscaped() +
-                    "</h2><br><b>" +
-                    createPackageVersionsHTML(updateNames) +
-                    "</b>";
-            if (!detailedMessage.isEmpty())
-                detailedMessage += "\n\n";
-            detailedMessage += QObject::tr("%3 package(s) will be updated:").
-                    arg(updateNames.count()) + "\n" +
-                    updateNames.join("\n");
-        }
-        if (uninstallNames.count() > 0) {
-            msg += "<h2>" +
-                    QObject::tr("%1 package(s) will be uninstalled:").
-                    arg(uninstallNames.count()).toHtmlEscaped() +
-                    "</h2><br><b>" +
-                    createPackageVersionsHTML(uninstallNames) +
-                    "</b>";
-            if (!detailedMessage.isEmpty())
-                detailedMessage += "\n\n";
-            detailedMessage += QObject::tr("%1 package(s) will be uninstalled:").
-                    arg(uninstallNames.count()) + "\n" +
-                    uninstallNames.join("\n");
-        }
-        if (installNames.count() > 0) {
-            msg += "<h2>" +
-                    QObject::tr("%3 package(s) will be installed:").
-                    arg(installNames.count()).toHtmlEscaped() +
-                    "</h2><br><b>" +
-                    createPackageVersionsHTML(installNames) +
-                    "</b>";
-            if (!detailedMessage.isEmpty())
-                detailedMessage += "\n\n";
-            detailedMessage += QObject::tr("%3 package(s) will be installed:").
-                    arg(installNames.count()) + "\n" +
-                    installNames.join("\n");
-        }
-        msg += "<br><br>" +
-                QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
-                toHtmlEscaped();
-        msg += "</body>";
-    }
+    bool confirmed = false;
+    if (err.isEmpty())
+        confirmed = UIUtils::confirmInstalOperations(this, install, &err);
 
     if (err.isEmpty()) {
-        if (!b)
-            b = UIUtils::confirm(this, dialogTitle, msg, detailedMessage);
-    }
-
-    if (err.isEmpty()) {
-        if (b) {
+        if (confirmed) {
             Job* job = new Job();
             InstallThread* it = new InstallThread(0, 1, job);
             it->install = install;
@@ -909,7 +710,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
                     SLOT(processThreadFinished()),
                     Qt::QueuedConnection);
 
-            monitor(job, title, it);
+            monitor(job, QObject::tr("Install/Uninstall"), it);
         }
     }
 
@@ -919,9 +720,6 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
     qDeleteAll(install);
     install.clear();
-
-    qDeleteAll(pvs);
-    pvs.clear();
 }
 
 void MainWindow::processThreadFinished()

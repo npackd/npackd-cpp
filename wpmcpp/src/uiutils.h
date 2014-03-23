@@ -2,7 +2,9 @@
 #define UIUTILS_H
 
 #include <QWidget>
-#include "qstring.h"
+#include <QString>
+
+#include "installoperation.h"
 
 /**
  * Some UI related utility methods.
@@ -11,6 +13,8 @@ class UIUtils
 {
 private:
     UIUtils();
+
+    static QString createPackageVersionsHTML(const QStringList &names);
 public:
     /**
      * Shows a confirmation dialog.
@@ -32,6 +36,9 @@ public:
      * @return "data:..." or an empty string if the icon cannot be extracted
      */
     static QString extractIconURL(const QString &iconFile);
+
+    static bool confirmInstalOperations(QWidget *parent,
+            QList<InstallOperation *> &install, QString *err);
 };
 
 #endif // UIUTILS_H

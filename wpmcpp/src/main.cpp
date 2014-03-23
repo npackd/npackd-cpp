@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QTranslator>
 #include <QList>
+#include <QVBoxLayout>
 
 #include "version.h"
 #include "mainwindow.h"
@@ -22,12 +23,37 @@
 #include "commandline.h"
 #include "packageversion.h"
 #include "installoperation.h"
+#include "uiutils.h"
+#include "progressframe.h"
+#include "installthread.h"
+
+void monitor(Job* job, const QString& title, QThread* thread)
+{
+    QDialog d;
+    QVBoxLayout* layout = new QVBoxLayout();
+
+    ProgressFrame* pf = new ProgressFrame(&d, job, title, thread);
+    pf->resize(100, 100);
+    layout->insertWidget(0, pf);
+
+    d.setLayout(layout);
+
+    d.exec();
+}
 
 QString remove(const CommandLine& cl)
 {
     QString err;
 
-    // TODO: int programCloseType = WPMUtils::getProgramCloseType(cl, &err);
+    err = DBRepository::getDefault()->openDefault();
+
+    if (err.isEmpty()) {
+        err = InstalledPackages::getDefault()->readRegistryDatabase();
+    }
+
+    int programCloseType = WPMUtils::CLOSE_WINDOW;
+    if (err.isEmpty())
+        programCloseType = WPMUtils::getProgramCloseType(cl, &err);
 
     QList<PackageVersion*> toRemove;
     if (err.isEmpty()) {
@@ -50,11 +76,31 @@ QString remove(const CommandLine& cl)
         }
     }
 
-    // TODO: if (err.isEmpty())
-    //    process(ops, programCloseType);
+    bool confirmed = false;
+    if (err.isEmpty())
+        confirmed = UIUtils::confirmInstalOperations(0, ops, &err);
+
+    if (err.isEmpty() && confirmed) {
+        Job* job = new Job();
+        InstallThread* it = new InstallThread(0, 1, job);
+        it->install = ops;
+        it->programCloseType = programCloseType;
+        ops.clear();
+
+        /* TODO
+        connect(it, SIGNAL(finished()), this,
+                SLOT(processThreadFinished()),
+                Qt::QueuedConnection);
+                */
+
+        monitor(job, QObject::tr("Uninstall"), it);
+    }
 
     qDeleteAll(installed);
     qDeleteAll(toRemove);
+
+    qDeleteAll(ops);
+    ops.clear();
 
     return err;
 }
@@ -135,7 +181,6 @@ QString add(const CommandLine& cl)
     return r;
     */
 }
-
 
 int main(int argc, char *argv[])
 {
