@@ -1246,7 +1246,10 @@ QString App::info()
         if (pv) {
             WPMUtils::outputTextConsole(QString("Type: ") +
                     (pv->type == 0 ? "zip" : "one-file") + "\n");
-            WPMUtils::outputTextConsole("SHA1: " + pv->sha1 + "\n");
+
+            WPMUtils::outputTextConsole(QString("Hash sum: ") +
+                    (pv->hashSumType == QCryptographicHash::Sha1 ? "SHA-1" : "SHA-256") +
+                    ": " + pv->sha1 + "\n");
 
             QString details;
             for (int i = 0; i < pv->importantFiles.count(); i++) {
