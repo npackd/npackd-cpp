@@ -8,10 +8,10 @@
 #include <qstringlist.h>
 #include <qstring.h>
 
-#include "..\wpmcpp\repository.h"
-#include "..\wpmcpp\commandline.h"
-#include "..\wpmcpp\job.h"
-#include "..\wpmcpp\clprogress.h"
+#include "repository.h"
+#include "commandline.h"
+#include "job.h"
+#include "clprogress.h"
 
 /**
  * NpackdCL

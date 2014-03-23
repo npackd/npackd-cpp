@@ -143,6 +143,12 @@ public:
     virtual ~DBRepository();
 
     /**
+     * @brief opens the default database as "default"
+     * @return error
+     */
+    QString openDefault();
+
+    /**
      * @brief opens the database
      * @param connectionName name for the database connection
      * @param file database file

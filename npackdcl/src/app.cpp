@@ -5,14 +5,14 @@
 #include <QScopedPointer>
 
 #include "app.h"
-#include "..\wpmcpp\wpmutils.h"
-#include "..\wpmcpp\commandline.h"
-#include "..\wpmcpp\downloader.h"
-#include "..\wpmcpp\installedpackages.h"
-#include "..\wpmcpp\installedpackageversion.h"
-#include "..\wpmcpp\abstractrepository.h"
-#include "..\wpmcpp\dbrepository.h"
-#include "..\wpmcpp\hrtimer.h"
+#include "wpmutils.h"
+#include "commandline.h"
+#include "downloader.h"
+#include "installedpackages.h"
+#include "installedpackageversion.h"
+#include "abstractrepository.h"
+#include "dbrepository.h"
+#include "hrtimer.h"
 
 static bool packageVersionLessThan(const PackageVersion* pv1,
         const PackageVersion* pv2)
@@ -114,7 +114,7 @@ int App::test()
 
 int App::process()
 {
-    QString err = DBRepository::getDefault()->open();
+    QString err = DBRepository::getDefault()->openDefault();
     if (!err.isEmpty()) {
         WPMUtils::outputTextConsole("Error: " + err + "\n");
         return 1;
@@ -348,7 +348,7 @@ QString App::which()
         Job* job = new Job();
 
         // ignoring the error as this should be available for non-admins
-        ip->refresh(job);
+        ip->refresh(DBRepository::getDefault(), job);
 
         delete job;
     }
@@ -391,7 +391,7 @@ QString App::setInstallPath()
     if (r.isEmpty()) {
         Job* job = new Job();
 
-        ip->refresh(job);
+        ip->refresh(DBRepository::getDefault(), job);
 
         if (!job->getErrorMessage().isEmpty())
             r = job->getErrorMessage();
@@ -427,7 +427,7 @@ QString App::check()
     QString r;
 
     Job* job = new Job();
-    InstalledPackages::getDefault()->refresh(job);
+    InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
     if (!job->getErrorMessage().isEmpty()) {
         r = job->getErrorMessage();
     }
@@ -537,7 +537,7 @@ QString App::list()
         job = clp.createJob();
 
     // ignoring the error as "list" should also be usable for non-admins
-    InstalledPackages::getDefault()->refresh(job);
+    InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
 
     delete job;
 
@@ -598,7 +598,8 @@ QString App::search()
 
         // ignoring the error message as this should also be available for
         // non-admins
-        InstalledPackages::getDefault()->refresh(rjob);
+        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
+                rjob);
 
         delete rjob;
     }
@@ -762,7 +763,8 @@ QString App::update()
 
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.05);
-        InstalledPackages::getDefault()->refresh(rjob);
+        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
+                rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
@@ -886,7 +888,8 @@ QString App::add()
 
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.1);
-        InstalledPackages::getDefault()->refresh(rjob);
+        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
+                rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
@@ -1074,7 +1077,8 @@ QString App::remove()
 
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.1);
-        InstalledPackages::getDefault()->refresh(rjob);
+        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
+                rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
@@ -1164,7 +1168,7 @@ QString App::info()
 
     // ignore the error as "npackdcl info" should be available for non-admins
     // too
-    InstalledPackages::getDefault()->refresh(job);
+    InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
 
     delete job;
 

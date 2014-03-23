@@ -11,8 +11,7 @@ PROFILE=release32
 ifeq (32,$(findstring 32,$(PROFILE)))
 QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.2.1
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.8.2, 4.8.2]")
-#QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.6.2, 0.6.2]")
-QUAZIP=C:\windows-package-manager.npackd-scripts\build-packages\quazip-dev-i686-w64-static-0.6.2
+QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.6.2, 0.6.2]")
 BITS=32
 else
 QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.2.1

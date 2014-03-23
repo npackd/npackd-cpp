@@ -1583,6 +1583,22 @@ QString DBRepository::updateStatus(const QString& package)
     return err;
 }
 
+QString DBRepository::openDefault()
+{
+    QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
+    QDir d;
+    if (!d.exists(dir))
+        d.mkpath(dir);
+
+    QString path = dir + "\\Data.db";
+
+    path = QDir::toNativeSeparators(path);
+
+    QString err = open("default", path);
+
+    return err;
+}
+
 QString DBRepository::open(const QString& connectionName, const QString& file)
 {
     QString err;
