@@ -74,8 +74,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    commandLineProcessed = false;
-
     this->setMenuAccelerators();
     this->setActionAccelerators(this);
 
@@ -452,45 +450,6 @@ void MainWindow::prepare()
 
     pTimer->start(0);
 
-    cl.add("package", 'p',
-            "internal package name (e.g. com.example.Editor or just Editor)",
-            "package", true);
-    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
-            "range", false);
-    cl.add("version", 'v', "version number (e.g. 1.5.12)",
-            "version", false);
-    cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
-            "repository", false);
-    cl.add("status", 's', "filters package versions by status",
-            "status", false);
-    cl.add("bare-format", 'b', "bare format (no heading or summary)",
-            "", false);
-    cl.add("query", 'q', "search terms (e.g. editor)",
-            "search terms", false);
-    cl.add("debug", 'd', "turn on the debug output", "", false);
-    cl.add("file", 'f', "file or directory", "file", false);
-    cl.add("end-process", 'e',
-        "comma separated list of ways to close running applications (windows, kill)",
-        "list", false);
-
-    commandLineParsingError = cl.parse();
-
-    // cl.dump();
-
-    /* TODO
-    if (cl.isPresent("debug")) {
-        clp.setUpdateRate(0);
-    }
-    */
-
-    QStringList fr = cl.getFreeArguments();
-
-    if (fr.count() == 1) {
-        commandLineCommand = fr.at(0);
-    } else if (fr.count() > 1) {
-        commandLineParsingError = QObject::tr("Unexpected argument: %1").
-                arg(fr.at(1));
-    }
 }
 
 void MainWindow::updateProgressTabTitle()
@@ -604,60 +563,9 @@ void MainWindow::onShow()
 
     if (err.isEmpty()) {
         fillList();
-        if (!cl.argumentsAvailable()) {
-            recognizeAndLoadRepositories(true);
-        } else {
-            if (commandLineParsingError.isEmpty()) {
-                processCommandLine();
-            } else {
-                QString msg = QObject::tr("Error parsing the command line: %1").
-                        arg(commandLineParsingError);
-                addErrorMessage(msg, msg, true, QMessageBox::Critical);
-            }
-        }
+        recognizeAndLoadRepositories(true);
     } else
         this->addErrorMessage(err, err, true, QMessageBox::Critical);
-}
-
-void MainWindow::processCommandLine()
-{
-    QString cmd = commandLineCommand;
-
-    QString err;
-    /*if (cmd == "help") {
-        usage();
-    } else if (cmd == "path") {
-        err = path();
-    } else */if (cmd == "remove" || cmd == "rm") {
-        err = remove();
-    } else if (cmd == "add") {
-        err = add();
-    } /* else if (cmd == "add-repo") {
-        err = addRepo();
-    } else if (cmd == "remove-repo") {
-        err = removeRepo();
-    } else if (cmd == "list-repos") {
-        err = listRepos();
-    } else if (cmd == "search") {
-        err = search();
-    } else if (cmd == "check") {
-        err = check();
-    } else if (cmd == "which") {
-        err = which();
-    } else if (cmd == "list") {
-        err = list();
-    } else if (cmd == "info") {
-        err = info();
-    } else if (cmd == "update") {
-        err = update();
-    } else if (cmd == "detect") {
-        err = detect();
-    } else {
-        err = "Wrong command: " + cmd + ". Try npackdcl help";
-    }*/
-
-    if (!err.isEmpty())
-        addErrorMessage(err, err, true, QMessageBox::Critical);
 }
 
 void MainWindow::selectPackages(QList<Package*> ps)
@@ -2105,119 +2013,6 @@ void MainWindow::openURL(const QUrl& url) {
     if (!QDesktopServices::openUrl(url))
         this->addErrorMessage(QObject::tr("Cannot open the URL %1").
                 arg(url.toString()));
-}
-
-QString MainWindow::remove()
-{
-    QString err;
-
-    int programCloseType = WPMUtils::getProgramCloseType(cl, &err);
-
-    QList<PackageVersion*> toRemove;
-    if (err.isEmpty()) {
-        toRemove =
-                WPMUtils::getPackageVersionOptions(cl, &err, false);
-    }
-
-    QList<PackageVersion*> installed;
-    if (err.isEmpty()) {
-        installed = AbstractRepository::getDefault_()->getInstalled_(&err);
-    }
-
-    QList<InstallOperation*> ops;
-    if (err.isEmpty()) {
-        for (int i = 0; i < toRemove.count(); i++) {
-            PackageVersion* pv = toRemove.at(i);
-            err = pv->planUninstallation(installed, ops);
-            if (!err.isEmpty())
-                break;
-        }
-    }
-
-    if (err.isEmpty())
-        process(ops, programCloseType);
-
-    qDeleteAll(installed);
-    qDeleteAll(toRemove);
-
-    return err;
-}
-
-QString MainWindow::add()
-{
-    return ""; // TODO
-    /*
-    Job* job = clp.createJob();
-
-    if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.1);
-        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob);
-        if (!rjob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(rjob->getErrorMessage());
-        }
-        delete rjob;
-    }
-
-    QString err;
-    QList<PackageVersion*> toInstall =
-            WPMUtils::getPackageVersionOptions(cl, &err, true);
-    if (!err.isEmpty())
-        job->setErrorMessage(err);
-
-    // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
-    QList<InstallOperation*> ops;
-    if (job->shouldProceed()) {
-        QString err;
-        QList<PackageVersion*> installed =
-                AbstractRepository::getDefault_()->getInstalled_(&err);
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-
-        QList<PackageVersion*> avoid;
-        for (int i = 0; i < toInstall.size(); i++) {
-            PackageVersion* pv = toInstall.at(i);
-            if (job->shouldProceed())
-                err = pv->planInstallation(installed, ops, avoid);
-            if (!err.isEmpty()) {
-                job->setErrorMessage(err);
-            }
-        }
-        qDeleteAll(installed);
-    }
-
-    // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
-
-    AbstractRepository* rep = AbstractRepository::getDefault_();
-    if (job->shouldProceed("Installing") && ops.size() > 0) {
-        Job* ijob = job->newSubJob(0.9);
-        rep->process(ijob, ops, WPMUtils::CLOSE_WINDOW);
-        if (!ijob->getErrorMessage().isEmpty())
-            job->setErrorMessage(QString("Error installing: %1").
-                    arg(ijob->getErrorMessage()));
-
-        delete ijob;
-    }
-
-    job->complete();
-
-    QString r = job->getErrorMessage();
-    if (r.isEmpty()) {
-        for (int i = 0; i < toInstall.size(); i++) {
-            PackageVersion* pv = toInstall.at(i);
-            WPMUtils::outputTextConsole(QString(
-                    "The package %1 was installed successfully in %2\n").arg(
-                    pv->toString()).arg(pv->getPath()));
-        }
-    }
-
-    delete job;
-
-    qDeleteAll(ops);
-    qDeleteAll(toInstall);
-
-    return r;
-    */
 }
 
 void MainWindow::on_actionOpen_folder_triggered()
