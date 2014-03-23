@@ -21,7 +21,6 @@
 #include "fileloader.h"
 #include "selection.h"
 #include "mainframe.h"
-#include "commandline.h"
 
 namespace Ui {
     class MainWindow;
@@ -47,11 +46,6 @@ class MainWindow : public QMainWindow, public Selection {
     Q_OBJECT
 private:
     static MainWindow* instance;
-
-    CommandLine cl;
-    QString commandLineParsingError;
-    QString commandLineCommand;
-    bool commandLineProcessed;
 
     time_t monitoredJobLastChanged;
     QList<Job*> runningJobs;
@@ -111,11 +105,7 @@ private:
     void saveUISettings();
     void loadUISettings();
 
-    QString remove();
-    QString add();
-
     virtual void closeEvent(QCloseEvent *event);
-    void processCommandLine();
 public:
     void updateActions();
 
