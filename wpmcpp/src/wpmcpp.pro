@@ -48,7 +48,8 @@ SOURCES += main.cpp \
     scandiskthirdpartypm.cpp \
     mysqlquery.cpp \
     repositoryxmlhandler.cpp \
-    cbsthirdpartypm.cpp
+    cbsthirdpartypm.cpp \
+    installthread.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -94,7 +95,8 @@ HEADERS += mainwindow.h \
     mysqlquery.h \
     repositoryxmlhandler.h \
     cbsthirdpartypm.h \
-    msoav2.h
+    msoav2.h \
+    installthread.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \

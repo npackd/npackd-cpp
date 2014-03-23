@@ -17,6 +17,7 @@ LIBS += -lquazip \
     -lshlwapi \
     -lmsi
 SOURCES += main.cpp \
+    ../../wpmcpp/src/installthread.cpp \
     ../../wpmcpp/src/repository.cpp \
     ../../wpmcpp/src/version.cpp \
     ../../wpmcpp/src/packageversionfile.cpp \
@@ -48,7 +49,8 @@ SOURCES += main.cpp \
     ../../wpmcpp/src/installedpackagesthirdpartypm.cpp \
     ../../wpmcpp/src/cbsthirdpartypm.cpp \
     ../../wpmcpp/src/uiutils.cpp
-HEADERS += ../../wpmcpp/src/repository.h \
+HEADERS += ../../wpmcpp/src/installthread.h \
+    ../../wpmcpp/src/repository.h \
     ../../wpmcpp/src/version.h \
     ../../wpmcpp/src/packageversionfile.h \
     ../../wpmcpp/src/package.h \

@@ -129,6 +129,11 @@ public:
      * @return parsed options
      */
     QList<ParsedOption*> getParsedOptions() const;
+
+    /**
+     * @return true if any arguments were entered
+     */
+    bool argumentsAvailable() const;
 };
 
 #endif // COMMANDLINE_H

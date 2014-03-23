@@ -112,8 +112,10 @@ private:
     void loadUISettings();
 
     QString remove();
+    QString add();
 
     virtual void closeEvent(QCloseEvent *event);
+    void processCommandLine();
 public:
     void updateActions();
 

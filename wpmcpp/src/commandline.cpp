@@ -239,6 +239,11 @@ QList<CommandLine::ParsedOption *> CommandLine::getParsedOptions() const
     return this->parsedOptions;
 }
 
+bool CommandLine::argumentsAvailable() const
+{
+    return (this->freeArguments.count() + this->parsedOptions.size()) > 0;
+}
+
 QStringList CommandLine::getAll(const QString& name)
 {
     QStringList r;

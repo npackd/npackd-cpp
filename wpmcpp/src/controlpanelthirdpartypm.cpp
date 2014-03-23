@@ -218,6 +218,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
 
         if (dir.isEmpty() && !uninstall.isEmpty()) {
             QStringList params = WPMUtils::parseCommandLine(uninstall, &err);
+            // qDebug() << uninstall << params.count();
             if (err.isEmpty() && params.count() > 0 && d.exists(params[0])) {
                 dir = WPMUtils::parentDirectory(params[0]);
             } /* DEBUG  else {

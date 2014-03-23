@@ -53,7 +53,7 @@ public:
     /** PACKAGE.REPOSITORY. ID of the repisotory. */
     int repository;
 
-    /** categories. Sub-categories are separated by | */
+    /** categories. Sub-categories are separated by / */
     QStringList categories;
 
     Package(const QString& name, const QString& title);
