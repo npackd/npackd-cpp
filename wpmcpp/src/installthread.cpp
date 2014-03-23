@@ -11,6 +11,7 @@ InstallThread::InstallThread(PackageVersion *pv, int type, Job* job)
     this->type = type;
     this->job = job;
     this->useCache = false;
+    this->programCloseType = WPMUtils::getCloseProcessType();
 }
 
 void InstallThread::run()
@@ -23,7 +24,7 @@ void InstallThread::run()
         case 1:
         case 2:
             AbstractRepository::getDefault_()->process(job, install,
-                    WPMUtils::getCloseProcessType());
+                    this->programCloseType);
             break;
         case 3:
         case 4: {

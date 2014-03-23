@@ -245,8 +245,9 @@ protected:
 
     /**
      * @param install the objects will be destroyed
+     * @param programCloseType how the programs should be closed
      */
-    void process(QList<InstallOperation*>& install);
+    void process(QList<InstallOperation*>& install, int programCloseType);
 private slots:
     void processThreadFinished();
     void hardDriveScanThreadFinished();
