@@ -3,13 +3,13 @@
 #include <qstringlist.h>
 #include <qstring.h>
 
-#include "..\wpmcpp\repository.h"
-#include "..\wpmcpp\commandline.h"
-#include "..\wpmcpp\wpmutils.h"
-#include "..\wpmcpp\abstractrepository.h"
-#include "..\wpmcpp\dbrepository.h"
-#include "..\wpmcpp\version.h"
-#include "..\wpmcpp\installedpackages.h"
+#include "repository.h"
+#include "commandline.h"
+#include "wpmutils.h"
+#include "abstractrepository.h"
+#include "dbrepository.h"
+#include "version.h"
+#include "installedpackages.h"
 
 #include "app.h"
 

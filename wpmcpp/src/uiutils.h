@@ -1,7 +1,7 @@
 #ifndef UIUTILS_H
 #define UIUTILS_H
 
-#include "qwidget.h"
+#include <QWidget>
 #include "qstring.h"
 
 /**

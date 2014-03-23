@@ -1,13 +1,14 @@
 NPACKD_VERSION = $$system(type ..\\wpmcpp\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
-QT += xml sql
+QT += xml sql widgets winextras
 TARGET = npackdcl
 CONFIG += console
 CONFIG -= app_bundle
 TEMPLATE = app
 RC_FILE = npackdcl.rc
 LIBS += -lquazip \
+    -lz \
     -lole32 \
     -luuid \
     -lwininet \
@@ -16,68 +17,68 @@ LIBS += -lquazip \
     -lshlwapi \
     -lmsi
 SOURCES += main.cpp \
-    ../wpmcpp/repository.cpp \
-    ../wpmcpp/version.cpp \
-    ../wpmcpp/packageversionfile.cpp \
-    ../wpmcpp/package.cpp \
-    ../wpmcpp/packageversion.cpp \
-    ../wpmcpp/job.cpp \
-    ../wpmcpp/installoperation.cpp \
-    ../wpmcpp/dependency.cpp \
-    ../wpmcpp/wpmutils.cpp \
-    ../wpmcpp/downloader.cpp \
-    ../wpmcpp/license.cpp \
-    ../wpmcpp/windowsregistry.cpp \
-    ../wpmcpp/detectfile.cpp \
+    ../../wpmcpp/src/repository.cpp \
+    ../../wpmcpp/src/version.cpp \
+    ../../wpmcpp/src/packageversionfile.cpp \
+    ../../wpmcpp/src/package.cpp \
+    ../../wpmcpp/src/packageversion.cpp \
+    ../../wpmcpp/src/job.cpp \
+    ../../wpmcpp/src/installoperation.cpp \
+    ../../wpmcpp/src/dependency.cpp \
+    ../../wpmcpp/src/wpmutils.cpp \
+    ../../wpmcpp/src/downloader.cpp \
+    ../../wpmcpp/src/license.cpp \
+    ../../wpmcpp/src/windowsregistry.cpp \
+    ../../wpmcpp/src/detectfile.cpp \
     app.cpp \
-    ../wpmcpp/commandline.cpp \
-    ../wpmcpp/xmlutils.cpp \
-    ../wpmcpp/installedpackages.cpp \
-    ../wpmcpp/installedpackageversion.cpp \
-    ../wpmcpp/clprogress.cpp \
-    ../wpmcpp/dbrepository.cpp \
-    ../wpmcpp/abstractrepository.cpp \
-    ../wpmcpp/abstractthirdpartypm.cpp \
-    ../wpmcpp/msithirdpartypm.cpp \
-    ../wpmcpp/controlpanelthirdpartypm.cpp \
-    ../wpmcpp/wellknownprogramsthirdpartypm.cpp \
-    ../wpmcpp/hrtimer.cpp \
-    ../wpmcpp/repositoryxmlhandler.cpp \
-    ../wpmcpp/mysqlquery.cpp \
-    ../wpmcpp/installedpackagesthirdpartypm.cpp \
-    ../wpmcpp/cbsthirdpartypm.cpp \
-    ../wpmcpp/uiutils.cpp
-HEADERS += ../wpmcpp/repository.h \
-    ../wpmcpp/version.h \
-    ../wpmcpp/packageversionfile.h \
-    ../wpmcpp/package.h \
-    ../wpmcpp/packageversion.h \
-    ../wpmcpp/job.h \
-    ../wpmcpp/installoperation.h \
-    ../wpmcpp/dependency.h \
-    ../wpmcpp/wpmutils.h \
-    ../wpmcpp/downloader.h \
-    ../wpmcpp/license.h \
-    ../wpmcpp/windowsregistry.h \
-    ../wpmcpp/detectfile.h \
+    ../../wpmcpp/src/commandline.cpp \
+    ../../wpmcpp/src/xmlutils.cpp \
+    ../../wpmcpp/src/installedpackages.cpp \
+    ../../wpmcpp/src/installedpackageversion.cpp \
+    ../../wpmcpp/src/clprogress.cpp \
+    ../../wpmcpp/src/dbrepository.cpp \
+    ../../wpmcpp/src/abstractrepository.cpp \
+    ../../wpmcpp/src/abstractthirdpartypm.cpp \
+    ../../wpmcpp/src/msithirdpartypm.cpp \
+    ../../wpmcpp/src/controlpanelthirdpartypm.cpp \
+    ../../wpmcpp/src/wellknownprogramsthirdpartypm.cpp \
+    ../../wpmcpp/src/hrtimer.cpp \
+    ../../wpmcpp/src/repositoryxmlhandler.cpp \
+    ../../wpmcpp/src/mysqlquery.cpp \
+    ../../wpmcpp/src/installedpackagesthirdpartypm.cpp \
+    ../../wpmcpp/src/cbsthirdpartypm.cpp \
+    ../../wpmcpp/src/uiutils.cpp
+HEADERS += ../../wpmcpp/src/repository.h \
+    ../../wpmcpp/src/version.h \
+    ../../wpmcpp/src/packageversionfile.h \
+    ../../wpmcpp/src/package.h \
+    ../../wpmcpp/src/packageversion.h \
+    ../../wpmcpp/src/job.h \
+    ../../wpmcpp/src/installoperation.h \
+    ../../wpmcpp/src/dependency.h \
+    ../../wpmcpp/src/wpmutils.h \
+    ../../wpmcpp/src/downloader.h \
+    ../../wpmcpp/src/license.h \
+    ../../wpmcpp/src/windowsregistry.h \
+    ../../wpmcpp/src/detectfile.h \
     app.h \
-    ../wpmcpp/installedpackages.h \
-    ../wpmcpp/installedpackageversion.h \
-    ../wpmcpp/commandline.h \
-    ../wpmcpp/xmlutils.h \
-    ../wpmcpp/clprogress.h \
-    ../wpmcpp/dbrepository.h \
-    ../wpmcpp/abstractrepository.h \
-    ../wpmcpp/abstractthirdpartypm.h \
-    ../wpmcpp/msithirdpartypm.h \
-    ../wpmcpp/controlpanelthirdpartypm.h \
-    ../wpmcpp/wellknownprogramsthirdpartypm.h \
-    ../wpmcpp/hrtimer.h \
-    ../wpmcpp/repositoryxmlhandler.h \
-    ../wpmcpp/mysqlquery.h \
-    ../wpmcpp/installedpackagesthirdpartypm.h \
-    ../wpmcpp/cbsthirdpartypm.h \
-    ../wpmcpp/uiutils.h
+    ../../wpmcpp/src/installedpackages.h \
+    ../../wpmcpp/src/installedpackageversion.h \
+    ../../wpmcpp/src/commandline.h \
+    ../../wpmcpp/src/xmlutils.h \
+    ../../wpmcpp/src/clprogress.h \
+    ../../wpmcpp/src/dbrepository.h \
+    ../../wpmcpp/src/abstractrepository.h \
+    ../../wpmcpp/src/abstractthirdpartypm.h \
+    ../../wpmcpp/src/msithirdpartypm.h \
+    ../../wpmcpp/src/controlpanelthirdpartypm.h \
+    ../../wpmcpp/src/wellknownprogramsthirdpartypm.h \
+    ../../wpmcpp/src/hrtimer.h \
+    ../../wpmcpp/src/repositoryxmlhandler.h \
+    ../../wpmcpp/src/mysqlquery.h \
+    ../../wpmcpp/src/installedpackagesthirdpartypm.h \
+    ../../wpmcpp/src/cbsthirdpartypm.h \
+    ../../wpmcpp/src/uiutils.h
 FORMS += 
 
 CONFIG += static
@@ -86,10 +87,12 @@ DEFINES+=QUAZIP_STATIC=1
 
 INCLUDEPATH+=$$[QT_INSTALL_PREFIX]/src/3rdparty/zlib
 INCLUDEPATH+=$$(QUAZIP_PATH)/quazip
+INCLUDEPATH+=../../wpmcpp/src/
 
 QMAKE_LIBDIR+=$$(QUAZIP_PATH)/quazip/release
 
-QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror
+QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
+    -Wno-missing-field-initializers -Wno-unused-parameter
 QMAKE_LFLAGS += -static
 
 QMAKE_LFLAGS_RELEASE += -Wl,-Map,npackdcl_release.map
