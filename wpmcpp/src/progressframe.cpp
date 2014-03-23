@@ -42,15 +42,21 @@ ProgressFrame::ProgressFrame(QWidget *parent, Job* job, const QString& title,
 ProgressFrame::~ProgressFrame()
 {
     if (!job->getErrorMessage().isEmpty()) {
-        MainWindow::getInstance()->addErrorMessage(
-                QObject::tr("Error") + ": " + this->title +
-                " / " + job->getHint() +
-                ": " + WPMUtils::getFirstLine(job->getErrorMessage()),
-                job->getHint() + "\n" +
-                job->getErrorMessage());
+        // TODO: handle missing main window
+        if (MainWindow::getInstance())
+            MainWindow::getInstance()->addErrorMessage(
+                    QObject::tr("Error") + ": " + this->title +
+                    " / " + job->getHint() +
+                    ": " + WPMUtils::getFirstLine(job->getErrorMessage()),
+                    job->getHint() + "\n" +
+                    job->getErrorMessage());
     }
     delete this->thread;
-    MainWindow::getInstance()->unregisterJob(this->job);
+
+    // TODO: handle missing main window
+    if (MainWindow::getInstance())
+        MainWindow::getInstance()->unregisterJob(this->job);
+
     delete this->job;
     delete ui;
 }
