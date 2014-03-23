@@ -57,7 +57,7 @@ HRESULT CreateAttachmentServices(IAttachmentExecute **ppae)
 
     if (SUCCEEDED(hr))
     {
-        qDebug() << "CoCreateInstance succeeded";
+        // qDebug() << "CoCreateInstance succeeded";
         // Set the client's GUID.
 
         // UUID_ClientID should be created using uuidgen.exe and
