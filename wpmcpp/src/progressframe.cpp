@@ -7,9 +7,9 @@
 
 #include "progressframe.h"
 #include "ui_progressframe.h"
-
 #include "mainwindow.h"
 #include "wpmutils.h"
+#include "visiblejobs.h"
 
 ProgressFrame::ProgressFrame(QWidget *parent, Job* job, const QString& title,
         QThread* thread) :
@@ -53,9 +53,7 @@ ProgressFrame::~ProgressFrame()
     }
     delete this->thread;
 
-    // TODO: handle missing main window
-    if (MainWindow::getInstance())
-        MainWindow::getInstance()->unregisterJob(this->job);
+    VisibleJobs::getDefault()->unregisterJob(this->job);
 
     delete this->job;
     delete ui;

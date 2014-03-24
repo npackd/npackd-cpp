@@ -58,6 +58,7 @@
 #include "installthread.h"
 #include "updaterepositorythread.h"
 #include "scanharddrivesthread.h"
+#include "visiblejobs.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -79,7 +80,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->taskbarMessageId = 0;
 
-    this->monitoredJobLastChanged = 0;
     this->progressContent = 0;
     this->jobsTab = 0;
     this->taskbarInterface = 0;
@@ -127,6 +127,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->loadUISettings();
 
     this->addJobsTab();
+    connect(VisibleJobs::getDefault(), SIGNAL(changed()),
+            this, SLOT(visibleJobsChanged()));
+
     this->mainFrame->getFilterLineEdit()->setFocus();
 
     InstalledPackages* ip = InstalledPackages::getDefault();
@@ -146,8 +149,10 @@ MainWindow::MainWindow(QWidget *parent) :
             (HWND, UINT, DWORD, void*) =
             (BOOL (WINAPI*) (HWND, UINT, DWORD, void*))
             GetProcAddress(hInstLib, "ChangeWindowMessageFilterEx");
-    if (lpfChangeWindowMessageFilterEx)
+    if (lpfChangeWindowMessageFilterEx) {
         lpfChangeWindowMessageFilterEx((HWND) winId(), taskbarMessageId, 1, 0);
+        // qDebug() << "allow taskbar event " << taskbarMessageId;
+    }
     FreeLibrary(hInstLib);
 }
 
@@ -156,9 +161,12 @@ void MainWindow::applicationFocusChanged(QWidget* old, QWidget* now)
     updateActions();
 }
 
-bool MainWindow::winEvent(MSG* message, long* result)
+bool MainWindow::nativeEvent(const QByteArray & eventType, void * message,
+        long * result)
 {
-    if (message->message == taskbarMessageId) {
+    MSG* msg = static_cast<MSG*>(message);
+    if (msg->message == taskbarMessageId) {
+        // qDebug() << "taskbarmessageid";
         HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL,
                 CLSCTX_INPROC_SERVER, IID_ITaskbarList3,
                 reinterpret_cast<void**> (&(taskbarInterface)));
@@ -374,7 +382,7 @@ void MainWindow::loadUISettings()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    int n = this->runningJobs.count();
+    int n = VisibleJobs::getDefault()->runningJobs.count();
 
     if (n == 0) {
         this->saveUISettings();
@@ -454,11 +462,11 @@ void MainWindow::prepare()
 
 void MainWindow::updateProgressTabTitle()
 {
-    int n = this->runningJobStates.count();
+    int n = VisibleJobs::getDefault()->runningJobStates.count();
     time_t max = 0;
     double maxProgress = 0;
     for (int i = 0; i < n; i++) {
-        JobState state = this->runningJobStates.at(i);
+        JobState state = VisibleJobs::getDefault()->runningJobStates.at(i);
 
         // state.job may be null if the corresponding task was just started
         if (state.job) {
@@ -510,12 +518,12 @@ void MainWindow::monitoredJobChanged(const JobState& state)
     time_t now;
     time(&now);
 
-    if (now != this->monitoredJobLastChanged) {
-        this->monitoredJobLastChanged = now;
+    if (now != VisibleJobs::getDefault()->monitoredJobLastChanged) {
+        VisibleJobs::getDefault()->monitoredJobLastChanged = now;
 
-        int index = this->runningJobs.indexOf(state.job);
+        int index = VisibleJobs::getDefault()->runningJobs.indexOf(state.job);
         if (index >= 0) {
-            this->runningJobStates.replace(index, state);
+            VisibleJobs::getDefault()->runningJobStates.replace(index, state);
         }
 
         updateProgressTabTitle();
@@ -528,8 +536,8 @@ void MainWindow::monitor(Job* job, const QString& title, QThread* thread)
             SLOT(monitoredJobChanged(const JobState&)),
             Qt::QueuedConnection);
 
-    this->runningJobs.append(job);
-    this->runningJobStates.append(JobState());
+    VisibleJobs::getDefault()->runningJobs.append(job);
+    VisibleJobs::getDefault()->runningJobStates.append(JobState());
 
     updateProgressTabTitle();
 
@@ -757,23 +765,12 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_actionExit_triggered()
 {
-    int n = this->runningJobs.count();
+    int n = VisibleJobs::getDefault()->runningJobs.count();
 
     if (n > 0)
         addErrorMessage(QObject::tr("Cannot exit while jobs are running"));
     else
         this->close();
-}
-
-void MainWindow::unregisterJob(Job *job)
-{
-    int index = this->runningJobs.indexOf(job);
-    if (index >= 0) {
-        this->runningJobs.removeAt(index);
-        this->runningJobStates.removeAt(index);
-    }
-
-    this->updateProgressTabTitle();
 }
 
 bool MainWindow::isUpdateEnabled(const QString& package)
@@ -1852,4 +1849,9 @@ void MainWindow::on_actionOpen_folder_triggered()
     }
 
     qDeleteAll(pvs);
+}
+
+void MainWindow::visibleJobsChanged()
+{
+    this->updateProgressTabTitle();
 }
