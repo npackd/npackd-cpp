@@ -51,7 +51,8 @@ SOURCES += main.cpp \
     cbsthirdpartypm.cpp \
     installthread.cpp \
     updaterepositorythread.cpp \
-    scanharddrivesthread.cpp
+    scanharddrivesthread.cpp \
+    visiblejobs.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -100,7 +101,8 @@ HEADERS += mainwindow.h \
     msoav2.h \
     installthread.h \
     updaterepositorythread.h \
-    scanharddrivesthread.h
+    scanharddrivesthread.h \
+    visiblejobs.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \

@@ -17,6 +17,7 @@ LIBS += -lquazip \
     -lshlwapi \
     -lmsi
 SOURCES += main.cpp \
+    ../../wpmcpp/src/visiblejobs.cpp \
     ../../wpmcpp/src/installthread.cpp \
     ../../wpmcpp/src/updaterepositorythread.cpp \
     ../../wpmcpp/src/repository.cpp \
@@ -51,6 +52,7 @@ SOURCES += main.cpp \
     ../../wpmcpp/src/cbsthirdpartypm.cpp \
     ../../wpmcpp/src/uiutils.cpp
 HEADERS += ../../wpmcpp/src/installthread.h \
+    ../../wpmcpp/src/visiblejobs.h \
     ../../wpmcpp/src/updaterepositorythread.h \
     ../../wpmcpp/src/repository.h \
     ../../wpmcpp/src/version.h \

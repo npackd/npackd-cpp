@@ -28,17 +28,6 @@ namespace Ui {
 
 const UINT WM_ICONTRAY = WM_USER + 1;
 
-#if !defined(__x86_64__)
-/*const UINT NIN_BALLOONSHOW = WM_USER + 2;
-const UINT NIN_BALLOONHIDE = WM_USER + 3;
-const UINT NIN_BALLOONTIMEOUT = WM_USER + 4;
-const UINT NIN_BALLOONUSERCLICK = WM_USER + 5;
-const UINT NIN_SELECT = WM_USER + 0;
-const UINT NINF_KEY = 1;
-const UINT NIN_KEYSELECT = NIN_SELECT or NINF_KEY;
-*/
-#endif
-
 /**
  * Main window.
  */
@@ -46,10 +35,6 @@ class MainWindow : public QMainWindow, public Selection {
     Q_OBJECT
 private:
     static MainWindow* instance;
-
-    time_t monitoredJobLastChanged;
-    QList<Job*> runningJobs;
-    QList<JobState> runningJobStates;
 
     Ui::MainWindow *ui;
 
@@ -170,7 +155,7 @@ public:
      */
     void addTextTab(const QString& title, const QString& text, bool html=false);
 
-    virtual bool winEvent(MSG* message, long* result);
+    virtual bool nativeEvent(const QByteArray & eventType, void * message, long * result);
 
     /**
      * Prepares the UI after the constructor was called.
@@ -189,13 +174,6 @@ public:
      * @param useCache true = use HTTP cache
      */
     void recognizeAndLoadRepositories(bool useCache);
-
-    /**
-     * Unregistered a currently running monitored job.
-     *
-     * @param job a currently running and monitored job
-     */
-    void unregisterJob(Job* job);
 
     /**
      * Adds a new tab. The new tab will be automatically selected.
@@ -265,6 +243,7 @@ private slots:
     void on_actionUninstall_triggered();
     void on_actionAdd_package_triggered();
     void on_actionOpen_folder_triggered();
+    void visibleJobsChanged();
 };
 
 #endif // MAINWINDOW_H
