@@ -8,6 +8,8 @@ PROFILE=release32
 
 .PHONY: all printvars clean compile prep zip msi gprof drmemory
 
+SHELL:=cmd.exe
+
 ifeq (32,$(findstring 32,$(PROFILE)))
 QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.2.1
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.8.2, 4.8.2]")
@@ -40,7 +42,7 @@ RPAREN=)
 AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 11$(RPAREN)")
 SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 10$(RPAREN)")
 MINGWUTILS=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
-VERSION=$(shell type version.txt)
+VERSION=$(shell cmd /c type version.txt)
 
 all:
 	$(MAKE) clean PROFILE=release32
@@ -52,6 +54,7 @@ all:
 	echo ======================= SUCCESS =======================================
 
 printvars:
+	@echo PATH=$(PATH)
 	@echo PROFILE=$(PROFILE)
 	@echo BITS=$(BITS)
 	@echo VERSION=$(VERSION)
@@ -100,8 +103,8 @@ $(WHERE)/zip:
 $(WHERE):
 	-mkdir $(WHERE)
 
+# rem note how && directly follows \bin. Otherwise the path would contain a space
 $(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE) 
-	rem note how && directly follows \bin. Otherwise the path would contain a space
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 
 compile: printvars $(WHERE) $(WHERE)/../Makefile
