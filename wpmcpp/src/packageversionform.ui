@@ -38,7 +38,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-370</y>
+        <y>0</y>
         <width>439</width>
         <height>820</height>
        </rect>
@@ -73,6 +73,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="lineEditTitle">
+         <property name="toolTip">
+          <string>package title</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -90,6 +93,9 @@
        </item>
        <item row="2" column="1">
         <widget class="QLineEdit" name="lineEditVersion">
+         <property name="toolTip">
+          <string>version number</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -107,6 +113,9 @@
        </item>
        <item row="3" column="1">
         <widget class="QTextEdit" name="textEditDescription">
+         <property name="toolTip">
+          <string>package description</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -123,6 +132,9 @@
         <widget class="QLabel" name="labelLicense">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>license</string>
          </property>
          <property name="text">
           <string>TextLabel</string>
@@ -144,6 +156,9 @@
        </item>
        <item row="5" column="1">
         <widget class="QLineEdit" name="lineEditPath">
+         <property name="toolTip">
+          <string>installation path on disk or empty if this package version is not installed</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -161,6 +176,9 @@
        </item>
        <item row="6" column="1">
         <widget class="QLineEdit" name="lineEditDetectionInfo">
+         <property name="toolTip">
+          <string>detection info or empty</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -178,6 +196,9 @@
        </item>
        <item row="7" column="1">
         <widget class="QLineEdit" name="lineEditInternalName">
+         <property name="toolTip">
+          <string>internal package name</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -195,6 +216,9 @@
        </item>
        <item row="8" column="1">
         <widget class="QLineEdit" name="lineEditStatus">
+         <property name="toolTip">
+          <string>status of this package version</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -211,6 +235,9 @@
         <widget class="QLabel" name="labelDownloadURL">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>direct download link for the package binary</string>
          </property>
          <property name="text">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -239,6 +266,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="11" column="1">
         <widget class="QLineEdit" name="lineEditType">
+         <property name="toolTip">
+          <string>one-file or zip</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -256,6 +286,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="12" column="1">
         <widget class="QLineEdit" name="lineEditSHA1">
+         <property name="toolTip">
+          <string>cryptographic hash sum of the binary (either SHA-1 or SHA-256)</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -273,6 +306,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="13" column="1">
         <widget class="QTextEdit" name="textEditImportantFiles">
+         <property name="toolTip">
+          <string>an entry in the start menu will be created for each important file mentioned here</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -290,6 +326,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="14" column="1">
         <widget class="QTextEdit" name="textEditDependencies">
+         <property name="toolTip">
+          <string>other packages that this one depends upon</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>

@@ -1263,6 +1263,16 @@ QString App::info()
             WPMUtils::outputTextConsole("Important files: " + details + "\n");
         }
 
+        if (pv) {
+            QString details;
+            for (int i = 0; i < pv->files.count(); i++) {
+                if (i != 0)
+                    details.append("; ");
+                details.append(pv->files.at(i)->path);
+            }
+            WPMUtils::outputTextConsole("Text files: " + details + "\n");
+        }
+
         if (!pv) {
             QString versions;
             QList<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &r);
