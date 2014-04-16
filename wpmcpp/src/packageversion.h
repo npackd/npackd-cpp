@@ -149,7 +149,7 @@ public:
     QStringList importantFilesTitles;
 
     /**
-     * Packages.
+     * Text files.
      */
     QList<PackageVersionFile*> files;
 

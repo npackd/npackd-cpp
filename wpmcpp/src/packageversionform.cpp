@@ -133,6 +133,14 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
 
     updateIcons();
 
+    this->ui->tabWidgetTextFiles->clear();
+    for (int i = 0; i < pv->files.count(); i++) {
+        QTextEdit* w = new QTextEdit(this->ui->tabWidgetTextFiles);
+        w->setText(pv->files.at(i)->content);
+        w->setReadOnly(true);
+        this->ui->tabWidgetTextFiles->addTab(w, pv->files.at(i)->path);
+    }
+
     delete p;
 }
 
