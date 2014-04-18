@@ -14,7 +14,16 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -53,8 +62,11 @@
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_2">
+         <property name="toolTip">
+          <string>web address</string>
+         </property>
          <property name="text">
-          <string>Download URL:</string>
+          <string>URL:</string>
          </property>
         </widget>
        </item>
@@ -70,6 +82,9 @@
        </item>
        <item row="0" column="1">
         <widget class="QLineEdit" name="lineEditTitle">
+         <property name="toolTip">
+          <string>title</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -93,6 +108,9 @@
        </item>
        <item row="3" column="1">
         <widget class="QLineEdit" name="lineEditInternalName">
+         <property name="toolTip">
+          <string>internal name</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>

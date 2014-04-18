@@ -104,6 +104,9 @@ p, li { white-space: pre-wrap; }
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QRadioButton" name="radioButtonAll">
+            <property name="toolTip">
+             <string>show all packages</string>
+            </property>
             <property name="text">
              <string>&amp;All</string>
             </property>
@@ -114,6 +117,9 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QRadioButton" name="radioButtonInstalled">
+            <property name="toolTip">
+             <string>show only packages with at least one version installed</string>
+            </property>
             <property name="text">
              <string>&amp;Installed</string>
             </property>
@@ -121,6 +127,9 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QRadioButton" name="radioButtonUpdateable">
+            <property name="toolTip">
+             <string>show only packages where the newest available version can be updated</string>
+            </property>
             <property name="text">
              <string>&amp;Updateable</string>
             </property>
@@ -144,6 +153,9 @@ p, li { white-space: pre-wrap; }
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="toolTip">
+          <string>package category filter</string>
+         </property>
         </widget>
        </item>
        <item>
@@ -160,6 +172,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QComboBox" name="comboBoxCategory1">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>package sub-category filter</string>
          </property>
         </widget>
        </item>
