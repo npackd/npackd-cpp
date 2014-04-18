@@ -33,7 +33,7 @@ void monitor(Job* job, const QString& title, QThread* thread)
     QVBoxLayout* layout = new QVBoxLayout();
 
     ProgressFrame* pf = new ProgressFrame(&d, job, title, thread);
-    pf->resize(100, 100);
+    pf->resize(400, 100);
     layout->insertWidget(0, pf);
 
     d.setLayout(layout);

@@ -23,7 +23,16 @@
    <number>0</number>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -73,6 +82,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="lineEditTitle">
+         <property name="toolTip">
+          <string>package title</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -96,6 +108,9 @@
            <verstretch>1</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>package description</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -112,6 +127,9 @@
         <widget class="QLabel" name="labelLicense">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>license</string>
          </property>
          <property name="text">
           <string>TextLabel</string>
@@ -133,6 +151,9 @@
        </item>
        <item row="4" column="1">
         <widget class="QLineEdit" name="lineEditInternalName">
+         <property name="toolTip">
+          <string>internal package name</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -152,6 +173,9 @@
          </property>
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>home page</string>
          </property>
          <property name="text">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -182,6 +206,9 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>package category</string>
          </property>
          <property name="text">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -215,6 +242,9 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="contextMenuPolicy">
           <enum>Qt::ActionsContextMenu</enum>
+         </property>
+         <property name="toolTip">
+          <string>available versions</string>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
