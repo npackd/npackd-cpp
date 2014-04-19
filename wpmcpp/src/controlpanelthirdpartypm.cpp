@@ -219,15 +219,18 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         if (dir.isEmpty() && !uninstall.isEmpty()) {
             QStringList params = WPMUtils::parseCommandLine(uninstall, &err);
             // qDebug() << uninstall << params.count();
-            if (err.isEmpty() && params.count() > 0 && d.exists(params[0])) {
-                dir = WPMUtils::parentDirectory(params[0]);
-            } /* DEBUG  else {
+            if (err.isEmpty() && params.count() > 0) {
+                if (d.exists(params[0]))
+                    dir = WPMUtils::parentDirectory(params[0]);
+                else
+                    useThisEntry = false;
+            } else {
                 qDebug() << "cannot parse " << uninstall << " " << err <<
                         " " << params.count();
                 if (params.count() > 0)
                     qDebug() << "cannot parse2 " << params[0] << " " <<
                             d.exists(params[0]);
-            } */
+            }
         }
     }
 
