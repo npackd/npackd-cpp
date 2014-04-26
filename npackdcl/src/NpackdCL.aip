@@ -33,11 +33,12 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="LICENSE.txt" ComponentId="{9B6F126D-4E50-44B7-B142-29F7B5DDAAEB}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
     <ROW Component="ProductInformation" ComponentId="{9ECB374C-7949-46BE-911B-7F1122FB0EA3}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="_" ComponentId="{F03FCFAA-6C5D-4DC7-99A3-34EDE3ACEB35}" Directory_="APPDIR" Attributes="4" KeyPath="_"/>
     <ROW Component="exchndl.dll" ComponentId="{08E5CA20-350C-47BF-A9EB-E00A39FF0049}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
     <ROW Component="npackdcl.exe" ComponentId="{5736AB50-D8F5-4399-9A4C-F1BA4754F3F0}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation exchndl.dll npackdcl.exe"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation _ exchndl.dll npackdcl.exe"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
@@ -114,7 +115,6 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiEnvComponent">
     <ROW Environment="NPACKD_CL" Name="=-*NPACKD_CL" Value="[APPDIR]" Component_="ProductInformation"/>
-    <ROW Environment="Path" Name="=-*Path" Value="[~];[APPDIR]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="app_1.exe" SourcePath="..\wpmcpp\app.ico" Index="0"/>
@@ -137,6 +137,7 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
     <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+    <ROW Registry="_" Root="2" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\npackdcl.exe" Value="[APPDIR]\npackdcl.exe" Component_="_"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>

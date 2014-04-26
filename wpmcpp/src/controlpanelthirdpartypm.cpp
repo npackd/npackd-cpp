@@ -224,13 +224,13 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
                     dir = WPMUtils::parentDirectory(params[0]);
                 else
                     useThisEntry = false;
-            } else {
+            } /* DEBUG else {
                 qDebug() << "cannot parse " << uninstall << " " << err <<
                         " " << params.count();
                 if (params.count() > 0)
                     qDebug() << "cannot parse2 " << params[0] << " " <<
                             d.exists(params[0]);
-            }
+            }*/
         }
     }
 
