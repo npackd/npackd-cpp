@@ -167,33 +167,6 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
 
     timer.time(3);
 
-    // qDebug() << "InstalledPackages::detect3rdParty.1";
-
-    if (!detectionInfoPrefix.isEmpty()) {
-        QSet<QString> foundDetectionInfos;
-        for (int i = 0; i < installed.count(); i++) {
-            InstalledPackageVersion* ipv = installed.at(i);
-            foundDetectionInfos.insert(ipv->detectionInfo);
-        }
-
-        // remove uninstalled packages
-        QMapIterator<QString, InstalledPackageVersion*> i(data);
-        while (i.hasNext()) {
-            i.next();
-            InstalledPackageVersion* ipv = i.value();
-            qDebug() << "checking" << ipv->detectionInfo << "for" <<
-                    detectionInfoPrefix << ipv->installed() <<
-                    foundDetectionInfos.contains(ipv->detectionInfo);
-            if (ipv->detectionInfo.indexOf(detectionInfoPrefix) == 0 &&
-                    ipv->installed() &&
-                    !foundDetectionInfos.contains(ipv->detectionInfo)) {
-                qDebug() << detectionInfoPrefix <<
-                        " package removed: " << ipv->package;
-                ipv->setPath("");
-            }
-        }
-    }
-
     qDeleteAll(installed);
 
     timer.time(4);
