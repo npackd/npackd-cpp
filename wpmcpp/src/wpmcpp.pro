@@ -52,7 +52,8 @@ SOURCES += main.cpp \
     installthread.cpp \
     updaterepositorythread.cpp \
     scanharddrivesthread.cpp \
-    visiblejobs.cpp
+    visiblejobs.cpp \
+    clprocessor.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -102,7 +103,8 @@ HEADERS += mainwindow.h \
     installthread.h \
     updaterepositorythread.h \
     scanharddrivesthread.h \
-    visiblejobs.h
+    visiblejobs.h \
+    clprocessor.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \
