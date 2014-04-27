@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <QVBoxLayout>
+#include <QMessageBox>
 
 #include "progressframe.h"
 #include "installedpackages.h"
@@ -12,22 +13,39 @@
 #include "uiutils.h"
 #include "installthread.h"
 
+class ProgressDialog: public QDialog {
+public:
+    Job* job;
+
+    void reject();
+};
+
+void ProgressDialog::reject() {
+    job->cancel();
+}
+
 CLProcessor::CLProcessor()
 {
 }
 
 void CLProcessor::monitor(Job* job, const QString& title, QThread* thread)
 {
-    QDialog d;
+    ProgressDialog* d = new ProgressDialog();
+    d->setWindowTitle(title);
+    d->job = job;
     QVBoxLayout* layout = new QVBoxLayout();
 
-    ProgressFrame* pf = new ProgressFrame(&d, job, title, thread);
-    pf->resize(400, 100);
+    ProgressFrame* pf = new ProgressFrame(d, job, title, thread);
     layout->insertWidget(0, pf);
 
-    d.setLayout(layout);
+    d->setLayout(layout);
 
-    d.exec();
+    QObject::connect(thread, SIGNAL(finished()), d,
+            SLOT(accept()), Qt::QueuedConnection);
+
+    d->resize(400, 200);
+    d->exec();
+    d->deleteLater();
 }
 
 QString CLProcessor::remove(const CommandLine& cl)
@@ -67,7 +85,7 @@ QString CLProcessor::remove(const CommandLine& cl)
 
     bool confirmed = false;
     if (err.isEmpty())
-        confirmed = UIUtils::confirmInstalOperations(0, ops, &err);
+        confirmed = UIUtils::confirmInstallOperations(0, ops, &err);
 
     if (err.isEmpty() && confirmed) {
         Job* job = new Job();
@@ -75,12 +93,6 @@ QString CLProcessor::remove(const CommandLine& cl)
         it->install = ops;
         it->programCloseType = programCloseType;
         ops.clear();
-
-        /* TODO
-        connect(it, SIGNAL(finished()), this,
-                SLOT(processThreadFinished()),
-                Qt::QueuedConnection);
-                */
 
         monitor(job, QObject::tr("Uninstall"), it);
     }
@@ -96,79 +108,53 @@ QString CLProcessor::remove(const CommandLine& cl)
 
 QString CLProcessor::add(const CommandLine& cl)
 {
-    return ""; // TODO
-    /*
-    Job* job = clp.createJob();
+    QString err;
 
-    if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.1);
-        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob);
-        if (!rjob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(rjob->getErrorMessage());
-        }
-        delete rjob;
+    err = DBRepository::getDefault()->openDefault();
+
+    if (err.isEmpty()) {
+        err = InstalledPackages::getDefault()->readRegistryDatabase();
     }
 
-    QString err;
     QList<PackageVersion*> toInstall =
             WPMUtils::getPackageVersionOptions(cl, &err, true);
-    if (!err.isEmpty())
-        job->setErrorMessage(err);
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     QList<InstallOperation*> ops;
-    if (job->shouldProceed()) {
-        QString err;
-        QList<PackageVersion*> installed =
-                AbstractRepository::getDefault_()->getInstalled_(&err);
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
 
+    QList<PackageVersion*> installed;
+    if (err.isEmpty()) {
+        installed = AbstractRepository::getDefault_()->getInstalled_(&err);
+    }
+
+    if (err.isEmpty()) {
         QList<PackageVersion*> avoid;
         for (int i = 0; i < toInstall.size(); i++) {
             PackageVersion* pv = toInstall.at(i);
-            if (job->shouldProceed())
-                err = pv->planInstallation(installed, ops, avoid);
-            if (!err.isEmpty()) {
-                job->setErrorMessage(err);
-            }
+            err = pv->planInstallation(installed, ops, avoid);
+            if (!err.isEmpty())
+                break;
         }
-        qDeleteAll(installed);
     }
+
+    qDeleteAll(installed);
 
     // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
-    if (job->shouldProceed("Installing") && ops.size() > 0) {
-        Job* ijob = job->newSubJob(0.9);
-        rep->process(ijob, ops, WPMUtils::CLOSE_WINDOW);
-        if (!ijob->getErrorMessage().isEmpty())
-            job->setErrorMessage(QString("Error installing: %1").
-                    arg(ijob->getErrorMessage()));
+    if (err.isEmpty()) {
+        Job* job = new Job();
+        InstallThread* it = new InstallThread(0, 1, job);
+        it->install = ops;
+        // TODO: it->programCloseType = programCloseType;
+        ops.clear();
 
-        delete ijob;
+        monitor(job, QObject::tr("Install"), it);
     }
-
-    job->complete();
-
-    QString r = job->getErrorMessage();
-    if (r.isEmpty()) {
-        for (int i = 0; i < toInstall.size(); i++) {
-            PackageVersion* pv = toInstall.at(i);
-            WPMUtils::outputTextConsole(QString(
-                    "The package %1 was installed successfully in %2\n").arg(
-                    pv->toString()).arg(pv->getPath()));
-        }
-    }
-
-    delete job;
 
     qDeleteAll(ops);
     qDeleteAll(toInstall);
 
-    return r;
-    */
+    return err;
 }
 
 

@@ -704,7 +704,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
     bool confirmed = false;
     if (err.isEmpty())
-        confirmed = UIUtils::confirmInstalOperations(this, install, &err);
+        confirmed = UIUtils::confirmInstallOperations(this, install, &err);
 
     if (err.isEmpty()) {
         if (confirmed) {

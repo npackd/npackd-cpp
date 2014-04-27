@@ -37,7 +37,7 @@ public:
      */
     static QString extractIconURL(const QString &iconFile);
 
-    static bool confirmInstalOperations(QWidget *parent,
+    static bool confirmInstallOperations(QWidget *parent,
             QList<InstallOperation *> &install, QString *err);
 };
 
