@@ -63,7 +63,7 @@ QString UIUtils::createPackageVersionsHTML(const QStringList& names)
     return allNames.join("<br>");
 }
 
-bool UIUtils::confirmInstalOperations(QWidget* parent,
+bool UIUtils::confirmInstallOperations(QWidget* parent,
         QList<InstallOperation*> &install, QString* err)
 {
     QList<PackageVersion*> pvs;
