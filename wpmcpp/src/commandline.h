@@ -118,7 +118,7 @@ public:
      * @param name name of the option
      * @return values of the option or an empty list if not present
      */
-    QStringList getAll(const QString& name);
+    QStringList getAll(const QString& name) const;
 
     /**
      * @return "free" arguments (those without options)

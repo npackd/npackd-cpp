@@ -19,18 +19,30 @@ public:
     CLProcessor();
 
     /**
-     * @brief installs a package
+     * @brief installs packages
      * @param cl command line
      * @return error message or ""
      */
     QString add(const CommandLine &cl);
 
     /**
-     * @brief removes a package
+     * @brief removes packages
      * @param cl command line
      * @return error message or ""
      */
     QString remove(const CommandLine &cl);
+
+    /**
+     * @brief updates packages
+     * @param cl command line
+     * @return error message or ""
+     */
+    QString update(const CommandLine &cl);
+
+    /**
+     * @brief show the command line options help
+     */
+    void usage();
 private:
     void monitor(Job *job, const QString &title, QThread *thread);
 };

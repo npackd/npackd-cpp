@@ -90,9 +90,28 @@ QString WPMUtils::parentDirectory(const QString& path)
 
 QString WPMUtils::getProgramFilesDir()
 {
-    WCHAR dir[MAX_PATH];
-    SHGetFolderPath(0, CSIDL_PROGRAM_FILES, NULL, 0, dir);
-    return QString::fromUtf16(reinterpret_cast<ushort*>(dir));
+    QString ret;
+
+    if (is64BitWindows()) {
+        WindowsRegistry wr;
+        QString err = wr.open(HKEY_LOCAL_MACHINE,
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion", false,
+                KEY_READ);
+
+        if (err.isEmpty()) {
+            ret = wr.get("ProgramFilesDir", &err);
+            if (!err.isEmpty())
+                ret = "";
+        }
+    }
+
+    if (ret.isEmpty()) {
+        WCHAR dir[MAX_PATH];
+        SHGetFolderPath(0, CSIDL_PROGRAM_FILES, NULL, 0, dir);
+        ret = QString::fromUtf16(reinterpret_cast<ushort*>(dir));
+    }
+
+    return ret;
 }
 
 QString WPMUtils::normalizePath(const QString& path)
@@ -642,6 +661,41 @@ QStringList WPMUtils::getProcessFiles()
 
 QString WPMUtils::getShellDir(int type)
 {
+    /* since Vista
+        HRESULT WINAPI (*lpfSHGetKnownFolderPath) (
+          _In_      REFKNOWNFOLDERID rfid,
+          _In_      DWORD dwFlags,
+          _In_opt_  HANDLE hToken,
+          _Out_     PWSTR *ppszPath
+        );
+
+        HINSTANCE hInstLib = LoadLibraryA("SHELL32.DLL");
+        if (hInstLib) {
+            lpfSHGetKnownFolderPath =
+                    (HRESULT (WINAPI*) (
+                      _In_      REFKNOWNFOLDERID rfid,
+                      _In_      DWORD dwFlags,
+                      _In_opt_  HANDLE hToken,
+                      _Out_     PWSTR *ppszPath
+                    ))
+                    GetProcAddress(hInstLib, "SHGetKnownFolderPath");
+
+            if (lpfSHGetKnownFolderPath) {
+                outputTextConsole("not null\n");
+                PWSTR s;
+                const DWORD KF_FLAG_DONT_VERIFY = 0x00004000;
+                if (SUCCEEDED(lpfSHGetKnownFolderPath(FOLDERID_ProgramFilesX64,
+                        KF_FLAG_DONT_VERIFY,
+                        0, &s))) {
+                    outputTextConsole("S_OK\n");
+                    ret = QString::fromUtf16(reinterpret_cast<ushort*>(s));
+                    CoTaskMemFree(s);
+                }
+            }
+
+            FreeLibrary(hInstLib);
+        }
+     */
     WCHAR dir[MAX_PATH];
     SHGetFolderPath(0, type, NULL, 0, dir);
     return QString::fromUtf16(reinterpret_cast<ushort*>(dir));

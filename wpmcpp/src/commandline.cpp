@@ -244,7 +244,7 @@ bool CommandLine::argumentsAvailable() const
     return (this->freeArguments.count() + this->parsedOptions.size()) > 0;
 }
 
-QStringList CommandLine::getAll(const QString& name)
+QStringList CommandLine::getAll(const QString& name) const
 {
     QStringList r;
     for (int i = 0; i < this->parsedOptions.count(); i++) {
