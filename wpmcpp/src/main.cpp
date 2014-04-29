@@ -126,9 +126,9 @@ int main(int argc, char *argv[])
         QString cmd = fr.at(0);
 
         QString err;
-        /*if (cmd == "help") {
-            usage();
-        } else if (cmd == "path") {
+        if (cmd == "help") {
+            clp.usage();
+        }/* else if (cmd == "path") {
             err = path();
         } else */if (cmd == "remove" || cmd == "rm") {
             err = clp.remove(cl);
@@ -150,9 +150,9 @@ int main(int argc, char *argv[])
             err = list();
         } else if (cmd == "info") {
             err = info();
-        } else if (cmd == "update") {
-            err = update();
-        } else if (cmd == "detect") {
+        }*/ else if (cmd == "update") {
+            err = clp.update(cl);
+        }/* else if (cmd == "detect") {
             err = detect();
         }*/ else {
             err = "Wrong command: " + cmd + ". Try npackdg help";
