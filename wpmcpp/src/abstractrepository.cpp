@@ -65,6 +65,32 @@ QString AbstractRepository::updateNpackdCLEnvVar()
     return err;
 }
 
+bool AbstractRepository::includesRemoveItself(
+        const QList<InstallOperation *> &install_)
+{
+    bool res = false;
+
+    QString myPackage = InstalledPackages::getDefault()->packageName;
+    for (int i = 0; i < install_.count(); i++) {
+        InstallOperation* op = install_.at(i);
+        Version myVersion(NPACKD_VERSION);
+        if (!op->install && op->package == myPackage &&
+                op->version == myVersion) {
+            QString err;
+            PackageVersion* pv = this->findPackageVersion_(
+                    op->package, op->version, &err);
+            if (err.isEmpty() && pv &&
+                    WPMUtils::pathEquals(WPMUtils::getExeDir(),
+                    pv->getPath())) {
+                res = true;
+                break;
+            }
+        }
+    }
+
+    return res;
+}
+
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType)
 {

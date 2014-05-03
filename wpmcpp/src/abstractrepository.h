@@ -209,6 +209,15 @@ public:
      * @return error message
      */
     virtual QString clear() = 0;
+
+    /**
+     * @brief checks whether the given operations include removing the current
+     *     running Npackd or NpackdCL instance
+     * @param install_ operations
+     * @return true = the operation for removing the current running Npackd
+     *     or NpackdCL instance is included
+     */
+    bool includesRemoveItself(const QList<InstallOperation *> &install_);
 };
 
 #endif // ABSTRACTREPOSITORY_H

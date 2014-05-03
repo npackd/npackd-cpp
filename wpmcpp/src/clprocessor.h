@@ -43,6 +43,13 @@ public:
      * @brief show the command line options help
      */
     void usage();
+
+    /**
+     * @brief process the command line
+     * @param errorCode error code will be stored here
+     * @return false = GUI should be started
+     */
+    bool process(int *errorCode);
 private:
     void monitor(Job *job, const QString &title, QThread *thread);
 };
