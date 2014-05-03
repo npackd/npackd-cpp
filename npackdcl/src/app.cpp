@@ -3,6 +3,7 @@
 
 #include <QRegExp>
 #include <QScopedPointer>
+#include <QProcess>
 
 #include "app.h"
 #include "wpmutils.h"
@@ -855,7 +856,7 @@ QString App::update()
 
     if (job->shouldProceed("Updating") && !up2date) {
         Job* ijob = job->newSubJob(0.86);
-        rep->process(ijob, ops, programCloseType);
+        processInstallOperations(ijob, ops, programCloseType);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
                     arg(ijob->getErrorMessage()));
@@ -880,6 +881,69 @@ QString App::update()
     qDeleteAll(toUpdate);
 
     return r;
+}
+
+void App::processInstallOperations(Job *job,
+        const QList<InstallOperation *> &ops, DWORD programCloseType)
+{
+    DBRepository* rep = DBRepository::getDefault();
+
+    if (rep->includesRemoveItself(ops)) {
+        QString thisExe = WPMUtils::getExeFile();
+
+        // 1. copy .exe to the temporary directory
+        QTemporaryFile of(QDir::tempPath() +
+                          "\\npackdclXXXXXX.exe");
+        // qDebug() << "1";
+        of.setAutoRemove(false);
+        // qDebug() << "2";
+        of.open(); // TODO: return value
+        QString newExe = of.fileName();
+        // qDebug() << "3";
+        of.remove(); // TODO: return value
+        //qDebug() << "4";
+        of.close();
+        // qDebug() << "5" << WPMUtils::getExeFile() << newExe;
+
+        // TODO: use the actual file name instead of npackdg.exe
+        QFile::copy(thisExe,
+                newExe); // TODO: return value
+        // qDebug() << "6";
+
+        QStringList batch;
+        for (int i = 0; i < ops.count(); i++) {
+            InstallOperation* op = ops.at(i);
+            QString oneCmd = "\"" + thisExe + "\" ";
+            if (op->install)
+                oneCmd += "add ";
+            else
+                oneCmd += "remove ";
+            oneCmd += "-p " + op->package + " -v " +
+                    op->version.getVersionString();
+            batch.append(oneCmd);
+        }
+
+        QTemporaryFile file(QDir::tempPath() +
+                          "\\npackdclXXXXXX.bat");
+        file.setAutoRemove(false);
+
+        // TODO: error handling
+        QTextStream stream(&file);
+        stream.setCodec("UTF-8");
+        stream << batch.join("\r\n");
+        file.close();
+
+        QProcess p(0);
+
+        QString file_ = file.fileName();
+        file_.replace('/', '\\');
+        p.setNativeArguments("/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"");
+        QProcess::startDetached(WPMUtils::findCmdExe());
+
+        job->complete();
+    } else {
+        rep->process(job, ops, programCloseType);
+    }
 }
 
 QString App::add()
@@ -925,10 +989,9 @@ QString App::add()
 
     // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
     if (job->shouldProceed("Installing") && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.9);
-        rep->process(ijob, ops, WPMUtils::CLOSE_WINDOW);
+        processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
                     arg(ijob->getErrorMessage()));
@@ -1073,8 +1136,6 @@ QString App::remove()
 {
     Job* job = clp.createJob();
 
-    DBRepository* rep = DBRepository::getDefault();
-
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.1);
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
@@ -1136,7 +1197,7 @@ QString App::remove()
 
     if (job->shouldProceed("Removing")) {
         Job* removeJob = job->newSubJob(0.9);
-        rep->process(removeJob, ops, programCloseType);
+        processInstallOperations(removeJob, ops, programCloseType);
         if (!removeJob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error removing: %1\n").
                     arg(removeJob->getErrorMessage()));

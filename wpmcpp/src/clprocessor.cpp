@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QString>
 
 #include "progressframe.h"
 #include "installedpackages.h"
@@ -12,6 +13,7 @@
 #include "installoperation.h"
 #include "uiutils.h"
 #include "installthread.h"
+#include "commandline.h"
 
 // TODO: i18n
 
@@ -385,4 +387,101 @@ void CLProcessor::usage()
     mb.setDefaultButton(QMessageBox::Ok);
     mb.setDetailedText(sl.join("\r\n"));
     mb.exec();
+}
+
+bool CLProcessor::process(int* errorCode)
+{
+    *errorCode = 0;
+
+    bool ret = true;
+
+    CommandLine cl;
+
+    cl.add("package", 'p',
+            "internal package name (e.g. com.example.Editor or just Editor)",
+            "package", true);
+    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
+            "range", false);
+    cl.add("version", 'v', "version number (e.g. 1.5.12)",
+            "version", false);
+    cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
+            "repository", false);
+    cl.add("status", 's', "filters package versions by status",
+            "status", false);
+    cl.add("bare-format", 'b', "bare format (no heading or summary)",
+            "", false);
+    cl.add("query", 'q', "search terms (e.g. editor)",
+            "search terms", false);
+    cl.add("debug", 'd', "turn on the debug output", "", false);
+    cl.add("file", 'f', "file or directory", "file", false);
+    cl.add("end-process", 'e',
+        "comma separated list of ways to close running applications (windows, kill)",
+        "list", false);
+
+    QString commandLineParsingError = cl.parse();
+
+    // cl.dump();
+
+    /* TODO
+    if (cl.isPresent("debug")) {
+        clp.setUpdateRate(0);
+    }
+    */
+
+    QStringList fr = cl.getFreeArguments();
+
+    if (!commandLineParsingError.isEmpty()) {
+        QString msg = QObject::tr("Error parsing the command line: %1").
+                arg(commandLineParsingError);
+        QMessageBox::critical(0, QObject::tr("Error"), msg);
+        *errorCode = 1;
+    } else if (fr.count() == 1) {
+        QString cmd = fr.at(0);
+
+        QString err;
+        if (cmd == "help") {
+            usage();
+        }/* else if (cmd == "path") {
+            err = path();
+        } else */if (cmd == "remove" || cmd == "rm") {
+            err = remove(cl);
+        } else if (cmd == "add") {
+            err = add(cl);
+        } /* else if (cmd == "add-repo") {
+            err = addRepo();
+        } else if (cmd == "remove-repo") {
+            err = removeRepo();
+        } else if (cmd == "list-repos") {
+            err = listRepos();
+        } else if (cmd == "search") {
+            err = search();
+        } else if (cmd == "check") {
+            err = check();
+        } else if (cmd == "which") {
+            err = which();
+        } else if (cmd == "list") {
+            err = list();
+        } else if (cmd == "info") {
+            err = info();
+        }*/ else if (cmd == "update") {
+            err = update(cl);
+        }/* else if (cmd == "detect") {
+            err = detect();
+        }*/ else {
+            err = "Wrong command: " + cmd + ". Try npackdg help";
+        }
+        if (!err.isEmpty()) {
+            QMessageBox::critical(0, QObject::tr("Error"), err);
+            *errorCode = 1;
+        }
+    } else if (fr.count() > 1) {
+        QString err = QObject::tr("Unexpected argument: %1").
+                arg(fr.at(1));
+        QMessageBox::critical(0, QObject::tr("Error"), err);
+        *errorCode = 1;
+    } else {
+        ret = false;
+    }
+
+    return ret;
 }

@@ -448,57 +448,6 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     QDir d(getPath());
 
-    QString myPackage = InstalledPackages::getDefault()->packageName;
-    Version myVersion(NPACKD_VERSION);
-    if (this->package == myPackage && this->version == myVersion) {
-        if (WPMUtils::pathEquals(WPMUtils::getExeDir(), getPath())) {
-            // 1. copy .exe to the temporary directory
-            QTemporaryFile of(QDir::tempPath() +
-                              "\\npackdgXXXXXX.exe");
-            // qDebug() << "1";
-            of.setAutoRemove(false);
-            // qDebug() << "2";
-            of.open(); // TODO: return value
-            QString newExe = of.fileName();
-            // qDebug() << "3";
-            of.remove(); // TODO: return value
-            //qDebug() << "4";
-            of.close();
-            // qDebug() << "5" << WPMUtils::getExeFile() << newExe;
-
-            // TODO: use the actual file name instead of npackdg.exe
-            QFile::copy(WPMUtils::getExeFile(),
-                    newExe); // TODO: return value
-            // qDebug() << "6";
-
-            if (myPackage == "com.googlecode.windows-package-manager.Npackd" ||
-                    myPackage == "com.googlecode.windows-package-manager.Npackd64") {
-                // npackdg
-                QStringList args;
-                args.append("remove");
-                args.append("--package");
-                args.append(myPackage);
-                args.append("--version");
-                args.append(myVersion.getVersionString());
-                QProcess::startDetached(newExe, args);
-
-                return;
-            } else {
-                // npackdcl
-                QStringList args;
-                args.append("remove");
-                args.append("--package");
-                args.append(myPackage);
-                args.append("--version");
-                args.append(myVersion.getVersionString());
-                QProcess::startDetached(newExe, args);
-
-                return;
-            }
-        }
-    }
-
-
     if (job->shouldProceed(QObject::tr("Closing running processes"))) {
         WPMUtils::closeProcessesThatUseDirectory(this->getPath(),
                 programCloseType);
