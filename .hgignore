@@ -33,3 +33,6 @@ syntax: regexp
 \.pro\.user
 ^npackd_lazarus/
 ^npackdcl-i686-test/
+^wpmcpp/src/build/
+^wpmcpp/src/wpmcpp32-cache/
+^wpmcpp/src/wpmcpp64-cache/
