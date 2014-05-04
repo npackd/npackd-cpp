@@ -6,7 +6,7 @@ PROFILE=release32
 
 # ------------------------------------------------------------------------------
 
-.PHONY: all printvars clean compile prep zip msi gprof drmemory
+.PHONY: all printvars clean compile prep zip msi gprof drmemory upload
 
 SHELL:=cmd.exe
 
@@ -15,11 +15,13 @@ QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.2.1
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.8.2, 4.8.2]")
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.6.2, 0.6.2]")
 BITS=32
+PACKAGE=com.googlecode.windows-package-manager.Npackd
 else
 QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.2.1
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.8.2, 4.8.2]")
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.6.2, 0.6.2]")
 BITS=64
+PACKAGE=com.googlecode.windows-package-manager.Npackd64
 endif
 ifeq ($(PROFILE),release32)
 CONFIG=release
@@ -42,6 +44,7 @@ RPAREN=)
 AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 11$(RPAREN)")
 SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 10$(RPAREN)")
 MINGWUTILS=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
+PUTTY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=uk.org.greenend.chiark.sgtatham.Putty" "--versions=[0.62, 2$(RPAREN)")
 VERSION=$(shell cmd /c type version.txt)
 
 all:
@@ -64,6 +67,7 @@ printvars:
 	@echo SEVENZIP=$(SEVENZIP)
 	@echo QUAZIP=$(QUAZIP)
 	@echo MINGWUTILS=$(MINGWUTILS)
+	@echo PUTTY=$(PUTTY)
 	@echo WHERE=$(WHERE)
 	@echo CONFIG=$(CONFIG)
 ifndef PROFILE
@@ -93,6 +97,9 @@ endif
 ifndef MINGWUTILS
 	$(error MINGWUTILS is not defined)
 endif
+ifndef PUTTY
+	$(error PUTTY is not defined)
+endif
 
 clean: printvars
 	-rmdir /s /q $(WHERE)
@@ -111,7 +118,7 @@ compile: printvars $(WHERE) $(WHERE)/../Makefile
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
 
 prep: compile $(WHERE)/zip
-	cd $(WHERE) && copy ..\wpmcpp_release.map zip\Npackd-$(VERSION).map
+	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
 	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
 	copy src\wpmcpp_es.qm $(WHERE)\zip\npackdg_es.qm
 	copy src\wpmcpp_ru.qm $(WHERE)\zip\npackdg_ru.qm
@@ -142,4 +149,15 @@ ifeq (32,$(BITS))
 drmemory: compile
 	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -no_callstack_use_top_fp -- wpmcpp.exe
 endif
+
+upload: zip msi
+	"$(PUTTY)\pscp.exe" \
+	    $(WHERE)/Npackd$(BITS)-$(VERSION).zip \
+		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
+	"$(PUTTY)\pscp.exe" \
+	    $(WHERE)/Npackd$(BITS)-$(VERSION).msi \
+		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
+	"$(PUTTY)\pscp.exe" \
+	    $(WHERE)/Npackd$(BITS)-$(VERSION).map \
+		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 
