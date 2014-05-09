@@ -153,11 +153,7 @@ endif
 upload: zip msi
 	"$(PUTTY)\pscp.exe" \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).zip \
-		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
-	"$(PUTTY)\pscp.exe" \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).msi \
-		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
-	"$(PUTTY)\pscp.exe" \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).map \
 		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 
