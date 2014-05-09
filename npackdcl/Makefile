@@ -50,7 +50,7 @@ all:
 	$(MAKE) clean PROFILE=release32
 	$(MAKE) zip PROFILE=release32
 	$(MAKE) msi PROFILE=release32
-	echo ======================= SUCCESS =======================================
+	@echo ======================= SUCCESS =======================================
 
 printvars:
 	@echo PROFILE=$(PROFILE)
@@ -126,7 +126,7 @@ endif
 zip: prep
 	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip *
 
-msi: prep
+msi: CrystalIcons_LICENSE.txt LICENSE.txt build\32\release\zip\npackdcl.exe build\32\release\zip\exchndl.dll zip
 	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\$(PROJECT)$(BITS).aip /SetVersion $(VERSION)
 	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\$(PROJECT)$(BITS).aip
 
@@ -142,7 +142,7 @@ drmemory: compile
 endif
 
 upload: zip msi
-	"$(PUTTY)\pscp.exe" \
+	"$(PUTTY)\pscp.exe" -C \
 		$(WHERE)/$(PROJECT)-$(VERSION).zip \
 	    $(WHERE)/$(PROJECT)-$(VERSION).msi \
 	    $(WHERE)/$(PROJECT)-$(VERSION).map \
