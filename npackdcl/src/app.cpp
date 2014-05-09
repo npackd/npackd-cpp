@@ -889,6 +889,8 @@ void App::processInstallOperations(Job *job,
     DBRepository* rep = DBRepository::getDefault();
 
     if (rep->includesRemoveItself(ops)) {
+        qDebug() << "starting self-update";
+
         QString thisExe = WPMUtils::getExeFile();
 
         // 1. copy .exe to the temporary directory
@@ -905,10 +907,14 @@ void App::processInstallOperations(Job *job,
         of.close();
         // qDebug() << "5" << WPMUtils::getExeFile() << newExe;
 
+        qDebug() << "self-update 1";
+
         // TODO: use the actual file name instead of npackdg.exe
         QFile::copy(thisExe,
                 newExe); // TODO: return value
         // qDebug() << "6";
+
+        qDebug() << "self-update 2";
 
         QStringList batch;
         for (int i = 0; i < ops.count(); i++) {
@@ -923,10 +929,13 @@ void App::processInstallOperations(Job *job,
             batch.append(oneCmd);
         }
 
+        qDebug() << "self-update 3";
+
         QTemporaryFile file(QDir::tempPath() +
                           "\\npackdclXXXXXX.bat");
         file.setAutoRemove(false);
         file.open(); // TODO: error handling
+        qDebug() << "batch" << file.fileName();
 
         // TODO: error handling
         QTextStream stream(&file);
@@ -934,12 +943,16 @@ void App::processInstallOperations(Job *job,
         stream << batch.join("\r\n");
         file.close();
 
+        qDebug() << "self-update 4";
+
         QProcess p(0);
 
         QString file_ = file.fileName();
         file_.replace('/', '\\');
         p.setNativeArguments("/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"");
         QProcess::startDetached(WPMUtils::findCmdExe());
+
+        qDebug() << "self-update 5";
 
         job->complete();
     } else {

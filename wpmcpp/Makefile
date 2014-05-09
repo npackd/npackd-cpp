@@ -151,7 +151,7 @@ drmemory: compile
 endif
 
 upload: zip msi
-	"$(PUTTY)\pscp.exe" \
+	"$(PUTTY)\pscp.exe" -C \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).zip \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).msi \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).map \
