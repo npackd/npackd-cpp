@@ -50,9 +50,6 @@ all:
 	$(MAKE) clean PROFILE=release32
 	$(MAKE) zip PROFILE=release32
 	$(MAKE) msi PROFILE=release32
-	$(MAKE) clean PROFILE=release64
-	$(MAKE) zip PROFILE=release64
-	$(MAKE) msi PROFILE=release64
 	echo ======================= SUCCESS =======================================
 
 printvars:
@@ -147,11 +144,7 @@ endif
 upload: zip msi
 	"$(PUTTY)\pscp.exe" \
 		$(WHERE)/$(PROJECT)-$(VERSION).zip \
-		hilt2@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
-	"$(PUTTY)\pscp.exe" \
 	    $(WHERE)/$(PROJECT)-$(VERSION).msi \
-		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
-	"$(PUTTY)\pscp.exe" \
 	    $(WHERE)/$(PROJECT)-$(VERSION).map \
-		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
+		hilt2@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 

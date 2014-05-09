@@ -926,6 +926,7 @@ void App::processInstallOperations(Job *job,
         QTemporaryFile file(QDir::tempPath() +
                           "\\npackdclXXXXXX.bat");
         file.setAutoRemove(false);
+        file.open(); // TODO: error handling
 
         // TODO: error handling
         QTextStream stream(&file);
