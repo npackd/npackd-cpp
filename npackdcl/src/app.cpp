@@ -231,12 +231,10 @@ QString App::addNpackdCL()
         pv->version = Version(NPACKD_VERSION);
         r->savePackageVersion(pv);
     }
-    if (!pv->installed()) {
-        err = pv->setPath(WPMUtils::getExeDir());
-        if (err.isEmpty())
-            err = r->updateNpackdCLEnvVar();
-    }
     delete pv;
+    pv = 0;
+
+    err = r->updateNpackdCLEnvVar();
 
     return err;
 }
@@ -889,70 +887,107 @@ void App::processInstallOperations(Job *job,
     DBRepository* rep = DBRepository::getDefault();
 
     if (rep->includesRemoveItself(ops)) {
-        qDebug() << "starting self-update";
+        QString newExe;
 
-        QString thisExe = WPMUtils::getExeFile();
+        if (job->shouldProceed("Copying the executable")) {
+            QString thisExe = WPMUtils::getExeFile();
 
-        // 1. copy .exe to the temporary directory
-        QTemporaryFile of(QDir::tempPath() +
-                          "\\npackdclXXXXXX.exe");
-        // qDebug() << "1";
-        of.setAutoRemove(false);
-        // qDebug() << "2";
-        of.open(); // TODO: return value
-        QString newExe = of.fileName();
-        // qDebug() << "3";
-        of.remove(); // TODO: return value
-        //qDebug() << "4";
-        of.close();
-        // qDebug() << "5" << WPMUtils::getExeFile() << newExe;
+            // 1. copy .exe to the temporary directory
+            QTemporaryFile of(QDir::tempPath() + "\\npackdclXXXXXX.exe");
+            of.setAutoRemove(false);
+            if (!of.open())
+                job->setErrorMessage(of.errorString());
+            else {
+                newExe = of.fileName();
+                if (!of.remove()) {
+                    job->setErrorMessage(of.errorString());
+                } else {
+                    of.close();
 
-        qDebug() << "self-update 1";
+                    qDebug() << "self-update 1";
 
-        // TODO: use the actual file name instead of npackdg.exe
-        QFile::copy(thisExe,
-                newExe); // TODO: return value
-        // qDebug() << "6";
+                    if (!QFile::copy(thisExe, newExe))
+                        job->setErrorMessage("Error copying the binary");
+                    else
+                        job->setProgress(0.8);
 
-        qDebug() << "self-update 2";
-
-        QStringList batch;
-        for (int i = 0; i < ops.count(); i++) {
-            InstallOperation* op = ops.at(i);
-            QString oneCmd = "\"" + thisExe + "\" ";
-            if (op->install)
-                oneCmd += "add ";
-            else
-                oneCmd += "remove ";
-            oneCmd += "-p " + op->package + " -v " +
-                    op->version.getVersionString();
-            batch.append(oneCmd);
+                    qDebug() << "self-update 2";
+                }
+            }
         }
 
-        qDebug() << "self-update 3";
+        QString batchFileName;
+        if (job->shouldProceed("Creating the .bat file")) {
+            QStringList batch;
+            for (int i = 0; i < ops.count(); i++) {
+                InstallOperation* op = ops.at(i);
+                QString oneCmd = "\"" + newExe + "\" ";
+                if (op->install)
+                    oneCmd += "add ";
+                else
+                    oneCmd += "remove ";
+                oneCmd += "-p " + op->package + " -v " +
+                        op->version.getVersionString();
+                batch.append(oneCmd);
+            }
 
-        QTemporaryFile file(QDir::tempPath() +
-                          "\\npackdclXXXXXX.bat");
-        file.setAutoRemove(false);
-        file.open(); // TODO: error handling
-        qDebug() << "batch" << file.fileName();
+            qDebug() << "self-update 3";
 
-        // TODO: error handling
-        QTextStream stream(&file);
-        stream.setCodec("UTF-8");
-        stream << batch.join("\r\n");
-        file.close();
+            QTemporaryFile file(QDir::tempPath() +
+                              "\\npackdclXXXXXX.bat");
+            file.setAutoRemove(false);
+            if (!file.open())
+                job->setErrorMessage(file.errorString());
+            else {
+                batchFileName = file.fileName();
 
-        qDebug() << "self-update 4";
+                qDebug() << "batch" << file.fileName();
 
-        QProcess p(0);
+                QTextStream stream(&file);
+                stream.setCodec("UTF-8");
+                stream << batch.join("\r\n");
+                if (stream.status() != QTextStream::Ok)
+                    job->setErrorMessage("Error writing the .bat file");
+                file.close();
 
-        QString file_ = file.fileName();
-        file_.replace('/', '\\');
-        p.setNativeArguments("/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"");
-        QProcess::startDetached(WPMUtils::findCmdExe());
+                qDebug() << "self-update 4";
 
-        qDebug() << "self-update 5";
+                job->setProgress(0.9);
+            }
+        }
+
+        if (job->shouldProceed("Starting the copied binary")) {
+            QString file_ = batchFileName;
+            file_.replace('/', '\\');
+            QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
+            QString prg = WPMUtils::findCmdExe();
+
+            bool success = false;
+            PROCESS_INFORMATION pinfo;
+
+            STARTUPINFOW startupInfo = {
+                sizeof(STARTUPINFO), 0, 0, 0,
+                (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+                (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            };
+            success = CreateProcess(
+                    (wchar_t*) prg.utf16(),
+                    (wchar_t*) args.utf16(),
+                    0, 0, TRUE,
+                    CREATE_UNICODE_ENVIRONMENT, 0,
+                    0, &startupInfo, &pinfo);
+
+            if (success) {
+                CloseHandle(pinfo.hThread);
+                CloseHandle(pinfo.hProcess);
+                qDebug() << "success!222";
+            }
+
+            qDebug() << "self-update 5";
+
+            job->setProgress(1);
+        }
 
         job->complete();
     } else {

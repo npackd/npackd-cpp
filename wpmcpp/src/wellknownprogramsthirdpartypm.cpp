@@ -420,9 +420,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
 
     if (job->shouldProceed()) {
         Version version(NPACKD_VERSION);
-        PackageVersion* pv = new PackageVersion(
-                packageName,
-                version);
+        PackageVersion* pv = new PackageVersion(packageName, version);
         err = rep->savePackageVersion(pv);
         if (!err.isEmpty())
             job->setErrorMessage(err);
