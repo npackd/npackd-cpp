@@ -7,7 +7,6 @@
 #include "msithirdpartypm.h"
 #include "wpmutils.h"
 #include "dbrepository.h"
-#include "uiutils.h"
 
 void MSIThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed,
@@ -117,7 +116,7 @@ void MSIThirdPartyPM::scan(Job* job,
                 QString icon = WPMUtils::getMSIProductAttribute(guid,
                         INSTALLPROPERTY_PRODUCTICON, &err);
                 if (err.isEmpty()) {
-                    p->icon = UIUtils::extractIconURL(icon);
+                    p->icon = WPMUtils::extractIconURL(icon);
                 } else {
                     err = "";
                 }

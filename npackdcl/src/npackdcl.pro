@@ -1,7 +1,7 @@
 NPACKD_VERSION = $$system(type ..\\..\\wpmcpp\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
-QT += xml sql widgets winextras
+QT += xml sql
 TARGET = npackdcl
 CONFIG += console
 CONFIG -= app_bundle
@@ -49,8 +49,7 @@ SOURCES += main.cpp \
     ../../wpmcpp/src/repositoryxmlhandler.cpp \
     ../../wpmcpp/src/mysqlquery.cpp \
     ../../wpmcpp/src/installedpackagesthirdpartypm.cpp \
-    ../../wpmcpp/src/cbsthirdpartypm.cpp \
-    ../../wpmcpp/src/uiutils.cpp
+    ../../wpmcpp/src/cbsthirdpartypm.cpp
 HEADERS += ../../wpmcpp/src/installthread.h \
     ../../wpmcpp/src/visiblejobs.h \
     ../../wpmcpp/src/updaterepositorythread.h \
@@ -83,8 +82,7 @@ HEADERS += ../../wpmcpp/src/installthread.h \
     ../../wpmcpp/src/repositoryxmlhandler.h \
     ../../wpmcpp/src/mysqlquery.h \
     ../../wpmcpp/src/installedpackagesthirdpartypm.h \
-    ../../wpmcpp/src/cbsthirdpartypm.h \
-    ../../wpmcpp/src/uiutils.h
+    ../../wpmcpp/src/cbsthirdpartypm.h
 FORMS += 
 
 CONFIG += static
