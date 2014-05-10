@@ -70,20 +70,20 @@ bool AbstractRepository::includesRemoveItself(
 {
     bool res = false;
 
-    QString myPackage = InstalledPackages::getDefault()->packageName;
+    QString exeDir = WPMUtils::getExeDir();
     for (int i = 0; i < install_.count(); i++) {
         InstallOperation* op = install_.at(i);
-        Version myVersion(NPACKD_VERSION);
-        if (!op->install && op->package == myPackage &&
-                op->version == myVersion) {
+        if (!op->install) {
             QString err;
             PackageVersion* pv = this->findPackageVersion_(
                     op->package, op->version, &err);
-            if (err.isEmpty() && pv &&
-                    WPMUtils::pathEquals(WPMUtils::getExeDir(),
-                    pv->getPath())) {
-                res = true;
-                break;
+            if (err.isEmpty() && pv) {
+                QString path = pv->getPath();
+                if (WPMUtils::pathEquals(exeDir, path) ||
+                        WPMUtils::isUnder(exeDir, path)) {
+                    res = true;
+                    break;
+                }
             }
         }
     }
@@ -105,24 +105,6 @@ void AbstractRepository::process(Job *job,
                 first->install && !second->install) {
             install.insert(0, second);
             install.removeAt(2);
-        }
-    }
-
-    // if we have to remove ourself, move this operation to the end
-    if (install.size() > 1) {
-        int index = -1;
-        QString myPackage = InstalledPackages::getDefault()->packageName;
-        Version myVersion(NPACKD_VERSION);
-        for (int i = 0; i < install.size(); i++) {
-            InstallOperation* op = install.at(i);
-            if (!op->install && op->package == myPackage &&
-                    op->version == myVersion) {
-                index = i;
-            }
-        }
-
-        if (index >= 0) {
-            install.append(install.takeAt(index));
         }
     }
 

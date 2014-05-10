@@ -111,7 +111,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     if (pExecute)
         pExecute->Release();
 
-    qDebug() << err;
+    // qDebug() << err;
 
     return res;
 }
