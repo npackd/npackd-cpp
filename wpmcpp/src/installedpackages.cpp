@@ -56,6 +56,8 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
 
     QString err;
 
+    // qDebug() << "detect3rdParty 1";
+
     // remove all package versions detected via this 3rd party package manager
     // in the previous run
     if (err.isEmpty() && !detectionInfoPrefix.isEmpty()) {
@@ -71,12 +73,13 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
         }
     }
 
+    // qDebug() << "detect3rdParty 2";
+
     Repository rep;
     QList<InstalledPackageVersion*> installed;
 
-    Job* job;
     if (err.isEmpty()) {
-        job = new Job();
+        Job* job = new Job();
         pm->scan(job, &installed, &rep);
         if (!job->getErrorMessage().isEmpty())
             err = job->getErrorMessage();
@@ -84,6 +87,8 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
     }
 
     timer.time(1);
+
+    // qDebug() << "detect3rdParty 3";
 
     // remove packages and versions that are not installed
     if (err.isEmpty()) {
@@ -114,8 +119,10 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
         }
     }
 
+    // qDebug() << "detect3rdParty 4";
+
     if (err.isEmpty()) {
-        job = new Job();
+        Job* job = new Job();
         r->saveAll(job, &rep, replace);
         if (!job->getErrorMessage().isEmpty())
             err = job->getErrorMessage();
@@ -164,6 +171,8 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
             processOneInstalled3rdParty(r, ipv);
         }
     }
+
+    // qDebug() << "detect3rdParty 5";
 
     timer.time(3);
 
@@ -453,6 +462,8 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         if (job->getErrorMessage().isEmpty())
             job->setProgress(0.69);
     }
+
+     // qDebug() << "InstalledPackages::refresh.2.1";
 
     /*
     if (job->shouldProceed(

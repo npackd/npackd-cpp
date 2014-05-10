@@ -13,6 +13,8 @@ void MSIThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed,
         Repository *rep) const
 {
+    // qDebug() << "MSIThirdPartyPM::scan 0";
+
     QStringList all = WPMUtils::findInstalledMSIProducts();
 
     QStringList components = WPMUtils::findInstalledMSIComponents();
@@ -24,19 +26,29 @@ void MSIThirdPartyPM::scan(Job* job,
     DBRepository* dbr = DBRepository::getDefault();
     // qDebug() << all.at(0);
 
+    // qDebug() << "MSIThirdPartyPM::scan 1";
+
     for (int i = 0; i < all.count(); i++) {
         QString guid = all.at(i);
+
+        // qDebug() << "MSIThirdPartyPM::scan " << i << "of" << all.count();
+        // qDebug() << guid;
 
         QString err;
         QString package;
         Version version;
+
+        // qDebug() << "MSIThirdPartyPM::scan loop 1";
 
         PackageVersion* pv_ = dbr->findPackageVersionByMSIGUID_(guid, &err);
         if (pv_ != 0) {
             package = pv_->package;
             version = pv_->version;
             delete pv_;
+            pv_ = 0;
         } else {
+            // qDebug() << "MSIThirdPartyPM::scan loop 1.1";
+
             package = "msi." + guid.mid(1, 36);
 
             // create package version
@@ -52,6 +64,8 @@ void MSIThirdPartyPM::scan(Job* job,
             }
             pv->version = version;
 
+            // qDebug() << "MSIThirdPartyPM::scan loop 1.2";
+
             // Uninstall.bat
             PackageVersionFile* pvf = new PackageVersionFile(
                     ".Npackd\\Uninstall.bat",
@@ -65,6 +79,8 @@ void MSIThirdPartyPM::scan(Job* job,
             pv->files.append(pvf);
             rep->savePackageVersion(pv.data());
 
+            // qDebug() << "MSIThirdPartyPM::scan loop 1.3";
+
             QString title = WPMUtils::getMSIProductName(guid, &err);
 
             // use the directory name for the title if there is no title
@@ -75,6 +91,8 @@ void MSIThirdPartyPM::scan(Job* job,
                 if (pos > 0)
                     title = title.right(title.length() - pos - 1);
             }
+
+            // qDebug() << "MSIThirdPartyPM::scan loop 1.4";
 
             QScopedPointer<Package> p(new Package(pv->package, title));
             p->description = "[" + QObject::tr("MSI database") +
@@ -90,6 +108,8 @@ void MSIThirdPartyPM::scan(Job* job,
                 if (err.isEmpty() && QUrl(url).isValid())
                     p->url = url;
             }
+
+            // qDebug() << "MSIThirdPartyPM::scan loop 1.5";
 
             p->categories.append(QObject::tr("MSI packages"));
 
@@ -108,8 +128,14 @@ void MSIThirdPartyPM::scan(Job* job,
 
             // qDebug() << p->title; // TODO: remove
 
+            // qDebug() << "MSIThirdPartyPM::scan loop 1.6";
+
             rep->savePackage(p.data());
+
+            // qDebug() << "MSIThirdPartyPM::scan loop 1.7";
         }
+
+        // qDebug() << "MSIThirdPartyPM::scan loop 2";
 
         // create InstalledPackageVersion
         QString dir = WPMUtils::getMSIProductLocation(guid, &err);
@@ -147,6 +173,8 @@ void MSIThirdPartyPM::scan(Job* job,
             }
         }
 
+        // qDebug() << "MSIThirdPartyPM::scan loop 3";
+
         // qDebug() << "dir" << dir; // TODO: remove
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
@@ -154,6 +182,8 @@ void MSIThirdPartyPM::scan(Job* job,
         ipv->detectionInfo = "msi:" + guid;
         installed->append(ipv);
     }
+
+    // qDebug() << "MSIThirdPartyPM::scan 2";
 
     job->setProgress(1);
     job->complete();

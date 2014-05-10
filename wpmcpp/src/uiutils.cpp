@@ -1,8 +1,10 @@
 #include <windows.h>
 
+#include <QDebug>
 #include <QMessageBox>
 #include <QBuffer>
 #include <qwinfunctions.h>
+#include <QPixmap>
 
 #include "uiutils.h"
 #include "packageversion.h"
@@ -11,11 +13,124 @@ UIUtils::UIUtils()
 {
 }
 
+// Qt 5.2.1
+// qtbase/src/gui/image/qpixmap_win.cpp:qt_pixmapFromWinHICON has a bug.
+// It crashes in the following line sometimes:
+//     return QPixmap::fromImage(image);
+// => this function only uses QImage
+QImage my_qt_pixmapFromWinHICON(HICON icon)
+{
+    // qDebug() << "my_qt_pixmapFromWinHICON 0";
+
+    HDC screenDevice = GetDC(0);
+    HDC hdc = CreateCompatibleDC(screenDevice);
+    ReleaseDC(0, screenDevice);
+
+    ICONINFO iconinfo;
+    bool result = GetIconInfo(icon, &iconinfo);
+    if (!result)
+        qWarning("QPixmap::fromWinHICON(), failed to GetIconInfo()");
+
+    // qDebug() << "my_qt_pixmapFromWinHICON 1";
+
+    int w = 0;
+    int h = 0;
+    if (!iconinfo.xHotspot || !iconinfo.yHotspot) {
+        // We could not retrieve the icon size via GetIconInfo,
+        // so we try again using the icon bitmap.
+        BITMAP bm;
+        int result = GetObject(iconinfo.hbmColor, sizeof(BITMAP), &bm);
+        if (!result) result = GetObject(iconinfo.hbmMask, sizeof(BITMAP), &bm);
+        if (!result) {
+            qWarning("QPixmap::fromWinHICON(), failed to retrieve icon size");
+            return QImage();
+        }
+        w = bm.bmWidth;
+        h = bm.bmHeight;
+    } else {
+        // x and y Hotspot describes the icon center
+        w = iconinfo.xHotspot * 2;
+        h = iconinfo.yHotspot * 2;
+    }
+    const DWORD dwImageSize = w * h * 4;
+
+    // qDebug() << "my_qt_pixmapFromWinHICON 2" << w << h;
+
+    BITMAPINFO bmi;
+    memset(&bmi, 0, sizeof(bmi));
+    bmi.bmiHeader.biSize        = sizeof(BITMAPINFO);
+    bmi.bmiHeader.biWidth       = w;
+    bmi.bmiHeader.biHeight      = -h;
+    bmi.bmiHeader.biPlanes      = 1;
+    bmi.bmiHeader.biBitCount    = 32;
+    bmi.bmiHeader.biCompression = BI_RGB;
+    bmi.bmiHeader.biSizeImage   = dwImageSize;
+
+    uchar* bits;
+
+    // qDebug() << "my_qt_pixmapFromWinHICON 3";
+
+    HBITMAP winBitmap = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, (void**) &bits, 0, 0);
+    if (winBitmap )
+        memset(bits, 0xff, dwImageSize);
+    if (!winBitmap) {
+        qWarning("QPixmap::fromWinHICON(), failed to CreateDIBSection()");
+        return QImage();
+    }
+
+    HGDIOBJ oldhdc = (HBITMAP)SelectObject(hdc, winBitmap);
+    if (!DrawIconEx( hdc, 0, 0, icon, w, h, 0, 0, DI_NORMAL))
+        qWarning("QPixmap::fromWinHICON(), failed to DrawIcon()");
+
+    uint mask = 0xff000000;
+    // Create image and copy data into image.
+    QImage image(w, h, QImage::Format_ARGB32);
+
+    if (!image.isNull()) { // failed to alloc?
+        int bytes_per_line = w * sizeof(QRgb);
+        for (int y=0; y < h; ++y) {
+            QRgb *dest = (QRgb *) image.scanLine(y);
+            const QRgb *src = (const QRgb *) (bits + y * bytes_per_line);
+            for (int x=0; x < w; ++x) {
+                dest[x] = src[x];
+            }
+        }
+    }
+
+    // qDebug() << "my_qt_pixmapFromWinHICON 4";
+
+    if (!DrawIconEx( hdc, 0, 0, icon, w, h, 0, 0, DI_MASK))
+        qWarning("QPixmap::fromWinHICON(), failed to DrawIcon()");
+    if (!image.isNull()) { // failed to alloc?
+        int bytes_per_line = w * sizeof(QRgb);
+        for (int y=0; y < h; ++y) {
+            QRgb *dest = (QRgb *) image.scanLine(y);
+            const QRgb *src = (const QRgb *) (bits + y * bytes_per_line);
+            for (int x=0; x < w; ++x) {
+                if (!src[x])
+                    dest[x] = dest[x] | mask;
+            }
+        }
+    }
+
+    SelectObject(hdc, oldhdc); //restore state
+    DeleteObject(winBitmap);
+    DeleteDC(hdc);
+
+    // qDebug() << "my_qt_pixmapFromWinHICON 5";
+
+    return image;
+}
+
 QString UIUtils::extractIconURL(const QString& iconFile)
 {
+    // qDebug() << "extractIconURL 0";
+
     QString res;
     QString icon = iconFile.trimmed();
     if (!icon.isEmpty()) {
+        // qDebug() << "extractIconURL 1";
+
         UINT iconIndex = 0;
         int index = icon.lastIndexOf(',');
         if (index > 0) {
@@ -28,20 +143,36 @@ QString UIUtils::extractIconURL(const QString& iconFile)
             }
         }
 
+        // qDebug() << "extractIconURL 2" << icon << iconIndex;
+
         HICON ic = ExtractIcon(GetModuleHandle(NULL),
                 (LPCWSTR) icon.utf16(), iconIndex);
+
+        // qDebug() << "extractIconURL 2.1" << ((UINT_PTR) ic);
+
         if (((UINT_PTR) ic) > 1) {
-            QPixmap pm = QtWin::fromHICON(ic);
+            // qDebug() << "extractIconURL 3" << ii << info.fIcon << info.xHotspot;
+
+            QImage pm = my_qt_pixmapFromWinHICON(ic); // QtWin::fromHICON(ic);
+
+            // qDebug() << "extractIconURL 4";
+
             if (!pm.isNull() && pm.width() > 0 &&
                     pm.height() > 0) {
+                // qDebug() << "extractIconURL 5";
+
                 QByteArray bytes;
                 QBuffer buffer(&bytes);
                 buffer.open(QIODevice::WriteOnly);
                 pm.save(&buffer, "PNG");
                 res = QString("data:image/png;base64,") +
                         bytes.toBase64();
+
+                // qDebug() << "extractIconURL 6";
             }
             DestroyIcon(ic);
+
+            // qDebug() << "extractIconURL 7";
         }
     }
 

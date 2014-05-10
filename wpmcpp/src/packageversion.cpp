@@ -70,45 +70,48 @@ HRESULT CreateAttachmentServices(IAttachmentExecute **ppae)
     return hr;
 }
 
-bool isFileSafe(const QString& filename, const QString& url, QString* err)
+bool isFileSafe(const QString& filename, const QString& url)
 {
-    *err = "";
-
     bool res = true;
 
     IAttachmentExecute *pExecute;
 
+    QString err;
+
+    // MS Security Essentials does not support the interface
     HRESULT hr = CreateAttachmentServices(&pExecute);
     if (!SUCCEEDED(hr)) {
-        WPMUtils::formatMessage(hr, err);
+        WPMUtils::formatMessage(hr, &err);
+        // err = "1: " + err;
         pExecute = 0;
     }
 
-    if (err->isEmpty()) {
+    if (err.isEmpty()) {
         hr = pExecute->SetLocalPath((LPCWSTR) filename.utf16());
-        if (!SUCCEEDED(hr))
-            WPMUtils::formatMessage(hr, err);
+        if (!SUCCEEDED(hr)) {
+            WPMUtils::formatMessage(hr, &err);
+            // err = "2: " + err;
+        }
     }
 
-    if (err->isEmpty()) {
+    if (err.isEmpty()) {
         pExecute->SetSource((LPCWSTR) url.utf16());
-        if (!SUCCEEDED(hr))
-            WPMUtils::formatMessage(hr, err);
+        if (!SUCCEEDED(hr)) {
+            WPMUtils::formatMessage(hr, &err);
+            // err = "3: " + err;
+        }
     }
 
-    if (err->isEmpty()) {
+    if (err.isEmpty()) {
         hr = pExecute->Save();
-        if (hr == S_OK)
-            res = true;
-        else
+        if (hr != S_OK)
             res = false;
     }
 
     if (pExecute)
         pExecute->Release();
 
-    if (!res)
-        *err = "";
+    qDebug() << err;
 
     return res;
 }
@@ -1098,12 +1101,8 @@ void PackageVersion::install(Job* job, const QString& where)
     }
 
     if (job->shouldProceed(QObject::tr("Checking for viruses"))) {
-        QString err;
-        bool safe = isFileSafe(f->fileName(), this->download.toString(), &err);
-        if (!err.isEmpty()) {
-            job->setErrorMessage(QObject::tr("Antivirus check failed: %1").
-                    arg(err));
-        } else if (!safe) {
+        bool safe = isFileSafe(f->fileName(), this->download.toString());
+        if (!safe) {
             job->setErrorMessage(QObject::tr("Antivirus check failed. The file is not safe."));
         }
         job->setProgress(0.69);
