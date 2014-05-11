@@ -52,6 +52,7 @@ public:
     bool process(int *errorCode);
 private:
     void monitor(Job *job, const QString &title, QThread *thread);
+    QString startNewestNpackdg(const CommandLine &cl);
 };
 
 #endif // CLPROCESSOR_H
