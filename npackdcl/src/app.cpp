@@ -890,6 +890,7 @@ void App::processInstallOperations(Job *job,
         QString newExe;
 
         if (job->shouldProceed("Copying the executable")) {
+            // TODO: programCloseType is unused here.
             QString thisExe = WPMUtils::getExeFile();
 
             // 1. copy .exe to the temporary directory
@@ -927,7 +928,8 @@ void App::processInstallOperations(Job *job,
                 else
                     oneCmd += "remove ";
                 oneCmd += "-p " + op->package + " -v " +
-                        op->version.getVersionString();
+                        op->version.getVersionString() +
+                        " || exit /b %errorlevel%";
                 batch.append(oneCmd);
             }
 

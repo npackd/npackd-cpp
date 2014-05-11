@@ -110,6 +110,55 @@ QString CLProcessor::remove(const CommandLine& cl)
     return err;
 }
 
+QString CLProcessor::startNewestNpackdg(const CommandLine& cl)
+{
+    QString err;
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    if (err.isEmpty()) {
+        err = ip->readRegistryDatabase();
+    }
+
+    QString exe;
+    if (err.isEmpty()) {
+        InstalledPackageVersion* ipv = ip->getNewestInstalled(ip->packageName);
+
+        if (!ipv || ipv->version <= Version(NPACKD_VERSION))
+            err = QObject::tr("Newer Npackd GUI was not found");
+        else
+            exe = ipv->directory + "\\npackdg.exe";
+    }
+
+    if (err.isEmpty()) {
+        QString args;
+        bool success = false;
+        PROCESS_INFORMATION pinfo;
+
+        STARTUPINFOW startupInfo = {
+            sizeof(STARTUPINFO), 0, 0, 0,
+            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+        success = CreateProcess(
+                (wchar_t*) exe.utf16(),
+                (wchar_t*) args.utf16(),
+                0, 0, TRUE,
+                CREATE_UNICODE_ENVIRONMENT, 0,
+                0, &startupInfo, &pinfo);
+
+        if (success) {
+            CloseHandle(pinfo.hThread);
+            CloseHandle(pinfo.hProcess);
+        } else {
+            WPMUtils::formatMessage(GetLastError(), &err);
+            err = QObject::tr("Error starting %1: %2").arg(exe).arg(err);
+        }
+    }
+
+    return err;
+}
+
 QString CLProcessor::add(const CommandLine& cl)
 {
     QString err;
@@ -447,6 +496,10 @@ bool CLProcessor::process(int* errorCode)
             err = remove(cl);
         } else if (cmd == "add") {
             err = add(cl);
+        } else if (cmd == "start-newest-npackdg") {
+            err = startNewestNpackdg(cl);
+            if (!err.isEmpty())
+                ret = false;
         } /* else if (cmd == "add-repo") {
             err = addRepo();
         } else if (cmd == "remove-repo") {

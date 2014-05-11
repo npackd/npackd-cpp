@@ -362,6 +362,21 @@ QList<InstalledPackageVersion *> InstalledPackages::getByPackage(
     return r;
 }
 
+InstalledPackageVersion* InstalledPackages::getNewestInstalled(
+        const QString &package) const
+{
+    QList<InstalledPackageVersion*> all = this->data.values();
+    InstalledPackageVersion* r = 0;
+    for (int i = 0; i < all.count(); i++) {
+        InstalledPackageVersion* ipv = all.at(i);
+        if (ipv->package == package && ipv->installed()) {
+            if (!r || r->version < ipv->version)
+                r = ipv;
+        }
+    }
+    return r;
+}
+
 QStringList InstalledPackages::getAllInstalledPackagePaths() const
 {
     QStringList r;

@@ -206,7 +206,7 @@ public:
      * Formats a Windows error message.
      *
      * @param err see GetLastError() or HRESULT
-     * @param errMsg the message will be stored her
+     * @param errMsg the message will be stored here
      */
     static void formatMessage(DWORD err, QString* errMsg);
 

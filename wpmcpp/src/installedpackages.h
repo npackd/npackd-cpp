@@ -217,6 +217,13 @@ public:
      * @param version package version number
      */
     void fireStatusChanged(const QString& package, const Version& version);
+
+    /**
+     * @brief returns the newest installed version for a package
+     * @param package full package name
+     * @return found installed version or 0. This is not a copy.
+     */
+    InstalledPackageVersion *getNewestInstalled(const QString &package) const;
 signals:
     /**
      * @brief fired if a package version was installed or uninstalled

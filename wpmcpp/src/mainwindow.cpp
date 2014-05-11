@@ -697,6 +697,120 @@ QString MainWindow::createPackageVersionsHTML(const QStringList& names)
     return allNames.join("<br>");
 }
 
+void MainWindow::processWithSelfUpdate(Job* job,
+        QList<InstallOperation*> &ops, int programCloseType)
+{
+    // TODO: programCloseType is unused
+
+    QString newExe;
+
+    if (job->shouldProceed("Copying the executable")) {
+        QString thisExe = WPMUtils::getExeFile();
+
+        // 1. copy .exe to the temporary directory
+        QTemporaryFile of(QDir::tempPath() + "\\npackdgXXXXXX.exe");
+        of.setAutoRemove(false);
+        if (!of.open())
+            job->setErrorMessage(of.errorString());
+        else {
+            newExe = of.fileName();
+            if (!of.remove()) {
+                job->setErrorMessage(of.errorString());
+            } else {
+                of.close();
+
+                qDebug() << "self-update 1";
+
+                if (!QFile::copy(thisExe, newExe))
+                    job->setErrorMessage("Error copying the binary");
+                else
+                    job->setProgress(0.8);
+
+                qDebug() << "self-update 2";
+            }
+        }
+    }
+
+    QString batchFileName;
+    if (job->shouldProceed("Creating the .bat file")) {
+        // TODO: present the possible error in .bat to the user
+        QStringList batch;
+        for (int i = 0; i < ops.count(); i++) {
+            InstallOperation* op = ops.at(i);
+            QString oneCmd = "\"" + newExe + "\" ";
+            if (op->install)
+                oneCmd += "add ";
+            else
+                oneCmd += "remove ";
+            oneCmd += "-p " + op->package + " -v " +
+                    op->version.getVersionString() +
+                    " || exit /b %errorlevel%";
+            batch.append(oneCmd);
+        }
+
+        batch.append("\"" + newExe + "\" start-newest-npackdg");
+
+        qDebug() << "self-update 3";
+
+        QTemporaryFile file(QDir::tempPath() +
+                          "\\npackdgXXXXXX.bat");
+        file.setAutoRemove(false);
+        if (!file.open())
+            job->setErrorMessage(file.errorString());
+        else {
+            batchFileName = file.fileName();
+
+            qDebug() << "batch" << file.fileName();
+
+            QTextStream stream(&file);
+            stream.setCodec("UTF-8");
+            stream << batch.join("\r\n");
+            if (stream.status() != QTextStream::Ok)
+                job->setErrorMessage("Error writing the .bat file");
+            file.close();
+
+            qDebug() << "self-update 4";
+
+            job->setProgress(0.9);
+        }
+    }
+
+    if (job->shouldProceed("Starting the copied binary")) {
+        QString file_ = batchFileName;
+        file_.replace('/', '\\');
+        QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
+        QString prg = WPMUtils::findCmdExe();
+
+        bool success = false;
+        PROCESS_INFORMATION pinfo;
+
+        STARTUPINFOW startupInfo = {
+            sizeof(STARTUPINFO), 0, 0, 0,
+            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+        success = CreateProcess(
+                (wchar_t*) prg.utf16(),
+                (wchar_t*) args.utf16(),
+                0, 0, TRUE,
+                CREATE_UNICODE_ENVIRONMENT, 0,
+                0, &startupInfo, &pinfo);
+
+        if (success) {
+            CloseHandle(pinfo.hThread);
+            CloseHandle(pinfo.hProcess);
+            qDebug() << "success!222";
+        }
+
+        qDebug() << "self-update 5";
+
+        job->setProgress(1);
+    }
+
+    job->complete();
+}
+
 void MainWindow::process(QList<InstallOperation*> &install,
         int programCloseType)
 {
@@ -708,17 +822,28 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
     if (err.isEmpty()) {
         if (confirmed) {
-            Job* job = new Job();
-            InstallThread* it = new InstallThread(0, 1, job);
-            it->install = install;
-            it->programCloseType = programCloseType;
-            install.clear();
+            AbstractRepository* rep = AbstractRepository::getDefault_();
 
-            connect(it, SIGNAL(finished()), this,
-                    SLOT(processThreadFinished()),
-                    Qt::QueuedConnection);
+            if (rep->includesRemoveItself(install)) {
+                QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
+                if (UIUtils::confirm(this, QObject::tr("Warning"), txt, txt)) {
+                    Job* job = new Job();
+                    processWithSelfUpdate(job, install, programCloseType);
+                    delete job;
+                }
+            } else {
+                Job* job = new Job();
+                InstallThread* it = new InstallThread(0, 1, job);
+                it->install = install;
+                it->programCloseType = programCloseType;
+                install.clear();
 
-            monitor(job, QObject::tr("Install/Uninstall"), it);
+                connect(it, SIGNAL(finished()), this,
+                        SLOT(processThreadFinished()),
+                        Qt::QueuedConnection);
+
+                monitor(job, QObject::tr("Install/Uninstall"), it);
+            }
         }
     }
 

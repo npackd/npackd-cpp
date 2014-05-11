@@ -91,6 +91,8 @@ private:
     void loadUISettings();
 
     virtual void closeEvent(QCloseEvent *event);
+    void processWithSelfUpdate(Job *job, QList<InstallOperation *> &install,
+            int programCloseType);
 public:
     void updateActions();
 
