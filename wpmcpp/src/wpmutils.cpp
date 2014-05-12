@@ -220,7 +220,8 @@ QImage my_qt_pixmapFromWinHICON(HICON icon)
 
     // qDebug() << "my_qt_pixmapFromWinHICON 3";
 
-    HBITMAP winBitmap = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, (void**) &bits, 0, 0);
+    HBITMAP winBitmap = CreateDIBSection(hdc, &bmi,
+            DIB_RGB_COLORS, (void**) &bits, 0, 0);
     if (winBitmap )
         memset(bits, 0xff, dwImageSize);
     if (!winBitmap) {
