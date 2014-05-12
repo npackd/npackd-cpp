@@ -25,7 +25,11 @@
 #include <QProcessEnvironment>
 #include <QBuffer>
 #include <QByteArray>
+
+// reduces the size of NpackdCL by 5 MiB
+#ifdef QT_GUI_LIB
 #include <QImage>
+#endif
 
 #include "wpmutils.h"
 #include "version.h"
@@ -162,6 +166,8 @@ bool WPMUtils::isUnderOrEquals(const QString& file, const QStringList& dirs)
 
     return r;
 }
+
+#ifdef QT_GUI_LIB
 
 // Qt 5.2.1
 // qtbase/src/gui/image/qpixmap_win.cpp:qt_pixmapFromWinHICON has a bug.
@@ -329,6 +335,12 @@ QString WPMUtils::extractIconURL(const QString& iconFile)
 
     return res;
 }
+#else
+QString WPMUtils::extractIconURL(const QString& iconFile)
+{
+    return "";
+}
+#endif
 
 bool WPMUtils::isUnderOrEquals(const QString& file, const QString& dir)
 {
