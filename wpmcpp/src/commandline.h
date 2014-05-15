@@ -92,7 +92,7 @@ public:
      *    -u, --url       repository URL (e.g. https://www.example.com/Rep.xml)",
      *    -s, --status    filters package versions by status",
      */
-    void printOptions() const;
+    QStringList printOptions() const;
 
     /**
      * Parses program arguments

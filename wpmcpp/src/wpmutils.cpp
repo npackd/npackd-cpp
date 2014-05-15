@@ -93,6 +93,25 @@ QString WPMUtils::parentDirectory(const QString& path)
     return p.left(index);
 }
 
+QString WPMUtils::programCloseType2String(DWORD programCloseType)
+{
+    QString r;
+
+    if (programCloseType & WPMUtils::CLOSE_WINDOW) {
+        if (!r.isEmpty())
+            r += ",";
+        r += "windows";
+    }
+
+    if (programCloseType & WPMUtils::KILL_PROCESS) {
+        if (!r.isEmpty())
+            r += ",";
+        r += "kill";
+    }
+
+    return r;
+}
+
 QString WPMUtils::getProgramFilesDir()
 {
     QString ret;

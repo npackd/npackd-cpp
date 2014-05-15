@@ -1,8 +1,9 @@
+#include <windows.h>
+
 #include <QDebug>
 #include <QCoreApplication>
 
 #include "commandline.h"
-#include "wpmutils.h"
 
 bool CommandLine::Option::nameMathes(const QString& name)
 {
@@ -146,8 +147,10 @@ void CommandLine::add(QString name, char name2, QString description,
     this->options.append(opt);
 }
 
-void CommandLine::printOptions() const
+QStringList CommandLine::printOptions() const
 {
+    QStringList result;
+
     QStringList names;
     int len = 0;
     for (int i = 0; i < this->options.count(); i++) {
@@ -171,9 +174,10 @@ void CommandLine::printOptions() const
         QString s = names.at(i);
         s += QString().fill(' ', len + 4 - s.length());
         s.append(opt->description);
-        s.append("\n");
-        WPMUtils::outputTextConsole(s);
+        result.append(s);
     }
+
+    return result;
 }
 
 QString CommandLine::parse()

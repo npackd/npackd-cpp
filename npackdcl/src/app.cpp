@@ -297,7 +297,11 @@ void App::usage()
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
         WPMUtils::outputTextConsole(QString(lines[i]) + "\n");
     }
-    this->cl.printOptions();
+    QStringList lines = this->cl.printOptions();
+    for (int i = 0; i < lines.count(); i++) {
+        WPMUtils::outputTextConsole(lines.at(i) + "\n");
+    }
+
     const char* lines2[] = {
         "",
         "The process exits with the code unequal to 0 if an error occures.",
@@ -890,7 +894,6 @@ void App::processInstallOperations(Job *job,
         QString newExe;
 
         if (job->shouldProceed("Copying the executable")) {
-            // TODO: programCloseType is unused here.
             QString thisExe = WPMUtils::getExeFile();
 
             // 1. copy .exe to the temporary directory
@@ -919,17 +922,21 @@ void App::processInstallOperations(Job *job,
 
         QString batchFileName;
         if (job->shouldProceed("Creating the .bat file")) {
+            QString pct = WPMUtils::programCloseType2String(programCloseType);
             QStringList batch;
             for (int i = 0; i < ops.count(); i++) {
                 InstallOperation* op = ops.at(i);
                 QString oneCmd = "\"" + newExe + "\" ";
-                if (op->install)
-                    oneCmd += "add ";
-                else
-                    oneCmd += "remove ";
-                oneCmd += "-p " + op->package + " -v " +
-                        op->version.getVersionString() +
-                        " || exit /b %errorlevel%";
+                if (op->install) {
+                    oneCmd += "add -p " + op->package + " -v " +
+                            op->version.getVersionString() +
+                            " || exit /b %errorlevel%";
+                } else {
+                    oneCmd += "remove -p " + op->package + " -v " +
+                            op->version.getVersionString() +
+                            " -e " + pct +
+                            " || exit /b %errorlevel%";
+                }
                 batch.append(oneCmd);
             }
 
@@ -983,10 +990,10 @@ void App::processInstallOperations(Job *job,
             if (success) {
                 CloseHandle(pinfo.hThread);
                 CloseHandle(pinfo.hProcess);
-                qDebug() << "success!222";
+                // qDebug() << "success!222";
             }
 
-            qDebug() << "self-update 5";
+            // qDebug() << "self-update 5";
 
             job->setProgress(1);
         }

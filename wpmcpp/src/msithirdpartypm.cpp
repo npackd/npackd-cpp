@@ -125,8 +125,6 @@ void MSIThirdPartyPM::scan(Job* job,
 
             // qDebug() << guid << p->title;
 
-            // qDebug() << p->title; // TODO: remove
-
             // qDebug() << "MSIThirdPartyPM::scan loop 1.6";
 
             rep->savePackage(p.data());
@@ -142,7 +140,7 @@ void MSIThirdPartyPM::scan(Job* job,
             dir = "";
 
         if (dir.isEmpty()) {
-            // TODO: it would be better to search for a common ancestor here
+            // it would be better to search for a common ancestor here
             QList<QString> cmps = p2c.values(guid);
             for (int i = 0; i < cmps.size(); i++) {
                 dir = WPMUtils::getMSIComponentPath(guid, cmps.at(i), &err);
@@ -160,12 +158,11 @@ void MSIThirdPartyPM::scan(Job* job,
                                     WPMUtils::normalizePath(d.absolutePath()),
                                     windowsDir)) {
                                 dir = d.absolutePath();
-                                // qDebug() << "cmp" << dir; // TODO: remove
                                 break;
                             }
                         }
                     } else {
-                        // qDebug() << "cmp reg" << dir; // TODO: remove
+                        // qDebug() << "cmp reg" << dir;
                     }
                 }
                 dir = "";
@@ -173,8 +170,6 @@ void MSIThirdPartyPM::scan(Job* job,
         }
 
         // qDebug() << "MSIThirdPartyPM::scan loop 3";
-
-        // qDebug() << "dir" << dir; // TODO: remove
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);

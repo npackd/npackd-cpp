@@ -12,6 +12,7 @@
  */
 class CLProcessor
 {
+    CommandLine cl;
 public:
     /**
      * @brief -
@@ -20,24 +21,21 @@ public:
 
     /**
      * @brief installs packages
-     * @param cl command line
      * @return error message or ""
      */
-    QString add(const CommandLine &cl);
+    QString add();
 
     /**
      * @brief removes packages
-     * @param cl command line
      * @return error message or ""
      */
-    QString remove(const CommandLine &cl);
+    QString remove();
 
     /**
      * @brief updates packages
-     * @param cl command line
      * @return error message or ""
      */
-    QString update(const CommandLine &cl);
+    QString update();
 
     /**
      * @brief show the command line options help
@@ -52,7 +50,7 @@ public:
     bool process(int *errorCode);
 private:
     void monitor(Job *job, const QString &title, QThread *thread);
-    QString startNewestNpackdg(const CommandLine &cl);
+    QString startNewestNpackdg();
 };
 
 #endif // CLPROCESSOR_H

@@ -80,5 +80,7 @@ http://npackd.appspot.com/rep/xml?tag=vim
     - choose "Package", "Uninstall"
     => the AkelPad window start flashing
     => after 30 seconds the process is killed and packages is un-installed
-
+18. Self-update
+    - update Npackd
+    => new Npackd version will be started
     

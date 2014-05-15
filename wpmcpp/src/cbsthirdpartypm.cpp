@@ -6,6 +6,8 @@
 #include "wpmutils.h"
 
 
+// the packages are here: C:\Windows\servicing\Packages
+
 void CBSThirdPartyPM::scan(
         Job *job, QList<InstalledPackageVersion *> *installed,
         Repository *rep) const
