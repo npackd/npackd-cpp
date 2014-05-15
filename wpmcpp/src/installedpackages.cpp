@@ -101,7 +101,6 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
         for (int i = 0; i < rep.packages.size(); ) {
             Package* p = rep.packages.at(i);
             if (!packages.contains(p->name)) {
-                //qDebug() << "removing" << p->name; // TODO: remove
                 rep.packages.removeAt(i);
                 rep.package2versions.remove(p->name);
                 delete p;

@@ -282,7 +282,6 @@ void MainFrame::tableWidget_selectionChanged()
 void MainFrame::fillList()
 {
     MainWindow* mw = MainWindow::getInstance();
-    // TODO: if (!mw->reloadRepositoriesThreadRunning && !mw->hardDriveScanRunning)
     mw->fillList();
 }
 

@@ -52,7 +52,7 @@ void CLProcessor::monitor(Job* job, const QString& title, QThread* thread)
     d->deleteLater();
 }
 
-QString CLProcessor::remove(const CommandLine& cl)
+QString CLProcessor::remove()
 {
     QString err;
 
@@ -110,7 +110,7 @@ QString CLProcessor::remove(const CommandLine& cl)
     return err;
 }
 
-QString CLProcessor::startNewestNpackdg(const CommandLine& cl)
+QString CLProcessor::startNewestNpackdg()
 {
     QString err;
 
@@ -159,7 +159,7 @@ QString CLProcessor::startNewestNpackdg(const CommandLine& cl)
     return err;
 }
 
-QString CLProcessor::add(const CommandLine& cl)
+QString CLProcessor::add()
 {
     QString err;
 
@@ -171,6 +171,11 @@ QString CLProcessor::add(const CommandLine& cl)
 
     QList<PackageVersion*> toInstall =
             WPMUtils::getPackageVersionOptions(cl, &err, true);
+
+    DWORD pct = WPMUtils::CLOSE_WINDOW;
+    if (err.isEmpty()) {
+        pct = WPMUtils::getProgramCloseType(cl, &err);
+    }
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     QList<InstallOperation*> ops;
@@ -198,7 +203,7 @@ QString CLProcessor::add(const CommandLine& cl)
         Job* job = new Job();
         InstallThread* it = new InstallThread(0, 1, job);
         it->install = ops;
-        // TODO: it->programCloseType = programCloseType;
+        it->programCloseType = pct;
         ops.clear();
 
         monitor(job, QObject::tr("Install"), it);
@@ -210,7 +215,7 @@ QString CLProcessor::add(const CommandLine& cl)
     return err;
 }
 
-QString CLProcessor::update(const CommandLine& cl)
+QString CLProcessor::update()
 {
     Job* job = new Job();
 
@@ -226,8 +231,7 @@ QString CLProcessor::update(const CommandLine& cl)
 
     DBRepository* rep = DBRepository::getDefault();
 
-    /* TODO
-    int programCloseType; // TODO = WPMUtils::CLOSE_WINDOW;
+    int programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
         programCloseType = WPMUtils::getProgramCloseType(cl, &err);
@@ -235,13 +239,12 @@ QString CLProcessor::update(const CommandLine& cl)
             job->setErrorMessage(err);
         }
     }
-    */
 
     QStringList packages_ = cl.getAll("package");
 
     if (job->shouldProceed()) {
         if (packages_.size() == 0) {
-            job->setErrorMessage("Missing option: --package");
+            job->setErrorMessage(QObject::tr("Missing option: --package"));
         }
     }
 
@@ -249,7 +252,8 @@ QString CLProcessor::update(const CommandLine& cl)
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
             if (!Package::isValidName(package)) {
-                job->setErrorMessage("Invalid package name: " + package);
+                job->setErrorMessage(QObject::tr("Invalid package name: %1").
+                        arg(package));
             }
         }
     }
@@ -270,9 +274,10 @@ QString CLProcessor::update(const CommandLine& cl)
 
             if (job->shouldProceed()) {
                 if (packages.count() == 0) {
-                    job->setErrorMessage("Unknown package: " + package);
+                    job->setErrorMessage(QObject::tr("Unknown package: %1").
+                            arg(package));
                 } else if (packages.count() > 1) {
-                    job->setErrorMessage("Ambiguous package name");
+                    job->setErrorMessage(QObject::tr("Ambiguous package name"));
                 } else {
                     toUpdate.append(packages.at(0)->clone());
                 }
@@ -287,7 +292,7 @@ QString CLProcessor::update(const CommandLine& cl)
 
     QList<InstallOperation*> ops;
     bool up2date = false;
-    if (job->shouldProceed("Planning")) {
+    if (job->shouldProceed(QObject::tr("Planning"))) {
         QString err = rep->planUpdates(toUpdate, ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -310,11 +315,11 @@ QString CLProcessor::update(const CommandLine& cl)
     }
     */
 
-    if (job->shouldProceed("Updating") && !up2date) {
+    if (job->shouldProceed(QObject::tr("Updating")) && !up2date) {
         Job* sjob = new Job();
         InstallThread* it = new InstallThread(0, 1, sjob);
         it->install = ops;
-        // TODO: it->programCloseType = programCloseType;
+        it->programCloseType = programCloseType;
         ops.clear();
 
         monitor(sjob, QObject::tr("Install"), it);
@@ -323,11 +328,11 @@ QString CLProcessor::update(const CommandLine& cl)
     }
 
     /*
-    if (job->shouldProceed("Updating") && !up2date) {
+    if (job->shouldProceed(QObject::tr("Updating")) && !up2date) {
         Job* ijob = job->newSubJob(0.86);
         rep->process(ijob, ops, programCloseType);
         if (!ijob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(QString("Error updating: %1").
+            job->setErrorMessage(QObject::tr("Error updating: %1").
                     arg(ijob->getErrorMessage()));
         }
         delete ijob;
@@ -338,14 +343,16 @@ QString CLProcessor::update(const CommandLine& cl)
 
     job->complete();
 
-    /* TODO
+    /*
     QString r = job->getErrorMessage();
     if (job->isCancelled()) {
-        r = "The package update was cancelled";
+        r = QObject::tr("The package update was cancelled");
     } else if (up2date) {
-        WPMUtils::outputTextConsole("The packages are already up-to-date\n");
+        WPMUtils::outputTextConsole(
+                QObject::tr("The packages are already up-to-date\n"));
     } else if (r.isEmpty()) {
-        WPMUtils::outputTextConsole("The packages were updated successfully\n");
+        WPMUtils::outputTextConsole(
+                QObject::tr("The packages were updated successfully\n"));
     }
     */
 
@@ -360,28 +367,32 @@ QString CLProcessor::update(const CommandLine& cl)
 
 void CLProcessor::usage()
 {
-    // TODO: i18n
-
     const char* lines[] = {
         "Usage:",
-        "    npackdcl help",
+        "    npackdg help",
         "        prints this help",
-        "    npackdcl add (--package=<package> [--version=<version>])+",
+        "    npackdg add (--package=<package> [--version=<version>])+",
         "        installs packages. The newest available version will be installed, ",
         "        if none is specified.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    npackdcl remove|rm (--package=<package> [--version=<version>])+",
+        "    npackdg remove|rm (--package=<package> [--version=<version>])+",
         "           [--end-process=<types>]",
         "        removes packages. The version number may be omitted, ",
         "        if only one is installed.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    npackdcl update (--package=<package>)+ [--end-process=<types>]",
+        /*
+        "    npackdg update (--package=<package>)+ [--end-process=<types>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
+        */
+        "    npackdg start-newest",
+        "        searches for the newest installed version ",
+        "        of Npackd GUI and starts it",
+        /*
         "    npackdcl list [--status=installed | all] [--bare-format]",
         "        lists package versions sorted by package name and version.",
         "        Please note that since 1.18 only installed package versions",
@@ -410,18 +421,22 @@ void CLProcessor::usage()
         "        changes the directory where packages will be installed",
         "    npackdcl get-install-dir",
         "        prints the directory where packages will be installed",
+        */
         "Options:",
     };
     QStringList sl;
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
         sl.append(QString(lines[i]));
     }
-    // TODO: this->cl.printOptions();
+
+    QStringList opts = this->cl.printOptions();
+    sl.append(opts);
+
     const char* lines2[] = {
         "",
         "The process exits with the code unequal to 0 if an error occures."
         //"",
-        // TODO:"See https://code.google.com/p/windows-package-manager/wiki/CommandLine for more details.",
+        // "See https://code.google.com/p/windows-package-manager/wiki/CommandLine for more details.",
     };
     for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
         sl.append(QString(lines2[i]));
@@ -430,8 +445,9 @@ void CLProcessor::usage()
     QMessageBox mb(0);
     mb.setWindowTitle(QString(
             "Npackd %1\n").arg(NPACKD_VERSION));
-    mb.setText("npackdg [command]"); // TODO
-    mb.setIcon(QMessageBox::Warning);
+    mb.setText("npackdg [command] [options]\n"
+            "Here is [command] one of add, remove, rm or help");
+    mb.setIcon(QMessageBox::Information);
     mb.setStandardButtons(QMessageBox::Ok);
     mb.setDefaultButton(QMessageBox::Ok);
     mb.setDetailedText(sl.join("\r\n"));
@@ -444,15 +460,14 @@ bool CLProcessor::process(int* errorCode)
 
     bool ret = true;
 
-    CommandLine cl;
-
     cl.add("package", 'p',
-            "internal package name (e.g. com.example.Editor or just Editor)",
-            "package", true);
-    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
-            "range", false);
-    cl.add("version", 'v', "version number (e.g. 1.5.12)",
-            "version", false);
+            QObject::tr("internal package name (e.g. com.example.Editor or just Editor)"),
+            QObject::tr("package"), true);
+    cl.add("versions", 'r', QObject::tr("versions range (e.g. [1.5,2))"),
+            QObject::tr("range"), false);
+    cl.add("version", 'v', QObject::tr("version number (e.g. 1.5.12)"),
+            QObject::tr("version"), false);
+            /*
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
             "repository", false);
     cl.add("status", 's', "filters package versions by status",
@@ -463,15 +478,16 @@ bool CLProcessor::process(int* errorCode)
             "search terms", false);
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("file", 'f', "file or directory", "file", false);
+    */
     cl.add("end-process", 'e',
-        "comma separated list of ways to close running applications (windows, kill)",
-        "list", false);
+            QObject::tr("comma separated list of ways to close running applications (windows, kill)"),
+            QObject::tr("list"), false);
 
     QString commandLineParsingError = cl.parse();
 
     // cl.dump();
 
-    /* TODO
+    /*
     if (cl.isPresent("debug")) {
         clp.setUpdateRate(0);
     }
@@ -492,12 +508,12 @@ bool CLProcessor::process(int* errorCode)
             usage();
         }/* else if (cmd == "path") {
             err = path();
-        } else */if (cmd == "remove" || cmd == "rm") {
-            err = remove(cl);
+        }*/ else if (cmd == "remove" || cmd == "rm") {
+            err = remove();
         } else if (cmd == "add") {
-            err = add(cl);
-        } else if (cmd == "start-newest-npackdg") {
-            err = startNewestNpackdg(cl);
+            err = add();
+        } else if (cmd == "start-newest") {
+            err = startNewestNpackdg();
             if (!err.isEmpty())
                 ret = false;
         } /* else if (cmd == "add-repo") {
@@ -516,12 +532,12 @@ bool CLProcessor::process(int* errorCode)
             err = list();
         } else if (cmd == "info") {
             err = info();
-        }*/ else if (cmd == "update") {
-            err = update(cl);
-        }/* else if (cmd == "detect") {
+        } else if (cmd == "update") {
+            err = update();
+        } else if (cmd == "detect") {
             err = detect();
         }*/ else {
-            err = "Wrong command: " + cmd + ". Try npackdg help";
+            err = QObject::tr("Wrong command: %1. Try npackdg help").arg(cmd);
         }
         if (!err.isEmpty()) {
             QMessageBox::critical(0, QObject::tr("Error"), err);

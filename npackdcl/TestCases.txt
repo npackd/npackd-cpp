@@ -123,4 +123,7 @@ noted.
 31. --debug
     - npackdcl detect --debug
     => all messages are outputted
+32. self-update
+    - npackdcl update -p NpackdCL
+    => test newly installed package
 

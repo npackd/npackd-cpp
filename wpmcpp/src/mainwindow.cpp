@@ -700,8 +700,6 @@ QString MainWindow::createPackageVersionsHTML(const QStringList& names)
 void MainWindow::processWithSelfUpdate(Job* job,
         QList<InstallOperation*> &ops, int programCloseType)
 {
-    // TODO: programCloseType is unused
-
     QString newExe;
 
     if (job->shouldProceed("Copying the executable")) {
@@ -719,38 +717,41 @@ void MainWindow::processWithSelfUpdate(Job* job,
             } else {
                 of.close();
 
-                qDebug() << "self-update 1";
+                // qDebug() << "self-update 1";
 
                 if (!QFile::copy(thisExe, newExe))
                     job->setErrorMessage("Error copying the binary");
                 else
                     job->setProgress(0.8);
 
-                qDebug() << "self-update 2";
+                // qDebug() << "self-update 2";
             }
         }
     }
 
     QString batchFileName;
     if (job->shouldProceed("Creating the .bat file")) {
-        // TODO: present the possible error in .bat to the user
+        QString pct = WPMUtils::programCloseType2String(programCloseType);
         QStringList batch;
         for (int i = 0; i < ops.count(); i++) {
             InstallOperation* op = ops.at(i);
             QString oneCmd = "\"" + newExe + "\" ";
-            if (op->install)
-                oneCmd += "add ";
-            else
-                oneCmd += "remove ";
-            oneCmd += "-p " + op->package + " -v " +
-                    op->version.getVersionString() +
-                    " || exit /b %errorlevel%";
+            if (op->install) {
+                oneCmd += "add -p " + op->package + " -v " +
+                        op->version.getVersionString() +
+                        " || exit /b %errorlevel%";
+            } else {
+                oneCmd += "remove -p " + op->package + " -v " +
+                        op->version.getVersionString() +
+                        "-e " + pct +
+                        " || exit /b %errorlevel%";
+            }
             batch.append(oneCmd);
         }
 
-        batch.append("\"" + newExe + "\" start-newest-npackdg");
+        batch.append("\"" + newExe + "\" start-newest");
 
-        qDebug() << "self-update 3";
+        // qDebug() << "self-update 3";
 
         QTemporaryFile file(QDir::tempPath() +
                           "\\npackdgXXXXXX.bat");
@@ -760,7 +761,7 @@ void MainWindow::processWithSelfUpdate(Job* job,
         else {
             batchFileName = file.fileName();
 
-            qDebug() << "batch" << file.fileName();
+            // qDebug() << "batch" << file.fileName();
 
             QTextStream stream(&file);
             stream.setCodec("UTF-8");
@@ -769,7 +770,7 @@ void MainWindow::processWithSelfUpdate(Job* job,
                 job->setErrorMessage("Error writing the .bat file");
             file.close();
 
-            qDebug() << "self-update 4";
+            // qDebug() << "self-update 4";
 
             job->setProgress(0.9);
         }
@@ -800,10 +801,10 @@ void MainWindow::processWithSelfUpdate(Job* job,
         if (success) {
             CloseHandle(pinfo.hThread);
             CloseHandle(pinfo.hProcess);
-            qDebug() << "success!222";
+            // qDebug() << "success!222";
         }
 
-        qDebug() << "self-update 5";
+        // qDebug() << "self-update 5";
 
         job->setProgress(1);
     }
@@ -1788,7 +1789,6 @@ void MainWindow::on_actionReload_Repositories_triggered()
         this->addErrorMessage(msg.arg(locked->toString()));
         delete locked;
     } else {
-        // TODO: closeDetailTabs();
         recognizeAndLoadRepositories(true);
     }
 }

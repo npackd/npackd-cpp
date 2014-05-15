@@ -106,6 +106,14 @@ public:
     static QString parentDirectory(const QString& path);
 
     /**
+     * @brief converts the value for how to show programs into the command line
+     *     parameter
+     * @param programCloseType how to close programs
+     * @return e.g. "windows,kill"
+     */
+    static QString programCloseType2String(DWORD programCloseType);
+
+    /**
      * @return directory like "C:\Program Files"
      */
     static QString getProgramFilesDir();

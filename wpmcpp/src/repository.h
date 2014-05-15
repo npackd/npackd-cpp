@@ -30,8 +30,6 @@ private:
     static PackageVersion* createPackageVersion(QDomElement* e,
             QString* err);
 
-    // TODO: void loadOne(QUrl* url, Job* job, bool useCache=true);
-
     void addWindowsPackage();
 
     /**
@@ -106,15 +104,6 @@ public:
     static QString checkCategory(const QString& category, QString* err);
 
     /**
-     * Loads the content from the URLs. None of the packages has the information
-     * about installation path after this method was called.
-     *
-     * @param job job for this method
-     * @param useCache true = cache will be used
-     */
-    // TODO: void load(Job* job, bool useCache=true);
-
-    /**
      * Package versions. All version numbers should be normalized.
      */
     QList<PackageVersion*> packageVersions;
@@ -135,22 +124,6 @@ public:
     Repository();
 
     virtual ~Repository();
-
-    /**
-     * Loads one repository from an XML document.
-     *
-     * @param doc repository
-     * @param job Job
-     */
-    void loadOne(QDomDocument* doc, Job* job);
-
-    /**
-     * Loads one repository from a file.
-     *
-     * @param filename repository file name
-     * @param job Job
-     */
-    void loadOne(const QString& filename, Job* job);
 
     Package* findPackage_(const QString& name);
 
