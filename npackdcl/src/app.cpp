@@ -297,9 +297,9 @@ void App::usage()
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
         WPMUtils::outputTextConsole(QString(lines[i]) + "\n");
     }
-    QStringList lines = this->cl.printOptions();
-    for (int i = 0; i < lines.count(); i++) {
-        WPMUtils::outputTextConsole(lines.at(i) + "\n");
+    QStringList opts = this->cl.printOptions();
+    for (int i = 0; i < opts.count(); i++) {
+        WPMUtils::outputTextConsole(opts.at(i) + "\n");
     }
 
     const char* lines2[] = {

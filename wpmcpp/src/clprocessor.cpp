@@ -140,6 +140,8 @@ QString CLProcessor::startNewestNpackdg()
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         };
+        startupInfo.dwFlags = STARTF_USESHOWWINDOW;
+        startupInfo.wShowWindow = SW_HIDE;
         success = CreateProcess(
                 (wchar_t*) exe.utf16(),
                 (wchar_t*) args.utf16(),
