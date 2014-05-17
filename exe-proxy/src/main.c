@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <string.h>
 
+#define ERROR_EXIT_CODE 20000
+
 wchar_t* getExePath()
 {
     // get our executable name
@@ -25,13 +27,13 @@ int copyExe(wchar_t **argv)
 
     wchar_t* exe = getExePath();
     if (!exe) {
-        ret = 1;
+        ret = ERROR_EXIT_CODE;
         wprintf(L"Cannot determine the name of this executable");
     }
 
     if (!ret) {
         if (!CopyFile(exe, argv[2], TRUE)) {
-            ret = 1;
+            ret = ERROR_EXIT_CODE;
             wprintf(L"Copying the executable failed");
         }
     }
@@ -42,14 +44,14 @@ int copyExe(wchar_t **argv)
     if (!ret) {
         hUpdateRes = BeginUpdateResource(argv[2], TRUE);
         if (!hUpdateRes) {
-            ret = 1;
+            ret = ERROR_EXIT_CODE;
             wprintf(L"BeginUpdateResource failed");
         }
     }
 
     // copy the icon from the target executable
     if (!ret) {
-
+        // http://www.codeproject.com/Articles/30644/Replacing-ICON-resources-in-EXE-and-DLL-files
     }
 
     // set the path to the target .exe file in the resource string 1
@@ -67,14 +69,14 @@ int copyExe(wchar_t **argv)
                 MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),
                 buf,
                 bufSize)) {
-            ret = 1;
+            ret = ERROR_EXIT_CODE;
             wprintf(L"UpdateResource failed");
         }
     }
 
     if (!ret) {
         if (!EndUpdateResource(hUpdateRes, FALSE)) {
-            ret = 1;
+            ret = ERROR_EXIT_CODE;
             wprintf(L"EndUpdateResource failed with the error code %d",
                     GetLastError());
         }
@@ -94,7 +96,7 @@ int wmain(int argc, wchar_t **argv)
 
     wchar_t* exe = getExePath();
     if (!exe) {
-        ret = 1;
+        ret = ERROR_EXIT_CODE;
         wprintf(L"Cannot determine the name of this executable");
     }
 
@@ -126,7 +128,7 @@ int wmain(int argc, wchar_t **argv)
     if (!ret) {
         target = malloc(MAX_PATH * sizeof(TCHAR));
         if (LoadString(0, 1, target, MAX_PATH) == 0) {
-            ret = 1;
+            ret = ERROR_EXIT_CODE;
             wprintf(L"Cannot load the target executable path from the resource\n");
         }
     }
@@ -177,12 +179,16 @@ int wmain(int argc, wchar_t **argv)
 
         if (success) {
             WaitForSingleObject(pinfo.hProcess, INFINITE);
+            DWORD ec;
+            if (GetExitCodeProcess(pinfo.hProcess, &ec))
+                ret = ec;
+            else
+                ret = ERROR_EXIT_CODE;
             CloseHandle(pinfo.hThread);
             CloseHandle(pinfo.hProcess);
-            ret = 0;
         } else {
             wprintf(L"Error starting %s %s\n", newExe, args);
-            ret = 1;
+            ret = ERROR_EXIT_CODE;
         }
     }
     
