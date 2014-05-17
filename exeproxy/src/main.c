@@ -4,6 +4,10 @@
 
 #define ERROR_EXIT_CODE 20000
 
+/**
+ * @brief full path to the current exe file
+ * @return path that must be freed later or 0 if an error occures
+ */
 wchar_t* getExePath()
 {
     // get our executable name
@@ -28,13 +32,13 @@ int copyExe(wchar_t **argv)
     wchar_t* exe = getExePath();
     if (!exe) {
         ret = ERROR_EXIT_CODE;
-        wprintf(L"Cannot determine the name of this executable");
+        wprintf(L"Cannot determine the name of this executable\n");
     }
 
     if (!ret) {
         if (!CopyFile(exe, argv[2], TRUE)) {
             ret = ERROR_EXIT_CODE;
-            wprintf(L"Copying the executable failed");
+            wprintf(L"Copying the executable failed\n");
         }
     }
 
@@ -45,7 +49,7 @@ int copyExe(wchar_t **argv)
         hUpdateRes = BeginUpdateResource(argv[2], TRUE);
         if (!hUpdateRes) {
             ret = ERROR_EXIT_CODE;
-            wprintf(L"BeginUpdateResource failed");
+            wprintf(L"BeginUpdateResource failed\n");
         }
     }
 
@@ -70,14 +74,14 @@ int copyExe(wchar_t **argv)
                 buf,
                 bufSize)) {
             ret = ERROR_EXIT_CODE;
-            wprintf(L"UpdateResource failed");
+            wprintf(L"UpdateResource failed\n");
         }
     }
 
     if (!ret) {
         if (!EndUpdateResource(hUpdateRes, FALSE)) {
             ret = ERROR_EXIT_CODE;
-            wprintf(L"EndUpdateResource failed with the error code %d",
+            wprintf(L"EndUpdateResource failed with the error code %d\n",
                     GetLastError());
         }
     }
@@ -89,7 +93,7 @@ int wmain(int argc, wchar_t **argv)
 {
     int ret = 0;
 
-    if (argc == 4 && wcscmp(argv[1], L"exe-proxy-copy") == 0) {
+    if (argc == 4 && wcscmp(argv[1], L"exeproxy-copy") == 0) {
         ret = copyExe(argv);
         return ret;
     }
@@ -97,7 +101,7 @@ int wmain(int argc, wchar_t **argv)
     wchar_t* exe = getExePath();
     if (!exe) {
         ret = ERROR_EXIT_CODE;
-        wprintf(L"Cannot determine the name of this executable");
+        wprintf(L"Cannot determine the name of this executable\n");
     }
 
     // extract parameters
@@ -187,7 +191,7 @@ int wmain(int argc, wchar_t **argv)
             CloseHandle(pinfo.hThread);
             CloseHandle(pinfo.hProcess);
         } else {
-            wprintf(L"Error starting %s %s\n", newExe, args);
+            wprintf(L"Error starting %ls %ls\n", newExe, args);
             ret = ERROR_EXIT_CODE;
         }
     }

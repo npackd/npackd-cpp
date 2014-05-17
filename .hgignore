@@ -37,3 +37,4 @@ syntax: regexp
 ^wpmcpp/src/wpmcpp64-cache/
 ^npackdcl/src/npackdcl32-cache/
 ^exe-proxy/build/
+^exeproxy/build/
