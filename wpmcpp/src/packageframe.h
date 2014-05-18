@@ -29,6 +29,11 @@ public:
     ~PackageFrame();
 
     /**
+     * @brief re-read the package information from the database
+     */
+    void reload();
+
+    /**
      * Fills the form with the data of a package.
      *
      * @param p a package. This object will be stored here.

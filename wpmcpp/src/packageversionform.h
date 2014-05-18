@@ -38,6 +38,11 @@ public:
     void updateStatus();
 
     QList<void*> getSelected(const QString& type) const;
+
+    /**
+     * @brief re-read the package version information from the database
+     */
+    void reload();
 protected:
     void changeEvent(QEvent *e);
 

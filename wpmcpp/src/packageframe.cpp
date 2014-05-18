@@ -43,6 +43,16 @@ PackageFrame::~PackageFrame()
     delete ui;
 }
 
+void PackageFrame::reload()
+{
+    if (this->p) {
+        AbstractRepository* r = AbstractRepository::getDefault_();
+        Package* newp = r->findPackage_(p->name);
+        if (newp)
+            this->fillForm(newp);
+    }
+}
+
 void PackageFrame::updateIcons()
 {
     QIcon icon = MainWindow::getPackageVersionIcon(p->name);
