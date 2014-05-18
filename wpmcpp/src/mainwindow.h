@@ -92,7 +92,8 @@ private:
 
     virtual void closeEvent(QCloseEvent *event);
     void processWithSelfUpdate(Job *job, QList<InstallOperation *> &install,
-            int programCloseType);
+                               int programCloseType);
+    void reloadTabs();
 public:
     void updateActions();
 

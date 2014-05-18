@@ -27,6 +27,11 @@ public:
      * @param license a license. The object will be managed here.
      */
     void fillForm(License *license);
+
+    /**
+     * @brief re-read the license information from the database
+     */
+    void reload();
 protected:
     void changeEvent(QEvent *e);
 

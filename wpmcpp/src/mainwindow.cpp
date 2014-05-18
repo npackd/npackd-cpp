@@ -1364,6 +1364,28 @@ void MainWindow::setActionAccelerators(QWidget* w) {
     }
 }
 
+void MainWindow::reloadTabs()
+{
+    for (int i = 0; i < this->ui->tabWidget->count(); i++) {
+        QWidget* w = this->ui->tabWidget->widget(i);
+
+        PackageFrame* pf = dynamic_cast<PackageFrame*>(w);
+        if (pf) {
+            pf->reload();
+        }
+
+        PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
+        if (pvf) {
+            pvf->reload();
+        }
+
+        LicenseForm* lf = dynamic_cast<LicenseForm*>(w);
+        if (lf) {
+            lf->reload();
+        }
+    }
+}
+
 void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 {
     QTableView* t = this->mainFrame->getTableWidget();
@@ -1372,6 +1394,7 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
     m->clearCache();
 
     fillList();
+    reloadTabs();
 
     this->reloadRepositoriesThreadRunning = false;
     updateActions();

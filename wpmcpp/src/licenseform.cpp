@@ -1,6 +1,8 @@
 #include "licenseform.h"
 #include "ui_licenseform.h"
 
+#include "abstractrepository.h"
+
 LicenseForm::LicenseForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LicenseForm)
@@ -31,6 +33,17 @@ void LicenseForm::fillForm(License* license)
     this->ui->labelURL->setText(dl);
 
     this->ui->lineEditInternalName->setText(license->name);
+}
+
+void LicenseForm::reload()
+{
+    if (this->license) {
+        AbstractRepository* r = AbstractRepository::getDefault_();
+        QString err;
+        License* newLicense = r->findLicense_(this->license->name, &err);
+        if (err.isEmpty() && newLicense)
+            this->fillForm(newLicense);
+    }
 }
 
 void LicenseForm::changeEvent(QEvent *e)
