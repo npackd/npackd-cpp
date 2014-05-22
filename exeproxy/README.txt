@@ -26,7 +26,7 @@ reside in the same directory as the EXE Proxy itself.
 In order to change the target executable resource entry you could start the EXE
 Proxy with the parameter "exe-proxy-copy":
 
-exe-proxy.exe exe-proxy-copy <output file name> <target executable name>
+exeproxy.exe exe-proxy-copy <output file name> <target executable name>
 
 The second parameter should be the name of the output exe file where a copy of
 the EXE Proxy will be stored. The third parameter should either contain an
