@@ -482,7 +482,7 @@ bool CLProcessor::process(int* errorCode)
     cl.add("file", 'f', "file or directory", "file", false);
     */
     cl.add("end-process", 'e',
-            QObject::tr("comma separated list of ways to close running applications (windows, kill)"),
+            QObject::tr("comma separated list of ways to close running applications (close, kill)"),
             QObject::tr("list"), false);
 
     QString commandLineParsingError = cl.parse();

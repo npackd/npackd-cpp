@@ -3,7 +3,7 @@ PROFILE=release32
 
 # ------------------------------------------------------------------------------
 
-.PHONY: all printvars clean compile prep zip msi gprof drmemory upload
+.PHONY: all printvars clean compile prep zip gprof drmemory upload
 
 PROJECT=exeproxy
 
@@ -12,7 +12,7 @@ QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.2.1
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.8.2, 4.8.2]")
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.6.2, 0.6.2]")
 BITS=32
-PACKAGE=com.googlecode.windows-package-manager.NpackdCL
+PACKAGE=exeproxy
 else
 QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.2.1
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.8.2, 4.8.2]")
@@ -46,7 +46,6 @@ VERSION=0.1
 all:
 	$(MAKE) clean PROFILE=release32
 	$(MAKE) zip PROFILE=release32
-# $(MAKE) msi PROFILE=release32
 	@echo ======================= SUCCESS =======================================
 
 printvars:
@@ -119,10 +118,6 @@ prep: compile $(WHERE)/zip
 zip: prep
 	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip *
 
-msi: CrystalIcons_LICENSE.txt LICENSE.txt build\32\release\zip\npackdcl.exe build\32\release\zip\exchndl.dll zip
-	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\$(PROJECT)$(BITS).aip /SetVersion $(VERSION)
-	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\$(PROJECT)$(BITS).aip
-
 gprof: $(WHERE)\$(PROJECT).exe $(WHERE)\gmon.out
 # use --no-demangle to find out a mangled function name
 # -f _ZN12DBRepository8updateF5EP3Job
@@ -134,10 +129,9 @@ drmemory: compile
 	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -no_callstack_use_top_fp -- $(PROJECT).exe
 endif
 
-upload: zip msi
+upload: zip 
 	"$(PUTTY)\pscp.exe" -C \
 		$(WHERE)/$(PROJECT)-$(VERSION).zip \
-	    $(WHERE)/$(PROJECT)-$(VERSION).msi \
 	    $(WHERE)/$(PROJECT)-$(VERSION).map \
 		hilt2@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 

@@ -1876,7 +1876,7 @@ int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
         } else {
             for (int i = 0; i < sl.count(); i++) {
                 QString t = sl.at(i);
-                if (t == "windows")
+                if (t == "close")
                     r |= WPMUtils::CLOSE_WINDOW;
                 else if (t == "kill")
                     r |= WPMUtils::KILL_PROCESS;

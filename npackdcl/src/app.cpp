@@ -142,7 +142,7 @@ int App::process()
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("file", 'f', "file or directory", "file", false);
     cl.add("end-process", 'e',
-        "comma separated list of ways to close running applications (windows, kill)",
+        "comma separated list of ways to close running applications (close, kill)",
         "list", false);
 
     err = cl.parse();
