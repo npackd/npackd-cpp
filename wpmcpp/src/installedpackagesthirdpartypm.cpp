@@ -1,6 +1,7 @@
 #include <QList>
 #include <QSet>
 #include <QString>
+#include <QDebug>
 
 #include "installedpackagesthirdpartypm.h"
 #include "installedpackages.h"
@@ -35,6 +36,10 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
         PackageVersion* pv = new PackageVersion(ipv->package, ipv->version);
         rep->packageVersions.append(pv);
         rep->package2versions.insert(ipv->package, pv);
+
+        if (ipv->installed()) {
+            installed->append(ipv->clone());
+        }
     }
 
     job->setProgress(1);

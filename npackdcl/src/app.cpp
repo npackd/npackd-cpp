@@ -142,7 +142,7 @@ int App::process()
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("file", 'f', "file or directory", "file", false);
     cl.add("end-process", 'e',
-        "comma separated list of ways to close running applications (close, kill)",
+        "comma separated list of ways to close running applications (close, kill). The default value is 'close'.",
         "list", false);
 
     err = cl.parse();
@@ -200,7 +200,7 @@ int App::process()
             err = detect();
         } else if (cmd == "set-install-dir") {
             err = setInstallPath();
-        } else if (cmd == "get-install-dir") {
+        } else if (cmd == "install-dir") {
             err = getInstallPath();
         } else {
             err = "Wrong command: " + cmd + ". Try npackdcl help";
@@ -246,51 +246,51 @@ void App::usage()
             arg(NPACKD_VERSION));
     const char* lines[] = {
         "Usage:",
-        "    npackdcl help",
+        "    ncl help",
         "        prints this help",
-        "    npackdcl add (--package=<package> [--version=<version>])+",
+        "    ncl add (--package=<package> [--version=<version>])+",
         "        installs packages. The newest available version will be installed, ",
         "        if none is specified.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    npackdcl remove|rm (--package=<package> [--version=<version>])+",
+        "    ncl remove|rm (--package=<package> [--version=<version>])+",
         "           [--end-process=<types>]",
         "        removes packages. The version number may be omitted, ",
         "        if only one is installed.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    npackdcl update (--package=<package>)+ [--end-process=<types>]",
+        "    ncl update (--package=<package>)+ [--end-process=<types>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    npackdcl list [--status=installed | all] [--bare-format]",
+        "    ncl list [--status=installed | all] [--bare-format]",
         "        lists package versions sorted by package name and version.",
         "        Please note that since 1.18 only installed package versions",
         "        are listed regardless of the --status switch.",
-        "    npackdcl search [--query=<search terms>] [--status=installed | all]",
+        "    ncl search [--query=<search terms>] [--status=installed | all]",
         "            [--bare-format]",
         "        full text search. Lists found packages sorted by package name.",
         "        All packages are shown by default.",
-        "    npackdcl info --package=<package> [--version=<version>]",
+        "    ncl info --package=<package> [--version=<version>]",
         "        shows information about the specified package or package version",
-        "    npackdcl path --package=<package> [--versions=<versions>]",
+        "    ncl path --package=<package> [--versions=<versions>]",
         "        searches for an installed package and prints its location",
-        "    npackdcl add-repo --url=<repository>",
+        "    ncl add-repo --url=<repository>",
         "        appends a repository to the list",
-        "    npackdcl remove-repo --url=<repository>",
+        "    ncl remove-repo --url=<repository>",
         "        removes a repository from the list",
-        "    npackdcl list-repos",
+        "    ncl list-repos",
         "        list currently defined repositories",
-        "    npackdcl detect",
+        "    ncl detect",
         "        detect packages from the MSI database and software control panel",
-        "    npackdcl check",
+        "    ncl check",
         "        checks the installed packages for missing dependencies",
-        "    npackdcl which --file=<file>",
+        "    ncl which --file=<file>",
         "        finds the package that owns the specified file or directory",
-        "    npackdcl set-install-dir --file=<directory>",
+        "    ncl set-install-dir --file=<directory>",
         "        changes the directory where packages will be installed",
-        "    npackdcl get-install-dir",
+        "    ncl install-dir",
         "        prints the directory where packages will be installed",
         "Options:",
     };
@@ -430,6 +430,16 @@ QString App::check()
     QString r;
 
     Job* job = new Job();
+
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
+
     InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
     if (!job->getErrorMessage().isEmpty()) {
         r = job->getErrorMessage();
@@ -539,6 +549,15 @@ QString App::list()
     else
         job = clp.createJob();
 
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
+
     // ignoring the error as "list" should also be usable for non-admins
     InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
 
@@ -596,8 +615,17 @@ QString App::search()
 
     DBRepository* rep = DBRepository::getDefault();
 
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
+
     if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.99);
+        Job* rjob = job->newSubJob(0.98);
 
         // ignoring the error message as this should also be available for
         // non-admins
@@ -764,6 +792,15 @@ QString App::update()
     DBRepository* rep = DBRepository::getDefault();
     Job* job = clp.createJob();
 
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
+
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.05);
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
@@ -857,7 +894,7 @@ QString App::update()
     */
 
     if (job->shouldProceed("Updating") && !up2date) {
-        Job* ijob = job->newSubJob(0.86);
+        Job* ijob = job->newSubJob(0.85);
         processInstallOperations(ijob, ops, programCloseType);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
@@ -1007,6 +1044,15 @@ void App::processInstallOperations(Job *job,
 QString App::add()
 {
     Job* job = clp.createJob();
+
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
 
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.1);
@@ -1194,6 +1240,15 @@ QString App::remove()
 {
     Job* job = clp.createJob();
 
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
+
     if (job->shouldProceed("Detecting installed software")) {
         Job* rjob = job->newSubJob(0.1);
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
@@ -1284,6 +1339,15 @@ QString App::info()
     QString r;
 
     Job* job = new Job();
+
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
 
     // ignore the error as "npackdcl info" should be available for non-admins
     // too
@@ -1512,6 +1576,15 @@ QString App::detect()
 {
     Job* job = clp.createJob();
     job->setHint("Loading repositories and detecting installed software");
+
+    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.01);
+    }
 
     DBRepository* rep = DBRepository::getDefault();
     rep->updateF5(job);
