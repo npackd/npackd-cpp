@@ -58,23 +58,6 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
 
     // qDebug() << "detect3rdParty 1";
 
-    // remove all package versions detected via this 3rd party package manager
-    // in the previous run
-    if (err.isEmpty() && !detectionInfoPrefix.isEmpty()) {
-        // remove uninstalled packages
-        QMapIterator<QString, InstalledPackageVersion*> i(data);
-        while (i.hasNext()) {
-            i.next();
-            InstalledPackageVersion* ipv = i.value();
-            if (ipv->detectionInfo.indexOf(detectionInfoPrefix) == 0 &&
-                    ipv->installed()) {
-                ipv->setPath("");
-            }
-        }
-    }
-
-    // qDebug() << "detect3rdParty 2";
-
     Repository rep;
     QList<InstalledPackageVersion*> installed;
 
@@ -91,6 +74,8 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
     // qDebug() << "detect3rdParty 3";
 
     // remove packages and versions that are not installed
+    // we assume that one 3rd party package manager does not create package
+    // or package version objects for another
     if (err.isEmpty()) {
         QSet<QString> packages;
         for (int i = 0; i < installed.size();i++) {
@@ -118,8 +103,7 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
         }
     }
 
-    // qDebug() << "detect3rdParty 4";
-
+    // save all detected packages and versions
     if (err.isEmpty()) {
         Job* job = new Job();
         r->saveAll(job, &rep, replace);
@@ -129,6 +113,35 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
     }
 
     timer.time(2);
+
+    // remove all package versions that are not detected as installed anymore
+    if (err.isEmpty() && !detectionInfoPrefix.isEmpty()) {
+        QSet<QString> installedPVs;
+        for (int i = 0; i < installed.count(); i++) {
+            InstalledPackageVersion* ipv = installed.at(i);
+            installedPVs.insert(ipv->package + "@" +
+                    ipv->version.getVersionString());
+        }
+
+        // remove uninstalled packages
+        QMapIterator<QString, InstalledPackageVersion*> i(data);
+        while (i.hasNext()) {
+            i.next();
+            InstalledPackageVersion* ipv = i.value();
+            bool same3rdPartyPM = ipv->detectionInfo.indexOf(
+                    detectionInfoPrefix) == 0 ||
+                    (detectionInfoPrefix == "msi:" &&
+                    ipv->package.startsWith("msi.")) ||
+                    (detectionInfoPrefix == "control-panel:" &&
+                    ipv->package.startsWith("control-panel."));
+            if (same3rdPartyPM &&
+                    ipv->installed() && !installedPVs.contains(
+                    ipv->package + "@" +
+                    ipv->version.getVersionString())) {
+                ipv->setPath("");
+            }
+        }
+    }
 
     QStringList packagePaths = this->getAllInstalledPackagePaths();
     for (int i = 0; i < packagePaths.size(); i++) {
@@ -238,18 +251,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         delete p;
     }
 
-    if (err.isEmpty() && u != 0 && d.exists(path)) {
-        // qDebug() << "    3";
-        if (d.mkpath(path + "\\.Npackd")) {
-            QFile file(path + "\\.Npackd\\Uninstall.bat");
-            if (file.open(QIODevice::WriteOnly |
-                    QIODevice::Truncate)) {
-                QTextStream stream(&file);
-                stream.setCodec("UTF-8");
-                stream << u->content;
-                file.close();
-            }
-        }
+    if (err.isEmpty() && d.exists(path)) {
+        err = pv->saveFiles(QDir(path));
     }
 
     InstalledPackageVersion* ipv2 = 0;

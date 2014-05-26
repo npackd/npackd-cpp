@@ -39,6 +39,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
         // qDebug() << "MSIThirdPartyPM::scan loop 1";
 
+        Package* p = 0;
         PackageVersion* pv_ = dbr->findPackageVersionByMSIGUID_(guid, &err);
         if (pv_ != 0) {
             package = pv_->package;
@@ -74,26 +75,26 @@ void MSIThirdPartyPM::scan(Job* job,
                                 "type .Npackd\\UninstallMSI.log" + "\r\n" +
                                 "rem 3010=restart required" + "\r\n" +
                                 "if %err% equ 3010 exit 0" + "\r\n" +
+                                "rem 1605=unknown product" + "\r\n" +
+                                "if %err% equ 1605 exit 0" + "\r\n" +
                                 "if %err% neq 0 exit %err%" + "\r\n");
             pv->files.append(pvf);
+
+
+            pvf = new PackageVersionFile(
+                    ".Npackd\\Stop.bat",
+                    "rem the program should be stopped by the uninstaller\r\n");
+            pv->files.append(pvf);
+
             rep->savePackageVersion(pv.data());
 
             // qDebug() << "MSIThirdPartyPM::scan loop 1.3";
 
             QString title = WPMUtils::getMSIProductName(guid, &err);
 
-            // use the directory name for the title if there is no title
-            if (!err.isEmpty() || title.trimmed().isEmpty()) {
-                title = WPMUtils::getMSIProductLocation(guid, &err);
-                title = WPMUtils::normalizePath(title);
-                int pos = title.lastIndexOf('\\');
-                if (pos > 0)
-                    title = title.right(title.length() - pos - 1);
-            }
-
             // qDebug() << "MSIThirdPartyPM::scan loop 1.4";
 
-            QScopedPointer<Package> p(new Package(pv->package, title));
+            p = new Package(pv->package, title);
             p->description = "[" + QObject::tr("MSI database") +
                     "] " + p->title + " GUID: " + guid;
             QString url = WPMUtils::getMSIProductAttribute(guid,
@@ -126,8 +127,6 @@ void MSIThirdPartyPM::scan(Job* job,
             // qDebug() << guid << p->title;
 
             // qDebug() << "MSIThirdPartyPM::scan loop 1.6";
-
-            rep->savePackage(p.data());
 
             // qDebug() << "MSIThirdPartyPM::scan loop 1.7";
         }
@@ -167,6 +166,25 @@ void MSIThirdPartyPM::scan(Job* job,
                 }
                 dir = "";
             }
+        }
+
+        if (p) {
+            // use the directory name for the title if there is no title
+            if (p->title.trimmed().isEmpty()) {
+                if (!dir.isEmpty()) {
+                    p->title = WPMUtils::normalizePath(dir);
+                    int pos = p->title.lastIndexOf('\\');
+                    if (pos > 0)
+                        p->title = p->title.right(p->title.length() - pos - 1);
+                } else {
+                    p->title = QObject::tr("MSI package with the GUID %1").
+                            arg(guid);
+                }
+            }
+
+            rep->savePackage(p);
+            delete p;
+            p = 0;
         }
 
         // qDebug() << "MSIThirdPartyPM::scan loop 3";
