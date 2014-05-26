@@ -53,7 +53,6 @@ private:
 
     void unzip(Job* job, QString zipfile, QString outputdir);
     bool createShortcuts(const QString& dir, QString* errMsg);
-    QString saveFiles(const QDir& d);
 
     /**
      * @brief executes a script like .Npackd\Install.bat
@@ -207,6 +206,14 @@ public:
     PackageVersion(const QString& package, const Version& version);
 
     virtual ~PackageVersion();
+
+    /**
+     * @brief saves the text files associated with this package version
+     * @param d the files will be saved in this directory. This directory
+     *     might not exist.
+     * @return error message or ""
+     */
+    QString saveFiles(const QDir& d);
 
     /**
      * Locks this package version so that it cannot be installed or removed
