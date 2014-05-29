@@ -125,7 +125,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     if (err.isEmpty()) {
         QList<QUrl*> urls;
         for (int i = 0; i < list.count(); i++) {
-            QUrl* url = new QUrl(list.at(i));
+            QUrl* url = new QUrl(list.at(i).trimmed());
             urls.append(url);
             if (!url->isValid()) {
                 err = QString(QObject::tr("%1 is not a valid repository address")).arg(

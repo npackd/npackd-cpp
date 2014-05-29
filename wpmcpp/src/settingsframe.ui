@@ -133,6 +133,9 @@ p, li { white-space: pre-wrap; }
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
           <widget class="QCheckBox" name="checkBoxCloseWindows">
+           <property name="toolTip">
+            <string>closes the top application windows as you would do with Alt+F4 or the cross in the top right window corner</string>
+           </property>
            <property name="text">
             <string>Close windows</string>
            </property>
@@ -140,8 +143,11 @@ p, li { white-space: pre-wrap; }
          </item>
          <item>
           <widget class="QCheckBox" name="checkBoxKillProcesses">
+           <property name="toolTip">
+            <string>forcefully terminates the process. All unsaved data will be lost.</string>
+           </property>
            <property name="text">
-            <string>Kill the process</string>
+            <string>Terminate the process</string>
            </property>
           </widget>
          </item>
