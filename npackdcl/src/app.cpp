@@ -491,7 +491,7 @@ QString App::addRepo()
 {
     QString err;
 
-    QString url = cl.get("url");
+    QString url = cl.get("url").trimmed();
 
     if (err.isEmpty()) {
         if (url.isNull()) {
@@ -1021,7 +1021,7 @@ void App::processInstallOperations(Job *job,
                     (wchar_t*) prg.utf16(),
                     (wchar_t*) args.utf16(),
                     0, 0, TRUE,
-                    CREATE_UNICODE_ENVIRONMENT, 0,
+                    CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, 0,
                     0, &startupInfo, &pinfo);
 
             if (success) {
