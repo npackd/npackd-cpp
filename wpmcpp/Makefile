@@ -6,7 +6,7 @@ PROFILE=release32
 
 # ------------------------------------------------------------------------------
 
-.PHONY: all printvars clean compile prep zip msi gprof drmemory upload
+.PHONY: all printvars clean compile prep zip msi gprof drmemory upload translations
 
 SHELL:=cmd.exe
 
@@ -117,7 +117,7 @@ $(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE)
 compile: printvars $(WHERE) $(WHERE)/../Makefile
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
 
-prep: compile $(WHERE)/zip
+prep: compile translations $(WHERE)/zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
 	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
 	copy src\wpmcpp_es.qm $(WHERE)\zip\npackdg_es.qm
@@ -156,4 +156,8 @@ upload: zip msi
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).msi \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).map \
 		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
+
+translations:
+	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\lupdate.exe" ..\..\src\wpmcpp.pro
+	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\lrelease.exe" ..\..\src\wpmcpp.pro
 
