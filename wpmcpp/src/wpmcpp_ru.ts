@@ -1827,27 +1827,27 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="dbrepository.cpp" line="1136"/>
         <source>Commiting the SQL transaction (tempdb)</source>
-        <translation type="unfinished"></translation>
+        <translation>Завершаю SQL операцию (tempdb)</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1147"/>
         <source>Refreshing the installation status (tempdb)</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновляю статусы инсталляции (tempdb)</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1156"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновляю статусы установленных пакетов в базе данных (tempdb)</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1176"/>
         <source>Attaching the temporary database</source>
-        <translation type="unfinished"></translation>
+        <translation>Открываю временную базу данных</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1213"/>
         <source>Transferring the data from the temporary database</source>
-        <translation type="unfinished"></translation>
+        <translation>Переношу данные из временной базы данных</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1228"/>
@@ -1899,7 +1899,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="dbrepository.cpp" line="1248"/>
         <source>Detaching the temporary database</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрываю временную базу данных</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1291"/>
@@ -2106,7 +2106,7 @@ p, li { white-space: pre-wrap; }
         <location filename="uiutils.cpp" line="141"/>
         <location filename="uiutils.cpp" line="147"/>
         <source>The package %1 will be uninstalled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Пакет %1 будет удалён.</translation>
     </message>
     <message>
         <location filename="uiutils.cpp" line="144"/>
