@@ -98,15 +98,11 @@ QString WPMUtils::programCloseType2String(DWORD programCloseType)
     QString r;
 
     if (programCloseType & WPMUtils::CLOSE_WINDOW) {
-        if (!r.isEmpty())
-            r += ",";
-        r += "windows";
+        r += "c";
     }
 
     if (programCloseType & WPMUtils::KILL_PROCESS) {
-        if (!r.isEmpty())
-            r += ",";
-        r += "kill";
+        r += "k";
     }
 
     return r;
@@ -1870,15 +1866,14 @@ int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
     QString v = cl.get("end-process");
     if (!v.isNull()) {
         r = 0;
-        QStringList sl = v.split(',');
-        if (sl.count() == 0) {
+        if (v.length() == 0) {
             *err = QObject::tr("Empty list of program close types");
         } else {
-            for (int i = 0; i < sl.count(); i++) {
-                QString t = sl.at(i);
-                if (t == "close")
+            for (int i = 0; i < v.length(); i++) {
+                QChar t = v.at(i);
+                if (t == 'c')
                     r |= WPMUtils::CLOSE_WINDOW;
-                else if (t == "kill")
+                else if (t == 'k')
                     r |= WPMUtils::KILL_PROCESS;
                 else
                     *err = QObject::tr(
