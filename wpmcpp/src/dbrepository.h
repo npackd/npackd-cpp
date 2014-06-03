@@ -113,6 +113,8 @@ public:
      */
     DBRepository();
 
+    virtual ~DBRepository();
+
     /**
      * @brief inserts or updates an existing license
      * @param p a license
@@ -139,8 +141,6 @@ public:
      * @return error message
      */
     QString savePackage(Package *p, bool replace);
-
-    virtual ~DBRepository();
 
     /**
      * @brief opens the default database as "default"
