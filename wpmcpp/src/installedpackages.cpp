@@ -151,7 +151,6 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
     // qDebug() << "InstalledPackages::detect3rdParty.0";
 
     if (err.isEmpty()) {
-        QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir());
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
 
@@ -167,15 +166,12 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
 
             // qDebug() << "    0.1";
 
-            // we cannot handle nested directories or paths under C:\Windows
+            // we cannot handle nested directories
             QString path = ipv->directory;
             if (!path.isEmpty()) {
                 path = WPMUtils::normalizePath(path);
                 if (WPMUtils::isUnderOrEquals(path, packagePaths))
                     continue;
-
-                if (WPMUtils::isUnderOrEquals(path, windowsDir))
-                    ipv->directory = "";
             }
 
             // qDebug() << "    0.2";
@@ -577,16 +573,14 @@ QString InstalledPackages::clearPackagesInNestedDirectories() {
         paths.append(p);
     }
 
-    QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir()) +
-            '\\';
     for (int j = 0; j < pvs.count(); j++) {
         InstalledPackageVersion* pv = pvs.at(j);
         QString pvdir = paths.at(j);
-        if (pv->installed() && pvdir != windowsDir) {
+        if (pv->installed()) {
             for (int i = j + 1; i < pvs.count(); i++) {
                 InstalledPackageVersion* pv2 = pvs.at(i);
                 QString pv2dir = paths.at(i);
-                if (pv2->installed() && pv2dir != windowsDir) {
+                if (pv2->installed()) {
                     if (pv2dir.startsWith(pvdir)) {
                         pv2->setPath("");
 

@@ -1,7 +1,6 @@
-# This is the main build file for Npackd. It builds both 32 bit and 64 bit
-# versions.
+# This is the main build file for NpackdCL.
 
-# Parameter: release32, gprof32, release64, gprof64
+# Parameter: release32, gprof32
 PROFILE=release32
 
 # ------------------------------------------------------------------------------
@@ -44,6 +43,7 @@ AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.A
 SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 10$(RPAREN)")
 MINGWUTILS=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
 PUTTY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=uk.org.greenend.chiark.sgtatham.Putty" "--versions=[0.62, 2$(RPAREN)")
+EXEPROXY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=exeproxy" "--versions=[0.1, 0.1]")
 VERSION=$(shell type ..\wpmcpp\version.txt)
 
 all:
@@ -123,8 +123,11 @@ ifeq (32,$(BITS))
 	copy "$(MINGWUTILS)\bin\exchndl.dll" $(WHERE)\zip
 endif
 
-zip: prep
+zip: prep $(WHERE)\zip\ncl.exe
 	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip *
+
+$(WHERE)\zip\ncl.exe:
+	$(EXEPROXY)\exeproxy exeproxy-copy $(WHERE)\zip\ncl.exe npackdcl.exe
 
 msi: CrystalIcons_LICENSE.txt LICENSE.txt build\32\release\zip\npackdcl.exe build\32\release\zip\exchndl.dll zip
 	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\$(PROJECT)$(BITS).aip /SetVersion $(VERSION)

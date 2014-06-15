@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>LicenseForm</name>
     <message>
@@ -31,7 +31,7 @@
     </message>
     <message>
         <source>Download URL:</source>
-        <translation>URL для загрузки:</translation>
+        <translation type="vanished">URL для загрузки:</translation>
     </message>
     <message>
         <location filename="licenseform.ui" line="76"/>
@@ -614,7 +614,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>SHA1:</source>
-        <translation>SHA1:</translation>
+        <translation type="vanished">SHA1:</translation>
     </message>
     <message>
         <location filename="packageversionform.ui" line="300"/>
@@ -1863,7 +1863,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Downloading the remote repositories and filling the local database</source>
-        <translation>Загружаю удаленные репозитории и заполняю локальную базу данных</translation>
+        <translation type="vanished">Загружаю удаленные репозитории и заполняю локальную базу данных</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1354"/>
@@ -1880,11 +1880,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Refreshing the installation status</source>
-        <translation>Обновление статуса установки</translation>
+        <translation type="vanished">Обновление статуса установки</translation>
     </message>
     <message>
         <source>Updating the status for installed packages in the database</source>
-        <translation>Обновление статуса установленных пакетов в базе данных</translation>
+        <translation type="vanished">Обновление статуса установленных пакетов в базе данных</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1264"/>
@@ -1996,52 +1996,52 @@ p, li { white-space: pre-wrap; }
         <translation>Ошибка открытия файла %1</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="413"/>
+        <location filename="installedpackages.cpp" line="409"/>
         <source>Detecting directories deleted externally</source>
         <translation>Обнаружение директорий, удалённых внешне</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="435"/>
+        <location filename="installedpackages.cpp" line="431"/>
         <source>Reading registry package database</source>
         <translation>Чтение реестра базы данных пакетов</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="447"/>
+        <location filename="installedpackages.cpp" line="443"/>
         <source>Adding well-known packages</source>
         <translation>Редактирование известных пакетов</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="459"/>
+        <location filename="installedpackages.cpp" line="455"/>
         <source>Setting the NPACKD_CL environment variable</source>
         <translation>Устанавливаю переменную среды NPACKD_CL</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="499"/>
+        <location filename="installedpackages.cpp" line="495"/>
         <source>Reading the list of packages installed by Npackd</source>
         <translation>Читаю список пакетов, установленных Npackd</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="472"/>
+        <location filename="installedpackages.cpp" line="468"/>
         <source>Detecting MSI packages</source>
         <translation>Детектирую MSI пакеты</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="515"/>
+        <location filename="installedpackages.cpp" line="511"/>
         <source>Detecting software control panel packages</source>
         <translation>Детектирую пакеты из панели управления для программ</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="527"/>
+        <location filename="installedpackages.cpp" line="523"/>
         <source>Clearing information about installed package versions in nested directories</source>
         <translation>Удаление информации о версиях уставленных пакетов во вложенных директориях</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="77"/>
+        <location filename="main.cpp" line="69"/>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
         <translation>32 битная версия Npackd требует 32 битной операционной системы.</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="78"/>
+        <location filename="main.cpp" line="70"/>
         <source>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</source>
         <translation>Пожалуйста, скачайте 64 битную версию с http://code.google.com/p/windows-package-manager/</translation>
     </message>
@@ -2152,11 +2152,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find the package version</source>
-        <translation>Невозможно найти версию пакета</translation>
+        <translation type="vanished">Невозможно найти версию пакета</translation>
     </message>
     <message>
         <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
-        <translation>Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
+        <translation type="vanished">Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="101"/>
@@ -2182,15 +2182,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="257"/>
-        <location filename="wpmutils.cpp" line="1912"/>
+        <location filename="wpmutils.cpp" line="1907"/>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="279"/>
-        <location filename="wpmutils.cpp" line="1920"/>
-        <location filename="wpmutils.cpp" line="2024"/>
-        <location filename="wpmutils.cpp" line="2030"/>
+        <location filename="wpmutils.cpp" line="1915"/>
+        <location filename="wpmutils.cpp" line="2019"/>
+        <location filename="wpmutils.cpp" line="2025"/>
         <source>Unknown package: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2241,12 +2241,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="485"/>
-        <source>comma separated list of ways to close running applications (close, kill)</source>
+        <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
+        <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="486"/>
-        <source>list</source>
+        <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2271,7 +2272,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be installed: %2</source>
-        <translation>%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
+        <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="211"/>
@@ -2287,47 +2288,47 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
-        <translation>%1 пакет(ы) будет(ут) удален(ы): %2. Соответствующие директории будут полностью удалены; нет возможности восстановить файлы.</translation>
+        <translation type="vanished">%1 пакет(ы) будет(ут) удален(ы): %2. Соответствующие директории будут полностью удалены; нет возможности восстановить файлы.</translation>
     </message>
     <message>
         <source>Installing %1 packages, uninstalling %2 packages</source>
-        <translation>Установка %1 пакетов, удаление %2 пакетов</translation>
+        <translation type="vanished">Установка %1 пакетов, удаление %2 пакетов</translation>
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
-        <translation>%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
+        <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="846"/>
-        <location filename="mainwindow.cpp" line="1725"/>
+        <location filename="mainwindow.cpp" line="1712"/>
         <location filename="uiutils.cpp" line="185"/>
         <source>Install/Uninstall</source>
         <translation>Установка/Удаление</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1030"/>
-        <location filename="mainwindow.cpp" line="1085"/>
+        <location filename="mainwindow.cpp" line="1026"/>
+        <location filename="mainwindow.cpp" line="1079"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Ошибка при поиске самой новой установленной версии для %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1285"/>
+        <location filename="mainwindow.cpp" line="1267"/>
         <source>Initializing</source>
         <translation>Инициализация</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1532"/>
+        <location filename="mainwindow.cpp" line="1514"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1631"/>
+        <location filename="mainwindow.cpp" line="1618"/>
         <source>About</source>
         <translation>О</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="829"/>
@@ -2340,37 +2341,47 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1632"/>
+        <location filename="mainwindow.cpp" line="1619"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1689"/>
+        <location filename="mainwindow.cpp" line="1676"/>
         <source>Jobs</source>
         <translation>Задания</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1709"/>
+        <location filename="mainwindow.cpp" line="1696"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1783"/>
+        <location filename="mainwindow.cpp" line="1770"/>
         <source>%1 package(s) detected</source>
         <translation>%1 пакет(ы) обнаружен(ы)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1788"/>
+        <location filename="mainwindow.cpp" line="1775"/>
         <source>Package detection status</source>
         <translation>Статус обнаружения пакета</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1811"/>
+        <location filename="mainwindow.cpp" line="1798"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Невозможно обновить репозитории сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1957"/>
+        <location filename="mainwindow.cpp" line="1829"/>
+        <source>Cannot start this action while a drive scan is in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1833"/>
+        <source>Cannot start this action while repositories reload is in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1969"/>
         <source>Cannot open the URL %1</source>
         <translation>Не удалось открыть URL %1</translation>
     </message>
@@ -2568,7 +2579,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>
-        <translation>Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
+        <translation type="vanished">Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="909"/>
@@ -2634,7 +2645,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
-        <translation>Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
+        <translation type="vanished">Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1129"/>
@@ -2911,11 +2922,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Opening file</source>
-        <translation>Открытие файла</translation>
+        <translation type="vanished">Открытие файла</translation>
     </message>
     <message>
         <source>Cannot open the file</source>
-        <translation>Невозможно открыть файл</translation>
+        <translation type="vanished">Невозможно открыть файл</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1075"/>
@@ -2924,7 +2935,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Analyzing the content</source>
-        <translation>Анализ содержимого</translation>
+        <translation type="vanished">Анализ содержимого</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="266"/>
@@ -2960,11 +2971,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
-        <translation>Пакет(ы) не может(гут) быть удален(ы), так как следующие файлы используются (пожалуйста, закройте соответствующие приложения): %1</translation>
+        <translation type="vanished">Пакет(ы) не может(гут) быть удален(ы), так как следующие файлы используются (пожалуйста, закройте соответствующие приложения): %1</translation>
     </message>
     <message>
         <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
-        <translation>Пакет %1 не может быть удалён, так как некоторые файлы или папки в %2 используются.</translation>
+        <translation type="vanished">Пакет %1 не может быть удалён, так как некоторые файлы или папки в %2 используются.</translation>
     </message>
     <message>
         <location filename="scandiskthirdpartypm.cpp" line="25"/>
@@ -2992,17 +3003,17 @@ p, li { white-space: pre-wrap; }
         <translation>Невозможно изменить настройки сейчас. Пакет %1 заблокирован текущей(ем) установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="417"/>
+        <location filename="wpmutils.cpp" line="413"/>
         <source>The installation directory cannot be empty</source>
         <translation>Установочная директория не может быть пустой</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="420"/>
+        <location filename="wpmutils.cpp" line="416"/>
         <source>The installation directory does not exist</source>
         <translation>Установочная директория не существует</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="427"/>
+        <location filename="wpmutils.cpp" line="423"/>
         <source>Cannot change the installation directory to %1. %2 %3 is installed there</source>
         <translation>Не могу изменить директорий для установки пакетов на %1. %2 %3 уже установлен там.</translation>
     </message>
@@ -3027,54 +3038,54 @@ p, li { white-space: pre-wrap; }
         <translation>XML библиотека</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="184"/>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="195"/>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="205"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="179"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="189"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="200"/>
         <source>operating system</source>
         <translation>операционная система</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="194"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="178"/>
         <source>Windows 32 bit</source>
         <translation>Windows 32-битная</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="204"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="188"/>
         <source>Windows 64 bit</source>
         <translation>Windows 64-битная</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="226"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="224"/>
         <source>JRE</source>
         <translation>JRE</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="227"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="225"/>
         <source>Java runtime</source>
         <translation>Среда выполнения Java</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="274"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="272"/>
         <source>JDK 64 bit</source>
         <translation>JDK 64-битный</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="274"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="272"/>
         <source>JDK</source>
         <translation>JDK</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="276"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="274"/>
         <source>Java development kit</source>
         <translation>Java development kit</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="322"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="320"/>
         <source>Windows Installer</source>
         <translation>Установщик Windows</translation>
     </message>
     <message>
-        <location filename="wellknownprogramsthirdpartypm.cpp" line="324"/>
+        <location filename="wellknownprogramsthirdpartypm.cpp" line="322"/>
         <source>Package manager</source>
         <translation>Менеджер пакетов</translation>
     </message>
@@ -3150,263 +3161,263 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="commandline.cpp" line="191"/>
-        <location filename="wpmutils.cpp" line="161"/>
+        <location filename="wpmutils.cpp" line="157"/>
         <source>CommandLineToArgvW failed</source>
         <translation>Функция CommandLineToArgvW потерпела неудачу</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="374"/>
+        <location filename="wpmutils.cpp" line="370"/>
         <source>A GUID must be 38 characters long</source>
         <translation>GUID должен быть 38 символов в длину</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="392"/>
+        <location filename="wpmutils.cpp" line="388"/>
         <source>Wrong character at position %1</source>
         <translation>Неверный символ в %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="454"/>
+        <location filename="wpmutils.cpp" line="450"/>
         <source>Error %1</source>
         <translation>Ошибка %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="458"/>
+        <location filename="wpmutils.cpp" line="454"/>
         <source>Error %1: %2</source>
         <translation>Ошибка %1: %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="906"/>
+        <location filename="wpmutils.cpp" line="902"/>
         <source>Empty package name</source>
         <translation>Отсутствует имя пакета</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="910"/>
+        <location filename="wpmutils.cpp" line="906"/>
         <source>Empty segment at position %1 in %2</source>
         <translation>Пустой сегмент на позиции %1 в %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="915"/>
-        <location filename="wpmutils.cpp" line="924"/>
+        <location filename="wpmutils.cpp" line="911"/>
+        <location filename="wpmutils.cpp" line="920"/>
         <source>-- at position %1 in %2</source>
         <translation>-- на позиции %1 в %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="934"/>
+        <location filename="wpmutils.cpp" line="930"/>
         <source>Wrong character at position 1 in %1</source>
         <translation>Неверный символ на позиции 1 в %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="946"/>
-        <location filename="wpmutils.cpp" line="957"/>
-        <location filename="wpmutils.cpp" line="1027"/>
-        <location filename="wpmutils.cpp" line="1046"/>
+        <location filename="wpmutils.cpp" line="942"/>
+        <location filename="wpmutils.cpp" line="953"/>
+        <location filename="wpmutils.cpp" line="1023"/>
+        <location filename="wpmutils.cpp" line="1042"/>
         <source>Wrong character at position %1 in %2</source>
         <translation>Неверный символ в %1 у %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1020"/>
-        <location filename="wpmutils.cpp" line="1039"/>
+        <location filename="wpmutils.cpp" line="1016"/>
+        <location filename="wpmutils.cpp" line="1035"/>
         <source>Wrong length: %1</source>
         <translation>Неверная длина: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1201"/>
+        <location filename="wpmutils.cpp" line="1197"/>
         <source>Cannot determine MSI product location for GUID %1</source>
         <translation>Невозможно установить размещение MSI продукта для GUID %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1224"/>
+        <location filename="wpmutils.cpp" line="1220"/>
         <source>Cannot determine MSI component location for GUID %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1429"/>
+        <location filename="wpmutils.cpp" line="1425"/>
         <source>The source and destination files are the same file.</source>
         <translation>Исходный и файл назначения совпадают.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1432"/>
+        <location filename="wpmutils.cpp" line="1428"/>
         <source>Multiple file paths were specified in the source buffer, but only one destination file path.</source>
         <translation>Много путей для файлов было специфицировано в исходном буфере, но лишь один целевой путь.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1435"/>
+        <location filename="wpmutils.cpp" line="1431"/>
         <source>Rename operation was specified but the destination path is a different directory. Use the move operation instead.</source>
         <translation>Операция по переименованию была специфицирована, но целевой путь это другой директорий. Используйте вместо этого операцию перемещения.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1438"/>
+        <location filename="wpmutils.cpp" line="1434"/>
         <source>The source is a root directory, which cannot be moved or renamed.</source>
         <translation>Источник - корневая директория, которая не может быть перемещена или переименована.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1441"/>
+        <location filename="wpmutils.cpp" line="1437"/>
         <source>The operation was canceled by the user, or silently canceled if the appropriate flags were supplied to SHFileOperation.</source>
         <translation>Операция была отменена польователем, или тихо отменена, если соответствующие флаги были получены SHFileOperation.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1444"/>
+        <location filename="wpmutils.cpp" line="1440"/>
         <source>The destination is a subtree of the source.</source>
         <translation>Путь назначения - поддиректория источника.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1447"/>
+        <location filename="wpmutils.cpp" line="1443"/>
         <source>Security settings denied access to the source.</source>
         <translation>Настройки безопастности запрещают доступ к источнику.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1450"/>
+        <location filename="wpmutils.cpp" line="1446"/>
         <source>The source or destination path exceeded or would exceed MAX_PATH.</source>
         <translation>Истоник или путь назначения превысили или могли бы превысить  MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1453"/>
+        <location filename="wpmutils.cpp" line="1449"/>
         <source>The operation involved multiple destination paths, which can fail in the case of a move operation.</source>
         <translation>Операция использует много целевых путей, что может привести к ошибке в случае операции перемещения.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1456"/>
+        <location filename="wpmutils.cpp" line="1452"/>
         <source>The path in the source or destination or both was invalid.</source>
         <translation>Путь источника или назначения, или оба не существуют.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1459"/>
+        <location filename="wpmutils.cpp" line="1455"/>
         <source>The source and destination have the same parent folder.</source>
         <translation>Источник и путь назначения имеют одинаковый родительский каталог</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1462"/>
+        <location filename="wpmutils.cpp" line="1458"/>
         <source>The destination path is an existing file.</source>
         <translation>Путь назначения - существующий файл.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1465"/>
+        <location filename="wpmutils.cpp" line="1461"/>
         <source>The destination path is an existing folder.</source>
         <translation>Путь назначения - существующая директория.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1468"/>
+        <location filename="wpmutils.cpp" line="1464"/>
         <source>The name of the file exceeds MAX_PATH.</source>
         <translation>Имя файла превышает MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1471"/>
+        <location filename="wpmutils.cpp" line="1467"/>
         <source>The destination is a read-only CD-ROM, possibly unformatted.</source>
         <translation>Путь назначения - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1474"/>
+        <location filename="wpmutils.cpp" line="1470"/>
         <source>The destination is a read-only DVD, possibly unformatted.</source>
         <translation>Путь назначения - DVD, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1477"/>
+        <location filename="wpmutils.cpp" line="1473"/>
         <source>The destination is a writable CD-ROM, possibly unformatted.</source>
         <translation>Путь назначения - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1480"/>
+        <location filename="wpmutils.cpp" line="1476"/>
         <source>The file involved in the operation is too large for the destination media or file system.</source>
         <translation>Файл, учавствующий в процессе, - слишком большой для файловой системы или устройства.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1483"/>
+        <location filename="wpmutils.cpp" line="1479"/>
         <source>The source is a read-only CD-ROM, possibly unformatted.</source>
         <translation>Источник - CD-ROM, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1486"/>
+        <location filename="wpmutils.cpp" line="1482"/>
         <source>The source is a read-only DVD, possibly unformatted.</source>
         <translation>Источник - DVD, доступный только для чтения, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1489"/>
+        <location filename="wpmutils.cpp" line="1485"/>
         <source>The source is a writable CD-ROM, possibly unformatted.</source>
         <translation>Источник - перезаписываемый CD-ROM, возможно не отформатирован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1492"/>
+        <location filename="wpmutils.cpp" line="1488"/>
         <source>MAX_PATH was exceeded during the operation.</source>
         <translation>MAX_PATH был превышен во время операции.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1495"/>
+        <location filename="wpmutils.cpp" line="1491"/>
         <source>An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later.</source>
         <translation>Случилась неизвестная ошибка. Это, как правило, произходит вследствии неверного пути в источнике или назначении. Эта ошибка не возникает на Windows Vista и более поздних.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1498"/>
+        <location filename="wpmutils.cpp" line="1494"/>
         <source>An unspecified error occurred on the destination.</source>
         <translation>Произошла неизвестная ошибка в пути назначения.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1501"/>
+        <location filename="wpmutils.cpp" line="1497"/>
         <source>Destination is a root directory and cannot be renamed.</source>
         <translation>Путь назначения - корневая директория и поэтому не может быть переименован.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1526"/>
+        <location filename="wpmutils.cpp" line="1522"/>
         <source>Error deleting %1: %2</source>
         <translation>Ошибка удаления %1: %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1619"/>
+        <location filename="wpmutils.cpp" line="1615"/>
         <source>Cannot delete the file: %1</source>
         <translation>Невозможно удалить файл: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1634"/>
+        <location filename="wpmutils.cpp" line="1630"/>
         <source>Cannot delete the directory: %1</source>
         <translation>Невозможно удалить директорию: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1875"/>
+        <location filename="wpmutils.cpp" line="1870"/>
         <source>Empty list of program close types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1884"/>
+        <location filename="wpmutils.cpp" line="1879"/>
         <source>Invalid program close type: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1935"/>
+        <location filename="wpmutils.cpp" line="1930"/>
         <source>No installable version was found for the package %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1943"/>
+        <location filename="wpmutils.cpp" line="1938"/>
         <source>Package %1 (%2) is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1954"/>
+        <location filename="wpmutils.cpp" line="1949"/>
         <source>More than one version of the package %1 (%2) is installed: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1963"/>
-        <location filename="wpmutils.cpp" line="1981"/>
+        <location filename="wpmutils.cpp" line="1958"/>
+        <location filename="wpmutils.cpp" line="1976"/>
         <source>Package version not found: %1 (%2) %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1974"/>
+        <location filename="wpmutils.cpp" line="1969"/>
         <source>Cannot parse version: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1992"/>
+        <location filename="wpmutils.cpp" line="1987"/>
         <source>%1 is already installed in %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1999"/>
+        <location filename="wpmutils.cpp" line="1994"/>
         <source>%1 is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2040"/>
+        <location filename="wpmutils.cpp" line="2035"/>
         <source>More than one package was found: %1</source>
         <translation type="unfinished"></translation>
     </message>

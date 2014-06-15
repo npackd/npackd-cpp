@@ -42,14 +42,6 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-/*
- * this should translate the Qt messages
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    app.installTranslator(&qtTranslator);
-*/
-
     QString packageName;
 #if !defined(__x86_64__)
     packageName = "com.googlecode.windows-package-manager.Npackd";
