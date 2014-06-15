@@ -85,7 +85,7 @@ void WellKnownProgramsThirdPartyPM::detectOneDotNet(
         delete pv;
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package, v,
-                WPMUtils::getWindowsDir());
+                "");
         installed->append(ipv);
     }
 }
@@ -110,8 +110,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.data());
-            installed->append(new InstalledPackageVersion(p->name, v,
-                    WPMUtils::getWindowsDir()));
+            installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -120,8 +119,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.data());
-            installed->append(new InstalledPackageVersion(p->name, v,
-                    WPMUtils::getWindowsDir()));
+            installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -131,8 +129,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
             v.prepend(3);
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.data());
-            installed->append(new InstalledPackageVersion(p->name, v,
-                    WPMUtils::getWindowsDir()));
+            installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -141,8 +138,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.data());
-            installed->append(new InstalledPackageVersion(p->name, v,
-                    WPMUtils::getWindowsDir()));
+            installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -151,8 +147,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.data());
-            installed->append(new InstalledPackageVersion(p->name, v,
-                    WPMUtils::getWindowsDir()));
+            installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -161,8 +156,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.data());
-            installed->append(new InstalledPackageVersion(p->name, v,
-                    WPMUtils::getWindowsDir()));
+            installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -178,16 +172,6 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
     Version v;
     v.setVersion(osvi.dwMajorVersion, osvi.dwMinorVersion,
             osvi.dwBuildNumber);
-
-    QScopedPointer<Package> p(new Package("com.microsoft.Windows",
-            "Windows"));
-    p->description = QObject::tr("operating system");
-    p->url = "http://www.microsoft.com/windows/";
-    rep->savePackage(p.data());
-    QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-    rep->savePackageVersion(pv.data());
-    installed->append(new InstalledPackageVersion(p->name, v,
-            WPMUtils::getWindowsDir()));
 
     if (!WPMUtils::is64BitWindows()) {
         QScopedPointer<Package> p32(new Package("com.microsoft.Windows32",
@@ -210,6 +194,20 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
         installed->append(new InstalledPackageVersion(p64->name, v,
                 WPMUtils::getWindowsDir()));
     }
+
+    QScopedPointer<Package> p(new Package("com.microsoft.Windows",
+            "Windows"));
+    p->description = QObject::tr("operating system");
+    p->url = "http://www.microsoft.com/windows/";
+    rep->savePackage(p.data());
+    QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
+    rep->savePackageVersion(pv.data());
+
+    // "" is used here as the installation directory as Npackd does not allow
+    // multiple package versions to be installed in the same directory
+    // in this case these would be com.microsoft.Windows and
+    // com.microsoft.Windows64
+    installed->append(new InstalledPackageVersion(p->name, v, ""));
 }
 
 void WellKnownProgramsThirdPartyPM::detectJRE(
@@ -333,8 +331,7 @@ QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.data());
 
-            installed->append(new InstalledPackageVersion(p->name, v,
-                    WPMUtils::getWindowsDir()));
+            installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 

@@ -10,10 +10,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="http://code.google.com/p/windows-package-manager/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{A494A65D-42AC-4C2F-9C90-6DCEBB7B0257} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{AC82E0DC-C7F6-4D22-90DD-08D24C0A4A99} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.19.8" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.19.9" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{EABC4270-7D7F-47BF-B388-AC63606E8DAC}"/>
@@ -28,9 +28,9 @@
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="LICENSE.txt" ComponentId="{25FECB36-6C32-4F3E-A6F3-9BB8EA19F23B}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="SHORTCUTDIR" ComponentId="{C58132D1-D249-4FBC-AB6A-F883833E2007}" Directory_="SHORTCUTDIR" Attributes="0"/>
-    <ROW Component="wpmcpp.exe" ComponentId="{A3071913-B2B3-40D2-BDCF-65CAF2103321}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
+    <ROW Component="LICENSE.txt" ComponentId="{832393AC-0D0A-47B3-A1C2-6B57C6D73A42}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{553A1502-07FE-47BC-9B80-90EF8B377C01}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="wpmcpp.exe" ComponentId="{0A4DB39E-99FC-4760-9039-49B6F457FC81}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt SHORTCUTDIR wpmcpp.exe"/>

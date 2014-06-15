@@ -55,8 +55,9 @@ http://npackd.appspot.com/rep/xml?tag=vim
     - filter the packages to only show the installed
     - remove "Notepad2"
     => the package list should not show "Notepad2" anymore
-13. Package "Windows 64 bit" should have a description
+13. Package "Windows 64 bit"
     => the package com.microsoft.Windows64 should have a non-empty description
+        and should be installed
 14. Detection info should be filled
     - install "AbiWord 2.8.6" without Npackd
     - start Npackd

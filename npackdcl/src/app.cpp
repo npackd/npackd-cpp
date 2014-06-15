@@ -875,7 +875,7 @@ QString App::update()
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
-            job->setProgress(0.12);
+            job->setProgress(0.15);
             up2date = ops.size() == 0;
         }
     }
@@ -1055,7 +1055,7 @@ QString App::add()
     }
 
     if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.1);
+        Job* rjob = job->newSubJob(0.09);
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
                 rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
@@ -1250,7 +1250,7 @@ QString App::remove()
     }
 
     if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.1);
+        Job* rjob = job->newSubJob(0.09);
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
                 rjob);
         if (!rjob->getErrorMessage().isEmpty()) {

@@ -15,10 +15,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="http://code.google.com/p/windows-package-manager/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{FD99E13D-CE0E-4C19-9DCA-5D929344FA7C} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{CDC315A1-EB72-440C-9F33-4FC7EE93A0AE} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="NpackdCL" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.19.8" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.19.9" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{B57EADCE-24E8-4D80-8611-25F58745FA25}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -31,19 +31,21 @@
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="LICENSE.txt" ComponentId="{D5AA5CBE-DBCA-4427-BF5D-3867C81049CA}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="ProductInformation" ComponentId="{C745BCDF-D3DD-4229-B477-84128C1E8940}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="exchndl.dll" ComponentId="{E3F3E158-5206-4DE5-B5C6-A88025A70505}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
-    <ROW Component="npackdcl.exe" ComponentId="{EA6FFD9F-2F00-4680-A031-18C9FF45F669}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
+    <ROW Component="LICENSE.txt" ComponentId="{A8490BDF-3CDA-420C-A69D-4EC2E39E5148}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
+    <ROW Component="ProductInformation" ComponentId="{82EF99A2-54D6-4C87-A1A6-5A67CA67D659}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="exchndl.dll" ComponentId="{7D0D5CB1-8750-4F6B-976D-CEE8D131ED35}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
+    <ROW Component="ncl.exe" ComponentId="{31726BBA-4F45-4D44-AB8E-16377B5BF041}" Directory_="APPDIR" Attributes="0" KeyPath="ncl.exe"/>
+    <ROW Component="npackdcl.exe" ComponentId="{A70F3A8C-A83F-448B-B957-AB1AA28E1C1C}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation exchndl.dll npackdcl.exe"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation exchndl.dll ncl.exe npackdcl.exe"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="..\CrystalIcons_LICENSE.txt" SelfReg="false"/>
+    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="..\CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="ncl.exe"/>
     <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="..\LICENSE.txt" SelfReg="false" NextFile="npackdcl.exe"/>
     <ROW File="exchndl.dll" Component_="exchndl.dll" FileName="exchndl.dll" Attributes="0" SourcePath="..\build\32\release\zip\exchndl.dll" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
+    <ROW File="ncl.exe" Component_="ncl.exe" FileName="ncl.exe" Attributes="0" SourcePath="..\build\32\release\zip\ncl.exe" SelfReg="false" DigSign="true"/>
     <ROW File="npackdcl.exe" Component_="npackdcl.exe" FileName="npackdcl.exe" Attributes="0" SourcePath="..\build\32\release\zip\npackdcl.exe" SelfReg="false" NextFile="exchndl.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">

@@ -354,10 +354,10 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
 
         if (urls.isEmpty()) {
             urls.append(
-                    "https://windows-package-manager.googlecode.com/hg/repository/Rep.xml");
+                    "https://npackd.appspot.com/rep/xml?tag=stable");
             if (WPMUtils::is64BitWindows())
                 urls.append(
-                        "https://windows-package-manager.googlecode.com/hg/repository/Rep64.xml");
+                        "https://npackd.appspot.com/rep/xml?tag=stable64");
         }
         save = true;
     }
