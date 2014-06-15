@@ -109,6 +109,9 @@ int App::test()
     qDebug() << ".";
 
     qDebug() << "OK";
+
+    QCoreApplication::instance()->quit();
+
     return 0;
 }
 #endif
@@ -213,6 +216,8 @@ int App::process()
             WPMUtils::outputTextConsole(err + "\n", false);
         }
     }
+
+    QCoreApplication::instance()->exit(r);
 
     return r;
 }
@@ -1413,6 +1418,7 @@ QString App::info()
             InstalledPackageVersion* ipv = ip->find(pv->package, pv->version);
             WPMUtils::outputTextConsole("Detection info: " +
                     (ipv ? ipv->detectionInfo : "") + "\n");
+            delete ipv;
         }
         WPMUtils::outputTextConsole("Internal package name: " +
                 p->name + "\n");

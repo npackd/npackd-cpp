@@ -15,6 +15,7 @@
 
 /**
  * @brief information about installed packages
+ * @threadsafe
  */
 class InstalledPackages: public QObject
 {
@@ -22,6 +23,9 @@ class InstalledPackages: public QObject
 private:
     static InstalledPackages def;
 
+    mutable QMutex mutex;
+
+    /** please use the mutex to access the data */
     QMap<QString, InstalledPackageVersion*> data;
 
     InstalledPackages();
@@ -39,6 +43,12 @@ private:
     void detectJDK(bool w64bit);
     void detectWindows();
 
+    /**
+     * @brief processOneInstalled3rdParty
+     * @param r
+     * @param ipv
+     * @threadsafe
+     */
     void processOneInstalled3rdParty(DBRepository *r,
             InstalledPackageVersion *ipv);
 
@@ -59,6 +69,8 @@ private:
     void detectPre_1_15_Packages();
 
     /**
+     * THIS METHOD IS NOT THREAD-SAFE
+     *
      * @brief finds the specified installed package version
      * @param package full package name
      * @param version package version
@@ -74,6 +86,19 @@ private:
      * @return error message
      */
     static QString saveToRegistry(InstalledPackageVersion* ipv);
+
+    /**
+     * THIS METHOD IS NOT THREAD-SAFE
+     *
+     * @brief finds the specified installed package version
+     * @param package full package name
+     * @param version package version
+     * @return found information or 0 if the specified package version is not
+     *     installed. The returned object may still represent a not installed
+     *     package version. Please check InstalledPackageVersion::getDirectory()
+     */
+    InstalledPackageVersion* findNoCopy(const QString& package,
+            const Version& version) const;
 public:
     /** package name for the current application */
     QString packageName;
@@ -94,7 +119,8 @@ public:
      * @brief finds the specified installed package version
      * @param package full package name
      * @param version package version
-     * @return found information or 0 if the specified package version is not
+     * @return [owner:caller]
+     *     found information or 0 if the specified package version is not
      *     installed. The returned object may still represent a not installed
      *     package version. Please check InstalledPackageVersion::getDirectory()
      */
@@ -167,11 +193,6 @@ public:
     QList<InstalledPackageVersion*> getAll() const;
 
     /**
-     * @return [ownership:this] installed packages
-     */
-    QList<InstalledPackageVersion*> getAllNoCopy() const;
-
-    /**
      * Searches for installed versions of a package.
      *
      * @return [ownership:caller] installed packages
@@ -221,7 +242,7 @@ public:
     /**
      * @brief returns the newest installed version for a package
      * @param package full package name
-     * @return found installed version or 0. This is not a copy.
+     * @return [owner:caller] found installed version or 0. This is a copy.
      */
     InstalledPackageVersion *getNewestInstalled(const QString &package) const;
 signals:

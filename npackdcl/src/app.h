@@ -53,7 +53,7 @@ private:
                               const QString parentPrefix, int level, PackageVersion *pv);
     void processInstallOperations(Job *job,
             const QList<InstallOperation *> &ops, DWORD programCloseType);
-public:
+public slots:
     /**
      * Process the command line.
      *

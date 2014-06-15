@@ -2,6 +2,7 @@
 #include <qdebug.h>
 #include <qstringlist.h>
 #include <qstring.h>
+#include <QTimer>
 
 #include "repository.h"
 #include "commandline.h"
@@ -18,6 +19,9 @@ int main(int argc, char *argv[])
 #if !defined(__x86_64__)
     LoadLibrary(L"exchndl.dll");
 #endif
+
+    QCoreApplication ca(argc, argv);
+
     AbstractRepository::setDefault_(DBRepository::getDefault());
 
     CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -31,9 +35,11 @@ int main(int argc, char *argv[])
     App app;
 
 #ifdef TEST
-    return app.test();
+    QTimer::singleShot(0, app, SLOT(test()));
 #else
-    return app.process();
+    QTimer::singleShot(0, &app, SLOT(process()));
 #endif
+
+    return ca.exec();
 }
 

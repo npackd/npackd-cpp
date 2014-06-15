@@ -37,20 +37,42 @@ InstalledPackages* InstalledPackages::getDefault()
     return &def;
 }
 
-InstalledPackages::InstalledPackages()
+InstalledPackages::InstalledPackages() : mutex(QMutex::Recursive)
 {
+}
+
+InstalledPackageVersion* InstalledPackages::findNoCopy(const QString& package,
+        const Version& version) const
+{
+    // internal method, mutex is not used
+
+    InstalledPackageVersion* ipv = this->data.value(
+            PackageVersion::getStringId(package, version));
+
+    return ipv;
 }
 
 InstalledPackageVersion* InstalledPackages::find(const QString& package,
         const Version& version) const
 {
-    return this->data.value(PackageVersion::getStringId(package, version));
+    this->mutex.lock();
+
+    InstalledPackageVersion* ipv = this->data.value(
+            PackageVersion::getStringId(package, version));
+    if (ipv)
+        ipv = ipv->clone();
+
+    this->mutex.unlock();
+
+    return ipv;
 }
 
 QString InstalledPackages::detect3rdParty(DBRepository* r,
         AbstractThirdPartyPM *pm,
         bool replace, const QString& detectionInfoPrefix)
 {
+    // this method does not manipulate "date" directly => no locking
+
     HRTimer timer(5);
     timer.time(0);
 
@@ -124,10 +146,9 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
         }
 
         // remove uninstalled packages
-        QMapIterator<QString, InstalledPackageVersion*> i(data);
-        while (i.hasNext()) {
-            i.next();
-            InstalledPackageVersion* ipv = i.value();
+        QList<InstalledPackageVersion*> ipvs = getAll();
+        for (int i = 0; i < ipvs.count(); i++) {
+            InstalledPackageVersion* ipv = ipvs.at(i);
             bool same3rdPartyPM = ipv->detectionInfo.indexOf(
                     detectionInfoPrefix) == 0 ||
                     (detectionInfoPrefix == "msi:" &&
@@ -138,9 +159,10 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
                     ipv->installed() && !installedPVs.contains(
                     ipv->package + "@" +
                     ipv->version.getVersionString())) {
-                ipv->setPath("");
+                this->setPackageVersionPath(ipv->package, ipv->version, "");
             }
         }
+        qDeleteAll(ipvs);
     }
 
     QStringList packagePaths = this->getAllInstalledPackagePaths();
@@ -161,8 +183,11 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
                     ipv->version);
             if (existing && existing->installed()) {
                 // qDebug() << "existing: " << existing->toString();
+                delete existing;
                 continue;
             }
+
+            delete existing;
 
             // qDebug() << "    0.1";
 
@@ -268,6 +293,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 InstalledPackageVersion* InstalledPackages::findOrCreate(const QString& package,
         const Version& version, QString* err)
 {
+    // internal method, mutex is not used
+
     *err = "";
 
     QString key = PackageVersion::getStringId(package, version);
@@ -275,10 +302,8 @@ InstalledPackageVersion* InstalledPackages::findOrCreate(const QString& package,
     if (!r) {
         r = new InstalledPackageVersion(package, version, "");
         this->data.insert(key, r);
-
-        // *err = saveToRegistry(r);
-        fireStatusChanged(package, version);
     }
+
     return r;
 }
 
@@ -286,25 +311,32 @@ QString InstalledPackages::setPackageVersionPath(const QString& package,
         const Version& version,
         const QString& directory)
 {
+    this->mutex.lock();
+
     QString err;
 
-    InstalledPackageVersion* ipv = this->find(package, version);
+    InstalledPackageVersion* ipv = this->findNoCopy(package, version);
     if (!ipv) {
         ipv = new InstalledPackageVersion(package, version, directory);
         this->data.insert(package + "/" + version.getVersionString(), ipv);
         err = saveToRegistry(ipv);
-        fireStatusChanged(package, version);
     } else {
         ipv->setPath(directory);
         err = saveToRegistry(ipv);
-        fireStatusChanged(package, version);
     }
+
+    this->mutex.unlock();
+
+    fireStatusChanged(package, version);
 
     return err;
 }
 
-InstalledPackageVersion *InstalledPackages::findOwner(const QString &filePath) const
+InstalledPackageVersion *InstalledPackages::findOwner(
+        const QString &filePath) const
 {
+    this->mutex.lock();
+
     InstalledPackageVersion* f = 0;
     QList<InstalledPackageVersion*> ipvs = this->data.values();
     for (int i = 0; i < ipvs.count(); ++i) {
@@ -320,11 +352,15 @@ InstalledPackageVersion *InstalledPackages::findOwner(const QString &filePath) c
     if (f)
         f = f->clone();
 
+    this->mutex.unlock();
+
     return f;
 }
 
 QList<InstalledPackageVersion*> InstalledPackages::getAll() const
 {
+    this->mutex.lock();
+
     QList<InstalledPackageVersion*> all = this->data.values();
     QList<InstalledPackageVersion*> r;
     for (int i = 0; i < all.count(); i++) {
@@ -332,24 +368,17 @@ QList<InstalledPackageVersion*> InstalledPackages::getAll() const
         if (ipv->installed())
             r.append(ipv->clone());
     }
-    return r;
-}
 
-QList<InstalledPackageVersion*> InstalledPackages::getAllNoCopy() const
-{
-    QList<InstalledPackageVersion*> all = this->data.values();
-    QList<InstalledPackageVersion*> r;
-    for (int i = 0; i < all.count(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
-        if (ipv->installed())
-            r.append(ipv);
-    }
+    this->mutex.unlock();
+
     return r;
 }
 
 QList<InstalledPackageVersion *> InstalledPackages::getByPackage(
         const QString &package) const
 {
+    this->mutex.lock();
+
     QList<InstalledPackageVersion*> all = this->data.values();
     QList<InstalledPackageVersion*> r;
     for (int i = 0; i < all.count(); i++) {
@@ -357,26 +386,36 @@ QList<InstalledPackageVersion *> InstalledPackages::getByPackage(
         if (ipv->installed() && ipv->package == package)
             r.append(ipv->clone());
     }
+
+    this->mutex.unlock();
+
     return r;
 }
 
 InstalledPackageVersion* InstalledPackages::getNewestInstalled(
         const QString &package) const
 {
+    this->mutex.lock();
+
     QList<InstalledPackageVersion*> all = this->data.values();
     InstalledPackageVersion* r = 0;
     for (int i = 0; i < all.count(); i++) {
         InstalledPackageVersion* ipv = all.at(i);
         if (ipv->package == package && ipv->installed()) {
             if (!r || r->version < ipv->version)
-                r = ipv;
+                r = ipv->clone();
         }
     }
+
+    this->mutex.unlock();
+
     return r;
 }
 
 QStringList InstalledPackages::getAllInstalledPackagePaths() const
 {
+    this->mutex.lock();
+
     QStringList r;
     QList<InstalledPackageVersion*> ipvs = this->data.values();
     for (int i = 0; i < ipvs.count(); i++) {
@@ -384,11 +423,16 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
         if (ipv->installed())
             r.append(ipv->getDirectory());
     }
+
+    this->mutex.unlock();
+
     return r;
 }
 
 void InstalledPackages::refresh(DBRepository *rep, Job *job)
 {
+    // no direct usage of "data" here => no mutex
+
     /* Example:
 0 :  0  ms
 1 :  0  ms
@@ -407,21 +451,21 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Detecting directories deleted externally"));
-        QList<InstalledPackageVersion*> ipvs = this->data.values();
+        QList<InstalledPackageVersion*> ipvs = getAll();
         for (int i = 0; i < ipvs.count(); i++) {
             InstalledPackageVersion* ipv = ipvs.at(i);
             if (ipv->installed()) {
                 QDir d(ipv->getDirectory());
                 d.refresh();
                 if (!d.exists()) {
-                    ipv->directory = "";
-                    QString err = saveToRegistry(ipv);
+                    QString err = this->setPackageVersionPath(
+                            ipv->package, ipv->version, "");
                     if (!err.isEmpty())
                         job->setErrorMessage(err);
-                    fireStatusChanged(ipv->package, ipv->version);
                 }
             }
         }
+        qDeleteAll(ipvs);
         job->setProgress(0.2);
     }
 
@@ -532,16 +576,20 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
     // timer.dump();
 
-    job->complete();
+    // this->mutex.unlock();
 }
 
 QString InstalledPackages::getPath(const QString &package,
         const Version &version) const
 {
+    this->mutex.lock();
+
     QString r;
-    InstalledPackageVersion* ipv = find(package, version);
+    InstalledPackageVersion* ipv = findNoCopy(package, version);
     if (ipv)
         r = ipv->getDirectory();
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -549,8 +597,14 @@ QString InstalledPackages::getPath(const QString &package,
 bool InstalledPackages::isInstalled(const QString &package,
         const Version &version) const
 {
-    InstalledPackageVersion* ipv = find(package, version);
-    return ipv && ipv->installed();
+    this->mutex.lock();
+
+    InstalledPackageVersion* ipv = findNoCopy(package, version);
+    bool r = ipv && ipv->installed();
+
+    this->mutex.unlock();
+
+    return r;
 }
 
 void InstalledPackages::fireStatusChanged(const QString &package,
@@ -599,15 +653,16 @@ out:
 
 QString InstalledPackages::readRegistryDatabase()
 {
-    QString err;
+    // "data" is only used at the bottom of this method
 
-    this->data.clear();
+    QString err;
 
     WindowsRegistry packagesWR;
     LONG e;
     err = packagesWR.open(HKEY_LOCAL_MACHINE,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
+    QList<InstalledPackageVersion*> ipvs;
     if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
         err = "";
     } else if (err.isEmpty()) {
@@ -665,15 +720,27 @@ QString InstalledPackages::readRegistryDatabase()
                 qDebug() << "adding " << ipv->package <<
                         ipv->version.getVersionString() << "in" <<
                         ipv->directory;*/
-                this->data.insert(PackageVersion::getStringId(
-                        packageName, version), ipv);
-
-                fireStatusChanged(packageName, version);
+                ipvs.append(ipv);
             } else {
                 delete ipv;
             }
         }
     }
+
+    this->mutex.lock();
+    this->data.clear();
+    for (int i = 0; i < ipvs.count(); i++) {
+        InstalledPackageVersion* ipv = ipvs.at(i);
+        this->data.insert(PackageVersion::getStringId(ipv->package,
+                ipv->version), ipv->clone());
+    }
+    this->mutex.unlock();
+
+    for (int i = 0; i < ipvs.count(); i++) {
+        InstalledPackageVersion* ipv = ipvs.at(i);
+        fireStatusChanged(ipv->package, ipv->version);
+    }
+    qDeleteAll(ipvs);
 
     return err;
 }
