@@ -50,6 +50,7 @@ void PackageVersionForm::updateStatus()
     } else {
         this->ui->lineEditDetectionInfo->setText("");
     }
+    delete ipv;
 }
 
 void PackageVersionForm::reload()

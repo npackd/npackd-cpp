@@ -127,6 +127,8 @@ QString CLProcessor::startNewestNpackdg()
             err = QObject::tr("Newer Npackd GUI was not found");
         else
             exe = ipv->directory + "\\npackdg.exe";
+
+        delete ipv;
     }
 
     if (err.isEmpty()) {
