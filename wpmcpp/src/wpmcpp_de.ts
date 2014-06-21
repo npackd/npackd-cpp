@@ -1045,42 +1045,42 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler beim Öffnen von Datei: %1</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="409"/>
+        <location filename="installedpackages.cpp" line="453"/>
         <source>Detecting directories deleted externally</source>
         <translation>Ermittle Verzeichnisse, die extern gelöscht wurden</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="431"/>
+        <location filename="installedpackages.cpp" line="475"/>
         <source>Reading registry package database</source>
         <translation>Lese Registry-Paketdatenbank</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="443"/>
+        <location filename="installedpackages.cpp" line="487"/>
         <source>Adding well-known packages</source>
         <translation>Füge bekannte Pakete hinzu</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="455"/>
+        <location filename="installedpackages.cpp" line="499"/>
         <source>Setting the NPACKD_CL environment variable</source>
         <translation>Setze die NPACKD_CL-Umgebungsvariable</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="495"/>
+        <location filename="installedpackages.cpp" line="539"/>
         <source>Reading the list of packages installed by Npackd</source>
         <translation>Lese die Liste der von Npackd installierten Pakete</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="468"/>
+        <location filename="installedpackages.cpp" line="512"/>
         <source>Detecting MSI packages</source>
         <translation>Ermittle MSI-Pakete</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="511"/>
+        <location filename="installedpackages.cpp" line="555"/>
         <source>Detecting software control panel packages</source>
         <translation>Ermittle Pakete aus der Systemsteuerung</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="523"/>
+        <location filename="installedpackages.cpp" line="567"/>
         <source>Clearing information about installed package versions in nested directories</source>
         <translation>Leere Informationen über installierte Paketversionen in Verzeichnissen mit Unterverzeichnissen</translation>
     </message>
@@ -1220,23 +1220,23 @@ p, li { white-space: pre-wrap; }
         <translation>Ein neueres Npackd GUI wurde nicht gefunden</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="157"/>
+        <location filename="clprocessor.cpp" line="159"/>
         <source>Error starting %1: %2</source>
         <translation>Fehler beim Starten von %1: %2</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="249"/>
+        <location filename="clprocessor.cpp" line="251"/>
         <source>Missing option: --package</source>
         <translation>Fehlende Option: --package</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="257"/>
+        <location filename="clprocessor.cpp" line="259"/>
         <location filename="wpmutils.cpp" line="1907"/>
         <source>Invalid package name: %1</source>
         <translation>Ungültiger Paketname: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="279"/>
+        <location filename="clprocessor.cpp" line="281"/>
         <location filename="wpmutils.cpp" line="1915"/>
         <location filename="wpmutils.cpp" line="2019"/>
         <location filename="wpmutils.cpp" line="2025"/>
@@ -1244,58 +1244,58 @@ p, li { white-space: pre-wrap; }
         <translation>Unbekanntes Paket: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="282"/>
+        <location filename="clprocessor.cpp" line="284"/>
         <source>Ambiguous package name</source>
         <translation>Mehrdeutiger Paketname</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="297"/>
+        <location filename="clprocessor.cpp" line="299"/>
         <source>Planning</source>
         <translation>Plane</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="320"/>
+        <location filename="clprocessor.cpp" line="322"/>
         <source>Updating</source>
         <translation>Aktualisiere</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="466"/>
+        <location filename="clprocessor.cpp" line="468"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation>interner Paketname (z.B. com.example.Editor oder einfach Editor)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="467"/>
+        <location filename="clprocessor.cpp" line="469"/>
         <source>package</source>
         <translation>Paket</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="468"/>
+        <location filename="clprocessor.cpp" line="470"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation>Versionsbereich (z.B. [1.5,2))</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="469"/>
+        <location filename="clprocessor.cpp" line="471"/>
         <source>range</source>
         <translation>Bereich</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="470"/>
+        <location filename="clprocessor.cpp" line="472"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation>Versionsnummer (z.B. 1.5.12)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="471"/>
+        <location filename="clprocessor.cpp" line="473"/>
         <source>version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="485"/>
+        <location filename="clprocessor.cpp" line="487"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation>Liste von Möglichkeiten die Anwendungen zu schließen (c=close, k=kill). Der Standardwert ist &apos;c&apos;.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="486"/>
+        <location filename="clprocessor.cpp" line="488"/>
         <source>[c][k]</source>
         <translation>[c][k]</translation>
     </message>
@@ -1304,17 +1304,17 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Liste</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="501"/>
+        <location filename="clprocessor.cpp" line="503"/>
         <source>Error parsing the command line: %1</source>
         <translation>Fehler beim Parsen der Befehlszeile: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="542"/>
+        <location filename="clprocessor.cpp" line="544"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation>Falscher Befehl: %1. Versuchen Sie npackdg help</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="549"/>
+        <location filename="clprocessor.cpp" line="551"/>
         <source>Unexpected argument: %1</source>
         <translation>Unerwarteter Argument: %1</translation>
     </message>
@@ -1328,8 +1328,8 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 Paket(e) wird/werden installiert: %2</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="211"/>
-        <location filename="clprocessor.cpp" line="327"/>
+        <location filename="clprocessor.cpp" line="213"/>
+        <location filename="clprocessor.cpp" line="329"/>
         <location filename="uiutils.cpp" line="153"/>
         <source>Install</source>
         <translation>Installieren</translation>
@@ -1467,7 +1467,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="packageframe.cpp" line="82"/>
         <location filename="packageframe.cpp" line="103"/>
-        <location filename="packageversionform.cpp" line="84"/>
+        <location filename="packageversionform.cpp" line="85"/>
         <source>unknown</source>
         <translation>Unbekannt</translation>
     </message>
@@ -1899,15 +1899,15 @@ p, li { white-space: pre-wrap; }
         <translation>Falsche MSI-GUID für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversionform.cpp" line="107"/>
-        <location filename="packageversionform.cpp" line="117"/>
+        <location filename="packageversionform.cpp" line="108"/>
+        <location filename="packageversionform.cpp" line="118"/>
         <source>n/a</source>
         <translation>n.v.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="503"/>
-        <location filename="clprocessor.cpp" line="545"/>
-        <location filename="clprocessor.cpp" line="551"/>
+        <location filename="clprocessor.cpp" line="505"/>
+        <location filename="clprocessor.cpp" line="547"/>
+        <location filename="clprocessor.cpp" line="553"/>
         <location filename="progressframe.cpp" line="45"/>
         <source>Error</source>
         <translation>Fehler</translation>
