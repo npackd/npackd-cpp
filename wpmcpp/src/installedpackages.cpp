@@ -481,6 +481,26 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
     timer.time(2);
 
+    if (job->shouldProceed(QObject::tr(
+            "Correcting installation paths created by previous versions of Npackd"))) {
+        QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir());
+        QList<InstalledPackageVersion*> ipvs = this->getAll();
+        for (int i = 0; i < ipvs.count(); i++) {
+            InstalledPackageVersion* ipv = ipvs.at(i);
+            if (ipv->installed()) {
+                QString d = WPMUtils::normalizePath(ipv->directory);
+                qDebug() << ipv->package <<ipv->directory;
+                if ((WPMUtils::isUnder(d, windowsDir) ||
+                        WPMUtils::pathEquals(d, windowsDir)) &&
+                        ipv->package != packageName) {
+                    this->setPackageVersionPath(ipv->package, ipv->version, "");
+                }
+            }
+        }
+        qDeleteAll(ipvs);
+        job->setProgress(0.52);
+    }
+
     // adding well-known packages should happen before adding packages
     // determined from the list of installed packages to get better
     // package descriptions for com.microsoft.Windows64 and similar packages
@@ -636,12 +656,10 @@ QString InstalledPackages::clearPackagesInNestedDirectories() {
                 QString pv2dir = paths.at(i);
                 if (pv2->installed()) {
                     if (pv2dir.startsWith(pvdir)) {
-                        pv2->setPath("");
-
-                        err = saveToRegistry(pv2);
+                        err = setPackageVersionPath(pv2->package,
+                                pv2->version, "");
                         if (!err.isEmpty())
                             goto out;
-                        fireStatusChanged(pv2->package, pv2->version);
                     }
                 }
             }
