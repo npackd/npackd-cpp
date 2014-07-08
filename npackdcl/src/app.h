@@ -50,9 +50,11 @@ private:
     bool confirm(const QList<InstallOperation *> ops, QString *title,
             QString *err);
     QString printDependencies(bool onlyInstalled,
-                              const QString parentPrefix, int level, PackageVersion *pv);
+            const QString parentPrefix, int level, PackageVersion *pv);
     void processInstallOperations(Job *job,
             const QList<InstallOperation *> &ops, DWORD programCloseType);
+    QStringList  sortPackageVersionsByPackageTitle(
+            QList<PackageVersion *> *list);
 public slots:
     /**
      * Process the command line.
