@@ -455,8 +455,6 @@ QString App::setInstallPath()
 
 QString App::check()
 {
-    QString r;
-
     Job* job = clp.createJob();
 
     if (job->shouldProceed("Reading list of installed packages from the registry")) {
@@ -468,28 +466,31 @@ QString App::check()
             job->setProgress(0.01);
     }
 
-    InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
-    if (!job->getErrorMessage().isEmpty()) {
-        r = job->getErrorMessage();
-    }
-    delete job;
-
-    if (!r.isEmpty()) {
-        WPMUtils::outputTextConsole(
-                "Error updating the list of installed packages: " + r + "\n",
-                false);
-        r = "";
+    if (job->shouldProceed("Refreshing the list of installed packages")) {
+        Job* sub = job->newSubJob(0.5);
+        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
+                sub);
+        if (!sub->getErrorMessage().isEmpty()) {
+            job->setErrorMessage(sub->getErrorMessage());
+        }
     }
 
     AbstractRepository* rep = AbstractRepository::getDefault_();
     QList<PackageVersion*> list;
 
-    if (r.isEmpty()) {
-        list = rep->getInstalled_(&r);
+    if (job->shouldProceed()) {
+        QString err;
+        list = rep->getInstalled_(&err);
+        if (err.isEmpty())
+            job->setProgress(0.9);
+        else
+            job->setErrorMessage(err);
     }
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         sortPackageVersionsByPackageTitle(&list);
+
+        job->setProgress(1);
 
         int n = 0;
         for (int i = 0; i < list.count(); i++) {
@@ -509,8 +510,12 @@ QString App::check()
         if (n == 0)
             WPMUtils::outputTextConsole("All dependencies are installed\n");
 
-        qDeleteAll(list);
     }
+
+    qDeleteAll(list);
+
+    QString r = job->getErrorMessage();
+    delete job;
 
     return r;
 }

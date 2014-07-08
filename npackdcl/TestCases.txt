@@ -44,9 +44,7 @@ noted.
     - npackdcl add -p Firefox
     - start Firefox
     - npackdcl remove -p Firefox
-    => The package(s) cannot be uninstalled because the following files are in 
-        use (please close the corresponding applications): 
-        C:\ProgramFiles\Firefox-15\firefox.exe    
+    - Firefor is closed and removed
 10. search for packages
     - npackdcl search -q "c++"
     => about 60 packages should be found
