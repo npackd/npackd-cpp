@@ -736,15 +736,17 @@ void MainWindow::processWithSelfUpdate(Job* job,
         for (int i = 0; i < ops.count(); i++) {
             InstallOperation* op = ops.at(i);
             QString oneCmd = "\"" + newExe + "\" ";
+
+            // ping 1.1.1.1 always fails so we use || instead of &&
             if (op->install) {
                 oneCmd += "add -p " + op->package + " -v " +
                         op->version.getVersionString() +
-                        " || exit /b %errorlevel%";
+                        " || ping 1.1.1.1 -n 1 -w 10000 > nul || exit /b %errorlevel%";
             } else {
                 oneCmd += "remove -p " + op->package + " -v " +
                         op->version.getVersionString() +
                         "-e " + pct +
-                        " || exit /b %errorlevel%";
+                        " || ping 1.1.1.1 -n 1 -w 10000 > nul || exit /b %errorlevel%";
             }
             batch.append(oneCmd);
         }

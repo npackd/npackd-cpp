@@ -48,8 +48,7 @@ VERSION=$(shell type ..\wpmcpp\version.txt)
 
 all:
 	$(MAKE) clean PROFILE=release32
-	$(MAKE) zip PROFILE=release32
-	$(MAKE) msi PROFILE=release32
+	$(MAKE) upload PROFILE=release32
 	@echo ======================= SUCCESS =======================================
 
 printvars:
@@ -145,6 +144,7 @@ drmemory: compile
 endif
 
 upload: zip msi
+	echo 
 	"$(PUTTY)\pscp.exe" -C \
 		$(WHERE)/$(PROJECT)-$(VERSION).zip \
 	    $(WHERE)/$(PROJECT)-$(VERSION).msi \
