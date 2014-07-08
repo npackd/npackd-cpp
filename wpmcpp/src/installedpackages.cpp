@@ -671,6 +671,8 @@ out:
 
 QString InstalledPackages::readRegistryDatabase()
 {
+    // qDebug() << "start reading";
+
     // "data" is only used at the bottom of this method
 
     QString err;
@@ -759,6 +761,8 @@ QString InstalledPackages::readRegistryDatabase()
         fireStatusChanged(ipv->package, ipv->version);
     }
     qDeleteAll(ipvs);
+
+    // qDebug() << "stop reading";
 
     return err;
 }
