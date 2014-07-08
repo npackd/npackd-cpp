@@ -118,15 +118,6 @@ int App::test()
 
 int App::process()
 {
-    QString err = DBRepository::getDefault()->openDefault();
-    if (!err.isEmpty()) {
-        WPMUtils::outputTextConsole("Error: " + err + "\n");
-        return 1;
-    }
-
-    /* we ignore the returned error as it should also work for non-admins */
-    addNpackdCL();
-
     cl.add("package", 'p',
             "internal package name (e.g. com.example.Editor or just Editor)",
             "package", true);
@@ -148,9 +139,9 @@ int App::process()
         "list of ways to close running applications (c=close, k=kill). The default value is 'c'.",
         "[c][k]", false);
 
-    err = cl.parse();
+    QString err = cl.parse();
     if (!err.isEmpty()) {
-        WPMUtils::outputTextConsole("Error: " + err + "\n");
+        WPMUtils::outputTextConsole("Error: " + err + "\n", false);
         return 1;
     }
     // cl.dump();
@@ -172,15 +163,29 @@ int App::process()
         r = 1;
     } else {
         const QString cmd = fr.at(0);
-        QString err;
+
         if (cmd == "help") {
             usage();
         } else if (cmd == "path") {
-            err = path();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = path();
         } else if (cmd == "remove" || cmd == "rm") {
-            err = remove();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty()) {
+                /* we ignore the returned error as it should also work for non-admins */
+                addNpackdCL();
+
+                err = remove();
+            }
         } else if (cmd == "add") {
-            err = add();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty()) {
+                /* we ignore the returned error as it should also work for non-admins */
+                addNpackdCL();
+
+                err = add();
+            }
         } else if (cmd == "add-repo") {
             err = addRepo();
         } else if (cmd == "remove-repo") {
@@ -188,19 +193,33 @@ int App::process()
         } else if (cmd == "list-repos") {
             err = listRepos();
         } else if (cmd == "search") {
-            err = search();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = search();
         } else if (cmd == "check") {
-            err = check();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = check();
         } else if (cmd == "which") {
-            err = which();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = which();
         } else if (cmd == "list") {
-            err = list();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = list();
         } else if (cmd == "info") {
-            err = info();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = info();
         } else if (cmd == "update") {
-            err = update();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = update();
         } else if (cmd == "detect") {
-            err = detect();
+            err = DBRepository::getDefault()->openDefault();
+            if (err.isEmpty())
+                err = detect();
         } else if (cmd == "set-install-dir") {
             err = setInstallPath();
         } else if (cmd == "install-dir") {
@@ -392,20 +411,6 @@ QString App::which()
 QString App::setInstallPath()
 {
     QString r;
-
-    InstalledPackages* ip = InstalledPackages::getDefault();
-    r = ip->readRegistryDatabase();
-
-    if (r.isEmpty()) {
-        Job* job = new Job();
-
-        ip->refresh(DBRepository::getDefault(), job);
-
-        if (!job->getErrorMessage().isEmpty())
-            r = job->getErrorMessage();
-
-        delete job;
-    }
 
     QString file = cl.get("file");
     if (r.isEmpty()) {
@@ -950,14 +955,14 @@ void App::processInstallOperations(Job *job,
                 } else {
                     of.close();
 
-                    qDebug() << "self-update 1";
+                    // qDebug() << "self-update 1";
 
                     if (!QFile::copy(thisExe, newExe))
                         job->setErrorMessage("Error copying the binary");
                     else
                         job->setProgress(0.8);
 
-                    qDebug() << "self-update 2";
+                    // qDebug() << "self-update 2";
                 }
             }
         }
@@ -969,20 +974,22 @@ void App::processInstallOperations(Job *job,
             for (int i = 0; i < ops.count(); i++) {
                 InstallOperation* op = ops.at(i);
                 QString oneCmd = "\"" + newExe + "\" ";
+
+                // ping 1.1.1.1 always fails => we use || instead of &&
                 if (op->install) {
                     oneCmd += "add -p " + op->package + " -v " +
                             op->version.getVersionString() +
-                            " || exit /b %errorlevel%";
+                            " || ping 1.1.1.1 -n 1 -w 10000 > nul || exit /b %errorlevel%";
                 } else {
                     oneCmd += "remove -p " + op->package + " -v " +
                             op->version.getVersionString() +
                             " -e " + pct +
-                            " || exit /b %errorlevel%";
+                            " || ping 1.1.1.1 -n 1 -w 10000 > nul || exit /b %errorlevel%";
                 }
                 batch.append(oneCmd);
             }
 
-            qDebug() << "self-update 3";
+            // qDebug() << "self-update 3";
 
             QTemporaryFile file(QDir::tempPath() +
                               "\\npackdclXXXXXX.bat");
@@ -992,7 +999,7 @@ void App::processInstallOperations(Job *job,
             else {
                 batchFileName = file.fileName();
 
-                qDebug() << "batch" << file.fileName();
+                // qDebug() << "batch" << file.fileName();
 
                 QTextStream stream(&file);
                 stream.setCodec("UTF-8");
@@ -1001,7 +1008,7 @@ void App::processInstallOperations(Job *job,
                     job->setErrorMessage("Error writing the .bat file");
                 file.close();
 
-                qDebug() << "self-update 4";
+                // qDebug() << "self-update 4";
 
                 job->setProgress(0.9);
             }
@@ -1013,6 +1020,10 @@ void App::processInstallOperations(Job *job,
             QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
             QString prg = WPMUtils::findCmdExe();
 
+            WPMUtils::outputTextConsole(
+                    (QObject::tr("Starting update process %1 with parameters %2") + "\n").
+                    arg(prg).arg(args));
+
             bool success = false;
             PROCESS_INFORMATION pinfo;
 
@@ -1022,11 +1033,16 @@ void App::processInstallOperations(Job *job,
                 (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             };
+
+            // we do to not use CREATE_UNICODE_ENVIRONMENR here to not start
+            // new console if the current console is not Unicode, which is
+            // normally the case if you start cmd.exe from the Windows start
+            // menu
             success = CreateProcess(
                     (wchar_t*) prg.utf16(),
                     (wchar_t*) args.utf16(),
                     0, 0, TRUE,
-                    CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, 0,
+                    0 /*CREATE_UNICODE_ENVIRONMENT*/, 0,
                     0, &startupInfo, &pinfo);
 
             if (success) {

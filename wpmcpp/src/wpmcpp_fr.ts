@@ -1966,32 +1966,37 @@ p, li { white-space: pre-wrap; }
         <translation>Lecture de la base de données de paquets dans le registre</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="487"/>
+        <location filename="installedpackages.cpp" line="484"/>
+        <source>Correcting installation paths created by previous versions of Npackd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="installedpackages.cpp" line="507"/>
         <source>Adding well-known packages</source>
         <translation>Ajout des paquets fortement reconnus</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="499"/>
+        <location filename="installedpackages.cpp" line="519"/>
         <source>Setting the NPACKD_CL environment variable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="539"/>
+        <location filename="installedpackages.cpp" line="559"/>
         <source>Reading the list of packages installed by Npackd</source>
         <translation>Lecture de la liste des paquets installés par Npackd</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="512"/>
+        <location filename="installedpackages.cpp" line="532"/>
         <source>Detecting MSI packages</source>
         <translation>Détection des paquets MSI</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="555"/>
+        <location filename="installedpackages.cpp" line="575"/>
         <source>Detecting software control panel packages</source>
         <translation>Détection des paquets du panneau de configuration des programmes</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="567"/>
+        <location filename="installedpackages.cpp" line="587"/>
         <source>Clearing information about installed package versions in nested directories</source>
         <translation>Effacement des informations relatives aux versions de paquets installées dans des répertoires imbriqués</translation>
     </message>
@@ -2023,7 +2028,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="391"/>
-        <location filename="mainwindow.cpp" line="897"/>
+        <location filename="mainwindow.cpp" line="899"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Impossible de quitter lorsque des tâches sont en cours</translation>
     </message>
@@ -2259,30 +2264,30 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Désinstallation de %1 paquet(s) : %2 (les dossiers correspondants vont etre totalement supprimés; il n&apos;y a aucun moyen de restaurer les fichiers) et installation de %3 paquets : %4.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="846"/>
-        <location filename="mainwindow.cpp" line="1712"/>
+        <location filename="mainwindow.cpp" line="848"/>
+        <location filename="mainwindow.cpp" line="1714"/>
         <location filename="uiutils.cpp" line="185"/>
         <source>Install/Uninstall</source>
         <translation>Installer/Désinstaller</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1026"/>
-        <location filename="mainwindow.cpp" line="1079"/>
+        <location filename="mainwindow.cpp" line="1028"/>
+        <location filename="mainwindow.cpp" line="1081"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Erreur lors de la recherche de la dernière version installée pour %1 : %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1267"/>
+        <location filename="mainwindow.cpp" line="1269"/>
         <source>Initializing</source>
         <translation>Initialisation</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1514"/>
+        <location filename="mainwindow.cpp" line="1516"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1618"/>
+        <location filename="mainwindow.cpp" line="1620"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
@@ -2291,57 +2296,57 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - gestionnaire de paquets pour Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="829"/>
+        <location filename="mainwindow.cpp" line="831"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="830"/>
+        <location filename="mainwindow.cpp" line="832"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1619"/>
+        <location filename="mainwindow.cpp" line="1621"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1676"/>
+        <location filename="mainwindow.cpp" line="1678"/>
         <source>Jobs</source>
         <translation>Tâches</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1696"/>
+        <location filename="mainwindow.cpp" line="1698"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Impossible de démarrer le scan. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1770"/>
+        <location filename="mainwindow.cpp" line="1772"/>
         <source>%1 package(s) detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1775"/>
+        <location filename="mainwindow.cpp" line="1777"/>
         <source>Package detection status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1798"/>
+        <location filename="mainwindow.cpp" line="1800"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Impossible de recharger les dépôts. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1829"/>
+        <location filename="mainwindow.cpp" line="1831"/>
         <source>Cannot start this action while a drive scan is in progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1833"/>
+        <location filename="mainwindow.cpp" line="1835"/>
         <source>Cannot start this action while repositories reload is in progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1969"/>
+        <location filename="mainwindow.cpp" line="1971"/>
         <source>Cannot open the URL %1</source>
         <translation type="unfinished"></translation>
     </message>

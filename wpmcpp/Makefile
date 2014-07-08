@@ -49,11 +49,9 @@ VERSION=$(shell cmd /c type version.txt)
 
 all:
 	$(MAKE) clean PROFILE=release32
-	$(MAKE) zip PROFILE=release32
-	$(MAKE) msi PROFILE=release32
+	$(MAKE) upload PROFILE=release32
 	$(MAKE) clean PROFILE=release64
-	$(MAKE) zip PROFILE=release64
-	$(MAKE) msi PROFILE=release64
+	$(MAKE) upload PROFILE=release64
 	echo ======================= SUCCESS =======================================
 
 printvars:
@@ -151,6 +149,7 @@ drmemory: compile
 endif
 
 upload: zip msi
+	echo 
 	"$(PUTTY)\pscp.exe" -C \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).zip \
 	    $(WHERE)/Npackd$(BITS)-$(VERSION).msi \

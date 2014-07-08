@@ -489,7 +489,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             InstalledPackageVersion* ipv = ipvs.at(i);
             if (ipv->installed()) {
                 QString d = WPMUtils::normalizePath(ipv->directory);
-                qDebug() << ipv->package <<ipv->directory;
+                // qDebug() << ipv->package <<ipv->directory;
                 if ((WPMUtils::isUnder(d, windowsDir) ||
                         WPMUtils::pathEquals(d, windowsDir)) &&
                         ipv->package != packageName) {
