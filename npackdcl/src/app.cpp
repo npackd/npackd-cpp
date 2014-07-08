@@ -15,14 +15,16 @@
 #include "dbrepository.h"
 #include "hrtimer.h"
 
-static bool packageVersionLessThan(const PackageVersion* pv1,
-        const PackageVersion* pv2)
-{
+static bool compareByPackageTitle(const QPair<PackageVersion*, QString>& e1,
+        const QPair<PackageVersion*, QString>& e2) {
+    PackageVersion* pv1 = e1.first;
+    PackageVersion* pv2 = e2.first;
+
     if (pv1->package == pv2->package)
         return pv1->version.compare(pv2->version) < 0;
     else {
-        QString pt1 = pv1->getPackageTitle();
-        QString pt2 = pv2->getPackageTitle();
+        QString pt1 = e1.second;
+        QString pt2 = e2.second;
         return pt1.toLower() < pt2.toLower();
     }
 }
@@ -115,6 +117,31 @@ int App::test()
     return 0;
 }
 #endif
+
+QStringList App::sortPackageVersionsByPackageTitle(
+        QList<PackageVersion*> *list) {
+    QList<QPair<PackageVersion*, QString> > items;
+
+    for (int i = 0; i < list->count(); i++) {
+        PackageVersion* pv = list->at(i);
+        QString s = pv->getPackageTitle();
+
+        QPair<PackageVersion*, QString> pair;
+        pair.first = pv;
+        pair.second = s;
+        items.append(pair);
+    }
+
+    qSort(items.begin(), items.end(), compareByPackageTitle);
+
+    QStringList titles;
+    for (int i = 0; i < list->count(); i++) {
+        (*list)[i] = items.at(i).first;
+        titles.append(items.at(i).second);
+    }
+
+    return titles;
+}
 
 int App::process()
 {
@@ -462,7 +489,7 @@ QString App::check()
     }
 
     if (r.isEmpty()) {
-        qSort(list.begin(), list.end(), packageVersionLessThan);
+        sortPackageVersionsByPackageTitle(&list);
 
         int n = 0;
         for (int i = 0; i < list.count(); i++) {
@@ -559,13 +586,16 @@ QString App::list()
             job->setProgress(0.01);
     }
 
-    delete job;
-
     QList<PackageVersion*> list;
-    if (err.isEmpty()) {
+    QStringList titles;
+
+    if (job->shouldProceed("Getting the list of installed packages from the registry")) {
         AbstractRepository* rep = AbstractRepository::getDefault_();
         list = rep->getInstalled_(&err);
-        qSort(list.begin(), list.end(), packageVersionLessThan);
+        if (err.isEmpty()) {
+            titles = sortPackageVersionsByPackageTitle(&list);
+            job->setProgress(1);
+        }
     }
 
     if (err.isEmpty()) {
@@ -581,11 +611,13 @@ QString App::list()
             else
                 WPMUtils::outputTextConsole(pv->package + " " +
                         pv->version.getVersionString() + " " +
-                        pv->getPackageTitle() + "\n");
+                        titles.at(i) + "\n");
         }
     }
 
     qDeleteAll(list);
+
+    delete job;
 
     return err;
 }
