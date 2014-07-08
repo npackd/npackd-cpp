@@ -439,7 +439,7 @@ QString App::check()
 {
     QString r;
 
-    Job* job = new Job();
+    Job* job = clp.createJob();
 
     if (job->shouldProceed("Reading list of installed packages from the registry")) {
         InstalledPackages* ip = InstalledPackages::getDefault();
@@ -607,7 +607,7 @@ QString App::search()
     bool bare = cl.isPresent("bare-format");
     QString query = cl.get("query");
 
-    Job* job = new Job();
+    Job* job = clp.createJob();
 
     bool onlyInstalled = false;
     if (job->shouldProceed()) {
@@ -1359,7 +1359,7 @@ QString App::info()
 {
     QString r;
 
-    Job* job = new Job();
+    Job* job = clp.createJob();
 
     if (job->shouldProceed("Reading list of installed packages from the registry")) {
         InstalledPackages* ip = InstalledPackages::getDefault();
