@@ -371,15 +371,6 @@ QString App::which()
     InstalledPackages* ip = InstalledPackages::getDefault();
     r = ip->readRegistryDatabase();
 
-    if (r.isEmpty()) {
-        Job* job = new Job();
-
-        // ignoring the error as this should be available for non-admins
-        ip->refresh(DBRepository::getDefault(), job);
-
-        delete job;
-    }
-
     QString file = cl.get("file");
     if (r.isEmpty()) {
         if (file.isNull()) {
@@ -568,9 +559,6 @@ QString App::list()
             job->setProgress(0.01);
     }
 
-    // ignoring the error as "list" should also be usable for non-admins
-    InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
-
     delete job;
 
     QList<PackageVersion*> list;
@@ -631,18 +619,7 @@ QString App::search()
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.01);
-    }
-
-    if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.98);
-
-        // ignoring the error message as this should also be available for
-        // non-admins
-        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob);
-
-        delete rjob;
+            job->setProgress(0.98);
     }
 
     QList<Package*> list;
@@ -1369,10 +1346,6 @@ QString App::info()
         else
             job->setProgress(0.01);
     }
-
-    // ignore the error as "npackdcl info" should be available for non-admins
-    // too
-    InstalledPackages::getDefault()->refresh(DBRepository::getDefault(), job);
 
     delete job;
 
