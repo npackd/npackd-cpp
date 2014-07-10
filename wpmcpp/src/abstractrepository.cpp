@@ -108,6 +108,7 @@ void AbstractRepository::process(Job *job,
         }
     }
 
+    // search for PackageVersion objects
     QList<PackageVersion*> pvs;
     for (int i = 0; i < install.size(); i++) {
         InstallOperation* op = install.at(i);
@@ -141,29 +142,25 @@ void AbstractRepository::process(Job *job,
 
     int n = install.count();
 
+    // 10% for stopping the packages
     if (job->shouldProceed(QObject::tr("Closing running processes"))) {
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             if (!op->install) {
-                WPMUtils::closeProcessesThatUseDirectory(pv->getPath(),
-                        programCloseType);
-                if (pv->isDirectoryLocked()) {
-                    QString exe = WPMUtils::findFirstExeLockingDirectory(
-                            pv->getPath());
-                    if (exe.isEmpty())
-                        job->setErrorMessage(QObject::tr("Directory %0 is locked").arg(
-                                pv->getPath()));
-                    else
-                        job->setErrorMessage(
-                                QObject::tr("Directory %0 is locked by %1").arg(
-                                pv->getPath()).arg(exe));
+                Job* sub = job->newSubJob(0.1 / n);
+                pv->stop(sub, programCloseType);
+                if (!sub->getErrorMessage().isEmpty()) {
+                    job->setErrorMessage(sub->getErrorMessage());
                     break;
                 }
+            } else {
+                job->setProgress(0.1 / n * (i + 1));
             }
         }
     }
 
+    // 90% for removing/installing the packages
     if (job->shouldProceed()) {
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
@@ -174,7 +171,7 @@ void AbstractRepository::process(Job *job,
             else
                 job->setHint(QString(QObject::tr("Uninstalling %1")).arg(
                         pv->toString()));
-            Job* sub = job->newSubJob(1.0 / n);
+            Job* sub = job->newSubJob(0.9 / n);
             if (op->install)
                 pv->install(sub, pv->getPreferredInstallationDirectory());
             else

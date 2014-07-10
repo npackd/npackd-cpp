@@ -737,55 +737,53 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QObject</name>
     <message>
-        <location filename="abstractrepository.cpp" line="119"/>
+        <location filename="abstractrepository.cpp" line="120"/>
         <source>Cannot find the package version %1 %2: %3</source>
         <translation>Kann Paketversion %1 %2 %3 nicht finden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="127"/>
+        <location filename="abstractrepository.cpp" line="128"/>
         <source>Cannot find the package version %1 %2</source>
         <translation>Kann Paketversion %1 %2 nicht finden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="144"/>
+        <location filename="abstractrepository.cpp" line="146"/>
         <location filename="packageversion.cpp" line="454"/>
         <source>Closing running processes</source>
         <translation>Schließe laufende Prozesse</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="155"/>
         <location filename="packageversion.cpp" line="461"/>
         <source>Directory %0 is locked</source>
         <translation>Verzeichnis %0 ist gesperrt</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="159"/>
         <location filename="packageversion.cpp" line="465"/>
         <source>Directory %0 is locked by %1</source>
         <translation>Verzeichnis %0 ist gesperrt von %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="172"/>
+        <location filename="abstractrepository.cpp" line="169"/>
         <source>Installing %1</source>
         <translation>Installiere %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="175"/>
+        <location filename="abstractrepository.cpp" line="172"/>
         <source>Uninstalling %1</source>
         <translation>Deinstalliere %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="243"/>
+        <location filename="abstractrepository.cpp" line="240"/>
         <source>No installable version found for the package %1</source>
         <translation>Keine installierbare Version des Pakets %1 gefunden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="250"/>
+        <location filename="abstractrepository.cpp" line="247"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>Kann neueste installierte Version von %1: %2 nicht finden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="256"/>
+        <location filename="abstractrepository.cpp" line="253"/>
         <source>No installed version found for the package %1</source>
         <translation>Keine installierte Version des Pakets %1 gefunden</translation>
     </message>
@@ -1045,47 +1043,47 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler beim Öffnen von Datei: %1</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="453"/>
+        <location filename="installedpackages.cpp" line="459"/>
         <source>Detecting directories deleted externally</source>
         <translation>Ermittle Verzeichnisse, die extern gelöscht wurden</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="475"/>
+        <location filename="installedpackages.cpp" line="481"/>
         <source>Reading registry package database</source>
         <translation>Lese Registry-Paketdatenbank</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="484"/>
+        <location filename="installedpackages.cpp" line="490"/>
         <source>Correcting installation paths created by previous versions of Npackd</source>
-        <translation type="unfinished"></translation>
+        <translation>Korrigiere die von der vorherigen Versionen von Npackd erzeugten Installationspfade</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="507"/>
+        <location filename="installedpackages.cpp" line="513"/>
         <source>Adding well-known packages</source>
         <translation>Füge bekannte Pakete hinzu</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="519"/>
+        <location filename="installedpackages.cpp" line="525"/>
         <source>Setting the NPACKD_CL environment variable</source>
         <translation>Setze die NPACKD_CL-Umgebungsvariable</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="559"/>
+        <location filename="installedpackages.cpp" line="565"/>
         <source>Reading the list of packages installed by Npackd</source>
         <translation>Lese die Liste der von Npackd installierten Pakete</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="532"/>
+        <location filename="installedpackages.cpp" line="538"/>
         <source>Detecting MSI packages</source>
         <translation>Ermittle MSI-Pakete</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="575"/>
+        <location filename="installedpackages.cpp" line="581"/>
         <source>Detecting software control panel packages</source>
         <translation>Ermittle Pakete aus der Systemsteuerung</translation>
     </message>
     <message>
-        <location filename="installedpackages.cpp" line="587"/>
+        <location filename="installedpackages.cpp" line="593"/>
         <source>Clearing information about installed package versions in nested directories</source>
         <translation>Leere Informationen über installierte Paketversionen in Verzeichnissen mit Unterverzeichnissen</translation>
     </message>

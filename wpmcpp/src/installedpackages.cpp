@@ -223,6 +223,12 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
 void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         InstalledPackageVersion* ipv)
 {
+    if (!ipv->directory.isEmpty()) {
+        QDir d;
+        if (!d.exists(ipv->directory))
+            ipv->directory = "";
+    }
+
     QString err;
 
     QDir d;
