@@ -468,11 +468,11 @@ QString App::check()
 
     if (job->shouldProceed("Refreshing the list of installed packages")) {
         Job* sub = job->newSubJob(0.5);
+
+        // ignoring the error message here as "check" should be available
+        // for non-admins too
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
                 sub);
-        if (!sub->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(sub->getErrorMessage());
-        }
     }
 
     AbstractRepository* rep = AbstractRepository::getDefault_();

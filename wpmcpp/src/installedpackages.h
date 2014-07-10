@@ -131,20 +131,24 @@ public:
      * @brief detects packages, package versions etc. from another package
      *     manager
      *
+     * If the directory of an installed package resides under an existing
+     * package, it will be ignored.
+     *
      * These 5 cases exist for installed package versions:
-     *     case 1: directory is empty, "Uninstall.bat" is not available.
+     *     case 1: directory == "", "Uninstall.bat" is not available.
      *         A directory under "NpackdDetected" will be created and a simple
      *         "Uninstall.bat" that generates an error will be stored there.
-     *     case 2: directory is empty, "Uninstall.bat" is available.
+     *     case 2: directory == "", "Uninstall.bat" is available.
      *         A directory under "NpackdDetected" will be created and the
      *         "Uninstall.bat" will be placed there
-     *     case 3: directory is not empty, but is belongs to another package.
+     *     case 3: directory != "", but is belongs to another package.
      *         This entry will be ignored.
-     *     case 4: directory is not empty, "Uninstall.bat" is not available.
+     *     case 4: directory != "", "Uninstall.bat" is not available.
      *         The package removal would just delete the directory.
-     *     case 5: directory is not empty, "Uninstall.bat" is available. The
+     *     case 5: directory != "", "Uninstall.bat" is available. The
      *         "Uninstall.bat" will be stored in the package directory, if
      *         it does not already exist.
+     * Note: a non-existing directory is handled as ""
      *
      * @param r [ownership:caller] repository where all the data will be stored
      * @param pm [ownership:caller] a 3rd party package manager

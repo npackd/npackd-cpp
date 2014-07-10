@@ -451,26 +451,9 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     QDir d(getPath());
 
-    if (job->shouldProceed(QObject::tr("Closing running processes"))) {
-        WPMUtils::closeProcessesThatUseDirectory(this->getPath(),
-                programCloseType);
-        if (isDirectoryLocked()) {
-            QString exe = WPMUtils::findFirstExeLockingDirectory(
-                    this->getPath());
-            if (exe.isEmpty())
-                job->setErrorMessage(QObject::tr("Directory %0 is locked").arg(
-                        this->getPath()));
-            else
-                job->setErrorMessage(
-                        QObject::tr("Directory %0 is locked by %1").arg(
-                        this->getPath()).arg(exe));
-        } else
-            job->setProgress(0.05);
-    }
-
     if (job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Deleting shortcuts"));
-        Job* sub = job->newSubJob(0.15);
+        Job* sub = job->newSubJob(0.2);
         deleteShortcuts(d.absolutePath(), sub, true, false, false);
         delete sub;
     }

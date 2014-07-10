@@ -745,7 +745,7 @@ void MainWindow::processWithSelfUpdate(Job* job,
             } else {
                 oneCmd += "remove -p " + op->package + " -v " +
                         op->version.getVersionString() +
-                        "-e " + pct +
+                        " -e " + pct +
                         " || ping 1.1.1.1 -n 1 -w 10000 > nul || exit /b %errorlevel%";
             }
             batch.append(oneCmd);
