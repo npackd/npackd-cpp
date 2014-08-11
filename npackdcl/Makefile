@@ -21,18 +21,27 @@ MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.6.2, 0.6.2]")
 BITS=64
 endif
+
 ifeq ($(PROFILE),release32)
 CONFIG=release
 WHERE=build\32\release
 endif
+
 ifeq ($(PROFILE),release64)
 CONFIG=release
 WHERE=build\64\release
 endif
+
+ifeq ($(PROFILE),ftest32)
+CONFIG=ftest
+WHERE=build\32\ftest
+endif
+
 ifeq ($(PROFILE),gprof32)
 CONFIG=gprof
 WHERE=build\32\gprof
 endif
+
 ifeq ($(PROFILE),gprof64)
 CONFIG=gprof
 WHERE=build\64\gprof

@@ -55,6 +55,7 @@ private:
             const QList<InstallOperation *> &ops, DWORD programCloseType);
     QStringList  sortPackageVersionsByPackageTitle(
             QList<PackageVersion *> *list);
+    QString captureNpackdCLOutput(const QString &params);
 public slots:
     /**
      * Process the command line.
@@ -70,6 +71,15 @@ public slots:
      */
 #ifdef TEST
     int test();
+#endif
+
+    /**
+     * Functional tests
+     *
+     * @return exit code
+     */
+#ifdef FTEST
+    int functionalTest();
 #endif
 };
 
