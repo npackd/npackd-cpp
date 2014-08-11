@@ -46,6 +46,19 @@ private:
     /** mutex for lockedPackageVersions */
     static QMutex lockedPackageVersionsMutex;
 
+    /**
+     * @param job job to monitor the progress. The error message will be set
+     *     to a non-empty string if the exit code of the process is not 0.
+     * @param where working directory
+     * @param path .bat file
+     * @param outputFile the output will be saved here
+     * @param env additional environemnt variables
+     * @return program output
+     */
+    static QByteArray executeBatchFile(Job* job, const QString& where,
+            const QString& path, const QString& outputFile,
+            const QStringList& env);
+
     static PackageVersionFile* createPackageVersionFile(QDomElement* e,
             QString* err);
     static Dependency* createDependency(QDomElement* e);
@@ -69,15 +82,6 @@ private:
             const QString &outputFile, const QString &tempFileTemplate,
             const QStringList &env);
 
-    /**
-     * @param job job to monitor the progress. The error message will be set
-     *     to a non-empty string if the exit code of the process is not 0.
-     * @return program output
-     */
-    QByteArray executeFile(Job* job, const QString& where,
-            const QString& path, const QString& outputFile,
-            const QStringList& env);
-
     void deleteShortcuts(const QString& dir,
             Job* job, bool menu, bool desktop, bool quickLaunch);
     /**
@@ -95,6 +99,21 @@ private:
     QString addBasicVars(QStringList *env);
     void addDependencyVars(QStringList* vars);
 public:
+    /**
+     * @param job job to monitor the progress. The error message will be set
+     *     to a non-empty string if the exit code of the process is not 0.
+     * @param where working directory
+     * @param path executable
+     * @param nativeArguments all native arguments
+     * @param outputFile the output will be saved here
+     * @param env additional environemnt variables
+     * @return program output
+     */
+    static QByteArray executeFile(Job* job, const QString& where,
+            const QString& path, const QString &nativeArguments,
+            const QString& outputFile,
+            const QStringList& env);
+
     /**
      * @brief string ID for the specified package version
      * @param package full package name

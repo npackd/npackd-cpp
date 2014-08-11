@@ -35,7 +35,9 @@ int main(int argc, char *argv[])
     App app;
 
 #ifdef TEST
-    QTimer::singleShot(0, app, SLOT(test()));
+    QTimer::singleShot(0, &app, SLOT(test()));
+#elif FTEST
+    QTimer::singleShot(0, &app, SLOT(functionalTest()));
 #else
     QTimer::singleShot(0, &app, SLOT(process()));
 #endif

@@ -1434,7 +1434,7 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
         const QString& tempFileTemplate,
         const QStringList& env)
 {
-    QByteArray output = this->executeFile(job, where,
+    QByteArray output = executeBatchFile(job, where,
             path, outputFile, env);
     output.insert(0, WPMUtils::UCS2LE_BOM);
     if (!job->getErrorMessage().isEmpty()) {
@@ -1452,35 +1452,42 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
     }
 }
 
-QByteArray PackageVersion::executeFile(Job* job, const QString& where,
+QByteArray PackageVersion::executeBatchFile(
+        Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const QStringList& env)
 {
-    QByteArray ret;
-
     QDir d(where);
-    QProcess p(0);
-    p.setProcessChannelMode(QProcess::MergedChannels);
-    p.setWorkingDirectory(d.absolutePath());
 
     QString exe = WPMUtils::findCmdExe();
     QString file = d.absolutePath() + "\\" + path;
     file.replace('/', '\\');
+
+    return executeFile(job, d.absolutePath(), exe,
+            "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
+            d.absolutePath() + "\\" + outputFile, env);
+}
+
+QByteArray PackageVersion::executeFile(
+        Job* job, const QString& where,
+        const QString& path, const QString& nativeArguments,
+        const QString& outputFile, const QStringList& env)
+{
+    QByteArray ret;
+
+    QProcess p(0);
+    p.setProcessChannelMode(QProcess::MergedChannels);
+    p.setWorkingDirectory(where);
+
     QStringList args;
-    /*args.append("/U");
-    args.append("/E:ON");
-    args.append("/V:OFF");
-    args.append("/C");
-    args.append(file);
-    */
-    p.setNativeArguments("/U /E:ON /V:OFF /C \"\"" + file + "\"\"");
+    p.setNativeArguments(nativeArguments);
     // qDebug() << p.nativeArguments();
     QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
     for (int i = 0; i < env.count(); i += 2) {
         pe.insert(env.at(i), env.at(i + 1));
     }
     p.setProcessEnvironment(pe);
-    p.start(exe, args);
+    p.start(path, args);
 
     time_t start = time(NULL);
     while (true) {
@@ -1498,9 +1505,9 @@ QByteArray PackageVersion::executeFile(Job* job, const QString& where,
                 job->setErrorMessage(
                         QString(QObject::tr("Process %1 exited with the code %2")).
                         arg(
-                        exe).arg(p.exitCode()));
+                        path).arg(p.exitCode()));
             }
-            QFile f(d.absolutePath() + "\\" + outputFile);
+            QFile f(outputFile);
             if (f.open(QIODevice::WriteOnly)) {
                 f.write("\xff\xfe");
                 ret = p.readAll();
@@ -1670,40 +1677,45 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
         }
     }
 
-    QString hashSum;
-    QString hashSumType;
     if (err->isEmpty()) {
-        hashSum = XMLUtils::getTagContent(*e, "hash-sum").trimmed().toLower();
-        hashSumType = e->attribute("type", "SHA-256").trimmed();
-        if (!a->sha1.isEmpty() && !hashSum.isEmpty()) {
-            *err = QObject::tr(
-                    "SHA-1 and SHA-256 cannot be defined both for the same package version %1").
-                    arg(a->toString());
-        }
-    }
+        QDomNode hashSumTag = e->firstChildElement("hash-sum");
+        if (!hashSumTag.isNull() && hashSumTag.isElement()) {
+            QDomNode txt = hashSumTag.firstChild();
+            QString hashSum;
+            if (txt.isText()) {
+                hashSum = txt.nodeValue().trimmed();
+            }
+            QDomElement hashSumElement = hashSumTag.toElement();
 
-    QCryptographicHash::Algorithm alg = QCryptographicHash::Sha1;
+            QString hashSumType = hashSumElement.
+                    attribute("type", "SHA-256").trimmed();
 
-    if (err->isEmpty() && !hashSum.isEmpty()) {
-        if (hashSumType == "SHA-1")
-            alg = QCryptographicHash::Sha1;
-        else if (hashSumType == "SHA-256" || hashSumType.isEmpty())
-            alg = QCryptographicHash::Sha256;
-        else
-            *err = QObject::tr(
-                    "Unknown hash sum type %1 for %2").arg(hashSumType).
-                    arg(a->toString());
-    }
+            if (hashSumType == "SHA-1") {
+                // SHA-256 is the preferred hash sum
+                if (a->sha1.isEmpty()) {
+                    a->sha1 = hashSum;
+                    a->hashSumType = QCryptographicHash::Sha1;
 
-    if (err->isEmpty() && !hashSum.isEmpty()) {
-        a->sha1 = hashSum;
-        a->hashSumType = alg;
-        if (validate) {
-            if (!a->sha1.isEmpty()) {
-                *err = WPMUtils::validateSHA256(a->sha1);
-                if (!err->isEmpty()) {
-                    err->prepend(QString(QObject::tr("Invalid SHA-256 for %1: ")).
-                            arg(a->toString()));
+                    if (validate) {
+                        *err = WPMUtils::validateSHA1(a->sha1);
+                        if (!err->isEmpty()) {
+                            err->prepend(
+                                    QObject::tr("Invalid SHA-1 for %1: ").
+                                    arg(a->toString()));
+                        }
+                    }
+                }
+            } else if (hashSumType == "SHA-256" || hashSumType.isEmpty()) {
+                a->sha1 = hashSum;
+                a->hashSumType = QCryptographicHash::Sha256;
+
+                if (validate) {
+                    *err = WPMUtils::validateSHA256(a->sha1);
+                    if (!err->isEmpty()) {
+                        err->prepend(
+                                QObject::tr("Invalid SHA-256 for %1: ").
+                                arg(a->toString()));
+                    }
                 }
             }
         }
@@ -1902,8 +1914,9 @@ void PackageVersion::toXML(QDomElement* version) const {
     if (!this->sha1.isEmpty()) {
         if (this->hashSumType == QCryptographicHash::Sha1)
             XMLUtils::addTextTag(*version, "sha1", this->sha1);
-        else
+        else {
             XMLUtils::addTextTag(*version, "hash-sum", this->sha1);
+        }
     }
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
