@@ -3,7 +3,6 @@
 
 #include <guiddef.h>
 
-#include "qxml.h"
 #include <QString>
 #include <QMetaType>
 #include <QDir>

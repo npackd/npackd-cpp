@@ -38,3 +38,4 @@ syntax: regexp
 ^npackdcl/src/npackdcl32-cache/
 ^exe-proxy/build/
 ^exeproxy/build/
+^npackdcl/ftests/build/
