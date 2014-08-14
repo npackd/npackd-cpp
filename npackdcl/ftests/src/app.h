@@ -13,14 +13,54 @@ public:
     App();
 private slots:
     /**
-     * Functional tests
+     * @brief "add"/"remove"
      */
-    void functionalTest();
+    void addRemove();
 
     /**
      * @brief "npackdcl path" must be fast
      */
     void pathIsFast();
+
+    /**
+     * @brief "check"
+     */
+    void check();
+
+    /**
+     * @brief "list-repos"
+     */
+    void listRepos();
+
+    /**
+     * @brief "info"
+     */
+    void info();
+
+    /**
+     * @brief "search"
+     */
+    void search();
+
+    /**
+     * @brief "add-repo"/"remove-repo"
+     */
+    void addRemoveRepo();
+
+    /**
+     * @brief "detect"
+     */
+    void detect();
+
+    /**
+     * @brief "list"
+     */
+    void list();
+
+    /**
+     * @brief "help"
+     */
+    void help();
 };
 
 #endif // APP_H
