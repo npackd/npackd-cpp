@@ -1,7 +1,7 @@
 NPACKD_VERSION = $$system(type ..\\..\\..\\wpmcpp\\src\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
-QT       += core xml sql
+QT       += core xml sql testlib
 
 QT       -= gui
 

@@ -51,3 +51,8 @@ HRTimer::~HRTimer()
 {
     delete[] this->durations;
 }
+
+double HRTimer::getTime(int point)
+{
+    return ((double) this->durations[point]) / this->frequency;
+}

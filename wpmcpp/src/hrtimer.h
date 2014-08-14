@@ -33,6 +33,13 @@ public:
     void dump() const;
 
     ~HRTimer();
+
+    /**
+     * @param point measuring point index (0, 1, 2, ..., size - 1)
+     * @return time spent in the specified point between (point - 1) and (point) in
+     *     seconds
+     */
+    double getTime(int point);
 };
 
 #endif // HRTIMER_H
