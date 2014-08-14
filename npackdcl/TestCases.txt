@@ -21,9 +21,6 @@ noted.
     - start npackdcl.exe without parameters and *with* administrator
         privileges
     - => NPACKD_CL should be defined on the system level
-14. "npackdcl path" must be fast
-    - cmd /v:on /c "echo !TIME! & npackdcl path -p com.abisource.AbiWord & echo !TIME!"
-    => the execution time must be less than 10 ms
 16. removing a package without specifying the version number
     - npackdcl add -p FARManager
     - npackdcl remove -p FARManager

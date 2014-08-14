@@ -2,6 +2,7 @@
 #define APP_H
 
 #include <QObject>
+#include <QtTest/QtTest>
 
 class App: public QObject
 {
@@ -10,13 +11,16 @@ private:
     QString captureNpackdCLOutput(const QString &params);
 public:
     App();
-public slots:
+private slots:
     /**
      * Functional tests
-     *
-     * @return exit code
      */
-    int functionalTest();
+    void functionalTest();
+
+    /**
+     * @brief "npackdcl path" must be fast
+     */
+    void pathIsFast();
 };
 
 #endif // APP_H
