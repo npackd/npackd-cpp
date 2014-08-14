@@ -10,52 +10,11 @@ http://npackd.appspot.com/rep/xml?tag=vim
 All commands should be run as administrator except where it is explicitely
 noted.
 
-1. help
-    - npackdcl help
-    => help is shown
-2. no args
-    - npackdcl
-    => "Missing command. Try npackdcl help"
-3. list
-    - npackdcl list
-    => all installed packages are listed sorted by their title
-4. list --bare-format
-    - npackdcl list --bare-format
-    => only the data about packages is printed, no header
-5. detect
-    - npackdcl detect
-    => "Package detection completed successfully"
-6. add-repo
-    - npackdcl add-repo --url http://localhost:8083/NonExisting.xml
-    => test via Npackd GUI that the new URL was added
-    - npackdcl remove-repo --url http://localhost:8083/NonExisting.xml
-    => test via Npackd GUI that the new URL was removed
-7. add/remove
-    - npackdcl add -p AbiWord
-    => start AbiWord from the "Start" menu and check that it is OK
-    - npackdcl remove -p AbiWord -v 2.8.6
-    => there should be no entry "AbiWord" in the "Start" menu
-8. add twice
-    - npackdcl add -p AbiWord
-    - npackdcl add -p AbiWord
-    => "Package is already installed in C:\ProgramFiles\AbiWord"
-    => error level is 0
 9. locked files
     - npackdcl add -p Firefox
     - start Firefox
     - npackdcl remove -p Firefox
-    - Firefor is closed and removed
-10. search for packages
-    - npackdcl search -q "c++"
-    => about 60 packages should be found
-11. search for packages 2
-    - npackdcl search -q "c++" -b
-    => about 60 packages should be found
-    => only the data about packages is printed, no header
-12. info about a package
-    - npackdcl info -p MinGWW64
-    => information about the package including all available version numbers
-        should be shown.
+    - Firefox is closed and removed
 13. NPACKD_CL for an administrator
     - remove the NPACKD_CL variable definition for the current user and for the
         system
@@ -65,9 +24,6 @@ noted.
 14. "npackdcl path" must be fast
     - cmd /v:on /c "echo !TIME! & npackdcl path -p com.abisource.AbiWord & echo !TIME!"
     => the execution time must be less than 10 ms
-15. "npackdcl list-repos" should list the currently defined repositories
-    - npackdcl list-repos
-    => the currently defined repositories should be listed
 16. removing a package without specifying the version number
     - npackdcl add -p FARManager
     - npackdcl remove -p FARManager
