@@ -117,6 +117,3 @@ test {
     DEFINES += TEST
 }
 
-#ftest {
-    DEFINES += FTEST
-#}
