@@ -2052,10 +2052,6 @@ void PackageVersion::stop(Job* job, int programCloseType)
             }
         }
         delete exec;
-
-        if (this->isDirectoryLocked())
-            WPMUtils::closeProcessesThatUseDirectory(getPath(),
-                    programCloseType);
     } else {
         job->setProgress(0.5);
 
