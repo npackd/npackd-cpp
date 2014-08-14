@@ -3,3 +3,4 @@
 #include "app.h"
 
 QTEST_MAIN(App)
+

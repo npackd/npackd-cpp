@@ -17,10 +17,8 @@ QString App::captureNpackdCLOutput(const QString& params)
     QString where("C:\\Users\\t\\projects\\npackd\\1.19\\npackdcl");
     QString npackdcl("C:\\Users\\t\\projects\\npackd\\1.19\\npackdcl\\npackdcl.exe");
 
-    CLProgress clp;
-
     QStringList env;
-    Job* job = clp.createJob();
+    Job* job = new Job();
     QByteArray output = PackageVersion::executeFile(
             job, where,
             npackdcl,
@@ -28,7 +26,7 @@ QString App::captureNpackdCLOutput(const QString& params)
     delete job;
 
     QString s(output);
-    WPMUtils::outputTextConsole(s);
+
     return s;
 }
 
@@ -45,64 +43,71 @@ void App::pathIsFast()
     QVERIFY2(t.getTime(1) < 0.1, qPrintable(QString("%1").arg(t.getTime(1))));
 }
 
-void App::functionalTest()
+void App::addRemove()
 {
     // QSKIP("disabled");
 
-    QWARN("---- testing add\n");
     QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
             contains("installed successfully"));
-
-    QWARN("---- testing add twice\n");
     QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
             contains("is already installed in"));
-
-    QWARN("---- testing rm\n");
     QVERIFY(captureNpackdCLOutput("rm -p io.mpv.mpv-64 -v 0.4").
             contains("removed successfully"));
+}
 
-    QWARN("---- testing help\n");
+void App::help()
+{
     QVERIFY(captureNpackdCLOutput("help").contains("ncl update"));
 
-    QWARN("---- testing missing command\n");
     QVERIFY(captureNpackdCLOutput("").contains("Missing command"));
+}
 
-    QWARN("---- testing list\n");
+void App::list()
+{
     QVERIFY(captureNpackdCLOutput("list").contains("Windows Installer 5.0"));
 
-    QWARN("---- testing list\n");
     QVERIFY(!captureNpackdCLOutput("list --bare-format").
             contains("Reading list of installed packages"));
+}
 
-    QWARN("---- testing detect\n");
+void App::detect()
+{
     QVERIFY(captureNpackdCLOutput("detect").
             contains("Package detection completed successfully"));
+}
 
-    QWARN("---- testing add-repo\n");
+void App::addRemoveRepo()
+{
     QVERIFY(captureNpackdCLOutput("add-repo --url http://localhost:8083/NonExisting.xml").
             contains("The repository was added successfully"));
 
-    QWARN("---- testing remove-repo\n");
     QVERIFY(captureNpackdCLOutput("remove-repo --url http://localhost:8083/NonExisting.xml").
             contains("The repository was removed successfully"));
+}
 
-    QWARN("---- testing search\n");
+void App::search()
+{
     QVERIFY(captureNpackdCLOutput("search -q \"c++\"").
             contains("Microsoft Visual C++"));
 
-    QWARN("---- testing search -b\n");
     QVERIFY(!captureNpackdCLOutput("search -q \"c++\" -b").
             contains("packages found"));
+}
 
-    QWARN("---- testing info\n");
+void App::info()
+{
     QVERIFY(captureNpackdCLOutput("info -p io.mpv.mpv").
             contains("command line movie player"));
+}
 
-    QWARN("---- testing list-repos\n");
+void App::listRepos()
+{
     QVERIFY(captureNpackdCLOutput("list-repos").
             contains("npackd.appspot.com"));
+}
 
-    QWARN("---- testing check\n");
+void App::check()
+{
     QVERIFY(captureNpackdCLOutput("check").
             contains("All dependencies are installed"));
 }
