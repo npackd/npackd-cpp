@@ -37,8 +37,8 @@ bool packageLessThan(const Package* p1, const Package* p2)
 #ifdef FTEST
 QString App::captureNpackdCLOutput(const QString& params)
 {
-    QString where("C:\\Users\\t\\projects\\windows-package-manager\\1.19\\npackdcl");
-    QString npackdcl("C:\\Users\\t\\projects\\windows-package-manager\\1.19\\npackdcl\\npackdcl.exe");
+    QString where("C:\\Users\\t\\projects\\npackd\\1.19\\npackdcl");
+    QString npackdcl("C:\\Users\\t\\projects\\npackd\\1.19\\npackdcl\\npackdcl.exe");
 
     QStringList env;
     Job* job = clp.createJob();

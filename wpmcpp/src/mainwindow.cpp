@@ -588,6 +588,7 @@ void MainWindow::selectPackages(QList<Package*> ps)
             //topLeft = t->selectionModel()->selection().
             QModelIndex topLeft = t->model()->index(i, 0);
             // QModelIndex bottomRight = t->model()->index(i, t->columnCount() - 1);
+
             t->selectionModel()->select(topLeft, QItemSelectionModel::Rows |
                     QItemSelectionModel::Select);
         }
@@ -1373,11 +1374,21 @@ void MainWindow::reloadTabs()
 void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 {
     QTableView* t = this->mainFrame->getTableWidget();
+    QItemSelectionModel* sm = t->selectionModel();
+    QList<Package*> sel = mainFrame->getSelectedPackagesInTable();
+    for (int i = 0; i < sel.count(); i++) {
+        sel[i] = sel[i]->clone();
+    }
+    QModelIndex index = sm->currentIndex();
+
     PackageItemModel* m = (PackageItemModel*) t->model();
     m->setPackages(QList<Package*>());
     m->clearCache();
-
     fillList();
+
+    sm->setCurrentIndex(index, QItemSelectionModel::Current);
+    selectPackages(sel);
+    qDeleteAll(sel);
     reloadTabs();
 
     this->reloadRepositoriesThreadRunning = false;
