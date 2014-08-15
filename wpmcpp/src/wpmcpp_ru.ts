@@ -1699,19 +1699,16 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="146"/>
-        <location filename="packageversion.cpp" line="454"/>
         <source>Closing running processes</source>
         <translation>Как закрывать исполняемые процессы</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="461"/>
         <source>Directory %0 is locked</source>
-        <translation>Директорий %0 заперт</translation>
+        <translation type="vanished">Директорий %0 заперт</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="465"/>
         <source>Directory %0 is locked by %1</source>
-        <translation>Директорий %0 заперт программой %1</translation>
+        <translation type="vanished">Директорий %0 заперт программой %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="169"/>
@@ -1964,7 +1961,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="dbrepository.cpp" line="1062"/>
         <location filename="downloader.cpp" line="247"/>
-        <location filename="packageversion.cpp" line="849"/>
+        <location filename="packageversion.cpp" line="832"/>
         <source>Downloading</source>
         <translation>Загрузка</translation>
     </message>
@@ -2066,7 +2063,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="391"/>
-        <location filename="mainwindow.cpp" line="899"/>
+        <location filename="mainwindow.cpp" line="900"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Невозможно выйти пока запущены задания</translation>
     </message>
@@ -2302,30 +2299,30 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="848"/>
-        <location filename="mainwindow.cpp" line="1714"/>
+        <location filename="mainwindow.cpp" line="849"/>
+        <location filename="mainwindow.cpp" line="1725"/>
         <location filename="uiutils.cpp" line="185"/>
         <source>Install/Uninstall</source>
         <translation>Установка/Удаление</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1028"/>
-        <location filename="mainwindow.cpp" line="1081"/>
+        <location filename="mainwindow.cpp" line="1029"/>
+        <location filename="mainwindow.cpp" line="1082"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Ошибка при поиске самой новой установленной версии для %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1269"/>
+        <location filename="mainwindow.cpp" line="1270"/>
         <source>Initializing</source>
         <translation>Инициализация</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1516"/>
+        <location filename="mainwindow.cpp" line="1527"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1620"/>
+        <location filename="mainwindow.cpp" line="1631"/>
         <source>About</source>
         <translation>О</translation>
     </message>
@@ -2334,57 +2331,57 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="831"/>
+        <location filename="mainwindow.cpp" line="832"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="832"/>
+        <location filename="mainwindow.cpp" line="833"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1621"/>
+        <location filename="mainwindow.cpp" line="1632"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1678"/>
+        <location filename="mainwindow.cpp" line="1689"/>
         <source>Jobs</source>
         <translation>Задания</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1698"/>
+        <location filename="mainwindow.cpp" line="1709"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1772"/>
+        <location filename="mainwindow.cpp" line="1783"/>
         <source>%1 package(s) detected</source>
         <translation>%1 пакет(ы) обнаружен(ы)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1777"/>
+        <location filename="mainwindow.cpp" line="1788"/>
         <source>Package detection status</source>
         <translation>Статус обнаружения пакета</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1800"/>
+        <location filename="mainwindow.cpp" line="1811"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Невозможно обновить репозитории сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1831"/>
+        <location filename="mainwindow.cpp" line="1842"/>
         <source>Cannot start this action while a drive scan is in progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1835"/>
+        <location filename="mainwindow.cpp" line="1846"/>
         <source>Cannot start this action while repositories reload is in progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1971"/>
+        <location filename="mainwindow.cpp" line="1982"/>
         <source>Cannot open the URL %1</source>
         <translation>Не удалось открыть URL %1</translation>
     </message>
@@ -2487,65 +2484,65 @@ p, li { white-space: pre-wrap; }
         <translation>Панель быстрого запуска</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="472"/>
+        <location filename="packageversion.cpp" line="455"/>
         <source>Deleting shortcuts</source>
         <translation>Удаление ярлыков</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="495"/>
-        <location filename="packageversion.cpp" line="1186"/>
+        <location filename="packageversion.cpp" line="478"/>
+        <location filename="packageversion.cpp" line="1169"/>
         <source>Waiting while other (un)installation scripts are running</source>
         <translation>Ожидание пока другие скрипты установки или удаления запущены</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="508"/>
-        <location filename="packageversion.cpp" line="1199"/>
+        <location filename="packageversion.cpp" line="491"/>
+        <location filename="packageversion.cpp" line="1182"/>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
         <translation>Ожидание пока другие скрипты установки или удаления запущены (%1 минут)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="518"/>
+        <location filename="packageversion.cpp" line="501"/>
         <source>Running the uninstallation script (this may take some time)</source>
         <translation>Запуск скрипта удаления (это может занять некоторое время)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1093"/>
+        <location filename="packageversion.cpp" line="1076"/>
         <source>Hash sum %1 found, but %2 was expected. The file has changed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1103"/>
+        <location filename="packageversion.cpp" line="1086"/>
         <source>Checking for viruses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1106"/>
+        <location filename="packageversion.cpp" line="1089"/>
         <source>Antivirus check failed. The file is not safe.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1466"/>
+        <location filename="packageversion.cpp" line="1449"/>
         <source>%1. Full output was saved in %2</source>
         <translation>%1. Полный вывод был сохранён в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="571"/>
-        <location filename="packageversion.cpp" line="1278"/>
+        <location filename="packageversion.cpp" line="554"/>
+        <location filename="packageversion.cpp" line="1261"/>
         <source>Deleting files</source>
         <translation>Удаление файлов</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="625"/>
+        <location filename="packageversion.cpp" line="608"/>
         <source>Cannot change directory to %1</source>
         <translation>Невозможно изменить директорию на %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="632"/>
+        <location filename="packageversion.cpp" line="615"/>
         <source>Cannot create directory %0%1</source>
         <translation>Невозможно создать директорию %0%1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="643"/>
+        <location filename="packageversion.cpp" line="626"/>
         <source>Cannot rename %1 to %2 in %3</source>
         <translation>Невозможно переименовать %1 в %2 в %3</translation>
     </message>
@@ -2554,29 +2551,29 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Ошибка при поиске лучшего соответствия для зависимости: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="710"/>
+        <location filename="packageversion.cpp" line="693"/>
         <source>Error searching for the dependency matches: %1</source>
         <translation>Ошибка при поиске подходящих зависимых пакетов: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="716"/>
-        <location filename="packageversion.cpp" line="745"/>
+        <location filename="packageversion.cpp" line="699"/>
+        <location filename="packageversion.cpp" line="728"/>
         <source>Unsatisfied dependency: %1</source>
         <translation>Неудовлетворенные зависимости: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="842"/>
-        <location filename="packageversion.cpp" line="990"/>
+        <location filename="packageversion.cpp" line="825"/>
+        <location filename="packageversion.cpp" line="973"/>
         <source>No download URL</source>
         <translation>Нет ссылки URL</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="854"/>
+        <location filename="packageversion.cpp" line="837"/>
         <source>Download failed: %1</source>
         <translation>Загрузка не удалась: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="859"/>
+        <location filename="packageversion.cpp" line="842"/>
         <source>Computing SHA1</source>
         <translation>Вычисление SHA1</translation>
     </message>
@@ -2585,64 +2582,64 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="909"/>
+        <location filename="packageversion.cpp" line="892"/>
         <source>Shortcut target %1 does not exist</source>
         <translation>Объект ярлыка %1 не существует</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="958"/>
+        <location filename="packageversion.cpp" line="941"/>
         <source>Shortcut creation from %1 to %2 failed: %3</source>
         <translation>Создание ялыка с%1 по %2 не удалось: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="981"/>
+        <location filename="packageversion.cpp" line="964"/>
         <source>Preparing</source>
         <translation>Подготовка</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1000"/>
+        <location filename="packageversion.cpp" line="983"/>
         <source>Creating directory</source>
         <translation>Создание директории</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1003"/>
-        <location filename="packageversion.cpp" line="1014"/>
+        <location filename="packageversion.cpp" line="986"/>
+        <location filename="packageversion.cpp" line="997"/>
         <source>Cannot create directory: %0</source>
         <translation>Не возможно создать директорию: %0</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1011"/>
+        <location filename="packageversion.cpp" line="994"/>
         <source>Creating .Npackd sub-directory</source>
         <translation>Создание поддиректории .Npackd</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1024"/>
+        <location filename="packageversion.cpp" line="1007"/>
         <source>Waiting for a free HTTP connection</source>
         <translation>Ожидание свободного HTTP соединения</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1036"/>
+        <location filename="packageversion.cpp" line="1019"/>
         <source>Waiting for a free HTTP connection (%1 minutes)</source>
         <translation>Ожидание свободного HTTP соединения (%1 минут)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1048"/>
+        <location filename="packageversion.cpp" line="1031"/>
         <source>Downloading &amp; computing hash sum</source>
         <translation>Загрузка &amp; вычисление хэш суммы</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1050"/>
-        <location filename="packageversion.cpp" line="1069"/>
+        <location filename="packageversion.cpp" line="1033"/>
+        <location filename="packageversion.cpp" line="1052"/>
         <source>Cannot open the file: %0</source>
         <translation>Невозможно открыть файл: %0</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1072"/>
+        <location filename="packageversion.cpp" line="1055"/>
         <source>Downloading &amp; computing hash sum (2nd try)</source>
         <translation>Загрузка &amp; вычисление хэш суммы (вторая попытка)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1078"/>
+        <location filename="packageversion.cpp" line="1061"/>
         <source>Error downloading %1: %2</source>
         <translation>Ошибка загрузки %1: %2</translation>
     </message>
@@ -2651,200 +2648,195 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1129"/>
+        <location filename="packageversion.cpp" line="1112"/>
         <source>Extracting files</source>
         <translation>Извлечение файлов</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1134"/>
+        <location filename="packageversion.cpp" line="1117"/>
         <source>Error unzipping file into directory %0: %1</source>
         <translation>Ошибка распаковки файла в директорию %0: %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1141"/>
+        <location filename="packageversion.cpp" line="1124"/>
         <source>Renaming the downloaded file</source>
         <translation>Переименование скаченного файла</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1152"/>
+        <location filename="packageversion.cpp" line="1135"/>
         <source>Cannot rename %0 to %1</source>
         <translation>Невозможно переименовать %0 в %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1209"/>
+        <location filename="packageversion.cpp" line="1192"/>
         <source>Running the installation script (this may take some time)</source>
         <translation>Запуск скрипта установки (это может занять некоторое время)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1273"/>
+        <location filename="packageversion.cpp" line="1256"/>
         <source>Deleting start menu, desktop and quick launch shortcuts</source>
         <translation>Удаление ярлыков  в меню Пуск, Панели быстрого запуска и на Рабочем столе</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1328"/>
+        <location filename="packageversion.cpp" line="1311"/>
         <source>Opening ZIP file</source>
         <translation>Открытие ZIP файла</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1331"/>
+        <location filename="packageversion.cpp" line="1314"/>
         <source>Cannot open the ZIP file %1: %2</source>
         <translation>Невозможно открыть ZIP файл %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1338"/>
+        <location filename="packageversion.cpp" line="1321"/>
         <source>Extracting</source>
         <translation>Извлечение</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1348"/>
+        <location filename="packageversion.cpp" line="1331"/>
         <source>Error unzipping the file %1: Error %2 in %3</source>
         <translation>Ошибка распаковки файла %1: Ошибка %2 в %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1368"/>
+        <location filename="packageversion.cpp" line="1351"/>
         <source>Cannot create directory %1</source>
         <translation>Невозможно создать директорию %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1376"/>
+        <location filename="packageversion.cpp" line="1359"/>
         <source>%L1 files</source>
         <translation>%L1 файлы</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1404"/>
+        <location filename="packageversion.cpp" line="1387"/>
         <source>Could not create file %1</source>
         <translation>Невозможно создать файл %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1409"/>
+        <location filename="packageversion.cpp" line="1392"/>
         <source>Could not create directory %1</source>
         <translation>Невозможно создать директорию %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1426"/>
+        <location filename="packageversion.cpp" line="1409"/>
         <source>installed</source>
         <translation>уставлено</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1430"/>
+        <location filename="packageversion.cpp" line="1413"/>
         <source>updateable</source>
         <translation>доступна свежая версия</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1432"/>
+        <location filename="packageversion.cpp" line="1415"/>
         <source>obsolete</source>
         <translation>устаревший</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1440"/>
+        <location filename="packageversion.cpp" line="1423"/>
         <source>locked</source>
         <translation>заблокированный</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1516"/>
+        <location filename="packageversion.cpp" line="1506"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Процесс %1 завершился кодом %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1534"/>
+        <location filename="packageversion.cpp" line="1524"/>
         <source>%1 minutes</source>
         <translation>%1 минут</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1596"/>
+        <location filename="packageversion.cpp" line="1586"/>
         <location filename="repositoryxmlhandler.cpp" line="290"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1603"/>
+        <location filename="packageversion.cpp" line="1593"/>
         <location filename="repositoryxmlhandler.cpp" line="296"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Неверная SHA1 у &lt;detect-file&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1645"/>
+        <location filename="packageversion.cpp" line="1635"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1659"/>
+        <location filename="packageversion.cpp" line="1649"/>
         <location filename="repositoryxmlhandler.cpp" line="253"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Нет действительных ссылкок URL для %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1671"/>
+        <location filename="packageversion.cpp" line="1661"/>
         <location filename="repositoryxmlhandler.cpp" line="133"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Нет действительных версиий %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1683"/>
+        <location filename="packageversion.cpp" line="1673"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Неверная SHA1 у %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1696"/>
-        <source>SHA-1 and SHA-256 cannot be defined both for the same package version %1</source>
+        <location filename="packageversion.cpp" line="1703"/>
+        <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1710"/>
-        <source>Unknown hash sum type %1 for %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="packageversion.cpp" line="1722"/>
+        <location filename="packageversion.cpp" line="1716"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1737"/>
+        <location filename="packageversion.cpp" line="1732"/>
         <location filename="repositoryxmlhandler.cpp" line="147"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Неверное значение атрибута &apos;тип&apos; у %1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1752"/>
+        <location filename="packageversion.cpp" line="1747"/>
         <location filename="repositoryxmlhandler.cpp" line="157"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Пустое значение атрибута &apos;путь&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1759"/>
+        <location filename="packageversion.cpp" line="1754"/>
         <location filename="repositoryxmlhandler.cpp" line="163"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Больше чем один &lt;important-file&gt; с таким же атрибутом &apos;путь&apos; %1 для %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1769"/>
+        <location filename="packageversion.cpp" line="1764"/>
         <location filename="repositoryxmlhandler.cpp" line="175"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Пустое значение атрибута &apos;название&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1798"/>
+        <location filename="packageversion.cpp" line="1793"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>Дубликат тэга &lt;file&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1816"/>
+        <location filename="packageversion.cpp" line="1811"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>Несуществующий &lt;detect-file&gt; для %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1831"/>
+        <location filename="packageversion.cpp" line="1826"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1860"/>
+        <location filename="packageversion.cpp" line="1855"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>Дубликат &lt;dependency&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1878"/>
+        <location filename="packageversion.cpp" line="1873"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Неверный MSI GUID для %1: %2</translation>
     </message>
