@@ -110,7 +110,7 @@ zip: prep $(WHERE)\zip\ncl.exe
 $(WHERE)\zip\ncl.exe:
 	$(EXEPROXY)\exeproxy exeproxy-copy $(WHERE)\zip\ncl.exe npackdcl.exe
 
-msi: CrystalIcons_LICENSE.txt LICENSE.txt build\32\release\zip\npackdcl.exe build\32\release\zip\exchndl.dll zip
+msi: zip
 	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\$(PROJECT)$(BITS).aip /SetVersion $(VERSION)
 	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\$(PROJECT)$(BITS).aip
 
