@@ -76,36 +76,7 @@ printvars:
 	@echo PUTTY=$(PUTTY)
 	@echo WHERE=$(WHERE)
 	@echo CONFIG=$(CONFIG)
-ifndef PROFILE
-	$(error PROFILE is not defined)
-endif
-ifndef BITS
-	$(error BITS is not defined)
-endif
-ifndef VERSION
-	$(error VERSION is not defined)
-endif
-ifndef QT
-	$(error QT is not defined)
-endif
-ifndef MINGW
-	$(error MINGW is not defined)
-endif
-ifndef AI
-	$(error AI is not defined)
-endif
-ifndef SEVENZIP
-	$(error SEVENZIP is not defined)
-endif
-ifndef QUAZIP
-	$(error QUAZIP is not defined)
-endif
-ifndef PUTTY
-	$(error PUTTY is not defined)
-endif
-ifndef MINGWUTILS
-	$(error MINGWUTILS is not defined)
-endif
+	@echo EXEPROXY=$(EXEPROXY)
 
 clean: printvars
 	-rmdir /s /q $(WHERE)
