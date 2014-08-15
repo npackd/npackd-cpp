@@ -34,11 +34,7 @@ int main(int argc, char *argv[])
 
     App app;
 
-#ifdef TEST
-    QTimer::singleShot(0, &app, SLOT(test()));
-#else
     QTimer::singleShot(0, &app, SLOT(process()));
-#endif
 
     return ca.exec();
 }

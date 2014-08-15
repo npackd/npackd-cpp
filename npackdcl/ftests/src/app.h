@@ -8,6 +8,8 @@ class App: public QObject
 {
     Q_OBJECT
 private:
+    bool admin;
+
     QString captureNpackdCLOutput(const QString &params);
 public:
     App();

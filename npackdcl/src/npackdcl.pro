@@ -113,7 +113,3 @@ gprof {
     QMAKE_LFLAGS+=-pg
 }
 
-test {
-    DEFINES += TEST
-}
-
