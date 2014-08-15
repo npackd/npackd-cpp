@@ -3,6 +3,7 @@
 
 #include <time.h>
 
+#include <QtTest/QtTest>
 #include <QtCore/QCoreApplication>
 #include <qdebug.h>
 #include <qstringlist.h>
@@ -55,13 +56,11 @@ private:
             const QList<InstallOperation *> &ops, DWORD programCloseType);
     QStringList  sortPackageVersionsByPackageTitle(
             QList<PackageVersion *> *list);
-public slots:
+private slots:
     /**
-     * Process the command line.
-     *
-     * @return exit code
+     * Tests
      */
-    int process();
+    void test();
 };
 
 #endif // APP_H

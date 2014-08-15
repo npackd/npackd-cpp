@@ -39,3 +39,5 @@ syntax: regexp
 ^exe-proxy/build/
 ^exeproxy/build/
 ^npackdcl/ftests/build/
+^npackdcl/tests/build/
+^npackdcl/Output\.log$

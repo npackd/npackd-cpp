@@ -1,5 +1,6 @@
 #include <QStringList>
 #include <QCoreApplication>
+#include <QDir>
 
 #include "app.h"
 #include "job.h"
@@ -10,12 +11,23 @@
 
 App::App()
 {
+    HANDLE hToken;
+    OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hToken);
+
+    DWORD infoLen;
+    TOKEN_ELEVATION_TYPE elevationType;
+    GetTokenInformation(
+            hToken, TokenElevationType,
+            &elevationType, sizeof(elevationType), &infoLen);
+    this->admin = elevationType == TokenElevationTypeFull;
 }
 
 QString App::captureNpackdCLOutput(const QString& params)
 {
-    QString where("C:\\Users\\t\\projects\\npackd\\1.19\\npackdcl");
-    QString npackdcl("C:\\Users\\t\\projects\\npackd\\1.19\\npackdcl\\npackdcl.exe");
+    QDir d(WPMUtils::getExeDir() + "\\..\\..\\..\\..\\build\\32\\release");
+
+    QString where = d.absolutePath();
+    QString npackdcl = where + "\\npackdcl.exe";
 
     QStringList env;
     Job* job = new Job();
@@ -32,6 +44,9 @@ QString App::captureNpackdCLOutput(const QString& params)
 
 void App::pathIsFast()
 {
+    if (!admin)
+        QSKIP("disabled");
+
     QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
             contains("installed successfully"));
 
@@ -45,7 +60,8 @@ void App::pathIsFast()
 
 void App::addRemove()
 {
-    // QSKIP("disabled");
+    if (!admin)
+        QSKIP("disabled");
 
     QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
             contains("installed successfully"));
@@ -72,12 +88,18 @@ void App::list()
 
 void App::detect()
 {
+    if (!admin)
+        QSKIP("disabled");
+
     QVERIFY(captureNpackdCLOutput("detect").
             contains("Package detection completed successfully"));
 }
 
 void App::addRemoveRepo()
 {
+    if (!admin)
+        QSKIP("disabled");
+
     QVERIFY(captureNpackdCLOutput("add-repo --url http://localhost:8083/NonExisting.xml").
             contains("The repository was added successfully"));
 

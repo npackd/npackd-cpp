@@ -1,4 +1,4 @@
-# This is the main build file for ftests
+# This is the main build file for tests.
 
 # Parameter: release32
 PROFILE=release32
@@ -7,7 +7,7 @@ PROFILE=release32
 
 .PHONY: all printvars clean compile prep zip msi gprof drmemory upload
 
-PROJECT=ftests
+PROJECT=tests
 
 ifeq (32,$(findstring 32,$(PROFILE)))
 QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.2.1
@@ -32,21 +32,33 @@ CONFIG=release
 WHERE=build\64\release
 endif
 
+ifeq ($(PROFILE),gprof32)
+CONFIG=gprof
+WHERE=build\32\gprof
+endif
+
+ifeq ($(PROFILE),gprof64)
+CONFIG=gprof
+WHERE=build\64\gprof
+endif
+
 RPAREN=)
 AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 20$(RPAREN)")
 SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 10$(RPAREN)")
 MINGWUTILS=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
 PUTTY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=uk.org.greenend.chiark.sgtatham.Putty" "--versions=[0.62, 2$(RPAREN)")
 EXEPROXY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=exeproxy" "--versions=[0.1, 0.1]")
+VERSION=$(shell type ..\wpmcpp\version.txt)
 
 all:
-	$(MAKE) clean PROFILE=release64
-	$(MAKE) compile PROFILE=release64
+	$(MAKE) clean PROFILE=release32
+	$(MAKE) compile PROFILE=release32
 	@echo ======================= SUCCESS =======================================
 
 printvars:
 	@echo PROFILE=$(PROFILE)
 	@echo BITS=$(BITS)
+	@echo VERSION=$(VERSION)
 	@echo MINGW=$(MINGW)
 	@echo QUAZIP=$(QUAZIP)
 	@echo QT=$(QT)
@@ -62,6 +74,9 @@ ifndef PROFILE
 endif
 ifndef BITS
 	$(error BITS is not defined)
+endif
+ifndef VERSION
+	$(error VERSION is not defined)
 endif
 ifndef QT
 	$(error QT is not defined)
@@ -99,5 +114,44 @@ $(WHERE)/../Makefile: src/$(PROJECT).pro $(WHERE)
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\$(PROJECT).pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 
 compile: printvars $(WHERE) $(WHERE)/../Makefile
-	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe"
+	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
+
+prep: compile $(WHERE)/zip
+	cd $(WHERE) && copy ..\$(PROJECT)_release.map $(PROJECT)-$(VERSION).map
+	copy LICENSE.txt $(WHERE)\zip
+	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
+	copy $(WHERE)\$(PROJECT).exe $(WHERE)\zip\npackdcl.exe
+	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdcl.exe
+ifeq (32,$(BITS))
+	copy "$(MINGWUTILS)\bin\exchndl.dll" $(WHERE)\zip
+endif
+
+zip: prep $(WHERE)\zip\ncl.exe
+	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip *
+
+$(WHERE)\zip\ncl.exe:
+	$(EXEPROXY)\exeproxy exeproxy-copy $(WHERE)\zip\ncl.exe npackdcl.exe
+
+msi: CrystalIcons_LICENSE.txt LICENSE.txt build\32\release\zip\npackdcl.exe build\32\release\zip\exchndl.dll zip
+	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\$(PROJECT)$(BITS).aip /SetVersion $(VERSION)
+	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\$(PROJECT)$(BITS).aip
+
+gprof: $(WHERE)\$(PROJECT).exe $(WHERE)\gmon.out
+# use --no-demangle to find out a mangled function name
+# -f _ZN12DBRepository8updateF5EP3Job
+# -qDBRepository::updateF5(Job*) 
+	$(MINGW)\bin\gprof.exe -a -F _ZN12DBRepository8updateF5EP3Job $(WHERE)\$(PROJECT).exe $(WHERE)\gmon.out >> GProf.txt
+
+ifeq (32,$(BITS))
+drmemory: compile
+	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -no_callstack_use_top_fp -- $(PROJECT).exe
+endif
+
+upload: zip msi
+	echo 
+	"$(PUTTY)\pscp.exe" -C \
+		$(WHERE)/$(PROJECT)-$(VERSION).zip \
+	    $(WHERE)/$(PROJECT)-$(VERSION).msi \
+	    $(WHERE)/$(PROJECT)-$(VERSION).map \
+		hilt2@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 

@@ -32,11 +32,6 @@ CONFIG=release
 WHERE=build\64\release
 endif
 
-ifeq ($(PROFILE),ftest32)
-CONFIG=ftest
-WHERE=build\32\ftest
-endif
-
 ifeq ($(PROFILE),gprof32)
 CONFIG=gprof
 WHERE=build\32\gprof
@@ -56,7 +51,14 @@ EXEPROXY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=exeproxy" "--vers
 VERSION=$(shell type ..\wpmcpp\version.txt)
 
 all:
+	$(MAKE) -C tests clean PROFILE=release32
+	$(MAKE) -C tests compile PROFILE=release32
+	tests\build\32\release\tests -v2
+	$(MAKE) -C ftests clean PROFILE=release32
+	$(MAKE) -C ftests compile PROFILE=release32
 	$(MAKE) clean PROFILE=release32
+	$(MAKE) compile PROFILE=release32
+	ftests\build\32\release\ftests -v2
 	$(MAKE) upload PROFILE=release32
 	@echo ======================= SUCCESS =======================================
 
@@ -119,7 +121,7 @@ $(WHERE)/../Makefile: src/$(PROJECT).pro $(WHERE)
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\$(PROJECT).pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 
 compile: printvars $(WHERE) $(WHERE)/../Makefile
-	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
+	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe"
 
 prep: compile $(WHERE)/zip
 	cd $(WHERE) && copy ..\$(PROJECT)_release.map $(PROJECT)-$(VERSION).map
