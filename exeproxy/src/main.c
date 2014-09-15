@@ -165,6 +165,18 @@ int wmain(int argc, wchar_t **argv)
 
     free(target);
 
+    wchar_t* cmdLine = 0;
+    if (!ret) {
+        cmdLine = malloc((wcslen(newExe) + wcslen(args) + 4) * sizeof(wchar_t));
+        wcscpy(cmdLine, L"\"");
+        wcscat(cmdLine, newExe);
+        wcscat(cmdLine, L"\"");
+        if (wcslen(args) > 0) {
+            wcscat(cmdLine, L" ");
+            wcscat(cmdLine, args);
+        }
+    }
+
     if (!ret) {
         PROCESS_INFORMATION pinfo;
 
@@ -176,7 +188,7 @@ int wmain(int argc, wchar_t **argv)
         };
         WINBOOL success = CreateProcess(
                 newExe,
-                args,
+                cmdLine,
                 0, 0, TRUE,
                 CREATE_UNICODE_ENVIRONMENT, 0,
                 0, &startupInfo, &pinfo);
@@ -196,6 +208,7 @@ int wmain(int argc, wchar_t **argv)
         }
     }
     
+    free(cmdLine);
     free(exe);
     free(newExe);
     free(args);
