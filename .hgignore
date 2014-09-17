@@ -41,3 +41,5 @@ syntax: regexp
 ^npackdcl/ftests/build/
 ^npackdcl/tests/build/
 ^npackdcl/Output\.log$
+^vimorgrep/build/
+^vimorgrep/src/vimorgrep\.user$
