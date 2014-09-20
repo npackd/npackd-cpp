@@ -566,6 +566,16 @@ public:
      */
     static QString getMSIComponentPath(const QString &product,
                                        const QString &guid, QString *err);
+
+    /**
+     * @brief computes a check sum for a file
+     * @param job job
+     * @param file a file
+     * @param alg algorithm
+     * @return checksum
+     */
+    static QString fileCheckSum(Job *job, QFile *file,
+            QCryptographicHash::Algorithm alg);
 };
 
 #endif // WPMUTILS_H

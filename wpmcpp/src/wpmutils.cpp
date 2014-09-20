@@ -2043,3 +2043,46 @@ Package* WPMUtils::findOnePackage(const QString& package, QString* err)
     return p;
 }
 
+QString WPMUtils::fileCheckSum(Job* job,
+        QFile* file, QCryptographicHash::Algorithm alg)
+{
+    // download/compute SHA1 loop
+    QCryptographicHash hash(alg);
+    const int bufferSize = 512 * 1024;
+    char* buffer = new char[bufferSize];
+
+    QString sha1;
+
+    qint64 alreadyRead = 0;
+    qint64 bufferLength;
+    do {
+        bufferLength = file->read(buffer, bufferSize);
+
+        if (bufferLength == 0)
+            break;
+
+        if (bufferLength < 0) {
+            job->setErrorMessage(file->errorString());
+            job->complete();
+            break;
+        }
+
+        // update SHA1 if necessary
+        hash.addData((char*) buffer, bufferLength);
+
+        alreadyRead += bufferLength;
+        job->setProgress(0.5);
+        job->setHint(QString(QObject::tr("%L0 bytes")).
+                arg(alreadyRead));
+    } while (bufferLength != 0 && !job->isCancelled());
+
+    if (!job->isCancelled() && job->getErrorMessage().isEmpty())
+        job->setProgress(1);
+
+    if (!job->isCancelled() && job->getErrorMessage().isEmpty())
+        sha1 = hash.result().toHex().toLower();
+
+    delete[] buffer;
+
+    return sha1;
+}

@@ -21,6 +21,138 @@ VimOrgRepApp::VimOrgRepApp()
 {
 }
 
+PackageVersion* VimOrgRepApp::createTarGZPackage(const QString& packageName,
+        const QString& scriptVersion,
+        const QString& jpackage,
+        const QString& srcId,
+        const QString& vimVersion) {
+    PackageVersion* pv = new PackageVersion(packageName);
+    pv->version.setVersion(scriptVersion); // TODO: check error
+    pv->download = "http://www.vim.org/scripts/download_script.php?src_id=" +
+            srcId;
+
+    Dependency* d = new Dependency();
+    d->package = "com.googlecode.windows-package-manager.NpackdInstallerHelper";
+    d->setVersions("[1.6, 2)");
+    d->var = "nih";
+    pv->dependencies.append(d);
+
+    d = new Dependency();
+    d->package = "vim-pathogen";
+    d->setVersions("[2.3, 3)");
+    pv->dependencies.append(d);
+
+    d = new Dependency();
+    d->package = "vim-huge";
+    if (!d->setVersions("[" + vimVersion + ", 8)"))
+        d->setVersions("[7, 8)");
+    pv->dependencies.append(d);
+
+    PackageVersionFile* pvf = new PackageVersionFile(
+            ".Npackd\\Install.bat",
+            "ren download_script.php package.tar.gz\n"
+            "\"%nih%\\ExtractTarGZ.bat\" package.tar.gz\n"
+            "\"%nih%\\RegisterVimPlugin.bat\"\n");
+    pv->files.append(pvf);
+
+    pvf = new PackageVersionFile(
+            ".Npackd\\Uninstall.bat",
+            "\"%nih%\\UnregisterVimPlugin.bat\"");
+    pv->files.append(pvf);
+
+    pv->type = 1;
+
+    return pv;
+}
+
+PackageVersion* VimOrgRepApp::createVimSyntaxPackage(const QString& packageName,
+        const QString& scriptVersion,
+        const QString& jpackage,
+        const QString& srcId,
+        const QString& vimVersion,
+        const QString& scriptType) {
+    PackageVersion* pv = new PackageVersion(packageName);
+    pv->version.setVersion(scriptVersion); // TODO: check error
+    pv->download = "http://www.vim.org/scripts/download_script.php?src_id=" +
+            srcId;
+
+    Dependency* d = new Dependency();
+    d->package = "com.googlecode.windows-package-manager.NpackdInstallerHelper";
+    d->setVersions("[1.6, 2)");
+    d->var = "nih";
+    pv->dependencies.append(d);
+
+    d = new Dependency();
+    d->package = "vim-pathogen";
+    d->setVersions("[2.3, 3)");
+    pv->dependencies.append(d);
+
+    d = new Dependency();
+    d->package = "vim-huge";
+    if (!d->setVersions("[" + vimVersion + ", 8)"))
+        d->setVersions("[7, 8)");
+    pv->dependencies.append(d);
+
+    QString dir = scriptType == "color scheme" ? "colors" : scriptType;
+    PackageVersionFile* pvf = new PackageVersionFile(
+            ".Npackd\\Install.bat",
+            "mkdir " + dir + " || exit /b %errorlevel%\n"
+            "move download_script.php \"" + dir + "\\" +
+            jpackage + "\"  || exit /b %errorlevel%\n"
+            "\"%nih%\\RegisterVimPlugin.bat\"\n");
+    pv->files.append(pvf);
+
+    pvf = new PackageVersionFile(
+            ".Npackd\\Uninstall.bat",
+            "\"%nih%\\UnregisterVimPlugin.bat\"");
+    pv->files.append(pvf);
+
+    pv->type = 1;
+
+    return pv;
+}
+
+PackageVersion* VimOrgRepApp::createZIPPackage(const QString& packageName,
+        const QString& scriptVersion,
+        const QString& jpackage,
+        const QString& srcId,
+        const QString& vimVersion) {
+    PackageVersion* pv = new PackageVersion(packageName);
+    pv->version.setVersion(scriptVersion); // TODO: check error
+    pv->download = "http://www.vim.org/scripts/download_script.php?src_id=" +
+            srcId;
+
+    Dependency* d = new Dependency();
+    d->package = "com.googlecode.windows-package-manager.NpackdInstallerHelper";
+    d->setVersions("[1.6, 2)");
+    d->var = "nih";
+    pv->dependencies.append(d);
+
+    d = new Dependency();
+    d->package = "vim-pathogen";
+    d->setVersions("[2.3, 3)");
+    pv->dependencies.append(d);
+
+    d = new Dependency();
+    d->package = "vim-huge";
+    d->setVersions("[" + vimVersion + ", 8)");
+    pv->dependencies.append(d);
+
+    PackageVersionFile* pvf = new PackageVersionFile(
+            ".Npackd\\Install.bat",
+            "\"%nih%\\RegisterVimPlugin.bat\"");
+    pv->files.append(pvf);
+
+    pvf = new PackageVersionFile(
+            ".Npackd\\Uninstall.bat",
+            "\"%nih%\\UnregisterVimPlugin.bat\"");
+    pv->files.append(pvf);
+
+    pv->type = 0;
+
+    return pv;
+}
+
 int VimOrgRepApp::process()
 {
     int r = 0;
@@ -67,6 +199,7 @@ int VimOrgRepApp::process()
     if (job->shouldProceed()) {
         QStringList ids = root.keys();
 
+        int added = 0, ignored = 0;
         for (int i = 0; i < ids.size(); i++) {
             QJsonValue jp_ = root.value(ids.at(i));
             if (jp_.isObject()) {
@@ -89,6 +222,9 @@ int VimOrgRepApp::process()
                 Package* p = new Package(packageName, "Vim plugin " + scriptName);
                 p->description = description;
                 p->categories.append("Text/" + scriptType);
+                p->url = "http://www.vim.org/scripts/script.php?script_id=" +
+                        ids.at(i);
+                p->icon = "https://lh6.googleusercontent.com/-oPg5OrLBr74/UZ8rV_mHduI/AAAAAAAACE0/twSVwJ4sOTQ/s800/vim.png";
                 rep.savePackage(p);
                 delete p;
 
@@ -108,50 +244,55 @@ int VimOrgRepApp::process()
                         QString vimVersion = release.value("vim_version").
                                 toString();
 
-                        PackageVersion* pv = new PackageVersion(packageName);
-                        pv->version.setVersion(scriptVersion); // TODO: check error
-                        pv->download = "http://www.vim.org/scripts/download_script.php?src_id=" +
-                                srcId;
-
-                        Dependency* d = new Dependency();
-                        d->package = "com.googlecode.windows-package-manager.NpackdInstallerHelper";
-                        d->setVersions("[1.4, 2)");
-                        d->var = "nih";
-                        pv->dependencies.append(d);
-
-                        d = new Dependency();
-                        d->package = "vim-pathogen";
-                        d->setVersions("[2.3, 3)");
-                        pv->dependencies.append(d);
-
-                        d = new Dependency();
-                        d->package = "vim-huge";
-                        d->setVersions("[" + vimVersion + ", 8)");
-                        pv->dependencies.append(d);
-
-                        PackageVersionFile* pvf = new PackageVersionFile(
-                                ".Npackd\\Install.bat",
-                                "\"%nih%\\RegisterVimPlugin.bat\"");
-                        pv->files.append(pvf);
-
-                        pvf = new PackageVersionFile(
-                                ".Npackd\\Uninstall.bat",
-                                "\"%nih%\\UnregisterVimPlugin.bat\"");
-                        pv->files.append(pvf);
-
-                        pv->type = (jpackage.toLower().endsWith(".zip")) ? 0 : 1;
-
+                        PackageVersion* pv = createZIPPackage(packageName,
+                                scriptVersion, jpackage, srcId, vimVersion);
                         rep.savePackageVersion(pv);
                         delete pv;
+                        added++;
+                    } else if (jpackage.toLower().endsWith(".tar.gz") ||
+                            jpackage.toLower().endsWith(".tgz")) {
+                        QString srcId = release.value("src_id").
+                                toString();
+                        QString vimVersion = release.value("vim_version").
+                                toString();
+
+                        PackageVersion* pv = createTarGZPackage(packageName,
+                                scriptVersion, jpackage, srcId, vimVersion);
+                        rep.savePackageVersion(pv);
+                        delete pv;
+                        added++;
+                    } else if (jpackage.toLower().endsWith(".vim") &&
+                            (scriptType == "syntax" ||
+                            scriptType == "ftplugin" ||
+                            scriptType == "indent" ||
+                            scriptType == "color scheme")) {
+                        QString srcId = release.value("src_id").
+                                toString();
+                        QString vimVersion = release.value("vim_version").
+                                toString();
+
+                        PackageVersion* pv = createVimSyntaxPackage(packageName,
+                                scriptVersion, jpackage, srcId, vimVersion,
+                                scriptType);
+                        rep.savePackageVersion(pv);
+                        delete pv;
+                        added++;
+                    } else {
+                        WPMUtils::outputTextConsole(QString("Ignoring %1\n").
+                                arg(jpackage));
+                        ignored++;
                     }
                 }
             }
         }
 
+        WPMUtils::outputTextConsole(QString(
+                "%1 package versions added, %2 ignored\n").arg(added).
+                arg(ignored));
         job->setProgress(0.9);
     }
 
-    if (false && job->shouldProceed("Downloading the binaries")) {
+    if (true && job->shouldProceed("Downloading the binaries")) {
         int n = rep.packageVersions.size();
         for (int i = 0; i < n; i++) {
             PackageVersion* pv = rep.packageVersions.at(i);
@@ -165,7 +306,7 @@ int VimOrgRepApp::process()
                 if (f->open(QFile::ReadWrite)) {
                     Job* sub = job->newSubJob(0.1 / n);
                     Downloader::download(sub,
-                            QUrl(pv->download), f);
+                            QUrl(pv->download), f, &pv->sha1);
                     if (!sub->getErrorMessage().isEmpty()) {
                         job->setErrorMessage(sub->getErrorMessage());
                     }
@@ -175,7 +316,18 @@ int VimOrgRepApp::process()
                             arg(f->fileName()));
                 }
             } else {
-                job->setProgress(job->getProgress() + 0.1 / n);
+                if (f->open(QFile::ReadOnly)) {
+                    Job* sub = job->newSubJob(0.1 / n);
+                    pv->sha1 = WPMUtils::fileCheckSum(sub, f,
+                            QCryptographicHash::Sha1);
+                    if (!sub->getErrorMessage().isEmpty()) {
+                        job->setErrorMessage(sub->getErrorMessage());
+                    }
+                    delete sub;
+                } else {
+                    job->setErrorMessage(QString("Error opening %1").
+                            arg(f->fileName()));
+                }
             }
             delete f;
 
