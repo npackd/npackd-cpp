@@ -1371,6 +1371,7 @@ QString App::info()
                     pv->download.toString() + "\n");
         }
         WPMUtils::outputTextConsole("Package home page: " + p->url + "\n");
+        WPMUtils::outputTextConsole("Change log: " + p->changelog + "\n");
         WPMUtils::outputTextConsole("Categories: " +
                 p->categories.join(", ") + "\n");
         WPMUtils::outputTextConsole("Icon: " + p->icon + "\n");
