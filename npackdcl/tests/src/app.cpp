@@ -64,3 +64,16 @@ void App::test()
 
     QVERIFY(Version("2.8.7.4.8.9") > Version("2.8.6.4.8.8"));
 }
+
+void App::testCommandLine()
+{
+    QString err;
+    QStringList params = WPMUtils::parseCommandLine(
+            "\"C:\\Program Files (x86)\\InstallShield Installation Information\\{96D0B6C6-5A72-4B47-8583-A87E55F5FE81}\\setup.exe\" -runfromtemp -l0x0007 -removeonly",
+            &err);
+
+    QVERIFY(err.isEmpty());
+    QVERIFY(params.count() == 4);
+    QVERIFY2(params.at(0) == "C:\\Program Files (x86)\\InstallShield Installation Information\\{96D0B6C6-5A72-4B47-8583-A87E55F5FE81}\\setup.exe",
+            qPrintable(params.at(0)));
+}

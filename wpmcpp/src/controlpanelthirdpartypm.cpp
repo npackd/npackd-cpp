@@ -212,16 +212,16 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     QString dir;
     if (useThisEntry) {
         dir = k.get("InstallLocation", &err);
-        if (!err.isEmpty())
+        if (!err.isEmpty() || !d.exists(dir))
             dir = "";
 
         if (dir.isEmpty() && !uninstall.isEmpty()) {
             QStringList params = WPMUtils::parseCommandLine(uninstall, &err);
             // qDebug() << uninstall << params.count();
             if (err.isEmpty() && params.count() > 0) {
-                if (d.exists(params[0]))
+                if (d.exists(params[0])) {
                     dir = WPMUtils::parentDirectory(params[0]);
-                else
+                } else
                     useThisEntry = false;
             } /* DEBUG else {
                 qDebug() << "cannot parse " << uninstall << " " << err <<
@@ -240,6 +240,8 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     }
 
     if (useThisEntry) {
+        // qDebug() << "adding " << registryPath << package << dir;
+
         // qDebug() << package << version.getVersionString() << dir;
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);
