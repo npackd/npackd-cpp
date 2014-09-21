@@ -60,6 +60,8 @@ void Package::saveTo(QDomElement& e) const {
     for (int i = 0; i < this->categories.count(); i++) {
         XMLUtils::addTextTag(e, "category", this->categories.at(i));
     }
+    if (!this->changelog.isEmpty())
+        XMLUtils::addTextTag(e, "changelog", this->changelog);
 }
 
 Package *Package::clone() const
@@ -70,6 +72,7 @@ Package *Package::clone() const
     np->description = this->description;
     np->license = this->license;
     np->categories = this->categories;
+    np->changelog = this->changelog;
 
     return np;
 }

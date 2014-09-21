@@ -213,7 +213,7 @@ QString Repository::writeTo(const QString& filename) const
     QDomElement root = doc.createElement("root");
     doc.appendChild(root);
 
-    XMLUtils::addTextTag(root, "spec-version", "3");
+    XMLUtils::addTextTag(root, "spec-version", "3.3");
 
     for (int i = 0; i < this->packages.count(); i++) {
         Package* p = packages.at(i);

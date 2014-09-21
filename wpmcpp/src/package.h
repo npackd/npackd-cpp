@@ -56,6 +56,9 @@ public:
     /** categories. Sub-categories are separated by / */
     QStringList categories;
 
+    /** changelog URL */
+    QString changelog;
+
     Package(const QString& name, const QString& title);
 
     /**
