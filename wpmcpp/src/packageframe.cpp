@@ -107,7 +107,18 @@ void PackageFrame::fillForm(Package* p)
                     hp.toHtmlEscaped() + "</a>";
         }
         this->ui->labelHomePage->setText(hp);
+
         this->ui->labelCategory->setText(p->categories.join(", "));
+
+        QString changelog;
+        if (p->changelog.isEmpty())
+            changelog = QObject::tr("n/a");
+        else{
+            changelog = p->changelog;
+            changelog = "<a href=\"" + changelog.toHtmlEscaped() + "\">" +
+                    changelog.toHtmlEscaped() + "</a>";
+        }
+        this->ui->labelChangeLog->setText(changelog);
     }
 
     updateIcons();

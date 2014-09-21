@@ -56,6 +56,8 @@ int RepositoryXMLHandler::findWhere()
                     r = TAG_PACKAGE_LICENSE;
                 else if (tag2 == "category")
                     r = TAG_PACKAGE_CATEGORY;
+                else if (tag2 == "changelog")
+                    r = TAG_PACKAGE_CHANGELOG;
             } else if (tag1 == "license") {
                 if (tag2 == "title")
                     r = TAG_LICENSE_TITLE;
@@ -332,6 +334,17 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
             err = QObject::tr("More than one <category> %1").arg(c);
         } else {
             p->categories.append(c);
+        }
+    } else if (where == TAG_PACKAGE_CHANGELOG) {
+        p->changelog = chars.trimmed();
+        if (!p->changelog.isEmpty()) {
+            QUrl u(p->changelog);
+            if (!u.isValid() || u.isRelative() ||
+                    !(u.scheme() == "http" || u.scheme() == "https")) {
+                error = QString(
+                        QObject::tr("Invalid change log URL for %1: %2")).
+                        arg(p->title).arg(p->changelog);
+            }
         }
     } else if (where == TAG_LICENSE) {
         error = rep->saveLicense(lic, false);
