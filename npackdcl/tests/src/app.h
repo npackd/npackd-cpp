@@ -15,52 +15,21 @@
 #include "clprogress.h"
 
 /**
- * NpackdCL
+ * NpackdCL tests
  */
 class App: public QObject
 {
     Q_OBJECT
-private:
-    CommandLine cl;
-    CLProgress clp;
-
-    /**
-     * @brief defines the NPACKD_CL variable and adds the NpackdCL package to
-     *     the local repository
-     * @return error message
-     */
-    QString addNpackdCL();
-
-    void usage();
-    QString path();
-    QString add();
-    QString remove();
-    QString addRepo();
-    QString removeRepo();
-    QString search();
-    QString list();
-    QString info();
-    QString update();
-    QString detect();
-    QString listRepos();
-    QString which();
-    QString check();
-    QString getInstallPath();
-    QString setInstallPath();
-
-    bool confirm(const QList<InstallOperation *> ops, QString *title,
-            QString *err);
-    QString printDependencies(bool onlyInstalled,
-            const QString parentPrefix, int level, PackageVersion *pv);
-    void processInstallOperations(Job *job,
-            const QList<InstallOperation *> &ops, DWORD programCloseType);
-    QStringList  sortPackageVersionsByPackageTitle(
-            QList<PackageVersion *> *list);
 private slots:
     /**
      * Tests
      */
     void test();
+
+    /**
+     * Tests für CommandLine
+     */
+    void testCommandLine();
 };
 
 #endif // APP_H
