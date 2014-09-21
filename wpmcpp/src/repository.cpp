@@ -113,9 +113,7 @@ Package* Repository::createPackage(QDomElement* e, QString* err)
     if (err->isEmpty()) {
         a->icon = XMLUtils::getTagContent(*e, "icon");
         if (!a->icon.isEmpty()) {
-            QUrl u(a->icon);
-            if (!u.isValid() || u.isRelative() ||
-                    !(u.scheme() == "http" || u.scheme() == "https")) {
+            if (!Package::isValidURL(a->icon)) {
                 err->append(QString(
                         QObject::tr("Invalid icon URL for %1: %2")).
                         arg(a->title).arg(a->icon));

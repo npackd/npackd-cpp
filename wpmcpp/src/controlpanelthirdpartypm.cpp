@@ -85,6 +85,8 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         WindowsRegistry& k,
         const QString& keyName) const
 {
+    // see http://msdn.microsoft.com/en-us/library/aa372105(v=vs.85).aspx
+
     // find the package name
     QString package = keyName;
     package.replace('.', '_');
@@ -160,6 +162,10 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     if (!err.isEmpty() || url.isEmpty() || !QUrl(url).isValid())
         url = "";
     p->url = url;
+
+    p->changelog = k.get("URLUpdateInfo", &err);
+    if (!err.isEmpty() || !Package::isValidURL(p->changelog))
+        p->changelog = "";
 
     p->categories.append(QObject::tr("Control panel software"));
 

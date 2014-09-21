@@ -1,5 +1,6 @@
-#include "package.h"
+#include <QUrl>
 
+#include "package.h"
 #include "xmlutils.h"
 
 int Package::indexOf(const QList<Package*> pvs, Package* f)
@@ -45,6 +46,20 @@ bool Package::isValidName(const QString& name)
     }
     return r;
 }
+
+bool Package::isValidURL(const QString& url)
+{
+    bool r = true;
+    if (url.trimmed().isEmpty())
+        r = false;
+    else {
+        QUrl u(url);
+        r = u.isValid() && !u.isRelative() &&
+                (u.scheme() == "http" || u.scheme() == "https");
+    }
+    return r;
+}
+
 
 void Package::saveTo(QDomElement& e) const {
     e.setAttribute("name", name);

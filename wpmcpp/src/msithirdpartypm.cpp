@@ -109,6 +109,11 @@ void MSIThirdPartyPM::scan(Job* job,
                     p->url = url;
             }
 
+            p->changelog = WPMUtils::getMSIProductAttribute(guid,
+                    INSTALLPROPERTY_URLUPDATEINFO, &err);
+            if (!err.isEmpty() || !Package::isValidURL(p->changelog))
+                p->changelog = "";
+
             // qDebug() << "MSIThirdPartyPM::scan loop 1.5";
 
             p->categories.append(QObject::tr("MSI packages"));

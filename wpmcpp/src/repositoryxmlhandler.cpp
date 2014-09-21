@@ -248,13 +248,11 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_VERSION_URL) {
         QString url = chars.trimmed();
         if (!url.isEmpty()) {
-            pv->download.setUrl(url);
-            QUrl d = pv->download;
-            if (!d.isValid() || d.isRelative() ||
-                    (d.scheme() != "http" && d.scheme() != "https")) {
+            if (Package::isValidURL(url))
+                pv->download.setUrl(url);
+            else
                 error = QObject::tr("Not a valid download URL for %1: %2").
                         arg(pv->package).arg(url);
-            }
         }
     } else if (where == TAG_VERSION_SHA1) {
         pv->sha1 = chars.trimmed().toLower();
@@ -314,9 +312,7 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_PACKAGE_ICON) {
         p->icon = chars.trimmed();
         if (!p->icon.isEmpty()) {
-            QUrl u(p->icon);
-            if (!u.isValid() || u.isRelative() ||
-                    !(u.scheme() == "http" || u.scheme() == "https")) {
+            if (!Package::isValidURL(p->icon)) {
                 error = QString(
                         QObject::tr("Invalid icon URL for %1: %2")).
                         arg(p->title).arg(p->icon);
@@ -338,9 +334,7 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_PACKAGE_CHANGELOG) {
         p->changelog = chars.trimmed();
         if (!p->changelog.isEmpty()) {
-            QUrl u(p->changelog);
-            if (!u.isValid() || u.isRelative() ||
-                    !(u.scheme() == "http" || u.scheme() == "https")) {
+            if (!Package::isValidURL(p->changelog)) {
                 error = QString(
                         QObject::tr("Invalid change log URL for %1: %2")).
                         arg(p->title).arg(p->changelog);

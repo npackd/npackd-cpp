@@ -177,7 +177,7 @@ Package *DBRepository::findPackage_(const QString &name)
     MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, CATEGORY1, CATEGORY2, "
-            "CATEGORY3, CATEGORY4 "
+            "CATEGORY3, CATEGORY4, CHANGELOG "
             "FROM PACKAGE WHERE NAME = :NAME"))
         err = toString(q.lastError());
 
@@ -200,6 +200,7 @@ Package *DBRepository::findPackage_(const QString &name)
                 q.value(10).toInt());
         if (!path.isEmpty())
             p->categories.append(path);
+        p->changelog = q.value(11).toString();
 
         r = p;
     }
@@ -754,10 +755,11 @@ QString DBRepository::savePackage(Package *p, bool replace)
         QString add = " INTO PACKAGE "
                 "(NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
-                " CATEGORY4)"
+                " CATEGORY4, CHANGELOG)"
                 "VALUES(:NAME, :TITLE, :URL, :ICON, :DESCRIPTION, :LICENSE, "
                 ":FULLTEXT, :STATUS, :SHORT_NAME, "
-                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
+                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4, "
+                ":CHANGELOG)";
 
         insertSQL += add;
         replaceSQL += add;
@@ -813,6 +815,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
             savePackageQuery->bindValue(":CATEGORY4", QVariant(QVariant::Int));
         else
             savePackageQuery->bindValue(":CATEGORY4", cat4);
+        savePackageQuery->bindValue(":CHANGELOG", p->changelog);
         if (!savePackageQuery->exec())
             err = toString(savePackageQuery->lastError());
     }
@@ -846,7 +849,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
-            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG "
             "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME"))
         err = toString(q.lastError());
 
@@ -871,6 +874,8 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
                 q.value(10).toInt());
         if (!path.isEmpty())
             p->categories.append(path);
+
+        p->changelog = q.value(11).toString();
 
         r.append(p);
     }
@@ -1618,6 +1623,16 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
     }
 
     if (err.isEmpty()) {
+        if (e) {
+            // PACKAGE.CHANGELOG is new in 1.20
+            if (!columnExists(&db, "PACKAGE", "CHANGELOG", &err)) {
+                exec("DROP TABLE PACKAGE");
+                e = false;
+            }
+        }
+    }
+
+    if (err.isEmpty()) {
         if (!e) {
             // NULL should be stored in CATEGORYx if a package is not
             // categorized
@@ -1635,7 +1650,8 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
                     "CATEGORY1 INTEGER, "
                     "CATEGORY2 INTEGER, "
                     "CATEGORY3 INTEGER, "
-                    "CATEGORY4 INTEGER"
+                    "CATEGORY4 INTEGER, "
+                    "CHANGELOG TEXT"
                     ")");
             err = toString(db.lastError());
         }
