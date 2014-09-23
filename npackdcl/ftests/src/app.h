@@ -63,6 +63,11 @@ private slots:
      * @brief "help"
      */
     void help();
+
+    /**
+     * @brief "path" should also work if Data.db does not exist
+     */
+    void pathDoesNotNeedDatabase();
 };
 
 #endif // APP_H

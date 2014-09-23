@@ -218,14 +218,14 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     QString dir;
     if (useThisEntry) {
         dir = k.get("InstallLocation", &err);
-        if (!err.isEmpty() || !d.exists(dir))
+        if (!err.isEmpty() || dir.trimmed().isEmpty() || !d.exists(dir))
             dir = "";
 
         if (dir.isEmpty() && !uninstall.isEmpty()) {
             QStringList params = WPMUtils::parseCommandLine(uninstall, &err);
             // qDebug() << uninstall << params.count();
             if (err.isEmpty() && params.count() > 0) {
-                if (d.exists(params[0])) {
+                if (!params[0].trimmed().isEmpty() && d.exists(params[0])) {
                     dir = WPMUtils::parentDirectory(params[0]);
                 } else
                     useThisEntry = false;

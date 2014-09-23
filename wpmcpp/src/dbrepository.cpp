@@ -178,7 +178,7 @@ Package *DBRepository::findPackage_(const QString &name)
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, CATEGORY1, CATEGORY2, "
             "CATEGORY3, CATEGORY4, CHANGELOG "
-            "FROM PACKAGE WHERE NAME = :NAME"))
+            "FROM PACKAGE2 WHERE NAME = :NAME"))
         err = toString(q.lastError());
 
     if (err.isEmpty()) {
@@ -560,7 +560,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
         where = "WHERE " + where;
 
     QString sql = QString("SELECT CATEGORY.ID, COUNT(*), CATEGORY.NAME FROM "
-            "PACKAGE LEFT JOIN CATEGORY ON PACKAGE.CATEGORY") +
+            "PACKAGE2 LEFT JOIN CATEGORY ON PACKAGE2.CATEGORY") +
             QString::number(level) +
             " = CATEGORY.ID " +
             where + " GROUP BY CATEGORY.ID, CATEGORY.NAME "
@@ -606,7 +606,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
     QString sql = "SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, "
             "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
-            "FROM PACKAGE";
+            "FROM PACKAGE2";
 
     if (!where.isEmpty())
         sql += " " + where;
@@ -752,7 +752,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
         QString insertSQL = "INSERT OR IGNORE";
         QString replaceSQL = "INSERT OR REPLACE";
 
-        QString add = " INTO PACKAGE "
+        QString add = " INTO PACKAGE2 "
                 "(NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
                 " CATEGORY4, CHANGELOG)"
@@ -850,7 +850,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
             "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG "
-            "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME"))
+            "FROM PACKAGE2 WHERE SHORT_NAME = :SHORT_NAME"))
         err = toString(q.lastError());
 
     if (err.isEmpty()) {
@@ -980,6 +980,14 @@ QString DBRepository::clear()
 
     if (job->shouldProceed(QObject::tr("Clearing the packages table"))) {
         QString err = exec("DELETE FROM PACKAGE");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.05);
+    }
+
+    if (job->shouldProceed(QObject::tr("Clearing the packages table 2"))) {
+        QString err = exec("DELETE FROM PACKAGE2");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1172,6 +1180,17 @@ void DBRepository::updateF5(Job* job)
                 "(SELECT * FROM PACKAGE_VERSION "
                 "WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
+            job->setProgress(0.84);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed(
+            QObject::tr("Removing packages without versions 2"))) {
+        QString err = temp.exec("DELETE FROM PACKAGE2 WHERE NOT EXISTS "
+                "(SELECT * FROM PACKAGE_VERSION "
+                "WHERE PACKAGE = PACKAGE2.NAME)");
+        if (err.isEmpty())
             job->setProgress(0.85);
         else
             job->setErrorMessage(err);
@@ -1214,16 +1233,52 @@ void DBRepository::updateF5(Job* job)
             job->setErrorMessage(err);
     }
 
+    // do not copy full tables here, specify columns names instead to be
+    // forward compatible if a new column will be added
     if (job->shouldProceed(
             QObject::tr("Transferring the data from the temporary database"))) {
         // exec("DROP INDEX PACKAGE_VERSION_PACKAGE_NAME");
-        QString err = exec("INSERT INTO PACKAGE SELECT * FROM tempdb.PACKAGE");
+        QString err = exec("INSERT INTO PACKAGE(NAME, TITLE, URL, "
+                "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                "SHORT_NAME, REPOSITORY, CATEGORY0, "
+                "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4) "
+                "SELECT NAME, TITLE, URL, "
+                "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                "SHORT_NAME, REPOSITORY, CATEGORY0, "
+                "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+                "FROM tempdb.PACKAGE2");
         if (err.isEmpty())
-            err = exec("INSERT INTO PACKAGE_VERSION SELECT * FROM tempdb.PACKAGE_VERSION");
+            err = exec("INSERT INTO PACKAGE2(NAME, TITLE, URL, "
+                    "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                    "SHORT_NAME, REPOSITORY, CATEGORY0, "
+                    "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG) "
+                    "SELECT NAME, TITLE, URL, "
+                    "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                    "SHORT_NAME, REPOSITORY, CATEGORY0, "
+                    "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG "
+                    "FROM tempdb.PACKAGE2");
         if (err.isEmpty())
-            err = exec("INSERT INTO LICENSE SELECT * FROM tempdb.LICENSE");
+            err = exec("INSERT INTO PACKAGE_VERSION ("
+                    "NAME, PACKAGE, URL, "
+                    "CONTENT, MSIGUID, DETECT_FILE_COUNT) "
+                    "SELECT "
+                    "NAME, PACKAGE, URL, "
+                    "CONTENT, MSIGUID, DETECT_FILE_COUNT "
+                    "FROM tempdb.PACKAGE_VERSION");
         if (err.isEmpty())
-            err = exec("INSERT INTO CATEGORY SELECT * FROM tempdb.CATEGORY");
+            err = exec("INSERT INTO LICENSE (NAME, "
+                    "TITLE, "
+                    "DESCRIPTION, "
+                    "URL) "
+                    "SELECT NAME, "
+                    "TITLE, "
+                    "DESCRIPTION, "
+                    "URL FROM tempdb.LICENSE");
+        if (err.isEmpty())
+            err = exec("INSERT INTO CATEGORY (ID, "
+                    "NAME, PARENT, LEVEL) "
+                    "SELECT ID, "
+                    "NAME, PARENT, LEVEL FROM tempdb.CATEGORY");
         if (err.isEmpty())
             job->setProgress(0.95);
         else
@@ -1582,6 +1637,20 @@ QString DBRepository::updateStatus(const QString& package)
             if (!q.exec())
                 err = toString(q.lastError());
         }
+
+        if (err.isEmpty()) {
+            if (!q.prepare("UPDATE PACKAGE2 "
+                    "SET STATUS=:STATUS "
+                    "WHERE NAME=:NAME"))
+                err = toString(q.lastError());
+        }
+
+        if (err.isEmpty()) {
+            q.bindValue(":STATUS", status);
+            q.bindValue(":NAME", package);
+            if (!q.exec())
+                err = toString(q.lastError());
+        }
     }
     qDeleteAll(pvs);
 
@@ -1623,16 +1692,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
     }
 
     if (err.isEmpty()) {
-        if (e) {
-            // PACKAGE.CHANGELOG is new in 1.20
-            if (!columnExists(&db, "PACKAGE", "CHANGELOG", &err)) {
-                exec("DROP TABLE PACKAGE");
-                e = false;
-            }
-        }
-    }
-
-    if (err.isEmpty()) {
         if (!e) {
             // NULL should be stored in CATEGORYx if a package is not
             // categorized
@@ -1650,8 +1709,7 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
                     "CATEGORY1 INTEGER, "
                     "CATEGORY2 INTEGER, "
                     "CATEGORY3 INTEGER, "
-                    "CATEGORY4 INTEGER, "
-                    "CHANGELOG TEXT"
+                    "CATEGORY4 INTEGER "
                     ")");
             err = toString(db.lastError());
         }
@@ -1676,6 +1734,60 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_SHORT_NAME ON PACKAGE(SHORT_NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // PACKAGE2 is new in Npackd 1.20 and replaces PACKAGE as Npackd 1.19
+    // cannot handle new columns
+    if (err.isEmpty()) {
+        e = tableExists(&db, "PACKAGE2", &err);
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            // NULL should be stored in CATEGORYx if a package is not
+            // categorized
+            db.exec("CREATE TABLE PACKAGE2(NAME TEXT, "
+                    "TITLE TEXT, "
+                    "URL TEXT, "
+                    "ICON TEXT, "
+                    "DESCRIPTION TEXT, "
+                    "LICENSE TEXT, "
+                    "FULLTEXT TEXT, "
+                    "STATUS INTEGER, "
+                    "SHORT_NAME TEXT, "
+                    "REPOSITORY INTEGER, "
+                    "CATEGORY0 INTEGER, "
+                    "CATEGORY1 INTEGER, "
+                    "CATEGORY2 INTEGER, "
+                    "CATEGORY3 INTEGER, "
+                    "CATEGORY4 INTEGER, "
+                    "CHANGELOG TEXT"
+                    ")");
+            err = toString(db.lastError());
+        }
+    }
+
+/*
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX PACKAGE2_FULLTEXT ON PACKAGE2(FULLTEXT)");
+            err = toString(db.lastError());
+        }
+    }
+    */
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX PACKAGE2_NAME ON PACKAGE2(NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX PACKAGE2_SHORT_NAME ON PACKAGE2(SHORT_NAME)");
             err = toString(db.lastError());
         }
     }

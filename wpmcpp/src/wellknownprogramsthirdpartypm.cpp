@@ -249,6 +249,9 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
             if (!err.isEmpty())
                 continue;
 
+            if (path.trimmed().isEmpty())
+                continue;
+
             QDir d(path);
             if (!d.exists())
                 continue;
@@ -298,6 +301,9 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
 
                 QString path = r.get("JavaHome", &err);
                 if (!err.isEmpty())
+                    continue;
+
+                if (path.trimmed().isEmpty())
                     continue;
 
                 QDir d(path);
