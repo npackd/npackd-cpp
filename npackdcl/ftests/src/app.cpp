@@ -134,3 +134,14 @@ void App::check()
             contains("All dependencies are installed"));
 }
 
+void App::pathDoesNotNeedDatabase()
+{
+    QVERIFY(QFile::rename("C:\\ProgramData\\Npackd\\Data.db",
+            "C:\\ProgramData\\Npackd\\Data_.db"));
+    QVERIFY(captureNpackdCLOutput("path -p Windows64").trimmed() ==
+            "C:\\Windows");
+    QVERIFY(QFile::remove("C:\\ProgramData\\Npackd\\Data.db"));
+    QVERIFY(QFile::rename("C:\\ProgramData\\Npackd\\Data_.db",
+            "C:\\ProgramData\\Npackd\\Data.db"));
+}
+

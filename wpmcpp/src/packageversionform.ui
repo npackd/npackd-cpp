@@ -147,7 +147,7 @@
        <item row="5" column="0">
         <widget class="QLabel" name="label_13">
          <property name="text">
-          <string>Installation Path:</string>
+          <string>Installation path:</string>
          </property>
          <property name="buddy">
           <cstring>lineEditPath</cstring>
@@ -167,7 +167,7 @@
        <item row="6" column="0">
         <widget class="QLabel" name="label_15">
          <property name="text">
-          <string>Detection Info:</string>
+          <string>Detection info:</string>
          </property>
          <property name="buddy">
           <cstring>lineEditDetectionInfo</cstring>
@@ -187,7 +187,7 @@
        <item row="7" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Internal Name:</string>
+          <string>Internal name:</string>
          </property>
          <property name="buddy">
           <cstring>lineEditInternalName</cstring>
@@ -297,7 +297,7 @@ p, li { white-space: pre-wrap; }
        <item row="13" column="0">
         <widget class="QLabel" name="label_11">
          <property name="text">
-          <string>Important Files:</string>
+          <string>Important files:</string>
          </property>
          <property name="buddy">
           <cstring>textEditImportantFiles</cstring>

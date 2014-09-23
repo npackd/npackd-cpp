@@ -689,14 +689,12 @@ QString App::path()
         p = WPMUtils::findOnePackage(package, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else if (!p)
-            job->setErrorMessage(QString("Unknown package: %1").arg(package));
     }
 
     Dependency d;
     if (job->shouldProceed()) {
         // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
-        d.package = p->name;
+        d.package = p ? p->name : package;
         if (versions.isNull()) {
             d.min.setVersion(0, 0);
             d.max.setVersion(std::numeric_limits<int>::max(), 0);
