@@ -688,7 +688,7 @@ QString App::path()
         QString err;
         p = WPMUtils::findOnePackage(package, &err);
         if (!err.isEmpty())
-            job->setErrorMessage(err);
+            p = 0;
     }
 
     Dependency d;
