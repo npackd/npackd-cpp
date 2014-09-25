@@ -26,7 +26,7 @@ class PackageItemModel: public QAbstractTableModel
 
     mutable QCache<QString, Info> cache;
 
-    Info *createInfo(const QString &package) const;
+    Info *createInfo(Package *p) const;
 public:
     /**
      * @param [ownership:this] packages list of packages
