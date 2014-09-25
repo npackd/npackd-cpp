@@ -42,6 +42,9 @@ QStringList SettingsFrame::getRepositoryURLs()
 {
     QString txt = this->ui->plainTextEditReps->toPlainText().trimmed();
     QStringList sl = txt.split("\n", QString::SkipEmptyParts);
+    for (int i = 0; i < sl.count(); i++) {
+        sl[i] = sl.at(i).trimmed();
+    }
     return sl;
 }
 
@@ -91,11 +94,6 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         return;
     }
 
-    if (mw->reloadRepositoriesThreadRunning) {
-        mw->addErrorMessage(QObject::tr("Cannot change settings now. The repositories download is running."));
-        return;
-    }
-
     QString err;
     PackageVersion* locked = PackageVersion::findLockedPackageVersion(&err);
     if (locked) {
@@ -122,10 +120,10 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         err = WPMUtils::checkInstallationDirectory(getInstallationDirectory());
     }
 
+    QList<QUrl*> urls;
     if (err.isEmpty()) {
-        QList<QUrl*> urls;
         for (int i = 0; i < list.count(); i++) {
-            QUrl* url = new QUrl(list.at(i).trimmed());
+            QUrl* url = new QUrl(list.at(i));
             urls.append(url);
             if (!url->isValid()) {
                 err = QString(QObject::tr("%1 is not a valid repository address")).arg(
@@ -133,19 +131,46 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
                 break;
             }
         }
+    }
 
-        if (err.isEmpty()) {
-            WPMUtils::setInstallationDirectory(getInstallationDirectory());
-            Repository::setRepositoryURLs(urls, &err);
-            WPMUtils::setCloseProcessType(getCloseProcessType());
-            if (err.isEmpty()) {
-                mw->closeDetailTabs();
-                mw->recognizeAndLoadRepositories(false);
+    if (err.isEmpty()) {
+        WPMUtils::setInstallationDirectory(getInstallationDirectory());
+        WPMUtils::setCloseProcessType(getCloseProcessType());
+    }
+
+    bool repsChanged = false;
+
+    if (err.isEmpty()) {
+        QList<QUrl*> oldList = Repository::getRepositoryURLs(&err);
+        repsChanged = oldList.count() != urls.count();
+        if (!repsChanged) {
+            for (int i = 0; i < oldList.count(); i++) {
+                if ((*oldList.at(i)) != (*urls.at(i))) {
+                    repsChanged = true;
+                    break;
+                }
             }
         }
-        qDeleteAll(urls);
-        urls.clear();
+        qDeleteAll(oldList);
+        oldList.clear();
     }
+
+    if (err.isEmpty()) {
+        if (repsChanged) {
+            if (mw->reloadRepositoriesThreadRunning) {
+                err = QObject::tr("Cannot change settings now. The repositories download is running.");
+            } else {
+                Repository::setRepositoryURLs(urls, &err);
+                if (err.isEmpty()) {
+                    mw->closeDetailTabs();
+                    mw->recognizeAndLoadRepositories(false);
+                }
+            }
+        }
+    }
+
+    qDeleteAll(urls);
+    urls.clear();
 
     if (err.isEmpty()) {
         WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
