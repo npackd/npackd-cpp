@@ -8,6 +8,7 @@
 #include "abstractrepository.h"
 #include "mainwindow.h"
 #include "fileloaderitem.h"
+#include "wpmutils.h"
 
 PackageItemModel::PackageItemModel(const QList<Package *> packages) :
         obsoleteBrush(QColor(255, 0xc7, 0xc7))
@@ -31,7 +32,7 @@ int PackageItemModel::columnCount(const QModelIndex &parent) const
 }
 
 PackageItemModel::Info* PackageItemModel::createInfo(
-        const QString& package) const
+        Package* p) const
 {
     Info* r = new Info();
 
@@ -39,7 +40,7 @@ PackageItemModel::Info* PackageItemModel::createInfo(
 
     // error is ignored here
     QString err;
-    QList<PackageVersion*> pvs = rep->getPackageVersions_(package, &err);
+    QList<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &err);
 
     PackageVersion* newestInstallable = 0;
     PackageVersion* newestInstalled = 0;
@@ -84,13 +85,18 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             case 1:
                 r = p->title;
                 break;
-            case 2:
-                r = p->description;
+            case 2: {
+                QString s = p->description;
+                if (s.length() > 200) {
+                    s = s.left(200) + "...";
+                }
+                r = s;
                 break;
+            }
             case 3: {
                 Info* cached = this->cache.object(p->name);
                 if (!cached) {
-                    cached = createInfo(p->name);
+                    cached = createInfo(p);
                     r = cached->avail;
                     this->cache.insert(p->name, cached);
                 } else {
@@ -101,7 +107,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             case 4: {
                 Info* cached = this->cache.object(p->name);
                 if (!cached) {
-                    cached = createInfo(p->name);
+                    cached = createInfo(p);
                     r = cached->installed;
                     this->cache.insert(p->name, cached);
                 } else {
@@ -154,7 +160,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                 Info* cached = this->cache.object(p->name);
                 bool up2date;
                 if (!cached) {
-                    cached = createInfo(p->name);
+                    cached = createInfo(p);
                     up2date = cached->up2date;
                     this->cache.insert(p->name, cached);
                 } else {
