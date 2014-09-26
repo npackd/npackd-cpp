@@ -576,6 +576,14 @@ public:
      */
     static QString fileCheckSum(Job *job, QFile *file,
             QCryptographicHash::Algorithm alg);
+
+    /**
+     * @brief unzips a file
+     * @param job job
+     * @param zipfile .zip file
+     * @param outputdir output directory
+     */
+    static void unzip(Job* job, const QString zipfile, const QString outputdir);
 };
 
 #endif // WPMUTILS_H

@@ -58,8 +58,8 @@ public:
      * @param url this URL will be downloaded. http://, https:// and
      *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
-     * @return temporary file or 0 if an error occured
      * @param useCache true = use Windows Internet cache on the local disk
+     * @return temporary file or 0 if an error occured. The file is closed.
      */
     static QTemporaryFile* download(Job* job, const QUrl& url,
             QString* sha1=0, bool useCache=false);

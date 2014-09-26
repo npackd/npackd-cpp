@@ -26,6 +26,9 @@
 #include <QBuffer>
 #include <QByteArray>
 
+#include <quazip.h>
+#include <quazipfile.h>
+
 // reduces the size of NpackdCL by 5 MiB
 #ifdef QT_GUI_LIB
 #include <QImage>
@@ -2085,4 +2088,71 @@ QString WPMUtils::fileCheckSum(Job* job,
     delete[] buffer;
 
     return sha1;
+}
+
+void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
+{
+    job->setHint(QObject::tr("Opening ZIP file"));
+    QuaZip zip(zipfile);
+    if (!zip.open(QuaZip::mdUnzip)) {
+        job->setErrorMessage(QString(QObject::tr("Cannot open the ZIP file %1: %2")).
+                       arg(zipfile).arg(zip.getZipError()));
+    } else {
+        job->setProgress(0.01);
+    }
+
+    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+        QString odir = outputdir;
+        if (!odir.endsWith("\\") && !odir.endsWith("/"))
+            odir.append("\\");
+
+        job->setHint(QObject::tr("Extracting"));
+        QuaZipFile file(&zip);
+        int n = zip.getEntriesCount();
+        int blockSize = 1024 * 1024;
+        char* block = new char[blockSize];
+        int i = 0;
+        for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile()) {
+            QString name = zip.getCurrentFileName();
+            if (!file.open(QIODevice::ReadOnly)) {
+                job->setErrorMessage(QString(
+                        QObject::tr("Error unzipping the file %1: Error %2 in %3")).
+                        arg(zipfile).arg(file.getZipError()).
+                        arg(name));
+                break;
+            }
+            name.prepend(odir);
+            QFile meminfo(name);
+            QFileInfo infofile(meminfo);
+            QDir dira(infofile.absolutePath());
+            if (dira.mkpath(infofile.absolutePath())) {
+                if (meminfo.open(QIODevice::ReadWrite)) {
+                    while (true) {
+                        qint64 read = file.read(block, blockSize);
+                        if (read <= 0)
+                            break;
+                        meminfo.write(block, read);
+                    }
+                    meminfo.close();
+                }
+            } else {
+                job->setErrorMessage(QString(QObject::tr("Cannot create directory %1")).arg(
+                        infofile.absolutePath()));
+                file.close();
+            }
+            file.close(); // do not forget to close!
+            i++;
+            job->setProgress(0.01 + 0.99 * i / n);
+            if (i % 100 == 0)
+                job->setHint(QString(QObject::tr("%L1 files")).arg(i));
+
+            if (job->isCancelled() || !job->getErrorMessage().isEmpty())
+                break;
+        }
+        zip.close();
+
+        delete[] block;
+    }
+
+    job->complete();
 }
