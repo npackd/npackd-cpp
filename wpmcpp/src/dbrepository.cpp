@@ -14,6 +14,7 @@
 #include <QDebug>
 #include <QXmlStreamWriter>
 #include <QSqlRecord>
+#include <QTemporaryDir>
 
 #include "package.h"
 #include "repository.h"
@@ -1074,15 +1075,47 @@ void DBRepository::load(Job* job, bool useCache)
 void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
     job->setHint(QObject::tr("Downloading"));
 
-    QTemporaryFile* f = 0;
+    QFile* f = 0;
     if (job->getErrorMessage().isEmpty() && !job->isCancelled()) {
-        Job* djob = job->newSubJob(0.90);
+        Job* djob = job->newSubJob(0.8);
         f = Downloader::download(djob, *url, 0, useCache);
         if (!djob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString(
                     QObject::tr("Download failed: %2")).
                     arg(djob->getErrorMessage()));
         delete djob;
+    }
+
+    QTemporaryDir* dir = 0;
+    if (job->shouldProceed(QObject::tr("Unpacking repository"))) {
+        if (f->open(QFile::ReadOnly) &&
+                f->seek(0) && f->read(4) == QByteArray::fromRawData(
+                "PK\x03\x04", 4)) {
+            f->close();
+
+            dir = new QTemporaryDir();
+            if (dir->isValid()) {
+                Job* sub = job->newSubJob(0.1);
+                WPMUtils::unzip(sub, f->fileName(), dir->path() + "\\");
+                if (!sub->getErrorMessage().isEmpty()) {
+                    job->setErrorMessage(QString(
+                            QObject::tr("Unzipping the repository failed: %1")).
+                            arg(f->fileName()).
+                            arg(sub->getErrorMessage()));
+                } else {
+                    QString repfn = dir->path() + "\\Rep.xml";
+                    if (QFile::exists(repfn)) {
+                        delete f;
+                        f = new QFile(repfn);
+                    } else {
+                        job->setErrorMessage(QObject::tr(
+                                "Rep.xml is missing in a repository in ZIP format"));
+                    }
+                }
+                delete sub;
+            }
+        }
+        f->close();
     }
 
     if (job->shouldProceed(QObject::tr("Parsing XML"))) {
@@ -1098,6 +1131,7 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
     }
 
     delete f;
+    delete dir;
 
     job->complete();
 }

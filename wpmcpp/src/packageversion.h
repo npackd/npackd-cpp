@@ -63,7 +63,6 @@ private:
     static Dependency* createDependency(QDomElement* e);
     static DetectFile* createDetectFile(QDomElement* e, QString* err);
 
-    void unzip(Job* job, QString zipfile, QString outputdir);
     bool createShortcuts(const QString& dir, QString* errMsg);
 
     /**

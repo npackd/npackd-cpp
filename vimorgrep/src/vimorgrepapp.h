@@ -6,6 +6,10 @@
 
 #include "packageversion.h"
 
+/**
+ * @brief Creates an Npackd repository from the data from vim.org.
+ * See also https://bitbucket.org/vimcommunity/vim-pi/src/3477ee1dbdada435910fde6b335be4f55c3d1211/python/vimorg.py?at=master
+ */
 class VimOrgRepApp: public QObject
 {
     Q_OBJECT
