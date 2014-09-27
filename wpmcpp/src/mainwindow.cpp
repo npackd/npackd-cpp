@@ -34,6 +34,7 @@
 #include <QLabel>
 #include <QDockWidget>
 #include <QTreeWidget>
+#include <QtConcurrent/QtConcurrentRun>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"

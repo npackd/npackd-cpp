@@ -19,6 +19,9 @@
 #include <QDomElement>
 #include <QDomDocument>
 #include <QMutex>
+#include <QThreadPool>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QFuture>
 #include <zlib.h>
 
 //#include "msoav2.h"
@@ -451,11 +454,14 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     QDir d(getPath());
 
+    QFuture<void> deleteShortcutsFuture;
+    Job* deleteShortcutsJob = 0;
     if (job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Deleting shortcuts"));
-        Job* sub = job->newSubJob(0.2);
-        deleteShortcuts(d.absolutePath(), sub, true, false, false);
-        delete sub;
+        Job* deleteShortcutsJob = new Job();
+        deleteShortcutsFuture = QtConcurrent::run(this,
+                &PackageVersion::deleteShortcuts,
+                d.absolutePath(), deleteShortcutsJob, true, false, false);
     }
 
     QString uninstallationScript;
@@ -579,6 +585,9 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
         }
         job->setProgress(1);
     }
+
+    deleteShortcutsFuture.waitForFinished();
+    delete deleteShortcutsJob;
 
     job->complete();
 }
