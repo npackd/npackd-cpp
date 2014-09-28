@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->taskbarMessageId = 0;
 
-    this->progressContent = 0;
+    this->pt = 0;
     this->jobsTab = 0;
     this->taskbarInterface = 0;
 
@@ -544,8 +544,6 @@ void MainWindow::monitor(Job* job, const QString& title, QThread* thread)
     updateProgressTabTitle();
 
     pt->addJob(job, title, thread);
-
-    progressContent->resize(500, 500);
 }
 
 void MainWindow::onShow()
@@ -1666,33 +1664,12 @@ void MainWindow::addTextTab(const QString& title, const QString& text,
 
 void MainWindow::addJobsTab()
 {
-    QScrollArea* jobsScrollArea = new QScrollArea(this->ui->tabWidget);
-    jobsScrollArea->setFrameStyle(0);
+    pt = new ProgressTree2(this->ui->tabWidget);
 
-    progressContent = new QFrame(jobsScrollArea);
-    QVBoxLayout* layout = new QVBoxLayout();
-
-    QSizePolicy sp;
-    sp.setVerticalPolicy(QSizePolicy::Preferred);
-    sp.setHorizontalPolicy(QSizePolicy::Ignored);
-    sp.setHorizontalStretch(100);
-    progressContent->setSizePolicy(sp);
-
-    layout->addStretch(100);
-    progressContent->setLayout(layout);
-    jobsScrollArea->setWidget(progressContent);
-    jobsScrollArea->setWidgetResizable(true);
-
-    int index = this->ui->tabWidget->addTab(jobsScrollArea,
+    int index = this->ui->tabWidget->addTab(pt,
             QObject::tr("Jobs"));
     this->jobsTab = this->ui->tabWidget->widget(index);
     updateProgressTabTitle();
-
-    pt = new ProgressTree2(progressContent);
-    pt->resize(100, 100);
-    layout->insertWidget(0, pt);
-
-    progressContent->resize(500, 500);
 }
 
 void MainWindow::on_actionShow_Details_triggered()

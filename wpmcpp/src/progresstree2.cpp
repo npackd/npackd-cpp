@@ -6,10 +6,21 @@
 #include <QString>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QMessageBox>
 
 #include "progresstree2.h"
 #include "job.h"
 #include "visiblejobs.h"
+#include "wpmutils.h"
+#include "mainwindow.h"
+
+class CancelPushButton: public QPushButton
+{
+public:
+    QTreeWidgetItem* item;
+
+    CancelPushButton(QWidget *parent): QPushButton(parent) {}
+};
 
 ProgressTree2::ProgressTree2(QWidget *parent) :
     QTreeWidget(parent), started(0)
@@ -23,12 +34,16 @@ ProgressTree2::ProgressTree2(QWidget *parent) :
     this->monitoredJobLastChanged = 0;
 }
 
+void ProgressTree2::timerTimeout()
+{
+
+}
+
 void ProgressTree2::addJob(Job* job, const QString& title, QThread* thread)
 {
-    this->title = title;
-    this->thread = thread;
+    this->title = title; //TODO: different for different jobs
 
-    QTreeWidgetItem * item;
+    QTreeWidgetItem* item;
     item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(title));
 
     addTopLevelItem(item);
@@ -37,11 +52,14 @@ void ProgressTree2::addJob(Job* job, const QString& title, QThread* thread)
     pb->setMaximum(10000);
     setItemWidget(item, 3, pb);
 
-    QPushButton* cancel = new QPushButton(this);
+    CancelPushButton* cancel = new CancelPushButton(this);
     cancel->setText(QObject::tr("Cancel"));
+    cancel->item = item;
     connect(cancel, SIGNAL(clicked()), this,
             SLOT(cancelClicked()));
     setItemWidget(item, 4, cancel);
+
+    item->setData(0, Qt::UserRole, qVariantFromValue((void*) job));
 
     connect(job, SIGNAL(changed(const JobState&)), this,
             SLOT(monitoredJobChanged(const JobState&)),
@@ -56,8 +74,10 @@ void ProgressTree2::addJob(Job* job, const QString& title, QThread* thread)
 
 void ProgressTree2::cancelClicked()
 {
-    // TODO: ui->pushButtonCancel->setEnabled(false);
-    // TODO: job->cancel();
+    CancelPushButton* pb = (CancelPushButton*) QObject::sender();
+    pb->setEnabled(false);
+    Job* job = getJob(*pb->item);
+    job->cancel();
 }
 
 void ProgressTree2::monitoredJobChanged(const JobState& state)
@@ -72,13 +92,39 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
 
         int index = VisibleJobs::getDefault()->runningJobs.indexOf(state.job);
 
-        QTreeWidgetItem * item = this->topLevelItem(index);
+        QTreeWidgetItem* item = this->topLevelItem(index);
         updateItem(item, state);
     }
 
     if (state.completed) {
         int index = VisibleJobs::getDefault()->runningJobs.indexOf(state.job);
-        QTreeWidgetItem * item = this->topLevelItem(index);
+        QTreeWidgetItem* item = this->topLevelItem(index);
+
+        Job* job = state.job;
+
+        if (!job->getErrorMessage().isEmpty()) {
+            QString title = QObject::tr("Error") + ": " + this->title +
+                        " / " + job->getHint() +
+                        ": " + WPMUtils::getFirstLine(job->getErrorMessage());
+            QString msg = job->getHint() + "\n" + job->getErrorMessage();
+            if (MainWindow::getInstance())
+                MainWindow::getInstance()->addErrorMessage(
+                        title, msg);
+            else {
+                QMessageBox mb;
+                mb.setWindowTitle(title);
+                mb.setText(msg);
+                mb.setIcon(QMessageBox::Warning);
+                mb.setStandardButtons(QMessageBox::Ok);
+                mb.setDefaultButton(QMessageBox::Ok);
+                mb.setDetailedText(msg);
+                mb.exec();
+            }
+        }
+        VisibleJobs::getDefault()->unregisterJob(job);
+
+        //job->deleteLater();
+
         delete item;
     }
 }
@@ -122,44 +168,21 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
 
         QProgressBar* pb = (QProgressBar*) itemWidget(item, 3);
         pb->setValue(lround(s.progress * 10000));
-        /*
-         * TODO:
-        ui->pushButtonCancel->setEnabled(!s.cancelRequested);
-        */
+
+        QPushButton* b = (QPushButton*) itemWidget(item, 4);
+        b->setEnabled(!s.cancelRequested);
     }
 }
 
 void ProgressTree2::threadFinished()
 {
-    /* TODO:
-    if (!job->getErrorMessage().isEmpty()) {
-        QString title = QObject::tr("Error") + ": " + this->title +
-                    " / " + job->getHint() +
-                    ": " + WPMUtils::getFirstLine(job->getErrorMessage());
-        QString msg = job->getHint() + "\n" + job->getErrorMessage();
-        if (MainWindow::getInstance())
-            MainWindow::getInstance()->addErrorMessage(
-                    title, msg);
-        else {
-            QMessageBox mb;
-            mb.setWindowTitle(title);
-            mb.setText(msg);
-            mb.setIcon(QMessageBox::Warning);
-            mb.setStandardButtons(QMessageBox::Ok);
-            mb.setDefaultButton(QMessageBox::Ok);
-            mb.setDetailedText(msg);
-            mb.exec();
-        }
-    }
-    */
-
-    delete this->thread;
-
-    /* TODO:
-    VisibleJobs::getDefault()->unregisterJob(this->job);
-
-    delete this->job;
-    delete ui;
-    */
+    QThread* t = (QThread*) QObject::sender();
+    t->deleteLater();
 }
 
+Job* ProgressTree2::getJob(const QTreeWidgetItem& item)
+{
+    const QVariant v = item.data(0, Qt::UserRole);
+    Job* f = (Job*) v.value<void*>();
+    return f;
+}

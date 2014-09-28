@@ -41,7 +41,6 @@ private:
 
     Ui::MainWindow *ui;
 
-    QFrame* progressContent;
     QWidget* jobsTab;
     MainFrame* mainFrame;
 
