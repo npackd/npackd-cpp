@@ -22,9 +22,9 @@ private:
     time_t started;
     QTimer* timer;
     QString title;
-    QThread* thread;
     time_t monitoredJobLastChanged;
     void updateItem(QTreeWidgetItem *item, const JobState &s);
+    Job *getJob(const QTreeWidgetItem &item);
 public:
     /**
      * @param parent parent widget
@@ -42,6 +42,7 @@ private slots:
     void cancelClicked();
     void monitoredJobChanged(const JobState &state);
     void threadFinished();
+    void timerTimeout();
 };
 
 #endif // PROGRESSTREE2_H
