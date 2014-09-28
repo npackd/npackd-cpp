@@ -45,7 +45,7 @@
 #include "downloader.h"
 #include "packageversionform.h"
 #include "uiutils.h"
-#include "progressframe.h"
+#include "progresstree2.h"
 #include "messageframe.h"
 #include "settingsframe.h"
 #include "licenseform.h"
@@ -60,6 +60,7 @@
 #include "updaterepositorythread.h"
 #include "scanharddrivesthread.h"
 #include "visiblejobs.h"
+#include "progresstree2.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -542,11 +543,7 @@ void MainWindow::monitor(Job* job, const QString& title, QThread* thread)
 
     updateProgressTabTitle();
 
-    ProgressFrame* pf = new ProgressFrame(progressContent, job, title,
-            thread);
-    pf->resize(100, 100);
-    QVBoxLayout* layout = (QVBoxLayout*) progressContent->layout();
-    layout->insertWidget(0, pf);
+    pt->addJob(job, title, thread);
 
     progressContent->resize(500, 500);
 }
@@ -1690,6 +1687,12 @@ void MainWindow::addJobsTab()
             QObject::tr("Jobs"));
     this->jobsTab = this->ui->tabWidget->widget(index);
     updateProgressTabTitle();
+
+    pt = new ProgressTree2(progressContent);
+    pt->resize(100, 100);
+    layout->insertWidget(0, pt);
+
+    progressContent->resize(500, 500);
 }
 
 void MainWindow::on_actionShow_Details_triggered()

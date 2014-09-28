@@ -21,6 +21,7 @@
 #include "fileloader.h"
 #include "selection.h"
 #include "mainframe.h"
+#include "progresstree2.h"
 
 namespace Ui {
     class MainWindow;
@@ -35,6 +36,8 @@ class MainWindow : public QMainWindow, public Selection {
     Q_OBJECT
 private:
     static MainWindow* instance;
+
+    ProgressTree2* pt;
 
     Ui::MainWindow *ui;
 

@@ -25,7 +25,6 @@ SOURCES += main.cpp \
     detectfile.cpp \
     uiutils.cpp \
     commandline.cpp \
-    progressframe.cpp \
     messageframe.cpp \
     xmlutils.cpp \
     settingsframe.cpp \
@@ -53,7 +52,9 @@ SOURCES += main.cpp \
     updaterepositorythread.cpp \
     scanharddrivesthread.cpp \
     visiblejobs.cpp \
-    clprocessor.cpp
+    clprocessor.cpp \
+    progresstree2.cpp \
+    progressframe.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -74,7 +75,6 @@ HEADERS += mainwindow.h \
     detectfile.h \
     uiutils.h \
     commandline.h \
-    progressframe.h \
     messageframe.h \
     xmlutils.h \
     settingsframe.h \
@@ -104,15 +104,17 @@ HEADERS += mainwindow.h \
     updaterepositorythread.h \
     scanharddrivesthread.h \
     visiblejobs.h \
-    clprocessor.h
+    clprocessor.h \
+    progresstree2.h \
+    progressframe.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \
-    progressframe.ui \
     messageframe.ui \
     settingsframe.ui \
     packageframe.ui \
-    mainframe.ui
+    mainframe.ui \
+    progressframe.ui
 TRANSLATIONS = wpmcpp_es.ts wpmcpp_ru.ts wpmcpp_fr.ts wpmcpp_de.ts
 LIBS += -lquazip \
     -lz \

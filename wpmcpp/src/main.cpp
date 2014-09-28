@@ -24,7 +24,6 @@
 #include "packageversion.h"
 #include "installoperation.h"
 #include "uiutils.h"
-#include "progressframe.h"
 #include "installthread.h"
 #include "clprocessor.h"
 
