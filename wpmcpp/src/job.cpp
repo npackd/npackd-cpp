@@ -63,9 +63,13 @@ Job::Job() : mutex(QMutex::Recursive)
 {
     this->progress = 0.0;
     this->parentJob = 0;
+    this->subJobStart = 0;
+    this->subJobSteps = -1;
     this->cancelRequested = false;
     this->completed = false;
     this->started = 0;
+    this->uparentHint = true;
+    this->uparentProgress = true;
 }
 
 Job::~Job()
@@ -130,13 +134,16 @@ void Job::parentJobChanged(const JobState& s)
         this->cancel();
 }
 
-Job* Job::newSubJob(double part)
+Job* Job::newSubJob(double part, bool updateParentHint_,
+        bool updateParentProgress_)
 {
     Job* r = new Job();
     r->parentJob = this;
     r->subJobSteps = part;
     r->subJobStart = this->getProgress();
     r->parentHintStart = getHint();
+    r->uparentHint = updateParentHint_;
+    r->uparentProgress = updateParentProgress_;
 
     // bool success =
     connect(this, SIGNAL(changed(const JobState&)),
@@ -182,8 +189,10 @@ void Job::setProgress(double progress)
 
     fireChange();
 
-    updateParentProgress();
-    updateParentHint();
+    if (uparentProgress)
+        updateParentProgress();
+    if (uparentHint)
+        updateParentHint();
 }
 
 void Job::updateParentProgress()
@@ -233,7 +242,8 @@ void Job::setHint(const QString &hint)
 
     fireChange();
 
-    updateParentHint();
+    if (uparentHint)
+        updateParentHint();
 }
 
 void Job::updateParentHint()
