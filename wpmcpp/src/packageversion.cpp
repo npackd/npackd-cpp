@@ -366,7 +366,8 @@ bool PackageVersion::isDirectoryLocked()
     if (installed()) {
         QDir d(getPath());
         QDateTime now = QDateTime::currentDateTime();
-        QString newName = QString("%1-%2").arg(d.absolutePath()).arg(now.toTime_t());
+        QString newName = QString("%1-%2").arg(d.absolutePath()).arg(
+                now.toTime_t());
 
         if (!d.rename(d.absolutePath(), newName)) {
             return true;
@@ -458,7 +459,7 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
     Job* deleteShortcutsJob = 0;
     if (job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Deleting shortcuts"));
-        Job* deleteShortcutsJob = new Job();
+        Job* deleteShortcutsJob = job->newSubJob(0, false, false);
         deleteShortcutsFuture = QtConcurrent::run(this,
                 &PackageVersion::deleteShortcuts,
                 d.absolutePath(), deleteShortcutsJob, true, false, false);

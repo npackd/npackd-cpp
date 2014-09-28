@@ -106,6 +106,12 @@ private:
     /** time when this job was started or 0 */
     time_t started;
 
+    /** should the parent hint be updated? */
+    bool uparentHint;
+
+    /** should the parent progress be updated? */
+    bool uparentProgress;
+
     /**
      * @threadsafe
      */
@@ -166,10 +172,13 @@ public:
      * from the sub-job does not automatically propagate to the parent job.
      *
      * @param part 0..1 part of this for the created sub-job
+     * @param updateParentHint_ true = update hint of the parent job
+     * @param updateParentProgress_ true = update progress of the parent job
      * @return child job with parent=this
      * @threadsafe
      */
-    Job* newSubJob(double part);
+    Job* newSubJob(double part, bool updateParentHint_=true,
+            bool updateParentProgress_=true);
 
     /**
      * @return progress of this job (0...1)
