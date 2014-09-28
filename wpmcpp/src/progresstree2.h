@@ -21,7 +21,6 @@ class ProgressTree2: public QTreeWidget
 private:
     time_t started;
     QTimer* timer;
-    QString title;
     time_t monitoredJobLastChanged;
     void updateItem(QTreeWidgetItem *item, const JobState &s);
     Job *getJob(const QTreeWidgetItem &item);

@@ -1664,10 +1664,17 @@ void MainWindow::addTextTab(const QString& title, const QString& text,
 
 void MainWindow::addJobsTab()
 {
-    pt = new ProgressTree2(this->ui->tabWidget);
+    QWidget* w = new QWidget(this->ui->tabWidget);
+    QVBoxLayout* layout = new QVBoxLayout(w);
+    layout->setContentsMargins(0, 10, 0, 0);
+    w->setLayout(layout);
 
-    int index = this->ui->tabWidget->addTab(pt,
+    pt = new ProgressTree2(w);
+    layout->addWidget(pt);
+
+    int index = this->ui->tabWidget->addTab(w,
             QObject::tr("Jobs"));
+
     this->jobsTab = this->ui->tabWidget->widget(index);
     updateProgressTabTitle();
 }
