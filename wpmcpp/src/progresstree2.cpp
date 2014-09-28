@@ -7,6 +7,7 @@
 #include <QProgressBar>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QHeaderView>
 
 #include "progresstree2.h"
 #include "job.h"
@@ -32,6 +33,21 @@ ProgressTree2::ProgressTree2(QWidget *parent) :
     timer->start(1000);
 
     this->monitoredJobLastChanged = 0;
+
+    setColumnWidth(0, 500);
+    setColumnWidth(1, 100);
+    setColumnWidth(2, 100);
+    setColumnWidth(3, 200);
+    setColumnWidth(4, 100);
+    header()->setStretchLastSection(false);
+
+    QStringList hls;
+    hls.append(QObject::tr("Task / Step"));
+    hls.append(QObject::tr("Elapsed time"));
+    hls.append(QObject::tr("Estimated time"));
+    hls.append(QObject::tr("Progress"));
+    hls.append(QObject::tr(""));
+    setHeaderLabels(hls);
 }
 
 void ProgressTree2::timerTimeout()
@@ -41,8 +57,6 @@ void ProgressTree2::timerTimeout()
 
 void ProgressTree2::addJob(Job* job, const QString& title, QThread* thread)
 {
-    this->title = title; //TODO: different for different jobs
-
     QTreeWidgetItem* item;
     item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(title));
 
@@ -60,6 +74,7 @@ void ProgressTree2::addJob(Job* job, const QString& title, QThread* thread)
     setItemWidget(item, 4, cancel);
 
     item->setData(0, Qt::UserRole, qVariantFromValue((void*) job));
+    item->setData(1, Qt::UserRole, QVariant(title));
 
     connect(job, SIGNAL(changed(const JobState&)), this,
             SLOT(monitoredJobChanged(const JobState&)),
@@ -103,7 +118,8 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
         Job* job = state.job;
 
         if (!job->getErrorMessage().isEmpty()) {
-            QString title = QObject::tr("Error") + ": " + this->title +
+            QString jobTitle = item->data(1, Qt::UserRole).toString();
+            QString title = QObject::tr("Error") + ": " + jobTitle +
                         " / " + job->getHint() +
                         ": " + WPMUtils::getFirstLine(job->getErrorMessage());
             QString msg = job->getHint() + "\n" + job->getErrorMessage();
@@ -123,7 +139,7 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
         }
         VisibleJobs::getDefault()->unregisterJob(job);
 
-        //job->deleteLater();
+        job->deleteLater();
 
         delete item;
     }
@@ -137,7 +153,8 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
         time_t now;
         time(&now);
 
-        item->setText(0, this->title + " / " + s.hint);
+        QString jobTitle = item->data(1, Qt::UserRole).toString();
+        item->setText(0, jobTitle + " / " + s.hint);
 
         if (started != 0) {
             time_t diff = difftime(now, started);
