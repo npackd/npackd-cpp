@@ -979,44 +979,56 @@ QString DBRepository::clear()
 
     this->categories.clear();
 
-    if (job->shouldProceed(QObject::tr("Clearing the packages table"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Clearing the packages table"));
         QString err = exec("DELETE FROM PACKAGE");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.05);
+            sub->completeWithProgress();
     }
 
-    if (job->shouldProceed(QObject::tr("Clearing the packages table 2"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Clearing the packages table 2"));
         QString err = exec("DELETE FROM PACKAGE2");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.1);
+            sub->completeWithProgress();
     }
 
-    if (job->shouldProceed(QObject::tr("Clearing the package versions table"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.6,
+                QObject::tr("Clearing the package versions table"));
         QString err = exec("DELETE FROM PACKAGE_VERSION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.7);
+            sub->completeWithProgress();
     }
 
-    if (job->shouldProceed(QObject::tr("Clearing the licenses table"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.26,
+                QObject::tr("Clearing the licenses table"));
         QString err = exec("DELETE FROM LICENSE");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.96);
+            sub->completeWithProgress();
     }
 
-    if (job->shouldProceed(QObject::tr("Clearing the categories table"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.04,
+                QObject::tr("Clearing the categories table"));
         QString err = exec("DELETE FROM CATEGORY");
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
+            sub->completeWithProgress();
             job->setProgress(1);
+        }
     }
 
     job->complete();
@@ -1084,7 +1096,7 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
     }
 
     QTemporaryDir* dir = 0;
-    if (job->shouldProceed(QObject::tr("Unpacking repository"))) {
+    if (job->shouldProceed()) {
         if (f->open(QFile::ReadOnly) &&
                 f->seek(0) && f->read(4) == QByteArray::fromRawData(
                 "PK\x03\x04", 4)) {
@@ -1114,7 +1126,8 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
         f->close();
     }
 
-    if (job->shouldProceed(QObject::tr("Parsing XML"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.9, QObject::tr("Parsing XML"));
         RepositoryXMLHandler handler(this);
         QXmlSimpleReader reader;
         reader.setContentHandler(&handler);
@@ -1122,8 +1135,10 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
         QXmlInputSource inputSource(f);
         if (!reader.parse(inputSource))
             job->setErrorMessage(handler.errorString());
-        else
+        else {
+            sub->completeWithProgress();
             job->setProgress(1);
+        }
     }
 
     delete f;
@@ -1137,97 +1152,109 @@ void DBRepository::updateF5(Job* job)
     DBRepository temp;
     QTemporaryFile tempFile;
     bool tempDatabaseOpen = false;
-    if (job->shouldProceed(QObject::tr("Creating a temporary file"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Creating a temporary file"));
         if (!tempFile.open()) {
             job->setErrorMessage(QObject::tr("Error creating a temporary file"));
         } else {
             tempFile.close();
-            job->setProgress(0.01);
+            sub->completeWithProgress();
         }
     }
 
-    if (job->shouldProceed(QObject::tr("Creating a temporary database"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Creating a temporary database"));
         QString err = temp.open("tempdb", tempFile.fileName());
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
             tempDatabaseOpen = true;
-            job->setProgress(0.02);
+            sub->completeWithProgress();
         }
     }
 
     bool transactionStarted = false;
-    if (job->shouldProceed(QObject::tr("Starting an SQL transaction (tempdb)"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Starting an SQL transaction (tempdb)"));
         QString err = temp.exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
-            job->setProgress(0.03);
+            sub->completeWithProgress();
             transactionStarted = true;
         }
     }
 
-    if (job->shouldProceed(
-            QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"))) {
-        Job* sub = job->newSubJob(0.3);
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.27,
+                QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"));
         temp.load(sub, true);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
 
-    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction (tempdb)"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Commiting the SQL transaction (tempdb)"));
         QString err = temp.exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.35);
+            sub->completeWithProgress();
     } else {
         if (transactionStarted)
             temp.exec("ROLLBACK");
     }
 
-    if (job->shouldProceed(QObject::tr("Refreshing the installation status (tempdb)"))) {
-        Job* sub = job->newSubJob(0.4);
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.4,
+                QObject::tr("Refreshing the installation status (tempdb)"));
         InstalledPackages::getDefault()->refresh(&temp, sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
 
-    if (job->shouldProceed(
-            QObject::tr("Updating the status for installed packages in the database (tempdb)"))) {
-        Job* sub = job->newSubJob(0.05);
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Updating the status for installed packages in the database (tempdb)"));
         temp.updateStatusForInstalled(sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
 
-    if (job->shouldProceed(
-            QObject::tr("Removing packages without versions"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.04,
+                QObject::tr("Removing packages without versions"));
         QString err = temp.exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION "
                 "WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
-            job->setProgress(0.84);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(
-            QObject::tr("Removing packages without versions 2"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Removing packages without versions 2"));
         QString err = temp.exec("DELETE FROM PACKAGE2 WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION "
                 "WHERE PACKAGE = PACKAGE2.NAME)");
         if (err.isEmpty())
-            job->setProgress(0.85);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(
-            QObject::tr("Attaching the temporary database"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Attaching the temporary database"));
         QString err = exec("ATTACH '" + tempFile.fileName() + "' as tempdb");
         if (err.isEmpty())
-            job->setProgress(0.90);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
@@ -1241,29 +1268,34 @@ void DBRepository::updateF5(Job* job)
     qDebug() << tempFile.fileName();
     */
 
-    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Starting an SQL transaction"));
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
-            job->setProgress(0.91);
+            sub->completeWithProgress();
             transactionStarted = true;
         }
     }
 
-    if (job->shouldProceed(
-            QObject::tr("Clearing the database"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Clearing the database"));
         QString err = clear();
         if (err.isEmpty())
-            job->setProgress(0.92);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
     // do not copy full tables here, specify columns names instead to be
     // forward compatible if a new column will be added
-    if (job->shouldProceed(
-            QObject::tr("Transferring the data from the temporary database"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.03,
+                QObject::tr("Transferring the data from the temporary database"));
+
         // exec("DROP INDEX PACKAGE_VERSION_PACKAGE_NAME");
         QString err = exec("INSERT INTO PACKAGE(NAME, TITLE, URL, "
                 "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
@@ -1307,17 +1339,19 @@ void DBRepository::updateF5(Job* job)
                     "SELECT ID, "
                     "NAME, PARENT, LEVEL FROM tempdb.CATEGORY");
         if (err.isEmpty())
-            job->setProgress(0.95);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.03,
+                QObject::tr("Commiting the SQL transaction"));
         QString err = exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.99);
+            sub->completeWithProgress();
     } else {
         if (transactionStarted)
             exec("ROLLBACK");
@@ -1331,8 +1365,10 @@ void DBRepository::updateF5(Job* job)
     qDebug() << tempFile.fileName();
     */
 
-    if (job->shouldProceed(
-            QObject::tr("Detaching the temporary database"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Detaching the temporary database"));
+
         QString err;
         for (int i = 0; i < 10; i++) {
             err = exec("DETACH tempdb");
@@ -1343,16 +1379,19 @@ void DBRepository::updateF5(Job* job)
         }
 
         if (err.isEmpty())
-            job->setProgress(0.90);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QObject::tr("Reading categories"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Reading categories"));
         QString err = readCategories();
-        if (err.isEmpty())
+        if (err.isEmpty()) {
+            sub->completeWithProgress();
             job->setProgress(1);
-        else
+        } else
             job->setErrorMessage(err);
     }
 
@@ -1365,46 +1404,58 @@ void DBRepository::updateF5(Job* job)
 void DBRepository::saveAll(Job* job, Repository* r, bool replace)
 {
     bool transactionStarted = false;
-    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Starting an SQL transaction"));
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
-            job->setProgress(0.01);
+            sub->completeWithProgress();
             transactionStarted = true;
         }
     }
 
-    if (job->shouldProceed(QObject::tr("Inserting data in the packages table"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Inserting data in the packages table"));
         QString err = savePackages(r, replace);
         if (err.isEmpty())
-            job->setProgress(0.6);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QObject::tr("Inserting data in the package versions table"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.89,
+                QObject::tr("Inserting data in the package versions table"));
         QString err = savePackageVersions(r, replace);
         if (err.isEmpty())
-            job->setProgress(0.95);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QObject::tr("Inserting data in the licenses table"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.04,
+                QObject::tr("Inserting data in the licenses table"));
         QString err = saveLicenses(r, replace);
         if (err.isEmpty())
-            job->setProgress(0.98);
+            sub->completeWithProgress();
         else
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.02,
+                QObject::tr("Commiting the SQL transaction"));
         QString err = exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
+            sub->completeWithProgress();
             job->setProgress(1);
+        }
     } else {
         if (transactionStarted)
             exec("ROLLBACK");

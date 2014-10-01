@@ -107,6 +107,12 @@ void Job::complete()
         fireChange();
 }
 
+void Job::completeWithProgress()
+{
+    setProgress(1);
+    complete();
+}
+
 bool Job::isCancelled() const
 {
     bool cancelRequested_;

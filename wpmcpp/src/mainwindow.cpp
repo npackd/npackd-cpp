@@ -699,7 +699,9 @@ void MainWindow::processWithSelfUpdate(Job* job,
 {
     QString newExe;
 
-    if (job->shouldProceed("Copying the executable")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.8, "Copying the executable");
+
         QString thisExe = WPMUtils::getExeFile();
 
         // 1. copy .exe to the temporary directory
@@ -719,7 +721,7 @@ void MainWindow::processWithSelfUpdate(Job* job,
                 if (!QFile::copy(thisExe, newExe))
                     job->setErrorMessage("Error copying the binary");
                 else
-                    job->setProgress(0.8);
+                    sub->completeWithProgress();
 
                 // qDebug() << "self-update 2";
             }
@@ -727,7 +729,9 @@ void MainWindow::processWithSelfUpdate(Job* job,
     }
 
     QString batchFileName;
-    if (job->shouldProceed("Creating the .bat file")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.1, "Creating the .bat file");
+
         QString pct = WPMUtils::programCloseType2String(programCloseType);
         QStringList batch;
         for (int i = 0; i < ops.count(); i++) {
@@ -771,11 +775,13 @@ void MainWindow::processWithSelfUpdate(Job* job,
 
             // qDebug() << "self-update 4";
 
-            job->setProgress(0.9);
+            sub->completeWithProgress();
         }
     }
 
-    if (job->shouldProceed("Starting the copied binary")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.1, "Starting the copied binary");
+
         QString file_ = batchFileName;
         file_.replace('/', '\\');
         QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
@@ -805,6 +811,7 @@ void MainWindow::processWithSelfUpdate(Job* job,
 
         // qDebug() << "self-update 5";
 
+        sub->completeWithProgress();
         job->setProgress(1);
     }
 

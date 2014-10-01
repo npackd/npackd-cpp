@@ -145,7 +145,7 @@ void AbstractRepository::process(Job *job,
     int n = install.count();
 
     // 10% for stopping the packages
-    if (job->shouldProceed(QObject::tr("Stopping the running packages"))) {
+    if (job->shouldProceed()) {
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
@@ -421,16 +421,16 @@ QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
     QString v;
     InstalledPackageVersion* ipv;
     if (WPMUtils::is64BitWindows()) {
-        ipv = InstalledPackages::getNewestInstalled(
+        ipv = InstalledPackages::getDefault()->getNewestInstalled(
                 "com.googlecode.windows-package-manager.NpackdCL64");
     } else
         ipv = 0;
 
     if (!ipv)
-        ipv = InstalledPackages::getNewestInstalled(
+        ipv = InstalledPackages::getDefault()->getNewestInstalled(
             "com.googlecode.windows-package-manager.NpackdCL");
 
-    if (pv)
+    if (ipv)
         v = ipv->getDirectory();
 
     delete ipv;

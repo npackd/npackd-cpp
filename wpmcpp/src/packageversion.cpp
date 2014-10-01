@@ -1085,12 +1085,14 @@ void PackageVersion::install(Job* job, const QString& where)
         }
     }
 
-    if (job->shouldProceed(QObject::tr("Checking for viruses"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Checking for viruses"));
         bool safe = isFileSafe(f->fileName(), this->download.toString());
         if (!safe) {
             job->setErrorMessage(QObject::tr("Antivirus check failed. The file is not safe."));
         }
-        job->setProgress(0.69);
+        sub->completeWithProgress();
     }
 
     /* this should actually be used by MS Office. MS Essentials and
