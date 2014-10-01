@@ -74,7 +74,7 @@ private:
      * @return found package version or 0
      */
     PackageVersion* findPackageVersion(const QString& package,
-            const Version& version);
+            const Version& version) const;
 public:
     /** full package name -> all defined package versions */
     QMultiMap<QString, PackageVersion*> package2versions;
@@ -148,7 +148,7 @@ public:
             const QString& guid, QString *err) const;
 
     PackageVersion* findPackageVersion_(const QString& package,
-            const Version& version, QString* err);
+            const Version& version, QString* err) const;
 
     License* findLicense_(const QString& name, QString *err);
 

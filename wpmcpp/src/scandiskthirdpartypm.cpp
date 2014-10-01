@@ -28,7 +28,6 @@ void ScanDiskThirdPartyPM::scan(Job *job,
         UINT t = GetDriveType((WCHAR*) path.utf16());
         if (t == DRIVE_FIXED)
             scan(path, djob, 0, ignore);
-        delete djob;
     }
 
     job->complete();
@@ -114,7 +113,6 @@ void ScanDiskThirdPartyPM::scan(const QString& path, Job* job, int level,
             else
                 djob = 0;
             scan(path + "\\" + name.toLower(), djob, level + 1, ignore);
-            delete djob;
 
             if (job) {
                 job->setProgress(((double) idx) / count);

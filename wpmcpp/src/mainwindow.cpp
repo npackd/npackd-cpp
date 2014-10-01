@@ -532,7 +532,7 @@ void MainWindow::monitoredJobChanged(const JobState& state)
     }
 }
 
-void MainWindow::monitor(Job* job, const QString& title, QThread* thread)
+void MainWindow::monitor(Job* job, QThread* thread)
 {
     connect(job, SIGNAL(changed(const JobState&)), this,
             SLOT(monitoredJobChanged(const JobState&)),
@@ -543,7 +543,7 @@ void MainWindow::monitor(Job* job, const QString& title, QThread* thread)
 
     updateProgressTabTitle();
 
-    pt->addJob(job, title, thread);
+    pt->addJob(job, thread);
 }
 
 void MainWindow::onShow()
@@ -832,7 +832,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
                     delete job;
                 }
             } else {
-                Job* job = new Job();
+                Job* job = new Job(QObject::tr("Install/Uninstall"));
                 InstallThread* it = new InstallThread(0, 1, job);
                 it->install = install;
                 it->programCloseType = programCloseType;
@@ -842,7 +842,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
                         SLOT(processThreadFinished()),
                         Qt::QueuedConnection);
 
-                monitor(job, QObject::tr("Install/Uninstall"), it);
+                monitor(job, it);
             }
         }
     }
@@ -1253,7 +1253,7 @@ void MainWindow::closeDetailTabs()
 
 void MainWindow::recognizeAndLoadRepositories(bool useCache)
 {
-    Job* job = new Job();
+    Job* job = new Job(QObject::tr("Initializing"));
     UpdateRepositoryThread* it = new UpdateRepositoryThread(job);
 
     connect(it, SIGNAL(finished()), this,
@@ -1263,7 +1263,7 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
     this->reloadRepositoriesThreadRunning = true;
     updateActions();
 
-    monitor(job, QObject::tr("Initializing"), it);
+    monitor(job, it);
 }
 
 void MainWindow::setMenuAccelerators(){
@@ -1700,7 +1700,7 @@ void MainWindow::on_actionScan_Hard_Drives_triggered()
         return;
     }
 
-    Job* job = new Job();
+    Job* job = new Job(QObject::tr("Install/Uninstall"));
     ScanHardDrivesThread* it = new ScanHardDrivesThread(job);
 
     connect(it, SIGNAL(finished()), this,
@@ -1710,7 +1710,7 @@ void MainWindow::on_actionScan_Hard_Drives_triggered()
     this->hardDriveScanRunning = true;
     this->updateActions();
 
-    monitor(job, QObject::tr("Install/Uninstall"), it);
+    monitor(job, it);
 }
 
 bool comparesi(const QPair<QString, int>& a, const QPair<QString, int>& b)

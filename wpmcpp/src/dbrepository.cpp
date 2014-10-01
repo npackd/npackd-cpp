@@ -215,7 +215,7 @@ QString DBRepository::findCategory(int cat) const
 }
 
 PackageVersion* DBRepository::findPackageVersion_(
-        const QString& package, const Version& version, QString* err)
+        const QString& package, const Version& version, QString* err) const
 {
     *err = "";
 
@@ -1054,10 +1054,8 @@ void DBRepository::load(Job* job, bool useCache)
                         QObject::tr("Error loading the repository %1: %2")).arg(
                         urls.at(i)->toString()).arg(
                         s->getErrorMessage()));
-                delete s;
                 break;
             }
-            delete s;
         }
     } else {
         job->setErrorMessage(QObject::tr("No repositories defined"));
@@ -1083,7 +1081,6 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
             job->setErrorMessage(QString(
                     QObject::tr("Download failed: %2")).
                     arg(djob->getErrorMessage()));
-        delete djob;
     }
 
     QTemporaryDir* dir = 0;
@@ -1112,7 +1109,6 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
                                 "Rep.xml is missing in a repository in ZIP format"));
                     }
                 }
-                delete sub;
             }
         }
         f->close();
@@ -1177,7 +1173,6 @@ void DBRepository::updateF5(Job* job)
         temp.load(sub, true);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
-        delete sub;
     }
 
     if (job->shouldProceed(QObject::tr("Commiting the SQL transaction (tempdb)"))) {
@@ -1196,7 +1191,6 @@ void DBRepository::updateF5(Job* job)
         InstalledPackages::getDefault()->refresh(&temp, sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
-        delete sub;
     }
 
     if (job->shouldProceed(
@@ -1205,7 +1199,6 @@ void DBRepository::updateF5(Job* job)
         temp.updateStatusForInstalled(sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
-        delete sub;
     }
 
     if (job->shouldProceed(

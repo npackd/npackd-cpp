@@ -79,13 +79,12 @@ private:
     /**
      * Adds an entry in the "Progress" tab and monitors a task.
      *
-     * @param title job title
      * @param job this job will be monitored. The object will be destroyed after
      *     the thread completion
      * @param thread the job itself. The object will be destroyed after the
      *     completion. The thread will be started in this method.
      */
-    void monitor(Job* job, const QString& title, QThread* thread);
+    void monitor(Job* job, QThread* thread);
 
     void updateStatusInDetailTabs();
     void updateProgressTabTitle();

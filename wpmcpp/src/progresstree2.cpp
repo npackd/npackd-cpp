@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QHeaderView>
+#include <QDebug>
 
 #include "progresstree2.h"
 #include "job.h"
@@ -24,7 +25,7 @@ public:
 };
 
 ProgressTree2::ProgressTree2(QWidget *parent) :
-    QTreeWidget(parent), started(0)
+    QTreeWidget(parent)
 {
     setColumnCount(5);
 
@@ -55,12 +56,54 @@ void ProgressTree2::timerTimeout()
 
 }
 
-void ProgressTree2::addJob(Job* job, const QString& title, QThread* thread)
+QTreeWidgetItem* ProgressTree2::findItem(Job* job)
 {
-    QTreeWidgetItem* item;
-    item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(title));
+    QList<Job*> path;
+    Job* v = job;
+    while (v) {
+        path.insert(0, v);
+        v = v->parentJob;
+    }
 
-    addTopLevelItem(item);
+    QTreeWidgetItem* c = 0;
+    for (int i = 0; i < path.count(); i++) {
+        Job* toFind = path.at(i);
+        QTreeWidgetItem* found = 0;
+        if (i == 0) {
+            for (int j = 0; j < this->topLevelItemCount(); j++) {
+                QTreeWidgetItem* item = this->topLevelItem(j);
+                Job* v = getJob(*item);
+                if (v == toFind) {
+                    found = item;
+                    break;
+                }
+            }
+        } else {
+            for (int j = 0; j < c->childCount(); j++) {
+                QTreeWidgetItem* item = c->child(j);
+                Job* v = getJob(*item);
+                if (v == toFind) {
+                    found = item;
+                    break;
+                }
+            }
+        }
+        if (found)
+            c = found;
+        else {
+            c = 0;
+            break;
+        }
+    }
+
+    return c;
+}
+
+void ProgressTree2::fillItem(QTreeWidgetItem* item,
+        Job* job)
+{
+    item->setText(0, job->getTitle().isEmpty() ?
+            "-" : job->getTitle());
 
     QProgressBar* pb = new QProgressBar(this);
     pb->setMaximum(10000);
@@ -74,17 +117,38 @@ void ProgressTree2::addJob(Job* job, const QString& title, QThread* thread)
     setItemWidget(item, 4, cancel);
 
     item->setData(0, Qt::UserRole, qVariantFromValue((void*) job));
-    item->setData(1, Qt::UserRole, QVariant(title));
+}
+
+void ProgressTree2::addJob(Job* job, QThread* thread)
+{
+    QTreeWidgetItem* item = new QTreeWidgetItem(this);
+    fillItem(item, job);
+
+    connect(job, SIGNAL(subJobCreated(Job*)), this,
+            SLOT(subJobCreated(Job*)),
+            Qt::QueuedConnection);
 
     connect(job, SIGNAL(changed(const JobState&)), this,
             SLOT(monitoredJobChanged(const JobState&)),
             Qt::QueuedConnection);
 
-    connect(thread, SIGNAL(finished()), this,
-            SLOT(threadFinished()),
+    addTopLevelItem(item);
+
+    connect(thread, SIGNAL(finished()), this, SLOT(threadFinished()),
             Qt::QueuedConnection);
 
     thread->start(QThread::LowestPriority);
+}
+
+void ProgressTree2::subJobCreated(Job* sub)
+{
+    Job* job = sub->parentJob;
+    QTreeWidgetItem* item = findItem(job);
+    if (item) {
+        QTreeWidgetItem* subItem = new QTreeWidgetItem(item);
+        fillItem(subItem, sub);
+        item->setExpanded(true);
+    }
 }
 
 void ProgressTree2::cancelClicked()
@@ -102,23 +166,25 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
 
     // TODO: the index of the Job may be wrong here
 
-    if (now != monitoredJobLastChanged) {
+    //if (now != monitoredJobLastChanged) {
         monitoredJobLastChanged = now;
 
-        int index = VisibleJobs::getDefault()->runningJobs.indexOf(state.job);
-
-        QTreeWidgetItem* item = this->topLevelItem(index);
-        updateItem(item, state);
-    }
+        QTreeWidgetItem* item = findItem(state.job);
+        if (item)
+            updateItem(item, state);
+    //}
 
     if (state.completed) {
-        int index = VisibleJobs::getDefault()->runningJobs.indexOf(state.job);
-        QTreeWidgetItem* item = this->topLevelItem(index);
+        QTreeWidgetItem* item = findItem(state.job);
+
+        if (item) {
+            setItemWidget(item, 4, 0);
+        }
 
         Job* job = state.job;
 
         if (!job->getErrorMessage().isEmpty()) {
-            QString jobTitle = item->data(1, Qt::UserRole).toString();
+            QString jobTitle = job->getTitle();
             QString title = QObject::tr("Error") + ": " + jobTitle +
                         " / " + job->getHint() +
                         ": " + WPMUtils::getFirstLine(job->getErrorMessage());
@@ -137,11 +203,14 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
                 mb.exec();
             }
         }
-        VisibleJobs::getDefault()->unregisterJob(job);
 
-        job->deleteLater();
+        if (!job->parentJob) {
+            VisibleJobs::getDefault()->unregisterJob(job);
 
-        delete item;
+            // TODO: should be probably a QSharedPointer job->deleteLater();
+
+            delete item;
+        }
     }
 }
 
@@ -153,11 +222,13 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
         time_t now;
         time(&now);
 
-        QString jobTitle = item->data(1, Qt::UserRole).toString();
-        item->setText(0, jobTitle + " / " + s.hint);
+        if (item->childCount() == 0)
+            item->setText(0, s.job->getTitle() + " / " + s.job->getHint());
+        else
+            item->setText(0, s.job->getTitle());
 
-        if (started != 0) {
-            time_t diff = difftime(now, started);
+        if (s.started != 0) {
+            time_t diff = difftime(now, s.started);
 
             int sec = diff % 60;
             diff /= 60;
@@ -168,7 +239,7 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
             QTime e(h, min, sec);
             item->setText(1, e.toString());
 
-            diff = difftime(now, started);
+            diff = difftime(now, s.started);
             diff = lround(diff * (1 / s.progress - 1));
             sec = diff % 60;
             diff /= 60;
@@ -179,7 +250,6 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
             QTime r(h, min, sec);
             item->setText(2, r.toString());
         } else {
-            time(&this->started);
             item->setText(1, "-");
         }
 
