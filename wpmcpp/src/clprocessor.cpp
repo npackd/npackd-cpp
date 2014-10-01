@@ -296,12 +296,13 @@ QString CLProcessor::update()
 
     QList<InstallOperation*> ops;
     bool up2date = false;
-    if (job->shouldProceed(QObject::tr("Planning"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.12, QObject::tr("Planning"));
         QString err = rep->planUpdates(toUpdate, ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
-            job->setProgress(0.12);
+            sub->completeWithProgress();
             up2date = ops.size() == 0;
         }
     }
@@ -319,7 +320,7 @@ QString CLProcessor::update()
     }
     */
 
-    if (job->shouldProceed(QObject::tr("Updating")) && !up2date) {
+    if (job->shouldProceed() && !up2date) {
         Job* sjob = new Job();
         InstallThread* it = new InstallThread(0, 1, sjob);
         it->install = ops;

@@ -482,13 +482,15 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         QString err = readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        job->setProgress(0.5);
+        job->setProgress(0.8);
     }
 
     timer.time(2);
 
-    if (job->shouldProceed(QObject::tr(
-            "Correcting installation paths created by previous versions of Npackd"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.02,
+                QObject::tr(
+            "Correcting installation paths created by previous versions of Npackd"));
         QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir());
         QList<InstalledPackageVersion*> ipvs = this->getAll();
         for (int i = 0; i < ipvs.count(); i++) {
@@ -504,38 +506,43 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             }
         }
         qDeleteAll(ipvs);
-        job->setProgress(0.52);
+        sub->completeWithProgress();
     }
 
     // adding well-known packages should happen before adding packages
     // determined from the list of installed packages to get better
     // package descriptions for com.microsoft.Windows64 and similar packages
-    if (job->shouldProceed(QObject::tr("Adding well-known packages"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.03,
+                QObject::tr("Adding well-known packages"));
         AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
                 this->packageName);
         job->setErrorMessage(detect3rdParty(rep, pm, false));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.55);
+            sub->completeWithProgress();
     }
 
     timer.time(3);
 
-    if (job->shouldProceed(QObject::tr("Setting the NPACKD_CL environment variable"))) {
-        job->setHint("Updating NPACKD_CL");
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.02,
+                QObject::tr("Setting the NPACKD_CL environment variable"));
         QString err = rep->updateNpackdCLEnvVar();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.57);
+            sub->completeWithProgress();
     }
 
     timer.time(4);
 
     // qDebug() << "InstalledPackages::refresh.2";
 
-    if (job->shouldProceed(QObject::tr("Detecting MSI packages"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Detecting MSI packages"));
         // MSI package detection should happen before the detection for
         // control panel programs
         AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
@@ -543,7 +550,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.69);
+            sub->completeWithProgress();
     }
 
      // qDebug() << "InstalledPackages::refresh.2.1";
@@ -562,7 +569,10 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
     timer.time(5);
 
-    if (job->shouldProceed(QObject::tr("Reading the list of packages installed by Npackd"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Reading the list of packages installed by Npackd"));
+
         // detecting from the list of installed packages should happen first
         // as all other packages consult the list of installed packages
         AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
@@ -570,32 +580,37 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.7);
+            sub->completeWithProgress();
     }
 
     timer.time(6);
 
     // qDebug() << "InstalledPackages::refresh.3";
 
-    if (job->shouldProceed(
-            QObject::tr("Detecting software control panel packages"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.02,
+                QObject::tr("Detecting software control panel packages"));
+
         AbstractThirdPartyPM* pm = new ControlPanelThirdPartyPM();
         job->setErrorMessage(detect3rdParty(rep, pm, true, "control-panel:"));
         delete pm;
 
         if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.72);
+            sub->completeWithProgress();
     }
 
     timer.time(7);
 
-    if (job->shouldProceed(
-            QObject::tr("Clearing information about installed package versions in nested directories"))) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Clearing information about installed package versions in nested directories"));
         QString err = clearPackagesInNestedDirectories();
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else
+        else {
+            sub->completeWithProgress();
             job->setProgress(1);
+        }
     }
 
     timer.time(8);

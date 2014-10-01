@@ -174,6 +174,12 @@ public:
     void complete();
 
     /**
+     * @brief sets the progress to 1 and completes the job
+     * @threadsafe
+     */
+    void completeWithProgress();
+
+    /**
      * Request cancelling of this job.
      *
      * @threadsafe

@@ -373,13 +373,15 @@ QString App::check()
 {
     Job* job = clp.createJob();
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.01);
+            sub->completeWithProgress();
     }
 
     if (job->shouldProceed()) {
@@ -499,23 +501,28 @@ QString App::list()
     else
         job = clp.createJob();
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.01);
+            sub->completeWithProgress();
     }
 
     QList<PackageVersion*> list;
     QStringList titles;
 
-    if (job->shouldProceed("Getting the list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.99,
+                "Getting the list of installed packages from the registry");
         AbstractRepository* rep = AbstractRepository::getDefault_();
         list = rep->getInstalled_(&err);
         if (err.isEmpty()) {
             titles = sortPackageVersionsByPackageTitle(&list);
+            sub->completeWithProgress();
             job->setProgress(1);
         }
     }
@@ -567,22 +574,27 @@ QString App::search()
 
     DBRepository* rep = DBRepository::getDefault();
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.97,
+                "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.98);
+            sub->completeWithProgress();
     }
 
     QList<Package*> list;
-    if (job->shouldProceed("Searching for packages")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01, "Searching for packages");
         QString err;
         list = rep->findPackages(Package::INSTALLED, onlyInstalled,
                 query, -1, -1, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
     }
 
     if (job->shouldProceed()) {
@@ -731,13 +743,15 @@ QString App::update()
     DBRepository* rep = DBRepository::getDefault();
     Job* job = clp.createJob();
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.01);
+            sub->completeWithProgress();
     }
 
     if (job->shouldProceed()) {
@@ -868,7 +882,8 @@ void App::processInstallOperations(Job *job,
     if (rep->includesRemoveItself(ops)) {
         QString newExe;
 
-        if (job->shouldProceed("Copying the executable")) {
+        if (job->shouldProceed()) {
+            Job* sub = job->newSubJob(0.8, "Copying the executable");
             QString thisExe = WPMUtils::getExeFile();
 
             // 1. copy .exe to the temporary directory
@@ -888,7 +903,7 @@ void App::processInstallOperations(Job *job,
                     if (!QFile::copy(thisExe, newExe))
                         job->setErrorMessage("Error copying the binary");
                     else
-                        job->setProgress(0.8);
+                        sub->completeWithProgress();
 
                     // qDebug() << "self-update 2";
                 }
@@ -942,7 +957,8 @@ void App::processInstallOperations(Job *job,
             }
         }
 
-        if (job->shouldProceed("Starting the copied binary")) {
+        if (job->shouldProceed()) {
+            Job* sub = job->newSubJob(0.1, "Starting the copied binary");
             QString file_ = batchFileName;
             file_.replace('/', '\\');
             QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
@@ -981,6 +997,7 @@ void App::processInstallOperations(Job *job,
 
             // qDebug() << "self-update 5";
 
+            sub->completeWithProgress();
             job->setProgress(1);
         }
 
@@ -994,13 +1011,15 @@ QString App::add()
 {
     Job* job = clp.createJob();
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.01);
+            sub->completeWithProgress();
     }
 
     if (job->shouldProceed()) {
@@ -1187,13 +1206,15 @@ QString App::remove()
 {
     Job* job = clp.createJob();
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.01);
+            sub->completeWithProgress();
     }
 
     if (job->shouldProceed()) {

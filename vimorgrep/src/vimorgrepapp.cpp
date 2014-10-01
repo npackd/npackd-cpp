@@ -187,7 +187,7 @@ int VimOrgRepApp::process()
     Repository rep;
 
     QJsonObject root;
-    if (job->shouldProceed("Creating the repository")) {
+    if (job->shouldProceed()) {
         if (d.isObject()) {
             root = d.object();
         } else {
@@ -291,7 +291,7 @@ int VimOrgRepApp::process()
         job->setProgress(0.9);
     }
 
-    if (true && job->shouldProceed("Downloading the binaries")) {
+    if (true && job->shouldProceed()) {
         int n = rep.packageVersions.size();
         for (int i = 0; i < n; i++) {
             PackageVersion* pv = rep.packageVersions.at(i);
@@ -336,7 +336,7 @@ int VimOrgRepApp::process()
         }
     }
 
-    if (job->shouldProceed("Saving the repository")) {
+    if (job->shouldProceed()) {
         QString e = rep.writeTo("VimOrgRep.xml");
         if (!e.isEmpty())
             job->setErrorMessage(e);
