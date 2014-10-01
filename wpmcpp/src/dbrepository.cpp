@@ -1056,10 +1056,9 @@ void DBRepository::load(Job* job, bool useCache)
             if (!job->shouldProceed())
                 break;
 
-            job->setHint(QString(
+            Job* s = job->newSubJob(1.0 / urls.count(), QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
-                         arg(urls.count()));
-            Job* s = job->newSubJob(1.0 / urls.count());
+                    arg(urls.count()));
             loadOne(urls.at(i), s, useCache);
             if (!s->getErrorMessage().isEmpty()) {
                 job->setErrorMessage(QString(
@@ -1083,11 +1082,9 @@ void DBRepository::load(Job* job, bool useCache)
 }
 
 void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
-    job->setHint(QObject::tr("Downloading"));
-
     QFile* f = 0;
     if (job->getErrorMessage().isEmpty() && !job->isCancelled()) {
-        Job* djob = job->newSubJob(0.8);
+        Job* djob = job->newSubJob(0.8, QObject::tr("Downloading"));
         f = Downloader::download(djob, *url, 0, useCache);
         if (!djob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString(

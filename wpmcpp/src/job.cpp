@@ -83,14 +83,7 @@ Job::~Job()
         parentJob_->setHint(parentHintStart);
     }
 
-    for (int i = 0; i < this->childJobs.count(); i++) {
-        Job* ch = this->childJobs.at(i);
-        qDebug() << "deleting" << ch->getHint();
-        delete ch;
-        qDebug() << "OK";
-    }
-
-    // TODO: qDeleteAll(childJobs);
+    qDeleteAll(childJobs);
 }
 
 void Job::complete()

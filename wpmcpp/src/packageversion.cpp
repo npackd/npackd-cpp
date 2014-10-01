@@ -412,36 +412,37 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         bool menu, bool desktop, bool quickLaunch)
 {
     if (menu) {
-        job->setHint(QObject::tr("Start menu"));
+        Job* sub = job->newSubJob(0.33, QObject::tr("Start menu"));
         QDir d(WPMUtils::getShellDir(CSIDL_STARTMENU));
         WPMUtils::deleteShortcuts(dir, d);
 
         QDir d2(WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU));
         WPMUtils::deleteShortcuts(dir, d2);
+        sub->completeWithProgress();
     }
-    job->setProgress(0.33);
 
     if (desktop) {
-        job->setHint(QObject::tr("Desktop"));
+        Job* sub = job->newSubJob(0.33, QObject::tr("Desktop"));
         QDir d3(WPMUtils::getShellDir(CSIDL_DESKTOP));
         WPMUtils::deleteShortcuts(dir, d3);
 
         QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_DESKTOPDIRECTORY));
         WPMUtils::deleteShortcuts(dir, d4);
+        sub->completeWithProgress();
     }
-    job->setProgress(0.66);
 
     if (quickLaunch) {
-        job->setHint(QObject::tr("Quick launch bar"));
+        Job* sub = job->newSubJob(0.33, QObject::tr("Quick launch bar"));
         const char* A = "\\Microsoft\\Internet Explorer\\Quick Launch";
         QDir d3(WPMUtils::getShellDir(CSIDL_APPDATA) + A);
         WPMUtils::deleteShortcuts(dir, d3);
 
         QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + A);
         WPMUtils::deleteShortcuts(dir, d4);
+        sub->completeWithProgress();
     }
-    job->setProgress(1);
 
+    job->setProgress(1);
     job->complete();
 }
 
@@ -457,8 +458,8 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     QFuture<void> deleteShortcutsFuture;
     if (job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Deleting shortcuts"));
-        Job* deleteShortcutsJob = job->newSubJob(0, "", false, false);
+        Job* deleteShortcutsJob = job->newSubJob(0,
+                QObject::tr("Deleting shortcuts"), false, false);
         deleteShortcutsFuture = QtConcurrent::run(this,
                 &PackageVersion::deleteShortcuts,
                 d.absolutePath(), deleteShortcutsJob, true, false, false);
@@ -555,8 +556,7 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     if (job->getErrorMessage().isEmpty()) {
         if (d.exists()) {
-            job->setHint(QObject::tr("Deleting files"));
-            Job* rjob = job->newSubJob(0.54);
+            Job* rjob = job->newSubJob(0.54, QObject::tr("Deleting files"));
             removeDirectory(rjob, d.absolutePath());
             if (!rjob->getErrorMessage().isEmpty())
                 job->setErrorMessage(rjob->getErrorMessage());
@@ -834,18 +834,17 @@ QString PackageVersion::downloadAndComputeSHA1(Job* job)
 
     QString r;
 
-    job->setHint(QObject::tr("Downloading"));
     QTemporaryFile* f = 0;
-    Job* djob = job->newSubJob(0.95);
+    Job* djob = job->newSubJob(0.95, QObject::tr("Downloading"));
     f = Downloader::download(djob, this->download);
     if (!djob->getErrorMessage().isEmpty())
         job->setErrorMessage(QString(QObject::tr("Download failed: %1")).
                 arg(djob->getErrorMessage()));
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Computing SHA1"));
+        Job* sub = job->newSubJob(0.05, QObject::tr("Computing SHA1"));
         r = WPMUtils::sha1(f->fileName());
-        job->setProgress(1);
+        sub->completeWithProgress();
     }
 
     if (f)
@@ -965,8 +964,6 @@ QString PackageVersion::getPreferredInstallationDirectory()
 
 void PackageVersion::install(Job* job, const QString& where)
 {
-    job->setHint(QObject::tr("Preparing"));
-
     if (installed()) {
         job->setProgress(1);
         job->complete();
@@ -1055,9 +1052,9 @@ void PackageVersion::install(Job* job, const QString& where)
                 job->setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
                         arg(f->fileName()));
             } else {
-                job->setHint(QObject::tr("Downloading & computing hash sum (2nd try)"));
                 double rest = 0.63 - job->getProgress();
-                Job* djob = job->newSubJob(rest);
+                Job* djob = job->newSubJob(rest,
+                        QObject::tr("Downloading & computing hash sum (2nd try)"));
                 Downloader::download(djob, this->download, f,
                         this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
                 if (!djob->getErrorMessage().isEmpty())
@@ -1113,8 +1110,7 @@ void PackageVersion::install(Job* job, const QString& where)
     QString binary;
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (this->type == 0) {
-            job->setHint(QObject::tr("Extracting files"));
-            Job* djob = job->newSubJob(0.06);
+            Job* djob = job->newSubJob(0.06, QObject::tr("Extracting files"));
             WPMUtils::unzip(djob, f->fileName(), d.absolutePath() + "\\");
             if (!djob->getErrorMessage().isEmpty())
                 job->setErrorMessage(QString(
@@ -1192,8 +1188,8 @@ void PackageVersion::install(Job* job, const QString& where)
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!installationScript.isEmpty()) {
-            job->setHint(QObject::tr("Running the installation script (this may take some time)"));
-            Job* exec = job->newSubJob(0.09);
+            Job* exec = job->newSubJob(0.09,
+                    QObject::tr("Running the installation script (this may take some time)"));
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
 
@@ -1248,28 +1244,27 @@ void PackageVersion::install(Job* job, const QString& where)
         QString err;
         this->createShortcuts(d.absolutePath(), &err);
         if (err.isEmpty())
-            job->setProgress(1);
+            job->setProgress(0.98);
         else
             job->setErrorMessage(err);
     }
 
     if (!job->getErrorMessage().isEmpty() || job->isCancelled()) {
-        job->setHint(QString(
-                QObject::tr("Deleting start menu, desktop and quick launch shortcuts")));
-        Job* sub = new Job();
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Deleting start menu, desktop and quick launch shortcuts"));
         deleteShortcuts(d.absolutePath(), sub, true, true, true);
-        delete sub;
 
-        job->setHint(QString(QObject::tr("Deleting files")));
-        Job* rjob = new Job();
+        Job* rjob = job->newSubJob(0.01, QObject::tr("Deleting files"));
         removeDirectory(rjob, d.absolutePath());
-        delete rjob;
     }
 
     if (f && f->exists())
         f->remove();
 
     delete f;
+
+    if (job->shouldProceed())
+        job->setProgress(1);
 
     job->complete();
 }

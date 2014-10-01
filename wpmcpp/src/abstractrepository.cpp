@@ -176,7 +176,7 @@ void AbstractRepository::process(Job *job,
             else
                 txt = QString(QObject::tr("Uninstalling %1")).arg(
                         pv->toString());
-            job->setHint(txt);
+
             Job* sub = job->newSubJob(0.9 / n, txt);
             if (op->install)
                 pv->install(sub, pv->getPreferredInstallationDirectory());

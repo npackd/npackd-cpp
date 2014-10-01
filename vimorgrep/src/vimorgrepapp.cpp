@@ -295,8 +295,6 @@ int VimOrgRepApp::process()
         int n = rep.packageVersions.size();
         for (int i = 0; i < n; i++) {
             PackageVersion* pv = rep.packageVersions.at(i);
-            job->setHint(QString("Downloading package %1 of %2").arg(i + 1).
-                    arg(n));
 
             QString s = pv->download.toString();
             QString id = s.right(s.length() - s.lastIndexOf('=') - 1);
@@ -304,7 +302,7 @@ int VimOrgRepApp::process()
             if (!f->exists()) {
                 if (f->open(QFile::ReadWrite)) {
                     Job* sub = job->newSubJob(0.1 / n,
-                            QString("Downloading %1 of %2").arg(i + 1).
+                            QString("Downloading package %1 of %2").arg(i + 1).
                             arg(n));
                     Downloader::download(sub,
                             QUrl(pv->download), f, &pv->sha1);

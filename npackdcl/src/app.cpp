@@ -1541,15 +1541,16 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 QString App::detect()
 {
     Job* job = clp.createJob();
-    job->setHint("Loading repositories and detecting installed software");
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.01);
+            sub->completeWithProgress();
     }
 
     DBRepository* rep = DBRepository::getDefault();

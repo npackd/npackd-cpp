@@ -22,8 +22,8 @@ void ScanDiskThirdPartyPM::scan(Job *job,
 
         QFileInfo fi = fil.at(i);
 
-        job->setHint(QString(QObject::tr("Scanning %1")).arg(fi.absolutePath()));
-        Job* djob = job->newSubJob(1.0 / fil.count());
+        Job* djob = job->newSubJob(1.0 / fil.count(),
+                QString(QObject::tr("Scanning %1")).arg(fi.absolutePath()));
         QString path = WPMUtils::normalizePath(fi.absolutePath());
         UINT t = GetDriveType((WCHAR*) path.utf16());
         if (t == DRIVE_FIXED)
