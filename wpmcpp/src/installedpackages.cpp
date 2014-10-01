@@ -456,7 +456,9 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     // qDebug() << "InstalledPackages::refresh.0";
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Detecting directories deleted externally"));
+        Job* sub = job->newSubJob(0.2,
+                QObject::tr("Detecting directories deleted externally"));
+
         QList<InstalledPackageVersion*> ipvs = getAll();
         for (int i = 0; i < ipvs.count(); i++) {
             InstalledPackageVersion* ipv = ipvs.at(i);
@@ -472,17 +474,19 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             }
         }
         qDeleteAll(ipvs);
-        job->setProgress(0.2);
+
+        sub->completeWithProgress();
     }
 
     timer.time(1);
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Reading registry package database"));
+        Job* sub = job->newSubJob(0.6,
+                QObject::tr("Reading registry package database"));
         QString err = readRegistryDatabase();
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        job->setProgress(0.8);
+        sub->completeWithProgress();
     }
 
     timer.time(2);

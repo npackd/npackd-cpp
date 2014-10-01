@@ -2091,7 +2091,6 @@ QString WPMUtils::fileCheckSum(Job* job,
 
 void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 {
-    job->setHint(QObject::tr("Opening ZIP file"));
     QuaZip zip(zipfile);
     if (!zip.open(QuaZip::mdUnzip)) {
         job->setErrorMessage(QString(QObject::tr("Cannot open the ZIP file %1: %2")).
