@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "abstractrepository.h"
 #include "wpmutils.h"
 #include "windowsregistry.h"
@@ -143,12 +145,14 @@ void AbstractRepository::process(Job *job,
     int n = install.count();
 
     // 10% for stopping the packages
-    if (job->shouldProceed(QObject::tr("Closing running processes"))) {
+    if (job->shouldProceed(QObject::tr("Stopping the running packages"))) {
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             if (!op->install) {
-                Job* sub = job->newSubJob(0.1 / n);
+                Job* sub = job->newSubJob(0.1 / n,
+                        QObject::tr("Stopping the package %1 of %2").
+                        arg(i + 1).arg(n));
                 pv->stop(sub, programCloseType);
                 if (!sub->getErrorMessage().isEmpty()) {
                     job->setErrorMessage(sub->getErrorMessage());
@@ -165,20 +169,21 @@ void AbstractRepository::process(Job *job,
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
+            QString txt;
             if (op->install)
-                job->setHint(QString(QObject::tr("Installing %1")).arg(
-                        pv->toString()));
+                txt = QString(QObject::tr("Installing %1")).arg(
+                        pv->toString());
             else
-                job->setHint(QString(QObject::tr("Uninstalling %1")).arg(
-                        pv->toString()));
-            Job* sub = job->newSubJob(0.9 / n);
+                txt = QString(QObject::tr("Uninstalling %1")).arg(
+                        pv->toString());
+            job->setHint(txt);
+            Job* sub = job->newSubJob(0.9 / n, txt);
             if (op->install)
                 pv->install(sub, pv->getPreferredInstallationDirectory());
             else
                 pv->uninstall(sub, programCloseType);
             if (!sub->getErrorMessage().isEmpty())
                 job->setErrorMessage(sub->getErrorMessage());
-            delete sub;
 
             if (!job->getErrorMessage().isEmpty())
                 break;
@@ -399,48 +404,38 @@ PackageVersion* AbstractRepository::findNewestInstalledPackageVersion_(
 
     PackageVersion* r = 0;
 
-    QList<PackageVersion*> pvs = this->getPackageVersions_(name, err);
-    if (err->isEmpty()) {
-        for (int i = 0; i < pvs.count(); i++) {
-            PackageVersion* p = pvs.at(i);
-            if (p->installed()) {
-                if (r == 0 || p->version.compare(r->version) > 0) {
-                    r = p;
-                }
-            }
-        }
+    InstalledPackageVersion* ipv = InstalledPackages::getDefault()->
+            getNewestInstalled(name);
 
-        if (r)
-            r = r->clone();
+    if (ipv) {
+        r = this->findPackageVersion_(name, ipv->version, err);
     }
 
-    qDeleteAll(pvs);
+    delete ipv;
 
     return r;
 }
 
 QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
 {
-    *err = "";
-
     QString v;
-    PackageVersion* pv;
-    if (WPMUtils::is64BitWindows())
-        pv = findNewestInstalledPackageVersion_(
-            "com.googlecode.windows-package-manager.NpackdCL64", err);
-    else
-        pv = 0;
+    InstalledPackageVersion* ipv;
+    if (WPMUtils::is64BitWindows()) {
+        ipv = InstalledPackages::getNewestInstalled(
+                "com.googlecode.windows-package-manager.NpackdCL64");
+    } else
+        ipv = 0;
 
-    if (err->isEmpty()) {
-        if (!pv)
-            pv = findNewestInstalledPackageVersion_(
-                "com.googlecode.windows-package-manager.NpackdCL", err);
-    }
+    if (!ipv)
+        ipv = InstalledPackages::getNewestInstalled(
+            "com.googlecode.windows-package-manager.NpackdCL");
 
     if (pv)
-        v = pv->getPath();
+        v = ipv->getDirectory();
 
-    delete pv;
+    delete ipv;
+
+    qDebug() << "computed NPACKD_CL" << v;
 
     return v;
 }

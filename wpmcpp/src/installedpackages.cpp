@@ -603,6 +603,8 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     // timer.dump();
 
     // this->mutex.unlock();
+
+    job->complete();
 }
 
 QString InstalledPackages::getPath(const QString &package,
@@ -677,7 +679,7 @@ out:
 
 QString InstalledPackages::readRegistryDatabase()
 {
-    // qDebug() << "start reading";
+    qDebug() << "start reading registry database";
 
     // "data" is only used at the bottom of this method
 

@@ -303,11 +303,10 @@ out:
 
     job->setProgress(0.05);
 
-    Job* sub = job->newSubJob(0.95);
+    Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
     readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
     if (!sub->getErrorMessage().isEmpty())
         job->setErrorMessage(sub->getErrorMessage());
-    delete sub;
 
     InternetCloseHandle(internet);
 
@@ -366,7 +365,6 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
             QString errMsg;
             WPMUtils::formatMessage(GetLastError(), &errMsg);
             job->setErrorMessage(errMsg);
-            job->complete();
             break;
         }
 
@@ -460,7 +458,6 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
             if (err != Z_OK) {
                 job->setErrorMessage(QString(QObject::tr("zlib error %1")).
                         arg(err));
-                job->complete();
                 break;
             }
         } else {
@@ -547,7 +544,6 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
             QString errMsg;
             WPMUtils::formatMessage(GetLastError(), &errMsg);
             job->setErrorMessage(errMsg);
-            job->complete();
             break;
         }
 
@@ -580,6 +576,8 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         *sha1 = hash.result().toHex().toLower();
 
     delete[] buffer;
+
+    job->complete();
 }
 
 void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,

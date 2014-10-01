@@ -239,7 +239,7 @@ QString Repository::writeTo(const QString& filename) const
 }
 
 PackageVersion* Repository::findPackageVersion(const QString& package,
-        const Version& version)
+        const Version& version) const
 {
     PackageVersion* r = 0;
 
@@ -381,7 +381,7 @@ PackageVersion *Repository::findPackageVersionByMSIGUID_(
 }
 
 PackageVersion *Repository::findPackageVersion_(const QString &package,
-        const Version &version, QString *err)
+        const Version &version, QString *err) const
 {
     *err = "";
 

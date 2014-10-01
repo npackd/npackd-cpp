@@ -339,7 +339,6 @@ QString CLProcessor::update()
             job->setErrorMessage(QObject::tr("Error updating: %1").
                     arg(ijob->getErrorMessage()));
         }
-        delete ijob;
     }
     */
 

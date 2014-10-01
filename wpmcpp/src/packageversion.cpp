@@ -456,10 +456,9 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
     QDir d(getPath());
 
     QFuture<void> deleteShortcutsFuture;
-    Job* deleteShortcutsJob = 0;
     if (job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Deleting shortcuts"));
-        Job* deleteShortcutsJob = job->newSubJob(0, false, false);
+        Job* deleteShortcutsJob = job->newSubJob(0, "", false, false);
         deleteShortcutsFuture = QtConcurrent::run(this,
                 &PackageVersion::deleteShortcuts,
                 d.absolutePath(), deleteShortcutsJob, true, false, false);
@@ -541,8 +540,6 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
             if (!sub->getErrorMessage().isEmpty())
                 job->setErrorMessage(sub->getErrorMessage());
 
-            delete sub;
-
             if (ush != INVALID_HANDLE_VALUE) {
                 CloseHandle(ush);
             }
@@ -568,7 +565,6 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
                 if (!err.isEmpty())
                     job->setErrorMessage(err);
             }
-            delete rjob;
         }
     }
 
@@ -588,7 +584,6 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
     }
 
     deleteShortcutsFuture.waitForFinished();
-    delete deleteShortcutsJob;
 
     job->complete();
 }
@@ -846,7 +841,6 @@ QString PackageVersion::downloadAndComputeSHA1(Job* job)
     if (!djob->getErrorMessage().isEmpty())
         job->setErrorMessage(QString(QObject::tr("Download failed: %1")).
                 arg(djob->getErrorMessage()));
-    delete djob;
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         job->setHint(QObject::tr("Computing SHA1"));
@@ -1049,7 +1043,6 @@ void PackageVersion::install(Job* job, const QString& where)
             downloadOK = !djob->isCancelled() &&
                     djob->getErrorMessage().isEmpty();
             f->close();
-            delete djob;
         }
     }
 
@@ -1072,7 +1065,6 @@ void PackageVersion::install(Job* job, const QString& where)
                         arg(this->download.toString()).arg(
                         djob->getErrorMessage()));
                 f->close();
-                delete djob;
             }
         } else {
             job->setProgress(0.63);
@@ -1129,7 +1121,6 @@ void PackageVersion::install(Job* job, const QString& where)
                         arg(djob->getErrorMessage()));
             else if (!job->isCancelled())
                 job->setProgress(0.75);
-            delete djob;
         } else {
             job->setHint(QObject::tr("Renaming the downloaded file"));
             QString t = d.absolutePath();
@@ -1225,7 +1216,6 @@ void PackageVersion::install(Job* job, const QString& where)
                     job->setErrorMessage(err);
                 }
             }
-            delete exec;
         } else {
             QString path = d.absolutePath();
             path.replace('/', '\\');
@@ -1999,7 +1989,6 @@ void PackageVersion::stop(Job* job, int programCloseType)
                 job->setErrorMessage(err);
             }
         }
-        delete exec;
     } else {
         job->setProgress(0.5);
 

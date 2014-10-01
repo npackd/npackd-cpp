@@ -193,7 +193,7 @@ public:
      * @return [ownership:caller] found package version or 0
      */
     virtual PackageVersion* findPackageVersion_(const QString& package,
-            const Version& version, QString* err) = 0;
+            const Version& version, QString* err) const = 0;
 
     /**
      * Searches for a license by name.

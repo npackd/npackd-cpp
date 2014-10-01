@@ -1,12 +1,13 @@
 #ifndef JOB_H
 #define JOB_H
 
-#include <qstring.h>
-#include <qobject.h>
-#include "qmetatype.h"
+#include <QString>
+#include <QObject>
+#include <QMetaType>
 #include <QMutex>
-#include "qqueue.h"
-#include "QTime"
+#include <QQueue>
+#include <QTime>
+#include <QList>
 
 class Job;
 
@@ -18,6 +19,9 @@ class JobState: public QObject {
 public:
     /** job progress: 0..1 */
     double progress;
+
+    /** title */
+    QString title;
 
     /** job hint */
     QString hint;
@@ -84,15 +88,17 @@ class Job: public QObject
 private:
     mutable QMutex mutex;
 
+    QList<Job*> childJobs;
+
     /** progress 0...1 */
     double progress;
 
     /** description of the current state */
     QString hint;
 
-    QString errorMessage;
+    QString title;
 
-    Job* parentJob;
+    QString errorMessage;
 
     QString parentHintStart;
     double subJobSteps;
@@ -126,6 +132,10 @@ private:
      * @threadsafe
      */
     void fireChange();
+
+    void fireSubJobCreated(Job *sub);
+
+    void fireChange(const JobState &s);
 public slots:
     /**
      * @threadsafe
@@ -135,7 +145,16 @@ public:
     /** currently running jobs */
     static QList<Job*> jobs;
 
-    Job();
+    /** parent job or 0 */
+    Job* parentJob;
+
+    /**
+     * @brief creates a new job
+     * @param title title for this job
+     * @param parent parent job or 0
+     */
+    Job(const QString& title="", Job* parent=0);
+
     ~Job();
 
     /**
@@ -172,12 +191,14 @@ public:
      * from the sub-job does not automatically propagate to the parent job.
      *
      * @param part 0..1 part of this for the created sub-job
+     * @param title title for the new job
      * @param updateParentHint_ true = update hint of the parent job
      * @param updateParentProgress_ true = update progress of the parent job
      * @return child job with parent=this
      * @threadsafe
      */
-    Job* newSubJob(double part, bool updateParentHint_=true,
+    Job* newSubJob(double part, const QString& title="",
+            bool updateParentHint_=true,
             bool updateParentProgress_=true);
 
     /**
@@ -191,6 +212,12 @@ public:
      * @threadsafe
      */
     QString getHint() const;
+
+    /**
+     * @return the title
+     * @threadsafe
+     */
+    QString getTitle() const;
 
     /**
      * @param hint new hint
@@ -266,6 +293,12 @@ signals:
      * changes (progress, hint etc.).
      */
     void changed(const JobState& s);
+
+    /**
+     * @brief a new sub-job was created
+     * @param sub new sub-job
+     */
+    void subJobCreated(Job* sub);
 };
 
 #endif // JOB_H

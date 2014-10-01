@@ -231,7 +231,7 @@ public:
             const QString& guid, QString *err) const;
 
     PackageVersion* findPackageVersion_(const QString& package,
-            const Version& version, QString *err);
+            const Version& version, QString *err) const;
 
     License* findLicense_(const QString& name, QString* err);
 

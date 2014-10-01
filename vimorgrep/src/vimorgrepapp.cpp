@@ -161,12 +161,11 @@ int VimOrgRepApp::process()
 
     Job* job = clp.createJob();
 
-    Job* sub = job->newSubJob(0.8);
+    Job* sub = job->newSubJob(0.8, "Downloading the data");
     QTemporaryFile* f = Downloader::download(sub,
             QUrl("http://www.vim.org/script-info.php"));
     if (!sub->getErrorMessage().isEmpty())
         job->setErrorMessage(sub->getErrorMessage());
-    delete sub;
 
     QJsonDocument d;
     if (job->shouldProceed()) {
@@ -304,26 +303,27 @@ int VimOrgRepApp::process()
             QFile* f = new QFile("files\\" + id);
             if (!f->exists()) {
                 if (f->open(QFile::ReadWrite)) {
-                    Job* sub = job->newSubJob(0.1 / n);
+                    Job* sub = job->newSubJob(0.1 / n,
+                            QString("Downloading %1 of %2").arg(i + 1).
+                            arg(n));
                     Downloader::download(sub,
                             QUrl(pv->download), f, &pv->sha1);
                     if (!sub->getErrorMessage().isEmpty()) {
                         job->setErrorMessage(sub->getErrorMessage());
                     }
-                    delete sub;
                 } else {
                     job->setErrorMessage(QString("Error opening %1").
                             arg(f->fileName()));
                 }
             } else {
                 if (f->open(QFile::ReadOnly)) {
-                    Job* sub = job->newSubJob(0.1 / n);
+                    Job* sub = job->newSubJob(0.1 / n,
+                            "Computing the check sum");
                     pv->sha1 = WPMUtils::fileCheckSum(sub, f,
                             QCryptographicHash::Sha1);
                     if (!sub->getErrorMessage().isEmpty()) {
                         job->setErrorMessage(sub->getErrorMessage());
                     }
-                    delete sub;
                 } else {
                     job->setErrorMessage(QString("Error opening %1").
                             arg(f->fileName()));

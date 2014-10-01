@@ -1609,7 +1609,6 @@ void WPMUtils::removeDirectory(Job* job, QDir &aDir)
                 removeDirectory(sub, dd);
                 if (!sub->getErrorMessage().isEmpty())
                     job->setErrorMessage(sub->getErrorMessage());
-                delete sub;
                 // if (!ok)
                 //    qDebug() << "WPMUtils::removeDirectory.3" << *errMsg;
             } else {

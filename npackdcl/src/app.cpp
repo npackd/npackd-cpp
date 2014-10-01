@@ -382,8 +382,9 @@ QString App::check()
             job->setProgress(0.01);
     }
 
-    if (job->shouldProceed("Refreshing the list of installed packages")) {
-        Job* sub = job->newSubJob(0.5);
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.5,
+                "Refreshing the list of installed packages");
 
         // ignoring the error message here as "check" should be available
         // for non-admins too
@@ -739,14 +740,14 @@ QString App::update()
             job->setProgress(0.01);
     }
 
-    if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.05);
+    if (job->shouldProceed()) {
+        Job* rjob = job->newSubJob(0.05,
+                "Detecting installed software");
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
                 rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
-        delete rjob;
     }
 
     int programCloseType = WPMUtils::CLOSE_WINDOW;
@@ -831,14 +832,13 @@ QString App::update()
     }
     */
 
-    if (job->shouldProceed("Updating") && !up2date) {
-        Job* ijob = job->newSubJob(0.85);
+    if (job->shouldProceed() && !up2date) {
+        Job* ijob = job->newSubJob(0.85, "Updating");
         processInstallOperations(ijob, ops, programCloseType);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
                     arg(ijob->getErrorMessage()));
         }
-        delete ijob;
     }
     qDeleteAll(ops);
 
@@ -1003,14 +1003,14 @@ QString App::add()
             job->setProgress(0.01);
     }
 
-    if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.09);
+    if (job->shouldProceed()) {
+        Job* rjob = job->newSubJob(0.09,
+                "Detecting installed software");
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
                 rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
-        delete rjob;
     }
 
     QString err;
@@ -1042,14 +1042,12 @@ QString App::add()
 
     // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
 
-    if (job->shouldProceed("Installing") && ops.size() > 0) {
-        Job* ijob = job->newSubJob(0.9);
+    if (job->shouldProceed() && ops.size() > 0) {
+        Job* ijob = job->newSubJob(0.9, "Installing");
         processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
                     arg(ijob->getErrorMessage()));
-
-        delete ijob;
     }
 
     job->complete();
@@ -1198,14 +1196,14 @@ QString App::remove()
             job->setProgress(0.01);
     }
 
-    if (job->shouldProceed("Detecting installed software")) {
-        Job* rjob = job->newSubJob(0.09);
+    if (job->shouldProceed()) {
+        Job* rjob = job->newSubJob(0.09,
+                "Detecting installed software");
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
                 rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
-        delete rjob;
     }
 
     int programCloseType = WPMUtils::CLOSE_WINDOW;
@@ -1257,13 +1255,13 @@ QString App::remove()
     }
     */
 
-    if (job->shouldProceed("Removing")) {
-        Job* removeJob = job->newSubJob(0.9);
+    if (job->shouldProceed()) {
+        Job* removeJob = job->newSubJob(0.9,
+                "Removing");
         processInstallOperations(removeJob, ops, programCloseType);
         if (!removeJob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error removing: %1\n").
                     arg(removeJob->getErrorMessage()));
-        delete removeJob;
     }
 
     job->complete();
