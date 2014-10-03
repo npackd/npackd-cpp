@@ -23,7 +23,9 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         HWND parentWindow, QString* sha1, bool useCache,
         QCryptographicHash::Algorithm alg)
 {
-    job->setHint(QObject::tr("Connecting"));
+    QString initialTitle = job->getTitle();
+
+    job->setTitle(initialTitle + " / " + QObject::tr("Connecting"));
 
     if (sha1)
         sha1->clear();
@@ -244,7 +246,7 @@ out:
         return;
     }
 
-    job->setHint(QObject::tr("Downloading"));
+    job->setTitle(initialTitle + " / " + QObject::tr("Downloading"));
 
     // MIME type
     // qDebug() << "querying MIME type";
@@ -346,6 +348,8 @@ bool Downloader::internetReadFileFully(HINTERNET resourceHandle,
 void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
         QString* sha1, int64_t contentLength, QCryptographicHash::Algorithm alg)
 {
+    QString initialTitle = job->getTitle();
+
     // download/compute SHA1 loop
     QCryptographicHash hash(alg);
     const int bufferSize = 512 * 1024;
@@ -498,12 +502,14 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
         alreadyRead += bufferLength;
         if (contentLength > 0) {
             job->setProgress(((double) alreadyRead) / contentLength);
-            job->setHint(QString(QObject::tr("%L0 of %L1 bytes")).
+            job->setTitle(initialTitle + " / " +
+                    QString(QObject::tr("%L0 of %L1 bytes")).
                     arg(alreadyRead).
                     arg(contentLength));
         } else {
             job->setProgress(0.5);
-            job->setHint(QString(QObject::tr("%L0 bytes")).
+            job->setTitle(initialTitle + " / " +
+                    QString(QObject::tr("%L0 bytes")).
                     arg(alreadyRead));
         }
     } while (bufferLength != 0 && !job->isCancelled());
@@ -530,6 +536,8 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
 void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         QString* sha1, int64_t contentLength, QCryptographicHash::Algorithm alg)
 {
+    QString initialTitle = job->getTitle();
+
     // download/compute SHA1 loop
     QCryptographicHash hash(alg);
     const int bufferSize = 512 * 1024;
@@ -559,12 +567,14 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         alreadyRead += bufferLength;
         if (contentLength > 0) {
             job->setProgress(((double) alreadyRead) / contentLength);
-            job->setHint(QString(QObject::tr("%L0 of %L1 bytes")).
+            job->setTitle(initialTitle + " / " +
+                    QString(QObject::tr("%L0 of %L1 bytes")).
                     arg(alreadyRead).
                     arg(contentLength));
         } else {
             job->setProgress(0.5);
-            job->setHint(QString(QObject::tr("%L0 bytes")).
+            job->setTitle(initialTitle + " / " +
+                    QString(QObject::tr("%L0 bytes")).
                     arg(alreadyRead));
         }
     } while (bufferLength != 0 && !job->isCancelled());

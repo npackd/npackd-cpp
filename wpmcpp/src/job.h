@@ -226,10 +226,10 @@ public:
     QString getTitle() const;
 
     /**
-     * @param hint new hint
+     * @return the "title 1 / title 2 / ..."
      * @threadsafe
      */
-    void setHint(const QString& hint);
+    QString getFullTitle() const;
 
     /**
      * Sets the progress. The value is only informational. You have to
@@ -293,6 +293,12 @@ public:
      * @threadsafe
      */
     bool shouldProceed() const;
+
+    /**
+     * @brief changes the title
+     * @param title new title
+     */
+    void setTitle(const QString &title);
 signals:
     /**
      * This signal will be fired each time something in this object

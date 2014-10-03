@@ -42,6 +42,7 @@ class Downloader: QObject
      * Manual authentication:     
      *    http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
      *
+     * @param job job object
      * @param file the content will be stored here
      * @param parentWindow window handle or 0 if not UI is required
      * @param sha1 if not null, SHA1 will be computed and stored here

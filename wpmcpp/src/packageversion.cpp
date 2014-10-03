@@ -454,6 +454,8 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
         return;
     }
 
+    QString initialTitle = job->getTitle();
+
     QDir d(getPath());
 
     QFuture<void> deleteShortcutsFuture;
@@ -482,7 +484,8 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!uninstallationScript.isEmpty()) {
-            job->setHint(QObject::tr("Waiting while other (un)installation scripts are running"));
+            job->setTitle(initialTitle + " / " +
+                    QObject::tr("Waiting while other (un)installation scripts are running"));
 
             time_t start = time(NULL);
             while (!job->isCancelled()) {
@@ -494,7 +497,7 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
                 }
 
                 time_t seconds = time(NULL) - start;
-                job->setHint(QString(
+                job->setTitle(initialTitle + " / " + QString(
                         QObject::tr("Waiting while other (un)installation scripts are running (%1 minutes)")).
                         arg(seconds / 60));
             }
@@ -505,7 +508,8 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!uninstallationScript.isEmpty()) {
-            job->setHint(QObject::tr("Running the uninstallation script (this may take some time)"));
+            job->setTitle(initialTitle + " / " +
+                    QObject::tr("Running the uninstallation script (this may take some time)"));
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
             Job* sub = job->newSubJob(0.20);
@@ -577,7 +581,8 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
     if (job->shouldProceed()) {
         if (this->package == "com.googlecode.windows-package-manager.NpackdCL" ||
                 this->package == "com.googlecode.windows-package-manager.NpackdCL64") {
-            job->setHint("Updating NPACKD_CL");
+            job->setTitle(initialTitle + " / " +
+                    QObject::tr("Updating NPACKD_CL"));
             AbstractRepository::getDefault_()->updateNpackdCLEnvVar();
         }
         job->setProgress(1);
@@ -976,12 +981,15 @@ void PackageVersion::install(Job* job, const QString& where)
         return;
     }
 
+    QString initialTitle = job->getTitle();
+
     // qDebug() << "install.2";
     QDir d(where);
     QString npackdDir = where + "\\.Npackd";
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Creating directory"));
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Creating directory"));
         QString s = d.absolutePath();
         if (!d.mkpath(s)) {
             job->setErrorMessage(QString(QObject::tr("Cannot create directory: %0")).
@@ -992,7 +1000,8 @@ void PackageVersion::install(Job* job, const QString& where)
     }
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Creating .Npackd sub-directory"));
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Creating .Npackd sub-directory"));
         QString s = npackdDir;
         if (!d.mkpath(s)) {
             job->setErrorMessage(QString(QObject::tr("Cannot create directory: %0")).
@@ -1005,7 +1014,8 @@ void PackageVersion::install(Job* job, const QString& where)
     bool httpConnectionAcquired = false;
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Waiting for a free HTTP connection"));
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Waiting for a free HTTP connection"));
 
         time_t start = time(NULL);
         while (!job->isCancelled()) {
@@ -1016,7 +1026,7 @@ void PackageVersion::install(Job* job, const QString& where)
             }
 
             time_t seconds = time(NULL) - start;
-            job->setHint(QString(
+            job->setTitle(initialTitle + " / " + QString(
                     QObject::tr("Waiting for a free HTTP connection (%1 minutes)")).
                     arg(seconds / 60));
         }
@@ -1029,7 +1039,8 @@ void PackageVersion::install(Job* job, const QString& where)
     QString dsha1;
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setHint(QObject::tr("Downloading & computing hash sum"));
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Downloading & computing hash sum"));
         if (!f->open(QIODevice::ReadWrite)) {
             job->setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
                     arg(f->fileName()));
@@ -1120,7 +1131,8 @@ void PackageVersion::install(Job* job, const QString& where)
             else if (!job->isCancelled())
                 job->setProgress(0.75);
         } else {
-            job->setHint(QObject::tr("Renaming the downloaded file"));
+            job->setTitle(initialTitle + " / " +
+                    QObject::tr("Renaming the downloaded file"));
             QString t = d.absolutePath();
             t.append("\\");
             QString fn = this->download.path();
@@ -1165,7 +1177,8 @@ void PackageVersion::install(Job* job, const QString& where)
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!installationScript.isEmpty()) {
-            job->setHint(QObject::tr("Waiting while other (un)installation scripts are running"));
+            job->setTitle(initialTitle + " / " +
+                    QObject::tr("Waiting while other (un)installation scripts are running"));
 
             time_t start = time(NULL);
             while (!job->isCancelled()) {
@@ -1177,7 +1190,7 @@ void PackageVersion::install(Job* job, const QString& where)
                 }
 
                 time_t seconds = time(NULL) - start;
-                job->setHint(QString(
+                job->setTitle(initialTitle + " / " + QString(
                         QObject::tr("Waiting while other (un)installation scripts are running (%1 minutes)")).
                         arg(seconds / 60));
             }
@@ -1224,7 +1237,8 @@ void PackageVersion::install(Job* job, const QString& where)
 
         if (this->package == "com.googlecode.windows-package-manager.NpackdCL" ||
                 this->package == "com.googlecode.windows-package-manager.NpackdCL64") {
-            job->setHint("Updating NPACKD_CL");
+            job->setTitle(initialTitle + " / " +
+                    QObject::tr("Updating NPACKD_CL"));
             AbstractRepository::getDefault_()->updateNpackdCLEnvVar();
         }
 
@@ -1408,6 +1422,8 @@ QByteArray PackageVersion::executeFile(
         const QString& path, const QString& nativeArguments,
         const QString& outputFile, const QStringList& env)
 {
+    QString initialTitle = job->getTitle();
+
     QByteArray ret;
 
     QProcess p(0);
@@ -1456,7 +1472,8 @@ QByteArray PackageVersion::executeFile(
         if (percents > 0.9)
             percents = 0.9;
         job->setProgress(percents);
-        job->setHint(QString(QObject::tr("%1 minutes")).
+        job->setTitle(initialTitle + " / " +
+                QString(QObject::tr("%1 minutes")).
                 arg(seconds / 60));
     }
     job->complete();

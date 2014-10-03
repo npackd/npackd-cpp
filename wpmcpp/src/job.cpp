@@ -74,15 +74,6 @@ Job::Job(const QString &title, Job *parent): mutex(QMutex::Recursive), parentJob
 
 Job::~Job()
 {
-    Job* parentJob_;
-    this->mutex.lock();
-    parentJob_ = parentJob;
-    this->mutex.unlock();
-
-    if (parentJob_) {
-        parentJob_->setHint(parentHintStart);
-    }
-
     qDeleteAll(childJobs);
 }
 
@@ -277,10 +268,26 @@ QString Job::getTitle() const
     return title_;
 }
 
-void Job::setHint(const QString &hint)
+QString Job::getFullTitle() const
+{
+    QString title_;
+    this->mutex.lock();
+    title_ = this->title;
+    Job* v = this->parentJob;
+    while (v) {
+        title_ = v->getTitle() + " / " + title_;
+        v = v->parentJob;
+    }
+
+    this->mutex.unlock();
+
+    return title_;
+}
+
+void Job::setTitle(const QString &title)
 {
     this->mutex.lock();
-    this->hint = hint;
+    this->title = title;
     // qDebug() << hint;
     this->mutex.unlock();
 
@@ -325,8 +332,6 @@ QString Job::getErrorMessage() const
 bool Job::shouldProceed(const QString& hint)
 {
     bool b = !this->isCancelled() && this->getErrorMessage().isEmpty();
-    if (b)
-        setHint(hint);
     return b;
 }
 

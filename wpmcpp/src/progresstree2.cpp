@@ -186,9 +186,8 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
         if (!job->getErrorMessage().isEmpty()) {
             QString jobTitle = job->getTitle();
             QString title = QObject::tr("Error") + ": " + jobTitle +
-                        " / " + job->getHint() +
                         ": " + WPMUtils::getFirstLine(job->getErrorMessage());
-            QString msg = job->getHint() + "\n" + job->getErrorMessage();
+            QString msg = job->getFullTitle() + "\n" + job->getErrorMessage();
             if (MainWindow::getInstance())
                 MainWindow::getInstance()->addErrorMessage(
                         title, msg);
@@ -222,10 +221,7 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
         time_t now;
         time(&now);
 
-        if (item->childCount() == 0)
-            item->setText(0, s.job->getTitle() + " / " + s.job->getHint());
-        else
-            item->setText(0, s.job->getTitle());
+        item->setText(0, s.job->getTitle());
 
         if (s.started != 0) {
             time_t diff = difftime(now, s.started);

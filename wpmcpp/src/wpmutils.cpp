@@ -2048,6 +2048,8 @@ Package* WPMUtils::findOnePackage(const QString& package, QString* err)
 QString WPMUtils::fileCheckSum(Job* job,
         QFile* file, QCryptographicHash::Algorithm alg)
 {
+    QString initialTitle = job->getTitle();
+
     // download/compute SHA1 loop
     QCryptographicHash hash(alg);
     const int bufferSize = 512 * 1024;
@@ -2065,7 +2067,6 @@ QString WPMUtils::fileCheckSum(Job* job,
 
         if (bufferLength < 0) {
             job->setErrorMessage(file->errorString());
-            job->complete();
             break;
         }
 
@@ -2074,23 +2075,26 @@ QString WPMUtils::fileCheckSum(Job* job,
 
         alreadyRead += bufferLength;
         job->setProgress(0.5);
-        job->setHint(QString(QObject::tr("%L0 bytes")).
+        job->setTitle(initialTitle + " / " + QObject::tr("%L0 bytes").
                 arg(alreadyRead));
     } while (bufferLength != 0 && !job->isCancelled());
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty())
-        job->setProgress(1);
-
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty())
+    if (job->shouldProceed()) {
         sha1 = hash.result().toHex().toLower();
+        job->setProgress(1);
+    }
 
     delete[] buffer;
+
+    job->complete();
 
     return sha1;
 }
 
 void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 {
+    QString initialTitle = job->getTitle();
+
     QuaZip zip(zipfile);
     if (!zip.open(QuaZip::mdUnzip)) {
         job->setErrorMessage(QString(QObject::tr("Cannot open the ZIP file %1: %2")).
@@ -2104,7 +2108,7 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
         if (!odir.endsWith("\\") && !odir.endsWith("/"))
             odir.append("\\");
 
-        job->setHint(QObject::tr("Extracting"));
+        job->setTitle(initialTitle + " / " + QObject::tr("Extracting"));
         QuaZipFile file(&zip);
         int n = zip.getEntriesCount();
         int blockSize = 1024 * 1024;
@@ -2142,7 +2146,8 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
             i++;
             job->setProgress(0.01 + 0.99 * i / n);
             if (i % 100 == 0)
-                job->setHint(QString(QObject::tr("%L1 files")).arg(i));
+                job->setTitle(initialTitle + " / " +
+                        QString(QObject::tr("%L1 files")).arg(i));
 
             if (job->isCancelled() || !job->getErrorMessage().isEmpty())
                 break;
