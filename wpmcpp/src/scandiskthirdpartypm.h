@@ -15,7 +15,8 @@ private:
      * @param ignore ignored directories
      * @threadsafe
      */
-    void scan(const QString& path, Job* job, int level, QStringList& ignore) const;
+    void scan(const QString& path, Job* job, int level,
+            QStringList& ignore) const;
 public:
     ScanDiskThirdPartyPM();
 

@@ -102,7 +102,7 @@ void ScanDiskThirdPartyPM::scan(const QString& path, Job* job, int level,
             QString name = entryInfo.fileName();
 
             if (job) {
-                job->setHint(QString("%1").arg(name));
+                job->setTitle(name);
                 if (job->isCancelled())
                     break;
             }

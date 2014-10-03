@@ -43,9 +43,8 @@ ProgressFrame::~ProgressFrame()
 {
     if (!job->getErrorMessage().isEmpty()) {
         QString title = QObject::tr("Error") + ": " + this->title +
-                    " / " + job->getHint() +
                     ": " + WPMUtils::getFirstLine(job->getErrorMessage());
-        QString msg = job->getHint() + "\n" + job->getErrorMessage();
+        QString msg = job->getFullTitle() + "\n" + job->getErrorMessage();
         if (MainWindow::getInstance())
             MainWindow::getInstance()->addErrorMessage(
                     title, msg);
