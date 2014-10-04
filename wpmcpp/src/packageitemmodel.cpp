@@ -138,16 +138,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             case 0: {
                 MainWindow* mw = MainWindow::getInstance();
                 if (!p->icon.isEmpty()) {
-                    if (mw->icons.contains(p->icon)) {
-                        QIcon icon = mw->icons[p->icon];
-                        r = qVariantFromValue(icon);
-                    } else {
-                        FileLoaderItem it;
-                        it.url = p->icon;
-                        // qDebug() << "MainWindow::loadRepository " << it.url;
-                        mw->fileLoader.addWork(it);
-                        r = qVariantFromValue(MainWindow::waitAppIcon);
-                    }
+                    r = qVariantFromValue(mw->downloadIcon(p->icon));
                 } else {
                     r = qVariantFromValue(MainWindow::genericAppIcon);
                 }

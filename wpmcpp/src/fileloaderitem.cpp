@@ -2,7 +2,6 @@
 
 FileLoaderItem::FileLoaderItem()
 {
-    this->f = 0;
 }
 
 FileLoaderItem::~FileLoaderItem()

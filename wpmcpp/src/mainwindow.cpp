@@ -318,16 +318,14 @@ void MainWindow::updateStatusInDetailTabs()
 
 QIcon MainWindow::getPackageVersionIcon(const QString& package)
 {
+    MainWindow* mw = MainWindow::getInstance();
     AbstractRepository* r = AbstractRepository::getDefault_();
     Package* p = r->findPackage_(package);
 
     QIcon icon = MainWindow::genericAppIcon;
     if (p) {
         if (!p->icon.isEmpty()) {
-            if (MainWindow::icons.contains(p->icon))
-                icon = MainWindow::icons[p->icon];
-            else
-                icon = MainWindow::waitAppIcon;
+            icon = mw->downloadIcon(p->icon);
         }
     }
     delete p;
@@ -433,23 +431,8 @@ void MainWindow::repositoryStatusChanged(const QString& package,
 
 void MainWindow::iconDownloaded(const FileLoaderItem& it)
 {
-    if (it.f) {
-        QPixmap pm(it.f->fileName());
-
-        /* gray
-        QStyleOption opt(0);
-        opt.palette = QApplication::palette();
-        pm = QApplication::style()->generatedIconPixmap(QIcon::Disabled, pm, &opt);
-        */
-
-        delete it.f;
-        if (!pm.isNull()) {
-            QIcon icon(pm);
-            icon.detach();
-            this->icons.insert(it.url, icon);
-            updateIcon(it.url);
-        }
-    }
+    downloadCache.insert(it.url, it.f);
+    updateIcon(it.url);
 }
 
 void MainWindow::prepare()
@@ -515,12 +498,73 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-QIcon MainWindow::downloadImage(const QString &url)
+QIcon MainWindow::downloadIcon(const QString &url)
 {
     QIcon r;
     if (icons.contains(url)) {
-        QIcon icon = icons[url];
-        r = icon;
+        r = icons[url];
+    } else if (downloadCache.contains(url)) {
+        QString file = downloadCache[url];
+        if (!file.isEmpty()) {
+            QPixmap pm(file);
+
+            /* gray
+            QStyleOption opt(0);
+            opt.palette = QApplication::palette();
+            pm = QApplication::style()->generatedIconPixmap(QIcon::Disabled, pm, &opt);
+            */
+
+            if (!pm.isNull()) {
+                pm = pm.scaled(32, 32, Qt::KeepAspectRatio,
+                        Qt::SmoothTransformation);
+                r.addPixmap(pm);
+                r.detach();
+
+                icons.insert(url, r);
+            } else {
+                r = MainWindow::genericAppIcon;
+            }
+        } else {
+            r = MainWindow::genericAppIcon;
+        }
+    } else {
+        FileLoaderItem it;
+        it.url = url;
+        fileLoader.addWork(it);
+        r = MainWindow::waitAppIcon;
+    }
+    return r;
+}
+
+QIcon MainWindow::downloadScreenshot(const QString &url)
+{
+    QIcon r;
+    if (screenshots.contains(url)) {
+        r = screenshots[url];
+    } else if (downloadCache.contains(url)) {
+        QString file = downloadCache[url];
+        if (!file.isEmpty()) {
+            QPixmap pm(file);
+
+            /* gray
+            QStyleOption opt(0);
+            opt.palette = QApplication::palette();
+            pm = QApplication::style()->generatedIconPixmap(QIcon::Disabled, pm, &opt);
+            */
+
+            if (!pm.isNull()) {
+                pm = pm.scaled(200, 200, Qt::KeepAspectRatio,
+                        Qt::SmoothTransformation);
+                r.addPixmap(pm);
+                r.detach();
+
+                screenshots.insert(url, r);
+            } else {
+                r = MainWindow::genericAppIcon;
+            }
+        } else {
+            r = MainWindow::genericAppIcon;
+        }
     } else {
         FileLoaderItem it;
         it.url = url;
