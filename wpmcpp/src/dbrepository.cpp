@@ -202,7 +202,9 @@ Package *DBRepository::findPackage_(const QString &name)
         if (!path.isEmpty())
             p->categories.append(path);
         p->changelog = q.value(11).toString();
-        p->screenshots = q.value(12).toString().trimmed().split("\n");
+        QString screenshots = q.value(12).toString().trimmed();
+        if (!screenshots.isEmpty())
+            p->screenshots = screenshots.split("\n");
 
         r = p;
     }
@@ -642,7 +644,9 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
                 p->categories.append(path);
             }
             p->changelog = q.value(11).toString();
-            p->screenshots = q.value(12).toString().trimmed().split("\n");
+            QString screenshots = q.value(12).toString().trimmed();
+            if (!screenshots.isEmpty())
+                p->screenshots = screenshots.split("\n");
 
             r.append(p);
         }
@@ -882,7 +886,9 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
             p->categories.append(path);
 
         p->changelog = q.value(11).toString();
-        p->screenshots = q.value(12).toString().trimmed().split('\n');
+        QString screenshots = q.value(12).toString().trimmed();
+        if (!screenshots.isEmpty())
+            p->screenshots = screenshots.split('\n');
 
         r.append(p);
     }

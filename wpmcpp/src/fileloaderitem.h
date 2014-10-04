@@ -14,10 +14,10 @@ public:
     QString url;
 
     /**
-     * the downloaded file. This object will be not freed if FileLoaderItem is
-     * freed.
+     * the downloaded file or "" if an error occured. The file will be
+     * automatically removed during the program shutdown.
      */
-    QTemporaryFile* f;
+    QString f;
 
     FileLoaderItem();
     virtual ~FileLoaderItem();

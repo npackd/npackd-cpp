@@ -8,6 +8,7 @@
 #include <QDesktopServices>
 #include <QSharedPointer>
 #include <QDebug>
+#include <QVariant>
 
 #include "package.h"
 #include "repository.h"
@@ -77,10 +78,13 @@ void PackageFrame::updateIcons()
         c->setVisible(n > 0);
 
         for (int i = 0; i < n; i++) {
-            QIcon icon = mw->downloadImage(p->screenshots.at(i));
+            QIcon icon = mw->downloadScreenshot(p->screenshots.at(i));
             if (!icon.isNull()) {
-                c->addItem(new QListWidgetItem(icon,
-                        QObject::tr("Screen shot")));
+                QListWidgetItem* item = new QListWidgetItem(icon,
+                        QString::number(i + 1));
+                item->setData(Qt::UserRole,
+                        qVariantFromValue(p->screenshots.at(i)));
+                c->addItem(item);
             }
         }
     }
@@ -251,8 +255,11 @@ void PackageFrame::on_tableWidgetVersions_itemSelectionChanged()
 void PackageFrame::screenshotsItemActivated(QListWidgetItem *item)
 {
     MainWindow* mw = MainWindow::getInstance();
-    QLabel* label = new QLabel();
-    QPixmap pixmap = item->icon().pixmap(400, 400, QIcon::Normal, QIcon::On);
-    label->setPixmap(pixmap);
-    mw->addTab(label, item->icon(), QObject::tr("Screenshot"));
+    QString url = item->data(Qt::UserRole).toString();
+    QString filename = mw->downloadCache[url];
+    if (!filename.isEmpty()) {
+        if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename)))
+            mw->addErrorMessage(QObject::tr("Cannot open the file %1").
+                    arg(filename));
+    }
 }

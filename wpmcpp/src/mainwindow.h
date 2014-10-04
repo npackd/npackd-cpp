@@ -47,6 +47,8 @@ private:
     UINT taskbarMessageId;
     ITaskbarList3* taskbarInterface;
 
+    QMap<QString, QIcon> screenshots;
+
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
             const Version& version) const;
@@ -103,6 +105,9 @@ private:
      */
     QString mayPerformInstallOperation();
 public:
+    /** URL -> full path to the file or "" in case of an error */
+    QMap<QString, QString> downloadCache;
+
     void updateActions();
 
     /** URL -> icon */
@@ -149,7 +154,7 @@ public:
      * @return the image if it was already downloaded or a "please wait" image
      *     if the image is not yet available.
      */
-    QIcon downloadImage(const QString& url);
+    QIcon downloadIcon(const QString& url);
 
     /**
      * Fills the table with known package versions.
@@ -229,6 +234,17 @@ public:
 
     void openURL(const QUrl &url);
     static QString createPackageVersionsHTML(const QStringList &names);
+
+    /**
+     * @brief This functions returns the image downloaded from the specified
+     *     URL. The code inserts the provided URL in the work queue if it was
+     *     not yet downloaded. The background thread will download the image.
+     * @param url URL of the image
+     * @return the image if it was already downloaded or a "please wait" image
+     *     if the image is not yet available. The image will have the maximum
+     *     size of 200x200
+     */
+    QIcon downloadScreenshot(const QString &url);
 protected:
     void changeEvent(QEvent *e);
 

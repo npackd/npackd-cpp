@@ -9,6 +9,7 @@
 #include <QThread>
 #include <QAtomicInt>
 #include <QMutex>
+#include <QTemporaryDir>
 
 #include "fileloaderitem.h"
 
@@ -24,7 +25,11 @@ class FileLoader: public QThread
      */
     QQueue<FileLoaderItem> work;
 
+    int id;
+
     QMutex mutex;
+
+    QTemporaryDir dir;
 public:
     /** set this to 1 to terminate this thread. */
     QAtomicInt terminated;
