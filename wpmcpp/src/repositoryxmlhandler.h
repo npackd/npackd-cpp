@@ -38,6 +38,7 @@ class RepositoryXMLHandler: public QXmlDefaultHandler
         TAG_PACKAGE_ICON,
         TAG_PACKAGE_LICENSE,
         TAG_PACKAGE_CATEGORY,
+        TAG_PACKAGE_SCREENSHOT,
         TAG_LICENSE_TITLE,
         TAG_LICENSE_URL,
         TAG_LICENSE_DESCRIPTION,

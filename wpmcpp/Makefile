@@ -144,8 +144,11 @@ gprof: $(WHERE)\wpmcpp.exe $(WHERE)\gmon.out
 	$(MINGW)\bin\gprof.exe -a -F _ZN12DBRepository8updateF5EP3Job $(WHERE)\wpmcpp.exe $(WHERE)\gmon.out >> GProf.txt
 
 ifeq (32,$(BITS))
+memcheck: compile
+	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -report_leak_max 100000 -- wpmcpp.exe
+
 drmemory: compile
-	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -no_callstack_use_top_fp -- wpmcpp.exe
+	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
 endif
 
 upload: zip msi

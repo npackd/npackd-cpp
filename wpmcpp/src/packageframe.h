@@ -5,6 +5,7 @@
 #include <QModelIndex>
 #include <QSharedPointer>
 #include <QList>
+#include <QListWidgetItem>
 
 #include "package.h"
 #include "selection.h"
@@ -60,6 +61,7 @@ private slots:
 
     void on_tableWidgetVersions_itemSelectionChanged();
 
+    void screenshotsItemActivated(QListWidgetItem* item);
 private:
     Ui::PackageFrame *ui;
 };

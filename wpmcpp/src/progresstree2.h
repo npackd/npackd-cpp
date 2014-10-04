@@ -32,15 +32,13 @@ public:
     ProgressTree2(QWidget* parent);
 
     /**
-     * @brief registers a new job
+     * @brief registers a new job. The thread should not be started yet.
      * @param job the job
-     * @param thread job thread
      */
-    void addJob(Job* job, QThread* thread);
+    void addJob(Job* job);
 private slots:
     void cancelClicked();
     void monitoredJobChanged(const JobState &state);
-    void threadFinished();
     void timerTimeout();
     void subJobCreated(Job *sub);
 };

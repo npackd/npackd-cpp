@@ -29,6 +29,7 @@ private:
     QMap<QString, InstalledPackageVersion*> data;
 
     InstalledPackages();
+    virtual ~InstalledPackages();
 
     void detectOneDotNet(const WindowsRegistry& wr, const QString& keyName);
 

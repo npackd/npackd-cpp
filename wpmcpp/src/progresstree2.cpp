@@ -12,7 +12,6 @@
 
 #include "progresstree2.h"
 #include "job.h"
-#include "visiblejobs.h"
 #include "wpmutils.h"
 #include "mainwindow.h"
 
@@ -119,7 +118,7 @@ void ProgressTree2::fillItem(QTreeWidgetItem* item,
     item->setData(0, Qt::UserRole, qVariantFromValue((void*) job));
 }
 
-void ProgressTree2::addJob(Job* job, QThread* thread)
+void ProgressTree2::addJob(Job* job)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem(this);
     fillItem(item, job);
@@ -133,11 +132,6 @@ void ProgressTree2::addJob(Job* job, QThread* thread)
             Qt::QueuedConnection);
 
     addTopLevelItem(item);
-
-    connect(thread, SIGNAL(finished()), this, SLOT(threadFinished()),
-            Qt::QueuedConnection);
-
-    thread->start(QThread::LowestPriority);
 }
 
 void ProgressTree2::subJobCreated(Job* sub)
@@ -204,8 +198,6 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
         }
 
         if (!job->parentJob) {
-            VisibleJobs::getDefault()->unregisterJob(job);
-
             // TODO: should be probably a QSharedPointer job->deleteLater();
 
             delete item;
@@ -255,12 +247,6 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
         QPushButton* b = (QPushButton*) itemWidget(item, 4);
         b->setEnabled(!s.cancelRequested);
     }
-}
-
-void ProgressTree2::threadFinished()
-{
-    QThread* t = (QThread*) QObject::sender();
-    t->deleteLater();
 }
 
 Job* ProgressTree2::getJob(const QTreeWidgetItem& item)
