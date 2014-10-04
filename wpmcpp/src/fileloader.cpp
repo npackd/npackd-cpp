@@ -33,6 +33,7 @@ void FileLoader::run()
             // qDebug() << "FileLoader::run " << it.url;
             Job* job = new Job();
             it.f = Downloader::download(job, it.url, 0, true);
+            delete job;
 
             emit downloaded(it);
         }

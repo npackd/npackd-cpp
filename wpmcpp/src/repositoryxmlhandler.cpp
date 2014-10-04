@@ -58,6 +58,8 @@ int RepositoryXMLHandler::findWhere()
                     r = TAG_PACKAGE_CATEGORY;
                 else if (tag2 == "changelog")
                     r = TAG_PACKAGE_CHANGELOG;
+                else if (tag2 == "screenshot")
+                    r = TAG_PACKAGE_SCREENSHOT;
             } else if (tag1 == "license") {
                 if (tag2 == "title")
                     r = TAG_LICENSE_TITLE;
@@ -324,12 +326,22 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
         QString err;
         QString c = Repository::checkCategory(chars.trimmed(), &err);
         if (!err.isEmpty()) {
-            err = QObject::tr("Error in category tag for %1: %2").
+            error = QObject::tr("Error in category tag for %1: %2").
                     arg(p->title).arg(err);
         } else if (p->categories.contains(c)) {
-            err = QObject::tr("More than one <category> %1").arg(c);
+            error = QObject::tr("More than one <category> %1").arg(c);
         } else {
             p->categories.append(c);
+        }
+    } else if (where == TAG_PACKAGE_SCREENSHOT) {
+        //qDebug() << "screenshot!";
+        QString c = chars.trimmed();
+        if (!Package::isValidURL(c)) {
+            error = QString(
+                    QObject::tr("Invalid screen shot URL for %1: %2")).
+                    arg(p->title).arg(c);
+        } else {
+            p->screenshots.append(c);
         }
     } else if (where == TAG_PACKAGE_CHANGELOG) {
         p->changelog = chars.trimmed();

@@ -435,7 +435,7 @@ QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
 
     delete ipv;
 
-    qDebug() << "computed NPACKD_CL" << v;
+    // qDebug() << "computed NPACKD_CL" << v;
 
     return v;
 }

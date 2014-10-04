@@ -41,6 +41,14 @@ InstalledPackages::InstalledPackages() : mutex(QMutex::Recursive)
 {
 }
 
+InstalledPackages::~InstalledPackages()
+{
+    this->mutex.lock();
+    qDeleteAll(this->data);
+    this->data.clear();
+    this->mutex.unlock();
+}
+
 InstalledPackageVersion* InstalledPackages::findNoCopy(const QString& package,
         const Version& version) const
 {
@@ -409,9 +417,12 @@ InstalledPackageVersion* InstalledPackages::getNewestInstalled(
         InstalledPackageVersion* ipv = all.at(i);
         if (ipv->package == package && ipv->installed()) {
             if (!r || r->version < ipv->version)
-                r = ipv->clone();
+                r = ipv;
         }
     }
+
+    if (r)
+        r = r->clone();
 
     this->mutex.unlock();
 
@@ -693,12 +704,16 @@ QString InstalledPackages::clearPackagesInNestedDirectories() {
         }
     }
 out:
+
+    qDeleteAll(pvs);
+    pvs.clear();
+
     return err;
 }
 
 QString InstalledPackages::readRegistryDatabase()
 {
-    qDebug() << "start reading registry database";
+    // qDebug() << "start reading registry database";
 
     // "data" is only used at the bottom of this method
 
@@ -775,6 +790,7 @@ QString InstalledPackages::readRegistryDatabase()
     }
 
     this->mutex.lock();
+    qDeleteAll(this->data);
     this->data.clear();
     for (int i = 0; i < ipvs.count(); i++) {
         InstalledPackageVersion* ipv = ipvs.at(i);

@@ -142,6 +142,16 @@ public:
     ~MainWindow();
 
     /**
+     * @brief This functions returns the image downloaded from the specified
+     *     URL. The code inserts the provided URL in the work queue if it was
+     *     not yet downloaded. The background thread will download the image.
+     * @param url URL of the image
+     * @return the image if it was already downloaded or a "please wait" image
+     *     if the image is not yet available.
+     */
+    QIcon downloadImage(const QString& url);
+
+    /**
      * Fills the table with known package versions.
      */
     void fillList();

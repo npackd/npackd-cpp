@@ -60,7 +60,6 @@ bool Package::isValidURL(const QString& url)
     return r;
 }
 
-
 void Package::saveTo(QDomElement& e) const {
     e.setAttribute("name", name);
     XMLUtils::addTextTag(e, "title", title);
@@ -77,6 +76,9 @@ void Package::saveTo(QDomElement& e) const {
     }
     if (!this->changelog.isEmpty())
         XMLUtils::addTextTag(e, "changelog", this->changelog);
+    for (int i = 0; i < this->screenshots.count(); i++) {
+        XMLUtils::addTextTag(e, "screenshot", this->screenshots.at(i));
+    }
 }
 
 Package *Package::clone() const
@@ -88,6 +90,7 @@ Package *Package::clone() const
     np->license = this->license;
     np->categories = this->categories;
     np->changelog = this->changelog;
+    np->screenshots = this->screenshots;
 
     return np;
 }

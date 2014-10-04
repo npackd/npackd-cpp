@@ -515,12 +515,28 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+QIcon MainWindow::downloadImage(const QString &url)
+{
+    QIcon r;
+    if (icons.contains(url)) {
+        QIcon icon = icons[url];
+        r = icon;
+    } else {
+        FileLoaderItem it;
+        it.url = url;
+        fileLoader.addWork(it);
+        r = MainWindow::waitAppIcon;
+    }
+    return r;
+}
+
 void MainWindow::monitoredJobChanged(const JobState& state)
 {
     time_t now;
     time(&now);
 
-    if (now != VisibleJobs::getDefault()->monitoredJobLastChanged) {
+    if (now != VisibleJobs::getDefault()->monitoredJobLastChanged &&
+            !state.job->parentJob) {
         VisibleJobs::getDefault()->monitoredJobLastChanged = now;
 
         int index = VisibleJobs::getDefault()->runningJobs.indexOf(state.job);
@@ -529,6 +545,12 @@ void MainWindow::monitoredJobChanged(const JobState& state)
         }
 
         updateProgressTabTitle();
+    }
+
+    if (state.completed && !state.job->parentJob) {
+        VisibleJobs::getDefault()->unregisterJob(state.job);
+        updateProgressTabTitle();
+        state.job->deleteLater();
     }
 }
 
@@ -543,7 +565,8 @@ void MainWindow::monitor(Job* job, QThread* thread)
 
     updateProgressTabTitle();
 
-    pt->addJob(job, thread);
+    pt->addJob(job);
+    thread->start(QThread::LowestPriority);
 }
 
 void MainWindow::onShow()

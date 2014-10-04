@@ -33,6 +33,10 @@ PackageFrame::PackageFrame(QWidget *parent) :
     t->addAction(mw->findChild<QAction*>("actionShow_Details"));
     t->addAction(mw->findChild<QAction*>("actionTest_Download_Site"));
     t->addAction(mw->findChild<QAction*>("actionOpen_folder"));
+
+    connect(this->ui->listWidgetScreenshots,
+            SIGNAL(itemActivated(QListWidgetItem*)), this,
+            SLOT(screenshotsItemActivated(QListWidgetItem*)));
 }
 
 PackageFrame::~PackageFrame()
@@ -58,6 +62,28 @@ void PackageFrame::updateIcons()
     QIcon icon = MainWindow::getPackageVersionIcon(p->name);
     QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
     this->ui->labelIcon->setPixmap(pixmap);
+
+    // screen shots
+    if (p) {
+        MainWindow* mw = MainWindow::getInstance();
+
+        QListWidget* c = this->ui->listWidgetScreenshots;
+        c->clear();
+
+        int n = p->screenshots.count();
+
+        // qDebug() << n << "screen shots";
+
+        c->setVisible(n > 0);
+
+        for (int i = 0; i < n; i++) {
+            QIcon icon = mw->downloadImage(p->screenshots.at(i));
+            if (!icon.isNull()) {
+                c->addItem(new QListWidgetItem(icon,
+                        QObject::tr("Screen shot")));
+            }
+        }
+    }
 }
 
 void PackageFrame::updateStatus()
@@ -95,6 +121,7 @@ void PackageFrame::fillForm(Package* p)
     }
     this->ui->labelLicense->setText(licenseTitle);
 
+    // description, categories, change log
     if (p) {
         this->ui->textEditDescription->setText(p->description);
 
@@ -219,4 +246,13 @@ void PackageFrame::on_tableWidgetVersions_doubleClicked(const QModelIndex &index
 void PackageFrame::on_tableWidgetVersions_itemSelectionChanged()
 {
     MainWindow::getInstance()->updateActions();
+}
+
+void PackageFrame::screenshotsItemActivated(QListWidgetItem *item)
+{
+    MainWindow* mw = MainWindow::getInstance();
+    QLabel* label = new QLabel();
+    QPixmap pixmap = item->icon().pixmap(400, 400, QIcon::Normal, QIcon::On);
+    label->setPixmap(pixmap);
+    mw->addTab(label, item->icon(), QObject::tr("Screenshot"));
 }
