@@ -58,33 +58,26 @@ void PackageFrame::reload()
     }
 }
 
-void PackageFrame::updateIcons()
+void PackageFrame::updateIcons(const QString& url)
 {
-    QIcon icon = MainWindow::getPackageVersionIcon(p->name);
-    QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
-    this->ui->labelIcon->setPixmap(pixmap);
+    if (p->icon == url) {
+        QIcon icon = MainWindow::getPackageVersionIcon(p->name);
+        QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
+        this->ui->labelIcon->setPixmap(pixmap);
+    }
 
     // screen shots
     if (p) {
         MainWindow* mw = MainWindow::getInstance();
 
         QListWidget* c = this->ui->listWidgetScreenshots;
-        c->clear();
 
-        int n = p->screenshots.count();
-
-        // qDebug() << n << "screen shots";
-
-        c->setVisible(n > 0);
-
-        for (int i = 0; i < n; i++) {
-            QIcon icon = mw->downloadScreenshot(p->screenshots.at(i));
-            if (!icon.isNull()) {
-                QListWidgetItem* item = new QListWidgetItem(icon,
-                        QString::number(i + 1));
-                item->setData(Qt::UserRole,
-                        qVariantFromValue(p->screenshots.at(i)));
-                c->addItem(item);
+        for (int i = 0; i < c->count(); i++) {
+            QListWidgetItem* item = c->item(i);
+            QString url_ = item->data(Qt::UserRole).toString();
+            if (url_ == url) {
+                QIcon icon = mw->downloadScreenshot(p->screenshots.at(i));
+                item->setIcon(icon);
             }
         }
     }
@@ -152,7 +145,35 @@ void PackageFrame::fillForm(Package* p)
         this->ui->labelChangeLog->setText(changelog);
     }
 
-    updateIcons();
+    if (p) {
+        QIcon icon = MainWindow::getPackageVersionIcon(p->name);
+        QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
+        this->ui->labelIcon->setPixmap(pixmap);
+    }
+
+    if (p) {
+        MainWindow* mw = MainWindow::getInstance();
+
+        QListWidget* c = this->ui->listWidgetScreenshots;
+        c->clear();
+
+        int n = p->screenshots.count();
+
+        // qDebug() << n << "screen shots";
+
+        c->setVisible(n > 0);
+
+        for (int i = 0; i < n; i++) {
+            QIcon icon = mw->downloadScreenshot(p->screenshots.at(i));
+            if (!icon.isNull()) {
+                QListWidgetItem* item = new QListWidgetItem(icon,
+                        QString::number(i + 1));
+                item->setData(Qt::UserRole,
+                        qVariantFromValue(p->screenshots.at(i)));
+                c->addItem(item);
+            }
+        }
+    }
 
     QTableWidgetItem *newItem;
     QTableWidget* t = this->ui->tableWidgetVersions;

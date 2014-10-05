@@ -1479,8 +1479,12 @@ void DBRepository::saveAll(Job* job, Repository* r, bool replace)
 
 void DBRepository::updateStatusForInstalled(Job* job)
 {
+    QString initialTitle = job->getTitle();
+
     bool transactionStarted = false;
-    if (job->shouldProceed(QObject::tr("Starting an SQL transaction"))) {
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Starting an SQL transaction"));
         QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -1502,7 +1506,9 @@ void DBRepository::updateStatusForInstalled(Job* job)
         job->setProgress(0.02);
     }
 
-    if (job->shouldProceed(QObject::tr("Updating statuses"))) {
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Updating statuses"));
         QList<QString> packages_ = packages.values();
         for (int i = 0; i < packages_.count(); i++) {
             QString package = packages_.at(i);
@@ -1515,7 +1521,9 @@ void DBRepository::updateStatusForInstalled(Job* job)
         }
     }
 
-    if (job->shouldProceed(QObject::tr("Commiting the SQL transaction"))) {
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Commiting the SQL transaction"));
         QString err = exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -1525,6 +1533,8 @@ void DBRepository::updateStatusForInstalled(Job* job)
         if (transactionStarted)
             exec("ROLLBACK");
     }
+
+    job->setTitle(initialTitle);
 
     job->complete();
 }

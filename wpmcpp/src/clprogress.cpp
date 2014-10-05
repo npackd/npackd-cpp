@@ -21,7 +21,7 @@ void CLProgress::jobChanged(const JobState& s)
 
                 SetConsoleCursorPosition(hOutputHandle,
                         progressPos.dwCursorPosition);
-                QString txt = s.hint;
+                QString txt = s.title;
                 if (txt.length() >= w)
                     txt = "..." + txt.right(w - 3);
                 if (txt.length() < w)
@@ -29,7 +29,7 @@ void CLProgress::jobChanged(const JobState& s)
                 txt += QString("%1%").arg(floor(s.progress * 100 + 0.5), 4);
                 WPMUtils::outputTextConsole(txt);
             } else {
-                WPMUtils::outputTextConsole(s.hint + "\n");
+                WPMUtils::outputTextConsole(s.title + "\n");
             }
         }
     } else {
@@ -61,12 +61,12 @@ void CLProgress::jobChangedSimple(const JobState& s)
 
     if (output) {
         int n = 0;
-        while (this->lastHint.length() > n && s.hint.length() > n &&
-                this->lastHint.at(n) == s.hint.at(n)) {
+        while (this->lastHint.length() > n && s.title.length() > n &&
+                this->lastHint.at(n) == s.title.at(n)) {
             n++;
         }
         if (n) {
-            int pos = s.hint.lastIndexOf('/', n - 1);
+            int pos = s.title.lastIndexOf('/', n - 1);
             if (pos < 0)
                 n = 0;
             else
@@ -75,15 +75,13 @@ void CLProgress::jobChangedSimple(const JobState& s)
 
         QString hint;
         if (n == 0)
-            hint = s.hint;
+            hint = s.title;
         else {
-            hint = "... " + s.hint.mid(n);
+            hint = "... " + s.title.mid(n);
         }
 
         WPMUtils::outputTextConsole(("[%1%] - " + hint + "\n").
                 arg(floor(s.progress * 100 + 0.5)));
-
-        this->lastHint = s.hint;
     }
 }
 

@@ -241,7 +241,7 @@ void MainWindow::updateIcon(const QString& url)
         }
         PackageFrame* pf = dynamic_cast<PackageFrame*>(w);
         if (pf) {
-            pf->updateIcons();
+            pf->updateIcons(url);
             QIcon icon = getPackageVersionIcon(pf->p->name);
             this->ui->tabWidget->setTabIcon(i, icon);
         }

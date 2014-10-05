@@ -84,7 +84,7 @@ void ProgressFrame::jobChanged(const JobState& s)
         time_t now;
         time(&now);
         if (now != this->modified) {
-            ui->labelStep->setText(this->title + " / " + s.hint);
+            ui->labelStep->setText(this->title);
             this->modified = now;
 
             if (started != 0) {

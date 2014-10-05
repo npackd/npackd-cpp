@@ -823,7 +823,7 @@ QString App::update()
 
     QList<InstallOperation*> ops;
     bool up2date = false;
-    if (job->shouldProceed("Planning")) {
+    if (job->shouldProceed()) {
         QString err = rep->planUpdates(toUpdate, ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -911,7 +911,7 @@ void App::processInstallOperations(Job *job,
         }
 
         QString batchFileName;
-        if (job->shouldProceed("Creating the .bat file")) {
+        if (job->shouldProceed()) {
             QString pct = WPMUtils::programCloseType2String(programCloseType);
             QStringList batch;
             for (int i = 0; i < ops.count(); i++) {
@@ -1308,7 +1308,7 @@ QString App::info()
 
     Job* job = clp.createJob();
 
-    if (job->shouldProceed("Reading list of installed packages from the registry")) {
+    if (job->shouldProceed()) {
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())
@@ -1392,12 +1392,20 @@ QString App::info()
         WPMUtils::outputTextConsole("Categories: " +
                 p->categories.join(", ") + "\n");
         WPMUtils::outputTextConsole("Icon: " + p->icon + "\n");
+        WPMUtils::outputTextConsole("Screen shots: " +
+                (p->screenshots.count() > 0 ? p->screenshots.at(0) : "n/a") +
+                "\n");
+        for (int i = 1; i < p->screenshots.count(); i++) {
+            WPMUtils::outputTextConsole("    " + p->screenshots.at(i) + "\n");
+        }
+
         if (pv) {
             WPMUtils::outputTextConsole(QString("Type: ") +
                     (pv->type == 0 ? "zip" : "one-file") + "\n");
 
             WPMUtils::outputTextConsole(QString("Hash sum: ") +
-                    (pv->hashSumType == QCryptographicHash::Sha1 ? "SHA-1" : "SHA-256") +
+                    (pv->hashSumType == QCryptographicHash::Sha1 ?
+                    "SHA-1" : "SHA-256") +
                     ": " + pv->sha1 + "\n");
 
             QString details;
