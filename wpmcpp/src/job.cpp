@@ -11,7 +11,6 @@ JobState::JobState()
     this->cancelRequested = false;
     this->completed = false;
     this->errorMessage = "";
-    this->hint = "";
     this->progress = 0;
     this->job = 0;
     this->started = 0;
@@ -22,7 +21,6 @@ JobState::JobState(const JobState& s) : QObject()
     this->cancelRequested = s.cancelRequested;
     this->completed = s.completed;
     this->errorMessage = s.errorMessage;
-    this->hint = s.hint;
     this->progress = s.progress;
     this->job = s.job;
     this->started = s.started;
@@ -33,7 +31,6 @@ void JobState::operator=(const JobState& s)
     this->cancelRequested = s.cancelRequested;
     this->completed = s.completed;
     this->errorMessage = s.errorMessage;
-    this->hint = s.hint;
     this->progress = s.progress;
     this->job = s.job;
     this->started = s.started;
@@ -68,7 +65,6 @@ Job::Job(const QString &title, Job *parent): mutex(QMutex::Recursive), parentJob
     this->cancelRequested = false;
     this->completed = false;
     this->started = 0;
-    this->uparentHint = true;
     this->uparentProgress = true;
 }
 
@@ -138,12 +134,8 @@ Job* Job::newSubJob(double part, const QString &title, bool updateParentHint_,
 {
     Job* r = new Job("", this);
     r->title = title;
-    if (r->title.isEmpty())
-        r->title = this->getHint();
     r->subJobSteps = part;
     r->subJobStart = this->getProgress();
-    r->parentHintStart = getHint();
-    r->uparentHint = updateParentHint_;
     r->uparentProgress = updateParentProgress_;
 
     connect(this, SIGNAL(changed(const JobState&)),
@@ -188,7 +180,6 @@ void Job::fireChange()
     state.cancelRequested = this->cancelRequested;
     state.completed = this->completed;
     state.errorMessage = this->errorMessage;
-    state.hint = this->hint;
     state.title = this->title;
     state.progress = this->progress;
     state.started = this->started;
@@ -216,8 +207,6 @@ void Job::setProgress(double progress)
 
     if (uparentProgress)
         updateParentProgress();
-    if (uparentHint)
-        updateParentHint();
 }
 
 void Job::updateParentProgress()
@@ -246,16 +235,6 @@ double Job::getProgress() const
     this->mutex.unlock();
 
     return progress_;
-}
-
-QString Job::getHint() const
-{
-    QString hint_;
-    this->mutex.lock();
-    hint_ = this->hint;
-    this->mutex.unlock();
-
-    return hint_;
 }
 
 QString Job::getTitle() const
@@ -292,31 +271,6 @@ void Job::setTitle(const QString &title)
     this->mutex.unlock();
 
     fireChange();
-
-    if (uparentHint)
-        updateParentHint();
-}
-
-void Job::updateParentHint()
-{
-/*
-    Job* parentJob_;
-    QString hint_;
-    QString parentHintStart_;
-    this->mutex.lock();
-    parentJob_ = parentJob;
-    hint_ = this->hint;
-    parentHintStart_ = this->parentHintStart;
-    this->mutex.unlock();
-
-    if (parentJob_) {
-        if ((isCompleted() && getErrorMessage().isEmpty())
-                || hint_.isEmpty())
-            parentJob_->setHint(parentHintStart_);
-        else
-            parentJob_->setHint(parentHintStart_ + " / " + hint_);
-    }
-    */
 }
 
 QString Job::getErrorMessage() const
@@ -329,16 +283,9 @@ QString Job::getErrorMessage() const
     return errorMessage_;
 }
 
-bool Job::shouldProceed(const QString& hint)
-{
-    bool b = !this->isCancelled() && this->getErrorMessage().isEmpty();
-    return b;
-}
-
 bool Job::shouldProceed() const
 {
-    bool b = !this->isCancelled() && this->getErrorMessage().isEmpty();
-    return b;
+    return !this->isCancelled() && this->getErrorMessage().isEmpty();
 }
 
 void Job::setErrorMessage(const QString &errorMessage)

@@ -23,9 +23,6 @@ public:
     /** title */
     QString title;
 
-    /** job hint */
-    QString hint;
-
     /** job error message or "" */
     QString errorMessage;
 
@@ -64,7 +61,7 @@ Q_DECLARE_METATYPE(JobState)
  *     for (int i = 0; i < 100; i++) {
  *        if (job->isCancelled())
  *            break;
- *        job->setHint(QString("Processing step %1").arg(i));
+ *        job->setTitle(QString("Processing step %1").arg(i));
  *        .... do some work here
  *        job->setProgress(((double) i) / 100);
  *     }
@@ -93,14 +90,10 @@ private:
     /** progress 0...1 */
     double progress;
 
-    /** description of the current state */
-    QString hint;
-
     QString title;
 
     QString errorMessage;
 
-    QString parentHintStart;
     double subJobSteps;
     double subJobStart;
 
@@ -112,16 +105,8 @@ private:
     /** time when this job was started or 0 */
     time_t started;
 
-    /** should the parent hint be updated? */
-    bool uparentHint;
-
     /** should the parent progress be updated? */
     bool uparentProgress;
-
-    /**
-     * @threadsafe
-     */
-    void updateParentHint();
 
     /**
      * @threadsafe
@@ -214,12 +199,6 @@ public:
     double getProgress() const;
 
     /**
-     * @return current hint
-     * @threadsafe
-     */
-    QString getHint() const;
-
-    /**
      * @return the title
      * @threadsafe
      */
@@ -255,26 +234,6 @@ public:
      * @threadsafe
      */
     void setErrorMessage(const QString &errorMessage);
-
-    /**
-     * This function can be used to simplify the following case:
-     *
-     * if (!job->isCancelled() && job->getErrorMessage().isEmpty() {
-     *     job.setHint("Testing");
-     *     ...
-     * }
-     *
-     * as follows:
-     *
-     * if (job->shouldProceed("Testing") {
-     *     ...
-     * }
-     *
-     * @param hint new hint
-     * @return true if this job is neither cancelled nor failed
-     * @threadsafe
-     */
-    bool shouldProceed(const QString& hint);
 
     /**
      * This function can be used to simplify the following case:

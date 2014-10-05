@@ -43,8 +43,10 @@ public:
 
     /**
      * Updates the view if a new icon was downloaded.
+     *
+     * @param url URL of the downloaded icon
      */
-    void updateIcons();
+    void updateIcons(const QString &url);
 
     /**
      * Updates package status.
