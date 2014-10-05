@@ -14,7 +14,8 @@ FileLoader::FileLoader(): id(0)
 void FileLoader::addWork(const FileLoaderItem &item)
 {
     this->mutex.lock();
-    this->work.enqueue(item);
+    if (!this->work.contains(item))
+        this->work.enqueue(item);
     this->mutex.unlock();
 }
 
