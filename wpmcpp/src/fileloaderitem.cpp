@@ -20,3 +20,8 @@ FileLoaderItem& FileLoaderItem::operator=(const FileLoaderItem& it)
     this->f = it.f;
     return *this;
 }
+
+bool FileLoaderItem::operator==(const FileLoaderItem &it)
+{
+    return this->url == it.url;
+}

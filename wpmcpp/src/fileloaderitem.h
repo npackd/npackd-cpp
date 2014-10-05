@@ -25,6 +25,12 @@ public:
     FileLoaderItem(const FileLoaderItem& it);
 
     FileLoaderItem& operator=(const FileLoaderItem& it);
+
+    /**
+     * @param it another object
+     * @return true if the "url" is the same
+     */
+    bool operator==(const FileLoaderItem& it);
 };
 
 Q_DECLARE_METATYPE(FileLoaderItem)
