@@ -14,6 +14,7 @@
 #include <QMessageBox>
 #include <QStringList>
 #include <QString>
+#include <QCache>
 
 #include "packageversion.h"
 #include "package.h"
@@ -104,14 +105,14 @@ private:
      * @return error message or ""
      */
     QString mayPerformInstallOperation();
+
+    /** URL -> icon */
+    QCache<QString, QIcon> icons;
 public:
     /** URL -> full path to the file or "" in case of an error */
     QMap<QString, QString> downloadCache;
 
     void updateActions();
-
-    /** URL -> icon */
-    static QMap<QString, QIcon> icons;
 
     /**
      * @param package full package name

@@ -64,7 +64,6 @@
 
 extern HWND defaultPasswordWindow;
 
-QMap<QString, QIcon> MainWindow::icons;
 QIcon MainWindow::genericAppIcon;
 QIcon MainWindow::waitAppIcon;
 MainWindow* MainWindow::instance = 0;
@@ -501,8 +500,9 @@ MainWindow::~MainWindow()
 QIcon MainWindow::downloadIcon(const QString &url)
 {
     QIcon r;
-    if (icons.contains(url)) {
-        r = icons[url];
+    QIcon* inCache = icons.object(url);
+    if (inCache) {
+        r = *inCache;
     } else if (downloadCache.contains(url)) {
         QString file = downloadCache[url];
         if (!file.isEmpty()) {
@@ -517,10 +517,13 @@ QIcon MainWindow::downloadIcon(const QString &url)
             if (!pm.isNull()) {
                 pm = pm.scaled(32, 32, Qt::KeepAspectRatio,
                         Qt::SmoothTransformation);
-                r.addPixmap(pm);
-                r.detach();
 
-                icons.insert(url, r);
+                inCache = new QIcon(pm);
+                inCache->detach();
+
+                icons.insert(url, inCache);
+
+                r = *inCache;
             } else {
                 r = MainWindow::genericAppIcon;
             }
