@@ -461,7 +461,7 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
     QFuture<void> deleteShortcutsFuture;
     if (job->getErrorMessage().isEmpty()) {
         Job* deleteShortcutsJob = job->newSubJob(0,
-                QObject::tr("Deleting shortcuts"), false, false);
+                QObject::tr("Deleting shortcuts"), false);
         deleteShortcutsFuture = QtConcurrent::run(this,
                 &PackageVersion::deleteShortcuts,
                 d.absolutePath(), deleteShortcutsJob, true, false, false);
@@ -992,7 +992,7 @@ void PackageVersion::install(Job* job, const QString& where)
                 QObject::tr("Creating directory"));
         QString s = d.absolutePath();
         if (!d.mkpath(s)) {
-            job->setErrorMessage(QString(QObject::tr("Cannot create directory: %0")).
+            job->setErrorMessage(QObject::tr("Cannot create directory: %0").
                     arg(s));
         } else {
             job->setProgress(0.01);
@@ -1004,7 +1004,7 @@ void PackageVersion::install(Job* job, const QString& where)
                 QObject::tr("Creating .Npackd sub-directory"));
         QString s = npackdDir;
         if (!d.mkpath(s)) {
-            job->setErrorMessage(QString(QObject::tr("Cannot create directory: %0")).
+            job->setErrorMessage(QObject::tr("Cannot create directory: %0").
                     arg(s));
         } else {
             job->setProgress(0.02);
@@ -1060,7 +1060,7 @@ void PackageVersion::install(Job* job, const QString& where)
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!downloadOK) {
             if (!f->open(QIODevice::ReadWrite)) {
-                job->setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
+                job->setErrorMessage(QObject::tr("Cannot open the file: %0").
                         arg(f->fileName()));
             } else {
                 double rest = 0.63 - job->getProgress();
@@ -1069,7 +1069,7 @@ void PackageVersion::install(Job* job, const QString& where)
                 Downloader::download(djob, this->download, f,
                         this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
                 if (!djob->getErrorMessage().isEmpty())
-                    job->setErrorMessage(QString(QObject::tr("Error downloading %1: %2")).
+                    job->setErrorMessage(QObject::tr("Error downloading %1: %2").
                         arg(this->download.toString()).arg(
                         djob->getErrorMessage()));
                 f->close();
@@ -1277,8 +1277,10 @@ void PackageVersion::install(Job* job, const QString& where)
 
     delete f;
 
-    if (job->shouldProceed())
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle);
         job->setProgress(1);
+    }
 
     job->complete();
 }

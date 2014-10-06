@@ -49,7 +49,7 @@ public:
      */
     bool process(int *errorCode);
 private:
-    void monitor(Job *job, const QString &title, QThread *thread);
+    void monitorAndWaitFor(Job *job, const QString &title);
     QString startNewestNpackdg();
 };
 

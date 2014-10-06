@@ -11,8 +11,7 @@
 #include "wpmutils.h"
 #include "visiblejobs.h"
 
-ProgressFrame::ProgressFrame(QWidget *parent, Job* job, const QString& title,
-        QThread* thread) :
+ProgressFrame::ProgressFrame(QWidget *parent, Job* job, const QString& title) :
     QFrame(parent),
     ui(new Ui::ProgressFrame)
 {
@@ -23,7 +22,6 @@ ProgressFrame::ProgressFrame(QWidget *parent, Job* job, const QString& title,
     this->job = job;
     this->started = 0;
     this->modified = 0;
-    this->thread = thread;
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timerTimeout()));
@@ -32,11 +30,6 @@ ProgressFrame::ProgressFrame(QWidget *parent, Job* job, const QString& title,
     connect(job, SIGNAL(changed(const JobState&)), this,
             SLOT(jobChanged(const JobState&)),
             Qt::QueuedConnection);
-    connect(thread, SIGNAL(finished()), this,
-            SLOT(threadFinished()),
-            Qt::QueuedConnection);
-
-    thread->start(QThread::LowestPriority);
 }
 
 ProgressFrame::~ProgressFrame()
@@ -59,17 +52,11 @@ ProgressFrame::~ProgressFrame()
             mb.exec();
         }
     }
-    delete this->thread;
 
     VisibleJobs::getDefault()->unregisterJob(this->job);
 
     delete this->job;
     delete ui;
-}
-
-void ProgressFrame::threadFinished()
-{
-    this->deleteLater();
 }
 
 void ProgressFrame::timerTimeout()

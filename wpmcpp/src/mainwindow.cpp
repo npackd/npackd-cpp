@@ -601,7 +601,7 @@ void MainWindow::monitoredJobChanged(const JobState& state)
     }
 }
 
-void MainWindow::monitor(Job* job, QThread* thread)
+void MainWindow::monitor(Job* job)
 {
     connect(job, SIGNAL(changed(const JobState&)), this,
             SLOT(monitoredJobChanged(const JobState&)),
@@ -613,7 +613,6 @@ void MainWindow::monitor(Job* job, QThread* thread)
     updateProgressTabTitle();
 
     pt->addJob(job);
-    thread->start(QThread::LowestPriority);
 }
 
 void MainWindow::onShow()
@@ -919,7 +918,8 @@ void MainWindow::process(QList<InstallOperation*> &install,
                         SLOT(processThreadFinished()),
                         Qt::QueuedConnection);
 
-                monitor(job, it);
+                monitor(job);
+                it->start(QThread::LowestPriority);
             }
         }
     }
@@ -1340,7 +1340,8 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
     this->reloadRepositoriesThreadRunning = true;
     updateActions();
 
-    monitor(job, it);
+    monitor(job);
+    it->start(QThread::LowestPriority);
 }
 
 void MainWindow::setMenuAccelerators(){
@@ -1787,7 +1788,8 @@ void MainWindow::on_actionScan_Hard_Drives_triggered()
     this->hardDriveScanRunning = true;
     this->updateActions();
 
-    monitor(job, it);
+    monitor(job);
+    it->start(QThread::LowestPriority);
 }
 
 bool comparesi(const QPair<QString, int>& a, const QPair<QString, int>& b)
