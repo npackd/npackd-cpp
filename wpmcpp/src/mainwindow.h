@@ -80,14 +80,13 @@ private:
     void selectPackages(QList<Package*> ps);
 
     /**
-     * Adds an entry in the "Progress" tab and monitors a task.
+     * Adds an entry in the "Progress" tab and monitors a task. The thread
+     * itself should be started after the call to this method.
      *
      * @param job this job will be monitored. The object will be destroyed after
      *     the thread completion
-     * @param thread the job itself. The object will be destroyed after the
-     *     completion. The thread will be started in this method.
      */
-    void monitor(Job* job, QThread* thread);
+    void monitor(Job* job);
 
     void updateStatusInDetailTabs();
     void updateProgressTabTitle();

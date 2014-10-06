@@ -32,23 +32,28 @@ CLProcessor::CLProcessor()
 {
 }
 
-void CLProcessor::monitor(Job* job, const QString& title, QThread* thread)
+void CLProcessor::monitorAndWaitFor(Job* job, const QString& title)
 {
     ProgressDialog* d = new ProgressDialog();
     d->setWindowTitle(title);
     d->job = job;
     QVBoxLayout* layout = new QVBoxLayout();
 
-    ProgressFrame* pf = new ProgressFrame(d, job, title, thread);
+    ProgressFrame* pf = new ProgressFrame(d, job, title);
     layout->insertWidget(0, pf);
 
     d->setLayout(layout);
 
-    QObject::connect(thread, SIGNAL(finished()), d,
+    QObject::connect(job, SIGNAL(jobCompleted()), d,
             SLOT(accept()), Qt::QueuedConnection);
 
+
     d->resize(400, 200);
-    d->exec();
+
+    if (!job->isCompleted()) {
+        d->exec();
+    }
+
     d->deleteLater();
 }
 
@@ -98,7 +103,9 @@ QString CLProcessor::remove()
         it->programCloseType = programCloseType;
         ops.clear();
 
-        monitor(job, QObject::tr("Uninstall"), it);
+        it->start(QThread::LowestPriority);
+        monitorAndWaitFor(job, QObject::tr("Uninstall"));
+        it->deleteLater();
     }
 
     qDeleteAll(installed);
@@ -210,7 +217,9 @@ QString CLProcessor::add()
         it->programCloseType = pct;
         ops.clear();
 
-        monitor(job, QObject::tr("Install"), it);
+        it->start(QThread::LowestPriority);
+        monitorAndWaitFor(job, QObject::tr("Install"));
+        it->deleteLater();
     }
 
     qDeleteAll(ops);
@@ -327,7 +336,9 @@ QString CLProcessor::update()
         it->programCloseType = programCloseType;
         ops.clear();
 
-        monitor(sjob, QObject::tr("Install"), it);
+        it->start(QThread::LowestPriority);
+        monitorAndWaitFor(sjob, QObject::tr("Install"));
+        it->deleteLater();
         if (sjob->getErrorMessage().isEmpty())
             job->setErrorMessage(sjob->getErrorMessage());
     }

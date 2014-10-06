@@ -108,6 +108,8 @@ private:
     /** should the parent progress be updated? */
     bool uparentProgress;
 
+    bool updateParentErrorMessage;
+
     /**
      * @threadsafe
      */
@@ -183,14 +185,15 @@ public:
      *
      * @param part 0..1 part of this for the created sub-job
      * @param title title for the new job
-     * @param updateParentHint_ true = update hint of the parent job
      * @param updateParentProgress_ true = update progress of the parent job
+     * @param updateParentErrorMessage true = update the error message of the
+     *     parent job
      * @return child job with parent=this
      * @threadsafe
      */
     Job* newSubJob(double part, const QString& title="",
-            bool updateParentHint_=true,
-            bool updateParentProgress_=true);
+            bool updateParentProgress_=true,
+            bool updateParentErrorMessage=false);
 
     /**
      * @return progress of this job (0...1)
@@ -264,6 +267,11 @@ signals:
      * changes (progress, hint etc.).
      */
     void changed(const JobState& s);
+
+    /**
+     * Job was completed with an error message or successfully.
+     */
+    void jobCompleted();
 
     /**
      * @brief a new sub-job was created

@@ -56,7 +56,8 @@ time_t JobState::remainingTime()
 
 QList<Job*> Job::jobs;
 
-Job::Job(const QString &title, Job *parent): mutex(QMutex::Recursive), parentJob(parent)
+Job::Job(const QString &title, Job *parent):
+        mutex(QMutex::Recursive), parentJob(parent)
 {
     this->title = title;
     this->progress = 0.0;
@@ -66,6 +67,7 @@ Job::Job(const QString &title, Job *parent): mutex(QMutex::Recursive), parentJob
     this->completed = false;
     this->started = 0;
     this->uparentProgress = true;
+    this->updateParentErrorMessage = false;
 }
 
 Job::~Job()
@@ -80,6 +82,7 @@ void Job::complete()
     completed_ = this->completed;
     if (!completed_) {
         this->completed = true;
+        emit jobCompleted();
     }
     this->mutex.unlock();
 
@@ -129,7 +132,8 @@ void Job::parentJobChanged(const JobState& s)
         this->cancel();
 }
 
-Job* Job::newSubJob(double part, const QString &title, bool updateParentHint_,
+Job* Job::newSubJob(double part, const QString &title,
+        bool updateParentErrorMessage,
         bool updateParentProgress_)
 {
     Job* r = new Job("", this);
@@ -137,6 +141,7 @@ Job* Job::newSubJob(double part, const QString &title, bool updateParentHint_,
     r->subJobSteps = part;
     r->subJobStart = this->getProgress();
     r->uparentProgress = updateParentProgress_;
+    r->updateParentErrorMessage = updateParentErrorMessage;
 
     connect(this, SIGNAL(changed(const JobState&)),
             r, SLOT(parentJobChanged(const JobState&)),
@@ -292,6 +297,15 @@ void Job::setErrorMessage(const QString &errorMessage)
 {
     this->mutex.lock();
     this->errorMessage = errorMessage;
+    if (!this->errorMessage.isEmpty() && parentJob &&
+            updateParentErrorMessage) {
+        QString msg = title + ": " + errorMessage;
+        if (parentJob->getErrorMessage().isEmpty())
+            parentJob->setErrorMessage(msg);
+        else
+            parentJob->setErrorMessage(parentJob->getErrorMessage() + "; " +
+                    msg);
+    }
     this->mutex.unlock();
     fireChange();
 }
