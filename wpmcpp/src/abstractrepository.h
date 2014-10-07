@@ -127,7 +127,7 @@ public:
     QString updateNpackdCLEnvVar();
 
     /**
-     * @brief processes the given operatios
+     * @brief processes the given operations
      * @param job job
      * @param install operations that should be performed
      * @param programCloseType how to close running applications
@@ -218,6 +218,15 @@ public:
      *     or NpackdCL instance is included
      */
     bool includesRemoveItself(const QList<InstallOperation *> &install_);
+
+    /**
+     * @brief processes the given operations. Calls CoInitialize/CoUninitialize.
+     * @param job job
+     * @param install operations that should be performed
+     * @param programCloseType how to close running applications
+     */
+    void processWithCoInitialize(Job *job,
+            const QList<InstallOperation *> &install_, DWORD programCloseType);
 };
 
 #endif // ABSTRACTREPOSITORY_H

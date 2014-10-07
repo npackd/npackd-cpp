@@ -746,6 +746,7 @@ void MainWindow::fillList()
     PackageItemModel* m = (PackageItemModel*) t->model();
     m->setPackages(found);
     t->setUpdatesEnabled(true);
+    t->horizontalHeader()->setSectionsMovable(true);
 }
 
 QString MainWindow::createPackageVersionsHTML(const QStringList& names)
@@ -909,17 +910,20 @@ void MainWindow::process(QList<InstallOperation*> &install,
                 }
             } else {
                 Job* job = new Job(QObject::tr("Install/Uninstall"));
-                InstallThread* it = new InstallThread(0, 1, job);
-                it->install = install;
-                it->programCloseType = programCloseType;
-                install.clear();
 
-                connect(it, SIGNAL(finished()), this,
+                connect(job, SIGNAL(jobCompleted()), this,
                         SLOT(processThreadFinished()),
                         Qt::QueuedConnection);
 
                 monitor(job);
-                it->start(QThread::LowestPriority);
+
+                // TODO: not the lowest priority for the installer thread
+                QtConcurrent::run(AbstractRepository::getDefault_(),
+                        &AbstractRepository::processWithCoInitialize,
+                        job, install,
+                        WPMUtils::getCloseProcessType());
+
+                install.clear();
             }
         }
     }

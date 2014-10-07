@@ -93,6 +93,14 @@ bool AbstractRepository::includesRemoveItself(
     return res;
 }
 
+void AbstractRepository::processWithCoInitialize(Job *job,
+        const QList<InstallOperation *> &install_, DWORD programCloseType)
+{
+    CoInitialize(NULL);
+    process(job, install_, programCloseType);
+    CoUninitialize();
+}
+
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType)
 {
