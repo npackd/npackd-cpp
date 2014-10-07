@@ -133,8 +133,8 @@ void Job::parentJobChanged(const JobState& s)
 }
 
 Job* Job::newSubJob(double part, const QString &title,
-        bool updateParentErrorMessage,
-        bool updateParentProgress_)
+        bool updateParentProgress_,
+        bool updateParentErrorMessage)
 {
     Job* r = new Job("", this);
     r->title = title;

@@ -23,6 +23,7 @@ MainFrame::MainFrame(QWidget *parent) :
     t->setModel(new PackageItemModel(QList<Package*>()));
     t->setEditTriggers(QTableWidget::NoEditTriggers);
     t->setSortingEnabled(false);
+    t->horizontalHeader()->setSectionsMovable(true);
 
     t->verticalHeader()->setDefaultSectionSize(36);
     t->setColumnWidth(0, 40);
@@ -52,43 +53,49 @@ void MainFrame::saveColumns() const
     WindowsRegistry wrr;
     if (err.isEmpty()) {
         wrr = wr.createSubKey(
-                "Software\\Npackd\\Npackd\\TableColumns", &err,
+                "Software\\Npackd\\Npackd", &err,
                 KEY_ALL_ACCESS);
     }
 
     if (err.isEmpty()) {
         QTableView* t = this->ui->tableWidget;
-        QStringList v;
-        for (int i = 0; i < t->model()->columnCount(); i++) {
-            v.append(QString::number(t->columnWidth(i)));
-        }
-
-        wrr.saveStringList(v);
+        wrr.setBytes("MainTableState", t->horizontalHeader()->saveState());
     }
 }
 
 void MainFrame::loadColumns() const
 {
     WindowsRegistry wr;
-    QString err = wr.open(HKEY_CURRENT_USER,
-            "Software\\Npackd\\Npackd\\TableColumns", false,
-            KEY_READ);
+    if (wr.open(HKEY_CURRENT_USER,
+            "Software\\Npackd\\Npackd", false,
+            KEY_READ).isEmpty()) {
+        QString err;
+        QByteArray ba = wr.getBytes("MainTableState", &err);
+        if (err.isEmpty()) {
+            QTableView* t = this->ui->tableWidget;
+            t->horizontalHeader()->restoreState(ba);
+        }
+    } else {
+        QString err = wr.open(HKEY_CURRENT_USER,
+                "Software\\Npackd\\Npackd\\TableColumns", false,
+                KEY_READ);
 
-    QStringList v;
-    if (err.isEmpty()) {
-        v = wr.loadStringList(&err);
-    }
+        QStringList v;
+        if (err.isEmpty()) {
+            v = wr.loadStringList(&err);
+        }
 
-    if (err.isEmpty()) {
-        QTableView* t = this->ui->tableWidget;
-        for (int i = 0; i < std::min(t->model()->columnCount(),
-                v.count()); i++) {
-            bool ok;
-            int w = v.at(i).toInt(&ok);
-            if (!ok)
-                break;
+        if (err.isEmpty()) {
+            QTableView* t = this->ui->tableWidget;
+            for (int i = 0; i < std::min(t->model()->columnCount(),
+                    v.count()); i++) {
+                bool ok;
+                int w = v.at(i).toInt(&ok);
+                if (!ok)
+                    break;
 
-            t->setColumnWidth(i, w);
+                t->setColumnWidth(i, w);
+            }
         }
     }
 }
