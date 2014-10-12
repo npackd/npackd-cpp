@@ -1,6 +1,8 @@
 #ifndef PACKAGEITEMMODEL_H
 #define PACKAGEITEMMODEL_H
 
+#include <stdint.h>
+
 #include <QAbstractTableModel>
 #include <QCache>
 #include <QBrush>
@@ -22,6 +24,7 @@ class PackageItemModel: public QAbstractTableModel
         QString avail;
         QString installed;
         bool up2date;
+        QString newestDownloadURL;
     };
 
     mutable QCache<QString, Info> cache;
@@ -67,6 +70,12 @@ public:
      * @brief clears the cache
      */
     void clearCache();
+
+    /**
+     * @brief should be called if a download size for a package was computed
+     * @param url URL of the binary
+     */
+    void downloadSizeUpdated(const QString &url);
 };
 
 #endif // PACKAGEITEMMODEL_H

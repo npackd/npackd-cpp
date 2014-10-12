@@ -9,6 +9,7 @@
 #include <windows.h>
 #include <shlobj.h>
 #include <shobjidl.h>
+#include <stdint.h>
 
 #include <QApplication>
 #include <QTimer>
@@ -224,6 +225,13 @@ void MainWindow::showDetails()
     }
 }
 
+void MainWindow::updateDownloadSize(const QString& url)
+{
+    QTableView* t = this->mainFrame->getTableWidget();
+    PackageItemModel* m = (PackageItemModel*) t->model();
+    m->downloadSizeUpdated(url);
+}
+
 void MainWindow::updateIcon(const QString& url)
 {
     QTableView* t = this->mainFrame->getTableWidget();
@@ -430,8 +438,13 @@ void MainWindow::repositoryStatusChanged(const QString& package,
 
 void MainWindow::iconDownloaded(const FileLoaderItem& it)
 {
-    downloadCache.insert(it.url, it.f);
-    updateIcon(it.url);
+    if (it.contentRequired) {
+        downloadCache.insert(it.url, it.f);
+        updateIcon(it.url);
+    } else {
+        this->downloadSizes.insert(it.url, it.size);
+        updateDownloadSize(it.url);
+    }
 }
 
 void MainWindow::prepare()
@@ -573,6 +586,20 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
         it.url = url;
         fileLoader.addWork(it);
         r = MainWindow::waitAppIcon;
+    }
+    return r;
+}
+
+int64_t MainWindow::getDownloadSize(const QString &url)
+{
+    int64_t r = -2;
+    if (downloadSizes.contains(url)) {
+        r = downloadSizes[url];
+    } else {
+        FileLoaderItem it;
+        it.contentRequired = false;
+        it.url = url;
+        fileLoader.addWork(it);
     }
     return r;
 }

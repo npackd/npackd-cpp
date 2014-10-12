@@ -1,6 +1,7 @@
+#include <stdint.h>
+
 #include <QSharedPointer>
 #include <QDebug>
-
 #include <QApplication>
 
 #include "license.h"
@@ -28,7 +29,7 @@ int PackageItemModel::rowCount(const QModelIndex &parent) const
 
 int PackageItemModel::columnCount(const QModelIndex &parent) const
 {
-    return 6;
+    return 7;
 }
 
 PackageItemModel::Info* PackageItemModel::createInfo(
@@ -62,8 +63,11 @@ PackageItemModel::Info* PackageItemModel::createInfo(
         }
     }
 
-    if (newestInstallable)
+    if (newestInstallable) {
         r->avail = newestInstallable->version.getVersionString();
+        r->newestDownloadURL = newestInstallable->download.toString(
+                QUrl::FullyEncoded);
+    }
 
     r->up2date = !(newestInstalled && newestInstallable &&
             newestInstallable->version.compare(
@@ -122,6 +126,30 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                         p->license, &err));
                 if (lic)
                     r = lic->title;
+                break;
+            }
+            case 6: {
+                Info* cached = this->cache.object(p->name);
+                if (!cached) {
+                    cached = createInfo(p);
+                    this->cache.insert(p->name, cached);
+                }
+                MainWindow* mw = MainWindow::getInstance();
+                int64_t sz;
+                if (cached->newestDownloadURL.isEmpty())
+                    sz = -1;
+                else
+                    sz = mw->getDownloadSize(cached->newestDownloadURL);
+
+                if (sz == -2)
+                    r = qVariantFromValue(QObject::tr("computing"));
+                else if (sz <= 0)
+                    r = qVariantFromValue(QObject::tr("unknown"));
+                else {
+                    r = qVariantFromValue(QString::number(
+                        ((double) sz) / (1024.0 * 1024.0), 'f', 1) +
+                        " MiB");
+                }
                 break;
             }
         }
@@ -197,6 +225,9 @@ QVariant PackageItemModel::headerData(int section, Qt::Orientation orientation,
                 case 5:
                     r = QObject::tr("License");
                     break;
+                case 6:
+                    r = QObject::tr("Download size");
+                    break;
             }
         } else {
             r = QString("%1").arg(section + 1);
@@ -215,12 +246,23 @@ void PackageItemModel::setPackages(const QList<Package *> packages)
 
 void PackageItemModel::iconUpdated(const QString &url)
 {
+    this->dataChanged(this->index(0, 0), this->index(
+            this->packages.count() - 1, 0));
+    /*
+    //TODO: only update the visible rows. It should be much faster.
     for (int i = 0; i < this->packages.count(); i++) {
         Package* p = this->packages.at(i);
         if (p->icon == url) {
             this->dataChanged(this->index(i, 0), this->index(i, 0));
         }
     }
+    */
+}
+
+void PackageItemModel::downloadSizeUpdated(const QString &url)
+{
+    this->dataChanged(this->index(0, 5), this->index(
+            this->packages.count() - 1, 5));
 }
 
 void PackageItemModel::installedStatusChanged(const QString& package,
