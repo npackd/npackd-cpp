@@ -281,6 +281,7 @@ private slots:
     void on_actionAdd_package_triggered();
     void on_actionOpen_folder_triggered();
     void visibleJobsChanged();
+    void on_actionChoose_columns_triggered();
 };
 
 #endif // MAINWINDOW_H

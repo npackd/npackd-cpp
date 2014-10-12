@@ -99,6 +99,11 @@ public:
      * @param v new filter value or -1 for "All" or 0 for "Uncategorized"
      */
     void setCategoryFilter(int level, int v);
+
+    /**
+     * @brief shows a dialog to choose the visible columns
+     */
+    void chooseColumns();
 private:
     Ui::MainFrame *ui;
 private slots:

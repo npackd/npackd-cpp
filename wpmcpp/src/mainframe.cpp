@@ -5,6 +5,9 @@
 
 #include <QDebug>
 #include <QList>
+#include <QListWidgetItem>
+#include <QListWidget>
+#include <QDialogButtonBox>
 
 #include "mainwindow.h"
 #include "package.h"
@@ -202,6 +205,39 @@ void MainFrame::setCategoryFilter(int level, int v)
     }
 
     this->categoryCombosEvents = true;
+}
+
+void MainFrame::chooseColumns()
+{
+    QDialog* d = new QDialog(this);
+    QVBoxLayout* layout = new QVBoxLayout();
+    d->setLayout(layout);
+    QListWidget* list = new QListWidget(d);
+    d->layout()->addWidget(list);
+    QDialogButtonBox* dbb = new QDialogButtonBox(QDialogButtonBox::Ok |
+            QDialogButtonBox::Cancel);
+    d->layout()->addWidget(dbb);
+    connect(dbb, SIGNAL(accepted()), d, SLOT(accept()));
+    connect(dbb, SIGNAL(rejected()), d, SLOT(reject()));
+
+    QTableView* t = this->ui->tableWidget;
+    QAbstractItemModel* m = t->model();
+    QHeaderView* hv = t->horizontalHeader();
+
+    for (int i = 0; i < m->columnCount(); i++) {
+        QListWidgetItem* item = new QListWidgetItem(m->headerData(i,
+                Qt::Horizontal, Qt::DisplayRole).toString(), list);
+        item->setCheckState(!hv->isSectionHidden(i) ?
+                Qt::Checked : Qt::Unchecked);
+    }
+
+    if (d->exec()) {
+        for (int i = 0; i < m->columnCount(); i++) {
+            QListWidgetItem* item = list->item(i);
+            hv->setSectionHidden(i, item->checkState() == Qt::Unchecked);
+        }
+    }
+    d->deleteLater();
 }
 
 QTableView * MainFrame::getTableWidget() const
