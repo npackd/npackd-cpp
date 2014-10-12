@@ -1,6 +1,6 @@
 #include "fileloaderitem.h"
 
-FileLoaderItem::FileLoaderItem()
+FileLoaderItem::FileLoaderItem() : contentRequired(true), size(-1L)
 {
 }
 
@@ -10,12 +10,16 @@ FileLoaderItem::~FileLoaderItem()
 
 FileLoaderItem::FileLoaderItem(const FileLoaderItem& it) : QObject()
 {
+    this->contentRequired = it.contentRequired;
+    this->size = it.size;
     this->url = it.url;
     this->f = it.f;
 }
 
 FileLoaderItem& FileLoaderItem::operator=(const FileLoaderItem& it)
 {
+    this->contentRequired = it.contentRequired;
+    this->size = it.size;
     this->url = it.url;
     this->f = it.f;
     return *this;

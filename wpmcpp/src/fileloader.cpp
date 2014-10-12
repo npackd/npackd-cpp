@@ -38,7 +38,10 @@ void FileLoader::run()
                 QFile f(fn);
                 if (f.open(QFile::ReadWrite)) {
                     Job* job = new Job();
-                    Downloader::download(job, it.url, &f);
+                    if (it.contentRequired)
+                        Downloader::download(job, it.url, &f);
+                    else
+                        it.size = Downloader::getContentLength(job, it.url, 0);
                     f.close();
                     if (job->getErrorMessage().isEmpty()) {
                         it.f = fn;

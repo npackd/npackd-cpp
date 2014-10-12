@@ -43,13 +43,20 @@ class Downloader: QObject
      *    http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
      *
      * @param job job object
-     * @param file the content will be stored here
+     * @param url http: or https:
+     * @param verb e.g. L"GET"
+     * @param file the content will be stored here, 0 = do not read the content
      * @param parentWindow window handle or 0 if not UI is required
+     * @param mime if not null, MIME type will be stored here
+     * @param contentDisposition if not null, Content-Disposition will be
+     *     stored here
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param useCache true = use Windows Internet cache on the local disk
      * @param alg algorithm that should be used to compute the hash sum
+     * @return "content-length" or -1 if unknown
      */
-    static void downloadWin(Job* job, const QUrl& url, QFile* file,
+    static int64_t downloadWin(Job* job, const QUrl& url,
+            LPCWSTR verb, QFile* file,
             QString* mime, QString* contentDisposition,
             HWND parentWindow=0, QString* sha1=0, bool useCache=false,
             QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
@@ -78,6 +85,16 @@ public:
     static void download(Job* job, const QUrl& url, QFile* file,
             QString* sha1=0,
             QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
+
+    /**
+     * @brief retrieves the content-length header for an URL
+     * @param job job object
+     * @param url http: or https:
+     * @param parentWindow window handle or 0 if not UI is required
+     * @return the content-length header value or -1 if unknown
+     */
+    static int64_t getContentLength(Job *job, const QUrl &url,
+            HWND parentWindow);
 };
 
 #endif // DOWNLOADER_H

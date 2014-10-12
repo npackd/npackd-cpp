@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <shobjidl.h>
+#include <stdint.h>
 
 #include <QMainWindow>
 #include <QProgressDialog>
@@ -49,6 +50,11 @@ private:
     ITaskbarList3* taskbarInterface;
 
     QMap<QString, QIcon> screenshots;
+
+    /**
+     * @brief URL -> download size
+     */
+    QMap<QString, int64_t> downloadSizes;
 
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
@@ -107,6 +113,8 @@ private:
 
     /** URL -> icon */
     QCache<QString, QIcon> icons;
+
+    void updateDownloadSize(const QString &url);
 public:
     /** URL -> full path to the file or "" in case of an error */
     QMap<QString, QString> downloadCache;
@@ -245,6 +253,14 @@ public:
      *     size of 200x200
      */
     QIcon downloadScreenshot(const QString &url);
+
+    /**
+     * @brief determines the download size of a package. The code inserts the
+     *     provided URL in the work queue if the size was not yet determined.
+     * @param url http: or https:
+     * @return the size in bytes or -1 if unknown or -2 for "is being computed"
+     */
+    int64_t getDownloadSize(const QString& url);
 protected:
     void changeEvent(QEvent *e);
 

@@ -1,6 +1,8 @@
 #ifndef FILELOADERITEM_H
 #define FILELOADERITEM_H
 
+#include <stdint.h>
+
 #include "qobject.h"
 #include "qtemporaryfile.h"
 #include "qmetatype.h"
@@ -10,6 +12,11 @@
  */
 class FileLoaderItem: public QObject {
 public:
+    /**
+     * @brief should the file content be downloaded?
+     */
+    bool contentRequired;
+
     /** this file will be downloaded */
     QString url;
 
@@ -18,6 +25,11 @@ public:
      * automatically removed during the program shutdown.
      */
     QString f;
+
+    /**
+     * @brief size of the downloaded file or -1 if unknown
+     */
+    int64_t size;
 
     FileLoaderItem();
     virtual ~FileLoaderItem();

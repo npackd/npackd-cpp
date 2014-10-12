@@ -18,7 +18,8 @@
 
 HWND defaultPasswordWindow = 0;
 
-void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
+int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
+        QFile* file,
         QString* mime, QString* contentDisposition,
         HWND parentWindow, QString* sha1, bool useCache,
         QCryptographicHash::Algorithm alg)
@@ -50,7 +51,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         WPMUtils::formatMessage(GetLastError(), &errMsg);
         job->setErrorMessage(errMsg);
         job->complete();
-        return;
+        return -1L;
     }
 
     job->setProgress(0.01);
@@ -65,13 +66,13 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         WPMUtils::formatMessage(GetLastError(), &errMsg);
         job->setErrorMessage(errMsg);
         job->complete();
-        return;
+        return -1L;
     }
 
     if (job->isCancelled()) {
         InternetCloseHandle(internet);
         job->complete();
-        return;
+        return -1L;
     }
 
     // qDebug() << "download.4";
@@ -88,7 +89,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
     if (!useCache)
         flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
                 INTERNET_FLAG_RELOAD;
-    HINTERNET hResourceHandle = HttpOpenRequestW(hConnectHandle, L"GET",
+    HINTERNET hResourceHandle = HttpOpenRequestW(hConnectHandle, verb,
             (WCHAR*) resource.utf16(),
             0, 0, ppszAcceptTypes,
             flags, 0);
@@ -97,7 +98,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         WPMUtils::formatMessage(GetLastError(), &errMsg);
         job->setErrorMessage(errMsg);
         job->complete();
-        return;
+        return -1L;
     }
 
     if (!HttpAddRequestHeadersW(hResourceHandle,
@@ -107,7 +108,7 @@ void Downloader::downloadWin(Job* job, const QUrl& url, QFile* file,
         WPMUtils::formatMessage(GetLastError(), &errMsg);
         job->setErrorMessage(errMsg);
         job->complete();
-        return;
+        return -1L;
     }
 
     // qDebug() << "download.5";
@@ -243,30 +244,31 @@ out:
     job->setProgress(0.03);
     if (!job->getErrorMessage().isEmpty()) {
         job->complete();
-        return;
+        return -1L;
     }
 
     job->setTitle(initialTitle + " / " + QObject::tr("Downloading"));
 
     // MIME type
-    // qDebug() << "querying MIME type";
-    WCHAR mimeBuffer[1024];
-    DWORD bufferLength = sizeof(mimeBuffer);
-    DWORD index = 0;
-    if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
-            &mimeBuffer, &bufferLength, &index)) {
-        QString errMsg;
-        WPMUtils::formatMessage(GetLastError(), &errMsg);
-        job->setErrorMessage(errMsg);
-        job->complete();
-        return;
+    if (mime) {
+        WCHAR mimeBuffer[1024];
+        DWORD bufferLength = sizeof(mimeBuffer);
+        DWORD index = 0;
+        if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
+                &mimeBuffer, &bufferLength, &index)) {
+            QString errMsg;
+            WPMUtils::formatMessage(GetLastError(), &errMsg);
+            job->setErrorMessage(errMsg);
+            job->complete();
+            return -1L;
+        }
+        mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
     }
-    mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
 
     // qDebug() << "querying Content-Encoding type";
     WCHAR contentEncodingBuffer[1024];
-    bufferLength = sizeof(contentEncodingBuffer);
-    index = 0;
+    DWORD bufferLength = sizeof(contentEncodingBuffer);
+    DWORD index = 0;
     bool gzip = false;
     if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_ENCODING,
             &contentEncodingBuffer, &bufferLength, &index)) {
@@ -279,13 +281,15 @@ out:
     job->setProgress(0.04);
 
     // Content-Disposition
-    WCHAR cdBuffer[1024];
-    wcscpy(cdBuffer, L"Content-Disposition");
-    bufferLength = sizeof(cdBuffer);
-    index = 0;
-    if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CUSTOM,
-            &cdBuffer, &bufferLength, &index)) {
-        contentDisposition->setUtf16((ushort*) cdBuffer, bufferLength / 2);
+    if (contentDisposition) {
+        WCHAR cdBuffer[1024];
+        wcscpy(cdBuffer, L"Content-Disposition");
+        bufferLength = sizeof(cdBuffer);
+        index = 0;
+        if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CUSTOM,
+                &cdBuffer, &bufferLength, &index)) {
+            contentDisposition->setUtf16((ushort*) cdBuffer, bufferLength / 2);
+        }
     }
 
     // content length
@@ -306,7 +310,8 @@ out:
     job->setProgress(0.05);
 
     Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
-    readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
+    if (file)
+        readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
     if (!sub->getErrorMessage().isEmpty())
         job->setErrorMessage(sub->getErrorMessage());
 
@@ -316,7 +321,7 @@ out:
 
     job->complete();
 
-    return;
+    return contentLength;
 }
 
 bool Downloader::internetReadFileFully(HINTERNET resourceHandle,
@@ -605,8 +610,15 @@ void Downloader::download(Job* job, const QUrl& url, QFile* file,
 {
     QString mime;
     QString contentDisposition;
-    downloadWin(job, url, file, &mime, &contentDisposition,
-            defaultPasswordWindow, sha1, false, alg);
+    downloadWin(job, url, L"GET", file, &mime, &contentDisposition,
+                defaultPasswordWindow, sha1, false, alg);
+}
+
+int64_t Downloader::getContentLength(Job* job, const QUrl &url,
+        HWND parentWindow)
+{
+    return downloadWin(job, url, L"HEAD", 0, 0, 0, parentWindow, 0, false,
+            QCryptographicHash::Sha1);
 }
 
 QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
@@ -619,7 +631,7 @@ QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
         QString contentDisposition;
 
         if (url.scheme() == "https" || url.scheme() == "http")
-            downloadWin(job, url, file, &mime, &contentDisposition,
+            downloadWin(job, url, L"GET", file, &mime, &contentDisposition,
                     defaultPasswordWindow, sha1, useCache);
         else if (url.toString().startsWith("data:image/png;base64,")) {
             QString dataURL_ = url.toString().mid(22);
