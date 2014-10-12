@@ -76,6 +76,7 @@
     <addaction name="separator"/>
     <addaction name="actionScan_Hard_Drives"/>
     <addaction name="actionSettings"/>
+    <addaction name="actionChoose_columns"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -307,6 +308,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionChoose_columns">
+   <property name="text">
+    <string>Choose columns...</string>
+   </property>
+   <property name="toolTip">
+    <string>choose the columns for the table with the packages</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
  </widget>

@@ -2099,3 +2099,8 @@ void MainWindow::visibleJobsChanged()
 {
     this->updateProgressTabTitle();
 }
+
+void MainWindow::on_actionChoose_columns_triggered()
+{
+    this->mainFrame->chooseColumns();
+}
