@@ -298,6 +298,8 @@ private slots:
     void on_actionOpen_folder_triggered();
     void visibleJobsChanged();
     void on_actionChoose_columns_triggered();
+    void downloadCompleted(const QString &url,
+            const QString &filename, const QString &error);
 };
 
 #endif // MAINWINDOW_H

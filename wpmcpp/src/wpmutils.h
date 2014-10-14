@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QTime>
 #include <QCryptographicHash>
+#include <QThreadPool>
 
 #include "job.h"
 #include "version.h"

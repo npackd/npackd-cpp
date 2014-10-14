@@ -189,7 +189,7 @@ void AbstractRepository::process(Job *job,
             if (op->install)
                 pv->install(sub, pv->getPreferredInstallationDirectory());
             else
-                pv->uninstall(sub, programCloseType);
+                pv->uninstall(sub);
             if (!sub->getErrorMessage().isEmpty())
                 job->setErrorMessage(sub->getErrorMessage());
 

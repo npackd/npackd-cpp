@@ -110,6 +110,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&this->fileLoader, SIGNAL(downloaded(const FileLoaderItem&)), this,
             SLOT(iconDownloaded(const FileLoaderItem&)),
             Qt::QueuedConnection);
+    connect(&this->fileLoader, SIGNAL(downloadCompleted(QString,QString,QString)), this,
+            SLOT(downloadCompleted(QString,QString,QString)),
+            Qt::QueuedConnection);
     this->fileLoader.start(QThread::LowestPriority);
 
     // copy toolTip to statusTip for all actions
@@ -436,10 +439,15 @@ void MainWindow::repositoryStatusChanged(const QString& package,
     return img_gray;
 }*/
 
+void MainWindow::downloadCompleted(const QString& url,
+        const QString& filename, const QString& error)
+{
+    updateIcon(url);
+}
+
 void MainWindow::iconDownloaded(const FileLoaderItem& it)
 {
     if (it.contentRequired) {
-        downloadCache.insert(it.url, it.f);
         updateIcon(it.url);
     } else {
         this->downloadSizes.insert(it.url, it.size);
@@ -507,6 +515,10 @@ MainWindow::~MainWindow()
     this->fileLoader.terminated = 1;
     if (!this->fileLoader.wait(1000))
         this->fileLoader.terminate();
+
+    QThreadPool::globalInstance()->clear();
+    QThreadPool::globalInstance()->waitForDone(5000);
+
     delete ui;
 }
 
@@ -516,9 +528,12 @@ QIcon MainWindow::downloadIcon(const QString &url)
     QIcon* inCache = icons.object(url);
     if (inCache) {
         r = *inCache;
-    } else if (downloadCache.contains(url)) {
-        QString file = downloadCache[url];
-        if (!file.isEmpty()) {
+    } else {
+        QString err;
+        QString file = fileLoader.downloadOrQueue(url, &err);
+        if (!err.isEmpty()) {
+            r = MainWindow::genericAppIcon;
+        } else if (!file.isEmpty()) {
             QPixmap pm(file);
 
             /* gray
@@ -539,15 +554,14 @@ QIcon MainWindow::downloadIcon(const QString &url)
                 r = *inCache;
             } else {
                 r = MainWindow::genericAppIcon;
+                inCache = new QIcon(r);
+                inCache->detach();
+
+                icons.insert(url, inCache);
             }
         } else {
-            r = MainWindow::genericAppIcon;
+            r = MainWindow::waitAppIcon;
         }
-    } else {
-        FileLoaderItem it;
-        it.url = url;
-        fileLoader.addWork(it);
-        r = MainWindow::waitAppIcon;
     }
     return r;
 }
@@ -557,10 +571,15 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
     QIcon r;
     if (screenshots.contains(url)) {
         r = screenshots[url];
-    } else if (downloadCache.contains(url)) {
-        QString file = downloadCache[url];
-        if (!file.isEmpty()) {
-            QPixmap pm(file);
+    } else {
+        QString err;
+        QString filename = fileLoader.downloadOrQueue(url, &err);
+
+        if (!err.isEmpty()) {
+            // TODO: error icon
+            r = MainWindow::genericAppIcon;
+        } else if (!filename.isEmpty()) {
+            QPixmap pm(filename);
 
             /* gray
             QStyleOption opt(0);
@@ -577,15 +596,11 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
                 screenshots.insert(url, r);
             } else {
                 r = MainWindow::genericAppIcon;
+                screenshots.insert(url, r);
             }
         } else {
-            r = MainWindow::genericAppIcon;
+            r = MainWindow::waitAppIcon;
         }
-    } else {
-        FileLoaderItem it;
-        it.url = url;
-        fileLoader.addWork(it);
-        r = MainWindow::waitAppIcon;
     }
     return r;
 }

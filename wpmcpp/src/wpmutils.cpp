@@ -1859,6 +1859,8 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
             }
         }
         psl->Release();
+    } else {
+        qDebug() << "failed";
     }
 }
 
