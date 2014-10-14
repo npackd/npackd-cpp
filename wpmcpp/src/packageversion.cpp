@@ -22,6 +22,7 @@
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QFuture>
+#include <QFutureWatcher>
 #include <zlib.h>
 
 //#include "msoav2.h"
@@ -408,6 +409,15 @@ bool PackageVersion::installed() const
             this->version);
 }
 
+void PackageVersion::deleteShortcutsRunnable(const QString& dir, Job* job,
+        bool menu, bool desktop, bool quickLaunch)
+{
+    QThread::currentThread()->setPriority(QThread::IdlePriority);
+    CoInitialize(0);
+    deleteShortcuts(dir, job, menu, desktop, quickLaunch);
+    CoUninitialize();
+}
+
 void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         bool menu, bool desktop, bool quickLaunch)
 {
@@ -446,7 +456,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
     job->complete();
 }
 
-void PackageVersion::uninstall(Job* job, int programCloseType)
+void PackageVersion::uninstall(Job* job)
 {
     if (!installed()) {
         job->setProgress(1);
@@ -463,7 +473,7 @@ void PackageVersion::uninstall(Job* job, int programCloseType)
         Job* deleteShortcutsJob = job->newSubJob(0,
                 QObject::tr("Deleting shortcuts"), false);
         deleteShortcutsFuture = QtConcurrent::run(this,
-                &PackageVersion::deleteShortcuts,
+                &PackageVersion::deleteShortcutsRunnable,
                 d.absolutePath(), deleteShortcutsJob, true, false, false);
     }
 

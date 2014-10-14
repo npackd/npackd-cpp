@@ -82,6 +82,18 @@ private:
 
     void deleteShortcuts(const QString& dir,
             Job* job, bool menu, bool desktop, bool quickLaunch);
+
+    /**
+     * @brief deletes shortcuts from a new thread
+     * @param dir target directory for shortcuts
+     * @param job job
+     * @param menu true = delete shortcuts in the start menu
+     * @param desktop true = delete shortcuts on the desktop
+     * @param quickLaunch true = delete shortcuts in the quick launch bar
+     */
+    void deleteShortcutsRunnable(const QString& dir,
+            Job* job, bool menu, bool desktop, bool quickLaunch);
+
     /**
      * Deletes a directory. If something cannot be deleted, it waits and
      * tries to delete the directory again. Moves the directory to .Trash if
@@ -361,9 +373,8 @@ public:
      * Uninstalls this package version.
      *
      * @param job job for this method
-     * @param programCloseType how to close running applications
      */
-    void uninstall(Job* job, int programCloseType);
+    void uninstall(Job* job);
 
     /**
      * @return status like "locked, installed"
