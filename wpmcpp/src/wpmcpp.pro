@@ -54,7 +54,8 @@ SOURCES += main.cpp \
     visiblejobs.cpp \
     clprocessor.cpp \
     progresstree2.cpp \
-    progressframe.cpp
+    progressframe.cpp \
+    downloadsizefinder.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -106,7 +107,8 @@ HEADERS += mainwindow.h \
     visiblejobs.h \
     clprocessor.h \
     progresstree2.h \
-    progressframe.h
+    progressframe.h \
+    downloadsizefinder.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \
