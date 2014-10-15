@@ -24,6 +24,7 @@
 #include "selection.h"
 #include "mainframe.h"
 #include "progresstree2.h"
+#include "downloadsizefinder.h"
 
 namespace Ui {
     class MainWindow;
@@ -151,6 +152,9 @@ public:
     /** file loader thread */
     FileLoader fileLoader;
 
+    /** finds download sizes */
+    DownloadSizeFinder downloadSizeFinder;
+
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
@@ -253,14 +257,6 @@ public:
      *     size of 200x200
      */
     QIcon downloadScreenshot(const QString &url);
-
-    /**
-     * @brief determines the download size of a package. The code inserts the
-     *     provided URL in the work queue if the size was not yet determined.
-     * @param url http: or https:
-     * @return the size in bytes or -1 if unknown or -2 for "is being computed"
-     */
-    int64_t getDownloadSize(const QString& url);
 protected:
     void changeEvent(QEvent *e);
 
@@ -284,7 +280,6 @@ private slots:
     void on_actionGotoPackageURL_triggered();
     void onShow();
     void on_actionExit_triggered();
-    void iconDownloaded(const FileLoaderItem& it);
     void on_actionReload_Repositories_triggered();
     void on_actionClose_Tab_triggered();
     void repositoryStatusChanged(const QString &, const Version &);
@@ -299,6 +294,8 @@ private slots:
     void visibleJobsChanged();
     void on_actionChoose_columns_triggered();
     void downloadCompleted(const QString &url,
+            const QString &filename, const QString &error);
+    void downloadSizeCompleted(const QString &url,
             const QString &filename, const QString &error);
 };
 

@@ -134,22 +134,26 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                     cached = createInfo(p);
                     this->cache.insert(p->name, cached);
                 }
-                MainWindow* mw = MainWindow::getInstance();
-                int64_t sz;
-                if (cached->newestDownloadURL.isEmpty())
-                    sz = -1;
-                else
-                    sz = mw->getDownloadSize(cached->newestDownloadURL);
 
-                if (sz == -2)
-                    r = qVariantFromValue(QObject::tr("computing"));
-                else if (sz <= 0)
-                    r = qVariantFromValue(QObject::tr("unknown"));
-                else {
-                    r = qVariantFromValue(QString::number(
+                MainWindow* mw = MainWindow::getInstance();
+                QString err;
+                QString v;
+                if (cached->newestDownloadURL.isEmpty()) {
+                    v = QObject::tr("unknown");
+                } else {
+                    int64_t sz = mw->downloadSizeFinder.downloadOrQueue(
+                            cached->newestDownloadURL, &err);
+                    if (!err.isEmpty())
+                        v = QObject::tr("unknown");
+                    else if (sz == -1)
+                        v = QObject::tr("computing");
+                    else
+                    v = QString::number(
                         ((double) sz) / (1024.0 * 1024.0), 'f', 1) +
-                        " MiB");
+                        " MiB";
                 }
+
+                r = qVariantFromValue(v);
                 break;
             }
         }

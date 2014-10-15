@@ -107,13 +107,12 @@ MainWindow::MainWindow(QWidget *parent) :
     t->addAction(this->ui->actionGotoPackageURL);
     t->addAction(this->ui->actionTest_Download_Site);
 
-    connect(&this->fileLoader, SIGNAL(downloaded(const FileLoaderItem&)), this,
-            SLOT(iconDownloaded(const FileLoaderItem&)),
-            Qt::QueuedConnection);
     connect(&this->fileLoader, SIGNAL(downloadCompleted(QString,QString,QString)), this,
             SLOT(downloadCompleted(QString,QString,QString)),
             Qt::QueuedConnection);
-    this->fileLoader.start(QThread::LowestPriority);
+    connect(&this->downloadSizeFinder, SIGNAL(downloadCompleted(QString,QString,QString)), this,
+            SLOT(downloadSizeCompleted(QString,QString,QString)),
+            Qt::QueuedConnection);
 
     // copy toolTip to statusTip for all actions
     for (int i = 0; i < this->children().count(); i++) {
@@ -445,14 +444,10 @@ void MainWindow::downloadCompleted(const QString& url,
     updateIcon(url);
 }
 
-void MainWindow::iconDownloaded(const FileLoaderItem& it)
+void MainWindow::downloadSizeCompleted(const QString& url,
+        const QString& filename, const QString& error)
 {
-    if (it.contentRequired) {
-        updateIcon(it.url);
-    } else {
-        this->downloadSizes.insert(it.url, it.size);
-        updateDownloadSize(it.url);
-    }
+    // TODO: updateIcon(url);
 }
 
 void MainWindow::prepare()
@@ -512,10 +507,6 @@ void MainWindow::updateProgressTabTitle()
 
 MainWindow::~MainWindow()
 {
-    this->fileLoader.terminated = 1;
-    if (!this->fileLoader.wait(1000))
-        this->fileLoader.terminate();
-
     QThreadPool::globalInstance()->clear();
     QThreadPool::globalInstance()->waitForDone(5000);
 
@@ -601,20 +592,6 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
         } else {
             r = MainWindow::waitAppIcon;
         }
-    }
-    return r;
-}
-
-int64_t MainWindow::getDownloadSize(const QString &url)
-{
-    int64_t r = -2;
-    if (downloadSizes.contains(url)) {
-        r = downloadSizes[url];
-    } else {
-        FileLoaderItem it;
-        it.contentRequired = false;
-        it.url = url;
-        fileLoader.addWork(it);
     }
     return r;
 }
