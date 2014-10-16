@@ -16,7 +16,6 @@ SOURCES += main.cpp \
     version.cpp \
     dependency.cpp \
     fileloader.cpp \
-    fileloaderitem.cpp \
     installoperation.cpp \
     packageversionform.cpp \
     license.cpp \
@@ -67,7 +66,6 @@ HEADERS += mainwindow.h \
     version.h \
     dependency.h \
     fileloader.h \
-    fileloaderitem.h \
     installoperation.h \
     packageversionform.h \
     license.h \

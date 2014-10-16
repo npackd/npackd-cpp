@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <shobjidl.h>
 #include <shellapi.h>
+#include <stdint.h>
 
 #include <QApplication>
 #include <QMetaType>
@@ -59,8 +60,8 @@ int main(int argc, char *argv[])
         a.installTranslator(&myappTranslator);
 
     qRegisterMetaType<JobState>("JobState");
-    qRegisterMetaType<FileLoaderItem>("FileLoaderItem");
     qRegisterMetaType<Version>("Version");
+    qRegisterMetaType<int64_t>("int64_t");
 
 #if !defined(__x86_64__)
     if (WPMUtils::is64BitWindows()) {

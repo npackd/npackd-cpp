@@ -296,7 +296,7 @@ private slots:
     void downloadCompleted(const QString &url,
             const QString &filename, const QString &error);
     void downloadSizeCompleted(const QString &url,
-            const QString &filename, const QString &error);
+            int64_t size, const QString &error);
 };
 
 #endif // MAINWINDOW_H

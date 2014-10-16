@@ -8,7 +8,6 @@
 #include "packageitemmodel.h"
 #include "abstractrepository.h"
 #include "mainwindow.h"
-#include "fileloaderitem.h"
 #include "wpmutils.h"
 
 PackageItemModel::PackageItemModel(const QList<Package *> packages) :
@@ -139,12 +138,12 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                 QString err;
                 QString v;
                 if (cached->newestDownloadURL.isEmpty()) {
-                    v = QObject::tr("unknown");
+                    v = "";
                 } else {
                     int64_t sz = mw->downloadSizeFinder.downloadOrQueue(
                             cached->newestDownloadURL, &err);
                     if (!err.isEmpty())
-                        v = QObject::tr("unknown");
+                        v = "";
                     else if (sz == -1)
                         v = QObject::tr("computing");
                     else
