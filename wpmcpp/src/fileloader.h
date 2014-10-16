@@ -12,8 +12,6 @@
 #include <QTemporaryDir>
 #include <QMap>
 
-#include "fileloaderitem.h"
-
 /**
  * Loads files from the Internet.
  */

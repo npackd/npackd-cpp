@@ -1,4 +1,5 @@
 ﻿#include <math.h>
+#include <stdint.h>
 
 #include <qabstractitemview.h>
 #include <qmessagebox.h>
@@ -110,8 +111,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&this->fileLoader, SIGNAL(downloadCompleted(QString,QString,QString)), this,
             SLOT(downloadCompleted(QString,QString,QString)),
             Qt::QueuedConnection);
-    connect(&this->downloadSizeFinder, SIGNAL(downloadCompleted(QString,QString,QString)), this,
-            SLOT(downloadSizeCompleted(QString,QString,QString)),
+    connect(&this->downloadSizeFinder, SIGNAL(downloadCompleted(QString,int64_t,QString)), this,
+            SLOT(downloadSizeCompleted(QString,qlonglong,QString)),
             Qt::QueuedConnection);
 
     // copy toolTip to statusTip for all actions
@@ -445,9 +446,11 @@ void MainWindow::downloadCompleted(const QString& url,
 }
 
 void MainWindow::downloadSizeCompleted(const QString& url,
-        const QString& filename, const QString& error)
+        int64_t size, const QString& error)
 {
-    // TODO: updateIcon(url);
+    QTableView* t = this->mainFrame->getTableWidget();
+    PackageItemModel* m = (PackageItemModel*) t->model();
+    m->downloadSizeUpdated(url);
 }
 
 void MainWindow::prepare()
