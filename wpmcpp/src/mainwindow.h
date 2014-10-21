@@ -40,6 +40,8 @@ class MainWindow : public QMainWindow, public Selection {
 private:
     static MainWindow* instance;
 
+    QIcon brokenIcon;
+
     ProgressTree2* pt;
 
     Ui::MainWindow *ui;

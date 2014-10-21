@@ -8,6 +8,7 @@
         <file>fileissue.png</file>
         <file>wait.png</file>
         <file>add.png</file>
+        <file>broken.png</file>
     </qresource>
     <qresource prefix="/translations"/>
 </RCC>

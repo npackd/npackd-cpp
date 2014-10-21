@@ -94,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->genericAppIcon = QIcon(":/images/app.png");
     this->waitAppIcon = QIcon(":/images/wait.png");
+    this->brokenIcon = QIcon(":/images/broken.png");
 
     this->mainFrame = new MainFrame(this);
 
@@ -570,8 +571,7 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
         QString filename = fileLoader.downloadOrQueue(url, &err);
 
         if (!err.isEmpty()) {
-            // TODO: error icon
-            r = MainWindow::genericAppIcon;
+            r = MainWindow::brokenIcon;
         } else if (!filename.isEmpty()) {
             QPixmap pm(filename);
 
@@ -939,7 +939,6 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
                 monitor(job);
 
-                // TODO: not the lowest priority for the installer thread
                 QtConcurrent::run(AbstractRepository::getDefault_(),
                         &AbstractRepository::processWithCoInitialize,
                         job, install,

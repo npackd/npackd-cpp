@@ -251,15 +251,6 @@ void PackageItemModel::iconUpdated(const QString &url)
 {
     this->dataChanged(this->index(0, 0), this->index(
             this->packages.count() - 1, 0));
-    /*
-    //TODO: only update the visible rows. It should be much faster.
-    for (int i = 0; i < this->packages.count(); i++) {
-        Package* p = this->packages.at(i);
-        if (p->icon == url) {
-            this->dataChanged(this->index(i, 0), this->index(i, 0));
-        }
-    }
-    */
 }
 
 void PackageItemModel::downloadSizeUpdated(const QString &url)

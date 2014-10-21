@@ -75,7 +75,7 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
     return ipv;
 }
 
-QString InstalledPackages::detect3rdParty(DBRepository* r,
+void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
         AbstractThirdPartyPM *pm,
         bool replace, const QString& detectionInfoPrefix)
 {
@@ -84,19 +84,12 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
     HRTimer timer(5);
     timer.time(0);
 
-    QString err;
-
-    // qDebug() << "detect3rdParty 1";
-
     Repository rep;
     QList<InstalledPackageVersion*> installed;
 
-    if (err.isEmpty()) {
-        Job* job = new Job();
-        pm->scan(job, &installed, &rep);
-        if (!job->getErrorMessage().isEmpty())
-            err = job->getErrorMessage();
-        delete job;
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.8, QObject::tr("Detecting"), true, true);
+        pm->scan(sub, &installed, &rep);
     }
 
     timer.time(1);
@@ -106,7 +99,7 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
     // remove packages and versions that are not installed
     // we assume that one 3rd party package manager does not create package
     // or package version objects for another
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         QSet<QString> packages;
         for (int i = 0; i < installed.size();i++) {
             InstalledPackageVersion* ipv = installed.at(i);
@@ -134,18 +127,15 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
     }
 
     // save all detected packages and versions
-    if (err.isEmpty()) {
-        Job* job = new Job();
-        r->saveAll(job, &rep, replace);
-        if (!job->getErrorMessage().isEmpty())
-            err = job->getErrorMessage();
-        delete job;
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.2, QObject::tr("Saving"), true, true);
+        r->saveAll(sub, &rep, replace);
     }
 
     timer.time(2);
 
     // remove all package versions that are not detected as installed anymore
-    if (err.isEmpty() && !detectionInfoPrefix.isEmpty()) {
+    if (job->shouldProceed() && !detectionInfoPrefix.isEmpty()) {
         QSet<QString> installedPVs;
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
@@ -180,7 +170,7 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
 
     // qDebug() << "InstalledPackages::detect3rdParty.0";
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
 
@@ -225,7 +215,7 @@ QString InstalledPackages::detect3rdParty(DBRepository* r,
 
     // timer.dump();
 
-    return err;
+    job->complete();
 }
 
 void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
@@ -529,14 +519,11 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     // package descriptions for com.microsoft.Windows64 and similar packages
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.03,
-                QObject::tr("Adding well-known packages"));
+                QObject::tr("Adding well-known packages"), true, true);
         AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
                 this->packageName);
-        job->setErrorMessage(detect3rdParty(rep, pm, false));
+        detect3rdParty(sub, rep, pm, false);
         delete pm;
-
-        if (job->getErrorMessage().isEmpty())
-            sub->completeWithProgress();
     }
 
     timer.time(3);
@@ -557,15 +544,12 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
-                QObject::tr("Detecting MSI packages"));
+                QObject::tr("Detecting MSI packages"), true, true);
         // MSI package detection should happen before the detection for
         // control panel programs
         AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(rep, pm, true, "msi:"));
+        detect3rdParty(sub, rep, pm, true, "msi:");
         delete pm;
-
-        if (job->getErrorMessage().isEmpty())
-            sub->completeWithProgress();
     }
 
      // qDebug() << "InstalledPackages::refresh.2.1";
@@ -586,16 +570,14 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
-                QObject::tr("Reading the list of packages installed by Npackd"));
+                QObject::tr("Reading the list of packages installed by Npackd"),
+                true, true);
 
         // detecting from the list of installed packages should happen first
         // as all other packages consult the list of installed packages
         AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(rep, pm, false));
+        detect3rdParty(sub, rep, pm, false);
         delete pm;
-
-        if (job->getErrorMessage().isEmpty())
-            sub->completeWithProgress();
     }
 
     timer.time(6);
@@ -604,14 +586,12 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.02,
-                QObject::tr("Detecting software control panel packages"));
+                QObject::tr("Detecting software control panel packages"),
+                true, true);
 
         AbstractThirdPartyPM* pm = new ControlPanelThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(rep, pm, true, "control-panel:"));
+        detect3rdParty(sub, rep, pm, true, "control-panel:");
         delete pm;
-
-        if (job->getErrorMessage().isEmpty())
-            sub->completeWithProgress();
     }
 
     timer.time(7);

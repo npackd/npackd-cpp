@@ -46,12 +46,12 @@ void ScanHardDrivesThread::run()
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
-
-    ScanDiskThirdPartyPM* sd = new ScanDiskThirdPartyPM();
-    err = InstalledPackages::getDefault()->detect3rdParty(r, sd, false);
-    delete sd;
-    if (!err.isEmpty())
-        job->setErrorMessage(err);
+    if (job->shouldProceed()) {
+        ScanDiskThirdPartyPM* sd = new ScanDiskThirdPartyPM();
+        Job* sub = job->newSubJob(0.9, QObject::tr("Detecting"), true, true);
+        InstalledPackages::getDefault()->detect3rdParty(sub, r, sd, false);
+        delete sd;
+    }
 
     QList<PackageVersion*> s2 = r->getInstalled_(&err);
     if (!err.isEmpty())
@@ -66,5 +66,7 @@ void ScanHardDrivesThread::run()
 
     qDeleteAll(s1);
     qDeleteAll(s2);
+
+    job->complete();
 }
 
