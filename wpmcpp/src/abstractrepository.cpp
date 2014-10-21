@@ -96,6 +96,7 @@ bool AbstractRepository::includesRemoveItself(
 void AbstractRepository::processWithCoInitialize(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType)
 {
+    QThread::currentThread()->setPriority(QThread::LowestPriority);
     CoInitialize(NULL);
     process(job, install_, programCloseType);
     CoUninitialize();

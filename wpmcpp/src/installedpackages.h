@@ -151,6 +151,7 @@ public:
      *         it does not already exist.
      * Note: a non-existing directory is handled as ""
      *
+     * @param job [ownership:caller] job
      * @param r [ownership:caller] repository where all the data will be stored
      * @param pm [ownership:caller] a 3rd party package manager
      * @param replace should the existing entries be replaced?
@@ -160,9 +161,8 @@ public:
      *     the value is not empty, the package manager should return all
      *     installed packages and the packages not returned are considered to
      *     be not installed anymore.
-     * @return error message
      */
-    QString detect3rdParty(DBRepository *r,
+    void detect3rdParty(Job *job, DBRepository *r,
             AbstractThirdPartyPM* pm, bool replace=false,
             const QString &detectionInfoPrefix="");
 

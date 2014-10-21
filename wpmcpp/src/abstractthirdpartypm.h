@@ -23,6 +23,12 @@ public:
     virtual ~AbstractThirdPartyPM();
 
     /**
+     * @brief suitable for QRunnable::run. Calls scan()
+     */
+    void scanRunnable(Job* job, QList<InstalledPackageVersion*>* installed,
+            Repository* rep);
+
+    /**
      * @brief scans the 3rd party package manager repository
      *
      * @param job job
