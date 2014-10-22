@@ -79,11 +79,6 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
         AbstractThirdPartyPM *pm,
         bool replace, const QString& detectionInfoPrefix)
 {
-    // this method does not manipulate "date" directly => no locking
-
-    HRTimer timer(5);
-    timer.time(0);
-
     Repository rep;
     QList<InstalledPackageVersion*> installed;
 
@@ -91,6 +86,27 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
         Job* sub = job->newSubJob(0.8, QObject::tr("Detecting"), true, true);
         pm->scan(sub, &installed, &rep);
     }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.2,
+                QObject::tr("Processing detected packages"), true, true);
+        detect3rdParty(sub, r, &rep, installed, replace, detectionInfoPrefix);
+    }
+
+    qDeleteAll(installed);
+
+    job->complete();
+}
+
+void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
+        Repository* rep,
+        const QList<InstalledPackageVersion*>& installed,
+        bool replace, const QString& detectionInfoPrefix)
+{
+    // this method does not manipulate "date" directly => no locking
+
+    HRTimer timer(5);
+    timer.time(0);
 
     timer.time(1);
 
@@ -106,20 +122,20 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
             packages.insert(ipv->package);
         }
 
-        for (int i = 0; i < rep.packages.size(); ) {
-            Package* p = rep.packages.at(i);
+        for (int i = 0; i < rep->packages.size(); ) {
+            Package* p = rep->packages.at(i);
             if (!packages.contains(p->name)) {
-                rep.packages.removeAt(i);
-                rep.package2versions.remove(p->name);
+                rep->packages.removeAt(i);
+                rep->package2versions.remove(p->name);
                 delete p;
             } else
                 i++;
         }
 
-        for (int i = 0; i < rep.packageVersions.size(); ) {
-            PackageVersion* pv = rep.packageVersions.at(i);
+        for (int i = 0; i < rep->packageVersions.size(); ) {
+            PackageVersion* pv = rep->packageVersions.at(i);
             if (!packages.contains(pv->package)) {
-                rep.packageVersions.removeAt(i);
+                rep->packageVersions.removeAt(i);
                 delete pv;
             } else
                 i++;
@@ -129,7 +145,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
     // save all detected packages and versions
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.2, QObject::tr("Saving"), true, true);
-        r->saveAll(sub, &rep, replace);
+        r->saveAll(sub, rep, replace);
     }
 
     timer.time(2);
@@ -206,8 +222,6 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
     // qDebug() << "detect3rdParty 5";
 
     timer.time(3);
-
-    qDeleteAll(installed);
 
     timer.time(4);
 
