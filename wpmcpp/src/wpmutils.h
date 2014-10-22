@@ -15,6 +15,7 @@
 #include "commandline.h"
 #include "packageversion.h"
 #include "package.h"
+#include "hrtimer.h"
 
 /**
  * Some utility methods.
@@ -52,6 +53,8 @@ public:
     static const int KILL_PROCESS = 2;
 
     static const char* UCS2LE_BOM;
+
+    static HRTimer timer;
 
     /**
      * Converts the value returned by SHFileOperation to an error message.

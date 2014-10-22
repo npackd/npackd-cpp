@@ -100,6 +100,11 @@ private:
      */
     InstalledPackageVersion* findNoCopy(const QString& package,
             const Version& version) const;
+
+    void detect3rdParty(Job* job, DBRepository* r,
+            Repository *rep,
+            const QList<InstalledPackageVersion*>& installed,
+            bool replace, const QString& detectionInfoPrefix);
 public:
     /** package name for the current application */
     QString packageName;

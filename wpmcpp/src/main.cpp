@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         QMessageBox::critical(0, "Error",
                 QObject::tr("The 32 bit version of Npackd requires a 32 bit operating system.") + "\n" +
                 QObject::tr("Please download the 64 bit version from http://code.google.com/p/windows-package-manager/"));
-        //return 1;
+        return 1;
     }
 #endif
 
@@ -80,8 +80,10 @@ int main(int argc, char *argv[])
 
         w.prepare();
         w.show();
-        return QApplication::exec();
-    } else {
-        return errorCode;
+        errorCode = QApplication::exec();
     }
+
+    WPMUtils::timer.dump();
+
+    return errorCode;
 }

@@ -44,6 +44,8 @@
 
 const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
 
+HRTimer WPMUtils::timer(2);
+
 WPMUtils::WPMUtils()
 {
 }
