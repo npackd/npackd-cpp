@@ -107,13 +107,6 @@ private:
                                int programCloseType);
     void reloadTabs();
 
-    /**
-     * @brief tests whether an install/uninstall operation can be performed
-     *     right
-     * @return error message or ""
-     */
-    QString mayPerformInstallOperation();
-
     /** URL -> icon */
     QCache<QString, QIcon> icons;
 

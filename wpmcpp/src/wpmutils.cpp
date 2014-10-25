@@ -1839,10 +1839,11 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
                         //qDebug() << "Loading " << path;
 
                         hres = ppf->Load((WCHAR*) path.utf16(), STGM_READ);
+
                         if (SUCCEEDED(hres)) {
                             WCHAR info[MAX_PATH + 1];
                             hres = psl->GetPath(info, MAX_PATH,
-                                    (WIN32_FIND_DATAW*) 0, SLGP_UNCPRIORITY);
+                                    (WIN32_FIND_DATAW*) 0, 0);
                             if (SUCCEEDED(hres)) {
                                 QString targetPath;
                                 targetPath.setUtf16((ushort*) info, wcslen(info));

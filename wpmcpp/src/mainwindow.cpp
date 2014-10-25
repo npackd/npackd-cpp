@@ -1631,7 +1631,7 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionUpdate_triggered()
 {
-    QString err = mayPerformInstallOperation();
+    QString err;
 
     QList<Package*> packages;
     AbstractRepository* r = AbstractRepository::getDefault_();
@@ -1928,23 +1928,9 @@ void MainWindow::on_actionFile_an_Issue_triggered()
             "http://code.google.com/p/windows-package-manager/issues/entry?template=Defect%20report%20from%20user"));
 }
 
-QString MainWindow::mayPerformInstallOperation()
-{
-    QString err;
-    if (hardDriveScanRunning) {
-        err = QObject::tr("Cannot start this action while a drive scan is in progress");
-    }
-
-    if (err.isEmpty() && reloadRepositoriesThreadRunning) {
-        err = QObject::tr("Cannot start this action while repositories reload is in progress");
-    }
-
-    return err;
-}
-
 void MainWindow::on_actionInstall_triggered()
 {
-    QString err = mayPerformInstallOperation();
+    QString err;
 
     QList<PackageVersion*> pvs;
 
@@ -2005,7 +1991,7 @@ void MainWindow::on_actionInstall_triggered()
 
 void MainWindow::on_actionUninstall_triggered()
 {
-    QString err = mayPerformInstallOperation();
+    QString err;
 
     QList<PackageVersion*> pvs;
 
