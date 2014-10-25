@@ -59,7 +59,6 @@
 #include "flowlayout.h"
 #include "scandiskthirdpartypm.h"
 #include "installthread.h"
-#include "updaterepositorythread.h"
 #include "scanharddrivesthread.h"
 #include "visiblejobs.h"
 #include "progresstree2.h"
@@ -1356,9 +1355,8 @@ void MainWindow::closeDetailTabs()
 void MainWindow::recognizeAndLoadRepositories(bool useCache)
 {
     Job* job = new Job(QObject::tr("Initializing"));
-    UpdateRepositoryThread* it = new UpdateRepositoryThread(job);
 
-    connect(it, SIGNAL(finished()), this,
+    connect(job, SIGNAL(jobCompleted()), this,
             SLOT(recognizeAndLoadRepositoriesThreadFinished()),
             Qt::QueuedConnection);
 
@@ -1366,7 +1364,10 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
     updateActions();
 
     monitor(job);
-    it->start(QThread::LowestPriority);
+
+    QtConcurrent::run(DBRepository::getDefault(),
+            &DBRepository::updateF5Runnable,
+            job);
 }
 
 void MainWindow::setMenuAccelerators(){

@@ -48,7 +48,6 @@ SOURCES += main.cpp \
     repositoryxmlhandler.cpp \
     cbsthirdpartypm.cpp \
     installthread.cpp \
-    updaterepositorythread.cpp \
     scanharddrivesthread.cpp \
     visiblejobs.cpp \
     clprocessor.cpp \
@@ -100,7 +99,6 @@ HEADERS += mainwindow.h \
     cbsthirdpartypm.h \
     msoav2.h \
     installthread.h \
-    updaterepositorythread.h \
     scanharddrivesthread.h \
     visiblejobs.h \
     clprocessor.h \

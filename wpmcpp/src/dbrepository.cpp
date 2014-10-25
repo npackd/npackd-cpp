@@ -1414,6 +1414,14 @@ void DBRepository::updateF5(Job* job)
     job->complete();
 }
 
+void DBRepository::updateF5Runnable(Job *job)
+{
+    QThread::currentThread()->setPriority(QThread::LowestPriority);
+    CoInitialize(0);
+    updateF5(job);
+    CoUninitialize();
+}
+
 void DBRepository::saveAll(Job* job, Repository* r, bool replace)
 {
     bool transactionStarted = false;

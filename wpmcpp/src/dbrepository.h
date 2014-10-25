@@ -221,6 +221,12 @@ public:
      */
     void updateF5(Job *job);
 
+    /**
+     * @brief updateF5() that can be used with QtConcurrent::Run
+     * @param job job
+     */
+    void updateF5Runnable(Job* job);
+
     QString savePackage(Package* p);
 
     QString savePackageVersion(PackageVersion* p);
