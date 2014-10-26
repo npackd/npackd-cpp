@@ -66,11 +66,14 @@ public:
      * @param url this URL will be downloaded. http://, https:// and
      *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
+     * @param alg algorithm that should be used for computing the hash sum
      * @param useCache true = use Windows Internet cache on the local disk
      * @return temporary file or 0 if an error occured. The file is closed.
      */
     static QTemporaryFile* download(Job* job, const QUrl& url,
-            QString* sha1=0, bool useCache=false);
+            QString* sha1=0,
+            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
+            bool useCache=true);
 
     /**
      * Downloads a file.
@@ -81,10 +84,12 @@ public:
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param file the content will be stored here
      * @param alg algorithm that should be used for computing the hash sum
+     * @param useCache true = use Windows Internet cache on the local disk
      */
     static void download(Job* job, const QUrl& url, QFile* file,
             QString* sha1=0,
-            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
+            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
+            bool useCache=true);
 
     /**
      * @brief retrieves the content-length header for an URL

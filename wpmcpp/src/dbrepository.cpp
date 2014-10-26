@@ -1099,7 +1099,9 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
     QFile* f = 0;
     if (job->getErrorMessage().isEmpty() && !job->isCancelled()) {
         Job* djob = job->newSubJob(0.8, QObject::tr("Downloading"));
-        f = Downloader::download(djob, *url, 0, useCache);
+        f = Downloader::download(djob, *url, 0,
+                QCryptographicHash::Sha1,
+                useCache);
         if (!djob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString(
                     QObject::tr("Download failed: %2")).
@@ -1786,6 +1788,7 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
 {
     QString err;
 
+    QSqlDatabase::removeDatabase(connectionName);
     db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
     db.setDatabaseName(file);
     db.open();

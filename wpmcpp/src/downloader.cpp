@@ -606,12 +606,20 @@ void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,
 }
 
 void Downloader::download(Job* job, const QUrl& url, QFile* file,
-        QString* sha1, QCryptographicHash::Algorithm alg)
+        QString* sha1, QCryptographicHash::Algorithm alg, bool useCache)
 {
     QString mime;
     QString contentDisposition;
-    downloadWin(job, url, L"GET", file, &mime, &contentDisposition,
-                defaultPasswordWindow, sha1, false, alg);
+
+    if (url.scheme() == "https" || url.scheme() == "http")
+        downloadWin(job, url, L"GET", file, &mime, &contentDisposition,
+                defaultPasswordWindow, sha1, useCache, alg);
+    else if (url.toString().startsWith("data:image/png;base64,")) {
+        QString dataURL_ = url.toString().mid(22);
+        QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
+        if (file->write(ba) < 0)
+            job->setErrorMessage(file->errorString());
+    }
 }
 
 int64_t Downloader::getContentLength(Job* job, const QUrl &url,
@@ -622,24 +630,13 @@ int64_t Downloader::getContentLength(Job* job, const QUrl &url,
 }
 
 QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
+        QCryptographicHash::Algorithm alg,
         bool useCache)
 {
     QTemporaryFile* file = new QTemporaryFile();
 
     if (file->open()) {
-        QString mime;
-        QString contentDisposition;
-
-        if (url.scheme() == "https" || url.scheme() == "http")
-            downloadWin(job, url, L"GET", file, &mime, &contentDisposition,
-                    defaultPasswordWindow, sha1, useCache);
-        else if (url.toString().startsWith("data:image/png;base64,")) {
-            QString dataURL_ = url.toString().mid(22);
-            QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
-            if (file->write(ba) < 0)
-                job->setErrorMessage(file->errorString());
-        }
-
+        download(job, url, file, sha1, alg, useCache);
         file->close();
 
         if (job->isCancelled() || !job->getErrorMessage().isEmpty()) {
