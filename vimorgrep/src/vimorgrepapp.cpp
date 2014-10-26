@@ -163,7 +163,8 @@ int VimOrgRepApp::process()
 
     Job* sub = job->newSubJob(0.8, "Downloading the data");
     QTemporaryFile* f = Downloader::download(sub,
-            QUrl("http://www.vim.org/script-info.php"));
+            QUrl("http://www.vim.org/script-info.php"), 0,
+            QCryptographicHash::Sha1, false);
     if (!sub->getErrorMessage().isEmpty())
         job->setErrorMessage(sub->getErrorMessage());
 
