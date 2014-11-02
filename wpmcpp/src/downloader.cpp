@@ -619,14 +619,64 @@ void Downloader::download(Job* job, const QUrl& url, QFile* file,
         QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
         if (file->write(ba) < 0)
             job->setErrorMessage(file->errorString());
+        job->complete();
+    } else if (url.scheme() == "file") {
+        copyFile(job, url.toLocalFile(), file, sha1,  alg);
+    } else {
+        job->setErrorMessage(QObject::tr("Unsupported URL scheme: %1").
+                arg(url.toDisplayString()));
+        job->complete();
     }
+}
+
+void Downloader::copyFile(Job* job, const QString& source, QFile* file,
+         QString* sha1, QCryptographicHash::Algorithm alg) {
+    qDebug() << "src" << source;
+    QFile srcFile(source);
+    if (!srcFile.open(QFile::ReadOnly)) {
+        job->setErrorMessage(QObject::tr("Error opening file: %1").
+                arg(source));
+    } else {
+        qint64 srcSize = srcFile.size();
+        const int SZ = 8192;
+        char* data = new char[SZ];
+
+        qint64 progress = 0;
+        QCryptographicHash crypto(alg);
+        while(true) {
+            qint64 c = srcFile.read(data, SZ);
+            if (c <= 0)
+                break;
+
+            if (sha1)
+                crypto.addData(data, c);
+            file->write(data, c);
+
+            progress += c;
+            if (srcSize != 0)
+                job->setProgress(((double) progress) / srcSize);
+        }
+
+        if (sha1)
+            *sha1 = crypto.result().toHex().toLower();
+
+        srcFile.close();
+        delete[] data;
+    }
+    job->complete();
 }
 
 int64_t Downloader::getContentLength(Job* job, const QUrl &url,
         HWND parentWindow)
 {
-    return downloadWin(job, url, L"HEAD", 0, 0, 0, parentWindow, 0, false,
-            QCryptographicHash::Sha1);
+    if (url.scheme() == "file") {
+        QString filename = url.toLocalFile();
+        QFile f(filename);
+        return f.size();
+    } else {
+        return downloadWin(job, url, L"HEAD", 0, 0, 0, parentWindow, 0, false,
+                QCryptographicHash::Sha1);
+    }
 }
 
 QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,

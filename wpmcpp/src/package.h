@@ -59,7 +59,7 @@ public:
     /** changelog URL */
     QString changelog;
 
-    /** https: or http: URLs to screenshots in PNG format */
+    /** URLs to screenshots in PNG format */
     QStringList screenshots;
 
     Package(const QString& name, const QString& title);
