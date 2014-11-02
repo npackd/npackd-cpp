@@ -1049,13 +1049,13 @@ void PackageVersion::install(Job* job, const QString& where)
     QString dsha1;
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setTitle(initialTitle + " / " +
-                QObject::tr("Downloading & computing hash sum"));
+        job->setTitle(initialTitle);
         if (!f->open(QIODevice::ReadWrite)) {
             job->setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
                     arg(f->fileName()));
         } else {
-            Job* djob = job->newSubJob(0.58);
+            Job* djob = job->newSubJob(0.58,
+                    QObject::tr("Downloading & computing hash sum"));
             Downloader::download(djob, this->download, f,
                     this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
             downloadOK = !djob->isCancelled() &&
@@ -1609,7 +1609,8 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
             if (validate) {
                 QUrl d = a->download;
                 if (!d.isValid() || d.isRelative() ||
-                        (d.scheme() != "http" && d.scheme() != "https")) {
+                        (d.scheme() != "http" && d.scheme() != "https" &&
+                        d.scheme() != "file")) {
                     err->append(QString(QObject::tr("Not a valid download URL for %1: %2")).
                             arg(a->package).arg(url));
                 }

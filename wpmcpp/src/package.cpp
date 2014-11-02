@@ -55,7 +55,8 @@ bool Package::isValidURL(const QString& url)
     else {
         QUrl u(url);
         r = u.isValid() && !u.isRelative() &&
-                (u.scheme() == "http" || u.scheme() == "https");
+                (u.scheme() == "http" || u.scheme() == "https" ||
+                u.scheme() == "file");
     }
     return r;
 }

@@ -59,11 +59,30 @@ class Downloader: QObject
             LPCWSTR verb, QFile* file,
             QString* mime, QString* contentDisposition,
             HWND parentWindow=0, QString* sha1=0, bool useCache=false,
-            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
+                               QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
+
+    /**
+     * Copies a file.
+     *
+     * This functionality also offers the possibility to have a full
+     * offline support. Which means that Npackd can rely on only local files
+     * without requiring any internet access. Possibilities such as USB/CD
+     * installers, personal packages and collections are now a little easier
+     * (some little constraints are still present).
+     *
+     * @param job job for this method
+     * @param source source file name
+     * @param file the content will be stored here
+     * @param sha1 if not null, SHA1 will be computed and stored here
+     * @param alg algorithm that should be used to compute the hash sum
+     */
+    static void copyFile(Job *job, const QString &source, QFile *file,
+            QString *sha1,
+            QCryptographicHash::Algorithm alg);
 public:
     /**
      * @param job job for this method
-     * @param url this URL will be downloaded. http://, https:// and
+     * @param url this URL will be downloaded. http://, https://, file:// and
      *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param alg algorithm that should be used for computing the hash sum
@@ -79,7 +98,7 @@ public:
      * Downloads a file.
      *
      * @param job job for this method
-     * @param url this URL will be downloaded. http://, https:// and
+     * @param url this URL will be downloaded. http://, https://, file:// and
      *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param file the content will be stored here
@@ -92,9 +111,9 @@ public:
             bool useCache=true);
 
     /**
-     * @brief retrieves the content-length header for an URL
+     * @brief retrieves the content-length header for an URL.
      * @param job job object
-     * @param url http: or https:
+     * @param url http:, https: or file:
      * @param parentWindow window handle or 0 if not UI is required
      * @return the content-length header value or -1 if unknown
      */
