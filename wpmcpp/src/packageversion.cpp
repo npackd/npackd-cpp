@@ -554,7 +554,7 @@ void PackageVersion::uninstall(Job* job)
             */
 
             this->executeFile2(sub, d.absolutePath(), uninstallationScript,
-                    ".Npackd\\Uninstall.log", "NpackdUninstallXXXXXX.log",
+                    ".Npackd\\Uninstall.log",
                     env);
 
             if (!sub->getErrorMessage().isEmpty())
@@ -1231,7 +1231,7 @@ void PackageVersion::install(Job* job, const QString& where)
             addDependencyVars(&env);
 
             this->executeFile2(exec, d.absolutePath(), installationScript,
-                    ".Npackd\\Install.log", "NpackdInstallXXXXXX.log", env);
+                    ".Npackd\\Install.log", env);
             if (!exec->getErrorMessage().isEmpty())
                 job->setErrorMessage(exec->getErrorMessage());
             else {
@@ -1397,28 +1397,37 @@ QString PackageVersion::getStatus() const
 void PackageVersion::executeFile2(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile,
-        const QString& tempFileTemplate,
         const QStringList& env)
 {
-    QByteArray output = executeBatchFile(job, where,
-            path, outputFile, env);
-    output.insert(0, WPMUtils::UCS2LE_BOM);
-    if (!job->getErrorMessage().isEmpty()) {
-        QTemporaryFile of(QDir::tempPath() +
-                          "\\" + tempFileTemplate);
-        of.setAutoRemove(false);
-        if (of.open()) {
-            of.write(output);
-        }
+    executeBatchFile(job, where, path, outputFile, env);
 
-        job->setErrorMessage(QString(
-                QObject::tr("%1. Full output was saved in %2")).arg(
-                job->getErrorMessage()).
-                arg(WPMUtils::normalizePath(of.fileName())));
+    if (!job->getErrorMessage().isEmpty()) {
+        QString out = where + "\\" + path;
+
+        if (QFile::exists(out)) {
+            QTemporaryFile of;
+            of.setFileTemplate("NpackdXXXXXX.log");
+            of.setAutoRemove(false);
+            if (of.open()) {
+                of.close();
+
+                // ignoring the error here
+                QFile::copy(out, of.fileName());
+            }
+
+            job->setErrorMessage(QString(
+                    QObject::tr("%1. Full output was saved in %2")).arg(
+                    job->getErrorMessage()).
+                    arg(WPMUtils::normalizePath(of.fileName())));
+        } else {
+            job->setErrorMessage(QString(
+                    QObject::tr("%1. No output was generated")).arg(
+                    job->getErrorMessage()));
+        }
     }
 }
 
-QByteArray PackageVersion::executeBatchFile(
+void PackageVersion::executeBatchFile(
         Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const QStringList& env)
@@ -1429,12 +1438,12 @@ QByteArray PackageVersion::executeBatchFile(
     QString file = d.absolutePath() + "\\" + path;
     file.replace('/', '\\');
 
-    return executeFile(job, d.absolutePath(), exe,
+    executeFile(job, d.absolutePath(), exe,
             "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
             d.absolutePath() + "\\" + outputFile, env);
 }
 
-QByteArray PackageVersion::executeFile(
+void PackageVersion::executeFile(
         Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         const QString& outputFile, const QStringList& env)
@@ -1494,8 +1503,6 @@ QByteArray PackageVersion::executeFile(
                 arg(seconds / 60));
     }
     job->complete();
-
-    return ret;
 }
 
 bool PackageVersion::isInWindowsDir() const
@@ -2010,7 +2017,7 @@ void PackageVersion::stop(Job* job, int programCloseType)
         addDependencyVars(&env);
 
         this->executeFile2(exec, d.absolutePath(), ".Npackd\\Stop.bat",
-                ".Npackd\\Stop.log", "NpackdStopXXXXXX.log", env);
+                ".Npackd\\Stop.log", env);
         if (!exec->getErrorMessage().isEmpty()) {
             job->setErrorMessage(exec->getErrorMessage());
         } else {
