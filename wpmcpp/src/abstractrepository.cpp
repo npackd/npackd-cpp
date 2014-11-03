@@ -97,9 +97,15 @@ void AbstractRepository::processWithCoInitialize(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
+    bool b = SetThreadPriority(GetCurrentThread(),
+            THREAD_MODE_BACKGROUND_BEGIN);
+
     CoInitialize(NULL);
     process(job, install_, programCloseType);
     CoUninitialize();
+
+    if (b)
+        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 }
 
 void AbstractRepository::process(Job *job,
@@ -186,13 +192,11 @@ void AbstractRepository::process(Job *job,
                 txt = QString(QObject::tr("Uninstalling %1")).arg(
                         pv->toString());
 
-            Job* sub = job->newSubJob(0.9 / n, txt);
+            Job* sub = job->newSubJob(0.9 / n, txt, true, true);
             if (op->install)
                 pv->install(sub, pv->getPreferredInstallationDirectory());
             else
                 pv->uninstall(sub);
-            if (!sub->getErrorMessage().isEmpty())
-                job->setErrorMessage(sub->getErrorMessage());
 
             if (!job->getErrorMessage().isEmpty())
                 break;

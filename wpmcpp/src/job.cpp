@@ -24,6 +24,7 @@ JobState::JobState(const JobState& s) : QObject()
     this->progress = s.progress;
     this->job = s.job;
     this->started = s.started;
+    this->title = s.title;
 }
 
 void JobState::operator=(const JobState& s)
@@ -34,6 +35,7 @@ void JobState::operator=(const JobState& s)
     this->progress = s.progress;
     this->job = s.job;
     this->started = s.started;
+    this->title = s.title;
 }
 
 time_t JobState::remainingTime()

@@ -212,6 +212,7 @@ void MainFrame::setCategoryFilter(int level, int v)
 void MainFrame::chooseColumns()
 {
     QDialog* d = new QDialog(this);
+    d->setWindowTitle(QObject::tr("Choose columns"));
     QVBoxLayout* layout = new QVBoxLayout();
     d->setLayout(layout);
     QListWidget* list = new QListWidget(d);

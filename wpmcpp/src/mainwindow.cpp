@@ -616,6 +616,9 @@ void MainWindow::monitoredJobChanged(const JobState& state)
     }
 
     if (state.completed && !state.job->parentJob) {
+        if (!state.job->getErrorMessage().isEmpty())
+            addErrorMessage(state.job->getTitle() + ": " +
+                    state.errorMessage, state.errorMessage);
         VisibleJobs::getDefault()->unregisterJob(state.job);
         updateProgressTabTitle();
         state.job->deleteLater();
