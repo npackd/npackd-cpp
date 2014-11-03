@@ -52,9 +52,8 @@ private:
      * @param path .bat file
      * @param outputFile the output will be saved here
      * @param env additional environemnt variables
-     * @return program output
      */
-    static QByteArray executeBatchFile(Job* job, const QString& where,
+    static void executeBatchFile(Job* job, const QString& where,
             const QString& path, const QString& outputFile,
             const QStringList& env);
 
@@ -72,12 +71,10 @@ private:
      * @param path this is the name of the script like ".Npackd\Install.bat"
      *     relative to "where"
      * @param outputFile output file
-     * @param tempFileTemplate template for the temporary file for the script
-     *     output like "NpackdInstallXXXXXX.log"
      * @param env additional environment variables
      */
     void executeFile2(Job *job, const QString &where, const QString &path,
-            const QString &outputFile, const QString &tempFileTemplate,
+            const QString &outputFile,
             const QStringList &env);
 
     void deleteShortcuts(const QString& dir,
@@ -117,9 +114,8 @@ public:
      * @param nativeArguments all native arguments
      * @param outputFile the output will be saved here
      * @param env additional environemnt variables
-     * @return program output
      */
-    static QByteArray executeFile(Job* job, const QString& where,
+    static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             const QString& outputFile,
             const QStringList& env);
