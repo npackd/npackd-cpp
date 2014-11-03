@@ -64,6 +64,8 @@ DownloadSizeFinder::DownloadFile DownloadSizeFinder::downloadRunnable(
         const QString& url)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
+    bool b = SetThreadPriority(GetCurrentThread(),
+            THREAD_MODE_BACKGROUND_BEGIN);
 
     CoInitialize(NULL);
 
@@ -92,6 +94,9 @@ DownloadSizeFinder::DownloadFile DownloadSizeFinder::downloadRunnable(
     }
 
     CoUninitialize();
+
+    if (b)
+        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 
     return r;
 }

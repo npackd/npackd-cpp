@@ -568,17 +568,18 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
      // qDebug() << "InstalledPackages::refresh.2.1";
 
-    /*
-    if (job->shouldProceed(
-            QObject::tr("Detecting Component Based Servicing packages"))) {
-        AbstractThirdPartyPM* pm = new CBSThirdPartyPM();
-        job->setErrorMessage(detect3rdParty(pm, true, "cbs:"));
-        delete pm;
+/*
+ * use DISM API instead
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01,
+                QObject::tr("Detecting Component Based Servicing packages"),
+                true, true);
 
-        if (job->getErrorMessage().isEmpty())
-            job->setProgress(0.69);
+        AbstractThirdPartyPM* pm = new CBSThirdPartyPM();
+        detect3rdParty(sub, rep, pm, true, "cbs:");
+        delete pm;
     }
-    */
+ */
 
     timer.time(5);
 

@@ -413,9 +413,15 @@ void PackageVersion::deleteShortcutsRunnable(const QString& dir, Job* job,
         bool menu, bool desktop, bool quickLaunch)
 {
     QThread::currentThread()->setPriority(QThread::IdlePriority);
+    bool b = SetThreadPriority(GetCurrentThread(),
+            THREAD_MODE_BACKGROUND_BEGIN);
+
     CoInitialize(0);
     deleteShortcuts(dir, job, menu, desktop, quickLaunch);
     CoUninitialize();
+
+    if (b)
+        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 }
 
 void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
@@ -518,11 +524,10 @@ void PackageVersion::uninstall(Job* job)
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!uninstallationScript.isEmpty()) {
-            job->setTitle(initialTitle + " / " +
-                    QObject::tr("Running the uninstallation script (this may take some time)"));
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
-            Job* sub = job->newSubJob(0.20);
+            Job* sub = job->newSubJob(0.20,
+                    QObject::tr("Running the uninstallation script (this may take some time)"));
 
             // prepare the environment variables
 

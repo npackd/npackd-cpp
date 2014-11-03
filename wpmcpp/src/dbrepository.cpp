@@ -1117,7 +1117,7 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
 
             dir = new QTemporaryDir();
             if (dir->isValid()) {
-                Job* sub = job->newSubJob(0.1);
+                Job* sub = job->newSubJob(0.1, QObject::tr("Extracting"));
                 WPMUtils::unzip(sub, f->fileName(), dir->path() + "\\");
                 if (!sub->getErrorMessage().isEmpty()) {
                     job->setErrorMessage(QString(
@@ -1419,9 +1419,15 @@ void DBRepository::updateF5(Job* job)
 void DBRepository::updateF5Runnable(Job *job)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
+    bool b = SetThreadPriority(GetCurrentThread(),
+            THREAD_MODE_BACKGROUND_BEGIN);
+
     CoInitialize(0);
     updateF5(job);
     CoUninitialize();
+
+    if (b)
+        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 }
 
 void DBRepository::saveAll(Job* job, Repository* r, bool replace)

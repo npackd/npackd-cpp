@@ -621,7 +621,16 @@ void Downloader::download(Job* job, const QUrl& url, QFile* file,
             job->setErrorMessage(file->errorString());
         job->complete();
     } else if (url.scheme() == "file") {
-        copyFile(job, url.toLocalFile(), file, sha1,  alg);
+        QString localFile = url.toLocalFile();
+        QFileInfo fi(localFile);
+        if (fi.isAbsolute())
+            copyFile(job, localFile, file, sha1,  alg);
+        else {
+            job->setErrorMessage(
+                    QObject::tr("Cannot download a file from a relative path %1").
+                    arg(localFile));
+            job->complete();
+        }
     } else {
         job->setErrorMessage(QObject::tr("Unsupported URL scheme: %1").
                 arg(url.toDisplayString()));
@@ -631,7 +640,6 @@ void Downloader::download(Job* job, const QUrl& url, QFile* file,
 
 void Downloader::copyFile(Job* job, const QString& source, QFile* file,
          QString* sha1, QCryptographicHash::Algorithm alg) {
-    qDebug() << "src" << source;
     QFile srcFile(source);
     if (!srcFile.open(QFile::ReadOnly)) {
         job->setErrorMessage(QObject::tr("Error opening file: %1").
@@ -669,14 +677,22 @@ void Downloader::copyFile(Job* job, const QString& source, QFile* file,
 int64_t Downloader::getContentLength(Job* job, const QUrl &url,
         HWND parentWindow)
 {
+    int64_t result = -1;
     if (url.scheme() == "file") {
         QString filename = url.toLocalFile();
-        QFile f(filename);
-        return f.size();
+        QFileInfo fi(filename);
+        if (fi.isAbsolute()) {
+            result = fi.size();
+        } else {
+            job->setErrorMessage(QObject::tr("Cannot process relative file name %1").
+                    arg(filename));
+        }
+        job->complete();
     } else {
-        return downloadWin(job, url, L"HEAD", 0, 0, 0, parentWindow, 0, false,
+        result = downloadWin(job, url, L"HEAD", 0, 0, 0, parentWindow, 0, false,
                 QCryptographicHash::Sha1);
     }
+    return result;
 }
 
 QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,

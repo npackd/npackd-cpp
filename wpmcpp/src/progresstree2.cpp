@@ -182,10 +182,7 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
             QString title = QObject::tr("Error") + ": " + jobTitle +
                         ": " + WPMUtils::getFirstLine(job->getErrorMessage());
             QString msg = job->getFullTitle() + "\n" + job->getErrorMessage();
-            if (MainWindow::getInstance())
-                MainWindow::getInstance()->addErrorMessage(
-                        title, msg);
-            else {
+            if (!MainWindow::getInstance()) {
                 QMessageBox mb;
                 mb.setWindowTitle(title);
                 mb.setText(msg);
@@ -194,12 +191,11 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
                 mb.setDefaultButton(QMessageBox::Ok);
                 mb.setDetailedText(msg);
                 mb.exec();
+                // TODO: show errors only for the top-level jobs
             }
         }
 
         if (!job->parentJob) {
-            // TODO: should be probably a QSharedPointer job->deleteLater();
-
             delete item;
         }
     }
