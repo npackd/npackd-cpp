@@ -104,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
     t->addAction(this->ui->actionUninstall);
     t->addAction(this->ui->actionUpdate);
     t->addAction(this->ui->actionShow_Details);
+    t->addAction(this->ui->actionShow_changelog);
     t->addAction(this->ui->actionOpen_folder);
     t->addAction(this->ui->actionGotoPackageURL);
     t->addAction(this->ui->actionTest_Download_Site);
@@ -1037,6 +1038,7 @@ void MainWindow::updateActions()
     updateUninstallAction();
     updateUpdateAction();
     updateGotoPackageURLAction();
+    updateShowChangelogAction();
     updateTestDownloadSiteAction();
     updateActionShowDetailsAction();
     updateCloseTabAction();
@@ -1297,6 +1299,47 @@ void MainWindow::updateTestDownloadSiteAction()
     }
 
     this->ui->actionTest_Download_Site->setEnabled(enabled);
+}
+
+void MainWindow::updateShowChangelogAction()
+{
+    Selection* selection = Selection::findCurrent();
+    bool enabled = false;
+    if (selection) {
+        QList<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.count() > 0) {
+            AbstractRepository* r = Repository::getDefault_();
+            for (int i = 0; i < selected.count(); i++) {
+                PackageVersion* pv = (PackageVersion*) selected.at(i);
+
+                Package* p = r->findPackage_(pv->package);
+                if (p) {
+                    QUrl url(p->changelog);
+                    delete p;
+
+                    if (url.isValid()) {
+                        enabled = true;
+                        break;
+                    }
+                }
+            }
+        } else {
+            selected = selection->getSelected("Package");
+            for (int i = 0; i < selected.count(); i++) {
+                Package* p = (Package*) selected.at(i);
+
+                if (p) {
+                    QUrl url(p->changelog);
+                    if (url.isValid()) {
+                        enabled = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    this->ui->actionShow_changelog->setEnabled(enabled);
 }
 
 void MainWindow::updateGotoPackageURLAction()
@@ -2114,4 +2157,40 @@ void MainWindow::visibleJobsChanged()
 void MainWindow::on_actionChoose_columns_triggered()
 {
     this->mainFrame->chooseColumns();
+}
+
+void MainWindow::on_actionShow_changelog_triggered()
+{
+    QSet<QUrl> urls;
+
+    Selection* selection = Selection::findCurrent();
+    QList<void*> selected;
+    if (selection) {
+        selected = selection->getSelected("Package");
+        if (selected.count() != 0) {
+            for (int i = 0; i < selected.count(); i++) {
+                Package* p = (Package*) selected.at(i);
+                QUrl url(p->changelog);
+                if (url.isValid())
+                    urls.insert(url);
+            }
+        } else {
+            AbstractRepository* r = AbstractRepository::getDefault_();
+            selected = selection->getSelected("PackageVersion");
+            for (int i = 0; i < selected.count(); i++) {
+                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                QScopedPointer<Package> p(r->findPackage_(pv->package));
+                if (p) {
+                    QUrl url(p->changelog);
+                    if (url.isValid())
+                        urls.insert(url);
+                }
+            }
+        }
+    }
+
+    for (QSet<QUrl>::const_iterator it = urls.begin();
+            it != urls.end(); it++) {
+        openURL(*it);
+    }
 }

@@ -66,6 +66,7 @@
     <addaction name="actionUpdate"/>
     <addaction name="separator"/>
     <addaction name="actionShow_Details"/>
+    <addaction name="actionShow_changelog"/>
     <addaction name="actionOpen_folder"/>
     <addaction name="actionGotoPackageURL"/>
     <addaction name="actionTest_Download_Site"/>
@@ -316,6 +317,17 @@
    </property>
    <property name="toolTip">
     <string>choose the columns for the table with the packages</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionShow_changelog">
+   <property name="text">
+    <string>Show changelog</string>
+   </property>
+   <property name="toolTip">
+    <string>opens the web page that contains the recent changes in the selected package</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
