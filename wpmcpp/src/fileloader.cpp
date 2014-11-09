@@ -67,6 +67,7 @@ void FileLoader::watcherFinished()
 FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
+
     bool b = SetThreadPriority(GetCurrentThread(),
             THREAD_MODE_BACKGROUND_BEGIN);
 

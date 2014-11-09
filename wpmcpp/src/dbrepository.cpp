@@ -1419,15 +1419,21 @@ void DBRepository::updateF5(Job* job)
 void DBRepository::updateF5Runnable(Job *job)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
+
+    /*
+    makes the process too slow
     bool b = SetThreadPriority(GetCurrentThread(),
             THREAD_MODE_BACKGROUND_BEGIN);
+    */
 
     CoInitialize(0);
     updateF5(job);
     CoUninitialize();
 
+    /*
     if (b)
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
+    */
 }
 
 void DBRepository::saveAll(Job* job, Repository* r, bool replace)
