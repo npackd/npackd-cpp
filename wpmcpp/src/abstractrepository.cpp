@@ -97,15 +97,21 @@ void AbstractRepository::processWithCoInitialize(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
+
+    /*
+    makes the process too slow
     bool b = SetThreadPriority(GetCurrentThread(),
             THREAD_MODE_BACKGROUND_BEGIN);
+    */
 
     CoInitialize(NULL);
     process(job, install_, programCloseType);
     CoUninitialize();
 
+    /*
     if (b)
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
+    */
 }
 
 void AbstractRepository::process(Job *job,

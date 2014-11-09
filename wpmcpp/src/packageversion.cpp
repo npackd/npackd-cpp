@@ -1450,49 +1450,119 @@ void PackageVersion::executeFile(
 {
     QString initialTitle = job->getTitle();
 
-    QByteArray ret;
-
-    QProcess p(0);
-    p.setProcessChannelMode(QProcess::MergedChannels);
-    p.setWorkingDirectory(where);
-
-    QStringList args;
-    p.setNativeArguments(nativeArguments);
-    // qDebug() << p.nativeArguments();
-    QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
-    for (int i = 0; i < env.count(); i += 2) {
-        pe.insert(env.at(i), env.at(i + 1));
-    }
-    p.setProcessEnvironment(pe);
-    p.start(path, args);
-
     time_t start = time(NULL);
+
+    // TODO: use only system environment variables
+    LPWCH env2 = GetEnvironmentStrings();
+    QMap<QString, QString> env_;
+    LPWCH e = env2;
+    while (true) {
+        int len = wcslen(e);
+        if (!len)
+            break;
+
+        QString s;
+        s.setUtf16((const ushort*) e, len);
+        int p = s.indexOf('=');
+
+        QString name, value;
+        if (p >= 0) {
+            name = s.left(p);
+            value = s.mid(p + 1);
+        } else {
+            name = s;
+        }
+        env_.insert(name, value);
+
+        e += len + 1;
+
+        // qDebug() << name << value;
+    }
+    for (int i = 0; i + 1 < env.size(); i += 2) {
+        env_.insert(env.at(i), env.at(i + 1));
+    }
+    FreeEnvironmentStrings(env2);
+    QByteArray ba;
+    QMapIterator<QString, QString> i(env_);
+    while (i.hasNext()) {
+        i.next();
+        QString name = i.key();
+        QString value = i.value();
+        ba.append((char*) name.utf16(), name.length() * 2);
+        ba.append('=');
+        ba.append('\0');
+        ba.append((char*) value.utf16(), (value.length() + 1) * 2);
+    }
+    ba.append('\0');
+    ba.append('\0');
+
+    // qDebug() << ba;
+
+    PROCESS_INFORMATION pinfo;
+
+    SECURITY_ATTRIBUTES saAttr = {0};
+    saAttr.nLength = sizeof(saAttr);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+
+    HANDLE g_hChildStd_IN_Rd = NULL;
+    HANDLE g_hChildStd_IN_Wr = NULL;
+    HANDLE g_hChildStd_OUT_Rd = NULL;
+    HANDLE g_hChildStd_OUT_Wr = NULL;
+
+    // TODO: handle errors in the whole method
+
+    CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr, &saAttr, 0);
+
+    SetHandleInformation(g_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0);
+
+    CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0);
+
+    SetHandleInformation(g_hChildStd_IN_Wr, HANDLE_FLAG_INHERIT, 0);
+
+    STARTUPINFOW startupInfo = {
+        sizeof(STARTUPINFO), 0, 0, 0,
+        (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+        (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
+
+    startupInfo.dwFlags |= STARTF_USESTDHANDLES;
+    startupInfo.hStdInput = g_hChildStd_IN_Rd;
+    startupInfo.hStdOutput = g_hChildStd_OUT_Wr;
+    startupInfo.hStdError = g_hChildStd_OUT_Wr;
+
+    bool success = CreateProcess(
+            (wchar_t*) path.utf16(),
+            (wchar_t*) nativeArguments.utf16(),
+            0, &saAttr, TRUE,
+            CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
+            ba.data(),
+            (wchar_t*) where.utf16(),
+            &startupInfo, &pinfo);
+
+    CloseHandle(g_hChildStd_OUT_Wr);
+
+    QFile f(outputFile);
+    f.open(QIODevice::WriteOnly);
+    f.write("\xff\xfe");
+
+    DWORD ec;
+    const int BUFSIZE = 1024;
+    char* chBuf = new char[BUFSIZE];
     while (true) {
         if (job->isCancelled()) {
-            if (p.state() == QProcess::Running) {
-                p.terminate();
-                if (p.waitForFinished(10000))
-                    break;
-                p.kill();
-            }
-        }
-        if (p.waitForFinished(5000) || p.state() == QProcess::NotRunning) {
-            job->setProgress(1);
-            if (p.exitCode() != 0) {
-                job->setErrorMessage(
-                        QString(QObject::tr("Process %1 exited with the code %2")).
-                        arg(
-                        path).arg(p.exitCode()));
-            }
-            QFile f(outputFile);
-            if (f.open(QIODevice::WriteOnly)) {
-                f.write("\xff\xfe");
-                ret = p.readAll();
-                f.write(ret);
-                f.close();
-            }
             break;
         }
+
+        DWORD dwRead;
+        bool bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE,
+                &dwRead, NULL);
+        if (!bSuccess || dwRead == 0)
+            break;
+
+        f.write(chBuf, dwRead);
+
         time_t seconds = time(NULL) - start;
         double percents = ((double) seconds) / 300; // 5 Minutes
         if (percents > 0.9)
@@ -1502,6 +1572,49 @@ void PackageVersion::executeFile(
                 QString(QObject::tr("%1 minutes")).
                 arg(seconds / 60));
     }
+    delete[] chBuf;
+
+    f.close();
+
+    CloseHandle(g_hChildStd_OUT_Rd);
+
+    if (GetExitCodeProcess(pinfo.hProcess, &ec) && ec == STILL_ACTIVE) {
+        if (job->isCancelled())
+            TerminateProcess(pinfo.hProcess, 0xFFFFFFFF);
+        WaitForSingleObject(pinfo.hProcess, INFINITE); // TODO: 5 sec?
+    }
+
+    GetExitCodeProcess(pinfo.hProcess, &ec);
+    if (ec != 0) {
+        job->setErrorMessage(
+                QString(QObject::tr("Process %1 exited with the code %2")).
+                arg(path).arg(ec));
+    }
+
+    if (success) {
+        CloseHandle(pinfo.hThread);
+        CloseHandle(pinfo.hProcess);
+        // qDebug() << "success!222";
+    }
+
+/* todo
+    QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
+    for (int i = 0; i < env.count(); i += 2) {
+        pe.insert(env.at(i), env.at(i + 1));
+    }
+    p.setProcessEnvironment(pe);
+    p.start(path, args);
+    * /
+
+    while (true) {
+        if (p.waitForFinished(5000) || p.state() == QProcess::NotRunning) {
+            job->setProgress(1);
+            if (p.exitCode() != 0) {
+            }
+            break;
+        }
+    }
+    */
     job->complete();
 }
 
