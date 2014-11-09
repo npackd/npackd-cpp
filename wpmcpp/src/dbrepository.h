@@ -98,7 +98,7 @@ private:
      */
     void load(Job *job, bool useCache);
 
-    void loadOne(QUrl *url, Job *job, bool useCache);
+    void loadOne(Job *job, QFile *f);
 
     int count(const QString &sql, QString *err);
 public:

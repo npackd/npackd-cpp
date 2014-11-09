@@ -15,6 +15,8 @@
 #include <QXmlStreamWriter>
 #include <QSqlRecord>
 #include <QTemporaryDir>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QFuture>
 
 #include "package.h"
 #include "repository.h"
@@ -1066,14 +1068,37 @@ void DBRepository::load(Job* job, bool useCache)
                     QObject::tr("Error saving the list of repositories in the database: %1").arg(
                     err));
 
+        QList<QFuture<QTemporaryFile*> > files;
+        for (int i = 0; i < urls.count(); i++) {
+            QUrl* url = urls.at(i);
+            Job* s = job->newSubJob(0.1,
+                    QObject::tr("Downloading %1").
+                    arg(url->toDisplayString()), false, true);
+            QFuture<QTemporaryFile*> future = QtConcurrent::run(
+                    Downloader::download, s, *url, (QString*) 0,
+                    QCryptographicHash::Sha1,
+                    useCache);
+            files.append(future);
+        }
+
         for (int i = 0; i < urls.count(); i++) {
             if (!job->shouldProceed())
                 break;
 
+            files[i].waitForFinished();
+
+            job->setProgress((i + 1.0) / urls.count() * 0.5);
+        }
+
+        for (int i = 0; i < urls.count(); i++) {
+            if (!job->shouldProceed())
+                break;
+
+            QTemporaryFile* tf = files.at(i).result();
             Job* s = job->newSubJob(1.0 / urls.count(), QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
                     arg(urls.count()));
-            loadOne(urls.at(i), s, useCache);
+            loadOne(s, tf);
             if (!s->getErrorMessage().isEmpty()) {
                 job->setErrorMessage(QString(
                         QObject::tr("Error loading the repository %1: %2")).arg(
@@ -1081,6 +1106,14 @@ void DBRepository::load(Job* job, bool useCache)
                         s->getErrorMessage()));
                 break;
             }
+        }
+
+        for (int i = 0; i < urls.count(); i++) {
+            if (!job->shouldProceed())
+                break;
+
+            QTemporaryFile* tf = files.at(i).result();
+            delete tf;
         }
     } else {
         job->setErrorMessage(QObject::tr("No repositories defined"));
@@ -1095,19 +1128,7 @@ void DBRepository::load(Job* job, bool useCache)
     job->complete();
 }
 
-void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
-    QFile* f = 0;
-    if (job->getErrorMessage().isEmpty() && !job->isCancelled()) {
-        Job* djob = job->newSubJob(0.8, QObject::tr("Downloading"));
-        f = Downloader::download(djob, *url, 0,
-                QCryptographicHash::Sha1,
-                useCache);
-        if (!djob->getErrorMessage().isEmpty())
-            job->setErrorMessage(QString(
-                    QObject::tr("Download failed: %2")).
-                    arg(djob->getErrorMessage()));
-    }
-
+void DBRepository::loadOne(Job* job, QFile* f) {
     QTemporaryDir* dir = 0;
     if (job->shouldProceed()) {
         if (f->open(QFile::ReadOnly) &&
@@ -1127,7 +1148,6 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
                 } else {
                     QString repfn = dir->path() + "\\Rep.xml";
                     if (QFile::exists(repfn)) {
-                        delete f;
                         f = new QFile(repfn);
                     } else {
                         job->setErrorMessage(QObject::tr(
@@ -1154,7 +1174,6 @@ void DBRepository::loadOne(QUrl* url, Job* job, bool useCache) {
         }
     }
 
-    delete f;
     delete dir;
 
     job->complete();
