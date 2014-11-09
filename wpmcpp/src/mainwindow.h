@@ -82,6 +82,7 @@ private:
     void updateReloadRepositoriesAction();
     void updateScanHardDrivesAction();
     void updateShowFolderAction();
+    void updateShowChangelogAction();
 
     /**
      * @param ps selected packages
@@ -292,6 +293,7 @@ private slots:
             const QString &filename, const QString &error);
     void downloadSizeCompleted(const QString &url,
             int64_t size, const QString &error);
+    void on_actionShow_changelog_triggered();
 };
 
 #endif // MAINWINDOW_H
