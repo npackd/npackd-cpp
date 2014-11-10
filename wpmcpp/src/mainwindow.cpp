@@ -745,10 +745,13 @@ void MainWindow::fillList()
             cat0, cat1, &err);
 
     QList<QStringList> cats;
+    /*
     if (err.isEmpty()) {
         cats = dbr->findCategories(status, statusInclude, query, 0, -1, -1,
                 &err);
     }
+    */
+
     if (err.isEmpty())
         this->mainFrame->setCategories(0, cats);
 

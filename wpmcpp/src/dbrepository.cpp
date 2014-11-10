@@ -435,15 +435,11 @@ QList<Package*> DBRepository::findPackages(Package::Status status,
     QString where;
     QList<QVariant> params;
 
-    QStringList keywords = query.toLower().simplified().split(" ",
-            QString::SkipEmptyParts);
-
-    for (int i = 0; i < keywords.count(); i++) {
-        if (!where.isEmpty())
-            where += " AND ";
-        where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
-        params.append(QString("%" + keywords.at(i).toLower() + "%"));
+    if (!query.trimmed().isEmpty()) {
+        where += "FULLTEXT MATCH :FULLTEXT";
+        params.append(query);
     }
+
     if (filterByStatus) {
         if (!where.isEmpty())
             where += " AND ";
@@ -566,7 +562,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
         where = "WHERE " + where;
 
     QString sql = QString("SELECT CATEGORY.ID, COUNT(*), CATEGORY.NAME FROM "
-            "PACKAGE2 LEFT JOIN CATEGORY ON PACKAGE2.CATEGORY") +
+            "PACKAGE_FULLTEXT LEFT JOIN CATEGORY ON PACKAGE2.CATEGORY") +
             QString::number(level) +
             " = CATEGORY.ID " +
             where + " GROUP BY CATEGORY.ID, CATEGORY.NAME "
@@ -613,7 +609,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
             "DESCRIPTION, LICENSE, "
             "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, "
             "CHANGELOG, SCREENSHOTS "
-            "FROM PACKAGE2";
+            "FROM PACKAGE_FULLTEXT";
 
     if (!where.isEmpty())
         sql += " " + where;
@@ -1014,6 +1010,16 @@ QString DBRepository::clear()
     }
 
     if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.055,
+                QObject::tr("Clearing the packages search table"));
+        QString err = exec("DELETE FROM PACKAGE_FULLTEXT");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
+    }
+
+    if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.6,
                 QObject::tr("Clearing the package versions table"));
         QString err = exec("DELETE FROM PACKAGE_VERSION");
@@ -1372,6 +1378,18 @@ void DBRepository::updateF5(Job* job)
                     "NAME, PARENT, LEVEL) "
                     "SELECT ID, "
                     "NAME, PARENT, LEVEL FROM tempdb.CATEGORY");
+        if (err.isEmpty())
+            err = exec("INSERT INTO PACKAGE_FULLTEXT(NAME, TITLE, URL, "
+                    "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                    "SHORT_NAME, REPOSITORY, CATEGORY0, "
+                    "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG, "
+                    "SCREENSHOTS) "
+                    "SELECT NAME, TITLE, URL, "
+                    "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                    "SHORT_NAME, REPOSITORY, CATEGORY0, "
+                    "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG, "
+                    "SCREENSHOTS "
+                    "FROM PACKAGE2");
         if (err.isEmpty())
             sub->completeWithProgress();
         else
@@ -1877,6 +1895,37 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_SHORT_NAME ON PACKAGE(SHORT_NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // PACKAGE_FULLTEXT is new in Npackd 1.20
+    // cannot handle new columns
+    if (err.isEmpty()) {
+        e = tableExists(&db, "PACKAGE_FULLTEXT", &err);
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE VIRTUAL TABLE PACKAGE_FULLTEXT USING fts4("
+                    "NAME TEXT, "
+                    "TITLE TEXT, "
+                    "URL TEXT, "
+                    "ICON TEXT, "
+                    "DESCRIPTION TEXT, "
+                    "LICENSE TEXT, "
+                    "FULLTEXT TEXT, "
+                    "STATUS INTEGER, "
+                    "SHORT_NAME TEXT, "
+                    "REPOSITORY INTEGER, "
+                    "CATEGORY0 INTEGER, "
+                    "CATEGORY1 INTEGER, "
+                    "CATEGORY2 INTEGER, "
+                    "CATEGORY3 INTEGER, "
+                    "CATEGORY4 INTEGER, "
+                    "CHANGELOG TEXT, "
+                    "SCREENSHOTS TEXT"
+                    ")");
             err = toString(db.lastError());
         }
     }
