@@ -706,6 +706,8 @@ bool QCITableWidgetItem::operator<(const QTableWidgetItem &other) const
 
 void MainWindow::fillList()
 {
+    DWORD start = GetTickCount();
+
     // Columns and data types:
     // 0: icon QString
     // 1: package name Package*
@@ -772,6 +774,10 @@ void MainWindow::fillList()
     m->setPackages(found);
     t->setUpdatesEnabled(true);
     t->horizontalHeader()->setSectionsMovable(true);
+
+    DWORD dur = GetTickCount() - start;
+
+    this->mainFrame->setDuration(dur);
 }
 
 QString MainWindow::createPackageVersionsHTML(const QStringList& names)

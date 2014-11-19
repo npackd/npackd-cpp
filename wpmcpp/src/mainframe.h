@@ -104,6 +104,12 @@ public:
      * @brief shows a dialog to choose the visible columns
      */
     void chooseColumns();
+
+    /**
+     * @brief changes the search duration shown in the UI
+     * @param d duration in milliseconds
+     */
+    void setDuration(int d);
 private:
     Ui::MainFrame *ui;
 private slots:

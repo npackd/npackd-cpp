@@ -167,6 +167,11 @@ int MainFrame::getCategoryFilter(int level) const
     return r;
 }
 
+void MainFrame::setDuration(int d)
+{
+    this->ui->labelDuration->setText(QObject::tr("Found in %1 ms").arg(d));
+}
+
 void MainFrame::setCategoryFilter(int level, int v)
 {
     this->categoryCombosEvents = false;
