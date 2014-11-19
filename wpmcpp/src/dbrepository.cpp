@@ -1938,6 +1938,20 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
     }
 
     if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX IF NOT EXISTS PACKAGE2_CATEGORY0 ON PACKAGE2(CATEGORY0)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX IF NOT EXISTS PACKAGE2_CATEGORY1 ON PACKAGE2(CATEGORY1)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
         e = tableExists(&db, "REPOSITORY", &err);
     }
 
