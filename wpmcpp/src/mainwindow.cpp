@@ -661,6 +661,11 @@ void MainWindow::onShow()
 
     if (err.isEmpty()) {
         fillList();
+
+        // this seems to improve the rendering of the main table before
+        // the background repository loading starts
+        this->mainFrame->getTableWidget()->repaint();
+
         recognizeAndLoadRepositories(true);
     } else
         this->addErrorMessage(err, err, true, QMessageBox::Critical);
@@ -704,17 +709,46 @@ bool QCITableWidgetItem::operator<(const QTableWidgetItem &other) const
     return a.compare(b, Qt::CaseInsensitive) <= 0;
 }
 
-void MainWindow::fillList()
+_SearchResult MainWindow::search(Package::Status status, boolean statusInclude,
+        const QString& query, int cat0, int cat1, QString* err)
 {
     DWORD start = GetTickCount();
 
-    // Columns and data types:
-    // 0: icon QString
-    // 1: package name Package*
-    // 2: package description Package*
-    // 3: available version Package*
-    // 4: installed versions Package*
-    // 5: license Package*
+    _SearchResult r;
+    *err = "";
+
+    DBRepository* dbr = DBRepository::getDefault();
+    r.found = dbr->findPackages(status, statusInclude, query,
+            cat0, cat1, err);
+
+    DWORD search = GetTickCount();
+    qDebug() << "Only search" << (search - start) << query;
+
+    if (err->isEmpty()) {
+        r.cats = dbr->findCategories(status, statusInclude, query, 0, -1, -1,
+                err);
+    }
+
+    if (err->isEmpty()) {
+        if (cat0 >= 0) {
+            r.cats1 = dbr->findCategories(status, statusInclude, query, 1,
+                    cat0, -1, err);
+        }
+    }
+
+    qDebug() << "Only categories" << (GetTickCount() - search);
+
+    return r;
+}
+
+void MainWindow::fillListInBackground()
+{
+    fillList();
+}
+
+void MainWindow::fillList()
+{
+    DWORD start = GetTickCount();
 
     // qDebug() << "MainWindow::fillList";
     QTableView* t = this->mainFrame->getTableWidget();
@@ -741,37 +775,20 @@ void MainWindow::fillList()
     int cat0 = this->mainFrame->getCategoryFilter(0);
     int cat1 = this->mainFrame->getCategoryFilter(1);
 
-    DBRepository* dbr = DBRepository::getDefault();
     QString err;
-    QList<Package*> found = dbr->findPackages(status, statusInclude, query,
-            cat0, cat1, &err);
-
-    QList<QStringList> cats;
-    if (err.isEmpty()) {
-        cats = dbr->findCategories(status, statusInclude, query, 0, -1, -1,
-                &err);
-    }
-    if (err.isEmpty())
-        this->mainFrame->setCategories(0, cats);
-
-    this->mainFrame->setCategoryFilter(0, cat0);
+    _SearchResult sr = search(status, statusInclude, query, cat0, cat1, &err);
 
     if (err.isEmpty()) {
-        QList<QStringList> cats1;
-        if (cat0 >= 0) {
-            cats1 = dbr->findCategories(status, statusInclude, query, 1,
-                    cat0, -1, &err);
-        }
-        this->mainFrame->setCategories(1, cats1);
-    }
-
-    this->mainFrame->setCategoryFilter(1, cat1);
-
-    if (!err.isEmpty())
+        this->mainFrame->setCategories(0, sr.cats);
+        this->mainFrame->setCategoryFilter(0, cat0);
+        this->mainFrame->setCategories(1, sr.cats1);
+        this->mainFrame->setCategoryFilter(1, cat1);
+    } else {
         addErrorMessage(err, err, true, QMessageBox::Critical);
+    }
 
     PackageItemModel* m = (PackageItemModel*) t->model();
-    m->setPackages(found);
+    m->setPackages(sr.found);
     t->setUpdatesEnabled(true);
     t->horizontalHeader()->setSectionsMovable(true);
 
