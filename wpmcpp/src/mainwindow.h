@@ -16,6 +16,7 @@
 #include <QStringList>
 #include <QString>
 #include <QCache>
+#include <QList>
 
 #include "packageversion.h"
 #include "package.h"
@@ -31,6 +32,15 @@ namespace Ui {
 }
 
 const UINT WM_ICONTRAY = WM_USER + 1;
+
+/**
+ * @brief search result
+ */
+class _SearchResult {
+public:
+    QList<Package*> found;
+    QList<QStringList> cats, cats1;
+};
 
 /**
  * Main window.
@@ -112,6 +122,8 @@ private:
     QCache<QString, QIcon> icons;
 
     void updateDownloadSize(const QString &url);
+    _SearchResult search(Package::Status status, boolean statusInclude,
+            const QString &query, int cat0, int cat1, QString *err);
 public:
     /** URL -> full path to the file or "" in case of an error */
     QMap<QString, QString> downloadCache;
@@ -253,6 +265,11 @@ public:
      *     size of 200x200
      */
     QIcon downloadScreenshot(const QString &url);
+
+    /**
+     * @brief start filling the list asnchronously
+     */
+    void fillListInBackground();
 protected:
     void changeEvent(QEvent *e);
 

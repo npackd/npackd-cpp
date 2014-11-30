@@ -333,7 +333,7 @@ void MainFrame::tableWidget_selectionChanged()
 void MainFrame::fillList()
 {
     MainWindow* mw = MainWindow::getInstance();
-    mw->fillList();
+    mw->fillListInBackground();
 }
 
 void MainFrame::on_radioButtonAll_toggled(bool checked)
