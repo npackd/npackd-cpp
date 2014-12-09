@@ -476,9 +476,9 @@ QList<Package*> DBRepository::findPackages(Package::Status status,
         where = "WHERE " + where;
 
 
-    //where += " ORDER BY TITLE";
+    where += " ORDER BY TITLE";
 
-    where += " LIMIT 500";
+    //where += " LIMIT 500";
 
     // qDebug() << "DBRepository::findPackages.1";
 
@@ -1389,6 +1389,9 @@ void DBRepository::updateF5(Job* job)
                     "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG, "
                     "SCREENSHOTS "
                     "FROM PACKAGE2");
+        if (err.isEmpty())
+            err = exec("INSERT INTO PACKAGE_FULLTEXT(PACKAGE_FULLTEXT) "
+                    "VALUES('optimize')");
         if (err.isEmpty())
             sub->completeWithProgress();
         else
