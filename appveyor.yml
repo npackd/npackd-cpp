@@ -5,8 +5,15 @@ install:
   - ncl add-repo --url=https://npackd.appspot.com/rep/recent-xml
   - ncl add-repo --url=https://npackd.appspot.com/rep/xml?tag=libs
   - ncl add -p npackd-dev-i686-w64 -v 1.20.1
+  - mingw32-make.exe
 
-build_script: mingw32-make.exe
+build: OFF
+
+test: OFF
+
+test_script: OFF
+
+deploy: OFF
 
 branches:
   only:
