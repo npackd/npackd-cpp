@@ -439,10 +439,13 @@ QList<Package*> DBRepository::findPackages(Package::Status status,
             QString::SkipEmptyParts);
 
     for (int i = 0; i < keywords.count(); i++) {
-        if (!where.isEmpty())
-            where += " AND ";
-        where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
-        params.append(QString("%" + keywords.at(i).toLower() + "%"));
+        QString kw = keywords.at(i);
+        if (kw.length() > 1) {
+            if (!where.isEmpty())
+                where += " AND ";
+            where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
+            params.append(QString("%" + kw.toLower() + "%"));
+        }
     }
     if (filterByStatus) {
         if (!where.isEmpty())

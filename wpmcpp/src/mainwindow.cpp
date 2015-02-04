@@ -712,7 +712,7 @@ bool QCITableWidgetItem::operator<(const QTableWidgetItem &other) const
 _SearchResult MainWindow::search(Package::Status status, boolean statusInclude,
         const QString& query, int cat0, int cat1, QString* err)
 {
-    DWORD start = GetTickCount();
+    //DWORD start = GetTickCount();
 
     _SearchResult r;
     *err = "";
@@ -721,8 +721,8 @@ _SearchResult MainWindow::search(Package::Status status, boolean statusInclude,
     r.found = dbr->findPackages(status, statusInclude, query,
             cat0, cat1, err);
 
-    DWORD search = GetTickCount();
-    qDebug() << "Only search" << (search - start) << query;
+    //DWORD search = GetTickCount();
+    //qDebug() << "Only search" << (search - start) << query;
 
     if (err->isEmpty()) {
         r.cats = dbr->findCategories(status, statusInclude, query, 0, -1, -1,
@@ -736,7 +736,7 @@ _SearchResult MainWindow::search(Package::Status status, boolean statusInclude,
         }
     }
 
-    qDebug() << "Only categories" << (GetTickCount() - search);
+    //qDebug() << "Only categories" << (GetTickCount() - search);
 
     return r;
 }

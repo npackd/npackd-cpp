@@ -261,6 +261,16 @@ public:
      * @param title new title
      */
     void setTitle(const QString &title);
+
+    /**
+     * @brief checks the value returned by a Windows API function and sets
+     *     the error message to the formatted value of GetLastError() if the
+     *     value is false. The error message will not be changed if it is
+     *     already non-empty.
+     * @param v the value returned by a Windows API function like
+     *     SetHandleInformation
+     */
+    void checkOSCall(bool v);
 signals:
     /**
      * This signal will be fired each time something in this object

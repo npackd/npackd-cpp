@@ -1481,7 +1481,9 @@ void PackageVersion::executeFile(
     for (int i = 0; i + 1 < env.size(); i += 2) {
         env_.insert(env.at(i), env.at(i + 1));
     }
-    FreeEnvironmentStrings(env2);
+    if (job->shouldProceed()) {
+        job->checkOSCall(FreeEnvironmentStrings(env2));
+    }
     QByteArray ba;
     QMapIterator<QString, QString> i(env_);
     while (i.hasNext()) {
@@ -1512,13 +1514,28 @@ void PackageVersion::executeFile(
 
     // TODO: handle errors in the whole method
 
-    CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr, &saAttr, 0);
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr,
+                &saAttr, 0));
+    }
 
-    SetHandleInformation(g_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0);
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                SetHandleInformation(g_hChildStd_OUT_Rd,
+                HANDLE_FLAG_INHERIT, 0));
+    }
 
-    CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0);
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0));
+    }
 
-    SetHandleInformation(g_hChildStd_IN_Wr, HANDLE_FLAG_INHERIT, 0);
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                SetHandleInformation(g_hChildStd_IN_Wr,
+                HANDLE_FLAG_INHERIT, 0));
+    }
 
     STARTUPINFOW startupInfo = {
         sizeof(STARTUPINFO), 0, 0, 0,
@@ -1532,89 +1549,77 @@ void PackageVersion::executeFile(
     startupInfo.hStdOutput = g_hChildStd_OUT_Wr;
     startupInfo.hStdError = g_hChildStd_OUT_Wr;
 
-    bool success = CreateProcess(
-            (wchar_t*) path.utf16(),
-            (wchar_t*) nativeArguments.utf16(),
-            0, &saAttr, TRUE,
-            CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
-            ba.data(),
-            (wchar_t*) where.utf16(),
-            &startupInfo, &pinfo);
+    bool success = false;
 
-    CloseHandle(g_hChildStd_OUT_Wr);
+    if (job->shouldProceed()) {
+        success = CreateProcess(
+                (wchar_t*) path.utf16(),
+                (wchar_t*) nativeArguments.utf16(),
+                0, &saAttr, TRUE,
+                CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
+                ba.data(),
+                (wchar_t*) where.utf16(),
+                &startupInfo, &pinfo);
 
-    QFile f(outputFile);
-    f.open(QIODevice::WriteOnly);
-    f.write("\xff\xfe");
+        CloseHandle(g_hChildStd_OUT_Wr);
 
-    DWORD ec;
-    const int BUFSIZE = 1024;
-    char* chBuf = new char[BUFSIZE];
-    while (true) {
-        if (job->isCancelled()) {
-            break;
+        QFile f(outputFile);
+        f.open(QIODevice::WriteOnly);
+        f.write("\xff\xfe");
+
+        DWORD ec = 0;
+        const int BUFSIZE = 1024;
+        char* chBuf = new char[BUFSIZE];
+        while (true) {
+            if (job->isCancelled()) {
+                break;
+            }
+
+            DWORD dwRead;
+            bool bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE,
+                    &dwRead, NULL);
+            if (!bSuccess || dwRead == 0)
+                break;
+
+            f.write(chBuf, dwRead);
+
+            time_t seconds = time(NULL) - start;
+            double percents = ((double) seconds) / 300; // 5 Minutes
+            if (percents > 0.9)
+                percents = 0.9;
+            job->setProgress(percents);
+            job->setTitle(initialTitle + " / " +
+                    QString(QObject::tr("%1 minutes")).
+                    arg(seconds / 60));
+        }
+        delete[] chBuf;
+
+        f.close();
+
+        CloseHandle(g_hChildStd_OUT_Rd);
+
+        if (GetExitCodeProcess(pinfo.hProcess, &ec) && ec == STILL_ACTIVE) {
+            if (job->isCancelled())
+                TerminateProcess(pinfo.hProcess, 0xFFFFFFFF);
+            WaitForSingleObject(pinfo.hProcess, INFINITE);
         }
 
-        DWORD dwRead;
-        bool bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE,
-                &dwRead, NULL);
-        if (!bSuccess || dwRead == 0)
-            break;
+        if (job->shouldProceed()) {
+            job->checkOSCall(GetExitCodeProcess(pinfo.hProcess, &ec));
+        }
 
-        f.write(chBuf, dwRead);
-
-        time_t seconds = time(NULL) - start;
-        double percents = ((double) seconds) / 300; // 5 Minutes
-        if (percents > 0.9)
-            percents = 0.9;
-        job->setProgress(percents);
-        job->setTitle(initialTitle + " / " +
-                QString(QObject::tr("%1 minutes")).
-                arg(seconds / 60));
-    }
-    delete[] chBuf;
-
-    f.close();
-
-    CloseHandle(g_hChildStd_OUT_Rd);
-
-    if (GetExitCodeProcess(pinfo.hProcess, &ec) && ec == STILL_ACTIVE) {
-        if (job->isCancelled())
-            TerminateProcess(pinfo.hProcess, 0xFFFFFFFF);
-        WaitForSingleObject(pinfo.hProcess, INFINITE); // TODO: 5 sec?
-    }
-
-    GetExitCodeProcess(pinfo.hProcess, &ec);
-    if (ec != 0) {
-        job->setErrorMessage(
-                QString(QObject::tr("Process %1 exited with the code %2")).
-                arg(path).arg(ec));
+        if (ec != 0) {
+            job->setErrorMessage(
+                    QString(QObject::tr("Process %1 exited with the code %2")).
+                    arg(path).arg(ec));
+        }
     }
 
     if (success) {
         CloseHandle(pinfo.hThread);
         CloseHandle(pinfo.hProcess);
-        // qDebug() << "success!222";
     }
 
-/* todo
-    QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
-    for (int i = 0; i < env.count(); i += 2) {
-        pe.insert(env.at(i), env.at(i + 1));
-    }
-    p.setProcessEnvironment(pe);
-    p.start(path, args);
-    * /
-
-    while (true) {
-        if (p.waitForFinished(5000) || p.state() == QProcess::NotRunning) {
-            job->setProgress(1);
-            if (p.exitCode() != 0) {
-            }
-            break;
-        }
-    }
-    */
     job->complete();
 }
 

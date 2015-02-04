@@ -4,6 +4,8 @@
 #include "qdebug.h"
 #include "qmutex.h"
 
+#include "wpmutils.h"
+
 #include "job.h"
 
 JobState::JobState()
@@ -278,6 +280,16 @@ void Job::setTitle(const QString &title)
     this->mutex.unlock();
 
     fireChange();
+}
+
+void Job::checkOSCall(bool v)
+{
+    if (!v) {
+        this->mutex.lock();
+        if (this->errorMessage.isEmpty())
+            WPMUtils::formatMessage(GetLastError(), &this->errorMessage);
+        this->mutex.unlock();
+    }
 }
 
 QString Job::getErrorMessage() const
