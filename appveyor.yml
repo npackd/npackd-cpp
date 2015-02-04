@@ -7,4 +7,6 @@ install:
 build_script:
   - cd wpmcpp
   - mingw32-make.exe
-
+branches:
+  only:
+    - master
