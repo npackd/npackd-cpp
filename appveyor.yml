@@ -1,0 +1,10 @@
+﻿version: 1.20.1.{build}
+install:
+  - msiexec.exe /qb- /i http://bit.ly/npackdcl-1_19_13
+  - ncl add-repo --url=https://npackd.appspot.com/rep/recent-xml
+  - ncl add-repo --url=https://npackd.appspot.com/rep/xml?tag=libs
+  - ncl add -p npackd-dev-i686-w64 -v 1.20.1
+build_script:
+  - cd wpmcpp
+  - mingw32-make.exe
+
