@@ -452,6 +452,8 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
 
 void InstalledPackages::refresh(DBRepository *rep, Job *job)
 {
+    rep->currentRepository = 10000;
+
     // no direct usage of "data" here => no mutex
 
     /* Example:

@@ -29,6 +29,7 @@ private:
     static bool columnExists(QSqlDatabase *db, const QString &table,
             const QString &column, QString *err);
     static QString toString(const QSqlError& e);
+    static QString getErrorString(const MySQLQuery& q);
 
     QCache<QString, License> licenses;
 
@@ -102,6 +103,9 @@ private:
 
     int count(const QString &sql, QString *err);
 public:
+    /** index of the current repository used for saving the packages */
+    int currentRepository;
+
     /**
      * @return default repository
      * @threadsafe
