@@ -311,43 +311,6 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     return r;
 }
 
-QList<PackageVersion *> DBRepository::getPackageVersions2(const QString& package,
-        QString *err) const
-{
-    *err = "";
-
-    QList<PackageVersion*> r;
-
-    MySQLQuery q(db);
-    if (!q.prepare("SELECT NAME, URL FROM PACKAGE_VERSION2 "
-            "WHERE PACKAGE = :PACKAGE ORDER BY REPOSITORY"))
-        *err = getErrorString(q);
-
-    if (err->isEmpty()) {
-        q.bindValue(":PACKAGE", package);
-        if (!q.exec()) {
-            *err = getErrorString(q);
-        }
-    }
-
-    while (err->isEmpty() && q.next()) {
-        QString v = q.value(0).toString();
-        QString url = q.value(1).toString();
-        Version version;
-        if (!version.setVersion(v)) {
-            *err = QObject::tr("Read invalid package version from the database: %1").
-                    arg(v);
-            break;
-        } else {
-            PackageVersion* pv = new PackageVersion(package, version);
-            pv->download.setUrl(url);
-            r.append(pv);
-        }
-    }
-
-    return r;
-}
-
 QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
         QString *err) const
 {
@@ -1671,6 +1634,50 @@ QStringList DBRepository::readRepositories(QString* err)
     return r;
 }
 
+QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
+{
+    QString r;
+
+    QString sql = "SELECT SHA1 FROM REPOSITORY WHERE URL=:URL";
+
+    MySQLQuery q(db);
+
+    if (!q.prepare(sql))
+        *err = getErrorString(q);
+
+    if (err->isEmpty()) {
+        q.bindValue(":URL", url);
+
+        if (!q.exec())
+            *err = getErrorString(q);
+        else {
+            if (q.next()) {
+                r = q.value(1).toString();
+            }
+        }
+    }
+
+    return r;
+}
+
+void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
+        QString* err)
+{
+    MySQLQuery q(db);
+
+    QString sql = "UPDATE REPOSITORY SET SHA1=:SHA1 WHERE URL=:URL";
+    if (!q.prepare(sql))
+        *err = getErrorString(q);
+
+    if (err->isEmpty()) {
+        q.bindValue(":SHA1", sha1);
+        q.bindValue(":URL", url);
+        if (!q.exec())
+            *err = getErrorString(q);
+    }
+}
+
+
 QString DBRepository::saveRepositories(const QStringList &reps)
 {
     QString err = exec("DELETE FROM REPOSITORY");
@@ -2007,10 +2014,23 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
         e = tableExists(&db, "REPOSITORY", &err);
     }
 
+    bool ce = false;
+    if (err.isEmpty()) {
+        ce = columnExists(&db, "REPOSITORY", "SHA1", &err);
+    }
+
+    if (err.isEmpty()) {
+        if (e && !ce) {
+            db.exec("DROP TABLE REPOSITORY");
+            err = toString(db.lastError());
+            e = false;
+        }
+    }
+
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE REPOSITORY(ID INTEGER PRIMARY KEY ASC, "
-                    "URL TEXT)");
+                    "URL TEXT, SHA1 TEXT)");
             err = toString(db.lastError());
         }
     }

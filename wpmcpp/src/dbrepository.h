@@ -48,16 +48,6 @@ private:
             const QString &category, QString *err);
     QString findCategory(int cat) const;
 
-    /**
-     * @brief reads all stored package versions from the database
-     * @param package full package name
-     * @param err error will be stored here
-     * @return *unsorted* versions. Only the version number and the URL are
-     *     valid.
-     */
-    QList<PackageVersion*> getPackageVersions2(const QString &package,
-            QString *err) const;
-
     QList<Package*> findPackagesWhere(const QString &where,
             const QList<QVariant> &params, QString *err) const;
 
@@ -102,6 +92,8 @@ private:
     void loadOne(Job *job, QFile *f);
 
     int count(const QString &sql, QString *err);
+    QString getRepositorySHA1(const QString &url, QString *err);
+    void setRepositorySHA1(const QString &url, const QString &sha1, QString *err);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;
