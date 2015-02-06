@@ -94,6 +94,7 @@ private:
     int count(const QString &sql, QString *err);
     QString getRepositorySHA1(const QString &url, QString *err);
     void setRepositorySHA1(const QString &url, const QString &sha1, QString *err);
+    QString clearRepository(int id);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;
@@ -139,10 +140,11 @@ public:
     QString savePackage(Package *p, bool replace);
 
     /**
-     * @brief opens the default database as "default"
+     * @brief opens the default database
+     * @param databaseName name for the database
      * @return error
      */
-    QString openDefault();
+    QString openDefault(const QString &databaseName="default");
 
     /**
      * @brief opens the database
