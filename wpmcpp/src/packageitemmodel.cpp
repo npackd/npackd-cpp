@@ -159,7 +159,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::UserRole) {
         switch (index.column()) {
             case 0:
-                r = qVariantFromValue(p->icon);
+                r = qVariantFromValue(p->getIcon());
                 break;
             default:
                 r = qVariantFromValue((void*) p);
@@ -168,8 +168,8 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
         switch (index.column()) {
             case 0: {
                 MainWindow* mw = MainWindow::getInstance();
-                if (!p->icon.isEmpty()) {
-                    r = qVariantFromValue(mw->downloadIcon(p->icon));
+                if (!p->getIcon().isEmpty()) {
+                    r = qVariantFromValue(mw->downloadIcon(p->getIcon()));
                 } else {
                     r = qVariantFromValue(MainWindow::genericAppIcon);
                 }

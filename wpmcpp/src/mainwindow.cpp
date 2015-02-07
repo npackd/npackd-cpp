@@ -335,8 +335,8 @@ QIcon MainWindow::getPackageVersionIcon(const QString& package)
 
     QIcon icon = MainWindow::genericAppIcon;
     if (p) {
-        if (!p->icon.isEmpty()) {
-            icon = mw->downloadIcon(p->icon);
+        if (!p->getIcon().isEmpty()) {
+            icon = mw->downloadIcon(p->getIcon());
         }
     }
     delete p;

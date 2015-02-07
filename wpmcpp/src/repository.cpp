@@ -111,12 +111,12 @@ Package* Repository::createPackage(QDomElement* e, QString* err)
     }
 
     if (err->isEmpty()) {
-        a->icon = XMLUtils::getTagContent(*e, "icon");
-        if (!a->icon.isEmpty()) {
-            if (!Package::isValidURL(a->icon)) {
+        a->setIcon(XMLUtils::getTagContent(*e, "icon"));
+        if (!a->getIcon().isEmpty()) {
+            if (!Package::isValidURL(a->getIcon())) {
                 err->append(QString(
                         QObject::tr("Invalid icon URL for %1: %2")).
-                        arg(a->title).arg(a->icon));
+                        arg(a->title).arg(a->getIcon()));
             }
         }
     }
@@ -338,7 +338,7 @@ QString Repository::savePackage(Package *p)
     }
     fp->title = p->title;
     fp->url = p->url;
-    fp->icon = p->icon;
+    fp->setIcon(p->getIcon());
     fp->description = p->description;
     fp->license = p->license;
     fp->categories = p->categories;

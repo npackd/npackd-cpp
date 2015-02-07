@@ -194,7 +194,7 @@ Package *DBRepository::findPackage_(const QString &name)
     if (err.isEmpty() && q.next()) {
         Package* p = new Package(q.value(0).toString(), q.value(1).toString());
         p->url = q.value(2).toString();
-        p->icon = q.value(3).toString();
+        p->setIcon(q.value(3).toString());
         p->description = q.value(4).toString();
         p->license = q.value(5).toString();
         QString path = getCategoryPath(q.value(6).toInt(),
@@ -602,7 +602,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
         while (q.next()) {
             Package* p = new Package(q.value(0).toString(), q.value(1).toString());
             p->url = q.value(2).toString();
-            p->icon = q.value(3).toString();
+            p->setIcon(q.value(3).toString());
             p->description = q.value(4).toString();
             p->license = q.value(5).toString();
             QString path = getCategoryPath(q.value(6).toInt(),
@@ -770,7 +770,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
         savePackageQuery->bindValue(":NAME", p->name);
         savePackageQuery->bindValue(":TITLE", p->title);
         savePackageQuery->bindValue(":URL", p->url);
-        savePackageQuery->bindValue(":ICON", p->icon);
+        savePackageQuery->bindValue(":ICON", p->getIcon());
         savePackageQuery->bindValue(":DESCRIPTION", p->description);
         savePackageQuery->bindValue(":LICENSE", p->license);
         savePackageQuery->bindValue(":FULLTEXT", (p->title + " " + p->description + " " +
@@ -846,7 +846,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     while (err.isEmpty() && q.next()) {
         Package* p = new Package(q.value(0).toString(), q.value(1).toString());
         p->url = q.value(2).toString();
-        p->icon = q.value(3).toString();
+        p->setIcon(q.value(3).toString());
         p->description = q.value(4).toString();
         p->license = q.value(5).toString();
 

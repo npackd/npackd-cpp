@@ -31,11 +31,15 @@ QString Package::getIcon() const
 {
     QString r;
     QList<QString> values = links.values("icon");
-    if (values.isEmpty())
-        r = this->icon;
-    else
+    if (!values.isEmpty())
         r = values.last();
     return r;
+}
+
+void Package::setIcon(const QString &icon)
+{
+    links.remove("icon");
+    links.insert("icon", icon);
 }
 
 QString Package::getShortName() const
@@ -79,8 +83,8 @@ void Package::saveTo(QDomElement& e) const {
         XMLUtils::addTextTag(e, "url", this->url);
     if (!description.isEmpty())
         XMLUtils::addTextTag(e, "description", description);
-    if (!this->icon.isEmpty())
-        XMLUtils::addTextTag(e, "icon", this->icon);
+    if (!this->getIcon().isEmpty())
+        XMLUtils::addTextTag(e, "icon", this->getIcon());
     if (!this->license.isEmpty())
         XMLUtils::addTextTag(e, "license", this->license);
     for (int i = 0; i < this->categories.count(); i++) {
@@ -110,7 +114,6 @@ Package *Package::clone() const
 {
     Package* np = new Package(this->name, this->title);
     np->url = this->url;
-    np->icon = this->icon;
     np->description = this->description;
     np->license = this->license;
     np->categories = this->categories;

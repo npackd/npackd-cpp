@@ -42,9 +42,6 @@ public:
     /** web page associated with this piece of software. May be empty. */
     QString url;
 
-    /** icon URL or "" */
-    QString icon;
-
     /** description. May contain multiple lines and paragraphs. */
     QString description;
 
@@ -78,6 +75,12 @@ public:
      *     are currently supported
      */
     QString getIcon() const;
+
+    /**
+     * @brief changes the icon
+     * @param icon URL or ""
+     */
+    void setIcon(const QString& icon);
 
     /**
      * Checks whether the specified value is a valid package name.
