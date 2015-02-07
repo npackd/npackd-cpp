@@ -16,6 +16,40 @@ int Package::indexOf(const QList<Package*> pvs, Package* f)
     return r;
 }
 
+Package *Package::parse(QDomElement *e, QString *err, bool validate)
+{
+    // TODO: validation
+    Package* p = new Package("test", "test");
+    p->name = e->attribute("name");
+    p->title = XMLUtils::getTagContent(*e, "title");
+    p->url = XMLUtils::getTagContent(*e, "url");
+    p->description = XMLUtils::getTagContent(*e, "description");
+    p->license = XMLUtils::getTagContent(*e, "license");
+
+    QDomNodeList list = e->elementsByTagName("category");
+    for (int i = 0; i < list.count(); i++) {
+        QDomElement ch = list.at(i).toElement();
+        QDomNode txt = ch.firstChild();
+        if (txt.isText()) {
+            p->categories.append(txt.nodeValue().trimmed());
+        }
+    }
+
+    list = e->elementsByTagName("link");
+    for (int i = 0; i < list.count(); i++) {
+        QDomElement ch = list.at(i).toElement();
+        QString rel = ch.attribute("rel");
+        QString href = ch.attribute("href");
+        p->links.insert(rel, href);
+    }
+
+    if (p->getIcon().isEmpty()) {
+        p->setIcon(XMLUtils::getTagContent(*e, "icon"));
+    }
+
+    return p;
+}
+
 bool Package::contains(const QList<Package*> &list, Package *pv)
 {
     return indexOf(list, pv) >= 0;
@@ -36,10 +70,23 @@ QString Package::getIcon() const
     return r;
 }
 
+QString Package::getChangeLog() const
+{
+    QString r;
+    QList<QString> values = links.values("changelog");
+    if (!values.isEmpty())
+        r = values.last();
+    return r;
+}
+
+void Package::setChangeLog(const QString &changelog)
+{
+    links.replace("icon", changelog);
+}
+
 void Package::setIcon(const QString &icon)
 {
-    links.remove("icon");
-    links.insert("icon", icon);
+    links.replace("icon", icon);
 }
 
 QString Package::getShortName() const
@@ -76,6 +123,39 @@ bool Package::isValidURL(const QString& url)
     return r;
 }
 
+void Package::toXML(QXmlStreamWriter *w) const
+{
+    w->writeStartElement("package");
+    w->writeAttribute("name", this->name);
+    w->writeTextElement("title", this->title);
+    if (!this->url.isEmpty())
+        w->writeTextElement("url", this->url);
+    if (!this->description.isEmpty())
+        w->writeTextElement("description", this->description);
+    if (!this->getIcon().isEmpty())
+        w->writeTextElement("icon", this->getIcon());
+    if (!this->license.isEmpty())
+        w->writeTextElement("license", this->license);
+    for (int i = 0; i < this->categories.count(); i++) {
+        w->writeTextElement("category", this->categories.at(i));
+    }
+
+    // <link>
+    QList<QString> rels = links.keys();
+    for (int i = 0; i < rels.size(); i++) {
+        QString rel = rels.at(i);
+        QList<QString> hrefs = links.values(rel);
+        for (int j = hrefs.size() - 1; j >= 0; j--) {
+            w->writeStartElement("link");
+            w->writeAttribute("rel", rel);
+            w->writeAttribute("href", hrefs.at(j));
+            w->writeEndElement();
+        }
+    }
+
+    w->writeEndElement();
+}
+
 void Package::saveTo(QDomElement& e) const {
     e.setAttribute("name", name);
     XMLUtils::addTextTag(e, "title", title);
@@ -89,11 +169,6 @@ void Package::saveTo(QDomElement& e) const {
         XMLUtils::addTextTag(e, "license", this->license);
     for (int i = 0; i < this->categories.count(); i++) {
         XMLUtils::addTextTag(e, "category", this->categories.at(i));
-    }
-    if (!this->changelog.isEmpty())
-        XMLUtils::addTextTag(e, "changelog", this->changelog);
-    for (int i = 0; i < this->screenshots.count(); i++) {
-        XMLUtils::addTextTag(e, "screenshot", this->screenshots.at(i));
     }
 
     // <link>
@@ -117,8 +192,6 @@ Package *Package::clone() const
     np->description = this->description;
     np->license = this->license;
     np->categories = this->categories;
-    np->changelog = this->changelog;
-    np->screenshots = this->screenshots;
     np->links = this->links;
 
     return np;

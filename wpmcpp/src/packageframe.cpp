@@ -72,12 +72,13 @@ void PackageFrame::updateIcons(const QString& url)
         MainWindow* mw = MainWindow::getInstance();
 
         QListWidget* c = this->ui->listWidgetScreenshots;
+        QList<QString> screenshots = p->links.values("screenshot");
 
         for (int i = 0; i < c->count(); i++) {
             QListWidgetItem* item = c->item(i);
             QString url_ = item->data(Qt::UserRole).toString();
             if (url_ == url) {
-                QIcon icon = mw->downloadScreenshot(p->screenshots.at(i));
+                QIcon icon = mw->downloadScreenshot(screenshots.at(i));
                 item->setIcon(icon);
             }
         }
@@ -136,10 +137,10 @@ void PackageFrame::fillForm(Package* p)
         this->ui->labelCategory->setText(p->categories.join(", "));
 
         QString changelog;
-        if (p->changelog.isEmpty())
+        if (p->getChangeLog().isEmpty())
             changelog = QObject::tr("n/a");
         else{
-            changelog = p->changelog;
+            changelog = p->getChangeLog();
             changelog = "<a href=\"" + changelog.toHtmlEscaped() + "\">" +
                     changelog.toHtmlEscaped() + "</a>";
         }
@@ -158,19 +159,20 @@ void PackageFrame::fillForm(Package* p)
         QListWidget* c = this->ui->listWidgetScreenshots;
         c->clear();
 
-        int n = p->screenshots.count();
+        QList<QString> screenshots = p->links.values("screenshot");
+        int n = screenshots.count();
 
         // qDebug() << n << "screen shots";
 
         c->setVisible(n > 0);
 
         for (int i = 0; i < n; i++) {
-            QIcon icon = mw->downloadScreenshot(p->screenshots.at(i));
+            QIcon icon = mw->downloadScreenshot(screenshots.at(i));
             if (!icon.isNull()) {
                 QListWidgetItem* item = new QListWidgetItem(icon,
                         QString::number(i + 1));
                 item->setData(Qt::UserRole,
-                        qVariantFromValue(p->screenshots.at(i)));
+                        qVariantFromValue(screenshots.at(i)));
                 c->addItem(item);
             }
         }

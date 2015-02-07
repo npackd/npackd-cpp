@@ -100,7 +100,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
             QObject::tr("Microsoft Core XML Services (MSXML)")));
     p->url = "http://www.microsoft.com/downloads/en/details.aspx?FamilyID=993c0bcf-3bcf-4009-be21-27e85e1857b1#Overview";
     p->description = QObject::tr("XML library");
-    p->changelog = "http://msdn.microsoft.com/en-us/library/ms753751(v=vs.85).aspx";
+    p->setChangeLog("http://msdn.microsoft.com/en-us/library/ms753751(v=vs.85).aspx");
     err = rep->savePackage(p.data());
 
     Version v;
@@ -225,7 +225,7 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
             QObject::tr("JRE")));
     p->description = QObject::tr("Java runtime");
     p->url = "http://www.java.com/";
-    p->changelog = "http://en.wikipedia.org/wiki/Java_version_history";
+    p->setChangeLog("http://en.wikipedia.org/wiki/Java_version_history");
     rep->savePackage(p.data());
 
     WindowsRegistry jreWR;
@@ -277,7 +277,7 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
             w64bit ? QObject::tr("JDK 64 bit") : QObject::tr("JDK")));
     p->url = "http://www.oracle.com/technetwork/java/javase/overview/index.html";
     p->description = QObject::tr("Java development kit");
-    p->changelog = "http://en.wikipedia.org/wiki/Java_version_history";
+    p->setChangeLog("http://en.wikipedia.org/wiki/Java_version_history");
     rep->savePackage(p.data());
 
     WindowsRegistry wr;

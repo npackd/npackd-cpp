@@ -1337,7 +1337,7 @@ void MainWindow::updateShowChangelogAction()
 
                 Package* p = r->findPackage_(pv->package);
                 if (p) {
-                    QUrl url(p->changelog);
+                    QUrl url(p->getChangeLog());
                     delete p;
 
                     if (url.isValid()) {
@@ -1352,7 +1352,7 @@ void MainWindow::updateShowChangelogAction()
                 Package* p = (Package*) selected.at(i);
 
                 if (p) {
-                    QUrl url(p->changelog);
+                    QUrl url(p->getChangeLog());
                     if (url.isValid()) {
                         enabled = true;
                         break;
@@ -2193,7 +2193,7 @@ void MainWindow::on_actionShow_changelog_triggered()
         if (selected.count() != 0) {
             for (int i = 0; i < selected.count(); i++) {
                 Package* p = (Package*) selected.at(i);
-                QUrl url(p->changelog);
+                QUrl url(p->getChangeLog());
                 if (url.isValid())
                     urls.insert(url);
             }
@@ -2204,7 +2204,7 @@ void MainWindow::on_actionShow_changelog_triggered()
                 PackageVersion* pv = (PackageVersion*) selected.at(i);
                 QScopedPointer<Package> p(r->findPackage_(pv->package));
                 if (p) {
-                    QUrl url(p->changelog);
+                    QUrl url(p->getChangeLog());
                     if (url.isValid())
                         urls.insert(url);
                 }

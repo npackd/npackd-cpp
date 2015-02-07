@@ -6,6 +6,7 @@
 #include <QDomElement>
 #include <QStringList>
 #include <QMultiMap>
+#include <QXmlStreamWriter>
 
 /**
  * A package declaration.
@@ -13,6 +14,15 @@
 class Package
 {
 public:
+    /**
+     * @param e <package>
+     * @param err error message will be stored here
+     * @param validate true = perform all available validations
+     * @return created object or 0
+     */
+    static Package* parse(QDomElement* e, QString* err,
+            bool validate=true);
+
     /**
      * @brief searches for a package only using the package name
      * @param list searching in this list
@@ -54,12 +64,6 @@ public:
     /** categories. Sub-categories are separated by / */
     QStringList categories;
 
-    /** changelog URL */
-    QString changelog;
-
-    /** URLs to screenshots in PNG format */
-    QStringList screenshots;
-
     /**
      * <link> rel->href. The order of the values in QMultiMap is from
      * most recently to least recently inserted, but the appearance in XML is
@@ -75,6 +79,18 @@ public:
      *     are currently supported
      */
     QString getIcon() const;
+
+    /**
+     * @brief returns the changelog URL
+     * @return URL of the changelog or ""
+     */
+    QString getChangeLog() const;
+
+    /**
+     * @brief changes the URL of the changelog
+     * @param icon URL or ""
+     */
+    void setChangeLog(const QString& changelog);
 
     /**
      * @brief changes the icon
@@ -116,6 +132,13 @@ public:
      *     part after the last dot.
      */
     QString getShortName() const;
+
+    /**
+     * Stores this object as XML <package>.
+     *
+     * @param w output
+     */
+    void toXML(QXmlStreamWriter *w) const;
 };
 
 #endif // PACKAGE_H

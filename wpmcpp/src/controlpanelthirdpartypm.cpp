@@ -163,9 +163,9 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         url = "";
     p->url = url;
 
-    p->changelog = k.get("URLUpdateInfo", &err);
-    if (!err.isEmpty() || !Package::isValidURL(p->changelog))
-        p->changelog = "";
+    p->setChangeLog(k.get("URLUpdateInfo", &err));
+    if (!err.isEmpty() || !Package::isValidURL(p->getChangeLog()))
+        p->setChangeLog("");
 
     p->categories.append(QObject::tr("Control panel software"));
 
