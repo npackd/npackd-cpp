@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QDomElement>
 #include <QStringList>
+#include <QMultiMap>
 
 /**
  * A package declaration.
@@ -62,7 +63,21 @@ public:
     /** URLs to screenshots in PNG format */
     QStringList screenshots;
 
+    /**
+     * <link> rel->href. The order of the values in QMultiMap is from
+     * most recently to least recently inserted, but the appearance in XML is
+     * in the other order.
+     */
+    QMultiMap<QString, QString> links;
+
     Package(const QString& name, const QString& title);
+
+    /**
+     * @brief getIcon
+     * @return URL of the icon associated with this package. Only .png icons
+     *     are currently supported
+     */
+    QString getIcon() const;
 
     /**
      * Checks whether the specified value is a valid package name.

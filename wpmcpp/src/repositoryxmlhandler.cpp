@@ -60,6 +60,8 @@ int RepositoryXMLHandler::findWhere()
                     r = TAG_PACKAGE_CHANGELOG;
                 else if (tag2 == "screenshot")
                     r = TAG_PACKAGE_SCREENSHOT;
+                else if (tag2 == "link")
+                    r = TAG_PACKAGE_LINK;
             } else if (tag1 == "license") {
                 if (tag2 == "title")
                     r = TAG_LICENSE_TITLE;
@@ -218,6 +220,23 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         if (!error.isEmpty()) {
             error.prepend(QObject::tr("Error in attribute 'name' in <package>: "));
         }
+    } else if (where == TAG_PACKAGE_LINK) {
+        QString rel = atts.value("rel").trimmed();
+        QString href = atts.value("href").trimmed();
+
+        if (rel.isEmpty()) {
+            error = QObject::tr("Empty 'rel' attribute value for <link> for %1").
+                    arg(p->name);
+        }
+
+        if (error.isEmpty()) {
+            if (!Package::isValidURL(href))
+                error = QObject::tr("Not a valid href URL in <link> for %1: %2").
+                        arg(p->name).arg(href);
+        }
+
+        if (error.isEmpty())
+            p->links.insert(rel, href);
     } else if (where == TAG_LICENSE) {
         QString name = atts.value("name");
         lic = new License(name, name);
