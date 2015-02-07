@@ -331,12 +331,12 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_PACKAGE_DESCRIPTION) {
         p->description = chars.trimmed();
     } else if (where == TAG_PACKAGE_ICON) {
-        p->icon = chars.trimmed();
-        if (!p->icon.isEmpty()) {
-            if (!Package::isValidURL(p->icon)) {
+        p->setIcon(chars.trimmed());
+        if (!p->getIcon().isEmpty()) {
+            if (!Package::isValidURL(p->getIcon())) {
                 error = QString(
                         QObject::tr("Invalid icon URL for %1: %2")).
-                        arg(p->title).arg(p->icon);
+                        arg(p->title).arg(p->getIcon());
             }
         }
     } else if (where == TAG_PACKAGE_LICENSE) {

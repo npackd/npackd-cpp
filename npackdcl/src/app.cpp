@@ -1391,7 +1391,7 @@ QString App::info()
         WPMUtils::outputTextConsole("Change log: " + p->changelog + "\n");
         WPMUtils::outputTextConsole("Categories: " +
                 p->categories.join(", ") + "\n");
-        WPMUtils::outputTextConsole("Icon: " + p->icon + "\n");
+        WPMUtils::outputTextConsole("Icon: " + p->getIcon() + "\n");
         WPMUtils::outputTextConsole("Screen shots: " +
                 (p->screenshots.count() > 0 ? p->screenshots.at(0) : "n/a") +
                 "\n");

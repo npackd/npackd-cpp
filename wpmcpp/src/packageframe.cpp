@@ -61,7 +61,7 @@ void PackageFrame::reload()
 
 void PackageFrame::updateIcons(const QString& url)
 {
-    if (p->icon == url) {
+    if (p->getIcon() == url) {
         QIcon icon = MainWindow::getPackageVersionIcon(p->name);
         QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
         this->ui->labelIcon->setPixmap(pixmap);

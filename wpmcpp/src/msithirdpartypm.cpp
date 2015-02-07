@@ -122,7 +122,7 @@ void MSIThirdPartyPM::scan(Job* job,
                 QString icon = WPMUtils::getMSIProductAttribute(guid,
                         INSTALLPROPERTY_PRODUCTICON, &err);
                 if (err.isEmpty()) {
-                    p->icon = WPMUtils::extractIconURL(icon);
+                    p->setIcon(WPMUtils::extractIconURL(icon));
                 } else {
                     err = "";
                 }

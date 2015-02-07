@@ -224,7 +224,7 @@ int VimOrgRepApp::process()
                 p->categories.append("Text/" + scriptType);
                 p->url = "http://www.vim.org/scripts/script.php?script_id=" +
                         ids.at(i);
-                p->icon = "https://lh6.googleusercontent.com/-oPg5OrLBr74/UZ8rV_mHduI/AAAAAAAACE0/twSVwJ4sOTQ/s800/vim.png";
+                p->setIcon("https://lh6.googleusercontent.com/-oPg5OrLBr74/UZ8rV_mHduI/AAAAAAAACE0/twSVwJ4sOTQ/s800/vim.png");
                 rep.savePackage(p);
                 delete p;
 
