@@ -27,6 +27,17 @@ Package::Package(const QString& name, const QString& title)
     this->title = title;
 }
 
+QString Package::getIcon() const
+{
+    QString r;
+    QList<QString> values = links.values("icon");
+    if (values.isEmpty())
+        r = this->icon;
+    else
+        r = values.last();
+    return r;
+}
+
 QString Package::getShortName() const
 {
     QString r;
@@ -80,6 +91,19 @@ void Package::saveTo(QDomElement& e) const {
     for (int i = 0; i < this->screenshots.count(); i++) {
         XMLUtils::addTextTag(e, "screenshot", this->screenshots.at(i));
     }
+
+    // <link>
+    QList<QString> rels = links.keys();
+    for (int i = 0; i < rels.size(); i++) {
+        QString rel = rels.at(i);
+        QList<QString> hrefs = links.values(rel);
+        for (int j = hrefs.size() - 1; j >= 0; j--) {
+            QDomElement e = e.ownerDocument().createElement("link");
+            e.setAttribute("rel", rel);
+            e.setAttribute("href", hrefs.at(j));
+            e.appendChild(e);
+        }
+    }
 }
 
 Package *Package::clone() const
@@ -92,6 +116,7 @@ Package *Package::clone() const
     np->categories = this->categories;
     np->changelog = this->changelog;
     np->screenshots = this->screenshots;
+    np->links = this->links;
 
     return np;
 }

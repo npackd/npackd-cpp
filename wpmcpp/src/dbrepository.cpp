@@ -1113,7 +1113,7 @@ void DBRepository::load(Job* job, bool useCache)
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
                     arg(urls.count()));
             this->currentRepository = i;
-            // TODO: this is currently unnecessary clearRepository(i);
+            // this is currently unnecessary clearRepository(i);
             loadOne(s, tf);
             if (!s->getErrorMessage().isEmpty()) {
                 job->setErrorMessage(QString(
