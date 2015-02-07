@@ -4,6 +4,7 @@
 #include <QRegExp>
 #include <QScopedPointer>
 #include <QProcess>
+#include <QMultiMap>
 
 #include "app.h"
 #include "wpmutils.h"
@@ -1388,15 +1389,16 @@ QString App::info()
                     pv->download.toString() + "\n");
         }
         WPMUtils::outputTextConsole("Package home page: " + p->url + "\n");
-        WPMUtils::outputTextConsole("Change log: " + p->changelog + "\n");
+        WPMUtils::outputTextConsole("Change log: " + p->getChangeLog() + "\n");
         WPMUtils::outputTextConsole("Categories: " +
                 p->categories.join(", ") + "\n");
         WPMUtils::outputTextConsole("Icon: " + p->getIcon() + "\n");
+        QList<QString> screenshots = p->links.values("screenshot");
         WPMUtils::outputTextConsole("Screen shots: " +
-                (p->screenshots.count() > 0 ? p->screenshots.at(0) : "n/a") +
+                (screenshots.count() > 0 ? screenshots.at(0) : "n/a") +
                 "\n");
-        for (int i = 1; i < p->screenshots.count(); i++) {
-            WPMUtils::outputTextConsole("    " + p->screenshots.at(i) + "\n");
+        for (int i = 1; i < screenshots.count(); i++) {
+            WPMUtils::outputTextConsole("    " + screenshots.at(i) + "\n");
         }
 
         if (pv) {

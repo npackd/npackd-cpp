@@ -179,9 +179,7 @@ Package *DBRepository::findPackage_(const QString &name)
     Package* r = 0;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
-            "DESCRIPTION, LICENSE, CATEGORY0, CATEGORY1, CATEGORY2, "
-            "CATEGORY3, CATEGORY4, CHANGELOG, SCREENSHOTS "
+    if (!q.prepare("SELECT CONTENT "
             "FROM PACKAGE2 WHERE NAME = :NAME ORDER BY REPOSITORY"))
         err = getErrorString(q);
 
@@ -192,24 +190,24 @@ Package *DBRepository::findPackage_(const QString &name)
     }
 
     if (err.isEmpty() && q.next()) {
-        Package* p = new Package(q.value(0).toString(), q.value(1).toString());
-        p->url = q.value(2).toString();
-        p->setIcon(q.value(3).toString());
-        p->description = q.value(4).toString();
-        p->license = q.value(5).toString();
-        QString path = getCategoryPath(q.value(6).toInt(),
-                q.value(7).toInt(),
-                q.value(8).toInt(),
-                q.value(9).toInt(),
-                q.value(10).toInt());
-        if (!path.isEmpty())
-            p->categories.append(path);
-        p->changelog = q.value(11).toString();
-        QString screenshots = q.value(12).toString().trimmed();
-        if (!screenshots.isEmpty())
-            p->screenshots = screenshots.split("\n");
+        QDomDocument doc;
+        int errorLine, errorColumn;
+        if (!doc.setContent(q.value(0).toByteArray(),
+                &err, &errorLine, &errorColumn)) {
+            err = QString(
+                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
+                    arg(errorLine).arg(errorColumn).arg(err);
+        }
 
-        r = p;
+        QDomElement root = doc.documentElement();
+
+        if (err.isEmpty()) {
+            r = Package::parse(&root, &err);
+            if (!err.isEmpty()) {
+                delete r;
+                r = 0;
+            }
+        }
     }
 
     return r;
@@ -578,7 +576,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
     QString sql = "SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, "
             "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, "
-            "CHANGELOG, SCREENSHOTS, MIN(REPOSITORY) "
+            "CONTENT, MIN(REPOSITORY) "
             "FROM PACKAGE2";
 
     if (!where.isEmpty())
@@ -613,10 +611,6 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
             if (!path.isEmpty()) {
                 p->categories.append(path);
             }
-            p->changelog = q.value(11).toString();
-            QString screenshots = q.value(12).toString().trimmed();
-            if (!screenshots.isEmpty())
-                p->screenshots = screenshots.split("\n");
 
             r.append(p);
         }
@@ -735,12 +729,12 @@ QString DBRepository::savePackage(Package *p, bool replace)
                 "(REPOSITORY, NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
-                " CATEGORY4, CHANGELOG, SCREENSHOTS)"
+                " CATEGORY4, CONTENT)"
                 "VALUES(:REPOSITORY, :NAME, :TITLE, :URL, "
                 ":ICON, :DESCRIPTION, :LICENSE, "
                 ":FULLTEXT, :STATUS, :SHORT_NAME, "
                 ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4, "
-                ":CHANGELOG, :SCREENSHOTS)";
+                ":CONTENT)";
 
         insertSQL += add;
         replaceSQL += add;
@@ -797,8 +791,11 @@ QString DBRepository::savePackage(Package *p, bool replace)
             savePackageQuery->bindValue(":CATEGORY4", QVariant(QVariant::Int));
         else
             savePackageQuery->bindValue(":CATEGORY4", cat4);
-        savePackageQuery->bindValue(":CHANGELOG", p->changelog);
-        savePackageQuery->bindValue(":SCREENSHOTS", p->screenshots.join('\n'));
+        QByteArray file;
+        file.reserve(1024);
+        QXmlStreamWriter w(&file);
+        p->toXML(&w);
+        savePackageQuery->bindValue(":CONTENT", QVariant(file));
         if (!savePackageQuery->exec())
             err = getErrorString(*savePackageQuery);
     }
@@ -832,7 +829,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
-            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CHANGELOG, SCREENSHOTS "
+            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CONTENT "
             "FROM PACKAGE2 WHERE SHORT_NAME = :SHORT_NAME "
             "ORDER BY REPOSITORY"))
         err = getErrorString(q);
@@ -858,11 +855,6 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
                 q.value(10).toInt());
         if (!path.isEmpty())
             p->categories.append(path);
-
-        p->changelog = q.value(11).toString();
-        QString screenshots = q.value(12).toString().trimmed();
-        if (!screenshots.isEmpty())
-            p->screenshots = screenshots.split('\n');
 
         r.append(p);
     }
@@ -905,11 +897,11 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         savePackageVersionQuery->bindValue(":MSIGUID", p->msiGUID);
         savePackageVersionQuery->bindValue(":DETECT_FILE_COUNT",
                 p->detectFiles.count());
+
         QByteArray file;
         file.reserve(1024);
         QXmlStreamWriter w(&file);
         p->toXML(&w);
-
         savePackageVersionQuery->bindValue(":CONTENT", QVariant(file));
         if (!savePackageVersionQuery->exec())
             err = getErrorString(*savePackageVersionQuery);
@@ -1752,8 +1744,7 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
                     "CATEGORY2 INTEGER, "
                     "CATEGORY3 INTEGER, "
                     "CATEGORY4 INTEGER, "
-                    "CHANGELOG TEXT, "
-                    "SCREENSHOTS TEXT "
+                    "CONTENT BLOB "
                     ")");
             err = toString(db.lastError());
         }
