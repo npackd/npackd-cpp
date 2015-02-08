@@ -2,6 +2,7 @@
 
 #include "package.h"
 #include "xmlutils.h"
+#include "wpmutils.h"
 
 int Package::indexOf(const QList<Package*> pvs, Package* f)
 {
@@ -18,36 +19,81 @@ int Package::indexOf(const QList<Package*> pvs, Package* f)
 
 Package *Package::parse(QDomElement *e, QString *err, bool validate)
 {
-    // TODO: validation
     Package* p = new Package("test", "test");
     p->name = e->attribute("name");
+    if (validate) {
+        *err = WPMUtils::validateFullPackageName(p->name);
+        if (!err->isEmpty()) {
+            err->prepend(QObject::tr("Error in the attribute 'name' in <package>: "));
+        }
+    }
+
     p->title = XMLUtils::getTagContent(*e, "title");
     p->url = XMLUtils::getTagContent(*e, "url");
     p->description = XMLUtils::getTagContent(*e, "description");
     p->license = XMLUtils::getTagContent(*e, "license");
 
     QDomNodeList list = e->elementsByTagName("category");
-    for (int i = 0; i < list.count(); i++) {
-        QDomElement ch = list.at(i).toElement();
-        QDomNode txt = ch.firstChild();
-        if (txt.isText()) {
-            p->categories.append(txt.nodeValue().trimmed());
+    if (err->isEmpty()) {
+        for (int i = 0; i < list.count(); i++) {
+            QDomElement ch = list.at(i).toElement();
+            QDomNode txt = ch.firstChild();
+            if (txt.isText()) {
+                QString v = txt.nodeValue().trimmed();
+                p->categories.append(v);
+
+                if (validate && err->isEmpty()) {
+                    if (v.isEmpty()) {
+                        *err = QObject::tr("Empty category");
+                        break;
+                    }
+                }
+            }
         }
     }
 
-    list = e->elementsByTagName("link");
-    for (int i = 0; i < list.count(); i++) {
-        QDomElement ch = list.at(i).toElement();
-        QString rel = ch.attribute("rel");
-        QString href = ch.attribute("href");
-        p->links.insert(rel, href);
+    if (err->isEmpty()) {
+        list = e->elementsByTagName("link");
+        for (int i = 0; i < list.count(); i++) {
+            QDomElement ch = list.at(i).toElement();
+            QString rel = ch.attribute("rel").trimmed();
+            QString href = ch.attribute("href").trimmed();
+            p->links.insert(rel, href);
+
+            if (validate) {
+                if (rel.isEmpty()) {
+                    *err = QObject::tr("Empty attribute 'rel' in <link>");
+                    break;
+                }
+
+                if (!Package::isValidURL(href)) {
+                    *err = QObject::tr("Empty attribute 'href' in <link>");
+                    break;
+                }
+            }
+        }
     }
 
-    if (p->getIcon().isEmpty()) {
-        p->setIcon(XMLUtils::getTagContent(*e, "icon"));
+    if (err->isEmpty()) {
+        if (p->getIcon().isEmpty()) {
+            p->setIcon(XMLUtils::getTagContent(*e, "icon"));
+        }
     }
 
-    return p;
+    if (validate && err->isEmpty()) {
+        if (!p->getIcon().isEmpty()) {
+            if (!Package::isValidURL(p->getIcon())) {
+                *err = QObject::tr("Empty icon URL");
+            }
+        }
+    }
+
+    if (err->isEmpty())
+        return p;
+    else {
+        delete p;
+        return 0;
+    }
 }
 
 bool Package::contains(const QList<Package*> &list, Package *pv)
