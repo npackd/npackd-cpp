@@ -1799,22 +1799,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
         e = tableExists(&db, "REPOSITORY", &err);
     }
 
-    // REPOSITORY is new in Npackd 1.19
-    if (err.isEmpty()) {
-        if (!e) {
-            db.exec("CREATE TABLE REPOSITORY(ID INTEGER PRIMARY KEY ASC, "
-                    "URL TEXT)");
-            err = toString(db.lastError());
-        }
-    }
-
-    if (err.isEmpty()) {
-        if (!e) {
-            db.exec("CREATE UNIQUE INDEX REPOSITORY_ID ON REPOSITORY(ID)");
-            err = toString(db.lastError());
-        }
-    }
-
     if (err.isEmpty()) {
         e = tableExists(&db, "CATEGORY", &err);
     }

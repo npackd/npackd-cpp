@@ -158,8 +158,6 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
     time_t now;
     time(&now);
 
-    // TODO: the index of the Job may be wrong here
-
     //if (now != monitoredJobLastChanged) {
         monitoredJobLastChanged = now;
 

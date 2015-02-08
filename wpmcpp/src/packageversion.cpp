@@ -1512,8 +1512,6 @@ void PackageVersion::executeFile(
     HANDLE g_hChildStd_OUT_Rd = NULL;
     HANDLE g_hChildStd_OUT_Wr = NULL;
 
-    // TODO: handle errors in the whole method
-
     if (job->shouldProceed()) {
         job->checkOSCall(
                 CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr,
@@ -1561,12 +1559,22 @@ void PackageVersion::executeFile(
                 (wchar_t*) where.utf16(),
                 &startupInfo, &pinfo);
 
+        // ignore the possible errors here
         CloseHandle(g_hChildStd_OUT_Wr);
+    }
 
-        QFile f(outputFile);
-        f.open(QIODevice::WriteOnly);
-        f.write("\xff\xfe");
+    QFile f(outputFile);
+    if (job->shouldProceed()) {
+        if (!f.open(QIODevice::WriteOnly))
+            job->setErrorMessage(f.errorString());
+    }
 
+    if (job->shouldProceed()) {
+        if (f.write("\xff\xfe") == -1)
+            job->setErrorMessage(f.errorString());
+    }
+
+    if (job->shouldProceed()) {
         DWORD ec = 0;
         const int BUFSIZE = 1024;
         char* chBuf = new char[BUFSIZE];
@@ -1581,7 +1589,10 @@ void PackageVersion::executeFile(
             if (!bSuccess || dwRead == 0)
                 break;
 
-            f.write(chBuf, dwRead);
+            if (f.write(chBuf, dwRead) == -1) {
+                job->setErrorMessage(f.errorString());
+                break;
+            }
 
             time_t seconds = time(NULL) - start;
             double percents = ((double) seconds) / 300; // 5 Minutes
@@ -1594,8 +1605,10 @@ void PackageVersion::executeFile(
         }
         delete[] chBuf;
 
+        // ignore possible errors here
         f.close();
 
+        // ignore possible errors here
         CloseHandle(g_hChildStd_OUT_Rd);
 
         if (GetExitCodeProcess(pinfo.hProcess, &ec) && ec == STILL_ACTIVE) {
@@ -1616,6 +1629,7 @@ void PackageVersion::executeFile(
     }
 
     if (success) {
+        // ignore possible errors here
         CloseHandle(pinfo.hThread);
         CloseHandle(pinfo.hProcess);
     }
