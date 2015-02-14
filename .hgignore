@@ -43,3 +43,4 @@ syntax: regexp
 ^npackdcl/Output\.log$
 ^vimorgrep/build/
 ^vimorgrep/src/vimorgrep\.user$
+^wpmcpp/cov-int/
