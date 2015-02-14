@@ -39,6 +39,7 @@ private:
     MySQLQuery* insertPackageQuery;
     MySQLQuery* replacePackageQuery;
     MySQLQuery* selectCategoryQuery;
+    MySQLQuery* insertLinkQuery;
 
     QSqlDatabase db;
 
@@ -95,6 +96,7 @@ private:
     QString getRepositorySHA1(const QString &url, QString *err);
     void setRepositorySHA1(const QString &url, const QString &sha1, QString *err);
     QString clearRepository(int id);
+    QString saveLinks(Package *p);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;
