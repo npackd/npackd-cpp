@@ -127,12 +127,18 @@ QString Package::getChangeLog() const
 
 void Package::setChangeLog(const QString &changelog)
 {
-    links.replace("icon", changelog);
+    if (changelog.isEmpty())
+        links.remove("icon");
+    else
+        links.replace("icon", changelog);
 }
 
 void Package::setIcon(const QString &icon)
 {
-    links.replace("icon", icon);
+    if (icon.isEmpty())
+        links.remove("icon");
+    else
+        links.replace("icon", icon);
 }
 
 QString Package::getShortName() const

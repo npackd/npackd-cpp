@@ -45,6 +45,7 @@ DBRepository::DBRepository()
 {
     savePackageVersionQuery = 0;
     insertPackageQuery = 0;
+    insertLinkQuery = 0;
     replacePackageQuery = 0;
     selectCategoryQuery = 0;
 }
@@ -52,6 +53,7 @@ DBRepository::DBRepository()
 DBRepository::~DBRepository()
 {
     delete selectCategoryQuery;
+    delete insertLinkQuery;
     delete insertPackageQuery;
     delete replacePackageQuery;
     delete savePackageVersionQuery;
@@ -179,8 +181,8 @@ Package *DBRepository::findPackage_(const QString &name)
     Package* r = 0;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT CONTENT "
-            "FROM PACKAGE2 WHERE NAME = :NAME ORDER BY REPOSITORY"))
+    if (!q.prepare("SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE "
+            "FROM PACKAGE WHERE NAME = :NAME ORDER BY REPOSITORY LIMIT 1"))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
@@ -190,24 +192,14 @@ Package *DBRepository::findPackage_(const QString &name)
     }
 
     if (err.isEmpty() && q.next()) {
-        QDomDocument doc;
-        int errorLine, errorColumn;
-        if (!doc.setContent(q.value(0).toByteArray(),
-                &err, &errorLine, &errorColumn)) {
-            err = QString(
-                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
-                    arg(errorLine).arg(errorColumn).arg(err);
-        }
+        r = new Package(name, name);
+        r->title = q.value(0).toString();
+        r->url = q.value(1).toString();
+        r->setIcon(q.value(2).toString());
+        r->description = q.value(3).toString();
+        r->license = q.value(4).toString();
 
-        QDomElement root = doc.documentElement();
-
-        if (err.isEmpty()) {
-            r = Package::parse(&root, &err);
-            if (!err.isEmpty()) {
-                delete r;
-                r = 0;
-            }
-        }
+        // TODO: read the data from the LINK table
     }
 
     return r;
@@ -530,7 +522,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
         where = "WHERE " + where;
 
     QString sql = QString("SELECT CATEGORY.ID, COUNT(*), CATEGORY.NAME FROM "
-            "PACKAGE2 LEFT JOIN CATEGORY ON PACKAGE2.CATEGORY") +
+            "PACKAGE LEFT JOIN CATEGORY ON PACKAGE.CATEGORY") +
             QString::number(level) +
             " = CATEGORY.ID " +
             where + " GROUP BY CATEGORY.ID, CATEGORY.NAME "
@@ -571,13 +563,15 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
     *err = "";
 
     QList<Package*> r;
-
     MySQLQuery q(db);
+
+    // MIN(REPOSITORY) is important here as we want the data from the first
+    // repository
     QString sql = "SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, "
             "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, "
-            "CONTENT, MIN(REPOSITORY) "
-            "FROM PACKAGE2";
+            "MIN(REPOSITORY) "
+            "FROM PACKAGE";
 
     if (!where.isEmpty())
         sql += " " + where;
@@ -603,6 +597,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
             p->setIcon(q.value(3).toString());
             p->description = q.value(4).toString();
             p->license = q.value(5).toString();
+            /*
             QString path = getCategoryPath(q.value(6).toInt(),
                     q.value(7).toInt(),
                     q.value(8).toInt(),
@@ -611,6 +606,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
             if (!path.isEmpty()) {
                 p->categories.append(path);
             }
+            */
 
             r.append(p);
         }
@@ -673,6 +669,57 @@ int DBRepository::insertCategory(int parent, int level,
     return id;
 }
 
+QString DBRepository::saveLinks(Package* p)
+{
+    QString err;
+
+    if (!insertLinkQuery) {
+        insertLinkQuery = new MySQLQuery(db);
+
+        QString insertSQL = "INSERT INTO LINK "
+                "(REPOSITORY, PACKAGE, INDEX_, REL, HREF) "
+                "VALUES(:REPOSITORY, :PACKAGE, :INDEX_, :REL, :HREF)";
+
+        if (!insertLinkQuery->prepare(insertSQL)) {
+            err = getErrorString(*insertLinkQuery);
+            delete insertLinkQuery;
+        }
+    }
+
+    QList<QString> rels = p->links.keys();
+    int index = 1;
+    for (int i = 0; i < rels.size(); i++) {
+        if (!err.isEmpty())
+            break;
+
+        QString rel = rels.at(i);
+        QList<QString> hrefs = p->links.values(rel);
+        for (int j = 0; j < hrefs.size(); j++) {
+            if (!err.isEmpty())
+                break;
+
+            QString href = hrefs.at(j);
+
+            if (!rel.isEmpty() && !href.isEmpty()) {
+                insertLinkQuery->bindValue(":REPOSITORY", this->currentRepository);
+                insertLinkQuery->bindValue(":PACKAGE", p->name);
+                insertLinkQuery->bindValue(":INDEX_", index);
+                insertLinkQuery->bindValue(":REL", rel);
+                insertLinkQuery->bindValue(":HREF", href);
+                if (!insertLinkQuery->exec())
+                    err = getErrorString(*insertLinkQuery);
+
+                index++;
+            }
+        }
+    }
+
+    insertLinkQuery->finish();
+
+    return err;
+}
+
+
 QString DBRepository::savePackage(Package *p, bool replace)
 {
     QString err;
@@ -725,16 +772,15 @@ QString DBRepository::savePackage(Package *p, bool replace)
         QString insertSQL = "INSERT OR IGNORE";
         QString replaceSQL = "INSERT OR REPLACE";
 
-        QString add = " INTO PACKAGE2 "
+        QString add = " INTO PACKAGE "
                 "(REPOSITORY, NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
-                " CATEGORY4, CONTENT)"
+                " CATEGORY4)"
                 "VALUES(:REPOSITORY, :NAME, :TITLE, :URL, "
                 ":ICON, :DESCRIPTION, :LICENSE, "
                 ":FULLTEXT, :STATUS, :SHORT_NAME, "
-                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4, "
-                ":CONTENT)";
+                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
 
         insertSQL += add;
         replaceSQL += add;
@@ -791,16 +837,15 @@ QString DBRepository::savePackage(Package *p, bool replace)
             savePackageQuery->bindValue(":CATEGORY4", QVariant(QVariant::Int));
         else
             savePackageQuery->bindValue(":CATEGORY4", cat4);
-        QByteArray file;
-        file.reserve(1024);
-        QXmlStreamWriter w(&file);
-        p->toXML(&w);
-        savePackageQuery->bindValue(":CONTENT", QVariant(file));
         if (!savePackageQuery->exec())
             err = getErrorString(*savePackageQuery);
     }
 
     savePackageQuery->finish();
+
+    if (err.isEmpty()) {
+        err = saveLinks(p);
+    }
 
     return err;
 }
@@ -829,9 +874,9 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
-            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, CONTENT "
-            "FROM PACKAGE2 WHERE SHORT_NAME = :SHORT_NAME "
-            "ORDER BY REPOSITORY"))
+            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+            "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME "
+            "ORDER BY REPOSITORY LIMIT 1"))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
@@ -855,6 +900,8 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
                 q.value(10).toInt());
         if (!path.isEmpty())
             p->categories.append(path);
+
+        // TODO: read the data from the LINK table
 
         r.append(p);
     }
@@ -964,7 +1011,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
                 QObject::tr("Clearing the packages table"));
-        QString err = exec("DELETE FROM PACKAGE2");
+        QString err = exec("DELETE FROM PACKAGE");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -982,9 +1029,19 @@ QString DBRepository::clear()
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.26,
+        Job* sub = job->newSubJob(0.13,
                 QObject::tr("Clearing the licenses table"));
         QString err = exec("DELETE FROM LICENSE2");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.13,
+                QObject::tr("Clearing the links table"));
+        QString err = exec("DELETE FROM LINK");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1016,8 +1073,9 @@ QString DBRepository::clearRepository(int id)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
-                QObject::tr("Clearing the packages table"));
-        QString err = exec("DELETE FROM PACKAGE2 WHERE REPOSITORY=" +
+                QObject::tr("Clearing the packages table for the repository ") +
+                QString::number(id));
+        QString err = exec("DELETE FROM PACKAGE WHERE REPOSITORY=" +
                 QString::number(id));
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -1027,7 +1085,8 @@ QString DBRepository::clearRepository(int id)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.6,
-                QObject::tr("Clearing the package versions table"));
+                QObject::tr("Clearing the package versions table for the repository ") +
+                QString::number(id));
         QString err = exec("DELETE FROM PACKAGE_VERSION2 WHERE REPOSITORY=" +
                 QString::number(id));
         if (!err.isEmpty())
@@ -1038,9 +1097,21 @@ QString DBRepository::clearRepository(int id)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.3,
-                QObject::tr("Clearing the licenses table WHERE REPOSITORY=") +
+                QObject::tr("Clearing the licenses table for the repository ") +
                 QString::number(id));
         QString err = exec("DELETE FROM LICENSE2 WHERE REPOSITORY=" +
+                QString::number(id));
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.3,
+                QObject::tr("Clearing the links table for the repository ") +
+                QString::number(id));
+        QString err = exec("DELETE FROM LINK WHERE REPOSITORY=" +
                 QString::number(id));
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -1267,9 +1338,9 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
                 QObject::tr("Removing packages without versions"));
-        QString err = temp.exec("DELETE FROM PACKAGE2 WHERE NOT EXISTS "
+        QString err = temp.exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION2 "
-                "WHERE PACKAGE = PACKAGE2.NAME)");
+                "WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
             sub->completeWithProgress();
         else
@@ -1666,7 +1737,7 @@ QString DBRepository::updateStatus(const QString& package)
         }
 
         MySQLQuery q(db);
-        if (!q.prepare("UPDATE PACKAGE2 "
+        if (!q.prepare("UPDATE PACKAGE "
                 "SET STATUS=:STATUS "
                 "WHERE NAME=:NAME"))
             err = getErrorString(q);
@@ -1717,18 +1788,16 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
 
     bool e = false;
 
-    // PACKAGE2 is new in Npackd 1.20 and replaces PACKAGE as Npackd 1.19
     // cannot handle new columns
     if (err.isEmpty()) {
-        e = tableExists(&db, "PACKAGE2", &err);
+        e = tableExists(&db, "PACKAGE", &err);
     }
-
     if (err.isEmpty()) {
         if (!e) {
             // NULL should be stored in CATEGORYx if a package is not
             // categorized
-            // qDebug() << "creating package2";
-            db.exec("CREATE TABLE PACKAGE2("
+            // qDebug() << "creating package";
+            db.exec("CREATE TABLE PACKAGE("
                     "NAME TEXT, "
                     "TITLE TEXT, "
                     "URL TEXT, "
@@ -1743,66 +1812,67 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
                     "CATEGORY1 INTEGER, "
                     "CATEGORY2 INTEGER, "
                     "CATEGORY3 INTEGER, "
-                    "CATEGORY4 INTEGER, "
-                    "CONTENT BLOB "
+                    "CATEGORY4 INTEGER"
                     ")");
             err = toString(db.lastError());
         }
     }
-
 /*
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX PACKAGE2_FULLTEXT ON PACKAGE2(FULLTEXT)");
+            db.exec("CREATE INDEX PACKAGE_FULLTEXT ON PACKAGE(FULLTEXT)");
             err = toString(db.lastError());
         }
     }
     */
-
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX PACKAGE2_REPOSITORY ON "
-                    "PACKAGE2(REPOSITORY)");
+            db.exec("CREATE INDEX PACKAGE_REPOSITORY ON "
+                    "PACKAGE(REPOSITORY)");
             err = toString(db.lastError());
         }
     }
-
+    if (err.isEmpty()) {
+        // the index PACKAGE_NAME was unique before 1.20
+        db.exec("DROP INDEX IF EXISTS PACKAGE_NAME");
+        err = toString(db.lastError());
+    }
+    if (err.isEmpty()) {
+        db.exec("CREATE INDEX PACKAGE_NAME ON PACKAGE(NAME)");
+        err = toString(db.lastError());
+    }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX PACKAGE2_NAME ON PACKAGE2(NAME)");
+            db.exec("CREATE INDEX PACKAGE_NAME ON PACKAGE(NAME)");
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX PACKAGE2_SHORT_NAME ON PACKAGE2(SHORT_NAME)");
+            db.exec("CREATE INDEX PACKAGE_SHORT_NAME ON PACKAGE(SHORT_NAME)");
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX IF NOT EXISTS PACKAGE2_CATEGORY0 ON PACKAGE2(CATEGORY0)");
+            db.exec("CREATE INDEX IF NOT EXISTS PACKAGE_CATEGORY0 ON PACKAGE(CATEGORY0)");
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX IF NOT EXISTS PACKAGE2_CATEGORY1 ON PACKAGE2(CATEGORY1)");
+            db.exec("CREATE INDEX IF NOT EXISTS PACKAGE_CATEGORY1 ON PACKAGE(CATEGORY1)");
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         e = tableExists(&db, "REPOSITORY", &err);
     }
 
+    // CATEGORY
     if (err.isEmpty()) {
         e = tableExists(&db, "CATEGORY", &err);
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE CATEGORY(ID INTEGER PRIMARY KEY ASC, "
@@ -1810,7 +1880,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE UNIQUE INDEX CATEGORY_ID ON CATEGORY(ID)");
@@ -1818,10 +1887,10 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
         }
     }
 
+    // PACKAGE_VERSION2
     if (err.isEmpty()) {
         e = tableExists(&db, "PACKAGE_VERSION2", &err);
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE PACKAGE_VERSION2(REPOSITORY INTEGER, "
@@ -1831,7 +1900,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_VERSION2_REPOSITORY ON PACKAGE_VERSION2("
@@ -1839,7 +1907,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_VERSION2_PACKAGE ON PACKAGE_VERSION2("
@@ -1847,7 +1914,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_VERSION2_PACKAGE_NAME ON "
@@ -1856,13 +1922,11 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         db.exec("CREATE INDEX IF NOT EXISTS PACKAGE_VERSION2_MSIGUID ON "
                 "PACKAGE_VERSION2(MSIGUID)");
         err = toString(db.lastError());
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX PACKAGE_VERSION2_DETECT_FILE_COUNT ON PACKAGE_VERSION2("
@@ -1870,11 +1934,9 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         e = tableExists(&db, "LICENSE2", &err);
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE LICENSE2(REPOSITORY INTEGER, NAME TEXT, "
@@ -1885,7 +1947,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE INDEX LICENSE2_NAME ON LICENSE2(NAME)");
@@ -1893,15 +1954,14 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
         }
     }
 
+    // REPOSITORY
     if (err.isEmpty()) {
         e = tableExists(&db, "REPOSITORY", &err);
     }
-
     bool ce = false;
     if (err.isEmpty()) {
         ce = columnExists(&db, "REPOSITORY", "SHA1", &err);
     }
-
     if (err.isEmpty()) {
         if (e && !ce) {
             db.exec("DROP TABLE REPOSITORY");
@@ -1909,7 +1969,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             e = false;
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE REPOSITORY(ID INTEGER PRIMARY KEY ASC, "
@@ -1917,16 +1976,35 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE UNIQUE INDEX REPOSITORY_ID ON REPOSITORY(ID)");
             err = toString(db.lastError());
         }
     }
-
     if (err.isEmpty()) {
         err = readCategories();
+    }
+
+    // LINK. This table is new in Npackd 1.20.
+    if (err.isEmpty()) {
+        e = tableExists(&db, "LINK", &err);
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE LINK(REPOSITORY INTEGER NOT NULL, "
+                    "PACKAGE TEXT NOT NULL, INDEX_ INTEGER NOT NULL, "
+                    "REL TEXT NOT NULL, "
+                    "HREF TEXT NOT NULL)");
+            err = toString(db.lastError());
+        }
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX LINK_REPOSITORY_PACKAGE ON LINK("
+                    "REPOSITORY, PACKAGE)");
+            err = toString(db.lastError());
+        }
     }
 
     return err;
