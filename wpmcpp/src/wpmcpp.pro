@@ -2,6 +2,7 @@ NPACKD_VERSION = $$system(type ..\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
 QT += xml sql widgets winextras
+QTPLUGIN += qico
 TARGET = wpmcpp
 TEMPLATE = app
 SOURCES += main.cpp \

@@ -606,13 +606,12 @@ void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,
 }
 
 void Downloader::download(Job* job, const QUrl& url, QFile* file,
-        QString* sha1, QCryptographicHash::Algorithm alg, bool useCache)
+        QString* sha1, QCryptographicHash::Algorithm alg, bool useCache, QString *mime)
 {
-    QString mime;
     QString contentDisposition;
 
     if (url.scheme() == "https" || url.scheme() == "http")
-        downloadWin(job, url, L"GET", file, &mime, &contentDisposition,
+        downloadWin(job, url, L"GET", file, mime, &contentDisposition,
                 defaultPasswordWindow, sha1, useCache, alg);
     else if (url.toString().startsWith("data:image/png;base64,")) {
         QString dataURL_ = url.toString().mid(22);
@@ -697,12 +696,12 @@ int64_t Downloader::getContentLength(Job* job, const QUrl &url,
 
 QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
         QCryptographicHash::Algorithm alg,
-        bool useCache)
+        bool useCache, QString *mime)
 {
     QTemporaryFile* file = new QTemporaryFile();
 
     if (file->open()) {
-        download(job, url, file, sha1, alg, useCache);
+        download(job, url, file, sha1, alg, useCache, mime);
         file->close();
 
         if (job->isCancelled() || !job->getErrorMessage().isEmpty()) {
@@ -718,4 +717,10 @@ QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
     }
 
     return file;
+}
+
+QTemporaryFile* Downloader::download2(Job* job, const QUrl &url,
+        bool useCache)
+{
+    return download(job, url, 0, QCryptographicHash::Sha1, useCache, 0);
 }

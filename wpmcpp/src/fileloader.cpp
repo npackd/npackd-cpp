@@ -86,18 +86,35 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
         this->mutex.unlock();
     } else {
         this->mutex.unlock();
-        QString filename = QString("%1.png").arg(id.fetchAndAddAcquire(1));
+        QString filename = QString::number(id.fetchAndAddAcquire(1));
         QString fn = dir.path() + "\\" + filename;
         QFile f(fn);
         if (f.open(QFile::ReadWrite)) {
+            QString mime;
             Job* job = new Job();
-            Downloader::download(job, url, &f);
+            Downloader::download(job, url, &f, 0, QCryptographicHash::Sha1,
+                    true, &mime);
             f.close();
 
             if (!job->getErrorMessage().isEmpty()) {
                 r.error = job->getErrorMessage();
             } else {
-                r.file = filename;
+                QString ext;
+                if (mime == "image/png")
+                    ext = ".png";
+                else if (mime == "image/x-icon" || mime == "image/vnd.microsoft.icon")
+                    ext = ".ico";
+                else if (mime == "image/jpeg")
+                    ext = ".jpg";
+                else if (mime == "image/gif")
+                    ext = ".gif";
+                else if (mime == "image/x-windows-bmp" || mime == "image/bmp")
+                    ext = ".bmp";
+                else
+                    ext = ".png";
+                f.close();
+                f.rename(fn + ext);
+                r.file = filename + ext;
             }
             delete job;
         } else {

@@ -11,6 +11,8 @@
 #include <QTranslator>
 #include <QList>
 #include <QVBoxLayout>
+#include <QImageReader>
+#include <QtPlugin>
 
 #include "version.h"
 #include "mainwindow.h"
@@ -27,6 +29,8 @@
 #include "uiutils.h"
 #include "installthread.h"
 #include "clprocessor.h"
+
+Q_IMPORT_PLUGIN(QICOPlugin)
 
 int main(int argc, char *argv[])
 {
@@ -74,6 +78,11 @@ int main(int argc, char *argv[])
 
     CLProcessor clp;
 
+    qDebug() << QImageReader::supportedImageFormats();
+
+    QPixmap pm("C:\\Users\\t\\Downloads\\PartMan.ico");
+    qDebug() << pm.isNull();
+
     int errorCode;
     if (!clp.process(&errorCode)){
         MainWindow w;
@@ -83,7 +92,7 @@ int main(int argc, char *argv[])
         errorCode = QApplication::exec();
     }
 
-    WPMUtils::timer.dump();
+    //WPMUtils::timer.dump();
 
     return errorCode;
 }

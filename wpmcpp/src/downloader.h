@@ -87,11 +87,28 @@ public:
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param alg algorithm that should be used for computing the hash sum
      * @param useCache true = use Windows Internet cache on the local disk
+     * @param mime if not null, MIME type will be stored here
      * @return temporary file or 0 if an error occured. The file is closed.
      */
     static QTemporaryFile* download(Job* job, const QUrl& url,
             QString* sha1=0,
             QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
+            bool useCache=true,
+            QString* mime=0);
+
+    /**
+     * QtConcurrent::run only supports 5 arguments
+     *
+     * @param job job for this method
+     * @param url this URL will be downloaded. http://, https://, file:// and
+     *     data:image/png;base64, are supported
+     * @param sha1 if not null, SHA1 will be computed and stored here
+     * @param alg algorithm that should be used for computing the hash sum
+     * @param useCache true = use Windows Internet cache on the local disk
+     * @param mime if not null, MIME type will be stored here
+     * @return temporary file or 0 if an error occured. The file is closed.
+     */
+    static QTemporaryFile* download2(Job* job, const QUrl& url,
             bool useCache=true);
 
     /**
@@ -103,12 +120,14 @@ public:
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param file the content will be stored here
      * @param alg algorithm that should be used for computing the hash sum
+     * @param mime if not null, MIME type will be stored here
      * @param useCache true = use Windows Internet cache on the local disk
      */
     static void download(Job* job, const QUrl& url, QFile* file,
             QString* sha1=0,
             QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
-            bool useCache=true);
+            bool useCache=true,
+            QString* mime=0);
 
     /**
      * @brief retrieves the content-length header for an URL.
