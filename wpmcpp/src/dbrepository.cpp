@@ -1350,19 +1350,6 @@ void DBRepository::updateF5(Job* job)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
-                QObject::tr("Commiting the SQL transaction (tempdb)"));
-        QString err = temp.exec("COMMIT");
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
-            sub->completeWithProgress();
-    } else {
-        if (transactionStarted)
-            temp.exec("ROLLBACK");
-    }
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.05,
                 QObject::tr("Updating the status for installed packages in the database (tempdb)"));
         temp.updateStatusForInstalled(sub);
         if (!sub->getErrorMessage().isEmpty())
@@ -1379,6 +1366,57 @@ void DBRepository::updateF5(Job* job)
             sub->completeWithProgress();
         else
             job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Updating old tables for backward compatibility"));
+        QString err = temp.exec("DELETE FROM PACKAGE");
+        if (err.isEmpty())
+            err = temp.exec("INSERT INTO PACKAGE(NAME, TITLE, URL, "
+                    "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                    "SHORT_NAME, REPOSITORY, CATEGORY0, CATEGORY1, "
+                    "CATEGORY2, CATEGORY3) SELECT NAME, TITLE, URL, "
+                    "ICON, DESCRIPTION, LICENSE, FULLTEXT, STATUS, "
+                    "SHORT_NAME, MIN(REPOSITORY), CATEGORY0, CATEGORY1, "
+                    "CATEGORY2, CATEGORY3 FROM PACKAGE2 GROUP BY NAME");
+        if (err.isEmpty())
+            err = temp.exec("DELETE FROM PACKAGE_VERSION");
+        if (err.isEmpty())
+            err = temp.exec("INSERT INTO PACKAGE_VERSION"
+                    "(NAME, PACKAGE, URL, CONTENT, MSIGUID, DETECT_FILE_COUNT) "
+                    "SELECT NAME, PACKAGE, URL, CONTENT, MSIGUID, "
+                    "DETECT_FILE_COUNT "
+                    "FROM (SELECT NAME, PACKAGE, URL, CONTENT, MSIGUID, "
+                    "DETECT_FILE_COUNT, MIN(REPOSITORY) FROM "
+                    "PACKAGE_VERSION2 GROUP BY PACKAGE, NAME)");
+        if (err.isEmpty())
+            err = temp.exec("DELETE FROM LICENSE");
+        if (err.isEmpty())
+            err = temp.exec("INSERT INTO LICENSE"
+                    "(NAME, TITLE, DESCRIPTION, URL) "
+                    "SELECT NAME, TITLE, DESCRIPTION, URL "
+                    "FROM (SELECT NAME, TITLE, DESCRIPTION, URL, "
+                    "MIN(REPOSITORY) FROM "
+                    "LICENSE2 GROUP BY NAME)");
+
+        if (err.isEmpty())
+            sub->completeWithProgress();
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Commiting the SQL transaction (tempdb)"));
+        QString err = temp.exec("COMMIT");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
+    } else {
+        if (transactionStarted)
+            temp.exec("ROLLBACK");
     }
 
     /*QString error;
@@ -1399,7 +1437,7 @@ void DBRepository::updateF5(Job* job)
     */
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.01,
+        Job* sub = job->newSubJob(0.1,
                 QObject::tr("Reading categories"));
         QString err = temp.readCategories();
         if (err.isEmpty()) {
@@ -1474,19 +1512,6 @@ void DBRepository::updateStatusForInstalled(Job* job)
 {
     QString initialTitle = job->getTitle();
 
-    bool transactionStarted = false;
-    if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
-                QObject::tr("Starting an SQL transaction"));
-        QString err = exec("BEGIN TRANSACTION");
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else {
-            job->setProgress(0.01);
-            transactionStarted = true;
-        }
-    }
-
     QSet<QString> packages;
     if (job->shouldProceed()) {
         QList<InstalledPackageVersion*> pvs = InstalledPackages::getDefault()->getAll();
@@ -1496,7 +1521,7 @@ void DBRepository::updateStatusForInstalled(Job* job)
         }
         qDeleteAll(pvs);
         pvs.clear();
-        job->setProgress(0.02);
+        job->setProgress(0.1);
     }
 
     if (job->shouldProceed()) {
@@ -1510,21 +1535,8 @@ void DBRepository::updateStatusForInstalled(Job* job)
             if (!job->shouldProceed())
                 break;
 
-            job->setProgress(0.02 + 0.9 * (i + 1) / packages_.count());
+            job->setProgress(0.1 + 0.9 * (i + 1) / packages_.count());
         }
-    }
-
-    if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
-                QObject::tr("Commiting the SQL transaction"));
-        QString err = exec("COMMIT");
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
-            job->setProgress(1);
-    } else {
-        if (transactionStarted)
-            exec("ROLLBACK");
     }
 
     job->setTitle(initialTitle);
