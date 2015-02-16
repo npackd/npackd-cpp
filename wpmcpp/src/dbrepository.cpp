@@ -199,7 +199,8 @@ Package *DBRepository::findPackage_(const QString &name)
         r->description = q.value(3).toString();
         r->license = q.value(4).toString();
 
-        // TODO: read the data from the LINK table
+        if (err.isEmpty())
+            err = readLinks(r);
     }
 
     return r;
@@ -901,12 +902,46 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
         if (!path.isEmpty())
             p->categories.append(path);
 
-        // TODO: read the data from the LINK table
+        if (err.isEmpty())
+            err = readLinks(p);
 
         r.append(p);
     }
 
     return r;
+}
+
+QString DBRepository::readLinks(Package* p)
+{
+    QString err;
+
+    QList<Package*> r;
+
+    MySQLQuery q(db);
+    if (!q.prepare("SELECT REPOSITORY, REL, HREF "
+            "FROM LINK WHERE PACKAGE = :PACKAGE "
+            "ORDER BY REPOSITORY, INDEX_"))
+        err = getErrorString(q);
+
+    if (err.isEmpty()) {
+        q.bindValue(":PACKAGE", p->name);
+        if (!q.exec())
+            err = getErrorString(q);
+    }
+
+    int rep = -1;
+    while (err.isEmpty() && q.next()) {
+        if (rep == -1)
+            rep = q.value(0).toInt();
+
+        // only use the first repository
+        if (rep != q.value(0).toInt())
+            break;
+
+        p->links.insert(q.value(1).toString(), q.value(2).toString());
+    }
+
+    return err;
 }
 
 QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)

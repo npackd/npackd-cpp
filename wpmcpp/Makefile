@@ -118,10 +118,6 @@ compile: printvars $(WHERE) $(WHERE)/../Makefile
 prep: compile translations $(WHERE)/zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
 	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
-	copy src\wpmcpp_es.qm $(WHERE)\zip\npackdg_es.qm
-	copy src\wpmcpp_ru.qm $(WHERE)\zip\npackdg_ru.qm
-	copy src\wpmcpp_fr.qm $(WHERE)\zip\npackdg_fr.qm
-	copy src\wpmcpp_de.qm $(WHERE)\zip\npackdg_de.qm
 	copy LICENSE.txt $(WHERE)\zip
 	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
 	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip\npackdg.exe

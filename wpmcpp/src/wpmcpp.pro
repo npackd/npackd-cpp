@@ -140,8 +140,11 @@ QMAKE_CXXFLAGS_RELEASE += -g
 QMAKE_LFLAGS_RELEASE -= -Wl,-s
 
 QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
-    -Wno-missing-field-initializers -Wno-unused-parameter
+    -Wno-missing-field-initializers -Wno-unused-parameter -fno-exceptions
+QMAKE_CXXFLAGS -= -fexceptions
 QMAKE_LFLAGS += -static
+QMAKE_CXXFLAGS_RELEASE -= -O2
+QMAKE_CXXFLAGS_RELEASE += -Os
 
 QMAKE_LFLAGS_RELEASE += -Wl,-Map,wpmcpp_release.map
 

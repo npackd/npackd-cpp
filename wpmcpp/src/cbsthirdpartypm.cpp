@@ -113,7 +113,7 @@ void CBSThirdPartyPM::detectOneCBSPackage(
         rep->savePackageVersion(pv.data());
     }
 
-    DWORD state;
+    DWORD state = 0;
     if (err.isEmpty()) {
         state = k.getDWORD("CurrentState", &err);
     }
