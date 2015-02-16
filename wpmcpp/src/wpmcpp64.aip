@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="11.4" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="11.8" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_UPGRADE" Value="No"/>
@@ -40,13 +40,9 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="..\CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="wpmcpp_es.qm"/>
+    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="..\CrystalIcons_LICENSE.txt" SelfReg="false"/>
     <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="..\LICENSE.txt" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
     <ROW File="wpmcpp.exe" Component_="wpmcpp.exe" FileName="npackdg.exe" Attributes="0" SourcePath="..\build\64\release\zip\npackdg.exe" SelfReg="false" NextFile="LICENSE.txt"/>
-    <ROW File="wpmcpp_de.qm" Component_="LICENSE.txt" FileName="npackd~4.qm|npackdg_de.qm" Attributes="0" SourcePath="wpmcpp_de.qm" SelfReg="false"/>
-    <ROW File="wpmcpp_es.qm" Component_="LICENSE.txt" FileName="npackd~1.qm|npackdg_es.qm" Attributes="0" SourcePath="wpmcpp_es.qm" SelfReg="false" NextFile="wpmcpp_fr.qm"/>
-    <ROW File="wpmcpp_fr.qm" Component_="LICENSE.txt" FileName="npackd~2.qm|npackdg_fr.qm" Attributes="0" SourcePath="wpmcpp_fr.qm" SelfReg="false" NextFile="wpmcpp_ru.qm"/>
-    <ROW File="wpmcpp_ru.qm" Component_="LICENSE.txt" FileName="npackd~3.qm|npackdg_ru.qm" Attributes="0" SourcePath="wpmcpp_ru.qm" SelfReg="false" NextFile="wpmcpp_de.qm"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="..\build\64\release" PackageFileName="Npackd64-[|ProductVersion]" Languages="en" InstallationType="4" MsiPackageType="x64"/>

@@ -97,6 +97,7 @@ private:
     void setRepositorySHA1(const QString &url, const QString &sha1, QString *err);
     QString clearRepository(int id);
     QString saveLinks(Package *p);
+    QString readLinks(Package *p);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;

@@ -74,14 +74,21 @@ void PackageFrame::updateIcons(const QString& url)
         QListWidget* c = this->ui->listWidgetScreenshots;
         QList<QString> screenshots = p->links.values("screenshot");
 
+        bool updated = false;
         for (int i = 0; i < c->count(); i++) {
             QListWidgetItem* item = c->item(i);
             QString url_ = item->data(Qt::UserRole).toString();
             if (url_ == url) {
                 QIcon icon = mw->downloadScreenshot(screenshots.at(i));
                 item->setIcon(icon);
+                updated = true;
             }
         }
+
+        // workaround for a bug(?) in Qt 5.2.1: the space reserved for each
+        // screenshot is not updated otherwise
+        if (updated)
+            c->setFlow(QListView::LeftToRight);
     }
 }
 

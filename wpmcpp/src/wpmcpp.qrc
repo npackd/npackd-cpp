@@ -10,5 +10,10 @@
         <file>add.png</file>
         <file>broken.png</file>
     </qresource>
-    <qresource prefix="/translations"/>
+    <qresource prefix="/translations">
+        <file>wpmcpp_de.qm</file>
+        <file>wpmcpp_es.qm</file>
+        <file>wpmcpp_fr.qm</file>
+        <file>wpmcpp_ru.qm</file>
+    </qresource>
 </RCC>

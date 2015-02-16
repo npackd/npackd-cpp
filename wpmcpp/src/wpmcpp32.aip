@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="11.4" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="11.8" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiValidationComponent">
     <ROW Table="File" Column="Sequence" MinValue="1" MaxValue="2147483647" Description="Sequence with respect to the media images; order must track cabinet order." Options="0" ColumnType="3" ColumnIndex="7" ColumnSize="4" MsiKey="File#Sequence"/>
     <ROW Table="Media" Column="LastSequence" MinValue="0" MaxValue="2147483647" Description="File sequence number for the last file for this media." Options="0" ColumnType="3" ColumnIndex="1" ColumnSize="4" MsiKey="Media#LastSequence"/>
@@ -47,12 +47,8 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
     <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="..\CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="exchndl.dll"/>
     <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="..\LICENSE.txt" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
-    <ROW File="exchndl.dll" Component_="exchndl.dll" FileName="exchndl.dll" Attributes="0" SourcePath="..\build\32\release\zip\exchndl.dll" SelfReg="false" NextFile="wpmcpp_es.qm"/>
+    <ROW File="exchndl.dll" Component_="exchndl.dll" FileName="exchndl.dll" Attributes="0" SourcePath="..\build\32\release\zip\exchndl.dll" SelfReg="false"/>
     <ROW File="wpmcpp.exe" Component_="wpmcpp.exe" FileName="npackdg.exe" Attributes="0" SourcePath="..\build\32\release\zip\npackdg.exe" SelfReg="false" NextFile="LICENSE.txt"/>
-    <ROW File="wpmcpp_de.qm" Component_="LICENSE.txt" FileName="npackd~5.qm|npackdg_de.qm" Attributes="0" SourcePath="wpmcpp_de.qm" SelfReg="false"/>
-    <ROW File="wpmcpp_es.qm" Component_="LICENSE.txt" FileName="npackd~1.qm|npackdg_es.qm" Attributes="0" SourcePath="wpmcpp_es.qm" SelfReg="false" NextFile="wpmcpp_fr.qm"/>
-    <ROW File="wpmcpp_fr.qm" Component_="LICENSE.txt" FileName="npackd~2.qm|npackdg_fr.qm" Attributes="0" SourcePath="wpmcpp_fr.qm" SelfReg="false" NextFile="wpmcpp_ru.qm"/>
-    <ROW File="wpmcpp_ru.qm" Component_="LICENSE.txt" FileName="npackd~3.qm|npackdg_ru.qm" Attributes="0" SourcePath="wpmcpp_ru.qm" SelfReg="false" NextFile="wpmcpp_de.qm"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="..\build\32\release" PackageFileName="Npackd32-[|ProductVersion]" Languages="en" InstallationType="4"/>

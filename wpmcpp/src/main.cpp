@@ -54,12 +54,10 @@ int main(int argc, char *argv[])
 #endif
     InstalledPackages::getDefault()->packageName = packageName;
 
-    // to use a resource: ":/resources/translations"
     QTranslator myappTranslator;
-    bool r = myappTranslator.load(//"wpmcpp_fr",  // for testing
-            "npackdg_" + QLocale::system().name(),
-            a.applicationDirPath(),
-            "_.", ".qm");
+    bool r = myappTranslator.load(
+            "wpmcpp_" + QLocale::system().name(),
+            ":/translations");
     if (r)
         a.installTranslator(&myappTranslator);
 
@@ -78,10 +76,7 @@ int main(int argc, char *argv[])
 
     CLProcessor clp;
 
-    qDebug() << QImageReader::supportedImageFormats();
-
-    QPixmap pm("C:\\Users\\t\\Downloads\\PartMan.ico");
-    qDebug() << pm.isNull();
+    // qDebug() << QImageReader::supportedImageFormats();
 
     int errorCode;
     if (!clp.process(&errorCode)){
