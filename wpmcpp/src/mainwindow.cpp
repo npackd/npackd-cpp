@@ -548,9 +548,6 @@ QIcon MainWindow::downloadIcon(const QString &url)
 
                 r = *inCache;
             } else {
-                // TODO: comment out
-                qDebug() << "failed loading" << url << file;
-
                 r = MainWindow::genericAppIcon;
                 inCache = new QIcon(r);
                 inCache->detach();
@@ -592,9 +589,6 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
 
                 screenshots.insert(url, r);
             } else {
-                // TODO: remove
-                qDebug() << "failed loading screenshot" << url << filename;
-
                 r = MainWindow::genericAppIcon;
                 screenshots.insert(url, r);
             }

@@ -109,13 +109,13 @@ $(WHERE):
 	-mkdir $(WHERE)
 
 # rem note how && directly follows \bin. Otherwise the path would contain a space
-$(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE) 
+$(WHERE)/../Makefile: translations src/wpmcpp.pro $(WHERE) 
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 
 compile: printvars $(WHERE) $(WHERE)/../Makefile
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
 
-prep: compile translations $(WHERE)/zip
+prep: compile $(WHERE)/zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
 	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
 	copy LICENSE.txt $(WHERE)\zip

@@ -1161,9 +1161,6 @@ QString DBRepository::clearRepository(int id)
     return "";
 }
 
-// TODO: fill the tables for backwards compatibility: PACKAGE, PACKAGE_VERSION,
-// LICENSE
-
 void DBRepository::load(Job* job, bool useCache)
 {
     QString err;
