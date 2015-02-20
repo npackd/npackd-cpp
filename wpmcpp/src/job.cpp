@@ -246,6 +246,18 @@ double Job::getProgress() const
     return progress_;
 }
 
+int Job::getLevel() const
+{
+    int r = 0;
+
+    this->mutex.lock();
+    if (parentJob)
+        r = parentJob->getLevel() + 1;
+    this->mutex.unlock();
+
+    return r;
+}
+
 QString Job::getTitle() const
 {
     QString title_;

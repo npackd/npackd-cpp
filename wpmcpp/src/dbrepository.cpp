@@ -1820,14 +1820,16 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
     QSqlDatabase::removeDatabase(connectionName);
     db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
     db.setDatabaseName(file);
+    // db.setConnectOptions("QSQLITE_OPEN_READONLY=1");
     db.open();
     err = toString(db.lastError());
 
     if (err.isEmpty())
         err = exec("PRAGMA busy_timeout = 30000");
 
-    if (err.isEmpty())
+    if (err.isEmpty()) {
         err = exec("PRAGMA journal_mode = WAL");
+    }
 
     bool e = false;
 

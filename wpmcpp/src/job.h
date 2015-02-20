@@ -202,6 +202,12 @@ public:
     double getProgress() const;
 
     /**
+     * @return level (0..)
+     * @threadsafe
+     */
+    int getLevel() const;
+
+    /**
      * @return the title
      * @threadsafe
      */
