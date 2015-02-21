@@ -208,6 +208,12 @@ public:
     int getLevel() const;
 
     /**
+     * @return top level job
+     * @threadsafe
+     */
+    const Job* getTopJob() const;
+
+    /**
      * @return the title
      * @threadsafe
      */

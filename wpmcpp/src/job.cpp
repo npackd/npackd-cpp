@@ -258,6 +258,19 @@ int Job::getLevel() const
     return r;
 }
 
+const Job *Job::getTopJob() const
+{
+    const Job* r = 0;
+
+    this->mutex.lock();
+    r = this;
+    while (r->parentJob)
+        r = r->parentJob;
+    this->mutex.unlock();
+
+    return r;
+}
+
 QString Job::getTitle() const
 {
     QString title_;

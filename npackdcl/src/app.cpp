@@ -373,6 +373,7 @@ QString App::setInstallPath()
 QString App::check()
 {
     Job* job = clp.createJob();
+    job->setTitle("Checking dependency integrity for the installed packages");
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -558,6 +559,7 @@ QString App::search()
     QString query = cl.get("query");
 
     Job* job = clp.createJob();
+    job->setTitle("Searching for packages");
 
     bool onlyInstalled = false;
     if (job->shouldProceed()) {
