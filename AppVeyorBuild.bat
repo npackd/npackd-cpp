@@ -7,7 +7,7 @@ if %bits% equ 64 goto bits64
 rem Npackd
 set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads\bin\mingw32-make.exe
 "%make%" -C wpmcpp zip msi PROFILE=release32
-"%make%" -C npackdcl\compile PROFILE=release32
+"%make%" -C npackdcl zip msi PROFILE=release32
 goto :eof
 
 :bits64
