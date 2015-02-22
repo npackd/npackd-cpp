@@ -10,7 +10,7 @@ set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads\bin\mingw32-ma
 "%make%" -C npackdcl\compile PROFILE=release32
 goto :eof
 
-bits64:
+:bits64
 set make=C:\Program Files (x86)\MinGW-w64_x86_64_SEH_POSIX_threads\bin\mingw32-make.exe"
 "%make%" -C wpmcpp zip msi PROFILE=release64
 
