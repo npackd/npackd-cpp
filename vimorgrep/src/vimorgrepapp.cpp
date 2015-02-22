@@ -160,6 +160,7 @@ int VimOrgRepApp::process()
     CLProgress clp;
 
     Job* job = clp.createJob();
+    job->setTitle("Creating a repository for the data from vim.org");
 
     Job* sub = job->newSubJob(0.8, "Downloading the data");
     QTemporaryFile* f = Downloader::download(sub,
