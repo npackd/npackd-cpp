@@ -503,6 +503,8 @@ QString App::list()
     else
         job = clp.createJob();
 
+    job->setTitle("Listing package versions");
+
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
                 "Reading list of installed packages from the registry");
@@ -745,6 +747,7 @@ QString App::update()
 {
     DBRepository* rep = DBRepository::getDefault();
     Job* job = clp.createJob();
+    job->setTitle("Updating packages");
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -1013,6 +1016,7 @@ void App::processInstallOperations(Job *job,
 QString App::add()
 {
     Job* job = clp.createJob();
+    job->setTitle("Installing packages");
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -1208,6 +1212,7 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
 QString App::remove()
 {
     Job* job = clp.createJob();
+    job->setTitle("Removing packages");
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -1310,6 +1315,7 @@ QString App::info()
     QString r;
 
     Job* job = clp.createJob();
+    job->setTitle("Showing information");
 
     if (job->shouldProceed()) {
         InstalledPackages* ip = InstalledPackages::getDefault();
@@ -1553,6 +1559,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 QString App::detect()
 {
     Job* job = clp.createJob();
+    job->setTitle("Detecting packages");
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
