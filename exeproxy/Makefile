@@ -5,6 +5,8 @@ PROFILE=release32
 
 .PHONY: all printvars clean compile prep zip gprof drmemory upload
 
+SHELL:=cmd.exe
+
 PROJECT=exeproxy
 
 ifeq (32,$(findstring 32,$(PROFILE)))
