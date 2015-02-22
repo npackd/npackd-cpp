@@ -11,5 +11,5 @@ npackdcl\tests\build\32\release\tests -v2
 npackdcl\ftests\build\32\release\ftests -v2
 goto :eof
 
-bits64:
+:bits64
 

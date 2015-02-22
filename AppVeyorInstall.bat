@@ -15,6 +15,6 @@ if %bits% equ 64 goto bits64
 "%npackd_cl%\ncl" add -p npackd-dev-i686-w64 -v 1.20.1 || exit /b %errorlevel%
 goto :eof
 
-bits64:
+:bits64
 "%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v 1.20.1 || exit /b %errorlevel%
 
