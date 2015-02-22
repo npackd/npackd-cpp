@@ -1,0 +1,16 @@
+rem This script is used by AppVeyor to build the project.
+rem
+rem Parameters:
+rem %1 - type of the target system: 32 or 64
+
+if %bits% equ 64 goto bits64
+rem Npackd
+set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads
+"%make%" -C wpmcpp zip msi PROFILE=release32
+"%make%" -C npackdcl\compile PROFILE=release32
+goto :eof
+
+bits64:
+set mingw=C:\Program Files (x86)\MinGW-w64_x86_64_SEH_POSIX_threads
+"%mingw%\bin\mingw32-make.exe" -C wpmcpp zip msi PROFILE=release64
+
