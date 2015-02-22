@@ -7,6 +7,8 @@ PROFILE=release32
 
 .PHONY: all printvars clean compile prep zip msi gprof drmemory upload
 
+SHELL:=cmd.exe
+
 PROJECT=tests
 
 ifeq (32,$(findstring 32,$(PROFILE)))
@@ -48,7 +50,7 @@ SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZI
 MINGWUTILS=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
 PUTTY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=uk.org.greenend.chiark.sgtatham.Putty" "--versions=[0.62, 2$(RPAREN)")
 EXEPROXY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=exeproxy" "--versions=[0.1, 0.1]")
-VERSION=$(shell type ..\wpmcpp\version.txt)
+VERSION=$(shell type ..\..\wpmcpp\version.txt)
 
 all:
 	$(MAKE) clean PROFILE=release32

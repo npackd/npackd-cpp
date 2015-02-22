@@ -175,22 +175,20 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
 
         Job* job = state.job;
 
-        if (!job->getErrorMessage().isEmpty()) {
+        if (!job->parentJob && !job->getErrorMessage().isEmpty() &&
+                !MainWindow::getInstance()) {
             QString jobTitle = job->getTitle();
             QString title = QObject::tr("Error") + ": " + jobTitle +
                         ": " + WPMUtils::getFirstLine(job->getErrorMessage());
             QString msg = job->getFullTitle() + "\n" + job->getErrorMessage();
-            if (!MainWindow::getInstance()) {
-                QMessageBox mb;
-                mb.setWindowTitle(title);
-                mb.setText(msg);
-                mb.setIcon(QMessageBox::Warning);
-                mb.setStandardButtons(QMessageBox::Ok);
-                mb.setDefaultButton(QMessageBox::Ok);
-                mb.setDetailedText(msg);
-                mb.exec();
-                // TODO: show errors only for the top-level jobs
-            }
+            QMessageBox mb;
+            mb.setWindowTitle(title);
+            mb.setText(msg);
+            mb.setIcon(QMessageBox::Warning);
+            mb.setStandardButtons(QMessageBox::Ok);
+            mb.setDefaultButton(QMessageBox::Ok);
+            mb.setDetailedText(msg);
+            mb.exec();
         }
 
         if (!job->parentJob) {
