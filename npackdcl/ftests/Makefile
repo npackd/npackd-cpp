@@ -7,6 +7,8 @@ PROFILE=release32
 
 .PHONY: all printvars clean compile prep zip msi gprof drmemory upload
 
+SHELL:=cmd.exe
+
 PROJECT=ftests
 
 ifeq (32,$(findstring 32,$(PROFILE)))
