@@ -5,7 +5,7 @@ rem %1 - type of the target system: 32 or 64
 
 if %bits% equ 64 goto bits64
 rem Npackd
-set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads
+set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads\bin\mingw-make.exe
 "%make%" -C wpmcpp zip msi PROFILE=release32
 "%make%" -C npackdcl\compile PROFILE=release32
 goto :eof
