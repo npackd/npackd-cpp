@@ -31,11 +31,16 @@ QString App::captureNpackdCLOutput(const QString& params)
 
     QStringList env;
     Job* job = new Job();
-    QByteArray output = PackageVersion::executeFile(
+    PackageVersion::executeFile(
             job, where,
             npackdcl,
             params, "Output.log", env);
     delete job;
+
+    QFile f("Output.log");
+    f.open(QFile::ReadOnly);
+    QByteArray output = f.readAll();
+    f.close();
 
     QString s(output);
 
