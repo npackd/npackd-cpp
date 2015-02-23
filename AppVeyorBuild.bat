@@ -1,3 +1,5 @@
+echo on
+
 rem This script is used by AppVeyor to build the project.
 
 if %bits% equ 64 goto bits64
