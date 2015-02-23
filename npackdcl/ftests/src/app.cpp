@@ -35,7 +35,7 @@ QString App::captureNpackdCLOutput(const QString& params)
             job, where,
             npackdcl,
             params, "Output.log", env);
-    qDebug() << job->getErrorMessage();
+    // qDebug() << job->getErrorMessage();
     delete job;
 
     QFile f("Output.log");
@@ -140,14 +140,4 @@ void App::check()
             contains("All dependencies are installed"));
 }
 
-void App::pathDoesNotNeedDatabase()
-{
-    QVERIFY(QFile::rename("C:\\ProgramData\\Npackd\\Data.db",
-            "C:\\ProgramData\\Npackd\\Data_.db"));
-    QVERIFY(captureNpackdCLOutput("path -p Windows64").trimmed() ==
-            "C:\\Windows");
-    QVERIFY(QFile::remove("C:\\ProgramData\\Npackd\\Data.db"));
-    QVERIFY(QFile::rename("C:\\ProgramData\\Npackd\\Data_.db",
-            "C:\\ProgramData\\Npackd\\Data.db"));
-}
 
