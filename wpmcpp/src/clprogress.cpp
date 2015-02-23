@@ -48,14 +48,10 @@ void CLProgress::jobChanged(const JobState& s)
 void CLProgress::jobChangedSimple(const JobState& s)
 {
     bool output = false;
-    if (!s.completed) {
-        time_t now = time(0);
-        if (now - this->lastJobChange >= this->updateRate) {
-            this->lastJobChange = now;
+    time_t now = time(0);
+    if (now - this->lastJobChange >= this->updateRate) {
+        this->lastJobChange = now;
 
-            output = true;
-        }
-    } else {
         output = true;
     }
 

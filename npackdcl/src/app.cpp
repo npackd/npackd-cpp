@@ -111,9 +111,7 @@ int App::process()
         if (cmd == "help") {
             usage();
         } else if (cmd == "path") {
-            err = DBRepository::getDefault()->openDefault();
-            if (err.isEmpty())
-                err = path();
+            err = path();
         } else if (cmd == "remove" || cmd == "rm") {
             err = DBRepository::getDefault()->openDefault();
             if (err.isEmpty()) {
@@ -700,19 +698,10 @@ QString App::path()
         }
     }
 
-    Package* p = 0;
-
-    if (job->shouldProceed()) {
-        QString err;
-        p = WPMUtils::findOnePackage(package, &err);
-        if (!err.isEmpty())
-            p = 0;
-    }
-
     Dependency d;
     if (job->shouldProceed()) {
         // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
-        d.package = p ? p->name : package;
+        d.package = package;
         if (versions.isNull()) {
             d.min.setVersion(0, 0);
             d.max.setVersion(std::numeric_limits<int>::max(), 0);
@@ -724,20 +713,42 @@ QString App::path()
         }
     }
 
+    QString path;
     if (job->shouldProceed()) {
         // no long-running operation can be done here.
         // "npackdcl path" must be fast.
-        QString p = InstalledPackages::getDefault()->findPath_npackdcl(d);
-        if (!p.isEmpty()) {
-            p.replace('/', '\\');
-            WPMUtils::outputTextConsole(p + "\n");
+        path = InstalledPackages::getDefault()->findPath_npackdcl(d);
+    }
+
+    if (job->shouldProceed() && path.isEmpty() && !package.contains('.')) {
+        QString err = DBRepository::getDefault()->openDefault();
+        if (err.isEmpty()) {
+            Package* p = WPMUtils::findOnePackage(package, &err);
+            if (!err.isEmpty()) {
+                delete p;
+                p = 0;
+            }
+
+            if (p) {
+                d.package = p->name;
+                path = InstalledPackages::getDefault()->findPath_npackdcl(d);
+            }
+
+            delete p;
+        } else {
+            job->setErrorMessage(err);
         }
     }
+
+    if (!path.isEmpty()) {
+        path.replace('/', '\\');
+        WPMUtils::outputTextConsole(path + "\n");
+    }
+
     job->complete();
 
     QString r = job->getErrorMessage();
 
-    delete p;
     delete job;
 
     return r;
