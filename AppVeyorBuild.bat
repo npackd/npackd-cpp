@@ -18,5 +18,8 @@ goto :eof
 
 :bits64
 set make=C:\Program Files (x86)\MinGW-w64_x86_64_SEH_POSIX_threads\bin\mingw32-make.exe
-"%make%" -C wpmcpp zip msi PROFILE=release64
+"%make%" -C wpmcpp zip msi PROFILE=release64 || exit /b %errorlevel%
+appveyor PushArtifact wpmcpp\build\64\release\Npackd64-%version%.msi || exit /b %errorlevel%
+appveyor PushArtifact wpmcpp\build\64\release\Npackd64-%version%.zip || exit /b %errorlevel%
+appveyor PushArtifact wpmcpp\build\64\release\Npackd64-%version%.map || exit /b %errorlevel%
 
