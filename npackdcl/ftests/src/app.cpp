@@ -35,6 +35,7 @@ QString App::captureNpackdCLOutput(const QString& params)
             job, where,
             npackdcl,
             params, "Output.log", env);
+    qDebug() << job->getErrorMessage();
     delete job;
 
     QFile f("Output.log");
