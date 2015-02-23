@@ -139,7 +139,7 @@ QString CLProcessor::startNewestNpackdg()
     }
 
     if (err.isEmpty()) {
-        QString args;
+        QString args = "\"" + exe + "\"";
         bool success = false;
         PROCESS_INFORMATION pinfo;
 

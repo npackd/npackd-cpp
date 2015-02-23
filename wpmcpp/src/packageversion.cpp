@@ -1550,9 +1550,12 @@ void PackageVersion::executeFile(
     bool success = false;
 
     if (job->shouldProceed()) {
+        QString args = "\"" + path + "\"";
+        if (!nativeArguments.isEmpty())
+            args = args + ' ' + nativeArguments;
         success = CreateProcess(
                 (wchar_t*) path.utf16(),
-                (wchar_t*) nativeArguments.utf16(),
+                (wchar_t*) args.utf16(),
                 0, &saAttr, TRUE,
                 CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
                 ba.data(),

@@ -967,12 +967,14 @@ void App::processInstallOperations(Job *job,
             Job* sub = job->newSubJob(0.1, "Starting the copied binary");
             QString file_ = batchFileName;
             file_.replace('/', '\\');
-            QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
             QString prg = WPMUtils::findCmdExe();
+            QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
 
             WPMUtils::outputTextConsole(
                     (QObject::tr("Starting update process %1 with parameters %2") + "\n").
                     arg(prg).arg(args));
+
+            args = "\"" + prg + "\" " + args;
 
             bool success = false;
             PROCESS_INFORMATION pinfo;
@@ -984,7 +986,7 @@ void App::processInstallOperations(Job *job,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             };
 
-            // we do to not use CREATE_UNICODE_ENVIRONMENR here to not start
+            // we do to not use CREATE_UNICODE_ENVIRONMENT here to not start
             // new console if the current console is not Unicode, which is
             // normally the case if you start cmd.exe from the Windows start
             // menu

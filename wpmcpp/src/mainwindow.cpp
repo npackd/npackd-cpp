@@ -902,8 +902,9 @@ void MainWindow::processWithSelfUpdate(Job* job,
 
         QString file_ = batchFileName;
         file_.replace('/', '\\');
-        QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
         QString prg = WPMUtils::findCmdExe();
+
+        QString args = "\"" + prg + " /U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
 
         bool success = false;
         PROCESS_INFORMATION pinfo;
