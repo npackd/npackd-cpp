@@ -904,7 +904,7 @@ void MainWindow::processWithSelfUpdate(Job* job,
         file_.replace('/', '\\');
         QString prg = WPMUtils::findCmdExe();
 
-        QString args = "\"" + prg + " /U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
+        QString args = "\"" + prg + "\" /U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
 
         bool success = false;
         PROCESS_INFORMATION pinfo;
@@ -919,7 +919,7 @@ void MainWindow::processWithSelfUpdate(Job* job,
                 (wchar_t*) prg.utf16(),
                 (wchar_t*) args.utf16(),
                 0, 0, TRUE,
-                CREATE_UNICODE_ENVIRONMENT, 0,
+                CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, 0,
                 0, &startupInfo, &pinfo);
 
         if (success) {
