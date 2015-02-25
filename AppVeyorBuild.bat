@@ -26,8 +26,8 @@ goto :eof
 
 :npackdcl
 "%make%" -C npackdcl zip msi PROFILE=release%bits% || exit /b %errorlevel%
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-%version%.zip || exit /b %errorlevel%
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-%version%.msi || exit /b %errorlevel%
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-%version%.map || exit /b %errorlevel%
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.zip || exit /b %errorlevel%
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.msi || exit /b %errorlevel%
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.map || exit /b %errorlevel%
 goto :eof
 
