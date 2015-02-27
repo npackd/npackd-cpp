@@ -35,7 +35,7 @@ CLProcessor::CLProcessor()
 void CLProcessor::monitorAndWaitFor(Job* job, const QString& title)
 {
     ProgressDialog* d = new ProgressDialog();
-    d->setWindowTitle(title);
+    d->setWindowTitle("Npackd: " + title);
     d->job = job;
     QVBoxLayout* layout = new QVBoxLayout();
 
@@ -97,7 +97,7 @@ QString CLProcessor::remove()
         confirmed = UIUtils::confirmInstallOperations(0, ops, &err);
 
     if (err.isEmpty() && confirmed) {
-        Job* job = new Job();
+        Job* job = new Job("Uninstall");
         InstallThread* it = new InstallThread(0, 1, job);
         it->install = ops;
         it->programCloseType = programCloseType;
@@ -211,7 +211,7 @@ QString CLProcessor::add()
     // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
 
     if (err.isEmpty()) {
-        Job* job = new Job();
+        Job* job = new Job("Install");
         InstallThread* it = new InstallThread(0, 1, job);
         it->install = ops;
         it->programCloseType = pct;
@@ -330,7 +330,7 @@ QString CLProcessor::update()
     */
 
     if (job->shouldProceed() && !up2date) {
-        Job* sjob = new Job();
+        Job* sjob = new Job("Update");
         InstallThread* it = new InstallThread(0, 1, sjob);
         it->install = ops;
         it->programCloseType = programCloseType;

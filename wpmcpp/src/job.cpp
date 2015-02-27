@@ -58,8 +58,6 @@ time_t JobState::remainingTime()
     return result;
 }
 
-QList<Job*> Job::jobs;
-
 Job::Job(const QString &title, Job *parent):
         mutex(QMutex::Recursive), parentJob(parent)
 {
@@ -127,6 +125,12 @@ void Job::cancel()
             parentJob_->cancel();
 
         fireChange();
+
+        this->mutex.lock();
+        for (int i = 0; i < this->childJobs.size(); i++) {
+            this->childJobs.at(i)->cancel();
+        }
+        this->mutex.unlock();
     }
 }
 

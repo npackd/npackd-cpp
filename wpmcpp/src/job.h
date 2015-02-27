@@ -129,9 +129,6 @@ public slots:
      */
     void parentJobChanged(const JobState& s);
 public:
-    /** currently running jobs */
-    static QList<Job*> jobs;
-
     /** parent job or 0 */
     Job* parentJob;
 

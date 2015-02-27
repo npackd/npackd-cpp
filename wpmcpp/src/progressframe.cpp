@@ -71,7 +71,7 @@ void ProgressFrame::jobChanged(const JobState& s)
         time_t now;
         time(&now);
         if (now != this->modified) {
-            ui->labelStep->setText(this->title);
+            ui->labelStep->setText(s.job->getFullTitle());
             this->modified = now;
 
             if (started != 0) {
@@ -100,8 +100,8 @@ void ProgressFrame::jobChanged(const JobState& s)
                 time(&this->started);
                 ui->labelElapsed->setText("-");
             }
-            ui->progressBar->setValue(lround(s.progress * 10000));
-            ui->pushButtonCancel->setEnabled(!s.cancelRequested);
+            ui->progressBar->setValue(lround(this->job->getProgress() * 10000));
+            ui->pushButtonCancel->setEnabled(!this->job->isCancelled());
         }
     }
 }
