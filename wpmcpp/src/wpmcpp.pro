@@ -53,7 +53,6 @@ SOURCES += main.cpp \
     visiblejobs.cpp \
     clprocessor.cpp \
     progresstree2.cpp \
-    progressframe.cpp \
     downloadsizefinder.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
@@ -104,7 +103,6 @@ HEADERS += mainwindow.h \
     visiblejobs.h \
     clprocessor.h \
     progresstree2.h \
-    progressframe.h \
     downloadsizefinder.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
@@ -112,8 +110,7 @@ FORMS += mainwindow.ui \
     messageframe.ui \
     settingsframe.ui \
     packageframe.ui \
-    mainframe.ui \
-    progressframe.ui
+    mainframe.ui
 TRANSLATIONS = wpmcpp_es.ts wpmcpp_ru.ts wpmcpp_fr.ts wpmcpp_de.ts
 LIBS += -lquazip \
     -lz \

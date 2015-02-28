@@ -5,7 +5,6 @@
 #include <QMessageBox>
 #include <QString>
 
-#include "progressframe.h"
 #include "installedpackages.h"
 #include "wpmutils.h"
 #include "packageversion.h"
@@ -14,6 +13,7 @@
 #include "uiutils.h"
 #include "installthread.h"
 #include "commandline.h"
+#include "progresstree2.h"
 
 // TODO: i18n
 
@@ -39,7 +39,10 @@ void CLProcessor::monitorAndWaitFor(Job* job, const QString& title)
     d->job = job;
     QVBoxLayout* layout = new QVBoxLayout();
 
-    ProgressFrame* pf = new ProgressFrame(d, job, title);
+    ProgressTree2* pf = new ProgressTree2(d);
+    //pf->autoExpandNodes = false;
+    pf->addJob(job);
+    pf->setNarrowColumns();
     layout->insertWidget(0, pf);
 
     d->setLayout(layout);
@@ -48,7 +51,7 @@ void CLProcessor::monitorAndWaitFor(Job* job, const QString& title)
             SLOT(accept()), Qt::QueuedConnection);
 
 
-    d->resize(400, 200);
+    d->resize(450, 200);
 
     if (!job->isCompleted()) {
         d->exec();
