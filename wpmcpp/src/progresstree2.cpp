@@ -26,6 +26,7 @@ public:
 ProgressTree2::ProgressTree2(QWidget *parent) :
     QTreeWidget(parent)
 {
+    this->autoExpandNodes = true;
     setColumnCount(5);
 
     timer = new QTimer(this);
@@ -55,7 +56,7 @@ void ProgressTree2::timerTimeout()
 
 }
 
-QTreeWidgetItem* ProgressTree2::findItem(Job* job)
+QTreeWidgetItem* ProgressTree2::findItem(Job* job, bool create)
 {
     QList<Job*> path;
     Job* v = job;
@@ -90,8 +91,20 @@ QTreeWidgetItem* ProgressTree2::findItem(Job* job)
         if (found)
             c = found;
         else {
-            c = 0;
-            break;
+            if (create) {
+                if (!toFind->parentJob)
+                    c = addJob(toFind);
+                else {
+                    QTreeWidgetItem* subItem = new QTreeWidgetItem(c);
+                    fillItem(subItem, toFind);
+                    if (autoExpandNodes)
+                        c->setExpanded(true);
+                    c = subItem;
+                }
+            } else {
+                c = 0;
+                break;
+            }
         }
     }
 
@@ -118,7 +131,7 @@ void ProgressTree2::fillItem(QTreeWidgetItem* item,
     item->setData(0, Qt::UserRole, qVariantFromValue((void*) job));
 }
 
-void ProgressTree2::addJob(Job* job)
+QTreeWidgetItem* ProgressTree2::addJob(Job* job)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem(this);
     fillItem(item, job);
@@ -132,17 +145,22 @@ void ProgressTree2::addJob(Job* job)
             Qt::QueuedConnection);
 
     addTopLevelItem(item);
+
+    return item;
+}
+
+void ProgressTree2::setNarrowColumns()
+{
+    setColumnWidth(0, 110);
+    setColumnWidth(1, 60);
+    setColumnWidth(2, 60);
+    setColumnWidth(3, 100);
+    setColumnWidth(4, 70);
 }
 
 void ProgressTree2::subJobCreated(Job* sub)
 {
-    Job* job = sub->parentJob;
-    QTreeWidgetItem* item = findItem(job);
-    if (item) {
-        QTreeWidgetItem* subItem = new QTreeWidgetItem(item);
-        fillItem(subItem, sub);
-        item->setExpanded(true);
-    }
+    findItem(sub, true);
 }
 
 void ProgressTree2::cancelClicked()

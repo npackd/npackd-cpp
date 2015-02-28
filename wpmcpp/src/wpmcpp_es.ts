@@ -720,38 +720,30 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ProgressFrame</name>
     <message>
-        <location filename="progressframe.ui" line="429"/>
         <source>Frame</source>
-        <translation>Marco</translation>
+        <translation type="vanished">Marco</translation>
     </message>
     <message>
-        <location filename="progressframe.ui" line="474"/>
         <source>Task / Step:</source>
-        <translation>Tarea / Paso:</translation>
+        <translation type="vanished">Tarea / Paso:</translation>
     </message>
     <message>
-        <location filename="progressframe.ui" line="487"/>
-        <location filename="progressframe.ui" line="504"/>
-        <location filename="progressframe.ui" line="518"/>
         <source>-</source>
-        <translation>-</translation>
+        <translation type="vanished">-</translation>
     </message>
     <message>
-        <location filename="progressframe.ui" line="497"/>
         <source>Elapsed time:</source>
         <oldsource>Elapsed Time:</oldsource>
-        <translation type="unfinished">Tiempo transcurrido:</translation>
+        <translation type="obsolete">Tiempo transcurrido:</translation>
     </message>
     <message>
-        <location filename="progressframe.ui" line="511"/>
         <source>Remaining time:</source>
         <oldsource>Remaining Time:</oldsource>
-        <translation type="unfinished">Tiempo Restante:</translation>
+        <translation type="obsolete">Tiempo Restante:</translation>
     </message>
     <message>
-        <location filename="progressframe.ui" line="556"/>
         <source>Cancel</source>
-        <translation>Cancelar</translation>
+        <translation type="vanished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -1843,8 +1835,9 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1299"/>
-        <source>Creating a temporary database</source>
-        <translation>Creando base de datos temporal</translation>
+        <source>Opening the package database</source>
+        <oldsource>Creating a temporary database</oldsource>
+        <translation type="unfinished">Creando base de datos temporal</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1312"/>
@@ -2270,35 +2263,35 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">El paquete %1 será desinstalado. El directorio correspondiente %2 será completamente eliminado. No hay forma de restaurar los archivos.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="107"/>
+        <location filename="clprocessor.cpp" line="110"/>
         <location filename="uiutils.cpp" line="139"/>
         <location filename="uiutils.cpp" line="167"/>
         <source>Uninstall</source>
         <translation>Desinstalar</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="134"/>
+        <location filename="clprocessor.cpp" line="137"/>
         <source>Newer Npackd GUI was not found</source>
         <translation>GUI de Npackd más nueva no encontrada</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="166"/>
+        <location filename="clprocessor.cpp" line="169"/>
         <source>Error starting %1: %2</source>
         <translation>Error iniciando %1: %2</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="260"/>
+        <location filename="clprocessor.cpp" line="263"/>
         <source>Missing option: --package</source>
         <translation>Opción que falta: --package</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="268"/>
+        <location filename="clprocessor.cpp" line="271"/>
         <location filename="wpmutils.cpp" line="1914"/>
         <source>Invalid package name: %1</source>
         <translation>Nombre de paquete inválido: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="290"/>
+        <location filename="clprocessor.cpp" line="293"/>
         <location filename="wpmutils.cpp" line="1922"/>
         <location filename="wpmutils.cpp" line="2026"/>
         <location filename="wpmutils.cpp" line="2032"/>
@@ -2306,12 +2299,12 @@ p, li { white-space: pre-wrap; }
         <translation>Paquete desconocido: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="293"/>
+        <location filename="clprocessor.cpp" line="296"/>
         <source>Ambiguous package name</source>
         <translation>Nombre de paquete ambiguo</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="309"/>
+        <location filename="clprocessor.cpp" line="312"/>
         <source>Planning</source>
         <translation>Planeando</translation>
     </message>
@@ -2320,58 +2313,58 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Actualizando</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="479"/>
+        <location filename="clprocessor.cpp" line="482"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation>nombre interno del paquete (e.j. com.ejemplo.Editor o solamente Editor)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="480"/>
+        <location filename="clprocessor.cpp" line="483"/>
         <source>package</source>
         <translation>Paquete</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="481"/>
+        <location filename="clprocessor.cpp" line="484"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation>rango de versiones (e.j. [1.5,2))</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="482"/>
+        <location filename="clprocessor.cpp" line="485"/>
         <source>range</source>
         <translation>rango</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="483"/>
+        <location filename="clprocessor.cpp" line="486"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation>número de versión (e.j. 1.5.12)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="484"/>
+        <location filename="clprocessor.cpp" line="487"/>
         <source>version</source>
         <translation>versión</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="498"/>
+        <location filename="clprocessor.cpp" line="501"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation>lista de maneras de cerrar aplicaciones en ejecución (c=cerrar, k=forzar cierre). El valor por defecto es &apos;c&apos;.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="499"/>
+        <location filename="clprocessor.cpp" line="502"/>
         <source>[c][k]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="514"/>
+        <location filename="clprocessor.cpp" line="517"/>
         <source>Error parsing the command line: %1</source>
         <translation>Error analizando la línea de comandos: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="555"/>
+        <location filename="clprocessor.cpp" line="558"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation>Comando erróneo: %1. Intenta npackdg help</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="562"/>
+        <location filename="clprocessor.cpp" line="565"/>
         <source>Unexpected argument: %1</source>
         <translation>Argumento inesperado: %1</translation>
     </message>
@@ -2385,8 +2378,8 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 paquete(s) serán instalados: %2</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="221"/>
-        <location filename="clprocessor.cpp" line="340"/>
+        <location filename="clprocessor.cpp" line="224"/>
+        <location filename="clprocessor.cpp" line="343"/>
         <location filename="uiutils.cpp" line="153"/>
         <source>Install</source>
         <translation>Instalar</translation>
@@ -2977,11 +2970,10 @@ p, li { white-space: pre-wrap; }
         <translation>N/A</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="516"/>
-        <location filename="clprocessor.cpp" line="558"/>
-        <location filename="clprocessor.cpp" line="564"/>
-        <location filename="progressframe.cpp" line="38"/>
-        <location filename="progresstree2.cpp" line="181"/>
+        <location filename="clprocessor.cpp" line="519"/>
+        <location filename="clprocessor.cpp" line="561"/>
+        <location filename="clprocessor.cpp" line="567"/>
+        <location filename="progresstree2.cpp" line="199"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -3651,27 +3643,27 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="45"/>
+        <location filename="progresstree2.cpp" line="46"/>
         <source>Task / Step</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="46"/>
+        <location filename="progresstree2.cpp" line="47"/>
         <source>Elapsed time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="47"/>
+        <location filename="progresstree2.cpp" line="48"/>
         <source>Estimated time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="48"/>
+        <location filename="progresstree2.cpp" line="49"/>
         <source>Progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="112"/>
+        <location filename="progresstree2.cpp" line="125"/>
         <source>Cancel</source>
         <translation type="unfinished">Cancelar</translation>
     </message>
