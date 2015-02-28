@@ -1296,7 +1296,7 @@ void DBRepository::updateF5(Job* job)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
-                QObject::tr("Creating a temporary database"));
+                QObject::tr("Opening the package database"));
         QString err = temp.openDefault("tempdb");
         if (!err.isEmpty())
             job->setErrorMessage(err);
