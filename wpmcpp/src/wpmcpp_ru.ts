@@ -2287,35 +2287,34 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="110"/>
         <location filename="uiutils.cpp" line="139"/>
         <location filename="uiutils.cpp" line="167"/>
         <source>Uninstall</source>
         <translation>Удаление</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="137"/>
+        <location filename="clprocessor.cpp" line="136"/>
         <source>Newer Npackd GUI was not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="169"/>
+        <location filename="clprocessor.cpp" line="168"/>
         <source>Error starting %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="263"/>
+        <location filename="clprocessor.cpp" line="262"/>
         <source>Missing option: --package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="271"/>
+        <location filename="clprocessor.cpp" line="270"/>
         <location filename="wpmutils.cpp" line="1914"/>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="293"/>
+        <location filename="clprocessor.cpp" line="292"/>
         <location filename="wpmutils.cpp" line="1922"/>
         <location filename="wpmutils.cpp" line="2026"/>
         <location filename="wpmutils.cpp" line="2032"/>
@@ -2323,68 +2322,68 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="296"/>
+        <location filename="clprocessor.cpp" line="295"/>
         <source>Ambiguous package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="312"/>
+        <location filename="clprocessor.cpp" line="311"/>
         <source>Planning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="482"/>
+        <location filename="clprocessor.cpp" line="481"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="483"/>
+        <location filename="clprocessor.cpp" line="482"/>
         <source>package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="484"/>
+        <location filename="clprocessor.cpp" line="483"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="485"/>
+        <location filename="clprocessor.cpp" line="484"/>
         <source>range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="486"/>
+        <location filename="clprocessor.cpp" line="485"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="487"/>
+        <location filename="clprocessor.cpp" line="486"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="501"/>
+        <location filename="clprocessor.cpp" line="500"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="502"/>
+        <location filename="clprocessor.cpp" line="501"/>
         <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="517"/>
+        <location filename="clprocessor.cpp" line="516"/>
         <source>Error parsing the command line: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="558"/>
+        <location filename="clprocessor.cpp" line="557"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="565"/>
+        <location filename="clprocessor.cpp" line="564"/>
         <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2398,8 +2397,6 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="224"/>
-        <location filename="clprocessor.cpp" line="343"/>
         <location filename="uiutils.cpp" line="153"/>
         <source>Install</source>
         <translation>Установка</translation>
@@ -2986,9 +2983,9 @@ p, li { white-space: pre-wrap; }
         <translation>не доступно</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="519"/>
-        <location filename="clprocessor.cpp" line="561"/>
-        <location filename="clprocessor.cpp" line="567"/>
+        <location filename="clprocessor.cpp" line="518"/>
+        <location filename="clprocessor.cpp" line="560"/>
+        <location filename="clprocessor.cpp" line="566"/>
         <location filename="progresstree2.cpp" line="199"/>
         <source>Error</source>
         <translation>Ошибка</translation>

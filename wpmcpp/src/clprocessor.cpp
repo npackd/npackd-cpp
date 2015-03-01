@@ -32,15 +32,14 @@ CLProcessor::CLProcessor()
 {
 }
 
-void CLProcessor::monitorAndWaitFor(Job* job, const QString& title)
+void CLProcessor::monitorAndWaitFor(Job* job)
 {
     ProgressDialog* d = new ProgressDialog();
-    d->setWindowTitle("Npackd: " + title);
+    d->setWindowTitle("Npackd: " + job->getTitle());
     d->job = job;
     QVBoxLayout* layout = new QVBoxLayout();
 
     ProgressTree2* pf = new ProgressTree2(d);
-    //pf->autoExpandNodes = false;
     pf->addJob(job);
     pf->setNarrowColumns();
     layout->insertWidget(0, pf);
@@ -107,7 +106,7 @@ QString CLProcessor::remove()
         ops.clear();
 
         it->start(QThread::LowestPriority);
-        monitorAndWaitFor(job, QObject::tr("Uninstall"));
+        monitorAndWaitFor(job);
         it->deleteLater();
     }
 
@@ -221,7 +220,7 @@ QString CLProcessor::add()
         ops.clear();
 
         it->start(QThread::LowestPriority);
-        monitorAndWaitFor(job, QObject::tr("Install"));
+        monitorAndWaitFor(job);
         it->deleteLater();
     }
 
@@ -340,7 +339,7 @@ QString CLProcessor::update()
         ops.clear();
 
         it->start(QThread::LowestPriority);
-        monitorAndWaitFor(sjob, QObject::tr("Install"));
+        monitorAndWaitFor(sjob);
         it->deleteLater();
         if (sjob->getErrorMessage().isEmpty())
             job->setErrorMessage(sjob->getErrorMessage());
