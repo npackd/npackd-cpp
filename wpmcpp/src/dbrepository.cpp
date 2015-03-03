@@ -182,7 +182,7 @@ Package *DBRepository::findPackage_(const QString &name)
 
     MySQLQuery q(db);
     if (!q.prepare("SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE "
-            "FROM PACKAGE2 WHERE NAME = :NAME ORDER BY REPOSITORY LIMIT 1"))
+            "FROM PACKAGE WHERE NAME = :NAME LIMIT 1"))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
@@ -223,8 +223,8 @@ PackageVersion* DBRepository::findPackageVersion_(
 
     MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, "
-            "PACKAGE, CONTENT, MSIGUID FROM PACKAGE_VERSION2 "
-            "WHERE NAME = :NAME AND PACKAGE = :PACKAGE ORDER BY REPOSITORY"))
+            "PACKAGE, CONTENT, MSIGUID FROM PACKAGE_VERSION "
+            "WHERE NAME = :NAME AND PACKAGE = :PACKAGE"))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
@@ -264,9 +264,8 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     QList<PackageVersion*> r;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT CONTENT, MIN(REPOSITORY) FROM PACKAGE_VERSION2 "
-            "WHERE PACKAGE = :PACKAGE "
-            "GROUP BY NAME"))
+    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
+            "WHERE PACKAGE = :PACKAGE"))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
@@ -310,8 +309,8 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
     QList<PackageVersion*> r;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION2 "
-            "WHERE DETECT_FILE_COUNT > 0 ORDER BY REPOSITORY"))
+    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
+            "WHERE DETECT_FILE_COUNT > 0"))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
@@ -356,8 +355,8 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
         MySQLQuery q(db);
 
         if (!q.prepare("SELECT NAME, TITLE, DESCRIPTION, URL "
-                "FROM LICENSE2 "
-                "WHERE NAME = :NAME ORDER BY REPOSITORY"))
+                "FROM LICENSE "
+                "WHERE NAME = :NAME"))
             *err = getErrorString(q);
 
         if (err->isEmpty()) {
@@ -523,7 +522,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
         where = "WHERE " + where;
 
     QString sql = QString("SELECT CATEGORY.ID, COUNT(*), CATEGORY.NAME FROM "
-            "PACKAGE2 LEFT JOIN CATEGORY ON PACKAGE2.CATEGORY") +
+            "PACKAGE LEFT JOIN CATEGORY ON PACKAGE.CATEGORY") +
             QString::number(level) +
             " = CATEGORY.ID " +
             where + " GROUP BY CATEGORY.ID, CATEGORY.NAME "
@@ -566,18 +565,14 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
     QList<Package*> r;
     MySQLQuery q(db);
 
-    // MIN(REPOSITORY) is important here as we want the data from the first
-    // repository
     QString sql = "SELECT NAME, TITLE, URL, ICON, "
-            "DESCRIPTION, LICENSE, "
-            "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, "
-            "MIN(REPOSITORY) "
-            "FROM PACKAGE2";
+            "DESCRIPTION, LICENSE "
+            "FROM PACKAGE";
 
     if (!where.isEmpty())
         sql += " " + where;
 
-    sql += " GROUP BY NAME ORDER BY TITLE";
+    sql += " ORDER BY TITLE";
 
     if (!q.prepare(sql))
         *err = getErrorString(q);
@@ -598,16 +593,6 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
             p->setIcon(q.value(3).toString());
             p->description = q.value(4).toString();
             p->license = q.value(5).toString();
-            /*
-            QString path = getCategoryPath(q.value(6).toInt(),
-                    q.value(7).toInt(),
-                    q.value(8).toInt(),
-                    q.value(9).toInt(),
-                    q.value(10).toInt());
-            if (!path.isEmpty()) {
-                p->categories.append(path);
-            }
-            */
 
             r.append(p);
         }
@@ -876,8 +861,8 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
             "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
-            "FROM PACKAGE2 WHERE SHORT_NAME = :SHORT_NAME "
-            "ORDER BY REPOSITORY LIMIT 1"))
+            "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME "
+            "LIMIT 1"))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
@@ -1003,8 +988,8 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
 
     MySQLQuery q(db);
     if (!q.prepare("SELECT NAME, "
-            "PACKAGE, CONTENT FROM PACKAGE_VERSION2 "
-            "WHERE MSIGUID = :MSIGUID ORDER BY REPOSITORY"))
+            "PACKAGE, CONTENT FROM PACKAGE_VERSION "
+            "WHERE MSIGUID = :MSIGUID"))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {

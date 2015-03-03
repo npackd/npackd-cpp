@@ -1792,9 +1792,9 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="dbrepository.cpp" line="243"/>
-        <location filename="dbrepository.cpp" line="285"/>
-        <location filename="dbrepository.cpp" line="329"/>
-        <location filename="dbrepository.cpp" line="1023"/>
+        <location filename="dbrepository.cpp" line="284"/>
+        <location filename="dbrepository.cpp" line="328"/>
+        <location filename="dbrepository.cpp" line="1008"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>XML-анализатор завершился ошибкой в строке %1, колонке %2: %3</translation>
     </message>
@@ -1807,7 +1807,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Начинается SQL транзакция</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1048"/>
+        <location filename="dbrepository.cpp" line="1033"/>
         <source>Clearing the packages table</source>
         <translation>Очистка таблицы пакетов</translation>
     </message>
@@ -1822,22 +1822,22 @@ p, li { white-space: pre-wrap; }
         <translation>Не число</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1058"/>
+        <location filename="dbrepository.cpp" line="1043"/>
         <source>Clearing the package versions table</source>
         <translation>Очистка таблицы версий пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1068"/>
+        <location filename="dbrepository.cpp" line="1053"/>
         <source>Clearing the licenses table</source>
         <translation>Очистка таблицы лицензий</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1088"/>
+        <location filename="dbrepository.cpp" line="1073"/>
         <source>Clearing the categories table</source>
         <translation>Очищаю таблицу с категориями</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1177"/>
+        <location filename="dbrepository.cpp" line="1162"/>
         <source>Error saving the list of repositories in the database: %1</source>
         <translation>Ошибка при сохранении списка репозиториев в базе данных: %1</translation>
     </message>
@@ -1850,33 +1850,33 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Ошибка при создании временного файла</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1299"/>
+        <location filename="dbrepository.cpp" line="1284"/>
         <source>Opening the package database</source>
         <oldsource>Creating a temporary database</oldsource>
         <translation type="unfinished">Создаю временную базу данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1312"/>
+        <location filename="dbrepository.cpp" line="1297"/>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation>Начинаю SQL операцию (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1334"/>
+        <location filename="dbrepository.cpp" line="1319"/>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation>Загружаю отдалённые репозитории и заполняю локальную базу данных (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1408"/>
+        <location filename="dbrepository.cpp" line="1393"/>
         <source>Commiting the SQL transaction (tempdb)</source>
         <translation>Завершаю SQL операцию (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1342"/>
+        <location filename="dbrepository.cpp" line="1327"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation>Обновляю статусы инсталляции (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1350"/>
+        <location filename="dbrepository.cpp" line="1335"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation>Обновляю статусы установленных пакетов в базе данных (tempdb)</translation>
     </message>
@@ -1893,7 +1893,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Совершается SQL транзакция</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1324"/>
+        <location filename="dbrepository.cpp" line="1309"/>
         <source>Clearing the database</source>
         <translation>Очистка базы данных</translation>
     </message>
@@ -1902,7 +1902,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Загружаю удаленные репозитории и заполняю локальную базу данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1526"/>
+        <location filename="dbrepository.cpp" line="1511"/>
         <source>Updating statuses</source>
         <translation>Обновляю статус</translation>
     </message>
@@ -1923,72 +1923,72 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Обновление статуса установленных пакетов в базе данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1438"/>
+        <location filename="dbrepository.cpp" line="1423"/>
         <source>Reading categories</source>
         <translation>Читаю категории</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1358"/>
+        <location filename="dbrepository.cpp" line="1343"/>
         <source>Removing packages without versions</source>
         <translation>Удаляю пакеты без версий</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1078"/>
+        <location filename="dbrepository.cpp" line="1063"/>
         <source>Clearing the links table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1111"/>
+        <location filename="dbrepository.cpp" line="1096"/>
         <source>Clearing the packages table for the repository </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1123"/>
+        <location filename="dbrepository.cpp" line="1108"/>
         <source>Clearing the package versions table for the repository </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1135"/>
+        <location filename="dbrepository.cpp" line="1120"/>
         <source>Clearing the licenses table for the repository </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1147"/>
+        <location filename="dbrepository.cpp" line="1132"/>
         <source>Clearing the links table for the repository </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1184"/>
+        <location filename="dbrepository.cpp" line="1169"/>
         <source>Downloading %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1255"/>
+        <location filename="dbrepository.cpp" line="1240"/>
         <source>Unzipping the repository failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1263"/>
+        <location filename="dbrepository.cpp" line="1248"/>
         <source>Rep.xml is missing in a repository in ZIP format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1370"/>
+        <location filename="dbrepository.cpp" line="1355"/>
         <source>Updating old tables for backward compatibility</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1477"/>
+        <location filename="dbrepository.cpp" line="1462"/>
         <source>Inserting data in the packages table</source>
         <translation>Вставка данных в таблицу пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1487"/>
+        <location filename="dbrepository.cpp" line="1472"/>
         <source>Inserting data in the package versions table</source>
         <translation>Вставка данных в таблицу версий пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1497"/>
+        <location filename="dbrepository.cpp" line="1482"/>
         <source>Inserting data in the licenses table</source>
         <translation>Вставка данных в таблицу лицензий</translation>
     </message>
@@ -2811,7 +2811,7 @@ p, li { white-space: pre-wrap; }
         <translation>Невозможно открыть ZIP файл %1: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1251"/>
+        <location filename="dbrepository.cpp" line="1236"/>
         <location filename="wpmutils.cpp" line="2116"/>
         <source>Extracting</source>
         <translation>Извлечение</translation>
@@ -3023,17 +3023,17 @@ p, li { white-space: pre-wrap; }
         <translation>Невозможно открыть %1 для записи</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1207"/>
+        <location filename="dbrepository.cpp" line="1192"/>
         <source>Repository %1 of %2</source>
         <translation>Репозиторий %1 из %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1214"/>
+        <location filename="dbrepository.cpp" line="1199"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Ошибка загрузки репозитория %1: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1229"/>
+        <location filename="dbrepository.cpp" line="1214"/>
         <location filename="settingsframe.cpp" line="117"/>
         <source>No repositories defined</source>
         <translation>Нет заданных репозиториев</translation>
@@ -3059,7 +3059,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Невозможно открыть файл</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1273"/>
+        <location filename="dbrepository.cpp" line="1258"/>
         <source>Parsing XML</source>
         <translation>Анализ XML</translation>
     </message>
