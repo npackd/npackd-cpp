@@ -42,7 +42,7 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
 
     agent += " (compatible; MSIE 9.0)";
 
-    void* internet = InternetOpenW((WCHAR*) agent.utf16(),
+    HINTERNET internet = InternetOpenW((WCHAR*) agent.utf16(),
             INTERNET_OPEN_TYPE_PRECONFIG,
             0, 0, 0);
 
@@ -53,6 +53,11 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         job->complete();
         return -1L;
     }
+
+    // override the 30 second timeout
+    DWORD rec_timeout = 300 * 1000;
+    InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
+            &rec_timeout, sizeof(rec_timeout));
 
     job->setProgress(0.01);
 
