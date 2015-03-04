@@ -925,7 +925,7 @@ p, li { white-space: pre-wrap; }
         <translation>Aktualisiere die Installationsstati (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1335"/>
+        <location filename="dbrepository.cpp" line="1385"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation>Aktualisiere die Stati für die installierten Pakete in der Datenbank (tempdb)</translation>
     </message>
@@ -977,7 +977,7 @@ p, li { white-space: pre-wrap; }
         <translation>Lese die Kategorien ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1343"/>
+        <location filename="dbrepository.cpp" line="1335"/>
         <source>Removing packages without versions</source>
         <translation>Entferne Pakete ohne Versionen</translation>
     </message>
@@ -1022,7 +1022,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1355"/>
+        <location filename="dbrepository.cpp" line="1347"/>
         <source>Updating old tables for backward compatibility</source>
         <translation type="unfinished"></translation>
     </message>
