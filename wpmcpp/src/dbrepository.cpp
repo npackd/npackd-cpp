@@ -1332,14 +1332,6 @@ void DBRepository::updateF5(Job* job)
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
-                QObject::tr("Updating the status for installed packages in the database (tempdb)"));
-        temp.updateStatusForInstalled(sub);
-        if (!sub->getErrorMessage().isEmpty())
-            job->setErrorMessage(sub->getErrorMessage());
-    }
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.05,
                 QObject::tr("Removing packages without versions"));
         QString err = temp.exec("DELETE FROM PACKAGE2 WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION2 "
@@ -1386,6 +1378,14 @@ void DBRepository::updateF5(Job* job)
             sub->completeWithProgress();
         else
             job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Updating the status for installed packages in the database (tempdb)"));
+        temp.updateStatusForInstalled(sub);
+        if (!sub->getErrorMessage().isEmpty())
+            job->setErrorMessage(sub->getErrorMessage());
     }
 
     if (job->shouldProceed()) {
@@ -1765,7 +1765,7 @@ QString DBRepository::updateStatus(const QString& package)
         }
 
         MySQLQuery q(db);
-        if (!q.prepare("UPDATE PACKAGE2 "
+        if (!q.prepare("UPDATE PACKAGE "
                 "SET STATUS=:STATUS "
                 "WHERE NAME=:NAME"))
             err = getErrorString(q);
@@ -1817,6 +1817,45 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
     }
 
     bool e = false;
+
+    if (err.isEmpty()) {
+        e = tableExists(&db, "PACKAGE", &err);
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            // NULL should be stored in CATEGORYx if a package is not
+            // categorized
+            db.exec("CREATE TABLE PACKAGE(NAME TEXT, "
+                    "TITLE TEXT, "
+                    "URL TEXT, "
+                    "ICON TEXT, "
+                    "DESCRIPTION TEXT, "
+                    "LICENSE TEXT, "
+                    "FULLTEXT TEXT, "
+                    "STATUS INTEGER, "
+                    "SHORT_NAME TEXT, "
+                    "REPOSITORY INTEGER, "
+                    "CATEGORY0 INTEGER, "
+                    "CATEGORY1 INTEGER, "
+                    "CATEGORY2 INTEGER, "
+                    "CATEGORY3 INTEGER, "
+                    "CATEGORY4 INTEGER"
+                    ")");
+            err = toString(db.lastError());
+        }
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX PACKAGE_NAME ON PACKAGE(NAME)");
+            err = toString(db.lastError());
+        }
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX PACKAGE_SHORT_NAME ON PACKAGE(SHORT_NAME)");
+            err = toString(db.lastError());
+        }
+    }
 
     // PACKAGE2 is new in Npackd 1.20
     if (err.isEmpty()) {
@@ -1886,6 +1925,7 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
+
     if (err.isEmpty()) {
         e = tableExists(&db, "REPOSITORY", &err);
     }
@@ -1908,7 +1948,61 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
         }
     }
 
-    // PACKAGE_VERSION2
+    if (err.isEmpty()) {
+        e = tableExists(&db, "PACKAGE_VERSION", &err);
+    }
+
+    if (err.isEmpty()) {
+        if (e) {
+            // PACKAGE_VERSION.URL is new in 1.18.4
+            if (!columnExists(&db, "PACKAGE_VERSION", "URL", &err)) {
+                exec("DROP TABLE PACKAGE_VERSION");
+                e = false;
+            }
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE PACKAGE_VERSION(NAME TEXT, "
+                    "PACKAGE TEXT, URL TEXT, "
+                    "CONTENT BLOB, MSIGUID TEXT, DETECT_FILE_COUNT INTEGER)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX PACKAGE_VERSION_PACKAGE ON PACKAGE_VERSION("
+                    "PACKAGE)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX PACKAGE_VERSION_PACKAGE_NAME ON "
+                    "PACKAGE_VERSION("
+                    "PACKAGE, NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        db.exec("CREATE INDEX IF NOT EXISTS PACKAGE_VERSION_MSIGUID ON "
+                "PACKAGE_VERSION(MSIGUID)");
+        err = toString(db.lastError());
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX PACKAGE_VERSION_DETECT_FILE_COUNT ON PACKAGE_VERSION("
+                    "DETECT_FILE_COUNT)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // PACKAGE_VERSION2 is new in Npackd 1.20
     if (err.isEmpty()) {
         e = tableExists(&db, "PACKAGE_VERSION2", &err);
     }
@@ -1955,6 +2049,30 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
             err = toString(db.lastError());
         }
     }
+
+    if (err.isEmpty()) {
+        e = tableExists(&db, "LICENSE", &err);
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE LICENSE(NAME TEXT, "
+                    "TITLE TEXT, "
+                    "DESCRIPTION TEXT, "
+                    "URL TEXT"
+                    ")");
+            err = toString(db.lastError());
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX LICENSE_NAME ON LICENSE(NAME)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // LICENSE2 is new in Npackd 1.20
     if (err.isEmpty()) {
         e = tableExists(&db, "LICENSE2", &err);
     }
