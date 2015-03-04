@@ -176,17 +176,13 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
     time_t now;
     time(&now);
 
-    //if (now != monitoredJobLastChanged) {
-        monitoredJobLastChanged = now;
+    monitoredJobLastChanged = now;
 
-        QTreeWidgetItem* item = findItem(state.job);
-        if (item)
-            updateItem(item, state);
-    //}
+    QTreeWidgetItem* item = findItem(state.job, true);
+    if (item)
+        updateItem(item, state);
 
     if (state.completed) {
-        QTreeWidgetItem* item = findItem(state.job);
-
         if (item) {
             setItemWidget(item, 4, 0);
         }
@@ -217,26 +213,24 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
 
 void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
 {
-    if (s.completed) {
-        // nothing
-    } else {
-        time_t now;
-        time(&now);
+    item->setText(0, s.title);
 
-        item->setText(0, s.job->getTitle());
+    time_t now;
+    time(&now);
 
-        if (s.started != 0) {
-            time_t diff = difftime(now, s.started);
+    if (s.started != 0) {
+        time_t diff = difftime(now, s.started);
 
-            int sec = diff % 60;
-            diff /= 60;
-            int min = diff % 60;
-            diff /= 60;
-            int h = diff;
+        int sec = diff % 60;
+        diff /= 60;
+        int min = diff % 60;
+        diff /= 60;
+        int h = diff;
 
-            QTime e(h, min, sec);
-            item->setText(1, e.toString());
+        QTime e(h, min, sec);
+        item->setText(1, e.toString());
 
+        if (!s.completed) {
             diff = difftime(now, s.started);
             diff = lround(diff * (1 / s.progress - 1));
             sec = diff % 60;
@@ -248,13 +242,20 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
             QTime r(h, min, sec);
             item->setText(2, r.toString());
         } else {
-            item->setText(1, "-");
+            item->setText(2, "");
         }
+    } else {
+        item->setText(1, "");
+        item->setText(2, "");
+    }
 
-        QProgressBar* pb = (QProgressBar*) itemWidget(item, 3);
+    QProgressBar* pb = (QProgressBar*) itemWidget(item, 3);
+    QPushButton* b = (QPushButton*) itemWidget(item, 4);
+    if (s.completed) {
+        pb->setValue(10000);
+        b->setEnabled(false);
+    } else {
         pb->setValue(lround(s.progress * 10000));
-
-        QPushButton* b = (QPushButton*) itemWidget(item, 4);
         b->setEnabled(!s.cancelRequested);
     }
 }
