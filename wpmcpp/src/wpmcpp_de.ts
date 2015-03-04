@@ -2059,7 +2059,7 @@ p, li { white-space: pre-wrap; }
         <location filename="clprocessor.cpp" line="518"/>
         <location filename="clprocessor.cpp" line="560"/>
         <location filename="clprocessor.cpp" line="566"/>
-        <location filename="progresstree2.cpp" line="199"/>
+        <location filename="progresstree2.cpp" line="195"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
