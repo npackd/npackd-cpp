@@ -45,7 +45,7 @@ ProgressTree2::ProgressTree2(QWidget *parent) :
     QStringList hls;
     hls.append(QObject::tr("Task / Step"));
     hls.append(QObject::tr("Elapsed time"));
-    hls.append(QObject::tr("Estimated time"));
+    hls.append(QObject::tr("Remaining time"));
     hls.append(QObject::tr("Progress"));
     hls.append(QObject::tr(""));
     setHeaderLabels(hls);

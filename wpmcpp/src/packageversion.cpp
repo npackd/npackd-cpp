@@ -521,6 +521,7 @@ void PackageVersion::uninstall(Job* job)
             job->setProgress(0.25);
         }
     }
+    job->setTitle(initialTitle);
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!uninstallationScript.isEmpty()) {
@@ -602,6 +603,7 @@ void PackageVersion::uninstall(Job* job)
         }
         job->setProgress(1);
     }
+    job->setTitle(initialTitle);
 
     deleteShortcutsFuture.waitForFinished();
 
@@ -1013,6 +1015,7 @@ void PackageVersion::install(Job* job, const QString& where)
             job->setProgress(0.01);
         }
     }
+    job->setTitle(initialTitle);
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         job->setTitle(initialTitle + " / " +
@@ -1025,6 +1028,7 @@ void PackageVersion::install(Job* job, const QString& where)
             job->setProgress(0.02);
         }
     }
+    job->setTitle(initialTitle);
 
     bool httpConnectionAcquired = false;
 
@@ -1046,6 +1050,7 @@ void PackageVersion::install(Job* job, const QString& where)
                     arg(seconds / 60));
         }
     }
+    job->setTitle(initialTitle);
 
     // qDebug() << "install.3";
     QFile* f = new QFile(npackdDir + "\\__NpackdPackageDownload");
@@ -1054,7 +1059,6 @@ void PackageVersion::install(Job* job, const QString& where)
     QString dsha1;
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        job->setTitle(initialTitle);
         if (!f->open(QIODevice::ReadWrite)) {
             job->setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
                     arg(f->fileName()));
@@ -1165,6 +1169,7 @@ void PackageVersion::install(Job* job, const QString& where)
             }
         }
     }
+    job->setTitle(initialTitle);
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         QString errMsg = this->saveFiles(d);
@@ -1213,6 +1218,7 @@ void PackageVersion::install(Job* job, const QString& where)
             job->setProgress(0.86);
         }
     }
+    job->setTitle(initialTitle);
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!installationScript.isEmpty()) {
@@ -1259,6 +1265,7 @@ void PackageVersion::install(Job* job, const QString& where)
 
         job->setProgress(0.95);
     }
+    job->setTitle(initialTitle);
 
     if (installationScriptAcquired)
         installationScripts.release();
@@ -1293,7 +1300,6 @@ void PackageVersion::install(Job* job, const QString& where)
     delete f;
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle);
         job->setProgress(1);
     }
 
@@ -1630,6 +1636,7 @@ void PackageVersion::executeFile(
                     arg(path).arg(ec));
         }
     }
+    job->setTitle(initialTitle);
 
     if (success) {
         // ignore possible errors here
