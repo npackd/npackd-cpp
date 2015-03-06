@@ -377,6 +377,7 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <tabstops>
+  <tabstop>scrollArea</tabstop>
   <tabstop>lineEditTitle</tabstop>
   <tabstop>lineEditVersion</tabstop>
   <tabstop>textEditDescription</tabstop>
@@ -390,7 +391,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>lineEditSHA1</tabstop>
   <tabstop>textEditImportantFiles</tabstop>
   <tabstop>textEditDependencies</tabstop>
-  <tabstop>scrollArea</tabstop>
+  <tabstop>tabWidgetTextFiles</tabstop>
  </tabstops>
  <resources/>
  <connections/>
