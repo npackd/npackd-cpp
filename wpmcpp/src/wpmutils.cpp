@@ -147,6 +147,8 @@ QString WPMUtils::normalizePath(const QString& path)
         r.replace("\\\\", "\\");
     if (r.endsWith('\\'))
         r.chop(1);
+    if (r.endsWith('.'))
+        r.chop(1);
     return r;
 }
 
