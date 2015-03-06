@@ -319,6 +319,18 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>lineEditTitle</tabstop>
+  <tabstop>listWidgetScreenshots</tabstop>
+  <tabstop>textEditDescription</tabstop>
+  <tabstop>labelLicense</tabstop>
+  <tabstop>lineEditInternalName</tabstop>
+  <tabstop>labelHomePage</tabstop>
+  <tabstop>labelChangeLog</tabstop>
+  <tabstop>labelCategory</tabstop>
+  <tabstop>tableWidgetVersions</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <slots>
