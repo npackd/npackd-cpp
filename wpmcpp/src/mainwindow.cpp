@@ -109,6 +109,9 @@ MainWindow::MainWindow(QWidget *parent) :
     t->addAction(this->ui->actionGotoPackageURL);
     t->addAction(this->ui->actionTest_Download_Site);
 
+    t->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+    t->horizontalHeader()->addAction(this->ui->actionChoose_columns);
+
     connect(&this->fileLoader, SIGNAL(downloadCompleted(QString,QString,QString)), this,
             SLOT(downloadCompleted(QString,QString,QString)),
             Qt::QueuedConnection);
