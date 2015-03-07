@@ -2140,28 +2140,28 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="132"/>
+        <location filename="mainwindow.cpp" line="135"/>
         <source>Packages</source>
         <translation>Paquetes</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="402"/>
-        <location filename="mainwindow.cpp" line="1025"/>
+        <location filename="mainwindow.cpp" line="405"/>
+        <location filename="mainwindow.cpp" line="1028"/>
         <source>Cannot exit while jobs are running</source>
         <translation>No puede salir mientras las tareas se están ejecutando</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="489"/>
+        <location filename="mainwindow.cpp" line="492"/>
         <source>0 Jobs</source>
         <translation>0 Tareas</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="491"/>
+        <location filename="mainwindow.cpp" line="494"/>
         <source>1 Job (%1%, %2)</source>
         <translation>1 Tarea (%1%, %2)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="494"/>
+        <location filename="mainwindow.cpp" line="497"/>
         <source>%1 Jobs (%2%, %3)</source>
         <translation>%1 Tareas (%2%, %3)</translation>
     </message>
@@ -2374,30 +2374,30 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 paquete(s) será desinstalados: %2 (los directorios correspondientes serán completamente eliminados, no hay forma de restaurar los archivos) y %3 paquete(s) serán instalados: %4.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="961"/>
-        <location filename="mainwindow.cpp" line="1877"/>
+        <location filename="mainwindow.cpp" line="964"/>
+        <location filename="mainwindow.cpp" line="1880"/>
         <location filename="uiutils.cpp" line="185"/>
         <source>Install/Uninstall</source>
         <translation>Instalar/Desinstalar</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1155"/>
-        <location filename="mainwindow.cpp" line="1208"/>
+        <location filename="mainwindow.cpp" line="1158"/>
+        <location filename="mainwindow.cpp" line="1211"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Error encontrando la versión más nueva instalada para %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1427"/>
+        <location filename="mainwindow.cpp" line="1430"/>
         <source>Initializing</source>
         <translation>Inicializando</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1697"/>
+        <location filename="mainwindow.cpp" line="1700"/>
         <source>Settings</source>
         <translation>Preferencias</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1801"/>
+        <location filename="mainwindow.cpp" line="1804"/>
         <source>About</source>
         <translation>Acerca de</translation>
     </message>
@@ -2406,42 +2406,42 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - gestor de paquetes de software para Windows(R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="954"/>
+        <location filename="mainwindow.cpp" line="957"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation>Cambios elegidos requieren una actualización de esta instancia Npackd. Estás seguro?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="955"/>
+        <location filename="mainwindow.cpp" line="958"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1802"/>
+        <location filename="mainwindow.cpp" line="1805"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Administrador de paquetes de software para Windows (R)&lt;br&gt;&lt;a href=&quot;https://npackd.appspot.com/&quot;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1850"/>
+        <location filename="mainwindow.cpp" line="1853"/>
         <source>Jobs</source>
         <translation>Tareas</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1871"/>
+        <location filename="mainwindow.cpp" line="1874"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>No se puede iniciar el escaneo ahora. El paquete %1 está bloqueado por una instalación/desinstalación en ejecución.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1946"/>
+        <location filename="mainwindow.cpp" line="1949"/>
         <source>%1 package(s) detected</source>
         <translation>%1 paquete(s) detectados</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1951"/>
+        <location filename="mainwindow.cpp" line="1954"/>
         <source>Package detection status</source>
         <translation>Estado de la detección de paquetes</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1974"/>
+        <location filename="mainwindow.cpp" line="1977"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Imposible recargar los repositorios ahora. El paquete %1 está bloqueado por una instalación/desinstalación ejecutándose.</translation>
     </message>
@@ -2454,7 +2454,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">No se puede iniciar esta acción mientras la recarga de los repositorios está en progreso</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2131"/>
+        <location filename="mainwindow.cpp" line="2134"/>
         <source>Cannot open the URL %1</source>
         <translation>No se puede abrir la URL %1</translation>
     </message>
