@@ -422,61 +422,61 @@ p, li { white-space: pre-wrap; }
         <translation>Nom :</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="86"/>
+        <location filename="packageframe.ui" line="89"/>
         <source>package title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="96"/>
+        <location filename="packageframe.ui" line="99"/>
         <source>Description:</source>
         <translation>Description :</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="112"/>
+        <location filename="packageframe.ui" line="115"/>
         <source>package description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="122"/>
+        <location filename="packageframe.ui" line="128"/>
         <source>License:</source>
         <translation>Licence :</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="132"/>
+        <location filename="packageframe.ui" line="138"/>
         <source>license</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="135"/>
+        <location filename="packageframe.ui" line="141"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="145"/>
+        <location filename="packageframe.ui" line="151"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
         <translation type="unfinished">Nom interne :</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="155"/>
+        <location filename="packageframe.ui" line="161"/>
         <source>internal package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="165"/>
+        <location filename="packageframe.ui" line="171"/>
         <source>Package home page:</source>
         <oldsource>Package Home Page:</oldsource>
         <translation type="unfinished">Site officiel :</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="178"/>
+        <location filename="packageframe.ui" line="184"/>
         <source>home page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="181"/>
-        <location filename="packageframe.ui" line="214"/>
-        <location filename="packageframe.ui" line="279"/>
+        <location filename="packageframe.ui" line="187"/>
+        <location filename="packageframe.ui" line="220"/>
+        <location filename="packageframe.ui" line="285"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -485,37 +485,37 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="198"/>
+        <location filename="packageframe.ui" line="204"/>
         <source>Category:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="211"/>
+        <location filename="packageframe.ui" line="217"/>
         <source>package category</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="231"/>
+        <location filename="packageframe.ui" line="237"/>
         <source>Versions:</source>
         <translation>Versions :</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="247"/>
+        <location filename="packageframe.ui" line="253"/>
         <source>available versions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="263"/>
+        <location filename="packageframe.ui" line="269"/>
         <source>Change log:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="276"/>
+        <location filename="packageframe.ui" line="282"/>
         <source>change log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="296"/>
+        <location filename="packageframe.ui" line="302"/>
         <source>Screen shots:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -563,93 +563,93 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="137"/>
+        <location filename="packageversionform.ui" line="140"/>
         <source>license</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="160"/>
+        <location filename="packageversionform.ui" line="163"/>
         <source>installation path on disk or empty if this package version is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="180"/>
+        <location filename="packageversionform.ui" line="183"/>
         <source>detection info or empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="190"/>
+        <location filename="packageversionform.ui" line="193"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
         <translation type="unfinished">Nom interne :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="200"/>
+        <location filename="packageversionform.ui" line="203"/>
         <source>internal package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="210"/>
+        <location filename="packageversionform.ui" line="213"/>
         <source>Status:</source>
         <translation>Statut :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="220"/>
+        <location filename="packageversionform.ui" line="223"/>
         <source>status of this package version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="230"/>
+        <location filename="packageversionform.ui" line="233"/>
         <source>Download URL:</source>
         <translation>URL de téléchargement :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="240"/>
+        <location filename="packageversionform.ui" line="243"/>
         <source>direct download link for the package binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="260"/>
+        <location filename="packageversionform.ui" line="263"/>
         <source>Type:</source>
         <translation>Type :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="270"/>
+        <location filename="packageversionform.ui" line="273"/>
         <source>one-file or zip</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="280"/>
+        <location filename="packageversionform.ui" line="283"/>
         <source>Hash sum:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="290"/>
+        <location filename="packageversionform.ui" line="293"/>
         <source>cryptographic hash sum of the binary (either SHA-1 or SHA-256)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="330"/>
+        <location filename="packageversionform.ui" line="336"/>
         <source>other packages that this one depends upon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="340"/>
+        <location filename="packageversionform.ui" line="349"/>
         <source>Text files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="356"/>
+        <location filename="packageversionform.ui" line="365"/>
         <source>text files with their contents that will be created in the package directory additionally to the files provided by the downloaded binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="363"/>
+        <location filename="packageversionform.ui" line="372"/>
         <source>Tab 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="368"/>
+        <location filename="packageversionform.ui" line="377"/>
         <source>Tab 2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -658,28 +658,28 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">SHA1 :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="300"/>
+        <location filename="packageversionform.ui" line="303"/>
         <source>Important files:</source>
         <oldsource>Important Files:</oldsource>
         <translation type="unfinished">Fichiers importants :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="310"/>
+        <location filename="packageversionform.ui" line="313"/>
         <source>an entry in the start menu will be created for each important file mentioned here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="320"/>
+        <location filename="packageversionform.ui" line="326"/>
         <source>Dependencies:</source>
         <translation>Dépendances :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="127"/>
+        <location filename="packageversionform.ui" line="130"/>
         <source>License:</source>
         <translation>Licence :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="243"/>
+        <location filename="packageversionform.ui" line="246"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -688,12 +688,12 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="140"/>
+        <location filename="packageversionform.ui" line="143"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="150"/>
+        <location filename="packageversionform.ui" line="153"/>
         <source>Installation path:</source>
         <oldsource>Installation Path:</oldsource>
         <translation type="unfinished">Chemin d&apos;installation :</translation>
@@ -703,7 +703,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Site officiel :</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="170"/>
+        <location filename="packageversionform.ui" line="173"/>
         <source>Detection info:</source>
         <oldsource>Detection Info:</oldsource>
         <translation type="unfinished"></translation>
@@ -1735,10 +1735,10 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">La dernière version (%1) du paquet %2 est déjà installée</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="243"/>
-        <location filename="dbrepository.cpp" line="284"/>
-        <location filename="dbrepository.cpp" line="328"/>
-        <location filename="dbrepository.cpp" line="999"/>
+        <location filename="dbrepository.cpp" line="246"/>
+        <location filename="dbrepository.cpp" line="287"/>
+        <location filename="dbrepository.cpp" line="331"/>
+        <location filename="dbrepository.cpp" line="1037"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
     </message>
@@ -1747,68 +1747,68 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Démarrage d&apos;une transaction SQL</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1024"/>
+        <location filename="dbrepository.cpp" line="1062"/>
         <source>Clearing the packages table</source>
         <translation>Effacement de la table des paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="86"/>
+        <location filename="dbrepository.cpp" line="89"/>
         <source>No records found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="93"/>
+        <location filename="dbrepository.cpp" line="96"/>
         <source>Not a number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1034"/>
+        <location filename="dbrepository.cpp" line="1072"/>
         <source>Clearing the package versions table</source>
         <translation>Effacement de la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1044"/>
+        <location filename="dbrepository.cpp" line="1082"/>
         <source>Clearing the licenses table</source>
         <translation>Effacement de la table des licences</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1064"/>
+        <location filename="dbrepository.cpp" line="1102"/>
         <source>Clearing the categories table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1094"/>
+        <location filename="dbrepository.cpp" line="1132"/>
         <source>Error saving the list of repositories in the database: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1216"/>
+        <location filename="dbrepository.cpp" line="1254"/>
         <source>Opening the package database</source>
         <oldsource>Creating a temporary database</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1229"/>
+        <location filename="dbrepository.cpp" line="1267"/>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1251"/>
+        <location filename="dbrepository.cpp" line="1289"/>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1287"/>
+        <location filename="dbrepository.cpp" line="1325"/>
         <source>Commiting the SQL transaction (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1259"/>
+        <location filename="dbrepository.cpp" line="1297"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1279"/>
+        <location filename="dbrepository.cpp" line="1317"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1817,12 +1817,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Application de la transaction SQL</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1241"/>
+        <location filename="dbrepository.cpp" line="1279"/>
         <source>Clearing the database</source>
         <translation>Effacement de la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1405"/>
+        <location filename="dbrepository.cpp" line="1443"/>
         <source>Updating statuses</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1843,47 +1843,47 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Mise à jour des paquets installées dans la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1317"/>
+        <location filename="dbrepository.cpp" line="1355"/>
         <source>Reading categories</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1267"/>
+        <location filename="dbrepository.cpp" line="1305"/>
         <source>Removing packages without versions</source>
         <translation>Suppression des paquets sans version associée</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1054"/>
+        <location filename="dbrepository.cpp" line="1092"/>
         <source>Clearing the links table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1101"/>
+        <location filename="dbrepository.cpp" line="1139"/>
         <source>Downloading %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1172"/>
+        <location filename="dbrepository.cpp" line="1210"/>
         <source>Unzipping the repository failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1180"/>
+        <location filename="dbrepository.cpp" line="1218"/>
         <source>Rep.xml is missing in a repository in ZIP format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1356"/>
+        <location filename="dbrepository.cpp" line="1394"/>
         <source>Inserting data in the packages table</source>
         <translation>Insertion des données dans la table des paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1366"/>
+        <location filename="dbrepository.cpp" line="1404"/>
         <source>Inserting data in the package versions table</source>
         <translation>Insertion des données dans la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1376"/>
+        <location filename="dbrepository.cpp" line="1414"/>
         <source>Inserting data in the licenses table</source>
         <translation>Insertion des données dans la table des licences</translation>
     </message>
@@ -2706,7 +2706,7 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible d&apos;ouvrir le fichier ZIP %1 : %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1168"/>
+        <location filename="dbrepository.cpp" line="1206"/>
         <location filename="wpmutils.cpp" line="2118"/>
         <source>Extracting</source>
         <translation>Extraction</translation>
@@ -2910,17 +2910,17 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible d&apos;ouvrir %1 en écriture</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1124"/>
+        <location filename="dbrepository.cpp" line="1162"/>
         <source>Repository %1 of %2</source>
         <translation>Dépôt %1 de %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1131"/>
+        <location filename="dbrepository.cpp" line="1169"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Erreur lors du chargement du dépôt %1 : %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1146"/>
+        <location filename="dbrepository.cpp" line="1184"/>
         <location filename="settingsframe.cpp" line="117"/>
         <source>No repositories defined</source>
         <translation>Aucun dépôt défini</translation>
@@ -2946,7 +2946,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1190"/>
+        <location filename="dbrepository.cpp" line="1228"/>
         <source>Parsing XML</source>
         <translation>Extraction du XML</translation>
     </message>

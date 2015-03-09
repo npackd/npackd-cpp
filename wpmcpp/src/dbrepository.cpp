@@ -17,6 +17,7 @@
 #include <QTemporaryDir>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QFuture>
+#include <QSqlResult>
 
 #include "package.h"
 #include "repository.h"
@@ -46,6 +47,7 @@ DBRepository::DBRepository()
     savePackageVersionQuery = 0;
     insertPackageQuery = 0;
     insertLinkQuery = 0;
+    deleteLinkQuery = 0;
     replacePackageQuery = 0;
     selectCategoryQuery = 0;
 }
@@ -53,6 +55,7 @@ DBRepository::DBRepository()
 DBRepository::~DBRepository()
 {
     delete selectCategoryQuery;
+    delete deleteLinkQuery;
     delete insertLinkQuery;
     delete insertPackageQuery;
     delete replacePackageQuery;
@@ -655,6 +658,29 @@ int DBRepository::insertCategory(int parent, int level,
     return id;
 }
 
+QString DBRepository::deleteLinks(const QString& name)
+{
+    QString err;
+
+    if (!deleteLinkQuery) {
+        deleteLinkQuery = new MySQLQuery(db);
+        if (!deleteLinkQuery->prepare(
+                "DELETE FROM LINK WHERE PACKAGE=:PACKAGE")) {
+            err = getErrorString(*deleteLinkQuery);
+            delete deleteLinkQuery;
+        }
+    }
+
+    if (err.isEmpty()) {
+        deleteLinkQuery->bindValue(":PACKAGE", name);
+        if (!deleteLinkQuery->exec())
+            err = getErrorString(*deleteLinkQuery);
+        deleteLinkQuery->finish();
+    }
+
+    return err;
+}
+
 QString DBRepository::saveLinks(Package* p)
 {
     QString err;
@@ -672,7 +698,7 @@ QString DBRepository::saveLinks(Package* p)
         }
     }
 
-    QList<QString> rels = p->links.keys();
+    QList<QString> rels = p->links.uniqueKeys();
     int index = 1;
     for (int i = 0; i < rels.size(); i++) {
         if (!err.isEmpty())
@@ -790,6 +816,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
         savePackageQuery = replacePackageQuery;
     else
         savePackageQuery = insertPackageQuery;
+
+    int affected = 0;
     if (err.isEmpty()) {
         savePackageQuery->bindValue(":REPOSITORY", this->currentRepository);
         savePackageQuery->bindValue(":NAME", p->name);
@@ -824,12 +852,22 @@ QString DBRepository::savePackage(Package *p, bool replace)
             savePackageQuery->bindValue(":CATEGORY4", cat4);
         if (!savePackageQuery->exec())
             err = getErrorString(*savePackageQuery);
+        else
+            affected = savePackageQuery->numRowsAffected();
     }
 
     savePackageQuery->finish();
 
+    bool exists = affected == 0;
+
     if (err.isEmpty()) {
-        err = saveLinks(p);
+        if (!exists)
+            err = deleteLinks(p->name);
+    }
+
+    if (err.isEmpty()) {
+        if (!exists)
+            err = saveLinks(p);
     }
 
     return err;
