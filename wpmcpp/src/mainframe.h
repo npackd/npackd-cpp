@@ -29,20 +29,14 @@ private:
     /** ID, COUNT, NAME */
     QList<QStringList> categories0, categories1;
 
+    QList<Package*> selectedPackages;
+
     void fillList();
 public:
     explicit MainFrame(QWidget *parent = 0);
     ~MainFrame();
 
     QList<void*> getSelected(const QString& type) const;
-
-    /**
-     * This method returns a non-null Package* if something is selected
-     * in the table.
-     *
-     * @return selected package or 0.
-     */
-    Package* getSelectedPackageInTable();
 
     /**
      * This method returns all selected Package* items

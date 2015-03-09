@@ -384,7 +384,7 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     return r;
 }
 
-QList<Package*> DBRepository::findPackages(Package::Status status,
+QStringList DBRepository::findPackages(Package::Status status,
         bool filterByStatus,
         const QString& query, int cat0, int cat1, QString *err) const
 {
@@ -559,18 +559,16 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
     return r;
 }
 
-QList<Package*> DBRepository::findPackagesWhere(const QString& where,
+QStringList DBRepository::findPackagesWhere(const QString& where,
         const QList<QVariant>& params,
         QString *err) const
 {
     *err = "";
 
-    QList<Package*> r;
+    QStringList r;
     MySQLQuery q(db);
 
-    QString sql = "SELECT NAME, TITLE, URL, ICON, "
-            "DESCRIPTION, LICENSE "
-            "FROM PACKAGE";
+    QString sql = "SELECT NAME FROM PACKAGE";
 
     if (!where.isEmpty())
         sql += " " + where;
@@ -591,13 +589,7 @@ QList<Package*> DBRepository::findPackagesWhere(const QString& where,
             *err = getErrorString(q);
 
         while (q.next()) {
-            Package* p = new Package(q.value(0).toString(), q.value(1).toString());
-            p->url = q.value(2).toString();
-            p->setIcon(q.value(3).toString());
-            p->description = q.value(4).toString();
-            p->license = q.value(5).toString();
-
-            r.append(p);
+            r.append(q.value(0).toString());
         }
     }
 

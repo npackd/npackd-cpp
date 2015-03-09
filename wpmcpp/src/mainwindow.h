@@ -38,7 +38,7 @@ const UINT WM_ICONTRAY = WM_USER + 1;
  */
 class _SearchResult {
 public:
-    QList<Package*> found;
+    QStringList found;
     QList<QStringList> cats, cats1;
 };
 

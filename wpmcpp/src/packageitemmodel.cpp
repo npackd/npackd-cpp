@@ -10,7 +10,7 @@
 #include "mainwindow.h"
 #include "wpmutils.h"
 
-PackageItemModel::PackageItemModel(const QList<Package *> packages) :
+PackageItemModel::PackageItemModel(const QStringList& packages) :
         obsoleteBrush(QColor(255, 0xc7, 0xc7))
 {
     this->packages = packages;
@@ -18,7 +18,6 @@ PackageItemModel::PackageItemModel(const QList<Package *> packages) :
 
 PackageItemModel::~PackageItemModel()
 {
-    qDeleteAll(packages);
 }
 
 int PackageItemModel::rowCount(const QModelIndex &parent) const
@@ -75,65 +74,59 @@ PackageItemModel::Info* PackageItemModel::createInfo(
     qDeleteAll(pvs);
     pvs.clear();
 
+    QString s = p->description;
+    if (s.length() > 200) {
+        s = s.left(200) + "...";
+    }
+    r->shortenDescription = s;
+
+    r->title = p->title;
+
+    // the error message is ignored
+    QSharedPointer<License> lic(rep->findLicense_(
+            p->license, &err));
+    if (lic)
+        r->licenseTitle = lic->title;
+
+    r->icon = p->getIcon();
+
     return r;
 }
 
 QVariant PackageItemModel::data(const QModelIndex &index, int role) const
 {
-    Package* p = this->packages.at(index.row());
+    QString p = this->packages.at(index.row());
     QVariant r;
     AbstractRepository* rep = AbstractRepository::getDefault_();
+    Info* cached = this->cache.object(p);
+    if (!cached) {
+        Package* pk = rep->findPackage_(p);
+        cached = createInfo(pk);
+        delete pk;
+        this->cache.insert(p, cached);
+    }
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
             case 1:
-                r = p->title;
+                r = cached->title;
                 break;
             case 2: {
-                QString s = p->description;
-                if (s.length() > 200) {
-                    s = s.left(200) + "...";
-                }
-                r = s;
+                r = cached->shortenDescription;
                 break;
             }
             case 3: {
-                Info* cached = this->cache.object(p->name);
-                if (!cached) {
-                    cached = createInfo(p);
-                    r = cached->avail;
-                    this->cache.insert(p->name, cached);
-                } else {
-                    r = cached->avail;
-                }
+                r = cached->avail;
                 break;
             }
             case 4: {
-                Info* cached = this->cache.object(p->name);
-                if (!cached) {
-                    cached = createInfo(p);
-                    r = cached->installed;
-                    this->cache.insert(p->name, cached);
-                } else {
-                    r = cached->installed;
-                }
+                r = cached->installed;
                 break;
             }
             case 5: {
-                // the error message is ignored
-                QString err;
-                QSharedPointer<License> lic(rep->findLicense_(
-                        p->license, &err));
-                if (lic)
-                    r = lic->title;
+                r = cached->licenseTitle;
                 break;
             }
             case 6: {
-                Info* cached = this->cache.object(p->name);
-                if (!cached) {
-                    cached = createInfo(p);
-                    this->cache.insert(p->name, cached);
-                }
-
                 MainWindow* mw = MainWindow::getInstance();
                 QString err;
                 QString v;
@@ -159,17 +152,17 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::UserRole) {
         switch (index.column()) {
             case 0:
-                r = qVariantFromValue(p->getIcon());
+                r = qVariantFromValue(cached->icon);
                 break;
             default:
-                r = qVariantFromValue((void*) p);
+                r = p;
         }
     } else if (role == Qt::DecorationRole) {
         switch (index.column()) {
             case 0: {
                 MainWindow* mw = MainWindow::getInstance();
-                if (!p->getIcon().isEmpty()) {
-                    r = qVariantFromValue(mw->downloadIcon(p->getIcon()));
+                if (!cached->icon.isEmpty()) {
+                    r = qVariantFromValue(mw->downloadIcon(cached->icon));
                 } else {
                     r = qVariantFromValue(MainWindow::genericAppIcon);
                 }
@@ -179,16 +172,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::BackgroundRole) {
         switch (index.column()) {
             case 4: {
-                Info* cached = this->cache.object(p->name);
-                bool up2date;
-                if (!cached) {
-                    cached = createInfo(p);
-                    up2date = cached->up2date;
-                    this->cache.insert(p->name, cached);
-                } else {
-                    up2date = cached->up2date;
-                }
-                if (!up2date)
+                if (!cached->up2date)
                     r = qVariantFromValue(obsoleteBrush);
                 break;
             }
@@ -196,7 +180,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::StatusTipRole) {
         switch (index.column()) {
             case 1:
-                r = p->name;
+                r = p;
                 break;
         }
     }
@@ -239,10 +223,9 @@ QVariant PackageItemModel::headerData(int section, Qt::Orientation orientation,
     return r;
 }
 
-void PackageItemModel::setPackages(const QList<Package *> packages)
+void PackageItemModel::setPackages(const QStringList& packages)
 {
     this->beginResetModel();
-    qDeleteAll(this->packages);
     this->packages = packages;
     this->endResetModel();
 }
@@ -266,8 +249,8 @@ void PackageItemModel::installedStatusChanged(const QString& package,
     //        version.getVersionString();
     this->cache.remove(package);
     for (int i = 0; i < this->packages.count(); i++) {
-        Package* p = this->packages.at(i);
-        if (p->name == package) {
+        QString p = this->packages.at(i);
+        if (p == package) {
             this->dataChanged(this->index(i, 4), this->index(i, 4));
         }
     }
