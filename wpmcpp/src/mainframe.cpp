@@ -13,6 +13,7 @@
 #include "package.h"
 #include "packageitemmodel.h"
 #include "windowsregistry.h"
+#include "abstractrepository.h"
 
 MainFrame::MainFrame(QWidget *parent) :
     QFrame(parent), Selection(),
@@ -23,7 +24,7 @@ MainFrame::MainFrame(QWidget *parent) :
     this->categoryCombosEvents = true;
 
     QTableView* t = this->ui->tableWidget;
-    t->setModel(new PackageItemModel(QList<Package*>()));
+    t->setModel(new PackageItemModel(QStringList()));
     t->setEditTriggers(QTableWidget::NoEditTriggers);
     t->setSortingEnabled(false);
     t->horizontalHeader()->setSectionsMovable(true);
@@ -47,6 +48,7 @@ MainFrame::MainFrame(QWidget *parent) :
 
 MainFrame::~MainFrame()
 {
+    qDeleteAll(this->selectedPackages);
     delete ui;
 }
 
@@ -283,33 +285,9 @@ QList<void*> MainFrame::getSelected(const QString& type) const
     return res;
 }
 
-Package* MainFrame::getSelectedPackageInTable()
-{
-    QAbstractItemModel* m = this->ui->tableWidget->model();
-    QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
-    QModelIndexList sel = sm->selectedRows();
-    if (sel.count() > 0) {
-        QModelIndex index = m->index(sel.at(0).row(), 1);
-        const QVariant v = index.data(Qt::UserRole);
-        Package* p = (Package*) v.value<void*>();
-        return p;
-    }
-    return 0;
-}
-
 QList<Package*> MainFrame::getSelectedPackagesInTable() const
 {
-    QList<Package*> result;
-    QAbstractItemModel* m = this->ui->tableWidget->model();
-    QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
-    QModelIndexList sel = sm->selectedRows();
-    for (int i = 0; i < sel.count(); i++) {
-        QModelIndex index = m->index(sel.at(i).row(), 1);
-        const QVariant v = index.data(Qt::UserRole);
-        Package* p = (Package*) v.value<void*>();
-        result.append(p);
-    }
-    return result;
+    return this->selectedPackages;
 }
 
 void MainFrame::on_tableWidget_doubleClicked(QModelIndex index)
@@ -327,6 +305,21 @@ void MainFrame::on_lineEditText_textChanged(QString )
 
 void MainFrame::tableWidget_selectionChanged()
 {
+    qDeleteAll(this->selectedPackages);
+    this->selectedPackages.clear();
+
+    QAbstractItemModel* m = this->ui->tableWidget->model();
+    QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
+    QModelIndexList sel = sm->selectedRows();
+    AbstractRepository* r = AbstractRepository::getDefault_();
+    for (int i = 0; i < sel.count(); i++) {
+        QModelIndex index = m->index(sel.at(i).row(), 1);
+        const QVariant v = index.data(Qt::UserRole);
+        QString name = v.toString();
+        Package* p = r->findPackage_(name);
+        this->selectedPackages.append(p);
+    }
+
     MainWindow::getInstance()->updateActions();
 }
 

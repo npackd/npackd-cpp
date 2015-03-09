@@ -17,7 +17,7 @@ class PackageItemModel: public QAbstractTableModel
 {
     QBrush obsoleteBrush;
 
-    QList<Package*> packages;
+    QStringList packages;
 
     class Info {
     public:
@@ -25,6 +25,10 @@ class PackageItemModel: public QAbstractTableModel
         QString installed;
         bool up2date;
         QString newestDownloadURL;
+        QString shortenDescription;
+        QString title;
+        QString licenseTitle;
+        QString icon;
     };
 
     mutable QCache<QString, Info> cache;
@@ -32,9 +36,9 @@ class PackageItemModel: public QAbstractTableModel
     Info *createInfo(Package *p) const;
 public:
     /**
-     * @param [ownership:this] packages list of packages
+     * @param packages list of package names
      */
-    PackageItemModel(const QList<Package*> packages);
+    PackageItemModel(const QStringList &packages);
 
     ~PackageItemModel();
 
@@ -48,9 +52,9 @@ public:
 
     /**
      * @brief changes the list of packages
-     * @param packages [ownership:this] list of packages
+     * @param packages list of package names
      */
-    void setPackages(const QList<Package*> packages);
+    void setPackages(const QStringList &packages);
 
     /**
      * @brief should be called if an icon has changed

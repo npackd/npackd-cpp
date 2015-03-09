@@ -50,7 +50,7 @@ private:
             const QString &category, QString *err);
     QString findCategory(int cat) const;
 
-    QList<Package*> findPackagesWhere(const QString &where,
+    QStringList findPackagesWhere(const QString &where,
             const QList<QVariant> &params, QString *err) const;
 
     /**
@@ -211,9 +211,9 @@ public:
      * @param cat1 filter for the level 1 of categories. -1 means "All",
      *     0 means "Uncategorized"
      * @param err error message will be stored here
-     * @return [ownership:caller] found packages
+     * @return found packages
      */
-    QList<Package*> findPackages(Package::Status status, bool filterByStatus,
+    QStringList findPackages(Package::Status status, bool filterByStatus,
             const QString &query, int cat0, int cat1, QString* err) const;
 
     /**

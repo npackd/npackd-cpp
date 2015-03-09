@@ -96,11 +96,6 @@ Package *Package::parse(QDomElement *e, QString *err, bool validate)
     }
 }
 
-bool Package::contains(const QList<Package*> &list, Package *pv)
-{
-    return indexOf(list, pv) >= 0;
-}
-
 Package::Package(const QString& name, const QString& title)
 {
     this->name = name;

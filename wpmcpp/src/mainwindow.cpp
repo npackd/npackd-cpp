@@ -676,16 +676,19 @@ void MainWindow::onShow()
 
 void MainWindow::selectPackages(QList<Package*> ps)
 {
+    QSet<QString> packageNames;
+    for (int i = 0; i < ps.count(); i++) {
+        packageNames.insert(ps.at(i)->name);
+    }
+
     QTableView* t = this->mainFrame->getTableWidget();
     t->clearSelection();
     QAbstractItemModel* m = t->model();
     for (int i = 0; i < m->rowCount(); i++) {
         const QVariant v = m->data(m->index(i, 1), Qt::UserRole);
-        Package* f = (Package*) v.value<void*>();
-        if (Package::contains(ps, f)) {
-            //topLeft = t->selectionModel()->selection().
+        QString name = v.toString();
+        if (packageNames.contains(name)) {
             QModelIndex topLeft = t->model()->index(i, 0);
-            // QModelIndex bottomRight = t->model()->index(i, t->columnCount() - 1);
 
             t->selectionModel()->select(topLeft, QItemSelectionModel::Rows |
                     QItemSelectionModel::Select);
@@ -1555,7 +1558,7 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
     QModelIndex index = sm->currentIndex();
 
     PackageItemModel* m = (PackageItemModel*) t->model();
-    m->setPackages(QList<Package*>());
+    m->setPackages(QStringList());
     m->clearCache();
     fillList();
 

@@ -24,14 +24,6 @@ public:
             bool validate=true);
 
     /**
-     * @brief searches for a package only using the package name
-     * @param list searching in this list
-     * @param pv searching for this package
-     * @return true if the list contains the specified package
-     */
-    static bool contains(const QList<Package*>& list, Package* pv);
-
-    /**
      * @brief searches for the specified object in the specified list. Objects
      *     will be compared only by package name.
      * @param pvs list of packages
