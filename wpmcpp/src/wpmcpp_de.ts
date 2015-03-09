@@ -422,61 +422,61 @@ p, li { white-space: pre-wrap; }
         <translation>Name:</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="86"/>
+        <location filename="packageframe.ui" line="89"/>
         <source>package title</source>
         <translation>Pakettitel</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="96"/>
+        <location filename="packageframe.ui" line="99"/>
         <source>Description:</source>
         <translation>Beschreibung:</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="112"/>
+        <location filename="packageframe.ui" line="115"/>
         <source>package description</source>
         <translation>Paketbeschreibung</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="122"/>
+        <location filename="packageframe.ui" line="128"/>
         <source>License:</source>
         <translation>Lizenz:</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="132"/>
+        <location filename="packageframe.ui" line="138"/>
         <source>license</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="135"/>
+        <location filename="packageframe.ui" line="141"/>
         <source>TextLabel</source>
         <translation>Textfeld</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="145"/>
+        <location filename="packageframe.ui" line="151"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
         <translation type="unfinished">Interner Name:</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="155"/>
+        <location filename="packageframe.ui" line="161"/>
         <source>internal package name</source>
         <translation>interner Paketname</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="165"/>
+        <location filename="packageframe.ui" line="171"/>
         <source>Package home page:</source>
         <oldsource>Package Home Page:</oldsource>
         <translation type="unfinished">Homepage des Pakets:</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="178"/>
+        <location filename="packageframe.ui" line="184"/>
         <source>home page</source>
         <translation>Homepage</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="181"/>
-        <location filename="packageframe.ui" line="214"/>
-        <location filename="packageframe.ui" line="279"/>
+        <location filename="packageframe.ui" line="187"/>
+        <location filename="packageframe.ui" line="220"/>
+        <location filename="packageframe.ui" line="285"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -489,37 +489,37 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.test.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;TextLabel&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="198"/>
+        <location filename="packageframe.ui" line="204"/>
         <source>Category:</source>
         <translation>Kategorie:</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="211"/>
+        <location filename="packageframe.ui" line="217"/>
         <source>package category</source>
         <translation>Paketkategorie</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="231"/>
+        <location filename="packageframe.ui" line="237"/>
         <source>Versions:</source>
         <translation>Versionen:</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="247"/>
+        <location filename="packageframe.ui" line="253"/>
         <source>available versions</source>
         <translation>verfügbare Versionen</translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="263"/>
+        <location filename="packageframe.ui" line="269"/>
         <source>Change log:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="276"/>
+        <location filename="packageframe.ui" line="282"/>
         <source>change log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageframe.ui" line="296"/>
+        <location filename="packageframe.ui" line="302"/>
         <source>Screen shots:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -567,93 +567,93 @@ p, li { white-space: pre-wrap; }
         <translation>Paketbeschreibung</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="137"/>
+        <location filename="packageversionform.ui" line="140"/>
         <source>license</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="160"/>
+        <location filename="packageversionform.ui" line="163"/>
         <source>installation path on disk or empty if this package version is not installed</source>
         <translation>Installationspfad auf der Festplatte oder leer, falls diese Paketversion nicht installiert ist</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="180"/>
+        <location filename="packageversionform.ui" line="183"/>
         <source>detection info or empty</source>
         <translation>Erkennungsinformationen oder leer</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="190"/>
+        <location filename="packageversionform.ui" line="193"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
         <translation type="unfinished">Interner Name:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="200"/>
+        <location filename="packageversionform.ui" line="203"/>
         <source>internal package name</source>
         <translation>interner Paketname</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="210"/>
+        <location filename="packageversionform.ui" line="213"/>
         <source>Status:</source>
         <translation>Status:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="220"/>
+        <location filename="packageversionform.ui" line="223"/>
         <source>status of this package version</source>
         <translation>Status dieser Paketversion</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="230"/>
+        <location filename="packageversionform.ui" line="233"/>
         <source>Download URL:</source>
         <translation>Download-Adresse:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="240"/>
+        <location filename="packageversionform.ui" line="243"/>
         <source>direct download link for the package binary</source>
         <translation>direkter Downloadlink für die Paketdatei</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="260"/>
+        <location filename="packageversionform.ui" line="263"/>
         <source>Type:</source>
         <translation>Typ:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="270"/>
+        <location filename="packageversionform.ui" line="273"/>
         <source>one-file or zip</source>
         <translation>one-file oder zip</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="280"/>
+        <location filename="packageversionform.ui" line="283"/>
         <source>Hash sum:</source>
         <translation>Hash-Summe:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="290"/>
+        <location filename="packageversionform.ui" line="293"/>
         <source>cryptographic hash sum of the binary (either SHA-1 or SHA-256)</source>
         <translation>kryptografische Hash-Summe der Datei (entweder SHA-1 oder SHA-256)</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="330"/>
+        <location filename="packageversionform.ui" line="336"/>
         <source>other packages that this one depends upon</source>
         <translation>andere Pakete, von denen dieses abhängt</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="340"/>
+        <location filename="packageversionform.ui" line="349"/>
         <source>Text files:</source>
         <translation>Textdateien:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="356"/>
+        <location filename="packageversionform.ui" line="365"/>
         <source>text files with their contents that will be created in the package directory additionally to the files provided by the downloaded binary</source>
         <translation>Textdateien mit ihren Inhalten, die in dem Paketverzeichnis zusätzlich zu der heruntergeladenen Paketdatei erstellt werden</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="363"/>
+        <location filename="packageversionform.ui" line="372"/>
         <source>Tab 1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="368"/>
+        <location filename="packageversionform.ui" line="377"/>
         <source>Tab 2</source>
         <translation></translation>
     </message>
@@ -662,28 +662,28 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">SHA1:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="300"/>
+        <location filename="packageversionform.ui" line="303"/>
         <source>Important files:</source>
         <oldsource>Important Files:</oldsource>
         <translation type="unfinished">Wichtige Dateien:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="310"/>
+        <location filename="packageversionform.ui" line="313"/>
         <source>an entry in the start menu will be created for each important file mentioned here</source>
         <translation>für jede hier erwähnte wichtige Datei wird ein Eintrag im Startmenü angelegt</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="320"/>
+        <location filename="packageversionform.ui" line="326"/>
         <source>Dependencies:</source>
         <translation>Abhängigkeiten:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="127"/>
+        <location filename="packageversionform.ui" line="130"/>
         <source>License:</source>
         <translation>Lizenz:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="243"/>
+        <location filename="packageversionform.ui" line="246"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -696,12 +696,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.test.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;TextLabel&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="140"/>
+        <location filename="packageversionform.ui" line="143"/>
         <source>TextLabel</source>
         <translation>Textfeld</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="150"/>
+        <location filename="packageversionform.ui" line="153"/>
         <source>Installation path:</source>
         <oldsource>Installation Path:</oldsource>
         <translation type="unfinished">Installationspfad:</translation>
@@ -711,7 +711,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Homepage des Pakets:</translation>
     </message>
     <message>
-        <location filename="packageversionform.ui" line="170"/>
+        <location filename="packageversionform.ui" line="173"/>
         <source>Detection info:</source>
         <oldsource>Detection Info:</oldsource>
         <translation type="unfinished">Erkennungsinformationen:</translation>
@@ -840,10 +840,10 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Die neueste Version (%1) des Pakets %2 ist bereits installiert</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="243"/>
-        <location filename="dbrepository.cpp" line="284"/>
-        <location filename="dbrepository.cpp" line="328"/>
-        <location filename="dbrepository.cpp" line="999"/>
+        <location filename="dbrepository.cpp" line="246"/>
+        <location filename="dbrepository.cpp" line="287"/>
+        <location filename="dbrepository.cpp" line="331"/>
+        <location filename="dbrepository.cpp" line="1037"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
     </message>
@@ -856,37 +856,37 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Beginne SQL-Transaktion</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1024"/>
+        <location filename="dbrepository.cpp" line="1062"/>
         <source>Clearing the packages table</source>
         <translation>Leere die Paketetabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="86"/>
+        <location filename="dbrepository.cpp" line="89"/>
         <source>No records found</source>
         <translation>Keine Datensätze gefunden</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="93"/>
+        <location filename="dbrepository.cpp" line="96"/>
         <source>Not a number</source>
         <translation>Keine Zahl</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1034"/>
+        <location filename="dbrepository.cpp" line="1072"/>
         <source>Clearing the package versions table</source>
         <translation>Leere die Paketversionentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1044"/>
+        <location filename="dbrepository.cpp" line="1082"/>
         <source>Clearing the licenses table</source>
         <translation>Leere die Lizenzentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1064"/>
+        <location filename="dbrepository.cpp" line="1102"/>
         <source>Clearing the categories table</source>
         <translation>Leere die Kategorientabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1094"/>
+        <location filename="dbrepository.cpp" line="1132"/>
         <source>Error saving the list of repositories in the database: %1</source>
         <translation>Fehler beim Speichern der Liste der Repositories in der Datenbank: %1</translation>
     </message>
@@ -899,33 +899,33 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Fehler beim Erstellen einer temporären Datei</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1216"/>
+        <location filename="dbrepository.cpp" line="1254"/>
         <source>Opening the package database</source>
         <oldsource>Creating a temporary database</oldsource>
         <translation type="unfinished">Erstelle eine temporäre Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1229"/>
+        <location filename="dbrepository.cpp" line="1267"/>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation>Starte eine SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1251"/>
+        <location filename="dbrepository.cpp" line="1289"/>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation>Lade die entfernte Repositories herunter und fülle die lokale Datenbank (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1287"/>
+        <location filename="dbrepository.cpp" line="1325"/>
         <source>Commiting the SQL transaction (tempdb)</source>
         <translation>Führe einen Commit aus für die SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1259"/>
+        <location filename="dbrepository.cpp" line="1297"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation>Aktualisiere die Installationsstati (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1279"/>
+        <location filename="dbrepository.cpp" line="1317"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation>Aktualisiere die Stati für die installierten Pakete in der Datenbank (tempdb)</translation>
     </message>
@@ -942,7 +942,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Commit für die  SQL-Transaktion ausführen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1241"/>
+        <location filename="dbrepository.cpp" line="1279"/>
         <source>Clearing the database</source>
         <translation>Leere die Datenbank</translation>
     </message>
@@ -951,7 +951,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1405"/>
+        <location filename="dbrepository.cpp" line="1443"/>
         <source>Updating statuses</source>
         <translation>Aktualisiere Stati</translation>
     </message>
@@ -972,47 +972,47 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1317"/>
+        <location filename="dbrepository.cpp" line="1355"/>
         <source>Reading categories</source>
         <translation>Lese die Kategorien ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1267"/>
+        <location filename="dbrepository.cpp" line="1305"/>
         <source>Removing packages without versions</source>
         <translation>Entferne Pakete ohne Versionen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1054"/>
+        <location filename="dbrepository.cpp" line="1092"/>
         <source>Clearing the links table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1101"/>
+        <location filename="dbrepository.cpp" line="1139"/>
         <source>Downloading %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1172"/>
+        <location filename="dbrepository.cpp" line="1210"/>
         <source>Unzipping the repository failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1180"/>
+        <location filename="dbrepository.cpp" line="1218"/>
         <source>Rep.xml is missing in a repository in ZIP format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1356"/>
+        <location filename="dbrepository.cpp" line="1394"/>
         <source>Inserting data in the packages table</source>
         <translation>Füge Daten in die Paketetabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1366"/>
+        <location filename="dbrepository.cpp" line="1404"/>
         <source>Inserting data in the package versions table</source>
         <translation>Füge Daten in die Paketversionentabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1376"/>
+        <location filename="dbrepository.cpp" line="1414"/>
         <source>Inserting data in the licenses table</source>
         <translation>Füge Daten in die Lizenzentabelle ein</translation>
     </message>
@@ -1857,7 +1857,7 @@ p, li { white-space: pre-wrap; }
         <translation>Kann ZIP-Datei %1 nicht öffnen: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1168"/>
+        <location filename="dbrepository.cpp" line="1206"/>
         <location filename="wpmutils.cpp" line="2118"/>
         <source>Extracting</source>
         <translation>Entpacke</translation>
@@ -2071,17 +2071,17 @@ p, li { white-space: pre-wrap; }
         <translation>Kann %1 nicht zum Schreiben öffnen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1124"/>
+        <location filename="dbrepository.cpp" line="1162"/>
         <source>Repository %1 of %2</source>
         <translation>Repository %1 von %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1131"/>
+        <location filename="dbrepository.cpp" line="1169"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Fehler beim Laden des Repositories %1: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1146"/>
+        <location filename="dbrepository.cpp" line="1184"/>
         <location filename="settingsframe.cpp" line="117"/>
         <source>No repositories defined</source>
         <translation>Keine Repositories definiert</translation>
@@ -2107,7 +2107,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Kann die Datei nicht öffnen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1190"/>
+        <location filename="dbrepository.cpp" line="1228"/>
         <source>Parsing XML</source>
         <translation>Parse XML</translation>
     </message>

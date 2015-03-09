@@ -193,7 +193,7 @@ void Package::toXML(QXmlStreamWriter *w) const
     }
 
     // <link>
-    QList<QString> rels = links.keys();
+    QList<QString> rels = links.uniqueKeys();
     for (int i = 0; i < rels.size(); i++) {
         QString rel = rels.at(i);
         QList<QString> hrefs = links.values(rel);
@@ -224,7 +224,7 @@ void Package::saveTo(QDomElement& e) const {
     }
 
     // <link>
-    QList<QString> rels = links.keys();
+    QList<QString> rels = links.uniqueKeys();
     for (int i = 0; i < rels.size(); i++) {
         QString rel = rels.at(i);
         QList<QString> hrefs = links.values(rel);

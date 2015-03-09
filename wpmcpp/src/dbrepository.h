@@ -40,6 +40,7 @@ private:
     MySQLQuery* replacePackageQuery;
     MySQLQuery* selectCategoryQuery;
     MySQLQuery* insertLinkQuery;
+    MySQLQuery* deleteLinkQuery;
 
     QSqlDatabase db;
 
@@ -98,6 +99,7 @@ private:
     QString clearRepository(int id);
     QString saveLinks(Package *p);
     QString readLinks(Package *p);
+    QString deleteLinks(const QString &name);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;
