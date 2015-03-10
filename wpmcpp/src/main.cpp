@@ -32,6 +32,9 @@
 
 Q_IMPORT_PLUGIN(QICOPlugin)
 
+// Modern and efficient C++ Thread Pool Library
+// https://github.com/vit-vit/CTPL
+
 int main(int argc, char *argv[])
 {
     // test: scheduling a task

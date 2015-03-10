@@ -578,7 +578,7 @@ QString App::search()
     DBRepository* rep = DBRepository::getDefault();
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.97,
+        Job* sub = job->newSubJob(0.96,
                 "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
@@ -588,12 +588,23 @@ QString App::search()
             sub->completeWithProgress();
     }
 
+    QStringList packageNames;
     QList<Package*> list;
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01, "Searching for packages");
         QString err;
-        list = rep->findPackages(Package::INSTALLED, onlyInstalled,
+        packageNames = rep->findPackages(Package::INSTALLED, onlyInstalled,
                 query, -1, -1, &err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.01, "Fetching packages");
+        QString err;
+        list = rep->findPackages(packageNames);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else

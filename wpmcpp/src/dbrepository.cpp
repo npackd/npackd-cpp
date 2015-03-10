@@ -209,6 +209,81 @@ Package *DBRepository::findPackage_(const QString &name)
     return r;
 }
 
+QList<Package*> DBRepository::findPackages(const QStringList& names)
+{
+    QList<Package*> ret;
+    QString err;
+
+    int start = 0;
+    int c = names.count();
+    const int block = 10;
+
+    QString sql = "SELECT NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE "
+                "FROM PACKAGE WHERE NAME IN (:NAME0";
+    for (int i = 1; i < block; i++) {
+        sql = sql + ", :NAME" + QString::number(i);
+    }
+    sql += ")";
+
+    while (start < c) {
+        MySQLQuery q(db);
+        if (!q.prepare(sql))
+            err = getErrorString(q);
+
+        if (!err.isEmpty())
+            break;
+
+        for (int i = start; i < std::min(start + block, c); i++) {
+            q.bindValue(":NAME" + QString::number(i - start), names.at(i));
+        }
+
+        if (!q.exec())
+            err = getErrorString(q);
+
+        if (!err.isEmpty())
+            break;
+
+        QList<Package*> list;
+        while (q.next()) {
+            QString name = q.value(0).toString();
+            Package* r = new Package(name, name);
+            r->title = q.value(1).toString();
+            r->url = q.value(2).toString();
+            r->setIcon(q.value(3).toString());
+            r->description = q.value(4).toString();
+            r->license = q.value(5).toString();
+
+            err = readLinks(r);
+
+            if (!err.isEmpty())
+                break;
+
+            list.append(r);
+        }
+
+        for (int i = start; i < std::min(start + block, c); i++) {
+            QString find = names.at(i);
+            for (int j = 0; j < list.count(); j++) {
+                Package* p = list.at(j);
+                if (p->name == find) {
+                    list.removeAt(j);
+                    ret.append(p);
+                    break;
+                }
+            }
+        }
+
+        qDeleteAll(list);
+
+        if (!err.isEmpty())
+            break;
+
+        start += block;
+    }
+
+    return ret;
+}
+
 QString DBRepository::findCategory(int cat) const
 {
     return categories.value(cat);
