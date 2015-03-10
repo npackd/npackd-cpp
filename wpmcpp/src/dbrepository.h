@@ -288,6 +288,14 @@ public:
      * @return error message
      */
     QString saveRepositories(const QStringList& reps);
+
+    /**
+     * @brief searches for packages
+     * @param names names for the packages
+     * @return list of found packages. The order of returned packages does *NOT*
+     *     correspond the order in names.
+     */
+    QList<Package*> findPackages(const QStringList &names);
 };
 
 #endif // DBREPOSITORY_H
