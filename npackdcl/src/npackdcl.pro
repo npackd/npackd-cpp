@@ -20,7 +20,6 @@ LIBS += -lquazip \
     -lmsi
 SOURCES += main.cpp \
     ../../wpmcpp/src/visiblejobs.cpp \
-    ../../wpmcpp/src/installthread.cpp \
     ../../wpmcpp/src/repository.cpp \
     ../../wpmcpp/src/version.cpp \
     ../../wpmcpp/src/packageversionfile.cpp \
@@ -51,8 +50,7 @@ SOURCES += main.cpp \
     ../../wpmcpp/src/mysqlquery.cpp \
     ../../wpmcpp/src/installedpackagesthirdpartypm.cpp \
     ../../wpmcpp/src/cbsthirdpartypm.cpp
-HEADERS += ../../wpmcpp/src/installthread.h \
-    ../../wpmcpp/src/visiblejobs.h \
+HEADERS += ../../wpmcpp/src/visiblejobs.h \
     ../../wpmcpp/src/repository.h \
     ../../wpmcpp/src/version.h \
     ../../wpmcpp/src/packageversionfile.h \
