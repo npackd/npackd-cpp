@@ -185,7 +185,8 @@ public:
      * @param updateParentProgress_ true = update progress of the parent job
      * @param updateParentErrorMessage true = update the error message of the
      *     parent job
-     * @return child job with parent=this
+     * @return child job with parent=this. The created job is still owned by
+     *     this object and will be destroyed automatically.
      * @threadsafe
      */
     Job* newSubJob(double part, const QString& title="",
