@@ -39,8 +39,7 @@ public:
 
     /**
      * @brief registers a new job. The thread should not be started yet.
-     * @param job the job. The object will be destroyed after is was completed.
-     * @return the created node
+     * @param job the job
      */
     QTreeWidgetItem *addJob(Job* job);
 

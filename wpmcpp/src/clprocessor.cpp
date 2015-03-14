@@ -356,7 +356,7 @@ QString CLProcessor::update()
     return ret;
 }
 
-void CLProcessor::process(QList<InstallOperation*> &install,
+QString CLProcessor::process(QList<InstallOperation*> &install,
         int programCloseType)
 {
     // TODO: return error message
@@ -375,9 +375,9 @@ void CLProcessor::process(QList<InstallOperation*> &install,
                 QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
                 if (UIUtils::confirm(0, QObject::tr("Warning"), txt, txt)) {
                     Job* job = new Job();
-                    // TODO: store the error in err
                     UIUtils::processWithSelfUpdate(job, install,
                             programCloseType);
+                    err = job->getErrorMessage();
                     delete job;
                 }
             } else {
@@ -388,8 +388,8 @@ void CLProcessor::process(QList<InstallOperation*> &install,
                         job, install,
                         WPMUtils::getCloseProcessType());
 
-                // TODO: store the error in err
                 monitorAndWaitFor(job);
+                err = job->getErrorMessage();
 
                 install.clear();
             }
@@ -402,6 +402,8 @@ void CLProcessor::process(QList<InstallOperation*> &install,
 
     qDeleteAll(install);
     install.clear();
+
+    return err;
 }
 
 void CLProcessor::usage()

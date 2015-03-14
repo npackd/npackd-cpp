@@ -2272,28 +2272,28 @@ p, li { white-space: pre-wrap; }
         <translation>Удаление</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="129"/>
+        <location filename="clprocessor.cpp" line="128"/>
         <source>Newer Npackd GUI was not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="161"/>
+        <location filename="clprocessor.cpp" line="160"/>
         <source>Error starting %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="247"/>
+        <location filename="clprocessor.cpp" line="246"/>
         <source>Missing option: --package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="255"/>
+        <location filename="clprocessor.cpp" line="254"/>
         <location filename="wpmutils.cpp" line="1916"/>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="277"/>
+        <location filename="clprocessor.cpp" line="276"/>
         <location filename="wpmutils.cpp" line="1924"/>
         <location filename="wpmutils.cpp" line="2028"/>
         <location filename="wpmutils.cpp" line="2034"/>
@@ -2301,68 +2301,68 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="280"/>
+        <location filename="clprocessor.cpp" line="279"/>
         <source>Ambiguous package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="296"/>
+        <location filename="clprocessor.cpp" line="295"/>
         <source>Planning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="504"/>
+        <location filename="clprocessor.cpp" line="505"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="505"/>
+        <location filename="clprocessor.cpp" line="506"/>
         <source>package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="506"/>
+        <location filename="clprocessor.cpp" line="507"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="507"/>
+        <location filename="clprocessor.cpp" line="508"/>
         <source>range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="508"/>
+        <location filename="clprocessor.cpp" line="509"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="509"/>
+        <location filename="clprocessor.cpp" line="510"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="523"/>
+        <location filename="clprocessor.cpp" line="524"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="524"/>
+        <location filename="clprocessor.cpp" line="525"/>
         <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="539"/>
+        <location filename="clprocessor.cpp" line="540"/>
         <source>Error parsing the command line: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="580"/>
+        <location filename="clprocessor.cpp" line="581"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="587"/>
+        <location filename="clprocessor.cpp" line="588"/>
         <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2398,7 +2398,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="385"/>
+        <location filename="clprocessor.cpp" line="384"/>
         <location filename="mainwindow.cpp" line="832"/>
         <location filename="mainwindow.cpp" line="1748"/>
         <location filename="uiutils.cpp" line="191"/>
@@ -2431,13 +2431,13 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="376"/>
+        <location filename="clprocessor.cpp" line="375"/>
         <location filename="mainwindow.cpp" line="824"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="377"/>
+        <location filename="clprocessor.cpp" line="376"/>
         <location filename="mainwindow.cpp" line="825"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
@@ -2970,10 +2970,10 @@ p, li { white-space: pre-wrap; }
         <translation>не доступно</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="401"/>
-        <location filename="clprocessor.cpp" line="541"/>
-        <location filename="clprocessor.cpp" line="583"/>
-        <location filename="clprocessor.cpp" line="589"/>
+        <location filename="clprocessor.cpp" line="400"/>
+        <location filename="clprocessor.cpp" line="542"/>
+        <location filename="clprocessor.cpp" line="584"/>
+        <location filename="clprocessor.cpp" line="590"/>
         <location filename="progresstree2.cpp" line="195"/>
         <source>Error</source>
         <translation>Ошибка</translation>

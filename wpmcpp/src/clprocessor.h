@@ -54,8 +54,9 @@ private:
     /**
      * @param install the objects will be destroyed
      * @param programCloseType how the programs should be closed
+     * @return error message or ""
      */
-    void process(QList<InstallOperation*>& install, int programCloseType);
+    QString process(QList<InstallOperation*>& install, int programCloseType);
 
     /**
      * @brief waits for a job
