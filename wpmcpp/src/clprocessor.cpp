@@ -12,7 +12,6 @@
 #include "abstractrepository.h"
 #include "installoperation.h"
 #include "uiutils.h"
-#include "installthread.h"
 #include "commandline.h"
 #include "progresstree2.h"
 

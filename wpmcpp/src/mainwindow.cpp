@@ -58,7 +58,6 @@
 #include "installedpackages.h"
 #include "flowlayout.h"
 #include "scandiskthirdpartypm.h"
-#include "installthread.h"
 #include "scanharddrivesthread.h"
 #include "visiblejobs.h"
 #include "progresstree2.h"
