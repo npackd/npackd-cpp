@@ -1801,10 +1801,18 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
 {
     QString err;
 
+    QFile f(file);
+    bool readOnly = true;
+    if (f.open(QFile::ReadWrite)) {
+        readOnly = false;
+        f.close();
+    }
+
     QSqlDatabase::removeDatabase(connectionName);
     db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
     db.setDatabaseName(file);
-    // db.setConnectOptions("QSQLITE_OPEN_READONLY=1");
+    if (readOnly)
+        db.setConnectOptions("QSQLITE_OPEN_READONLY=1");
     db.open();
     err = toString(db.lastError());
 
@@ -1812,7 +1820,8 @@ QString DBRepository::open(const QString& connectionName, const QString& file)
         err = exec("PRAGMA busy_timeout = 30000");
 
     if (err.isEmpty()) {
-        err = exec("PRAGMA journal_mode = WAL");
+        if (!readOnly)
+            err = exec("PRAGMA journal_mode = WAL");
     }
 
     bool e = false;

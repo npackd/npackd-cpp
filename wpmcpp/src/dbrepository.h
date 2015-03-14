@@ -105,8 +105,9 @@ public:
     int currentRepository;
 
     /**
-     * @return default repository
-     * @threadsafe
+     * @return default repository. This repository should only be used form the
+     *     main UI thread or from the main thread of the command line
+     *     application.
      */
     static DBRepository* getDefault();
 

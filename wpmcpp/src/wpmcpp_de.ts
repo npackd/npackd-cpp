@@ -840,10 +840,10 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Die neueste Version (%1) des Pakets %2 ist bereits installiert</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="315"/>
-        <location filename="dbrepository.cpp" line="356"/>
-        <location filename="dbrepository.cpp" line="400"/>
-        <location filename="dbrepository.cpp" line="1098"/>
+        <location filename="dbrepository.cpp" line="321"/>
+        <location filename="dbrepository.cpp" line="362"/>
+        <location filename="dbrepository.cpp" line="406"/>
+        <location filename="dbrepository.cpp" line="1104"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
     </message>
@@ -856,7 +856,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Beginne SQL-Transaktion</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1123"/>
+        <location filename="dbrepository.cpp" line="1129"/>
         <source>Clearing the packages table</source>
         <translation>Leere die Paketetabelle</translation>
     </message>
@@ -871,22 +871,22 @@ p, li { white-space: pre-wrap; }
         <translation>Keine Zahl</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1133"/>
+        <location filename="dbrepository.cpp" line="1139"/>
         <source>Clearing the package versions table</source>
         <translation>Leere die Paketversionentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1143"/>
+        <location filename="dbrepository.cpp" line="1149"/>
         <source>Clearing the licenses table</source>
         <translation>Leere die Lizenzentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1163"/>
+        <location filename="dbrepository.cpp" line="1169"/>
         <source>Clearing the categories table</source>
         <translation>Leere die Kategorientabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1193"/>
+        <location filename="dbrepository.cpp" line="1199"/>
         <source>Error saving the list of repositories in the database: %1</source>
         <translation>Fehler beim Speichern der Liste der Repositories in der Datenbank: %1</translation>
     </message>
@@ -899,33 +899,33 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Fehler beim Erstellen einer temporären Datei</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1315"/>
+        <location filename="dbrepository.cpp" line="1321"/>
         <source>Opening the package database</source>
         <oldsource>Creating a temporary database</oldsource>
         <translation type="unfinished">Erstelle eine temporäre Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1328"/>
+        <location filename="dbrepository.cpp" line="1334"/>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation>Starte eine SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1350"/>
+        <location filename="dbrepository.cpp" line="1356"/>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation>Lade die entfernte Repositories herunter und fülle die lokale Datenbank (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1386"/>
+        <location filename="dbrepository.cpp" line="1392"/>
         <source>Commiting the SQL transaction (tempdb)</source>
         <translation>Führe einen Commit aus für die SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1358"/>
+        <location filename="dbrepository.cpp" line="1364"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation>Aktualisiere die Installationsstati (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1378"/>
+        <location filename="dbrepository.cpp" line="1384"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation>Aktualisiere die Stati für die installierten Pakete in der Datenbank (tempdb)</translation>
     </message>
@@ -942,7 +942,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Commit für die  SQL-Transaktion ausführen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1340"/>
+        <location filename="dbrepository.cpp" line="1346"/>
         <source>Clearing the database</source>
         <translation>Leere die Datenbank</translation>
     </message>
@@ -951,7 +951,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1504"/>
+        <location filename="dbrepository.cpp" line="1510"/>
         <source>Updating statuses</source>
         <translation>Aktualisiere Stati</translation>
     </message>
@@ -972,47 +972,47 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1416"/>
+        <location filename="dbrepository.cpp" line="1422"/>
         <source>Reading categories</source>
         <translation>Lese die Kategorien ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1366"/>
+        <location filename="dbrepository.cpp" line="1372"/>
         <source>Removing packages without versions</source>
         <translation>Entferne Pakete ohne Versionen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1153"/>
+        <location filename="dbrepository.cpp" line="1159"/>
         <source>Clearing the links table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1200"/>
+        <location filename="dbrepository.cpp" line="1206"/>
         <source>Downloading %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1271"/>
+        <location filename="dbrepository.cpp" line="1277"/>
         <source>Unzipping the repository failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1279"/>
+        <location filename="dbrepository.cpp" line="1285"/>
         <source>Rep.xml is missing in a repository in ZIP format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1455"/>
+        <location filename="dbrepository.cpp" line="1461"/>
         <source>Inserting data in the packages table</source>
         <translation>Füge Daten in die Paketetabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1465"/>
+        <location filename="dbrepository.cpp" line="1471"/>
         <source>Inserting data in the package versions table</source>
         <translation>Füge Daten in die Paketversionentabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1475"/>
+        <location filename="dbrepository.cpp" line="1481"/>
         <source>Inserting data in the licenses table</source>
         <translation>Füge Daten in die Lizenzentabelle ein</translation>
     </message>
@@ -1178,12 +1178,12 @@ p, li { white-space: pre-wrap; }
         <translation>Leere Informationen über installierte Paketversionen in Verzeichnissen mit Unterverzeichnissen</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="71"/>
+        <location filename="main.cpp" line="74"/>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
         <translation>Die 32bit-Version von Npackd erfordert ein 32bit-Betriebssystem.</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="72"/>
+        <location filename="main.cpp" line="75"/>
         <source>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</source>
         <translation>Bitte laden Sie die 64bit-Version von http://code.google.com/p/windows-package-manager/ herunter</translation>
     </message>
@@ -1857,7 +1857,7 @@ p, li { white-space: pre-wrap; }
         <translation>Kann ZIP-Datei %1 nicht öffnen: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1267"/>
+        <location filename="dbrepository.cpp" line="1273"/>
         <location filename="wpmutils.cpp" line="2118"/>
         <source>Extracting</source>
         <translation>Entpacke</translation>
@@ -1908,12 +1908,12 @@ p, li { white-space: pre-wrap; }
         <translation>gesperrt</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1635"/>
+        <location filename="packageversion.cpp" line="1634"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Prozess %1 wurde mit dem Code %2 beendet</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1612"/>
+        <location filename="packageversion.cpp" line="1611"/>
         <source>%1 minutes</source>
         <translation>%1 Minuten</translation>
     </message>
@@ -1923,41 +1923,41 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1704"/>
+        <location filename="packageversion.cpp" line="1703"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Leerer Tag &lt;path&gt; unterhalb von &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1711"/>
+        <location filename="packageversion.cpp" line="1710"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Falscher SHA1 in &lt;detect-file&gt;:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1753"/>
+        <location filename="packageversion.cpp" line="1752"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1768"/>
+        <location filename="packageversion.cpp" line="1767"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Keine gültige Download-Adresse für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1780"/>
+        <location filename="packageversion.cpp" line="1779"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Keine gültige Version für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1792"/>
+        <location filename="packageversion.cpp" line="1791"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Ungültige SHA1 für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1822"/>
+        <location filename="packageversion.cpp" line="1821"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished">Ungültige SHA-256 für %1:  {1 ?} {1:?}</translation>
     </message>
@@ -1970,56 +1970,56 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Unbekannter Typ der Hash-Summe %1 für %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1835"/>
+        <location filename="packageversion.cpp" line="1834"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation>Ungültige SHA-256 für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1851"/>
+        <location filename="packageversion.cpp" line="1850"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Falscher Wert für das Attribut &apos;type&apos; für %1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1866"/>
+        <location filename="packageversion.cpp" line="1865"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;path&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1873"/>
+        <location filename="packageversion.cpp" line="1872"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Mehr als ein &lt;important-file&gt; mit demselben &apos;path&apos;-Attribut %1 für %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1883"/>
+        <location filename="packageversion.cpp" line="1882"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;title&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1912"/>
+        <location filename="packageversion.cpp" line="1911"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1930"/>
+        <location filename="packageversion.cpp" line="1929"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>Ungültige Datei &lt;detect-file&gt; für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1945"/>
+        <location filename="packageversion.cpp" line="1944"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1974"/>
+        <location filename="packageversion.cpp" line="1973"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>Doppeltes &lt;dependency&gt; für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1992"/>
+        <location filename="packageversion.cpp" line="1991"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Falsche MSI-GUID für %1: %2</translation>
     </message>
@@ -2071,17 +2071,17 @@ p, li { white-space: pre-wrap; }
         <translation>Kann %1 nicht zum Schreiben öffnen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1223"/>
+        <location filename="dbrepository.cpp" line="1229"/>
         <source>Repository %1 of %2</source>
         <translation>Repository %1 von %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1230"/>
+        <location filename="dbrepository.cpp" line="1236"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Fehler beim Laden des Repositories %1: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1245"/>
+        <location filename="dbrepository.cpp" line="1251"/>
         <location filename="settingsframe.cpp" line="117"/>
         <source>No repositories defined</source>
         <translation>Keine Repositories definiert</translation>
@@ -2107,7 +2107,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Kann die Datei nicht öffnen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1289"/>
+        <location filename="dbrepository.cpp" line="1295"/>
         <source>Parsing XML</source>
         <translation>Parse XML</translation>
     </message>
