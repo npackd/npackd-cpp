@@ -1735,10 +1735,10 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">La dernière version (%1) du paquet %2 est déjà installée</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="315"/>
-        <location filename="dbrepository.cpp" line="356"/>
-        <location filename="dbrepository.cpp" line="400"/>
-        <location filename="dbrepository.cpp" line="1098"/>
+        <location filename="dbrepository.cpp" line="321"/>
+        <location filename="dbrepository.cpp" line="362"/>
+        <location filename="dbrepository.cpp" line="406"/>
+        <location filename="dbrepository.cpp" line="1104"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
     </message>
@@ -1747,7 +1747,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Démarrage d&apos;une transaction SQL</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1123"/>
+        <location filename="dbrepository.cpp" line="1129"/>
         <source>Clearing the packages table</source>
         <translation>Effacement de la table des paquets</translation>
     </message>
@@ -1762,53 +1762,47 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1133"/>
+        <location filename="dbrepository.cpp" line="1139"/>
         <source>Clearing the package versions table</source>
         <translation>Effacement de la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1143"/>
+        <location filename="dbrepository.cpp" line="1149"/>
         <source>Clearing the licenses table</source>
         <translation>Effacement de la table des licences</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1163"/>
+        <location filename="dbrepository.cpp" line="1169"/>
         <source>Clearing the categories table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1193"/>
+        <location filename="dbrepository.cpp" line="1199"/>
         <source>Error saving the list of repositories in the database: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1315"/>
-        <source>Opening the package database</source>
-        <oldsource>Creating a temporary database</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="dbrepository.cpp" line="1328"/>
+        <location filename="dbrepository.cpp" line="1319"/>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1350"/>
+        <location filename="dbrepository.cpp" line="1341"/>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1386"/>
+        <location filename="dbrepository.cpp" line="1377"/>
         <source>Commiting the SQL transaction (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1358"/>
+        <location filename="dbrepository.cpp" line="1349"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1378"/>
+        <location filename="dbrepository.cpp" line="1369"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1817,12 +1811,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Application de la transaction SQL</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1340"/>
+        <location filename="dbrepository.cpp" line="1331"/>
         <source>Clearing the database</source>
         <translation>Effacement de la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1504"/>
+        <location filename="dbrepository.cpp" line="1517"/>
         <source>Updating statuses</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1843,47 +1837,52 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Mise à jour des paquets installées dans la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1416"/>
+        <location filename="dbrepository.cpp" line="1407"/>
         <source>Reading categories</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1366"/>
+        <location filename="dbrepository.cpp" line="1357"/>
         <source>Removing packages without versions</source>
         <translation>Suppression des paquets sans version associée</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1153"/>
+        <location filename="dbrepository.cpp" line="1159"/>
         <source>Clearing the links table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1200"/>
+        <location filename="dbrepository.cpp" line="1206"/>
         <source>Downloading %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1271"/>
+        <location filename="dbrepository.cpp" line="1277"/>
         <source>Unzipping the repository failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1279"/>
+        <location filename="dbrepository.cpp" line="1285"/>
         <source>Rep.xml is missing in a repository in ZIP format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1455"/>
+        <location filename="dbrepository.cpp" line="1443"/>
+        <source>Updating the local repository</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="1468"/>
         <source>Inserting data in the packages table</source>
         <translation>Insertion des données dans la table des paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1465"/>
+        <location filename="dbrepository.cpp" line="1478"/>
         <source>Inserting data in the package versions table</source>
         <translation>Insertion des données dans la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1475"/>
+        <location filename="dbrepository.cpp" line="1488"/>
         <source>Inserting data in the licenses table</source>
         <translation>Insertion des données dans la table des licences</translation>
     </message>
@@ -2049,12 +2048,12 @@ p, li { white-space: pre-wrap; }
         <translation>Effacement des informations relatives aux versions de paquets installées dans des répertoires imbriqués</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="71"/>
+        <location filename="main.cpp" line="73"/>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
         <translation>La version 32-bit de Npackd requiert un système d&apos;exploitation 32-bit.</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="72"/>
+        <location filename="main.cpp" line="74"/>
         <source>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</source>
         <translation>Veuillez télécharger la version 64-bit depuis http://code.google.com/p/windows-package-manager/</translation>
     </message>
@@ -2080,96 +2079,96 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="134"/>
         <source>Packages</source>
         <translation>Paquets</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="405"/>
-        <location filename="mainwindow.cpp" line="1031"/>
+        <location filename="mainwindow.cpp" line="404"/>
+        <location filename="mainwindow.cpp" line="896"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Impossible de quitter lorsque des tâches sont en cours</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="492"/>
+        <location filename="mainwindow.cpp" line="491"/>
         <source>0 Jobs</source>
         <translation>0 Tâches</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="494"/>
+        <location filename="mainwindow.cpp" line="493"/>
         <source>1 Job (%1%, %2)</source>
         <translation>1 Tâche (%1, %2)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="497"/>
+        <location filename="mainwindow.cpp" line="496"/>
         <source>%1 Jobs (%2%, %3)</source>
         <translation>%1 Tâches (%2, %3)</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="41"/>
+        <location filename="uiutils.cpp" line="47"/>
         <source>Cannot find the package version %1: %2</source>
         <translation>Impossible de trouver la version de paquet %1 : %2</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="53"/>
+        <location filename="uiutils.cpp" line="59"/>
         <source>The package %1 is locked by a currently running installation/removal.</source>
         <translation>Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="132"/>
+        <location filename="uiutils.cpp" line="138"/>
         <source>Installing</source>
         <translation>Installation</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="135"/>
+        <location filename="uiutils.cpp" line="141"/>
         <source>Uninstalling</source>
         <translation>Désinstallation</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="141"/>
         <location filename="uiutils.cpp" line="147"/>
+        <location filename="uiutils.cpp" line="153"/>
         <source>The package %1 will be uninstalled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="144"/>
+        <location filename="uiutils.cpp" line="150"/>
         <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="155"/>
-        <location filename="uiutils.cpp" line="160"/>
+        <location filename="uiutils.cpp" line="161"/>
+        <location filename="uiutils.cpp" line="166"/>
         <source>%1 package(s) will be installed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="169"/>
-        <location filename="uiutils.cpp" line="177"/>
-        <location filename="uiutils.cpp" line="202"/>
-        <location filename="uiutils.cpp" line="209"/>
+        <location filename="uiutils.cpp" line="175"/>
+        <location filename="uiutils.cpp" line="183"/>
+        <location filename="uiutils.cpp" line="208"/>
+        <location filename="uiutils.cpp" line="215"/>
         <source>%1 package(s) will be uninstalled:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="174"/>
-        <location filename="uiutils.cpp" line="227"/>
+        <location filename="uiutils.cpp" line="180"/>
+        <location filename="uiutils.cpp" line="233"/>
         <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="181"/>
+        <location filename="uiutils.cpp" line="187"/>
         <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="189"/>
-        <location filename="uiutils.cpp" line="196"/>
+        <location filename="uiutils.cpp" line="195"/>
+        <location filename="uiutils.cpp" line="202"/>
         <source>%3 package(s) will be updated:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="215"/>
-        <location filename="uiutils.cpp" line="222"/>
+        <location filename="uiutils.cpp" line="221"/>
+        <location filename="uiutils.cpp" line="228"/>
         <source>%3 package(s) will be installed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2182,34 +2181,34 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Le paquet %1 va être désinstallé. Le dossier correspondant %2 va être totalement supprimé. Il n&apos;y a aucun moyen de restaurer les fichiers.</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="139"/>
-        <location filename="uiutils.cpp" line="167"/>
+        <location filename="uiutils.cpp" line="145"/>
+        <location filename="uiutils.cpp" line="173"/>
         <source>Uninstall</source>
         <translation>Désinstaller</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="136"/>
+        <location filename="clprocessor.cpp" line="128"/>
         <source>Newer Npackd GUI was not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="168"/>
+        <location filename="clprocessor.cpp" line="160"/>
         <source>Error starting %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="262"/>
+        <location filename="clprocessor.cpp" line="246"/>
         <source>Missing option: --package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="270"/>
+        <location filename="clprocessor.cpp" line="254"/>
         <location filename="wpmutils.cpp" line="1916"/>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="292"/>
+        <location filename="clprocessor.cpp" line="276"/>
         <location filename="wpmutils.cpp" line="1924"/>
         <location filename="wpmutils.cpp" line="2028"/>
         <location filename="wpmutils.cpp" line="2034"/>
@@ -2217,73 +2216,73 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="295"/>
+        <location filename="clprocessor.cpp" line="279"/>
         <source>Ambiguous package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="311"/>
+        <location filename="clprocessor.cpp" line="295"/>
         <source>Planning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="481"/>
+        <location filename="clprocessor.cpp" line="505"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="482"/>
+        <location filename="clprocessor.cpp" line="506"/>
         <source>package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="483"/>
+        <location filename="clprocessor.cpp" line="507"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="484"/>
+        <location filename="clprocessor.cpp" line="508"/>
         <source>range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="485"/>
+        <location filename="clprocessor.cpp" line="509"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="486"/>
+        <location filename="clprocessor.cpp" line="510"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="500"/>
+        <location filename="clprocessor.cpp" line="524"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="501"/>
+        <location filename="clprocessor.cpp" line="525"/>
         <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="516"/>
+        <location filename="clprocessor.cpp" line="540"/>
         <source>Error parsing the command line: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="557"/>
+        <location filename="clprocessor.cpp" line="581"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="564"/>
+        <location filename="clprocessor.cpp" line="588"/>
         <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="151"/>
+        <location filename="uiutils.cpp" line="157"/>
         <source>Installing %1 packages</source>
         <translation>Installation de %1 paquets</translation>
     </message>
@@ -2292,12 +2291,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Installation de %1 paquet(s) : %2</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="153"/>
+        <location filename="uiutils.cpp" line="159"/>
         <source>Install</source>
         <translation>Installer</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="165"/>
+        <location filename="uiutils.cpp" line="171"/>
         <source>Uninstalling %1 packages</source>
         <translation>Désinstallation de %1 paquets</translation>
     </message>
@@ -2314,30 +2313,31 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Désinstallation de %1 paquet(s) : %2 (les dossiers correspondants vont etre totalement supprimés; il n&apos;y a aucun moyen de restaurer les fichiers) et installation de %3 paquets : %4.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="967"/>
-        <location filename="mainwindow.cpp" line="1883"/>
-        <location filename="uiutils.cpp" line="185"/>
+        <location filename="clprocessor.cpp" line="384"/>
+        <location filename="mainwindow.cpp" line="832"/>
+        <location filename="mainwindow.cpp" line="1748"/>
+        <location filename="uiutils.cpp" line="191"/>
         <source>Install/Uninstall</source>
         <translation>Installer/Désinstaller</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1161"/>
-        <location filename="mainwindow.cpp" line="1214"/>
+        <location filename="mainwindow.cpp" line="1026"/>
+        <location filename="mainwindow.cpp" line="1079"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Erreur lors de la recherche de la dernière version installée pour %1 : %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1433"/>
+        <location filename="mainwindow.cpp" line="1298"/>
         <source>Initializing</source>
         <translation>Initialisation</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1703"/>
+        <location filename="mainwindow.cpp" line="1568"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1807"/>
+        <location filename="mainwindow.cpp" line="1672"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
@@ -2346,47 +2346,54 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - gestionnaire de paquets pour Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="960"/>
+        <location filename="clprocessor.cpp" line="375"/>
+        <location filename="mainwindow.cpp" line="824"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="961"/>
+        <location filename="clprocessor.cpp" line="376"/>
+        <location filename="mainwindow.cpp" line="825"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1808"/>
+        <location filename="dbrepository.cpp" line="1434"/>
+        <source>Error opening the database: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1673"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1856"/>
+        <location filename="mainwindow.cpp" line="1721"/>
         <source>Jobs</source>
         <translation>Tâches</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1877"/>
+        <location filename="mainwindow.cpp" line="1742"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Impossible de démarrer le scan. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1952"/>
+        <location filename="mainwindow.cpp" line="1817"/>
         <source>%1 package(s) detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1957"/>
+        <location filename="mainwindow.cpp" line="1822"/>
         <source>Package detection status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1980"/>
+        <location filename="mainwindow.cpp" line="1845"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Impossible de recharger les dépôts. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2137"/>
+        <location filename="mainwindow.cpp" line="2002"/>
         <source>Cannot open the URL %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2706,7 +2713,7 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible d&apos;ouvrir le fichier ZIP %1 : %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1267"/>
+        <location filename="dbrepository.cpp" line="1273"/>
         <location filename="wpmutils.cpp" line="2118"/>
         <source>Extracting</source>
         <translation>Extraction</translation>
@@ -2757,12 +2764,12 @@ p, li { white-space: pre-wrap; }
         <translation>bloqué</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1635"/>
+        <location filename="packageversion.cpp" line="1634"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Le processus %1 s&apos;est terminé avec le code de retour %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1612"/>
+        <location filename="packageversion.cpp" line="1611"/>
         <source>%1 minutes</source>
         <translation>%1 minute(s)</translation>
     </message>
@@ -2778,95 +2785,95 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1704"/>
+        <location filename="packageversion.cpp" line="1703"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Etiquette &lt;path&gt; vide dans &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1711"/>
+        <location filename="packageversion.cpp" line="1710"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>SHA1 incorrect dans &lt;detect-file&gt; :</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1753"/>
+        <location filename="packageversion.cpp" line="1752"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Erreur de l&apos;attribut &apos;package&apos; dans &lt;version&gt; : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1768"/>
+        <location filename="packageversion.cpp" line="1767"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Le lien de téléchargement%1 n&apos;est pas valide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1780"/>
+        <location filename="packageversion.cpp" line="1779"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>La version du paquet %1 est invalide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1792"/>
+        <location filename="packageversion.cpp" line="1791"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Le SHA1 de %1 est invalide : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1822"/>
+        <location filename="packageversion.cpp" line="1821"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1835"/>
+        <location filename="packageversion.cpp" line="1834"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1851"/>
+        <location filename="packageversion.cpp" line="1850"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Valeur incorrecte pour l&apos;attribut &apos;type&apos; dans %1 : %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1866"/>
+        <location filename="packageversion.cpp" line="1865"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>La valeur de l&apos;attribut &apos;path&apos; pour &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1873"/>
+        <location filename="packageversion.cpp" line="1872"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Il y a plus d&apos;un &lt;important-file&gt; avec le même attribut &apos;path&apos; %1 pour %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1883"/>
+        <location filename="packageversion.cpp" line="1882"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>La valeur de l&apos;attribut &apos;title&apos; de &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1912"/>
+        <location filename="packageversion.cpp" line="1911"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>L&apos;entrée &lt;file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1930"/>
+        <location filename="packageversion.cpp" line="1929"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>&lt;detect-file&gt; est invalide pour %1 : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1945"/>
+        <location filename="packageversion.cpp" line="1944"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>L&apos;entrée &lt;detect-file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1974"/>
+        <location filename="packageversion.cpp" line="1973"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>L&apos;entrée &lt;dependency&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1992"/>
+        <location filename="packageversion.cpp" line="1991"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Le GUID MSI pour %1 est invalide : %2</translation>
     </message>
@@ -2878,9 +2885,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="518"/>
-        <location filename="clprocessor.cpp" line="560"/>
-        <location filename="clprocessor.cpp" line="566"/>
+        <location filename="clprocessor.cpp" line="400"/>
+        <location filename="clprocessor.cpp" line="542"/>
+        <location filename="clprocessor.cpp" line="584"/>
+        <location filename="clprocessor.cpp" line="590"/>
         <location filename="progresstree2.cpp" line="195"/>
         <source>Error</source>
         <translation>Erreur</translation>
@@ -2910,17 +2918,17 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible d&apos;ouvrir %1 en écriture</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1223"/>
+        <location filename="dbrepository.cpp" line="1229"/>
         <source>Repository %1 of %2</source>
         <translation>Dépôt %1 de %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1230"/>
+        <location filename="dbrepository.cpp" line="1236"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Erreur lors du chargement du dépôt %1 : %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1245"/>
+        <location filename="dbrepository.cpp" line="1251"/>
         <location filename="settingsframe.cpp" line="117"/>
         <source>No repositories defined</source>
         <translation>Aucun dépôt défini</translation>
@@ -2946,7 +2954,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1289"/>
+        <location filename="dbrepository.cpp" line="1295"/>
         <source>Parsing XML</source>
         <translation>Extraction du XML</translation>
     </message>

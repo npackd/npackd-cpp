@@ -40,7 +40,6 @@ public:
     /**
      * @brief registers a new job. The thread should not be started yet.
      * @param job the job
-     * @return the created node
      */
     QTreeWidgetItem *addJob(Job* job);
 
