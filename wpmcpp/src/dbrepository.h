@@ -105,8 +105,9 @@ public:
     int currentRepository;
 
     /**
-     * @return default repository
-     * @threadsafe
+     * @return default repository. This repository should only be used form the
+     *     main UI thread or from the main thread of the command line
+     *     application.
      */
     static DBRepository* getDefault();
 
@@ -147,17 +148,21 @@ public:
     /**
      * @brief opens the default database
      * @param databaseName name for the database
+     * @param readOnly true = open in read-only mode
      * @return error
      */
-    QString openDefault(const QString &databaseName="default");
+    QString openDefault(const QString &databaseName="default",
+            bool readOnly=false);
 
     /**
      * @brief opens the database
      * @param connectionName name for the database connection
      * @param file database file
+     * @param readOnly true = open in read-only mode
      * @return error
      */
-    QString open(const QString &connectionName, const QString &file);
+    QString open(const QString &connectionName, const QString &file,
+            bool readOnly=false);
 
     /**
      * @brief update the status for the specified package

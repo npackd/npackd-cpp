@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QString>
+#include <QtConcurrent/QtConcurrent>
 
 #include "installedpackages.h"
 #include "wpmutils.h"
@@ -11,7 +12,6 @@
 #include "abstractrepository.h"
 #include "installoperation.h"
 #include "uiutils.h"
-#include "installthread.h"
 #include "commandline.h"
 #include "progresstree2.h"
 
@@ -99,15 +99,7 @@ QString CLProcessor::remove()
         confirmed = UIUtils::confirmInstallOperations(0, ops, &err);
 
     if (err.isEmpty() && confirmed) {
-        Job* job = new Job("Uninstall");
-        InstallThread* it = new InstallThread(0, 1, job);
-        it->install = ops;
-        it->programCloseType = programCloseType;
-        ops.clear();
-
-        it->start(QThread::LowestPriority);
-        monitorAndWaitFor(job);
-        it->deleteLater();
+        process(ops, programCloseType);
     }
 
     qDeleteAll(installed);
@@ -213,15 +205,7 @@ QString CLProcessor::add()
     // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
 
     if (err.isEmpty()) {
-        Job* job = new Job("Install");
-        InstallThread* it = new InstallThread(0, 1, job);
-        it->install = ops;
-        it->programCloseType = pct;
-        ops.clear();
-
-        it->start(QThread::LowestPriority);
-        monitorAndWaitFor(job);
-        it->deleteLater();
+        process(ops, pct);
     }
 
     qDeleteAll(ops);
@@ -332,17 +316,7 @@ QString CLProcessor::update()
     */
 
     if (job->shouldProceed() && !up2date) {
-        Job* sjob = new Job("Update");
-        InstallThread* it = new InstallThread(0, 1, sjob);
-        it->install = ops;
-        it->programCloseType = programCloseType;
-        ops.clear();
-
-        it->start(QThread::LowestPriority);
-        monitorAndWaitFor(sjob);
-        it->deleteLater();
-        if (sjob->getErrorMessage().isEmpty())
-            job->setErrorMessage(sjob->getErrorMessage());
+        process(ops, programCloseType);
     }
 
     /*
@@ -380,6 +354,56 @@ QString CLProcessor::update()
     qDeleteAll(toUpdate);
 
     return ret;
+}
+
+QString CLProcessor::process(QList<InstallOperation*> &install,
+        int programCloseType)
+{
+    // TODO: return error message
+
+    QString err;
+
+    bool confirmed = false;
+    if (err.isEmpty())
+        confirmed = UIUtils::confirmInstallOperations(0, install, &err);
+
+    if (err.isEmpty()) {
+        if (confirmed) {
+            AbstractRepository* rep = AbstractRepository::getDefault_();
+
+            if (rep->includesRemoveItself(install)) {
+                QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
+                if (UIUtils::confirm(0, QObject::tr("Warning"), txt, txt)) {
+                    Job* job = new Job();
+                    UIUtils::processWithSelfUpdate(job, install,
+                            programCloseType);
+                    err = job->getErrorMessage();
+                    delete job;
+                }
+            } else {
+                Job* job = new Job(QObject::tr("Install/Uninstall"));
+
+                QtConcurrent::run(AbstractRepository::getDefault_(),
+                        &AbstractRepository::processWithCoInitialize,
+                        job, install,
+                        WPMUtils::getCloseProcessType());
+
+                monitorAndWaitFor(job);
+                err = job->getErrorMessage();
+
+                install.clear();
+            }
+        }
+    }
+
+    if (!err.isEmpty()) {
+        QMessageBox::critical(0, QObject::tr("Error"), err);
+    }
+
+    qDeleteAll(install);
+    install.clear();
+
+    return err;
 }
 
 void CLProcessor::usage()
