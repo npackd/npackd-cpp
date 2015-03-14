@@ -135,7 +135,7 @@ int App::process()
         } else if (cmd == "list-repos") {
             err = listRepos();
         } else if (cmd == "search") {
-            err = DBRepository::getDefault()->openDefault();
+            err = DBRepository::getDefault()->openDefault("default", true);
             if (err.isEmpty())
                 err = search();
         } else if (cmd == "check") {
@@ -143,15 +143,15 @@ int App::process()
             if (err.isEmpty())
                 err = check();
         } else if (cmd == "which") {
-            err = DBRepository::getDefault()->openDefault();
+            err = DBRepository::getDefault()->openDefault("default", true);
             if (err.isEmpty())
                 err = which();
         } else if (cmd == "list") {
-            err = DBRepository::getDefault()->openDefault();
+            err = DBRepository::getDefault()->openDefault("default", true);
             if (err.isEmpty())
                 err = list();
         } else if (cmd == "info") {
-            err = DBRepository::getDefault()->openDefault();
+            err = DBRepository::getDefault()->openDefault("default", true);
             if (err.isEmpty())
                 err = info();
         } else if (cmd == "update") {
@@ -732,7 +732,7 @@ QString App::path()
     }
 
     if (job->shouldProceed() && path.isEmpty() && !package.contains('.')) {
-        QString err = DBRepository::getDefault()->openDefault();
+        QString err = DBRepository::getDefault()->openDefault("default", true);
         if (err.isEmpty()) {
             Package* p = WPMUtils::findOnePackage(package, &err);
             if (!err.isEmpty()) {

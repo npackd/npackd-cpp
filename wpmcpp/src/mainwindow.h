@@ -99,23 +99,12 @@ private:
      */
     void selectPackages(QList<Package*> ps);
 
-    /**
-     * Adds an entry in the "Progress" tab and monitors a task. The thread
-     * itself should be started after the call to this method.
-     *
-     * @param job this job will be monitored. The object will be destroyed after
-     *     the thread completion
-     */
-    void monitor(Job* job);
-
     void updateStatusInDetailTabs();
     void updateProgressTabTitle();
     void saveUISettings();
     void loadUISettings();
 
     virtual void closeEvent(QCloseEvent *event);
-    void processWithSelfUpdate(Job *job, QList<InstallOperation *> &install,
-                               int programCloseType);
     void reloadTabs();
 
     /** URL -> icon */
@@ -127,6 +116,15 @@ private:
 public:
     /** URL -> full path to the file or "" in case of an error */
     QMap<QString, QString> downloadCache;
+
+    /**
+     * Adds an entry in the "Progress" tab and monitors a task. The thread
+     * itself should be started after the call to this method.
+     *
+     * @param job this job will be monitored. The object will be destroyed after
+     *     the thread completion
+     */
+    void monitor(Job* job);
 
     void updateActions();
 

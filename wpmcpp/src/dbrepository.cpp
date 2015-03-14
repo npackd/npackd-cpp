@@ -1313,26 +1313,11 @@ void DBRepository::loadOne(Job* job, QFile* f) {
 
 void DBRepository::updateF5(Job* job)
 {
-    DBRepository temp;
-    bool tempDatabaseOpen = false;
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.01,
-                QObject::tr("Opening the package database"));
-        QString err = temp.openDefault("tempdb");
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else {
-            tempDatabaseOpen = true;
-            sub->completeWithProgress();
-        }
-    }
-
     bool transactionStarted = false;
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
                 QObject::tr("Starting an SQL transaction (tempdb)"));
-        QString err = temp.exec("BEGIN TRANSACTION");
+        QString err = exec("BEGIN TRANSACTION");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -1344,7 +1329,7 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
                 QObject::tr("Clearing the database"));
-        QString err = temp.clear();
+        QString err = clear();
         if (err.isEmpty())
             sub->completeWithProgress();
         else
@@ -1354,7 +1339,7 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.27,
                 QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"));
-        temp.load(sub, true);
+        load(sub, true);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -1362,7 +1347,7 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.4,
                 QObject::tr("Refreshing the installation status (tempdb)"));
-        InstalledPackages::getDefault()->refresh(&temp, sub);
+        InstalledPackages::getDefault()->refresh(this, sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -1370,7 +1355,7 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
                 QObject::tr("Removing packages without versions"));
-        QString err = temp.exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
+        QString err = exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
                 "(SELECT * FROM PACKAGE_VERSION "
                 "WHERE PACKAGE = PACKAGE.NAME)");
         if (err.isEmpty())
@@ -1382,7 +1367,7 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
                 QObject::tr("Updating the status for installed packages in the database (tempdb)"));
-        temp.updateStatusForInstalled(sub);
+        updateStatusForInstalled(sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -1390,14 +1375,14 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
                 QObject::tr("Commiting the SQL transaction (tempdb)"));
-        QString err = temp.exec("COMMIT");
+        QString err = exec("COMMIT");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
             sub->completeWithProgress();
     } else {
         if (transactionStarted)
-            temp.exec("ROLLBACK");
+            exec("ROLLBACK");
     }
 
     /*QString error;
@@ -1420,16 +1405,13 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
                 QObject::tr("Reading categories"));
-        QString err = temp.readCategories();
+        QString err = readCategories();
         if (err.isEmpty()) {
             sub->completeWithProgress();
             job->setProgress(1);
         } else
             job->setErrorMessage(err);
     }
-
-    if (tempDatabaseOpen)
-        temp.db.close();
 
     job->complete();
 }
@@ -1444,9 +1426,34 @@ void DBRepository::updateF5Runnable(Job *job)
             THREAD_MODE_BACKGROUND_BEGIN);
     */
 
-    CoInitialize(0);
-    updateF5(job);
-    CoUninitialize();
+    DBRepository* dbr = new DBRepository();
+
+    if (job->shouldProceed()) {
+        QString err = dbr->openDefault("recognize");
+        if (!err.isEmpty()) {
+            job->setErrorMessage(QObject::tr("Error opening the database: %1").
+                    arg(err));
+        } else {
+            job->setProgress(0.01);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.98,
+                QObject::tr("Updating the local repository"), true, true);
+        CoInitialize(0);
+        dbr->updateF5(sub);
+        CoUninitialize();
+    }
+
+    dbr->db.close();
+    delete dbr;
+
+    if (job->shouldProceed()) {
+        job->setProgress(1);
+    }
+
+    job->complete();
 
     /*
     if (b)
@@ -1781,7 +1788,7 @@ QString DBRepository::updateStatus(const QString& package)
     return err;
 }
 
-QString DBRepository::openDefault(const QString& databaseName)
+QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 {
     QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
     QDir d;
@@ -1792,20 +1799,23 @@ QString DBRepository::openDefault(const QString& databaseName)
 
     path = QDir::toNativeSeparators(path);
 
-    QString err = open(databaseName, path);
+    QString err = open(databaseName, path, readOnly);
 
     return err;
 }
 
-QString DBRepository::open(const QString& connectionName, const QString& file)
+QString DBRepository::open(const QString& connectionName, const QString& file,
+        bool readOnly)
 {
     QString err;
 
-    QFile f(file);
-    bool readOnly = true;
-    if (f.open(QFile::ReadWrite)) {
-        readOnly = false;
-        f.close();
+    // if we cannot write the file, we still try to open in read-only mode
+    if (!readOnly) {
+        QFile f(file);
+        if (f.open(QFile::ReadWrite)) {
+            readOnly = false;
+            f.close();
+        }
     }
 
     QSqlDatabase::removeDatabase(connectionName);
