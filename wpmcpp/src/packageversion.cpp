@@ -1458,7 +1458,6 @@ void PackageVersion::executeFile(
 
     time_t start = time(NULL);
 
-    // TODO: use only system environment variables
     LPWCH env2 = GetEnvironmentStrings();
     QMap<QString, QString> env_;
     LPWCH e = env2;
