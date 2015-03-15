@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QtTest/QtTest>
 
+/**
+ * @brief functional tests for NpackdCL. This tests should also work for
+ * non-admins. Test that cannot be run for non-admins will be skipped.
+ */
 class App: public QObject
 {
     Q_OBJECT
@@ -18,6 +22,14 @@ private slots:
      * @brief "add"/"remove"
      */
     void addRemove();
+
+    /**
+     * @brief "add" should not create another installed version for a detected
+     *     package in the same directory. For example, installing
+     *     net.poedit.POEdit in "C:\ProgramFiles" should not result in another
+     *     version being detected also in "C:\ProgramFiles\POEdit"
+     */
+    void addDoesntProduceDetected();
 
     /**
      * @brief "npackdcl path" must be fast

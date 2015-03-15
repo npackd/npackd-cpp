@@ -77,6 +77,24 @@ void App::addRemove()
             contains("removed successfully"));
 }
 
+void App::addDoesntProduceDetected()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    captureNpackdCLOutput("rm -p net.poedit.POEdit -v 1.7.3.1");
+
+    QVERIFY(captureNpackdCLOutput("add -p net.poedit.POEdit -v 1.7.3.1").
+            contains("installed successfully"));
+
+    QString s = captureNpackdCLOutput("info -p net.poedit.POEdit");
+    int p = s.indexOf("C:\\ProgramFiles\\Poedit");
+    QVERIFY(p > 0);
+
+    int p2 = s.indexOf("C:\\ProgramFiles\\Poedit", p + 1);
+    QVERIFY(p2 < 0);
+}
+
 void App::help()
 {
     QVERIFY(captureNpackdCLOutput("help").contains("ncl update"));
