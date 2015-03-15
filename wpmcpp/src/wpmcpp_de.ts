@@ -892,7 +892,7 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler beim Speichern der Liste der Repositories in der Datenbank: %1</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1908"/>
+        <location filename="dbrepository.cpp" line="1923"/>
         <source>Detaching the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
@@ -952,7 +952,7 @@ p, li { white-space: pre-wrap; }
         <translation>Übertrage die Daten aus der temporären Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1887"/>
+        <location filename="dbrepository.cpp" line="1902"/>
         <source>Commiting the SQL transaction</source>
         <translation>Commit für die  SQL-Transaktion ausführen</translation>
     </message>

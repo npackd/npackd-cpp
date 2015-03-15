@@ -1468,7 +1468,7 @@ void DBRepository::updateF5Runnable(Job *job)
             job->setErrorMessage(QObject::tr("Error opening the database: %1").
                     arg(err));
         } else {
-            job->setProgress(0.01);
+            job->setProgress(0.8);
         }
     }
 
@@ -1868,14 +1868,29 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     if (job->shouldProceed()) {
         job->setTitle(initialTitle + " / " +
                 QObject::tr("Transferring the data from the temporary database"));
+
         // exec("DROP INDEX PACKAGE_VERSION_PACKAGE_NAME");
-        QString err = exec("INSERT INTO PACKAGE SELECT * FROM tempdb.PACKAGE");
+        QString err = exec("INSERT INTO PACKAGE(NAME, TITLE, URL, ICON, "
+                "DESCRIPTION, LICENSE, FULLTEXT, STATUS, SHORT_NAME, "
+                "REPOSITORY, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, "
+                "CATEGORY4) SELECT NAME, TITLE, URL, ICON, DESCRIPTION, "
+                "LICENSE, FULLTEXT, STATUS, SHORT_NAME, REPOSITORY, "
+                "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+                "FROM tempdb.PACKAGE");
         if (err.isEmpty())
-            err = exec("INSERT INTO PACKAGE_VERSION SELECT * FROM tempdb.PACKAGE_VERSION");
+            err = exec("INSERT INTO PACKAGE_VERSION(NAME, PACKAGE, URL, "
+                    "CONTENT, MSIGUID, DETECT_FILE_COUNT) SELECT NAME, "
+                    "PACKAGE, URL, CONTENT, MSIGUID, DETECT_FILE_COUNT "
+                    "FROM tempdb.PACKAGE_VERSION");
         if (err.isEmpty())
-            err = exec("INSERT INTO LICENSE SELECT * FROM tempdb.LICENSE");
+            err = exec("INSERT INTO LICENSE(NAME, TITLE, DESCRIPTION, URL) "
+                    "SELECT NAME, TITLE, DESCRIPTION, URL FROM tempdb.LICENSE");
         if (err.isEmpty())
-            err = exec("INSERT INTO CATEGORY SELECT * FROM tempdb.CATEGORY");
+            err = exec("INSERT INTO CATEGORY(ID, NAME, PARENT, LEVEL) "
+                    "SELECT ID, NAME, PARENT, LEVEL FROM tempdb.CATEGORY");
+        if (err.isEmpty())
+            err = exec("INSERT INTO LINK(PACKAGE, INDEX_, REL, HREF) "
+                    "SELECT PACKAGE, INDEX_, REL, HREF FROM tempdb.LINK");
         if (err.isEmpty())
             job->setProgress(0.95);
         else

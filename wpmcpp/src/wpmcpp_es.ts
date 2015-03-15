@@ -1827,7 +1827,7 @@ p, li { white-space: pre-wrap; }
         <translation>Error guardando la lista de repositorios en la base de datos: %1</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1908"/>
+        <location filename="dbrepository.cpp" line="1923"/>
         <source>Detaching the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1887,7 +1887,7 @@ p, li { white-space: pre-wrap; }
         <translation>Transfiriendo la información de la base de datos</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1887"/>
+        <location filename="dbrepository.cpp" line="1902"/>
         <source>Commiting the SQL transaction</source>
         <translation>Cometer la transacción SQL</translation>
     </message>
