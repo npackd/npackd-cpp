@@ -1743,8 +1743,9 @@ p, li { white-space: pre-wrap; }
         <translation>L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1848"/>
         <source>Starting an SQL transaction</source>
-        <translation type="vanished">Démarrage d&apos;une transaction SQL</translation>
+        <translation>Démarrage d&apos;une transaction SQL</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1129"/>
@@ -1797,6 +1798,11 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1908"/>
+        <source>Detaching the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="dbrepository.cpp" line="1349"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation type="unfinished"></translation>
@@ -1807,16 +1813,39 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1435"/>
+        <source>Error creating a temporary file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="1454"/>
+        <source>Updating the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="1477"/>
+        <location filename="dbrepository.cpp" line="1870"/>
+        <source>Transferring the data from the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="1829"/>
+        <source>Attaching the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="1887"/>
         <source>Commiting the SQL transaction</source>
-        <translation type="vanished">Application de la transaction SQL</translation>
+        <translation>Application de la transaction SQL</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1331"/>
+        <location filename="dbrepository.cpp" line="1860"/>
         <source>Clearing the database</source>
         <translation>Effacement de la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1517"/>
+        <location filename="dbrepository.cpp" line="1547"/>
         <source>Updating statuses</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1867,22 +1896,17 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1443"/>
-        <source>Updating the local repository</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="dbrepository.cpp" line="1468"/>
+        <location filename="dbrepository.cpp" line="1498"/>
         <source>Inserting data in the packages table</source>
         <translation>Insertion des données dans la table des paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1478"/>
+        <location filename="dbrepository.cpp" line="1508"/>
         <source>Inserting data in the package versions table</source>
         <translation>Insertion des données dans la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1488"/>
+        <location filename="dbrepository.cpp" line="1518"/>
         <source>Inserting data in the licenses table</source>
         <translation>Insertion des données dans la table des licences</translation>
     </message>
@@ -2358,7 +2382,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1434"/>
+        <location filename="dbrepository.cpp" line="1468"/>
         <source>Error opening the database: %1</source>
         <translation type="unfinished"></translation>
     </message>

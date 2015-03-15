@@ -852,8 +852,9 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Ungültige Paketversion wurde aus der Datenbank eingelesen: %1</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1848"/>
         <source>Starting an SQL transaction</source>
-        <translation type="vanished">Beginne SQL-Transaktion</translation>
+        <translation>Beginne SQL-Transaktion</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1129"/>
@@ -891,12 +892,18 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler beim Speichern der Liste der Repositories in der Datenbank: %1</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1908"/>
+        <source>Detaching the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Creating a temporary file</source>
         <translation type="vanished">Erstelle eine temporäre Datei</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1435"/>
         <source>Error creating a temporary file</source>
-        <translation type="vanished">Fehler beim Erstellen einer temporären Datei</translation>
+        <translation>Fehler beim Erstellen einer temporären Datei</translation>
     </message>
     <message>
         <source>Opening the package database</source>
@@ -929,19 +936,29 @@ p, li { white-space: pre-wrap; }
         <translation>Aktualisiere die Stati für die installierten Pakete in der Datenbank (tempdb)</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1454"/>
+        <source>Updating the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="1829"/>
         <source>Attaching the temporary database</source>
-        <translation type="vanished">Die temporäre Datenbank wird angehängt</translation>
+        <translation>Die temporäre Datenbank wird angehängt</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1477"/>
+        <location filename="dbrepository.cpp" line="1870"/>
         <source>Transferring the data from the temporary database</source>
-        <translation type="vanished">Übertrage die Daten aus der temporären Datenbank</translation>
+        <translation>Übertrage die Daten aus der temporären Datenbank</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1887"/>
         <source>Commiting the SQL transaction</source>
-        <translation type="vanished">Commit für die  SQL-Transaktion ausführen</translation>
+        <translation>Commit für die  SQL-Transaktion ausführen</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1331"/>
+        <location filename="dbrepository.cpp" line="1860"/>
         <source>Clearing the database</source>
         <translation>Leere die Datenbank</translation>
     </message>
@@ -950,7 +967,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1517"/>
+        <location filename="dbrepository.cpp" line="1547"/>
         <source>Updating statuses</source>
         <translation>Aktualisiere Stati</translation>
     </message>
@@ -1001,22 +1018,17 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1443"/>
-        <source>Updating the local repository</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="dbrepository.cpp" line="1468"/>
+        <location filename="dbrepository.cpp" line="1498"/>
         <source>Inserting data in the packages table</source>
         <translation>Füge Daten in die Paketetabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1478"/>
+        <location filename="dbrepository.cpp" line="1508"/>
         <source>Inserting data in the package versions table</source>
         <translation>Füge Daten in die Paketversionentabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1488"/>
+        <location filename="dbrepository.cpp" line="1518"/>
         <source>Inserting data in the licenses table</source>
         <translation>Füge Daten in die Lizenzentabelle ein</translation>
     </message>
@@ -1500,7 +1512,7 @@ p, li { white-space: pre-wrap; }
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1434"/>
+        <location filename="dbrepository.cpp" line="1468"/>
         <source>Error opening the database: %1</source>
         <translation type="unfinished"></translation>
     </message>

@@ -1803,8 +1803,9 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Прочёл испорченную версию пакета из базы данных: %1</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1848"/>
         <source>Starting an SQL transaction</source>
-        <translation type="vanished">Начинается SQL транзакция</translation>
+        <translation>Начинается SQL транзакция</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1129"/>
@@ -1842,12 +1843,18 @@ p, li { white-space: pre-wrap; }
         <translation>Ошибка при сохранении списка репозиториев в базе данных: %1</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1908"/>
+        <source>Detaching the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Creating a temporary file</source>
         <translation type="vanished">Создаю временный файл</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1435"/>
         <source>Error creating a temporary file</source>
-        <translation type="vanished">Ошибка при создании временного файла</translation>
+        <translation>Ошибка при создании временного файла</translation>
     </message>
     <message>
         <source>Opening the package database</source>
@@ -1880,19 +1887,29 @@ p, li { white-space: pre-wrap; }
         <translation>Обновляю статусы установленных пакетов в базе данных (tempdb)</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1454"/>
+        <source>Updating the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="dbrepository.cpp" line="1829"/>
         <source>Attaching the temporary database</source>
-        <translation type="vanished">Открываю временную базу данных</translation>
+        <translation>Открываю временную базу данных</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1477"/>
+        <location filename="dbrepository.cpp" line="1870"/>
         <source>Transferring the data from the temporary database</source>
-        <translation type="vanished">Переношу данные из временной базы данных</translation>
+        <translation>Переношу данные из временной базы данных</translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1887"/>
         <source>Commiting the SQL transaction</source>
-        <translation type="vanished">Совершается SQL транзакция</translation>
+        <translation>Совершается SQL транзакция</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1331"/>
+        <location filename="dbrepository.cpp" line="1860"/>
         <source>Clearing the database</source>
         <translation>Очистка базы данных</translation>
     </message>
@@ -1901,7 +1918,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Загружаю удаленные репозитории и заполняю локальную базу данных</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1517"/>
+        <location filename="dbrepository.cpp" line="1547"/>
         <source>Updating statuses</source>
         <translation>Обновляю статус</translation>
     </message>
@@ -1952,22 +1969,17 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1443"/>
-        <source>Updating the local repository</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="dbrepository.cpp" line="1468"/>
+        <location filename="dbrepository.cpp" line="1498"/>
         <source>Inserting data in the packages table</source>
         <translation>Вставка данных в таблицу пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1478"/>
+        <location filename="dbrepository.cpp" line="1508"/>
         <source>Inserting data in the package versions table</source>
         <translation>Вставка данных в таблицу версий пакетов</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1488"/>
+        <location filename="dbrepository.cpp" line="1518"/>
         <source>Inserting data in the licenses table</source>
         <translation>Вставка данных в таблицу лицензий</translation>
     </message>
@@ -2443,7 +2455,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1434"/>
+        <location filename="dbrepository.cpp" line="1468"/>
         <source>Error opening the database: %1</source>
         <translation type="unfinished"></translation>
     </message>

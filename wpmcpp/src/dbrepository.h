@@ -100,6 +100,8 @@ private:
     QString saveLinks(Package *p);
     QString readLinks(Package *p);
     QString deleteLinks(const QString &name);
+    QString updateDatabase();
+    void transferFrom(Job *job, const QString &databaseFilename);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;

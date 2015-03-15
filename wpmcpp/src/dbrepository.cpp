@@ -1426,10 +1426,44 @@ void DBRepository::updateF5Runnable(Job *job)
             THREAD_MODE_BACKGROUND_BEGIN);
     */
 
-    DBRepository* dbr = new DBRepository();
+    DBRepository tempdb;
+
+    QTemporaryFile tempFile;
+    bool tempDatabaseOpen = false;
+    if (job->shouldProceed()) {
+        if (!tempFile.open()) {
+            job->setErrorMessage(QObject::tr("Error creating a temporary file"));
+        } else {
+            tempFile.close();
+            job->setProgress(0.01);
+        }
+    }
 
     if (job->shouldProceed()) {
-        QString err = dbr->openDefault("recognize");
+        QString err = tempdb.open("tempdb", tempFile.fileName());
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else {
+            tempDatabaseOpen = true;
+            job->setProgress(0.02);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.77,
+                QObject::tr("Updating the temporary database"), true, true);
+        CoInitialize(0);
+        tempdb.updateF5(sub);
+        CoUninitialize();
+    }
+
+    if (tempDatabaseOpen)
+        tempdb.db.close();
+
+    DBRepository dbr;
+
+    if (job->shouldProceed()) {
+        QString err = dbr.openDefault("recognize");
         if (!err.isEmpty()) {
             job->setErrorMessage(QObject::tr("Error opening the database: %1").
                     arg(err));
@@ -1439,15 +1473,11 @@ void DBRepository::updateF5Runnable(Job *job)
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.98,
-                QObject::tr("Updating the local repository"), true, true);
-        CoInitialize(0);
-        dbr->updateF5(sub);
-        CoUninitialize();
+        Job* sub = job->newSubJob(0.2,
+                QObject::tr("Transferring the data from the temporary database"),
+                true, true);
+        dbr.transferFrom(sub, tempFile.fileName());
     }
-
-    dbr->db.close();
-    delete dbr;
 
     if (job->shouldProceed()) {
         job->setProgress(1);
@@ -1788,6 +1818,114 @@ QString DBRepository::updateStatus(const QString& package)
     return err;
 }
 
+void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
+{
+    bool transactionStarted = false;
+
+    QString initialTitle = job->getTitle();
+
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+            QObject::tr("Attaching the temporary database"));
+        QString err = exec("ATTACH '" + databaseFilename + "' as tempdb");
+        if (err.isEmpty())
+            job->setProgress(0.10);
+        else
+            job->setErrorMessage(err);
+    }
+
+    /*QString error;
+    //tempFile.setAutoRemove(false);
+    qDebug() << "packages in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE", &error);
+    qDebug() << error;
+    qDebug() << "package versions in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE_VERSION", &error);
+    qDebug() << error;
+    qDebug() << tempFile.fileName();
+    */
+
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Starting an SQL transaction"));
+        QString err = exec("BEGIN TRANSACTION");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else {
+            job->setProgress(0.11);
+            transactionStarted = true;
+        }
+    }
+
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Clearing the database"));
+        QString err = clear();
+        if (err.isEmpty())
+            job->setProgress(0.20);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Transferring the data from the temporary database"));
+        // exec("DROP INDEX PACKAGE_VERSION_PACKAGE_NAME");
+        QString err = exec("INSERT INTO PACKAGE SELECT * FROM tempdb.PACKAGE");
+        if (err.isEmpty())
+            err = exec("INSERT INTO PACKAGE_VERSION SELECT * FROM tempdb.PACKAGE_VERSION");
+        if (err.isEmpty())
+            err = exec("INSERT INTO LICENSE SELECT * FROM tempdb.LICENSE");
+        if (err.isEmpty())
+            err = exec("INSERT INTO CATEGORY SELECT * FROM tempdb.CATEGORY");
+        if (err.isEmpty())
+            job->setProgress(0.95);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Commiting the SQL transaction"));
+        QString err = exec("COMMIT");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.99);
+    } else {
+        if (transactionStarted)
+            exec("ROLLBACK");
+    }
+
+    /*
+    qDebug() << "packages in db" << count("SELECT COUNT(*) FROM PACKAGE", &error);
+    qDebug() << error;
+    qDebug() << "package versions in db" << count("SELECT COUNT(*) FROM PACKAGE_VERSION", &error);
+    qDebug() << error;
+    qDebug() << tempFile.fileName();
+    */
+
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Detaching the temporary database"));
+        QString err;
+        for (int i = 0; i < 10; i++) {
+            err = exec("DETACH tempdb");
+            if (err.isEmpty())
+                break;
+            else
+                Sleep(1000);
+        }
+
+        if (err.isEmpty())
+            job->setProgress(0.90);
+        else
+            job->setErrorMessage(err);
+    }
+
+    job->setTitle(initialTitle);
+
+    job->complete();
+}
+
 QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 {
     QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
@@ -1804,35 +1942,9 @@ QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
     return err;
 }
 
-QString DBRepository::open(const QString& connectionName, const QString& file,
-        bool readOnly)
+QString DBRepository::updateDatabase()
 {
     QString err;
-
-    // if we cannot write the file, we still try to open in read-only mode
-    if (!readOnly) {
-        QFile f(file);
-        if (f.open(QFile::ReadWrite)) {
-            readOnly = false;
-            f.close();
-        }
-    }
-
-    QSqlDatabase::removeDatabase(connectionName);
-    db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
-    db.setDatabaseName(file);
-    if (readOnly)
-        db.setConnectOptions("QSQLITE_OPEN_READONLY=1");
-    db.open();
-    err = toString(db.lastError());
-
-    if (err.isEmpty())
-        err = exec("PRAGMA busy_timeout = 30000");
-
-    if (err.isEmpty()) {
-        if (!readOnly)
-            err = exec("PRAGMA journal_mode = WAL");
-    }
 
     bool e = false;
 
@@ -2024,6 +2136,44 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
                     "PACKAGE)");
             err = toString(db.lastError());
         }
+    }
+
+    return err;
+}
+
+QString DBRepository::open(const QString& connectionName, const QString& file,
+        bool readOnly)
+{
+    QString err;
+
+    // if we cannot write the file, we still try to open in read-only mode
+    if (!readOnly) {
+        QFile f(file);
+        if (f.open(QFile::ReadWrite)) {
+            readOnly = false;
+            f.close();
+        }
+    }
+
+    QSqlDatabase::removeDatabase(connectionName);
+    db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+    db.setDatabaseName(file);
+    if (readOnly)
+        db.setConnectOptions("QSQLITE_OPEN_READONLY=1");
+    db.open();
+    err = toString(db.lastError());
+
+    if (err.isEmpty())
+        err = exec("PRAGMA busy_timeout = 30000");
+
+    if (err.isEmpty()) {
+        if (!readOnly)
+            err = exec("PRAGMA journal_mode = DELETE");
+    }
+
+    if (err.isEmpty()) {
+        if (!readOnly)
+            err = updateDatabase();
     }
 
     return err;
