@@ -7,10 +7,14 @@ environment:
   version: 1.20.1
   matrix:
   - bits: 32
+    prg: npackdcl
   - bits: 64
+    prg: npackd
+  - bits: 32
+    prg: npackd
 install:
-- AppVeyorInstall.bat %bits%
+- AppVeyorInstall.bat
 build_script:
-- AppVeyorBuild.bat %bits%
+- AppVeyorBuild.bat
 test_script:
-- AppVeyorTest.bat %bits%
+- AppVeyorTest.bat
