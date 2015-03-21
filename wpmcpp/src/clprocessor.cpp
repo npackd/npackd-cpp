@@ -359,8 +359,6 @@ QString CLProcessor::update()
 QString CLProcessor::process(QList<InstallOperation*> &install,
         int programCloseType)
 {
-    // TODO: return error message
-
     QString err;
 
     bool confirmed = false;

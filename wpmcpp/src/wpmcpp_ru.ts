@@ -2156,8 +2156,9 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="main.cpp" line="74"/>
-        <source>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</source>
-        <translation>Пожалуйста, скачайте 64 битную версию с http://code.google.com/p/windows-package-manager/</translation>
+        <source>Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
+        <oldsource>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</oldsource>
+        <translation type="unfinished">Пожалуйста, скачайте 64 битную версию с http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
         <location filename="mainframe.cpp" line="120"/>
@@ -2328,58 +2329,58 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="505"/>
+        <location filename="clprocessor.cpp" line="503"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="506"/>
+        <location filename="clprocessor.cpp" line="504"/>
         <source>package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="507"/>
+        <location filename="clprocessor.cpp" line="505"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="508"/>
+        <location filename="clprocessor.cpp" line="506"/>
         <source>range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="509"/>
+        <location filename="clprocessor.cpp" line="507"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="510"/>
+        <location filename="clprocessor.cpp" line="508"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="524"/>
+        <location filename="clprocessor.cpp" line="522"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="525"/>
+        <location filename="clprocessor.cpp" line="523"/>
         <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="540"/>
+        <location filename="clprocessor.cpp" line="538"/>
         <source>Error parsing the command line: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="581"/>
+        <location filename="clprocessor.cpp" line="579"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="588"/>
+        <location filename="clprocessor.cpp" line="586"/>
         <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2415,7 +2416,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="384"/>
+        <location filename="clprocessor.cpp" line="382"/>
         <location filename="mainwindow.cpp" line="832"/>
         <location filename="mainwindow.cpp" line="1748"/>
         <location filename="uiutils.cpp" line="191"/>
@@ -2448,13 +2449,13 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="375"/>
+        <location filename="clprocessor.cpp" line="373"/>
         <location filename="mainwindow.cpp" line="824"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="376"/>
+        <location filename="clprocessor.cpp" line="374"/>
         <location filename="mainwindow.cpp" line="825"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
@@ -2987,10 +2988,10 @@ p, li { white-space: pre-wrap; }
         <translation>не доступно</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="400"/>
-        <location filename="clprocessor.cpp" line="542"/>
-        <location filename="clprocessor.cpp" line="584"/>
-        <location filename="clprocessor.cpp" line="590"/>
+        <location filename="clprocessor.cpp" line="398"/>
+        <location filename="clprocessor.cpp" line="540"/>
+        <location filename="clprocessor.cpp" line="582"/>
+        <location filename="clprocessor.cpp" line="588"/>
         <location filename="progresstree2.cpp" line="195"/>
         <source>Error</source>
         <translation>Ошибка</translation>
@@ -3090,8 +3091,9 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="repository.cpp" line="270"/>
-        <source>Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/</source>
-        <translation>Пожалуйста, скачайте свежую версию Npackd с http://code.google.com/p/windows-package-manager/</translation>
+        <source>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
+        <oldsource>Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/</oldsource>
+        <translation type="unfinished">Пожалуйста, скачайте свежую версию Npackd с http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="284"/>
@@ -3763,23 +3765,6 @@ p, li { white-space: pre-wrap; }
         <translation>Закончить процесс</translation>
     </message>
     <message>
-        <location filename="settingsframe.ui" line="165"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;sdölf sdölkf öslad fösa fsafsa&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;df sa&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;d fas&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;f sadf asdf sfd&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt; a f&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;sadf sdf&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/images/fileissue.png&quot; /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;https://www.google.de/logos/doodles/2014/niki-de-saint-phalles-84th-birthday-5177116207349760-hp.jpg&quot; /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="settingsframe.ui" line="75"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -3793,22 +3778,24 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/windows-package-manager/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/windows-package-manager/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http:// and https:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Example:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;You can find the list of available repositories at&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/windows-package-manager/&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/windows-package-manager/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/windows-package-manager/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/windows-package-manager/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }

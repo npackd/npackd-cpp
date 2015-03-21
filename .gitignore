@@ -1,6 +1,7 @@
 /.project
 *.qm
 *.pro.user
+npackdcl/build/
 wpmcpp/build/
 *.orig
 *.user
