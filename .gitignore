@@ -1,1 +1,5 @@
 /.project
+*.qm
+*.pro.user
+wpmcpp/build/
+
