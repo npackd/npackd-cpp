@@ -1866,7 +1866,7 @@ void MainWindow::updateActionsSlot()
 void MainWindow::on_actionFile_an_Issue_triggered()
 {
     openURL(QUrl(
-            "http://code.google.com/p/windows-package-manager/issues/entry?template=Defect%20report%20from%20user"));
+            "https://github.com/tim-lebedkov/npackd/issues/new"));
 }
 
 void MainWindow::on_actionInstall_triggered()

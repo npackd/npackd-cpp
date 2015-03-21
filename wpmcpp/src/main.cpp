@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     if (WPMUtils::is64BitWindows()) {
         QMessageBox::critical(0, "Error",
                 QObject::tr("The 32 bit version of Npackd requires a 32 bit operating system.") + "\n" +
-                QObject::tr("Please download the 64 bit version from http://code.google.com/p/windows-package-manager/"));
+                QObject::tr("Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads"));
         return 1;
     }
 #endif

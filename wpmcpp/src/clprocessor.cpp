@@ -477,7 +477,7 @@ void CLProcessor::usage()
         "",
         "The process exits with the code unequal to 0 if an error occures."
         //"",
-        // "See https://code.google.com/p/windows-package-manager/wiki/CommandLine for more details.",
+        // "See https://github.com/tim-lebedkov/npackd/wiki/CommandLine for more details.",
     };
     for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
         sl.append(QString(lines2[i]));

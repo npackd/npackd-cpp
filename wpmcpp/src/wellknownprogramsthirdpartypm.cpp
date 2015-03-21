@@ -388,7 +388,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
     if (job->shouldProceed()) {
         Package* p = new Package("com.googlecode.windows-package-manager.Npackd",
                 "Npackd");
-        p->url = "http://code.google.com/p/windows-package-manager/";
+        p->url = "https://github.com/tim-lebedkov/npackd";
         p->description = "package manager";
 
         err = rep->savePackage(p);
@@ -401,7 +401,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
     if (job->shouldProceed()) {
         Package* p = new Package("com.googlecode.windows-package-manager.Npackd64",
                 "Npackd 64 bit");
-        p->url = "http://code.google.com/p/windows-package-manager/";
+        p->url = "https://github.com/tim-lebedkov/npackd";
         p->description = "package manager";
 
         err = rep->savePackage(p);
@@ -414,7 +414,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
     if (job->shouldProceed()) {
         Package* p = new Package("com.googlecode.windows-package-manager.NpackdCL",
                 "NpackdCL");
-        p->url = "http://code.google.com/p/windows-package-manager/";
+        p->url = "https://github.com/tim-lebedkov/npackd";
         p->description = "command line interface to Npackd";
 
         err = rep->savePackage(p);

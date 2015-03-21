@@ -1848,6 +1848,11 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="dbrepository.cpp" line="1941"/>
+        <source>Reorganizing the database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Creating a temporary file</source>
         <translation type="vanished">Создаю временный файл</translation>
     </message>

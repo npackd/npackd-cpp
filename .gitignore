@@ -2,4 +2,6 @@
 *.qm
 *.pro.user
 wpmcpp/build/
+*.orig
+*.user
 

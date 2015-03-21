@@ -1936,6 +1936,16 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
             job->setErrorMessage(err);
     }
 
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Reorganizing the database"));
+        QString err = exec("VACUUM");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(1);
+    }
+
     job->setTitle(initialTitle);
 
     job->complete();
