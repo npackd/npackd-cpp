@@ -253,10 +253,12 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
     QPushButton* b = (QPushButton*) itemWidget(item, 4);
     if (s.completed) {
         pb->setValue(10000);
-        b->setEnabled(false);
+        if (b)
+            b->setEnabled(false);
     } else {
         pb->setValue(lround(s.progress * 10000));
-        b->setEnabled(!s.cancelRequested);
+        if (b)
+            b->setEnabled(!s.cancelRequested);
     }
 }
 
