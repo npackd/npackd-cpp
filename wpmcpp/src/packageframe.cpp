@@ -112,76 +112,68 @@ void PackageFrame::fillForm(Package* p)
     DBRepository* dbr = DBRepository::getDefault();
 
     QString licenseTitle = QObject::tr("unknown");
-    if (p) {
-        QString err;
-        License* lic = dbr->findLicense_(p->license, &err);
-        if (!err.isEmpty()) {
-            MainWindow::getInstance()->addErrorMessage(err, err, true,
-                    QMessageBox::Critical);
-        }
-        if (lic) {
-            licenseTitle = "<a href=\"http://www.example.com\">" +
-                    lic->title.toHtmlEscaped() + "</a>";
-            delete lic;
-        }
+    QString err;
+    License* lic = dbr->findLicense_(p->license, &err);
+    if (!err.isEmpty()) {
+        MainWindow::getInstance()->addErrorMessage(err, err, true,
+                QMessageBox::Critical);
+    }
+    if (lic) {
+        licenseTitle = "<a href=\"http://www.example.com\">" +
+                lic->title.toHtmlEscaped() + "</a>";
+        delete lic;
     }
     this->ui->labelLicense->setText(licenseTitle);
 
     // description, categories, change log
-    if (p) {
-        this->ui->textEditDescription->setText(p->description);
+    this->ui->textEditDescription->setText(p->description);
 
-        QString hp;
-        if (p->url.isEmpty())
-            hp = QObject::tr("unknown");
-        else{
-            hp = p->url;
-            hp = "<a href=\"" + hp.toHtmlEscaped() + "\">" +
-                    hp.toHtmlEscaped() + "</a>";
-        }
-        this->ui->labelHomePage->setText(hp);
-
-        this->ui->labelCategory->setText(p->categories.join(", "));
-
-        QString changelog;
-        if (p->getChangeLog().isEmpty())
-            changelog = QObject::tr("n/a");
-        else{
-            changelog = p->getChangeLog();
-            changelog = "<a href=\"" + changelog.toHtmlEscaped() + "\">" +
-                    changelog.toHtmlEscaped() + "</a>";
-        }
-        this->ui->labelChangeLog->setText(changelog);
+    QString hp;
+    if (p->url.isEmpty())
+        hp = QObject::tr("unknown");
+    else{
+        hp = p->url;
+        hp = "<a href=\"" + hp.toHtmlEscaped() + "\">" +
+                hp.toHtmlEscaped() + "</a>";
     }
+    this->ui->labelHomePage->setText(hp);
 
-    if (p) {
-        QIcon icon = MainWindow::getPackageVersionIcon(p->name);
-        QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
-        this->ui->labelIcon->setPixmap(pixmap);
+    this->ui->labelCategory->setText(p->categories.join(", "));
+
+    QString changelog;
+    if (p->getChangeLog().isEmpty())
+        changelog = QObject::tr("n/a");
+    else{
+        changelog = p->getChangeLog();
+        changelog = "<a href=\"" + changelog.toHtmlEscaped() + "\">" +
+                changelog.toHtmlEscaped() + "</a>";
     }
+    this->ui->labelChangeLog->setText(changelog);
 
-    if (p) {
-        MainWindow* mw = MainWindow::getInstance();
+    QIcon icon = MainWindow::getPackageVersionIcon(p->name);
+    QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
+    this->ui->labelIcon->setPixmap(pixmap);
 
-        QListWidget* c = this->ui->listWidgetScreenshots;
-        c->clear();
+    MainWindow* mw = MainWindow::getInstance();
 
-        QList<QString> screenshots = p->links.values("screenshot");
-        int n = screenshots.count();
+    QListWidget* c = this->ui->listWidgetScreenshots;
+    c->clear();
 
-        // qDebug() << n << "screen shots";
+    QList<QString> screenshots = p->links.values("screenshot");
+    int n = screenshots.count();
 
-        c->setVisible(n > 0);
+    // qDebug() << n << "screen shots";
 
-        for (int i = 0; i < n; i++) {
-            QIcon icon = mw->downloadScreenshot(screenshots.at(i));
-            if (!icon.isNull()) {
-                QListWidgetItem* item = new QListWidgetItem(icon,
-                        QString::number(i + 1));
-                item->setData(Qt::UserRole,
-                        qVariantFromValue(screenshots.at(i)));
-                c->addItem(item);
-            }
+    c->setVisible(n > 0);
+
+    for (int i = 0; i < n; i++) {
+        QIcon icon = mw->downloadScreenshot(screenshots.at(i));
+        if (!icon.isNull()) {
+            QListWidgetItem* item = new QListWidgetItem(icon,
+                    QString::number(i + 1));
+            item->setData(Qt::UserRole,
+                    qVariantFromValue(screenshots.at(i)));
+            c->addItem(item);
         }
     }
 
@@ -195,7 +187,6 @@ void PackageFrame::fillForm(Package* p)
     newItem = new QTableWidgetItem(QObject::tr("Installation path"));
     t->setHorizontalHeaderItem(1, newItem);
 
-    QString err;
     qDeleteAll(this->pvs);
     pvs = dbr->getPackageVersions_(p->name, &err);
 

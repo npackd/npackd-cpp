@@ -44,6 +44,7 @@ DBRepository DBRepository::def;
 
 DBRepository::DBRepository()
 {
+    currentRepository = -1;
     savePackageVersionQuery = 0;
     insertPackageQuery = 0;
     insertLinkQuery = 0;

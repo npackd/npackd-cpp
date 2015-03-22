@@ -139,7 +139,6 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
             if (parts.count() > 1 && parts.last().contains('.')) {
                 version.setVersion(parts.last());
                 version.normalize();
-                versionFound = true;
             }
         }
     }

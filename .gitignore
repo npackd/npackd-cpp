@@ -5,4 +5,5 @@ npackdcl/build/
 wpmcpp/build/
 *.orig
 *.user
+cov-int/
 

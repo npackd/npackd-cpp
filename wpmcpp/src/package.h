@@ -50,9 +50,6 @@ public:
     /** name of the license like "org.gnu.GPLv3" or "" if unknown */
     QString license;
 
-    /** PACKAGE.REPOSITORY. ID of the repisotory. */
-    int repository;
-
     /** categories. Sub-categories are separated by / */
     QStringList categories;
 

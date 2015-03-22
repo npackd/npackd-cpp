@@ -1,0 +1,1 @@
+﻿C:\Users\t\Downloads\cov-analysis-win64-7.6.0\cov-analysis-win64-7.6.0\bin\cov-build.exe --dir cov-int C:\ProgramFiles\MinGW-w64_x86_64_SEH_POSIX_threads\bin\mingw32-make.exe -C wpmcpp compile PROFILE=release64
