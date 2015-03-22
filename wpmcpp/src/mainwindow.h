@@ -309,6 +309,8 @@ private slots:
     void downloadSizeCompleted(const QString &url,
             int64_t size, const QString &error);
     void on_actionShow_changelog_triggered();
+    void on_actionToggle_toolbar_triggered();
+    void on_actionToggle_toolbar_triggered(bool checked);
 };
 
 #endif // MAINWINDOW_H

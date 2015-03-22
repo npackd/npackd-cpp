@@ -133,6 +133,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->ui->tabWidget->addTab(mainFrame, QObject::tr("Packages"));
     this->loadUISettings();
+    this->ui->actionToggle_toolbar->setChecked(
+            this->ui->mainToolBar->isVisible());
 
     this->addJobsTab();
     connect(VisibleJobs::getDefault(), SIGNAL(changed()),
@@ -2088,4 +2090,14 @@ void MainWindow::on_actionShow_changelog_triggered()
             it != urls.end(); it++) {
         openURL(*it);
     }
+}
+
+void MainWindow::on_actionToggle_toolbar_triggered(bool checked)
+{
+    this->ui->mainToolBar->setVisible(checked);
+}
+
+void MainWindow::on_actionToggle_toolbar_triggered()
+{
+
 }
