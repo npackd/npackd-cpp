@@ -102,6 +102,9 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle">
+    <string>Main toolbar</string>
+   </property>
    <property name="movable">
     <bool>true</bool>
    </property>
@@ -360,10 +363,28 @@
  <resources>
   <include location="wpmcpp.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>mainToolBar</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_mainToolBar_visibilityChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>461</x>
+     <y>89</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>install()</slot>
   <slot>uninstall()</slot>
   <slot>on_actionReload_repositories_triggered()</slot>
+  <slot>on_mainToolBar_visibilityChanged(bool)</slot>
  </slots>
 </ui>
