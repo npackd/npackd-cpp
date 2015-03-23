@@ -99,11 +99,12 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
     QVariant r;
     AbstractRepository* rep = AbstractRepository::getDefault_();
     Info* cached = this->cache.object(p);
+    bool insertIntoCache = false;
     if (!cached) {
         Package* pk = rep->findPackage_(p);
         cached = createInfo(pk);
         delete pk;
-        this->cache.insert(p, cached);
+        insertIntoCache = true;
     }
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
@@ -184,6 +185,10 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                 break;
         }
     }
+
+    if (insertIntoCache)
+        this->cache.insert(p, cached);
+
     return r;
 }
 

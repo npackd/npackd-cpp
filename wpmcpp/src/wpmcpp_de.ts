@@ -858,7 +858,7 @@ p, li { white-space: pre-wrap; }
         <location filename="dbrepository.cpp" line="322"/>
         <location filename="dbrepository.cpp" line="363"/>
         <location filename="dbrepository.cpp" line="407"/>
-        <location filename="dbrepository.cpp" line="1105"/>
+        <location filename="dbrepository.cpp" line="1111"/>
         <source>XML parsing failed at line %1, column %2: %3</source>
         <translation>XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
     </message>
@@ -867,12 +867,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Ungültige Paketversion wurde aus der Datenbank eingelesen: %1</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1849"/>
+        <location filename="dbrepository.cpp" line="1855"/>
         <source>Starting an SQL transaction</source>
         <translation>Beginne SQL-Transaktion</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1130"/>
+        <location filename="dbrepository.cpp" line="1136"/>
         <source>Clearing the packages table</source>
         <translation>Leere die Paketetabelle</translation>
     </message>
@@ -887,32 +887,32 @@ p, li { white-space: pre-wrap; }
         <translation>Keine Zahl</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1140"/>
+        <location filename="dbrepository.cpp" line="1146"/>
         <source>Clearing the package versions table</source>
         <translation>Leere die Paketversionentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1150"/>
+        <location filename="dbrepository.cpp" line="1156"/>
         <source>Clearing the licenses table</source>
         <translation>Leere die Lizenzentabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1170"/>
+        <location filename="dbrepository.cpp" line="1176"/>
         <source>Clearing the categories table</source>
         <translation>Leere die Kategorientabelle</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1200"/>
+        <location filename="dbrepository.cpp" line="1206"/>
         <source>Error saving the list of repositories in the database: %1</source>
         <translation>Fehler beim Speichern der Liste der Repositories in der Datenbank: %1</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1924"/>
+        <location filename="dbrepository.cpp" line="1930"/>
         <source>Detaching the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1942"/>
+        <location filename="dbrepository.cpp" line="1948"/>
         <source>Reorganizing the database</source>
         <translation type="unfinished"></translation>
     </message>
@@ -921,7 +921,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Erstelle eine temporäre Datei</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1436"/>
+        <location filename="dbrepository.cpp" line="1442"/>
         <source>Error creating a temporary file</source>
         <translation>Fehler beim Erstellen einer temporären Datei</translation>
     </message>
@@ -931,54 +931,54 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Erstelle eine temporäre Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1320"/>
+        <location filename="dbrepository.cpp" line="1326"/>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation>Starte eine SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1342"/>
+        <location filename="dbrepository.cpp" line="1348"/>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation>Lade die entfernte Repositories herunter und fülle die lokale Datenbank (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1378"/>
+        <location filename="dbrepository.cpp" line="1384"/>
         <source>Commiting the SQL transaction (tempdb)</source>
         <translation>Führe einen Commit aus für die SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1350"/>
+        <location filename="dbrepository.cpp" line="1356"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation>Aktualisiere die Installationsstati (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1370"/>
+        <location filename="dbrepository.cpp" line="1376"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation>Aktualisiere die Stati für die installierten Pakete in der Datenbank (tempdb)</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1455"/>
+        <location filename="dbrepository.cpp" line="1461"/>
         <source>Updating the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1830"/>
+        <location filename="dbrepository.cpp" line="1836"/>
         <source>Attaching the temporary database</source>
         <translation>Die temporäre Datenbank wird angehängt</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1478"/>
-        <location filename="dbrepository.cpp" line="1871"/>
+        <location filename="dbrepository.cpp" line="1484"/>
+        <location filename="dbrepository.cpp" line="1877"/>
         <source>Transferring the data from the temporary database</source>
         <translation>Übertrage die Daten aus der temporären Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1903"/>
+        <location filename="dbrepository.cpp" line="1909"/>
         <source>Commiting the SQL transaction</source>
         <translation>Commit für die  SQL-Transaktion ausführen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1332"/>
-        <location filename="dbrepository.cpp" line="1861"/>
+        <location filename="dbrepository.cpp" line="1338"/>
+        <location filename="dbrepository.cpp" line="1867"/>
         <source>Clearing the database</source>
         <translation>Leere die Datenbank</translation>
     </message>
@@ -987,7 +987,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1548"/>
+        <location filename="dbrepository.cpp" line="1554"/>
         <source>Updating statuses</source>
         <translation>Aktualisiere Stati</translation>
     </message>
@@ -1008,47 +1008,47 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1408"/>
+        <location filename="dbrepository.cpp" line="1414"/>
         <source>Reading categories</source>
         <translation>Lese die Kategorien ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1358"/>
+        <location filename="dbrepository.cpp" line="1364"/>
         <source>Removing packages without versions</source>
         <translation>Entferne Pakete ohne Versionen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1160"/>
+        <location filename="dbrepository.cpp" line="1166"/>
         <source>Clearing the links table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1207"/>
+        <location filename="dbrepository.cpp" line="1213"/>
         <source>Downloading %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1278"/>
+        <location filename="dbrepository.cpp" line="1284"/>
         <source>Unzipping the repository failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1286"/>
+        <location filename="dbrepository.cpp" line="1292"/>
         <source>Rep.xml is missing in a repository in ZIP format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1499"/>
+        <location filename="dbrepository.cpp" line="1505"/>
         <source>Inserting data in the packages table</source>
         <translation>Füge Daten in die Paketetabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1509"/>
+        <location filename="dbrepository.cpp" line="1515"/>
         <source>Inserting data in the package versions table</source>
         <translation>Füge Daten in die Paketversionentabelle ein</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1519"/>
+        <location filename="dbrepository.cpp" line="1525"/>
         <source>Inserting data in the licenses table</source>
         <translation>Füge Daten in die Lizenzentabelle ein</translation>
     </message>
@@ -1252,7 +1252,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="406"/>
-        <location filename="mainwindow.cpp" line="898"/>
+        <location filename="mainwindow.cpp" line="897"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Kann Programm nicht beenden, solange Jobs laufen</translation>
     </message>
@@ -1489,30 +1489,30 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="382"/>
-        <location filename="mainwindow.cpp" line="834"/>
-        <location filename="mainwindow.cpp" line="1750"/>
+        <location filename="mainwindow.cpp" line="833"/>
+        <location filename="mainwindow.cpp" line="1749"/>
         <location filename="uiutils.cpp" line="191"/>
         <source>Install/Uninstall</source>
         <translation>Installieren/Deinstallieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1028"/>
-        <location filename="mainwindow.cpp" line="1081"/>
+        <location filename="mainwindow.cpp" line="1027"/>
+        <location filename="mainwindow.cpp" line="1080"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Fehler beim Suchen der neuesten installierten Version von %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1300"/>
+        <location filename="mainwindow.cpp" line="1299"/>
         <source>Initializing</source>
         <translation>Initialisiere</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1570"/>
+        <location filename="mainwindow.cpp" line="1569"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1674"/>
+        <location filename="mainwindow.cpp" line="1673"/>
         <source>About</source>
         <translation>Über…</translation>
     </message>
@@ -1522,48 +1522,48 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="373"/>
-        <location filename="mainwindow.cpp" line="826"/>
+        <location filename="mainwindow.cpp" line="825"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation>Die gewählten Änderungen erfordern eine Aktualisierung dieser Npackd-Instanz. Sind Sie sicher?</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="374"/>
-        <location filename="mainwindow.cpp" line="827"/>
+        <location filename="mainwindow.cpp" line="826"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1469"/>
+        <location filename="dbrepository.cpp" line="1475"/>
         <source>Error opening the database: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1675"/>
+        <location filename="mainwindow.cpp" line="1674"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;Npackd %1 -Software Paket Manager für Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1723"/>
+        <location filename="mainwindow.cpp" line="1722"/>
         <source>Jobs</source>
         <translation>Jobs</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1744"/>
+        <location filename="mainwindow.cpp" line="1743"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann den Scan jetzt nicht starten. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1819"/>
+        <location filename="mainwindow.cpp" line="1818"/>
         <source>%1 package(s) detected</source>
         <translation>%1 Paket(e) erkannt</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1824"/>
+        <location filename="mainwindow.cpp" line="1823"/>
         <source>Package detection status</source>
         <translation>Status der Paketerkennung</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1847"/>
+        <location filename="mainwindow.cpp" line="1846"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann Repository jetzt nicht neu laden. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
@@ -1576,7 +1576,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Kann diese Aktioon nicht starten während die Repositories aktualisiert werden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2004"/>
+        <location filename="mainwindow.cpp" line="2003"/>
         <source>Cannot open the URL %1</source>
         <translation>Kann den URL %1 nicht öffnen</translation>
     </message>
@@ -1634,42 +1634,42 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="141"/>
+        <location filename="packageitemmodel.cpp" line="142"/>
         <source>computing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="198"/>
+        <location filename="packageitemmodel.cpp" line="203"/>
         <source>Icon</source>
         <translation>Symbol</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="201"/>
+        <location filename="packageitemmodel.cpp" line="206"/>
         <source>Title</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="204"/>
+        <location filename="packageitemmodel.cpp" line="209"/>
         <source>Description</source>
         <translation>Beschreibung</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="207"/>
+        <location filename="packageitemmodel.cpp" line="212"/>
         <source>Available</source>
         <translation>Verfügbar</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="210"/>
+        <location filename="packageitemmodel.cpp" line="215"/>
         <source>Installed</source>
         <translation>Installiert</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="213"/>
+        <location filename="packageitemmodel.cpp" line="218"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="216"/>
+        <location filename="packageitemmodel.cpp" line="221"/>
         <source>Download size</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1902,7 +1902,7 @@ p, li { white-space: pre-wrap; }
         <translation>Kann ZIP-Datei %1 nicht öffnen: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1274"/>
+        <location filename="dbrepository.cpp" line="1280"/>
         <location filename="wpmutils.cpp" line="2118"/>
         <source>Extracting</source>
         <translation>Entpacke</translation>
@@ -2080,7 +2080,7 @@ p, li { white-space: pre-wrap; }
         <location filename="clprocessor.cpp" line="540"/>
         <location filename="clprocessor.cpp" line="582"/>
         <location filename="clprocessor.cpp" line="588"/>
-        <location filename="progresstree2.cpp" line="195"/>
+        <location filename="progresstree2.cpp" line="197"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -2117,18 +2117,18 @@ p, li { white-space: pre-wrap; }
         <translation>Kann %1 nicht zum Schreiben öffnen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1230"/>
+        <location filename="dbrepository.cpp" line="1236"/>
         <source>Repository %1 of %2</source>
         <translation>Repository %1 von %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1237"/>
+        <location filename="dbrepository.cpp" line="1243"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Fehler beim Laden des Repositories %1: %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1252"/>
-        <location filename="settingsframe.cpp" line="117"/>
+        <location filename="dbrepository.cpp" line="1258"/>
+        <location filename="settingsframe.cpp" line="109"/>
         <source>No repositories defined</source>
         <translation>Keine Repositories definiert</translation>
     </message>
@@ -2153,7 +2153,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Kann die Datei nicht öffnen</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1296"/>
+        <location filename="dbrepository.cpp" line="1302"/>
         <source>Parsing XML</source>
         <translation>Parse XML</translation>
     </message>
@@ -2213,17 +2213,16 @@ p, li { white-space: pre-wrap; }
         <translation>Kann die Einstellungen jetzt nicht verändern. Der Scan des Laufwerks läuft gerade.</translation>
     </message>
     <message>
-        <location filename="settingsframe.cpp" line="161"/>
+        <location filename="settingsframe.cpp" line="153"/>
         <source>Cannot change settings now. The repositories download is running.</source>
         <translation>Kann die Einstellungen jetzt nicht verändern. Das Herunterladen des Repositories läuft gerade.</translation>
     </message>
     <message>
-        <location filename="settingsframe.cpp" line="100"/>
         <source>Cannot find locked package versions: %1</source>
-        <translation>Kann die Versionen des gesperrten Pakets nicht ermitteln: %1</translation>
+        <translation type="vanished">Kann die Versionen des gesperrten Pakets nicht ermitteln: %1</translation>
     </message>
     <message>
-        <location filename="settingsframe.cpp" line="108"/>
+        <location filename="settingsframe.cpp" line="100"/>
         <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann die Einstellungen jetzt nicht verändern. Das Paket %1 wird von einer aktuell laufenden (De-)Installation gesperrt.</translation>
     </message>
@@ -2243,7 +2242,7 @@ p, li { white-space: pre-wrap; }
         <translation>Kann das Installationsverzeichnis zu %1 nicht ändern. %2 %3 ist dort installiert</translation>
     </message>
     <message>
-        <location filename="settingsframe.cpp" line="129"/>
+        <location filename="settingsframe.cpp" line="121"/>
         <source>%1 is not a valid repository address</source>
         <translation>%1 ist keine gültige Repository-Adresse</translation>
     </message>
@@ -2652,7 +2651,7 @@ p, li { white-space: pre-wrap; }
         <translation>Npackd-Liste der installierten Pakete</translation>
     </message>
     <message>
-        <location filename="controlpanelthirdpartypm.cpp" line="169"/>
+        <location filename="controlpanelthirdpartypm.cpp" line="170"/>
         <source>Control panel software</source>
         <translation>Programme aus der Systemsteuerung</translation>
     </message>
@@ -2780,7 +2779,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="125"/>
+        <location filename="progresstree2.cpp" line="127"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbrechen</translation>
     </message>

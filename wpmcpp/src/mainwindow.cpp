@@ -548,9 +548,8 @@ QIcon MainWindow::downloadIcon(const QString &url)
                 inCache = new QIcon(pm);
                 inCache->detach();
 
-                icons.insert(url, inCache);
-
                 r = *inCache;
+                icons.insert(url, inCache);
             } else {
                 r = MainWindow::genericAppIcon;
                 inCache = new QIcon(r);

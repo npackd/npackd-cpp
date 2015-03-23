@@ -4,9 +4,10 @@
 #include "wpmutils.h"
 
 CLProgress::CLProgress(QObject *parent) :
-    QObject(parent), updateRate(5)
+    QObject(parent), updateRate(5), progressPos(), lastJobChange(0)
 {
 }
+
 
 void CLProgress::jobChanged(const JobState& s)
 {

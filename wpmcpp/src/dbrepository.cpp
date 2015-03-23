@@ -686,6 +686,7 @@ int DBRepository::insertCategory(int parent, int level,
         if (!selectCategoryQuery->prepare(sql)) {
             *err = getErrorString(*selectCategoryQuery);
             delete selectCategoryQuery;
+            return -1;
         }
     }
 
@@ -736,6 +737,7 @@ QString DBRepository::deleteLinks(const QString& name)
                 "DELETE FROM LINK WHERE PACKAGE=:PACKAGE")) {
             err = getErrorString(*deleteLinkQuery);
             delete deleteLinkQuery;
+            return err;
         }
     }
 
@@ -763,6 +765,7 @@ QString DBRepository::saveLinks(Package* p)
         if (!insertLinkQuery->prepare(insertSQL)) {
             err = getErrorString(*insertLinkQuery);
             delete insertLinkQuery;
+            return err;
         }
     }
 
@@ -868,6 +871,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
             err = getErrorString(*insertPackageQuery);
             delete insertPackageQuery;
             delete replacePackageQuery;
+            return err;
         }
 
         if (err.isEmpty()) {
@@ -875,6 +879,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
                 err = getErrorString(*replacePackageQuery);
                 delete insertPackageQuery;
                 delete replacePackageQuery;
+                return err;
             }
         }
     }
@@ -1046,6 +1051,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         if (!savePackageVersionQuery->prepare(sql)) {
             err = getErrorString(*savePackageVersionQuery);
             delete savePackageVersionQuery;
+            return err;
         }
     }
 

@@ -99,9 +99,10 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     QString err;
     QString version_ = k.get("DisplayVersion", &err);
     if (err.isEmpty()) {
-        version.setVersion(version_);
-        version.normalize();
-        versionFound = true;
+        if (version.setVersion(version_)) {
+            version.normalize();
+            versionFound = true;
+        }
     }
     if (!versionFound) {
         DWORD major = k.getDWORD("VersionMajor", &err);
