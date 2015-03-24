@@ -134,7 +134,6 @@ QString CLProcessor::startNewestNpackdg()
 
     if (err.isEmpty()) {
         QString args = "\"" + exe + "\"";
-        bool success = false;
         PROCESS_INFORMATION pinfo;
 
         STARTUPINFOW startupInfo = {
@@ -145,7 +144,7 @@ QString CLProcessor::startNewestNpackdg()
         };
         startupInfo.dwFlags = STARTF_USESHOWWINDOW;
         startupInfo.wShowWindow = SW_HIDE;
-        success = CreateProcess(
+        bool success = CreateProcess(
                 (wchar_t*) exe.utf16(),
                 (wchar_t*) args.utf16(),
                 0, 0, TRUE,

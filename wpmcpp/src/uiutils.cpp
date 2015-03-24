@@ -380,7 +380,6 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
         QString args = "\"" + prg + "\" /U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
 
-        bool success = false;
         PROCESS_INFORMATION pinfo;
 
         STARTUPINFOW startupInfo = {
@@ -389,7 +388,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         };
-        success = CreateProcess(
+        bool success = CreateProcess(
                 (wchar_t*) prg.utf16(),
                 (wchar_t*) args.utf16(),
                 0, 0, TRUE,

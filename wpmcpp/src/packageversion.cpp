@@ -247,10 +247,10 @@ PackageVersion::PackageVersion(const QString& package)
     this->hashSumType = QCryptographicHash::Sha1;
 }
 
-PackageVersion::PackageVersion(const QString &package, const Version &version)
+PackageVersion::PackageVersion(const QString &package, const Version &version):
+version(version)
 {
     this->package = package;
-    this->version = version;
     this->type = 0;
     this->hashSumType = QCryptographicHash::Sha1;
 }

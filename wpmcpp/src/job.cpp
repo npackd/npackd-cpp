@@ -29,7 +29,7 @@ JobState::JobState(const JobState& s) : QObject()
     this->title = s.title;
 }
 
-void JobState::operator=(const JobState& s)
+JobState& JobState::operator=(const JobState& s)
 {
     this->cancelRequested = s.cancelRequested;
     this->completed = s.completed;
@@ -38,6 +38,8 @@ void JobState::operator=(const JobState& s)
     this->job = s.job;
     this->started = s.started;
     this->title = s.title;
+
+    return *this;
 }
 
 time_t JobState::remainingTime()
@@ -48,8 +50,6 @@ time_t JobState::remainingTime()
         time(&now);
 
         time_t diff = difftime(now, started);
-
-        diff = difftime(now, started);
         diff = lround(diff * (1 / this->progress - 1));
         result = diff;
     } else {

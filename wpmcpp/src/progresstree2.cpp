@@ -167,7 +167,7 @@ void ProgressTree2::subJobCreated(Job* sub)
 
 void ProgressTree2::cancelClicked()
 {
-    CancelPushButton* pb = (CancelPushButton*) QObject::sender();
+    CancelPushButton* pb = static_cast<CancelPushButton*>(QObject::sender());
     pb->setEnabled(false);
     Job* job = getJob(*pb->item);
     job->cancel();
@@ -267,6 +267,6 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
 Job* ProgressTree2::getJob(const QTreeWidgetItem& item)
 {
     const QVariant v = item.data(0, Qt::UserRole);
-    Job* f = (Job*) v.value<void*>();
+    Job* f = v.value<Job*>();
     return f;
 }

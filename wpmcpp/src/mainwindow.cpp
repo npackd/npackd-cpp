@@ -199,14 +199,15 @@ void MainWindow::showDetails()
         QList<void*> selected = sel->getSelected("PackageVersion");
         if (selected.count() > 0) {
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
 
                 openPackageVersion(pv->package, pv->version, true);
             }
         } else {
             selected = sel->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
 
                 int index = this->findPackageTab(p->name);
                 if (index < 0) {
@@ -234,14 +235,14 @@ void MainWindow::showDetails()
 void MainWindow::updateDownloadSize(const QString& url)
 {
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = (PackageItemModel*) t->model();
+    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
     m->downloadSizeUpdated(url);
 }
 
 void MainWindow::updateIcon(const QString& url)
 {
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = (PackageItemModel*) t->model();
+    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
     m->iconUpdated(url);
 
     for (int i = 0; i < this->ui->tabWidget->count(); i++) {
@@ -412,7 +413,7 @@ void MainWindow::repositoryStatusChanged(const QString& package,
     // qDebug() << "MainWindow::repositoryStatusChanged" << pv->toString();
 
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = (PackageItemModel*) t->model();
+    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
     m->installedStatusChanged(package, version);
     this->updateStatusInDetailTabs();
     this->updateActions();
@@ -452,7 +453,7 @@ void MainWindow::downloadSizeCompleted(const QString& url,
         int64_t size, const QString& error)
 {
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = (PackageItemModel*) t->model();
+    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
     m->downloadSizeUpdated(url);
 }
 
@@ -783,7 +784,7 @@ void MainWindow::fillList()
         addErrorMessage(err, err, true, QMessageBox::Critical);
     }
 
-    PackageItemModel* m = (PackageItemModel*) t->model();
+    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
     m->setPackages(sr.found);
     t->setUpdatesEnabled(true);
     t->horizontalHeader()->setSectionsMovable(true);
@@ -955,7 +956,8 @@ void MainWindow::updateInstallAction()
                 if (!enabled)
                     break;
 
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
 
                 enabled = enabled &&
                         pv && !pv->isLocked() &&
@@ -970,7 +972,7 @@ void MainWindow::updateInstallAction()
                 if (!enabled)
                     break;
 
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
                 QString err;
                 PackageVersion* pv  = r->findNewestInstallablePackageVersion_(
                         p->name, &err);
@@ -1003,7 +1005,8 @@ void MainWindow::updateShowFolderAction()
                 if (!enabled)
                     break;
 
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
 
                 enabled = enabled &&
                         pv && !pv->isLocked() &&
@@ -1018,7 +1021,7 @@ void MainWindow::updateShowFolderAction()
                 if (!enabled)
                     break;
 
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
                 PackageVersion* pv = r->findNewestInstalledPackageVersion_(
@@ -1056,7 +1059,8 @@ void MainWindow::updateUninstallAction()
                 if (!enabled)
                     break;
 
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
 
                 enabled = enabled &&
                         pv && !pv->isLocked() &&
@@ -1071,7 +1075,7 @@ void MainWindow::updateUninstallAction()
                 if (!enabled)
                     break;
 
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
                 PackageVersion* pv = r->findNewestInstalledPackageVersion_(
@@ -1107,7 +1111,7 @@ void MainWindow::updateUpdateAction()
                 if (!enabled)
                     break;
 
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
 
                 enabled = enabled && isUpdateEnabled(p->name);
             }
@@ -1118,7 +1122,8 @@ void MainWindow::updateUpdateAction()
                 if (!enabled)
                     break;
 
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
 
                 enabled = enabled && isUpdateEnabled(pv->package);
             }
@@ -1170,7 +1175,8 @@ void MainWindow::updateTestDownloadSiteAction()
         QList<void*> selected = selection->getSelected("PackageVersion");
         if (selected.count() > 0) {
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
                 if (pv->download.isValid()) {
                     enabled = true;
                     break;
@@ -1180,7 +1186,7 @@ void MainWindow::updateTestDownloadSiteAction()
             AbstractRepository* r = AbstractRepository::getDefault_();
             selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
                 QString err;
                 PackageVersion* pv = r->findNewestInstallablePackageVersion_(
                         p->name, &err);
@@ -1206,7 +1212,8 @@ void MainWindow::updateShowChangelogAction()
         if (selected.count() > 0) {
             AbstractRepository* r = Repository::getDefault_();
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
 
                 Package* p = r->findPackage_(pv->package);
                 if (p) {
@@ -1222,7 +1229,7 @@ void MainWindow::updateShowChangelogAction()
         } else {
             selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
 
                 if (p) {
                     QUrl url(p->getChangeLog());
@@ -1247,7 +1254,8 @@ void MainWindow::updateGotoPackageURLAction()
         if (selected.count() > 0) {
             AbstractRepository* r = Repository::getDefault_();
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
 
                 Package* p = r->findPackage_(pv->package);
                 if (p) {
@@ -1263,7 +1271,7 @@ void MainWindow::updateGotoPackageURLAction()
         } else {
             selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
 
                 if (p) {
                     QUrl url(p->url);
@@ -1423,7 +1431,7 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
     }
     QModelIndex index = sm->currentIndex();
 
-    PackageItemModel* m = (PackageItemModel*) t->model();
+    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
     m->setPackages(QStringList());
     m->clearCache();
     fillList();
@@ -1511,7 +1519,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
         selected = selection->getSelected("Package");
         if (selected.count() != 0) {
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
                 QUrl url(p->url);
                 if (url.isValid())
                     urls.insert(url);
@@ -1520,7 +1528,8 @@ void MainWindow::on_actionGotoPackageURL_triggered()
             AbstractRepository* r = AbstractRepository::getDefault_();
             selected = selection->getSelected("PackageVersion");
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
                 QScopedPointer<Package> p(r->findPackage_(pv->package));
                 if (p) {
                     QUrl url(p->url);
@@ -1532,7 +1541,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
     }
 
     for (QSet<QUrl>::const_iterator it = urls.begin();
-            it != urls.end(); it++) {
+            it != urls.end(); ++it) {
         openURL(*it);
     }
 }
@@ -1589,7 +1598,8 @@ void MainWindow::on_actionUpdate_triggered()
             QSet<QString> used;
 
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
                 if (!used.contains(pv->package)) {
                     Package* p = r->findPackage_(pv->package);
 
@@ -1603,7 +1613,7 @@ void MainWindow::on_actionUpdate_triggered()
             if (sel) {
                 selected = sel->getSelected("Package");
                 for (int i = 0; i < selected.count(); i++) {
-                    Package* p = (Package*) selected.at(i);
+                    Package* p = static_cast<Package*>(selected.at(i));
                     packages.append(p->clone());
                 }
             }
@@ -1634,14 +1644,15 @@ void MainWindow::on_actionTest_Download_Site_triggered()
         QList<void*> selected = sel->getSelected("PackageVersion");
         if (selected.count() > 0) {
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
                 urls.insert(pv->download.host());
             }
         } else {
             AbstractRepository* r = AbstractRepository::getDefault_();
             selected = sel->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
                 QScopedPointer<PackageVersion> pv(
                         r->findNewestInstallablePackageVersion_(p->name,
                         &err));
@@ -1655,7 +1666,7 @@ void MainWindow::on_actionTest_Download_Site_triggered()
 
         if (err.isEmpty()) {
             for (QSet<QString>::const_iterator it = urls.begin();
-                    it != urls.end(); it++) {
+                    it != urls.end(); ++it) {
                 QString s = "http://www.urlvoid.com/scan/" + *it;
                 QUrl url(s);
                 if (url.isValid())
@@ -1808,7 +1819,8 @@ void MainWindow::hardDriveScanThreadFinished()
     */
 
     QStringList detected;
-    ScanHardDrivesThread* it = (ScanHardDrivesThread*) this->sender();
+    ScanHardDrivesThread* it = static_cast<ScanHardDrivesThread*>(
+            this->sender());
     for (int i = 0; i < it->detected.count(); i++) {
         PackageVersion* pv = it->detected.at(i);
         detected.append(pv->toString());
@@ -1832,7 +1844,8 @@ void MainWindow::addErrorMessage(const QString& msg, const QString& details,
 {
     MessageFrame* label = new MessageFrame(this->centralWidget(), msg,
             details, autoHide ? 30 : 0, icon);
-    QVBoxLayout* layout = (QVBoxLayout*) this->centralWidget()->layout();
+    QVBoxLayout* layout = static_cast<QVBoxLayout*>(
+            this->centralWidget()->layout());
     layout->insertWidget(0, label);
 }
 
@@ -1887,7 +1900,7 @@ void MainWindow::on_actionInstall_triggered()
             if (selection)
                 selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
                 PackageVersion* pv = r->findNewestInstallablePackageVersion_(
                         p->name, &err);
                 if (!err.isEmpty())
@@ -1898,7 +1911,7 @@ void MainWindow::on_actionInstall_triggered()
             }
         } else {
             for (int i = 0; i < selected.count(); i++) {
-                pvs.append(((PackageVersion*) selected.at(i))->clone());
+                pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
             }
         }
     }
@@ -1948,7 +1961,7 @@ void MainWindow::on_actionUninstall_triggered()
             if (selection)
                 selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
                 PackageVersion* pv = r->findNewestInstalledPackageVersion_(
@@ -1961,7 +1974,8 @@ void MainWindow::on_actionUninstall_triggered()
             }
         } else {
             for (int i = 0; i < selected.count(); i++) {
-                pvs.append(((PackageVersion*) selected.at(i))->clone());
+                pvs.append(static_cast<PackageVersion*>(selected.at(i))->
+                        clone());
             }
         }
     }
@@ -2017,7 +2031,7 @@ void MainWindow::on_actionOpen_folder_triggered()
         if (selection)
             selected = selection->getSelected("Package");
         for (int i = 0; i < selected.count(); i++) {
-            Package* p = (Package*) selected.at(i);
+            Package* p = static_cast<Package*>(selected.at(i));
 
             QString err;
             PackageVersion* pv = r->findNewestInstalledPackageVersion_(
@@ -2030,7 +2044,7 @@ void MainWindow::on_actionOpen_folder_triggered()
         }
     } else {
         for (int i = 0; i < selected.count(); i++) {
-            pvs.append(((PackageVersion*) selected.at(i))->clone());
+            pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
         }
     }
 
@@ -2065,7 +2079,7 @@ void MainWindow::on_actionShow_changelog_triggered()
         selected = selection->getSelected("Package");
         if (selected.count() != 0) {
             for (int i = 0; i < selected.count(); i++) {
-                Package* p = (Package*) selected.at(i);
+                Package* p = static_cast<Package*>(selected.at(i));
                 QUrl url(p->getChangeLog());
                 if (url.isValid())
                     urls.insert(url);
@@ -2074,7 +2088,8 @@ void MainWindow::on_actionShow_changelog_triggered()
             AbstractRepository* r = AbstractRepository::getDefault_();
             selected = selection->getSelected("PackageVersion");
             for (int i = 0; i < selected.count(); i++) {
-                PackageVersion* pv = (PackageVersion*) selected.at(i);
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
                 QScopedPointer<Package> p(r->findPackage_(pv->package));
                 if (p) {
                     QUrl url(p->getChangeLog());
@@ -2086,7 +2101,7 @@ void MainWindow::on_actionShow_changelog_triggered()
     }
 
     for (QSet<QUrl>::const_iterator it = urls.begin();
-            it != urls.end(); it++) {
+            it != urls.end(); ++it) {
         openURL(*it);
     }
 }

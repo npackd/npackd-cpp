@@ -40,7 +40,7 @@ public:
 
     JobState();
     JobState(const JobState& s);
-    void operator=(const JobState& s);
+    JobState& operator=(const JobState& s);
 
     /**
      * @return time remaining time necessary to complete this task
