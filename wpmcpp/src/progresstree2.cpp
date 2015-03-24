@@ -267,6 +267,6 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
 Job* ProgressTree2::getJob(const QTreeWidgetItem& item)
 {
     const QVariant v = item.data(0, Qt::UserRole);
-    Job* f = (Job*) v.value<void*>();
+    Job* f = static_cast<Job*>(v.value<void*>());
     return f;
 }
