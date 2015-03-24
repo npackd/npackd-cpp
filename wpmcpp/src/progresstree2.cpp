@@ -167,7 +167,7 @@ void ProgressTree2::subJobCreated(Job* sub)
 
 void ProgressTree2::cancelClicked()
 {
-    CancelPushButton* pb = (CancelPushButton*) QObject::sender();
+    CancelPushButton* pb = static_cast<CancelPushButton*>(QObject::sender());
     pb->setEnabled(false);
     Job* job = getJob(*pb->item);
     job->cancel();

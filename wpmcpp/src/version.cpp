@@ -4,14 +4,14 @@
 
 const Version Version::EMPTY(-1, -1);
 
-Version::Version()
+Version::Version(): basic()
 {
     this->parts = &this->basic[0];
     this->parts[0] = 1;
     this->nparts = 1;
 }
 
-Version::Version(const QString &v)
+Version::Version(const QString &v): basic()
 {
     this->parts = &this->basic[0];
     this->parts[0] = 1;
@@ -20,7 +20,7 @@ Version::Version(const QString &v)
     setVersion(v);
 }
 
-Version::Version(int a, int b)
+Version::Version(int a, int b): basic()
 {
     this->parts = &basic[0];
     this->parts[0] = a;
@@ -28,7 +28,7 @@ Version::Version(int a, int b)
     this->nparts = 2;
 }
 
-Version::Version(const Version &v)
+Version::Version(const Version &v): basic()
 {
     if (v.nparts <= BASIC_PARTS)
         this->parts = &basic[0];

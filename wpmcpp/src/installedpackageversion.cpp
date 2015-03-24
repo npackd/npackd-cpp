@@ -8,10 +8,9 @@
 #include "installedpackages.h"
 
 InstalledPackageVersion::InstalledPackageVersion(const QString &package,
-        const Version &version, const QString &directory)
+        const Version &version, const QString &directory): version(version)
 {
     this->package = package;
-    this->version = version;
     this->directory = directory;
 
     //qDebug() << "InstalledPackageVersion::InstalledPackageVersion " <<

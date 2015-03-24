@@ -367,7 +367,8 @@ PackageVersion *Repository::findPackageVersionByMSIGUID_(
 
     PackageVersion* r = 0;
     for (int i = 0; i < this->packageVersions.count(); i++) {
-        PackageVersion* pv = (PackageVersion*) this->packageVersions.at(i);
+        PackageVersion* pv = static_cast<PackageVersion*>(
+                this->packageVersions.at(i));
         if (pv->msiGUID == guid) {
             r = pv;
             break;
