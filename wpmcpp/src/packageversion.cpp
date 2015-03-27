@@ -90,7 +90,7 @@ bool isFileSafe(const QString& filename, const QString& url)
         pExecute = 0;
     }
 
-    if (err.isEmpty()) {
+    if (err.isEmpty() && pExecute) {
         hr = pExecute->SetLocalPath((LPCWSTR) filename.utf16());
         if (!SUCCEEDED(hr)) {
             WPMUtils::formatMessage(hr, &err);
@@ -98,7 +98,7 @@ bool isFileSafe(const QString& filename, const QString& url)
         }
     }
 
-    if (err.isEmpty()) {
+    if (err.isEmpty() && pExecute) {
         pExecute->SetSource((LPCWSTR) url.utf16());
         if (!SUCCEEDED(hr)) {
             WPMUtils::formatMessage(hr, &err);
@@ -106,7 +106,7 @@ bool isFileSafe(const QString& filename, const QString& url)
         }
     }
 
-    if (err.isEmpty()) {
+    if (err.isEmpty() && pExecute) {
         hr = pExecute->Save();
         if (hr != S_OK)
             res = false;

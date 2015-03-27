@@ -18,7 +18,7 @@ PackageVersionForm::PackageVersionForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PackageVersionForm)
 {
-    this->pv = 0;
+    this->pv = new PackageVersion();
     ui->setupUi(this);
 }
 
@@ -55,14 +55,12 @@ void PackageVersionForm::updateStatus()
 
 void PackageVersionForm::reload()
 {
-    if (this->pv) {
-        AbstractRepository* r = AbstractRepository::getDefault_();
-        QString err;
-        PackageVersion* newpv = r->findPackageVersion_(
-                this->pv->package, this->pv->version, &err);
-        if (err.isEmpty() && newpv)
-            this->fillForm(newpv);
-    }
+    AbstractRepository* r = AbstractRepository::getDefault_();
+    QString err;
+    PackageVersion* newpv = r->findPackageVersion_(
+            this->pv->package, this->pv->version, &err);
+    if (err.isEmpty() && newpv)
+        this->fillForm(newpv);
 }
 
 void PackageVersionForm::fillForm(PackageVersion* pv)

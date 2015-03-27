@@ -1514,7 +1514,7 @@ QString WPMUtils::moveToRecycleBin(QString dir)
 {
     SHFILEOPSTRUCTW f;
     memset(&f, 0, sizeof(f));
-    WCHAR from[MAX_PATH + 2];
+    WCHAR* from = new WCHAR[dir.length() + 2];
     wcscpy(from, (WCHAR*) dir.utf16());
     from[wcslen(from) + 1] = 0;
     f.wFunc = FO_DELETE;
@@ -1523,6 +1523,8 @@ QString WPMUtils::moveToRecycleBin(QString dir)
             FOF_SILENT | FOF_NOCONFIRMMKDIR;
 
     int r = SHFileOperationW(&f);
+    delete[] from;
+
     if (r == 0)
         return "";
     else {

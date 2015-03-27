@@ -75,6 +75,7 @@ DownloadSizeFinder::DownloadFile DownloadSizeFinder::downloadRunnable(
 
     DownloadSizeFinder::DownloadFile r;
     r.url = url;
+    r.size = 0;
 
     this->mutex.lock();
     if (this->files.contains(url)) {

@@ -1132,7 +1132,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="downloader.cpp" line="522"/>
         <location filename="downloader.cpp" line="587"/>
-        <location filename="wpmutils.cpp" line="2085"/>
+        <location filename="wpmutils.cpp" line="2087"/>
         <source>%L0 bytes</source>
         <translation>%L0 Bytes</translation>
     </message>
@@ -1375,15 +1375,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="253"/>
-        <location filename="wpmutils.cpp" line="1916"/>
+        <location filename="wpmutils.cpp" line="1918"/>
         <source>Invalid package name: %1</source>
         <translation>Ungültiger Paketname: %1</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="275"/>
-        <location filename="wpmutils.cpp" line="1924"/>
-        <location filename="wpmutils.cpp" line="2028"/>
-        <location filename="wpmutils.cpp" line="2034"/>
+        <location filename="wpmutils.cpp" line="1926"/>
+        <location filename="wpmutils.cpp" line="2030"/>
+        <location filename="wpmutils.cpp" line="2036"/>
         <source>Unknown package: %1</source>
         <translation>Unbekanntes Paket: %1</translation>
     </message>
@@ -1612,29 +1612,29 @@ p, li { white-space: pre-wrap; }
         <translation>MSI Paket mit der GUID %1</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="114"/>
-        <location filename="packageframe.cpp" line="133"/>
-        <location filename="packageversionform.cpp" line="85"/>
+        <location filename="packageframe.cpp" line="112"/>
+        <location filename="packageframe.cpp" line="131"/>
+        <location filename="packageversionform.cpp" line="83"/>
         <source>unknown</source>
         <translation>Unbekannt</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="185"/>
+        <location filename="packageframe.cpp" line="183"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="187"/>
+        <location filename="packageframe.cpp" line="185"/>
         <source>Installation path</source>
         <translation>Installationspfad</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="195"/>
+        <location filename="packageframe.cpp" line="193"/>
         <source>Error fetching package versions: %1</source>
         <translation>Fehler beim Ermitteln der Paketversionen: %1</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="284"/>
+        <location filename="packageframe.cpp" line="282"/>
         <source>Error downloading the file %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1902,28 +1902,28 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Öffne ZIP-Datei</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2107"/>
+        <location filename="wpmutils.cpp" line="2109"/>
         <source>Cannot open the ZIP file %1: %2</source>
         <translation>Kann ZIP-Datei %1 nicht öffnen: %2</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1280"/>
-        <location filename="wpmutils.cpp" line="2118"/>
+        <location filename="wpmutils.cpp" line="2120"/>
         <source>Extracting</source>
         <translation>Entpacke</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2128"/>
+        <location filename="wpmutils.cpp" line="2130"/>
         <source>Error unzipping the file %1: Error %2 in %3</source>
         <translation>Fehler beim Entpacken der Datei %1: Fehler %2 in %3</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2148"/>
+        <location filename="wpmutils.cpp" line="2150"/>
         <source>Cannot create directory %1</source>
         <translation>Kann Verzeichnis %1 nicht erstellen</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2157"/>
+        <location filename="wpmutils.cpp" line="2159"/>
         <source>%L1 files</source>
         <translation>%L1 Dateien</translation>
     </message>
@@ -2074,9 +2074,9 @@ p, li { white-space: pre-wrap; }
         <translation>Falsche MSI-GUID für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageframe.cpp" line="145"/>
-        <location filename="packageversionform.cpp" line="108"/>
-        <location filename="packageversionform.cpp" line="118"/>
+        <location filename="packageframe.cpp" line="143"/>
+        <location filename="packageversionform.cpp" line="106"/>
+        <location filename="packageversionform.cpp" line="116"/>
         <source>n/a</source>
         <translation>n.v.</translation>
     </message>
@@ -2585,68 +2585,68 @@ p, li { white-space: pre-wrap; }
         <translation>Das Ziel ist ein Wurzelverzeichnis und kann nicht umbenannt werden.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1529"/>
+        <location filename="wpmutils.cpp" line="1531"/>
         <source>Error deleting %1: %2</source>
         <translation>Fehler beim Löschen von %1: %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1621"/>
+        <location filename="wpmutils.cpp" line="1623"/>
         <source>Cannot delete the file: %1</source>
         <translation>Kann die Datei nicht löschen: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1636"/>
+        <location filename="wpmutils.cpp" line="1638"/>
         <source>Cannot delete the directory: %1</source>
         <translation>Kann Verzeichnis nicht löschen: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1879"/>
+        <location filename="wpmutils.cpp" line="1881"/>
         <source>Empty list of program close types</source>
         <translation>Leere Liste der Programschließtypen</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1888"/>
+        <location filename="wpmutils.cpp" line="1890"/>
         <source>Invalid program close type: %1</source>
         <translation>Ungültiger Typ der Schließens von Programmen: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1939"/>
+        <location filename="wpmutils.cpp" line="1941"/>
         <source>No installable version was found for the package %1 (%2)</source>
         <translation>Keine installierbare Version wurde für das Paket %1 (%2) gefunden</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1947"/>
+        <location filename="wpmutils.cpp" line="1949"/>
         <source>Package %1 (%2) is not installed</source>
         <translation>Paket %1 (%2) ist nicht installiert</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1958"/>
+        <location filename="wpmutils.cpp" line="1960"/>
         <source>More than one version of the package %1 (%2) is installed: %3</source>
         <translation>Mehr als eine Version des Pakets %1 (%2) ist installiert: %3</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1967"/>
-        <location filename="wpmutils.cpp" line="1985"/>
+        <location filename="wpmutils.cpp" line="1969"/>
+        <location filename="wpmutils.cpp" line="1987"/>
         <source>Package version not found: %1 (%2) %3</source>
         <translation>Paketversion nicht gefunden: %1 (%2) %3</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1978"/>
+        <location filename="wpmutils.cpp" line="1980"/>
         <source>Cannot parse version: %1</source>
         <translation>Kann die Version nicht Parsen: %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1996"/>
+        <location filename="wpmutils.cpp" line="1998"/>
         <source>%1 is already installed in %2</source>
         <translation>%1 ist bereits installiert in %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2003"/>
+        <location filename="wpmutils.cpp" line="2005"/>
         <source>%1 is not installed</source>
         <translation>%1 ist nicht installiert</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2044"/>
+        <location filename="wpmutils.cpp" line="2046"/>
         <source>More than one package was found: %1</source>
         <translation>Mehr als ein Paket wurde gefunden: %1</translation>
     </message>
@@ -2733,7 +2733,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="fileloader.cpp" line="121"/>
-        <location filename="packageframe.cpp" line="288"/>
+        <location filename="packageframe.cpp" line="286"/>
         <source>Cannot open the file %1</source>
         <translation type="unfinished"></translation>
     </message>
