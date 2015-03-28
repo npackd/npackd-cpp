@@ -124,7 +124,9 @@ QString CLProcessor::startNewestNpackdg()
     if (err.isEmpty()) {
         InstalledPackageVersion* ipv = ip->getNewestInstalled(ip->packageName);
 
-        if (!ipv || ipv->version <= Version(NPACKD_VERSION))
+        Version myVersion;
+        myVersion.setVersion(NPACKD_VERSION);
+        if (!ipv || ipv->version <= myVersion)
             err = QObject::tr("Newer Npackd GUI was not found");
         else
             exe = ipv->directory + "\\npackdg.exe";

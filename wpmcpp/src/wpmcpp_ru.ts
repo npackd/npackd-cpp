@@ -2062,49 +2062,49 @@ p, li { white-space: pre-wrap; }
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="316"/>
+        <location filename="downloader.cpp" line="315"/>
         <source>Reading the data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="481"/>
-        <location filename="downloader.cpp" line="497"/>
-        <location filename="downloader.cpp" line="503"/>
-        <location filename="downloader.cpp" line="537"/>
+        <location filename="downloader.cpp" line="480"/>
+        <location filename="downloader.cpp" line="496"/>
+        <location filename="downloader.cpp" line="502"/>
+        <location filename="downloader.cpp" line="536"/>
         <source>zlib error %1</source>
         <translation>Ошибка zlib %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="524"/>
-        <location filename="downloader.cpp" line="589"/>
+        <location filename="downloader.cpp" line="523"/>
+        <location filename="downloader.cpp" line="588"/>
         <source>%L0 of %L1 bytes</source>
         <translation>%L0 из %L1 байт</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="530"/>
-        <location filename="downloader.cpp" line="595"/>
+        <location filename="downloader.cpp" line="529"/>
+        <location filename="downloader.cpp" line="594"/>
         <location filename="wpmutils.cpp" line="2087"/>
         <source>%L0 bytes</source>
         <translation>%L0 байт</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="642"/>
+        <location filename="downloader.cpp" line="641"/>
         <source>Cannot download a file from a relative path %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="647"/>
+        <location filename="downloader.cpp" line="646"/>
         <source>Unsupported URL scheme: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="657"/>
-        <location filename="downloader.cpp" line="725"/>
+        <location filename="downloader.cpp" line="656"/>
+        <location filename="downloader.cpp" line="724"/>
         <source>Error opening file: %1</source>
         <translation>Ошибка открытия файла %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="699"/>
+        <location filename="downloader.cpp" line="698"/>
         <source>Cannot process relative file name %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2310,28 +2310,28 @@ p, li { white-space: pre-wrap; }
         <translation>Удаление</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="128"/>
+        <location filename="clprocessor.cpp" line="130"/>
         <source>Newer Npackd GUI was not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="159"/>
+        <location filename="clprocessor.cpp" line="161"/>
         <source>Error starting %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="245"/>
+        <location filename="clprocessor.cpp" line="247"/>
         <source>Missing option: --package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="253"/>
+        <location filename="clprocessor.cpp" line="255"/>
         <location filename="wpmutils.cpp" line="1918"/>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="275"/>
+        <location filename="clprocessor.cpp" line="277"/>
         <location filename="wpmutils.cpp" line="1926"/>
         <location filename="wpmutils.cpp" line="2030"/>
         <location filename="wpmutils.cpp" line="2036"/>
@@ -2339,68 +2339,68 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="278"/>
+        <location filename="clprocessor.cpp" line="280"/>
         <source>Ambiguous package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="294"/>
+        <location filename="clprocessor.cpp" line="296"/>
         <source>Planning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="502"/>
+        <location filename="clprocessor.cpp" line="504"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="503"/>
+        <location filename="clprocessor.cpp" line="505"/>
         <source>package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="504"/>
+        <location filename="clprocessor.cpp" line="506"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="505"/>
+        <location filename="clprocessor.cpp" line="507"/>
         <source>range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="506"/>
+        <location filename="clprocessor.cpp" line="508"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="507"/>
+        <location filename="clprocessor.cpp" line="509"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="521"/>
+        <location filename="clprocessor.cpp" line="523"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="522"/>
+        <location filename="clprocessor.cpp" line="524"/>
         <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="537"/>
+        <location filename="clprocessor.cpp" line="539"/>
         <source>Error parsing the command line: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="578"/>
+        <location filename="clprocessor.cpp" line="580"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="585"/>
+        <location filename="clprocessor.cpp" line="587"/>
         <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2436,7 +2436,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="381"/>
+        <location filename="clprocessor.cpp" line="383"/>
         <location filename="mainwindow.cpp" line="834"/>
         <location filename="mainwindow.cpp" line="1760"/>
         <location filename="uiutils.cpp" line="191"/>
@@ -2469,13 +2469,13 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="372"/>
+        <location filename="clprocessor.cpp" line="374"/>
         <location filename="mainwindow.cpp" line="826"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="373"/>
+        <location filename="clprocessor.cpp" line="375"/>
         <location filename="mainwindow.cpp" line="827"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
@@ -2887,12 +2887,12 @@ p, li { white-space: pre-wrap; }
         <translation>заблокированный</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1634"/>
+        <location filename="packageversion.cpp" line="1632"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Процесс %1 завершился кодом %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1611"/>
+        <location filename="packageversion.cpp" line="1609"/>
         <source>%1 minutes</source>
         <translation>%1 минут</translation>
     </message>
@@ -2908,95 +2908,95 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1703"/>
+        <location filename="packageversion.cpp" line="1701"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1710"/>
+        <location filename="packageversion.cpp" line="1708"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Неверная SHA1 у &lt;detect-file&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1752"/>
+        <location filename="packageversion.cpp" line="1750"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1767"/>
+        <location filename="packageversion.cpp" line="1765"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Нет действительных ссылкок URL для %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1779"/>
+        <location filename="packageversion.cpp" line="1777"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Нет действительных версиий %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1791"/>
+        <location filename="packageversion.cpp" line="1789"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Неверная SHA1 у %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1821"/>
+        <location filename="packageversion.cpp" line="1819"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1834"/>
+        <location filename="packageversion.cpp" line="1832"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1850"/>
+        <location filename="packageversion.cpp" line="1848"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Неверное значение атрибута &apos;тип&apos; у %1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1865"/>
+        <location filename="packageversion.cpp" line="1863"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Пустое значение атрибута &apos;путь&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1872"/>
+        <location filename="packageversion.cpp" line="1870"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Больше чем один &lt;important-file&gt; с таким же атрибутом &apos;путь&apos; %1 для %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1882"/>
+        <location filename="packageversion.cpp" line="1880"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Пустое значение атрибута &apos;название&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1911"/>
+        <location filename="packageversion.cpp" line="1909"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>Дубликат тэга &lt;file&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1929"/>
+        <location filename="packageversion.cpp" line="1927"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>Несуществующий &lt;detect-file&gt; для %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1944"/>
+        <location filename="packageversion.cpp" line="1942"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1973"/>
+        <location filename="packageversion.cpp" line="1971"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>Дубликат &lt;dependency&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1991"/>
+        <location filename="packageversion.cpp" line="1989"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Неверный MSI GUID для %1: %2</translation>
     </message>
@@ -3008,11 +3008,11 @@ p, li { white-space: pre-wrap; }
         <translation>не доступно</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="397"/>
-        <location filename="clprocessor.cpp" line="539"/>
-        <location filename="clprocessor.cpp" line="581"/>
-        <location filename="clprocessor.cpp" line="587"/>
-        <location filename="progresstree2.cpp" line="197"/>
+        <location filename="clprocessor.cpp" line="399"/>
+        <location filename="clprocessor.cpp" line="541"/>
+        <location filename="clprocessor.cpp" line="583"/>
+        <location filename="clprocessor.cpp" line="589"/>
+        <location filename="progresstree2.cpp" line="199"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
@@ -3711,7 +3711,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="127"/>
+        <location filename="progresstree2.cpp" line="129"/>
         <source>Cancel</source>
         <translation type="unfinished">Отмена</translation>
     </message>

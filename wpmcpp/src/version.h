@@ -34,11 +34,6 @@ public:
      */
     Version(int a, int b);
 
-    /**
-     * @param v "1.2.3"
-     */
-    Version(const QString& v);
-
     Version(const Version& v);
 
     Version& operator =(const Version& v);

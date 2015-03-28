@@ -11,15 +11,6 @@ Version::Version(): basic()
     this->nparts = 1;
 }
 
-Version::Version(const QString &v): basic()
-{
-    this->parts = &this->basic[0];
-    this->parts[0] = 1;
-    this->nparts = 1;
-
-    setVersion(v);
-}
-
 Version::Version(int a, int b): basic()
 {
     this->parts = &basic[0];

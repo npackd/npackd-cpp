@@ -252,10 +252,9 @@ out:
                 QString errMsg;
                 WPMUtils::formatMessage(GetLastError(), &errMsg);
                 job->setErrorMessage(errMsg);
-                job->complete();
-                return -1L;
+            } else {
+                mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
             }
-            mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
         }
     }
 

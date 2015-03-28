@@ -1111,49 +1111,49 @@ p, li { white-space: pre-wrap; }
         <translation>Herunterladen</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="316"/>
+        <location filename="downloader.cpp" line="315"/>
         <source>Reading the data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="481"/>
-        <location filename="downloader.cpp" line="497"/>
-        <location filename="downloader.cpp" line="503"/>
-        <location filename="downloader.cpp" line="537"/>
+        <location filename="downloader.cpp" line="480"/>
+        <location filename="downloader.cpp" line="496"/>
+        <location filename="downloader.cpp" line="502"/>
+        <location filename="downloader.cpp" line="536"/>
         <source>zlib error %1</source>
         <translation>zlib-Fehler %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="524"/>
-        <location filename="downloader.cpp" line="589"/>
+        <location filename="downloader.cpp" line="523"/>
+        <location filename="downloader.cpp" line="588"/>
         <source>%L0 of %L1 bytes</source>
         <translation>%L0 von %L1 Bytes</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="530"/>
-        <location filename="downloader.cpp" line="595"/>
+        <location filename="downloader.cpp" line="529"/>
+        <location filename="downloader.cpp" line="594"/>
         <location filename="wpmutils.cpp" line="2087"/>
         <source>%L0 bytes</source>
         <translation>%L0 Bytes</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="642"/>
+        <location filename="downloader.cpp" line="641"/>
         <source>Cannot download a file from a relative path %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="647"/>
+        <location filename="downloader.cpp" line="646"/>
         <source>Unsupported URL scheme: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="657"/>
-        <location filename="downloader.cpp" line="725"/>
+        <location filename="downloader.cpp" line="656"/>
+        <location filename="downloader.cpp" line="724"/>
         <source>Error opening file: %1</source>
         <translation>Fehler beim Öffnen von Datei: %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="699"/>
+        <location filename="downloader.cpp" line="698"/>
         <source>Cannot process relative file name %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1359,28 +1359,28 @@ p, li { white-space: pre-wrap; }
         <translation>Deinstallieren</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="128"/>
+        <location filename="clprocessor.cpp" line="130"/>
         <source>Newer Npackd GUI was not found</source>
         <translation>Ein neueres Npackd GUI wurde nicht gefunden</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="159"/>
+        <location filename="clprocessor.cpp" line="161"/>
         <source>Error starting %1: %2</source>
         <translation>Fehler beim Starten von %1: %2</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="245"/>
+        <location filename="clprocessor.cpp" line="247"/>
         <source>Missing option: --package</source>
         <translation>Fehlende Option: --package</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="253"/>
+        <location filename="clprocessor.cpp" line="255"/>
         <location filename="wpmutils.cpp" line="1918"/>
         <source>Invalid package name: %1</source>
         <translation>Ungültiger Paketname: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="275"/>
+        <location filename="clprocessor.cpp" line="277"/>
         <location filename="wpmutils.cpp" line="1926"/>
         <location filename="wpmutils.cpp" line="2030"/>
         <location filename="wpmutils.cpp" line="2036"/>
@@ -1388,12 +1388,12 @@ p, li { white-space: pre-wrap; }
         <translation>Unbekanntes Paket: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="278"/>
+        <location filename="clprocessor.cpp" line="280"/>
         <source>Ambiguous package name</source>
         <translation>Mehrdeutiger Paketname</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="294"/>
+        <location filename="clprocessor.cpp" line="296"/>
         <source>Planning</source>
         <translation>Plane</translation>
     </message>
@@ -1402,43 +1402,43 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Aktualisiere</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="502"/>
+        <location filename="clprocessor.cpp" line="504"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation>interner Paketname (z.B. com.example.Editor oder einfach Editor)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="503"/>
+        <location filename="clprocessor.cpp" line="505"/>
         <source>package</source>
         <translation>Paket</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="504"/>
+        <location filename="clprocessor.cpp" line="506"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation>Versionsbereich (z.B. [1.5,2))</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="505"/>
+        <location filename="clprocessor.cpp" line="507"/>
         <source>range</source>
         <translation>Bereich</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="506"/>
+        <location filename="clprocessor.cpp" line="508"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation>Versionsnummer (z.B. 1.5.12)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="507"/>
+        <location filename="clprocessor.cpp" line="509"/>
         <source>version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="521"/>
+        <location filename="clprocessor.cpp" line="523"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation>Liste von Möglichkeiten die Anwendungen zu schließen (c=close, k=kill). Der Standardwert ist &apos;c&apos;.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="522"/>
+        <location filename="clprocessor.cpp" line="524"/>
         <source>[c][k]</source>
         <translation>[c][k]</translation>
     </message>
@@ -1447,17 +1447,17 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Liste</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="537"/>
+        <location filename="clprocessor.cpp" line="539"/>
         <source>Error parsing the command line: %1</source>
         <translation>Fehler beim Parsen der Befehlszeile: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="578"/>
+        <location filename="clprocessor.cpp" line="580"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation>Falscher Befehl: %1. Versuchen Sie npackdg help</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="585"/>
+        <location filename="clprocessor.cpp" line="587"/>
         <source>Unexpected argument: %1</source>
         <translation>Unerwarteter Argument: %1</translation>
     </message>
@@ -1493,7 +1493,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 Paket(e) wird/werden deinstalliert: %2 (die zugehörigen Verzeichnisse werden vollständig gelöscht; die gelöschten Dateien können nicht wiederhergestellt werden) und %3 Paket(e) wird/werden installiert: %4.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="381"/>
+        <location filename="clprocessor.cpp" line="383"/>
         <location filename="mainwindow.cpp" line="834"/>
         <location filename="mainwindow.cpp" line="1760"/>
         <location filename="uiutils.cpp" line="191"/>
@@ -1526,13 +1526,13 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - Softwarepaketmanager für Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="372"/>
+        <location filename="clprocessor.cpp" line="374"/>
         <location filename="mainwindow.cpp" line="826"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation>Die gewählten Änderungen erfordern eine Aktualisierung dieser Npackd-Instanz. Sind Sie sicher?</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="373"/>
+        <location filename="clprocessor.cpp" line="375"/>
         <location filename="mainwindow.cpp" line="827"/>
         <source>Warning</source>
         <translation>Warnung</translation>
@@ -1958,12 +1958,12 @@ p, li { white-space: pre-wrap; }
         <translation>gesperrt</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1634"/>
+        <location filename="packageversion.cpp" line="1632"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Prozess %1 wurde mit dem Code %2 beendet</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1611"/>
+        <location filename="packageversion.cpp" line="1609"/>
         <source>%1 minutes</source>
         <translation>%1 Minuten</translation>
     </message>
@@ -1973,41 +1973,41 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1703"/>
+        <location filename="packageversion.cpp" line="1701"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Leerer Tag &lt;path&gt; unterhalb von &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1710"/>
+        <location filename="packageversion.cpp" line="1708"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Falscher SHA1 in &lt;detect-file&gt;:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1752"/>
+        <location filename="packageversion.cpp" line="1750"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1767"/>
+        <location filename="packageversion.cpp" line="1765"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Keine gültige Download-Adresse für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1779"/>
+        <location filename="packageversion.cpp" line="1777"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Keine gültige Version für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1791"/>
+        <location filename="packageversion.cpp" line="1789"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Ungültige SHA1 für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1821"/>
+        <location filename="packageversion.cpp" line="1819"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished">Ungültige SHA-256 für %1:  {1 ?} {1:?}</translation>
     </message>
@@ -2020,56 +2020,56 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Unbekannter Typ der Hash-Summe %1 für %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1834"/>
+        <location filename="packageversion.cpp" line="1832"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation>Ungültige SHA-256 für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1850"/>
+        <location filename="packageversion.cpp" line="1848"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Falscher Wert für das Attribut &apos;type&apos; für %1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1865"/>
+        <location filename="packageversion.cpp" line="1863"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;path&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1872"/>
+        <location filename="packageversion.cpp" line="1870"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Mehr als ein &lt;important-file&gt; mit demselben &apos;path&apos;-Attribut %1 für %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1882"/>
+        <location filename="packageversion.cpp" line="1880"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;title&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1911"/>
+        <location filename="packageversion.cpp" line="1909"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1929"/>
+        <location filename="packageversion.cpp" line="1927"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>Ungültige Datei &lt;detect-file&gt; für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1944"/>
+        <location filename="packageversion.cpp" line="1942"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1973"/>
+        <location filename="packageversion.cpp" line="1971"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>Doppeltes &lt;dependency&gt; für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1991"/>
+        <location filename="packageversion.cpp" line="1989"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Falsche MSI-GUID für %1: %2</translation>
     </message>
@@ -2081,11 +2081,11 @@ p, li { white-space: pre-wrap; }
         <translation>n.v.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="397"/>
-        <location filename="clprocessor.cpp" line="539"/>
-        <location filename="clprocessor.cpp" line="581"/>
-        <location filename="clprocessor.cpp" line="587"/>
-        <location filename="progresstree2.cpp" line="197"/>
+        <location filename="clprocessor.cpp" line="399"/>
+        <location filename="clprocessor.cpp" line="541"/>
+        <location filename="clprocessor.cpp" line="583"/>
+        <location filename="clprocessor.cpp" line="589"/>
+        <location filename="progresstree2.cpp" line="199"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -2784,7 +2784,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="progresstree2.cpp" line="127"/>
+        <location filename="progresstree2.cpp" line="129"/>
         <source>Cancel</source>
         <translation type="unfinished">Abbrechen</translation>
     </message>

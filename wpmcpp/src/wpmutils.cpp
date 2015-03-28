@@ -1980,7 +1980,7 @@ QList<PackageVersion*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
                         *err = QObject::tr("Cannot parse version: %1").
                                 arg(version);
                     } else {
-                        pv = rep->findPackageVersion_(p->name, version,
+                        pv = rep->findPackageVersion_(p->name, v,
                                 err);
                         if (err->isEmpty()) {
                             if (!pv) {
