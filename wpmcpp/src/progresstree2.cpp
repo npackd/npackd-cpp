@@ -26,7 +26,7 @@ public:
 ProgressTree2::ProgressTree2(QWidget *parent) :
     QTreeWidget(parent)
 {
-    this->autoExpandNodes = true;
+    this->autoExpandNodes = false;
     setColumnCount(5);
 
     timer = new QTimer(this);

@@ -75,6 +75,7 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
     }
 
     if (job->isCancelled()) {
+        InternetCloseHandle(hConnectHandle);
         InternetCloseHandle(internet);
         job->complete();
         return -1L;
@@ -85,39 +86,36 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
     // flags: http://msdn.microsoft.com/en-us/library/aa383661(v=vs.85).aspx
     // We support accepting any mime file type since this is a simple download
     // of a file
-    LPCTSTR ppszAcceptTypes[2];
-    ppszAcceptTypes[0] = L"*/*";
-    ppszAcceptTypes[1] = NULL;
-    DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0) |
-            INTERNET_FLAG_KEEP_CONNECTION;
-    flags |= INTERNET_FLAG_RESYNCHRONIZE;
-    if (!useCache)
-        flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
-                INTERNET_FLAG_RELOAD;
-    HINTERNET hResourceHandle = HttpOpenRequestW(hConnectHandle, verb,
-            (WCHAR*) resource.utf16(),
-            0, 0, ppszAcceptTypes,
-            flags, 0);
-    if (hResourceHandle == 0) {
-        QString errMsg;
-        WPMUtils::formatMessage(GetLastError(), &errMsg);
-        job->setErrorMessage(errMsg);
-        job->complete();
-        return -1L;
+    HINTERNET hResourceHandle = 0;
+    if (job->shouldProceed()) {
+        LPCTSTR ppszAcceptTypes[2];
+        ppszAcceptTypes[0] = L"*/*";
+        ppszAcceptTypes[1] = NULL;
+        DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0) |
+                INTERNET_FLAG_KEEP_CONNECTION;
+        flags |= INTERNET_FLAG_RESYNCHRONIZE;
+        if (!useCache)
+            flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
+                    INTERNET_FLAG_RELOAD;
+        hResourceHandle = HttpOpenRequestW(hConnectHandle, verb,
+                (WCHAR*) resource.utf16(),
+                0, 0, ppszAcceptTypes,
+                flags, 0);
+        if (hResourceHandle == 0) {
+            QString errMsg;
+            WPMUtils::formatMessage(GetLastError(), &errMsg);
+            job->setErrorMessage(errMsg);
+        }
     }
 
-    if (!HttpAddRequestHeadersW(hResourceHandle,
-            L"Accept-Encoding: gzip, deflate", -1,
-            HTTP_ADDREQ_FLAG_ADD)) {
-        QString errMsg;
-        WPMUtils::formatMessage(GetLastError(), &errMsg);
-        job->setErrorMessage(errMsg);
-        job->complete();
-        return -1L;
+    if (job->shouldProceed()) {
+        job->checkOSCall(HttpAddRequestHeadersW(hResourceHandle,
+                L"Accept-Encoding: gzip, deflate", -1,
+                HTTP_ADDREQ_FLAG_ADD));
     }
 
     // qDebug() << "download.5";
-    while (true) {
+    while (job->shouldProceed()) {
         // qDebug() << "download.5.1";
 
         if (!HttpSendRequestW(hResourceHandle, 0, 0, 0, 0)) {
@@ -246,83 +244,97 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
     };
 
 out:
-    job->setProgress(0.03);
-    if (!job->getErrorMessage().isEmpty()) {
-        job->complete();
-        return -1L;
+    if (job->shouldProceed()) {
+        job->setProgress(0.03);
+        job->setTitle(initialTitle + " / " + QObject::tr("Downloading"));
     }
-
-    job->setTitle(initialTitle + " / " + QObject::tr("Downloading"));
 
     // MIME type
-    if (mime) {
-        WCHAR mimeBuffer[1024];
-        DWORD bufferLength = sizeof(mimeBuffer);
-        DWORD index = 0;
-        if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
-                &mimeBuffer, &bufferLength, &index)) {
-            QString errMsg;
-            WPMUtils::formatMessage(GetLastError(), &errMsg);
-            job->setErrorMessage(errMsg);
-            job->complete();
-            return -1L;
+    if (job->shouldProceed()) {
+        if (mime) {
+            WCHAR mimeBuffer[1024];
+            DWORD bufferLength = sizeof(mimeBuffer);
+            DWORD index = 0;
+            if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
+                    &mimeBuffer, &bufferLength, &index)) {
+                QString errMsg;
+                WPMUtils::formatMessage(GetLastError(), &errMsg);
+                job->setErrorMessage(errMsg);
+                job->complete();
+                return -1L;
+            }
+            mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
         }
-        mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
     }
 
-    // qDebug() << "querying Content-Encoding type";
-    WCHAR contentEncodingBuffer[1024];
-    DWORD bufferLength = sizeof(contentEncodingBuffer);
-    DWORD index = 0;
     bool gzip = false;
-    if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_ENCODING,
-            &contentEncodingBuffer, &bufferLength, &index)) {
-        QString contentEncoding;
-        contentEncoding.setUtf16((ushort*) contentEncodingBuffer,
-                bufferLength / 2);
-        gzip = contentEncoding == "gzip" || contentEncoding == "deflate";
-    }
 
-    job->setProgress(0.04);
+    // Content-Encoding
+    if (job->shouldProceed()) {
+        WCHAR contentEncodingBuffer[1024];
+        DWORD bufferLength = sizeof(contentEncodingBuffer);
+        DWORD index = 0;
+        if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_ENCODING,
+                &contentEncodingBuffer, &bufferLength, &index)) {
+            QString contentEncoding;
+            contentEncoding.setUtf16((ushort*) contentEncodingBuffer,
+                    bufferLength / 2);
+            gzip = contentEncoding == "gzip" || contentEncoding == "deflate";
+        }
+
+        job->setProgress(0.04);
+    }
 
     // Content-Disposition
-    if (contentDisposition) {
-        WCHAR cdBuffer[1024];
-        wcscpy(cdBuffer, L"Content-Disposition");
-        bufferLength = sizeof(cdBuffer);
-        index = 0;
-        if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CUSTOM,
-                &cdBuffer, &bufferLength, &index)) {
-            contentDisposition->setUtf16((ushort*) cdBuffer, bufferLength / 2);
+    if (job->shouldProceed()) {
+        if (contentDisposition) {
+            WCHAR cdBuffer[1024];
+            wcscpy(cdBuffer, L"Content-Disposition");
+            DWORD bufferLength = sizeof(cdBuffer);
+            DWORD index = 0;
+            if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CUSTOM,
+                    &cdBuffer, &bufferLength, &index)) {
+                contentDisposition->setUtf16((ushort*) cdBuffer,
+                        bufferLength / 2);
+            }
         }
     }
 
-    // content length
-    WCHAR contentLengthBuffer[100];
-    bufferLength = sizeof(contentLengthBuffer);
-    index = 0;
     int64_t contentLength = -1;
-    if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_LENGTH,
-            contentLengthBuffer, &bufferLength, &index)) {
-        QString s;
-        s.setUtf16((ushort*) contentLengthBuffer, bufferLength / 2);
-        bool ok;
-        contentLength = s.toLongLong(&ok, 10);
-        if (!ok)
-            contentLength = 0;
+
+    // content length
+    if (job->shouldProceed()) {
+        WCHAR contentLengthBuffer[100];
+        DWORD bufferLength = sizeof(contentLengthBuffer);
+        DWORD index = 0;
+        if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_LENGTH,
+                contentLengthBuffer, &bufferLength, &index)) {
+            QString s;
+            s.setUtf16((ushort*) contentLengthBuffer, bufferLength / 2);
+            bool ok;
+            contentLength = s.toLongLong(&ok, 10);
+            if (!ok)
+                contentLength = 0;
+        }
+
+        job->setProgress(0.05);
     }
 
-    job->setProgress(0.05);
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
+        if (file)
+            readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
+        if (!sub->getErrorMessage().isEmpty())
+            job->setErrorMessage(sub->getErrorMessage());
+    }
 
-    Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
-    if (file)
-        readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
-    if (!sub->getErrorMessage().isEmpty())
-        job->setErrorMessage(sub->getErrorMessage());
+    if (internet)
+        InternetCloseHandle(internet);
 
-    InternetCloseHandle(internet);
+    if (job->shouldProceed())
+        job->setProgress(1);
 
-    job->setProgress(1);
+    job->setTitle(initialTitle);
 
     job->complete();
 

@@ -81,6 +81,43 @@ class Downloader: QObject
             QCryptographicHash::Algorithm alg);
 public:
     /**
+     * @brief HTTP request
+     */
+    class Request
+    {
+    public:
+        /** the response data will be stored here */
+        QFile* file;
+
+        /** true = ask the user for passwords */
+        bool interactive;
+
+        /** parent window handle or 0 */
+        HWND parentWindow;
+
+        /** http:/https: URL*/
+        QUrl url;
+
+        /** should the hash sum be computed? */
+        bool hashSum;
+
+        /** algorithm for the hash sum */
+        QCryptographicHash::Algorithm alg;
+
+        /** should the cache be used? */
+        bool useCache;
+    };
+
+
+    /**
+     * @brief HTTP response
+     */
+    class Response
+    {
+
+    };
+
+    /**
      * @param job job for this method
      * @param url this URL will be downloaded. http://, https://, file:// and
      *     data:image/png;base64, are supported

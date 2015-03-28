@@ -10,6 +10,8 @@
 #include "downloader.h"
 #include "job.h"
 
+extern HWND defaultPasswordWindow;
+
 DownloadSizeFinder::DownloadSizeFinder()
 {
 }
@@ -89,7 +91,7 @@ DownloadSizeFinder::DownloadFile DownloadSizeFinder::downloadRunnable(
         this->mutex.unlock();
 
         Job* job = new Job();
-        r.size = Downloader::getContentLength(job, url, 0);
+        r.size = Downloader::getContentLength(job, url, defaultPasswordWindow);
 
         if (!job->getErrorMessage().isEmpty()) {
             r.error = job->getErrorMessage();

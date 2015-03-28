@@ -28,7 +28,7 @@ private:
 public:
     /**
      * Should the nodes be automatically expanded if new sub-jobs are created?
-     * Default value is true.
+     * Default value is false.
      */
     bool autoExpandNodes;
 
