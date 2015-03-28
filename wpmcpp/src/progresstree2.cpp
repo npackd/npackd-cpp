@@ -79,12 +79,14 @@ QTreeWidgetItem* ProgressTree2::findItem(Job* job, bool create)
                 }
             }
         } else {
-            for (int j = 0; j < c->childCount(); j++) {
-                QTreeWidgetItem* item = c->child(j);
-                Job* v = getJob(*item);
-                if (v == toFind) {
-                    found = item;
-                    break;
+            if (c) {
+                for (int j = 0; j < c->childCount(); j++) {
+                    QTreeWidgetItem* item = c->child(j);
+                    Job* v = getJob(*item);
+                    if (v == toFind) {
+                        found = item;
+                        break;
+                    }
                 }
             }
         }

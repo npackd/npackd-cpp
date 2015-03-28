@@ -1992,7 +1992,7 @@ QList<PackageVersion*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
                 }
             }
 
-            if (err->isEmpty()) {
+            if (err->isEmpty() && pv) {
                 if (add) {
                     if (pv->installed()) {
                         WPMUtils::outputTextConsole(QObject::tr(

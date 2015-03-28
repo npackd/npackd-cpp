@@ -1486,9 +1486,7 @@ void PackageVersion::executeFile(
     for (int i = 0; i + 1 < env.size(); i += 2) {
         env_.insert(env.at(i), env.at(i + 1));
     }
-    if (job->shouldProceed()) {
-        job->checkOSCall(FreeEnvironmentStrings(env2));
-    }
+    FreeEnvironmentStrings(env2);
     QByteArray ba;
     QMapIterator<QString, QString> i(env_);
     while (i.hasNext()) {
