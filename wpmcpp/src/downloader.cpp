@@ -50,38 +50,30 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         QString errMsg;
         WPMUtils::formatMessage(GetLastError(), &errMsg);
         job->setErrorMessage(errMsg);
-        job->complete();
-        return -1L;
     }
 
-    // override the 30 second timeout
-    DWORD rec_timeout = 300 * 1000;
-    InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
-            &rec_timeout, sizeof(rec_timeout));
-
-    job->setProgress(0.01);
-
-    INTERNET_PORT port = url.port(url.scheme() == "https" ?
-            INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT);
-    HINTERNET hConnectHandle = InternetConnectW(internet,
-            (WCHAR*) server.utf16(), port, 0, 0, INTERNET_SERVICE_HTTP, 0, 0);
-
-    if (hConnectHandle == 0) {
-        QString errMsg;
-        WPMUtils::formatMessage(GetLastError(), &errMsg);
-        job->setErrorMessage(errMsg);
-        job->complete();
-        return -1L;
+    // change the timeout to 5 minutes
+    if (job->shouldProceed()) {
+        DWORD rec_timeout = 300 * 1000;
+        InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
+                &rec_timeout, sizeof(rec_timeout));
+        job->setProgress(0.01);
     }
 
-    if (job->isCancelled()) {
-        InternetCloseHandle(hConnectHandle);
-        InternetCloseHandle(internet);
-        job->complete();
-        return -1L;
+    HINTERNET hConnectHandle = 0;
+    if (job->shouldProceed()) {
+        INTERNET_PORT port = url.port(url.scheme() == "https" ?
+                INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT);
+        hConnectHandle = InternetConnectW(internet,
+                (WCHAR*) server.utf16(), port, 0, 0, INTERNET_SERVICE_HTTP, 0, 0);
+
+        if (hConnectHandle == 0) {
+            QString errMsg;
+            WPMUtils::formatMessage(GetLastError(), &errMsg);
+            job->setErrorMessage(errMsg);
+        }
     }
 
-    // qDebug() << "download.4";
 
     // flags: http://msdn.microsoft.com/en-us/library/aa383661(v=vs.85).aspx
     // We support accepting any mime file type since this is a simple download
@@ -328,6 +320,10 @@ out:
             job->setErrorMessage(sub->getErrorMessage());
     }
 
+    if (hResourceHandle)
+        InternetCloseHandle(hResourceHandle);
+    if (hConnectHandle)
+        InternetCloseHandle(hConnectHandle);
     if (internet)
         InternetCloseHandle(internet);
 
