@@ -2134,7 +2134,7 @@ void PackageVersion::stop(Job* job, int programCloseType)
     bool me = false;
     QString myPackage = InstalledPackages::getDefault()->packageName;
     Version myVersion;
-    myVersion.setVersion(NPACKD_VERSION);
+    (void) myVersion.setVersion(NPACKD_VERSION);
     if (this->package == myPackage && this->version == myVersion) {
         if (WPMUtils::pathEquals(WPMUtils::getExeDir(), getPath())) {
             me = true;

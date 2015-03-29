@@ -189,7 +189,7 @@ QString App::addNpackdCL()
 
     AbstractRepository* r = AbstractRepository::getDefault_();
     Version myVersion;
-    myVersion.setVersion(NPACKD_VERSION);
+    (void) myVersion.setVersion(NPACKD_VERSION);
     PackageVersion* pv = r->findPackageVersion_(
             "com.googlecode.windows-package-manager.NpackdCL",
             myVersion, &err);
