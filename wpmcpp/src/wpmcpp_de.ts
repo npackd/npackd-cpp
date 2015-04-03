@@ -1219,12 +1219,12 @@ p, li { white-space: pre-wrap; }
         <translation>Leere Informationen über installierte Paketversionen in Verzeichnissen mit Unterverzeichnissen</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="73"/>
+        <location filename="main.cpp" line="72"/>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
         <translation>Die 32bit-Version von Npackd erfordert ein 32bit-Betriebssystem.</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="74"/>
+        <location filename="main.cpp" line="73"/>
         <source>Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
         <oldsource>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</oldsource>
         <translation type="unfinished">Bitte laden Sie die 64bit-Version von http://code.google.com/p/windows-package-manager/ herunter</translation>
@@ -1257,22 +1257,22 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="405"/>
-        <location filename="mainwindow.cpp" line="898"/>
+        <location filename="mainwindow.cpp" line="890"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Kann Programm nicht beenden, solange Jobs laufen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="491"/>
+        <location filename="mainwindow.cpp" line="489"/>
         <source>0 Jobs</source>
         <translation>0 Jobs</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="493"/>
+        <location filename="mainwindow.cpp" line="491"/>
         <source>1 Job (%1%, %2)</source>
         <translation>1 Job (%1%, %2)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="496"/>
+        <location filename="mainwindow.cpp" line="494"/>
         <source>%1 Jobs (%2%, %3)</source>
         <translation>%1 Jobs (%2%, %3)</translation>
     </message>
@@ -1494,30 +1494,30 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="383"/>
-        <location filename="mainwindow.cpp" line="834"/>
-        <location filename="mainwindow.cpp" line="1760"/>
+        <location filename="mainwindow.cpp" line="826"/>
+        <location filename="mainwindow.cpp" line="1752"/>
         <location filename="uiutils.cpp" line="191"/>
         <source>Install/Uninstall</source>
         <translation>Installieren/Deinstallieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1030"/>
-        <location filename="mainwindow.cpp" line="1084"/>
+        <location filename="mainwindow.cpp" line="1022"/>
+        <location filename="mainwindow.cpp" line="1076"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Fehler beim Suchen der neuesten installierten Version von %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1307"/>
+        <location filename="mainwindow.cpp" line="1299"/>
         <source>Initializing</source>
         <translation>Initialisiere</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1578"/>
+        <location filename="mainwindow.cpp" line="1570"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1684"/>
+        <location filename="mainwindow.cpp" line="1676"/>
         <source>About</source>
         <translation>Über…</translation>
     </message>
@@ -1527,13 +1527,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="374"/>
-        <location filename="mainwindow.cpp" line="826"/>
+        <location filename="mainwindow.cpp" line="818"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation>Die gewählten Änderungen erfordern eine Aktualisierung dieser Npackd-Instanz. Sind Sie sicher?</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="375"/>
-        <location filename="mainwindow.cpp" line="827"/>
+        <location filename="mainwindow.cpp" line="819"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
@@ -1543,32 +1543,32 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1685"/>
+        <location filename="mainwindow.cpp" line="1677"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;Npackd %1 -Software Paket Manager für Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1733"/>
+        <location filename="mainwindow.cpp" line="1725"/>
         <source>Jobs</source>
         <translation>Jobs</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1754"/>
+        <location filename="mainwindow.cpp" line="1746"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann den Scan jetzt nicht starten. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1830"/>
+        <location filename="mainwindow.cpp" line="1822"/>
         <source>%1 package(s) detected</source>
         <translation>%1 Paket(e) erkannt</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1835"/>
+        <location filename="mainwindow.cpp" line="1827"/>
         <source>Package detection status</source>
         <translation>Status der Paketerkennung</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1859"/>
+        <location filename="mainwindow.cpp" line="1851"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann Repository jetzt nicht neu laden. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
@@ -1581,7 +1581,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Kann diese Aktioon nicht starten während die Repositories aktualisiert werden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2017"/>
+        <location filename="mainwindow.cpp" line="2009"/>
         <source>Cannot open the URL %1</source>
         <translation>Kann den URL %1 nicht öffnen</translation>
     </message>
@@ -2085,7 +2085,7 @@ p, li { white-space: pre-wrap; }
         <location filename="clprocessor.cpp" line="541"/>
         <location filename="clprocessor.cpp" line="583"/>
         <location filename="clprocessor.cpp" line="589"/>
-        <location filename="progresstree2.cpp" line="199"/>
+        <location filename="progresstree2.cpp" line="210"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>

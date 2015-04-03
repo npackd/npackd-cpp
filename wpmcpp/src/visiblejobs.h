@@ -21,7 +21,6 @@ private:
 public:
     time_t monitoredJobLastChanged;
     QList<Job*> runningJobs;
-    QList<JobState> runningJobStates;
 
     /**
      * @return default instance

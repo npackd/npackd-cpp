@@ -294,7 +294,7 @@ private slots:
     void on_actionReload_Repositories_triggered();
     void on_actionClose_Tab_triggered();
     void repositoryStatusChanged(const QString &, const Version &);
-    void monitoredJobChanged(const JobState& state);
+    void monitoredJobChanged(Job *state);
     void on_actionFile_an_Issue_triggered();
     void updateActionsSlot();
     void applicationFocusChanged(QWidget* old, QWidget* now);

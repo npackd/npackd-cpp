@@ -16,7 +16,6 @@ void VisibleJobs::unregisterJob(Job *job)
     int index = runningJobs.indexOf(job);
     if (index >= 0) {
         runningJobs.removeAt(index);
-        runningJobStates.removeAt(index);
     }
 
     emit changed();

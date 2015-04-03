@@ -1232,7 +1232,7 @@ void DBRepository::load(Job* job, bool useCache)
                 break;
 
             QTemporaryFile* tf = files.at(i).result();
-            Job* s = job->newSubJob(1.0 / urls.count(), QString(
+            Job* s = job->newSubJob(0.49 / urls.count(), QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
                     arg(urls.count()));
             this->currentRepository = i;
@@ -1899,7 +1899,7 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
             err = exec("INSERT INTO LINK(PACKAGE, INDEX_, REL, HREF) "
                     "SELECT PACKAGE, INDEX_, REL, HREF FROM tempdb.LINK");
         if (err.isEmpty())
-            job->setProgress(0.95);
+            job->setProgress(0.90);
         else
             job->setErrorMessage(err);
     }
@@ -1911,7 +1911,7 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
-            job->setProgress(0.99);
+            job->setProgress(0.95);
     } else {
         if (transactionStarted)
             exec("ROLLBACK");
@@ -1938,7 +1938,7 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
         }
 
         if (err.isEmpty())
-            job->setProgress(0.90);
+            job->setProgress(0.99);
         else
             job->setErrorMessage(err);
     }

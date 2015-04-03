@@ -8,56 +8,6 @@
 
 #include "job.h"
 
-JobState::JobState()
-{
-    this->cancelRequested = false;
-    this->completed = false;
-    this->errorMessage = "";
-    this->progress = 0;
-    this->job = 0;
-    this->started = 0;
-}
-
-JobState::JobState(const JobState& s) : QObject()
-{
-    this->cancelRequested = s.cancelRequested;
-    this->completed = s.completed;
-    this->errorMessage = s.errorMessage;
-    this->progress = s.progress;
-    this->job = s.job;
-    this->started = s.started;
-    this->title = s.title;
-}
-
-JobState& JobState::operator=(const JobState& s)
-{
-    this->cancelRequested = s.cancelRequested;
-    this->completed = s.completed;
-    this->errorMessage = s.errorMessage;
-    this->progress = s.progress;
-    this->job = s.job;
-    this->started = s.started;
-    this->title = s.title;
-
-    return *this;
-}
-
-time_t JobState::remainingTime()
-{
-    time_t result;
-    if (started != 0) {
-        time_t now;
-        time(&now);
-
-        time_t diff = difftime(now, started);
-        diff = lround(diff * (1 / this->progress - 1));
-        result = diff;
-    } else {
-        result = 0;
-    }
-    return result;
-}
-
 Job::Job(const QString &title, Job *parent):
         mutex(QMutex::Recursive), parentJob(parent)
 {
@@ -75,6 +25,37 @@ Job::Job(const QString &title, Job *parent):
 Job::~Job()
 {
     qDeleteAll(childJobs);
+}
+
+time_t Job::remainingTime()
+{
+    this->mutex.lock();
+    time_t started_ = this->started;
+    double progress_ = this->progress;
+    this->mutex.unlock();
+
+    time_t result;
+    if (started != 0) {
+        time_t now;
+        time(&now);
+
+        time_t diff = difftime(now, started_);
+        diff = lround(diff * (1 / progress_ - 1));
+        result = diff;
+    } else {
+        result = 0;
+    }
+    return result;
+}
+
+time_t Job::getStarted()
+{
+    time_t started_;
+    this->mutex.lock();
+    started_ = this->started;
+    this->mutex.unlock();
+
+    return started_;
 }
 
 void Job::complete()
@@ -134,9 +115,9 @@ void Job::cancel()
     }
 }
 
-void Job::parentJobChanged(const JobState& s)
+void Job::parentJobChanged(Job* s)
 {
-    if (s.cancelRequested && !this->isCancelled())
+    if (s->isCancelled() && !this->isCancelled())
         this->cancel();
 }
 
@@ -151,8 +132,8 @@ Job* Job::newSubJob(double part, const QString &title,
     r->uparentProgress = updateParentProgress_;
     r->updateParentErrorMessage = updateParentErrorMessage;
 
-    connect(this, SIGNAL(changed(const JobState&)),
-            r, SLOT(parentJobChanged(const JobState&)),
+    connect(this, SIGNAL(changed(Job*)),
+            r, SLOT(parentJobChanged(Job*)),
             Qt::DirectConnection);
 
     this->childJobs.append(r);
@@ -188,24 +169,16 @@ void Job::fireChange()
     if (this->started == 0)
         time(&this->started);
 
-    JobState state;
-    state.job = this;
-    state.cancelRequested = this->cancelRequested;
-    state.completed = this->completed;
-    state.errorMessage = this->errorMessage;
-    state.title = this->title;
-    state.progress = this->progress;
-    state.started = this->started;
     this->mutex.unlock();
 
     Job* top = this;
     while (top->parentJob)
         top = top->parentJob;
 
-    top->fireChange(state);
+    top->fireChange(this);
 }
 
-void Job::fireChange(const JobState& s)
+void Job::fireChange(Job* s)
 {
     emit changed(s);
 }
@@ -213,6 +186,13 @@ void Job::fireChange(const JobState& s)
 void Job::setProgress(double progress)
 {
     this->mutex.lock();
+    if (progress > 1) {
+        qDebug() << "Job: progress =" << progress << "in" << this->title;
+    }
+    if (progress < this->progress) {
+        qDebug() << "Job: stepping back from" << this->progress <<
+                "to" << progress << "in" << this->title;
+    }
     this->progress = progress;
     this->mutex.unlock();
 

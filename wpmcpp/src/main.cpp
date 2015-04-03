@@ -63,7 +63,6 @@ int main(int argc, char *argv[])
     if (r)
         a.installTranslator(&myappTranslator);
 
-    qRegisterMetaType<JobState>("JobState");
     qRegisterMetaType<Version>("Version");
     qRegisterMetaType<int64_t>("int64_t");
 

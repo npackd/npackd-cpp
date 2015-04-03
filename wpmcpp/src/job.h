@@ -12,45 +12,6 @@
 class Job;
 
 /**
- * This class is used to exchange data about a Job between threads.
- */
-class JobState: public QObject {
-    Q_OBJECT
-public:
-    /** job progress: 0..1 */
-    double progress;
-
-    /** title */
-    QString title;
-
-    /** job error message or "" */
-    QString errorMessage;
-
-    /** true, if the job was cancelled by the user */
-    bool cancelRequested;
-
-    /** the job was completed (with or without an error) */
-    bool completed;
-
-    /** the job */
-    Job* job;
-
-    /** time of the start or 0 */
-    time_t started;
-
-    JobState();
-    JobState(const JobState& s);
-    JobState& operator=(const JobState& s);
-
-    /**
-     * @return time remaining time necessary to complete this task
-     */
-    time_t remainingTime();
-};
-
-Q_DECLARE_METATYPE(JobState)
-
-/**
  * A long-running task.
  *
  * A task is typically defined as a function with the following signature:
@@ -122,12 +83,12 @@ private:
 
     void fireSubJobCreated(Job *sub);
 
-    void fireChange(const JobState &s);
+    void fireChange(Job *s);
 public slots:
     /**
      * @threadsafe
      */
-    void parentJobChanged(const JobState& s);
+    void parentJobChanged(Job *s);
 public:
     /** parent job or 0 */
     Job* parentJob;
@@ -281,12 +242,22 @@ public:
      *     SetHandleInformation
      */
     void checkOSCall(bool v);
+
+    /**
+     * @return the approximate time necessary to complete the rest of this task
+     */
+    time_t remainingTime();
+
+    /**
+     * @return start time for this job
+     */
+    time_t getStarted();
 signals:
     /**
      * This signal will be fired each time something in this object
      * changes (progress, hint etc.).
      */
-    void changed(const JobState& s);
+    void changed(Job* s);
 
     /**
      * Job was completed with an error message or successfully.

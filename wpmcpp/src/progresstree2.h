@@ -21,7 +21,7 @@ class ProgressTree2: public QTreeWidget
 private:
     QTimer* timer;
     time_t monitoredJobLastChanged;
-    void updateItem(QTreeWidgetItem *item, const JobState &s);
+    void updateItem(QTreeWidgetItem *item, Job *s);
     Job *getJob(const QTreeWidgetItem &item);
     void fillItem(QTreeWidgetItem* item, Job *job);
     QTreeWidgetItem *findItem(Job *job, bool create=false);
@@ -44,12 +44,18 @@ public:
     QTreeWidgetItem *addJob(Job* job);
 
     /**
+     * @brief removes a top-level job from the tree
+     * @param job this job will be removed
+     */
+    void removeJob(Job* job);
+
+    /**
      * @brief set the widths of the columns for a small dialog
      */
     void setNarrowColumns();
 private slots:
     void cancelClicked();
-    void monitoredJobChanged(const JobState &state);
+    void monitoredJobChanged(Job* state);
     void timerTimeout();
     void subJobCreated(Job *sub);
 };

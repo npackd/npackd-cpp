@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
 
     CoInitializeEx(0, COINIT_MULTITHREADED);
 
-    qRegisterMetaType<JobState>("JobState");
     qRegisterMetaType<Version>("Version");
 
     InstalledPackages::getDefault()->packageName =

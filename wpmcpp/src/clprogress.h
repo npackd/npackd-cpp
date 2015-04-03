@@ -16,8 +16,8 @@ class CLProgress : public QObject
 {
     Q_OBJECT
 private slots:
-    void jobChanged(const JobState& s);
-    void jobChangedSimple(const JobState& s);
+    void jobChanged(Job *s);
+    void jobChangedSimple(Job *s);
 private:
     int updateRate;
     CONSOLE_SCREEN_BUFFER_INFO progressPos;

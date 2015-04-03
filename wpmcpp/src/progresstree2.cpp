@@ -95,7 +95,7 @@ QTreeWidgetItem* ProgressTree2::findItem(Job* job, bool create)
         else {
             if (create) {
                 if (!toFind->parentJob)
-                    c = addJob(toFind);
+                    ; //c = addJob(toFind);
                 else {
                     if (c) {
                         QTreeWidgetItem* subItem = new QTreeWidgetItem(c);
@@ -144,13 +144,24 @@ QTreeWidgetItem* ProgressTree2::addJob(Job* job)
             SLOT(subJobCreated(Job*)),
             Qt::QueuedConnection);
 
-    connect(job, SIGNAL(changed(const JobState&)), this,
-            SLOT(monitoredJobChanged(const JobState&)),
+    connect(job, SIGNAL(changed(Job*)), this,
+            SLOT(monitoredJobChanged(Job*)),
             Qt::QueuedConnection);
 
     addTopLevelItem(item);
 
     return item;
+}
+
+void ProgressTree2::removeJob(Job *job)
+{
+    if (!job->parentJob) {
+        QTreeWidgetItem* item = findItem(job);
+        if (item) {
+            takeTopLevelItem(this->indexOfTopLevelItem(item));
+            delete item;
+        }
+    }
 }
 
 void ProgressTree2::setNarrowColumns()
@@ -175,23 +186,23 @@ void ProgressTree2::cancelClicked()
     job->cancel();
 }
 
-void ProgressTree2::monitoredJobChanged(const JobState& state)
+void ProgressTree2::monitoredJobChanged(Job* state)
 {
     time_t now;
     time(&now);
 
     monitoredJobLastChanged = now;
 
-    QTreeWidgetItem* item = findItem(state.job, true);
+    QTreeWidgetItem* item = findItem(state, true);
     if (item)
         updateItem(item, state);
 
-    if (state.completed) {
+    if (state->isCompleted()) {
         if (item) {
             setItemWidget(item, 4, 0);
         }
 
-        Job* job = state.job;
+        Job* job = state;
 
         if (!job->parentJob && !job->getErrorMessage().isEmpty() &&
                 !MainWindow::getInstance()) {
@@ -208,29 +219,25 @@ void ProgressTree2::monitoredJobChanged(const JobState& state)
             mb.setDetailedText(msg);
             mb.exec();
         }
-
-        if (!job->parentJob) {
-            delete item;
-        }
     }
 }
 
-void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
+void ProgressTree2::updateItem(QTreeWidgetItem* item, Job* s)
 {
-    item->setText(0, s.title);
+    item->setText(0, s->getTitle());
 
     time_t now;
     time(&now);
 
-    if (s.started != 0) {
-        time_t diff = difftime(now, s.started);
+    if (s->getStarted() != 0) {
+        time_t diff = difftime(now, s->getStarted());
 
         QTime e = WPMUtils::durationToTime(diff);
         item->setText(1, e.toString());
 
-        if (!s.completed) {
+        if (!s->isCompleted()) {
             QTime r = WPMUtils::durationToTime(lround(
-                    diff * (1 / s.progress - 1)));
+                    diff * (1 / s->getProgress() - 1)));
             item->setText(2, r.toString());
         } else {
             item->setText(2, "");
@@ -242,14 +249,14 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
 
     QProgressBar* pb = (QProgressBar*) itemWidget(item, 3);
     QPushButton* b = (QPushButton*) itemWidget(item, 4);
-    if (s.completed) {
+    if (s->isCompleted()) {
         pb->setValue(10000);
         if (b)
             b->setEnabled(false);
     } else {
-        pb->setValue(lround(s.progress * 10000));
+        pb->setValue(lround(s->getProgress() * 10000));
         if (b)
-            b->setEnabled(!s.cancelRequested);
+            b->setEnabled(!s->isCancelled());
     }
 }
 

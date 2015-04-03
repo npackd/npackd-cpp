@@ -468,19 +468,17 @@ void MainWindow::prepare()
 
 void MainWindow::updateProgressTabTitle()
 {
-    int n = VisibleJobs::getDefault()->runningJobStates.count();
+    int n = VisibleJobs::getDefault()->runningJobs.count();
     time_t max = 0;
     double maxProgress = 0;
     for (int i = 0; i < n; i++) {
-        JobState state = VisibleJobs::getDefault()->runningJobStates.at(i);
+        Job* state = VisibleJobs::getDefault()->runningJobs.at(i);
 
         // state.job may be null if the corresponding task was just started
-        if (state.job) {
-            time_t t = state.remainingTime();
-            if (t > max) {
-                max = t;
-                maxProgress = state.progress;
-            }
+        time_t t = state->remainingTime();
+        if (t > max) {
+            max = t;
+            maxProgress = state->getProgress();
         }
     }
     int maxProgress_ = lround(maxProgress * 100);
@@ -600,41 +598,35 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
     return r;
 }
 
-void MainWindow::monitoredJobChanged(const JobState& state)
+void MainWindow::monitoredJobChanged(Job* state)
 {
     time_t now;
     time(&now);
 
-    if (//now != VisibleJobs::getDefault()->monitoredJobLastChanged &&
-            !state.job->parentJob) {
+    if (!state->parentJob) {
         VisibleJobs::getDefault()->monitoredJobLastChanged = now;
-
-        int index = VisibleJobs::getDefault()->runningJobs.indexOf(state.job);
-        if (index >= 0) {
-            VisibleJobs::getDefault()->runningJobStates.replace(index, state);
-        }
 
         updateProgressTabTitle();
     }
 
-    if (state.completed && !state.job->parentJob) {
-        if (!state.job->getErrorMessage().isEmpty())
-            addErrorMessage(state.job->getTitle() + ": " +
-                    state.errorMessage, state.errorMessage);
-        VisibleJobs::getDefault()->unregisterJob(state.job);
+    if (state->isCompleted() && !state->parentJob) {
+        if (!state->getErrorMessage().isEmpty())
+            addErrorMessage(state->getTitle() + ": " +
+                    state->getErrorMessage(), state->getErrorMessage());
+        VisibleJobs::getDefault()->unregisterJob(state);
+        pt->removeJob(state);
         updateProgressTabTitle();
-        state.job->deleteLater();
+        state->deleteLater();
     }
 }
 
 void MainWindow::monitor(Job* job)
 {
-    connect(job, SIGNAL(changed(const JobState&)), this,
-            SLOT(monitoredJobChanged(const JobState&)),
+    connect(job, SIGNAL(changed(Job*)), this,
+            SLOT(monitoredJobChanged(Job*)),
             Qt::QueuedConnection);
 
     VisibleJobs::getDefault()->runningJobs.append(job);
-    VisibleJobs::getDefault()->runningJobStates.append(JobState());
 
     updateProgressTabTitle();
 

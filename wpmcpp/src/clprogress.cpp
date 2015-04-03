@@ -9,12 +9,12 @@ CLProgress::CLProgress(QObject *parent) :
 }
 
 
-void CLProgress::jobChanged(const JobState& s)
+void CLProgress::jobChanged(Job* s)
 {
     HANDLE hOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
     time_t now = time(0);
-    if (!s.completed) {
+    if (!s->isCompleted()) {
         if (now - this->lastJobChange >= this->updateRate) {
             this->lastJobChange = now;
             if (!WPMUtils::isOutputRedirected(true)) {
@@ -22,15 +22,16 @@ void CLProgress::jobChanged(const JobState& s)
 
                 SetConsoleCursorPosition(hOutputHandle,
                         progressPos.dwCursorPosition);
-                QString txt = s.title;
+                QString txt = s->getTitle();
                 if (txt.length() >= w)
                     txt = "..." + txt.right(w - 3);
                 if (txt.length() < w)
                     txt = txt + QString().fill(' ', w - txt.length());
-                txt += QString("%1%").arg(floor(s.progress * 100 + 0.5), 4);
+                txt += QString("%1%").arg(
+                        floor(s->getProgress() * 100 + 0.5), 4);
                 WPMUtils::outputTextConsole(txt);
             } else {
-                WPMUtils::outputTextConsole(s.title + "\n");
+                WPMUtils::outputTextConsole(s->getTitle() + "\n");
             }
         }
     } else {
@@ -46,7 +47,7 @@ void CLProgress::jobChanged(const JobState& s)
     }
 }
 
-void CLProgress::jobChangedSimple(const JobState& s)
+void CLProgress::jobChangedSimple(Job* s)
 {
     bool output = false;
     time_t now = time(0);
@@ -57,10 +58,10 @@ void CLProgress::jobChangedSimple(const JobState& s)
     }
 
     if (output) {
-        double progress = s.job->getTopJob()->getProgress();
+        double progress = s->getTopJob()->getProgress();
 
         int n = 0;
-        QString title = s.job->getFullTitle();
+        QString title = s->getFullTitle();
 
         while (this->lastHint.length() > n && title.length() > n &&
                 this->lastHint.at(n) == title.at(n)) {
@@ -98,8 +99,8 @@ Job* CLProgress::createJob()
     }
 
     Job* job = new Job();
-    connect(job, SIGNAL(changed(const JobState&)), this,
-            SLOT(jobChangedSimple(const JobState&)));
+    connect(job, SIGNAL(changed(Job*)), this,
+            SLOT(jobChangedSimple(Job*)));
 
     // -updateRate so that we do not have the initial delay
     this->lastJobChange = time(0) - this->updateRate;
