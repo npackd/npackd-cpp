@@ -225,25 +225,12 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, const JobState& s)
     if (s.started != 0) {
         time_t diff = difftime(now, s.started);
 
-        int sec = diff % 60;
-        diff /= 60;
-        int min = diff % 60;
-        diff /= 60;
-        int h = diff;
-
-        QTime e(h, min, sec);
+        QTime e = WPMUtils::durationToTime(diff);
         item->setText(1, e.toString());
 
         if (!s.completed) {
-            diff = difftime(now, s.started);
-            diff = lround(diff * (1 / s.progress - 1));
-            sec = diff % 60;
-            diff /= 60;
-            min = diff % 60;
-            diff /= 60;
-            h = diff;
-
-            QTime r(h, min, sec);
+            QTime r = WPMUtils::durationToTime(lround(
+                    diff * (1 / s.progress - 1)));
             item->setText(2, r.toString());
         } else {
             item->setText(2, "");

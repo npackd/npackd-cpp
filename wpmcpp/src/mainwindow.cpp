@@ -605,7 +605,7 @@ void MainWindow::monitoredJobChanged(const JobState& state)
     time_t now;
     time(&now);
 
-    if (now != VisibleJobs::getDefault()->monitoredJobLastChanged &&
+    if (//now != VisibleJobs::getDefault()->monitoredJobLastChanged &&
             !state.job->parentJob) {
         VisibleJobs::getDefault()->monitoredJobLastChanged = now;
 
