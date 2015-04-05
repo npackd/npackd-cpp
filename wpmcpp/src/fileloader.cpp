@@ -9,6 +9,8 @@
 #include "fileloader.h"
 #include "downloader.h"
 #include "job.h"
+#include "downloadsizefinder.h"
+#include "concurrent.h"
 
 FileLoader::FileLoader(): id(0)
 {
@@ -30,7 +32,8 @@ QString FileLoader::downloadOrQueue(const QString &url, QString *err)
     } else {
         this->mutex.unlock();
 
-        QFuture<DownloadFile> future = QtConcurrent::run(this,
+        QFuture<DownloadFile> future = run(
+                &DownloadSizeFinder::threadPool, this,
                 &FileLoader::downloadRunnable, url);
         QFutureWatcher<DownloadFile>* w =
                 new QFutureWatcher<DownloadFile>(this);
@@ -93,7 +96,7 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
             QString mime;
             Job* job = new Job();
             Downloader::download(job, url, &f, 0, QCryptographicHash::Sha1,
-                    true, &mime);
+                    true, &mime, false, 15);
             f.close();
 
             if (!job->getErrorMessage().isEmpty()) {

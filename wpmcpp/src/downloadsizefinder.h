@@ -13,6 +13,14 @@
 #include <QMutex>
 #include <QTemporaryDir>
 #include <QMap>
+#include <QThreadPool>
+
+class DownloadFile
+{
+public:
+    QString url, error;
+    int64_t size;
+};
 
 /**
  * Loads files from the Internet.
@@ -20,13 +28,6 @@
 class DownloadSizeFinder: public QObject
 {
     Q_OBJECT
-
-    class DownloadFile
-    {
-    public:
-        QString url, error;
-        int64_t size;
-    };
 
     /**
      * @brief URL -> size as int64_t or
@@ -44,6 +45,8 @@ class DownloadSizeFinder: public QObject
      */
     DownloadFile downloadRunnable(const QString &url);
 public:
+    static QThreadPool threadPool;
+
     /**
      * The thread is not started.
      */

@@ -21,12 +21,33 @@ class Downloader: QObject
 {
     Q_OBJECT
 
+    /**
+     * @brief readDataFlat
+     * @param job
+     * @param hResourceHandle
+     * @param file 0 = ignore the read data
+     * @param sha1
+     * @param contentLength
+     * @param alg
+     */
     static void readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
             QString* sha1, int64_t contentLength,
             QCryptographicHash::Algorithm alg);
+
     static void readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
             QString* sha1, int64_t contentLength,
             QCryptographicHash::Algorithm alg);
+
+    /**
+     * @brief readData
+     * @param job
+     * @param hResourceHandle
+     * @param file 0 = ignore the read data
+     * @param sha1
+     * @param gzip
+     * @param contentLength
+     * @param alg
+     */
     static void readData(Job* job, HINTERNET hResourceHandle, QFile* file,
             QString* sha1, bool gzip, int64_t contentLength,
             QCryptographicHash::Algorithm alg);
@@ -53,13 +74,16 @@ class Downloader: QObject
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param useCache true = use Windows Internet cache on the local disk
      * @param alg algorithm that should be used to compute the hash sum
+     * @param keepConnection true = keep the connection open
+     * @param timeout download timeout in seconds
      * @return "content-length" or -1 if unknown
      */
     static int64_t downloadWin(Job* job, const QUrl& url,
             LPCWSTR verb, QFile* file,
             QString* mime, QString* contentDisposition,
             HWND parentWindow=0, QString* sha1=0, bool useCache=false,
-                               QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1);
+            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
+            bool keepConnection=true, int timeout=300);
 
     /**
      * Copies a file.
@@ -72,7 +96,8 @@ class Downloader: QObject
      *
      * @param job job for this method
      * @param source source file name
-     * @param file the content will be stored here
+     * @param file the content will be stored here. 0 means that the hash sum
+     *     will be computed, but the file will be not copied
      * @param sha1 if not null, SHA1 will be computed and stored here
      * @param alg algorithm that should be used to compute the hash sum
      */
@@ -81,12 +106,16 @@ class Downloader: QObject
             QCryptographicHash::Algorithm alg);
 public:
     /**
-     * @brief HTTP request
+     * @brief a download request
      */
     class Request
     {
     public:
-        /** the response data will be stored here */
+        /**
+         * the response data will be stored here. This is only a reference,
+         * the object will not be freed with Request. 0 means that the response
+         * will be read and discarded.
+         */
         QFile* file;
 
         /** true = ask the user for passwords */
@@ -95,7 +124,7 @@ public:
         /** parent window handle or 0 */
         HWND parentWindow;
 
-        /** http:/https: URL*/
+        /** http:/https:/file:/data:image/png;base64 URL*/
         QUrl url;
 
         /** should the hash sum be computed? */
@@ -104,18 +133,66 @@ public:
         /** algorithm for the hash sum */
         QCryptographicHash::Algorithm alg;
 
-        /** should the cache be used? */
+        /**
+         * should the cache be used? This is only applicable to http: and
+         * https.
+         */
         bool useCache;
-    };
 
+        /**
+         * true = keep the connection open. This is only applicable to http:
+         * and https.
+         */
+        bool keepConnection;
+
+        /**
+         * "GET", etc. This is only applicable to http:
+         * and https.
+         */
+        QString httpMethod;
+
+        /**
+         * if true and file==0 a new QTemporary file will be created to store
+         * the downloaded file->
+         */
+        bool createTemporaryFile;
+
+        /**
+         * @param url http:/https:/file: URL
+         */
+        Request(const QUrl& url): file(0), interactive(false),
+                parentWindow(0), url(url), hashSum(false),
+                alg(QCryptographicHash::Sha256), useCache(true),
+                keepConnection(false), httpMethod("GET"),
+                createTemporaryFile(false) {
+        }
+    };
 
     /**
      * @brief HTTP response
      */
     class Response
     {
+    public:
+        /**
+         * the response data was stored here. This is only a reference,
+         * the object will not be freed with Response.
+         */
+        QFile* file;
 
+        /** computed hash sum, if requested */
+        QString hashSum;
+
+        /** MIME type of the response */
+        QString mimeType;
     };
+
+    /**
+     * @param job job for this method
+     * @param request request definition
+     * @return response
+     */
+    static Response download(Job* job, const Request& request);
 
     /**
      * @param job job for this method
@@ -155,16 +232,20 @@ public:
      * @param url this URL will be downloaded. http://, https://, file:// and
      *     data:image/png;base64, are supported
      * @param sha1 if not null, SHA1 will be computed and stored here
-     * @param file the content will be stored here
+     * @param file the content will be stored here. 0 means that the data will
+     *     be read and discarded
      * @param alg algorithm that should be used for computing the hash sum
      * @param mime if not null, MIME type will be stored here
      * @param useCache true = use Windows Internet cache on the local disk
+     * @param keepConnection true = keep the HTTP connection open
+     * @param timeout download timeout for HTTP in seconds
      */
     static void download(Job* job, const QUrl& url, QFile* file,
             QString* sha1=0,
             QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
             bool useCache=true,
-            QString* mime=0);
+            QString* mime=0,
+            bool keepConnection=true, int timeout=300);
 
     /**
      * @brief retrieves the content-length header for an URL.

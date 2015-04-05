@@ -11,6 +11,7 @@
 #include <QWaitCondition>
 #include <QMutex>
 #include <QCryptographicHash>
+#include <QProcess>
 
 #include "downloader.h"
 #include "job.h"
@@ -22,7 +23,7 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         QFile* file,
         QString* mime, QString* contentDisposition,
         HWND parentWindow, QString* sha1, bool useCache,
-        QCryptographicHash::Algorithm alg)
+        QCryptographicHash::Algorithm alg, bool keepConnection, int timeout)
 {
     QString initialTitle = job->getTitle();
 
@@ -54,7 +55,7 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
 
     // change the timeout to 5 minutes
     if (job->shouldProceed()) {
-        DWORD rec_timeout = 300 * 1000;
+        DWORD rec_timeout = timeout * 1000;
         InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
                 &rec_timeout, sizeof(rec_timeout));
         job->setProgress(0.01);
@@ -83,8 +84,9 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         LPCTSTR ppszAcceptTypes[2];
         ppszAcceptTypes[0] = L"*/*";
         ppszAcceptTypes[1] = NULL;
-        DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0) |
-                INTERNET_FLAG_KEEP_CONNECTION;
+        DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0);
+        if (keepConnection)
+            flags |= INTERNET_FLAG_KEEP_CONNECTION;
         flags |= INTERNET_FLAG_RESYNCHRONIZE;
         if (!useCache)
             flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
@@ -313,8 +315,7 @@ out:
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
-        if (file)
-            readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
+        readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -579,7 +580,8 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         if (sha1)
             hash.addData((char*) buffer, bufferLength);
 
-        file->write((char*) buffer, bufferLength);
+        if (file)
+            file->write((char*) buffer, bufferLength);
 
         alreadyRead += bufferLength;
         if (contentLength > 0) {
@@ -611,25 +613,29 @@ void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,
         QString* sha1, bool gzip, int64_t contentLength,
         QCryptographicHash::Algorithm alg)
 {
-    if (gzip)
+    if (gzip && file)
         readDataGZip(job, hResourceHandle, file, sha1, contentLength, alg);
     else
         readDataFlat(job, hResourceHandle, file, sha1, contentLength, alg);
 }
 
 void Downloader::download(Job* job, const QUrl& url, QFile* file,
-        QString* sha1, QCryptographicHash::Algorithm alg, bool useCache, QString *mime)
+        QString* sha1, QCryptographicHash::Algorithm alg, bool useCache,
+        QString *mime, bool keepConnection, int timeout)
 {
     QString contentDisposition;
 
     if (url.scheme() == "https" || url.scheme() == "http")
         downloadWin(job, url, L"GET", file, mime, &contentDisposition,
-                defaultPasswordWindow, sha1, useCache, alg);
+                defaultPasswordWindow, sha1, useCache, alg, keepConnection,
+                timeout);
     else if (url.toString().startsWith("data:image/png;base64,")) {
-        QString dataURL_ = url.toString().mid(22);
-        QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
-        if (file->write(ba) < 0)
-            job->setErrorMessage(file->errorString());
+        if (file) {
+            QString dataURL_ = url.toString().mid(22);
+            QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
+            if (file->write(ba) < 0)
+                job->setErrorMessage(file->errorString());
+        }
         job->complete();
     } else if (url.scheme() == "file") {
         QString localFile = url.toLocalFile();
@@ -669,7 +675,8 @@ void Downloader::copyFile(Job* job, const QString& source, QFile* file,
 
             if (sha1)
                 crypto.addData(data, c);
-            file->write(data, c);
+            if (file)
+                file->write(data, c);
 
             progress += c;
             if (srcSize != 0)
@@ -683,6 +690,22 @@ void Downloader::copyFile(Job* job, const QString& source, QFile* file,
         delete[] data;
     }
     job->complete();
+}
+
+Downloader::Response Downloader::download(Job *job,
+        const Downloader::Request &request)
+{
+    Downloader::Response r;
+    r.file = request.file;
+
+    // TODO:
+    // request.interactive, request.parentWindow
+    // request.keepConnection, httpMethod
+    download(job, request.url, request.file,
+            request.hashSum ? &r.hashSum : 0, request.alg,
+            request.useCache, &r.mimeType);
+
+    return r;
 }
 
 int64_t Downloader::getContentLength(Job* job, const QUrl &url,
@@ -701,7 +724,7 @@ int64_t Downloader::getContentLength(Job* job, const QUrl &url,
         job->complete();
     } else {
         result = downloadWin(job, url, L"HEAD", 0, 0, 0, parentWindow, 0, false,
-                QCryptographicHash::Sha1);
+                QCryptographicHash::Sha1, false, 15);
     }
     return result;
 }

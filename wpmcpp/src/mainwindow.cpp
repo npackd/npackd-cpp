@@ -514,6 +514,9 @@ MainWindow::~MainWindow()
     QThreadPool::globalInstance()->clear();
     QThreadPool::globalInstance()->waitForDone(5000);
 
+    DownloadSizeFinder::threadPool.clear();
+    DownloadSizeFinder::threadPool.waitForDone(5000);
+
     delete ui;
 }
 

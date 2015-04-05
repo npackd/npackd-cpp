@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.1" language="de_DE">
 <context>
     <name>LicenseForm</name>
     <message>
@@ -30,7 +30,7 @@
     </message>
     <message>
         <source>Download URL:</source>
-        <translation>Download-Adresse:</translation>
+        <translation type="vanished">Download-Adresse:</translation>
     </message>
     <message>
         <location filename="licenseform.ui" line="76"/>
@@ -679,7 +679,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>SHA1:</source>
-        <translation>SHA1:</translation>
+        <translation type="vanished">SHA1:</translation>
     </message>
     <message>
         <location filename="packageversionform.ui" line="303"/>
@@ -741,15 +741,15 @@ p, li { white-space: pre-wrap; }
     <name>ProgressFrame</name>
     <message>
         <source>Frame</source>
-        <translation>Rahmen</translation>
+        <translation type="vanished">Rahmen</translation>
     </message>
     <message>
         <source>Task / Step:</source>
-        <translation>Aufgabe / Schritt:</translation>
+        <translation type="vanished">Aufgabe / Schritt:</translation>
     </message>
     <message>
         <source>-</source>
-        <translation>-</translation>
+        <translation type="vanished">-</translation>
     </message>
     <message>
         <source>Elapsed time:</source>
@@ -763,7 +763,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -815,15 +815,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Closing running processes</source>
-        <translation>Schließe laufende Prozesse</translation>
+        <translation type="vanished">Schließe laufende Prozesse</translation>
     </message>
     <message>
         <source>Directory %0 is locked</source>
-        <translation>Verzeichnis %0 ist gesperrt</translation>
+        <translation type="vanished">Verzeichnis %0 ist gesperrt</translation>
     </message>
     <message>
         <source>Directory %0 is locked by %1</source>
-        <translation>Verzeichnis %0 ist gesperrt von %1</translation>
+        <translation type="vanished">Verzeichnis %0 ist gesperrt von %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="175"/>
@@ -869,7 +869,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Read invalid package version from the database: %1</source>
-        <translation>Ungültige Paketversion wurde aus der Datenbank eingelesen: %1</translation>
+        <translation type="vanished">Ungültige Paketversion wurde aus der Datenbank eingelesen: %1</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1855"/>
@@ -923,7 +923,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Creating a temporary file</source>
-        <translation>Erstelle eine temporäre Datei</translation>
+        <translation type="vanished">Erstelle eine temporäre Datei</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1442"/>
@@ -989,7 +989,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Downloading the remote repositories and filling the local database</source>
-        <translation>Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
+        <translation type="vanished">Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1554"/>
@@ -1006,11 +1006,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Refreshing the installation status</source>
-        <translation>Aktualisiere den Installationsstatus</translation>
+        <translation type="vanished">Aktualisiere den Installationsstatus</translation>
     </message>
     <message>
         <source>Updating the status for installed packages in the database</source>
-        <translation>Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
+        <translation type="vanished">Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1414"/>
@@ -1058,102 +1058,102 @@ p, li { white-space: pre-wrap; }
         <translation>Füge Daten in die Lizenzentabelle ein</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="29"/>
+        <location filename="downloader.cpp" line="30"/>
         <source>Connecting</source>
         <translation>Verbinde</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="136"/>
+        <location filename="downloader.cpp" line="138"/>
         <source>Cancelled by the user</source>
         <translation>Vom Benutzer abgebrochen</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="139"/>
+        <location filename="downloader.cpp" line="141"/>
         <source>Invalid handle</source>
         <translation>Ungültiger Handle</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="143"/>
+        <location filename="downloader.cpp" line="145"/>
         <source>Unknown error %1 from InternetErrorDlg</source>
         <translation>Unbekannter Fehler %1 von InternetErrorDlg</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="159"/>
+        <location filename="downloader.cpp" line="161"/>
         <source>The HTTP proxy requires authentication.</source>
         <translation>Der HTTP-Proxy erfordert eine Authentifizierung.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="160"/>
-        <location filename="downloader.cpp" line="187"/>
+        <location filename="downloader.cpp" line="162"/>
+        <location filename="downloader.cpp" line="189"/>
         <source>Username</source>
         <translation>Benutzername</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="162"/>
-        <location filename="downloader.cpp" line="189"/>
+        <location filename="downloader.cpp" line="164"/>
+        <location filename="downloader.cpp" line="191"/>
         <source>Password</source>
         <translation>Passwort</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="185"/>
+        <location filename="downloader.cpp" line="187"/>
         <source>The HTTP server requires authentication.</source>
         <translation>Der HTTP-Server erfordert eine Authentifizierung.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="214"/>
+        <location filename="downloader.cpp" line="216"/>
         <source>Cannot handle HTTP status code %1</source>
         <translation>Kann HTTP-Statuscode %1 nicht verarbeiten</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="241"/>
+        <location filename="downloader.cpp" line="243"/>
         <location filename="packageversion.cpp" line="860"/>
         <source>Downloading</source>
         <translation>Herunterladen</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="315"/>
+        <location filename="downloader.cpp" line="317"/>
         <source>Reading the data</source>
         <translation>Lese die Daten</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="480"/>
-        <location filename="downloader.cpp" line="496"/>
-        <location filename="downloader.cpp" line="502"/>
-        <location filename="downloader.cpp" line="536"/>
+        <location filename="downloader.cpp" line="481"/>
+        <location filename="downloader.cpp" line="497"/>
+        <location filename="downloader.cpp" line="503"/>
+        <location filename="downloader.cpp" line="537"/>
         <source>zlib error %1</source>
         <translation>zlib-Fehler %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="523"/>
-        <location filename="downloader.cpp" line="588"/>
+        <location filename="downloader.cpp" line="524"/>
+        <location filename="downloader.cpp" line="590"/>
         <source>%L0 of %L1 bytes</source>
         <translation>%L0 von %L1 Bytes</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="529"/>
-        <location filename="downloader.cpp" line="594"/>
+        <location filename="downloader.cpp" line="530"/>
+        <location filename="downloader.cpp" line="596"/>
         <location filename="wpmutils.cpp" line="2087"/>
         <source>%L0 bytes</source>
         <translation>%L0 Bytes</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="641"/>
+        <location filename="downloader.cpp" line="647"/>
         <source>Cannot download a file from a relative path %1</source>
         <translation>Kann die Datei vom relativen Pfad %1 nicht herunterladen</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="646"/>
+        <location filename="downloader.cpp" line="652"/>
         <source>Unsupported URL scheme: %1</source>
         <translation>URL-Schema %1 wird nicht unterstützt</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="656"/>
-        <location filename="downloader.cpp" line="724"/>
+        <location filename="downloader.cpp" line="662"/>
+        <location filename="downloader.cpp" line="747"/>
         <source>Error opening file: %1</source>
         <translation>Fehler beim Öffnen von Datei: %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="698"/>
+        <location filename="downloader.cpp" line="721"/>
         <source>Cannot process relative file name %1</source>
         <translation>Kann den relativen Dateinamen %1 nicht verarbeiten</translation>
     </message>
@@ -1257,7 +1257,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="405"/>
-        <location filename="mainwindow.cpp" line="890"/>
+        <location filename="mainwindow.cpp" line="893"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Kann Programm nicht beenden, solange Jobs laufen</translation>
     </message>
@@ -1346,11 +1346,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find the package version</source>
-        <translation>Kann die Paketversion nicht finden</translation>
+        <translation type="vanished">Kann die Paketversion nicht finden</translation>
     </message>
     <message>
         <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
-        <translation>Das Paket %1 wird deinstalliert. Das zugehörige Verzeichnis %2 wird vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
+        <translation type="vanished">Das Paket %1 wird deinstalliert. Das zugehörige Verzeichnis %2 wird vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
     </message>
     <message>
         <location filename="uiutils.cpp" line="145"/>
@@ -1399,7 +1399,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Updating</source>
-        <translation>Aktualisiere</translation>
+        <translation type="vanished">Aktualisiere</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="504"/>
@@ -1444,7 +1444,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>list</source>
-        <translation>Liste</translation>
+        <translation type="vanished">Liste</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="539"/>
@@ -1468,7 +1468,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be installed: %2</source>
-        <translation>%1 Paket(e) wird/werden installiert: %2</translation>
+        <translation type="vanished">%1 Paket(e) wird/werden installiert: %2</translation>
     </message>
     <message>
         <location filename="uiutils.cpp" line="159"/>
@@ -1482,58 +1482,58 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
-        <translation>%1 Paket(e) wird/werden deinstalliert: %2. Die zugehörigen Verzeichnisse werden vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
+        <translation type="vanished">%1 Paket(e) wird/werden deinstalliert: %2. Die zugehörigen Verzeichnisse werden vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
     </message>
     <message>
         <source>Installing %1 packages, uninstalling %2 packages</source>
-        <translation>Installiere %1 Pakete, deinstalliere %2 Pakete</translation>
+        <translation type="vanished">Installiere %1 Pakete, deinstalliere %2 Pakete</translation>
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
-        <translation>%1 Paket(e) wird/werden deinstalliert: %2 (die zugehörigen Verzeichnisse werden vollständig gelöscht; die gelöschten Dateien können nicht wiederhergestellt werden) und %3 Paket(e) wird/werden installiert: %4.</translation>
+        <translation type="vanished">%1 Paket(e) wird/werden deinstalliert: %2 (die zugehörigen Verzeichnisse werden vollständig gelöscht; die gelöschten Dateien können nicht wiederhergestellt werden) und %3 Paket(e) wird/werden installiert: %4.</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="383"/>
-        <location filename="mainwindow.cpp" line="826"/>
-        <location filename="mainwindow.cpp" line="1752"/>
+        <location filename="mainwindow.cpp" line="829"/>
+        <location filename="mainwindow.cpp" line="1755"/>
         <location filename="uiutils.cpp" line="191"/>
         <source>Install/Uninstall</source>
         <translation>Installieren/Deinstallieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1022"/>
-        <location filename="mainwindow.cpp" line="1076"/>
+        <location filename="mainwindow.cpp" line="1025"/>
+        <location filename="mainwindow.cpp" line="1079"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Fehler beim Suchen der neuesten installierten Version von %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1299"/>
+        <location filename="mainwindow.cpp" line="1302"/>
         <source>Initializing</source>
         <translation>Initialisiere</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1570"/>
+        <location filename="mainwindow.cpp" line="1573"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1676"/>
+        <location filename="mainwindow.cpp" line="1679"/>
         <source>About</source>
         <translation>Über…</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Softwarepaketmanager für Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - Softwarepaketmanager für Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="374"/>
-        <location filename="mainwindow.cpp" line="818"/>
+        <location filename="mainwindow.cpp" line="821"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation>Die gewählten Änderungen erfordern eine Aktualisierung dieser Npackd-Instanz. Sind Sie sicher?</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="375"/>
-        <location filename="mainwindow.cpp" line="819"/>
+        <location filename="mainwindow.cpp" line="822"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
@@ -1543,45 +1543,45 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler beim Öffnen der Datenbank: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1677"/>
+        <location filename="mainwindow.cpp" line="1680"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;Npackd %1 -Software Paket Manager für Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1725"/>
+        <location filename="mainwindow.cpp" line="1728"/>
         <source>Jobs</source>
         <translation>Jobs</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1746"/>
+        <location filename="mainwindow.cpp" line="1749"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann den Scan jetzt nicht starten. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1822"/>
+        <location filename="mainwindow.cpp" line="1825"/>
         <source>%1 package(s) detected</source>
         <translation>%1 Paket(e) erkannt</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1827"/>
+        <location filename="mainwindow.cpp" line="1830"/>
         <source>Package detection status</source>
         <translation>Status der Paketerkennung</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1851"/>
+        <location filename="mainwindow.cpp" line="1854"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann Repository jetzt nicht neu laden. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
     <message>
         <source>Cannot start this action while a drive scan is in progress</source>
-        <translation>Kann diese Aktion nicht starten während der Festplatten-Scan läuft</translation>
+        <translation type="vanished">Kann diese Aktion nicht starten während der Festplatten-Scan läuft</translation>
     </message>
     <message>
         <source>Cannot start this action while repositories reload is in progress</source>
-        <translation>Kann diese Aktioon nicht starten während die Repositories aktualisiert werden</translation>
+        <translation type="vanished">Kann diese Aktioon nicht starten während die Repositories aktualisiert werden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2009"/>
+        <location filename="mainwindow.cpp" line="2012"/>
         <source>Cannot open the URL %1</source>
         <translation>Kann den URL %1 nicht öffnen</translation>
     </message>
@@ -1800,7 +1800,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>
-        <translation>Falsche SHA1-Nummer: %1 erwartet, aber %2 gefunden</translation>
+        <translation type="vanished">Falsche SHA1-Nummer: %1 erwartet, aber %2 gefunden</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="917"/>
@@ -1814,7 +1814,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Preparing</source>
-        <translation>Vorbereiten</translation>
+        <translation type="vanished">Vorbereiten</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1009"/>
@@ -1865,7 +1865,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
-        <translation>Hash-Summe (SHA1) %1 gefunden, aber %2 erwartet. Die Datei hat sich verändert.</translation>
+        <translation type="vanished">Hash-Summe (SHA1) %1 gefunden, aber %2 erwartet. Die Datei hat sich verändert.</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1143"/>
@@ -1899,7 +1899,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Opening ZIP file</source>
-        <translation>Öffne ZIP-Datei</translation>
+        <translation type="vanished">Öffne ZIP-Datei</translation>
     </message>
     <message>
         <location filename="wpmutils.cpp" line="2109"/>
@@ -2013,11 +2013,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>SHA-1 and SHA-256 cannot be defined both for the same package version %1</source>
-        <translation>SHA-1 und SHA-256 können nicht gleichzeitig für dieselbe Paketversion definiert werden %1</translation>
+        <translation type="vanished">SHA-1 und SHA-256 können nicht gleichzeitig für dieselbe Paketversion definiert werden %1</translation>
     </message>
     <message>
         <source>Unknown hash sum type %1 for %2</source>
-        <translation>Unbekannter Typ der Hash-Summe %1 für %2</translation>
+        <translation type="vanished">Unbekannter Typ der Hash-Summe %1 für %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="1832"/>
@@ -2139,7 +2139,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Download failed: %2</source>
-        <translation>Herunterladen fehlgeschlagen: %2</translation>
+        <translation type="vanished">Herunterladen fehlgeschlagen: %2</translation>
     </message>
     <message>
         <source>Parsing the content</source>
@@ -2151,11 +2151,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Opening file</source>
-        <translation>Öffne Datei</translation>
+        <translation type="vanished">Öffne Datei</translation>
     </message>
     <message>
         <source>Cannot open the file</source>
-        <translation>Kann die Datei nicht öffnen</translation>
+        <translation type="vanished">Kann die Datei nicht öffnen</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1302"/>
@@ -2164,7 +2164,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Analyzing the content</source>
-        <translation>Analysiere den Inhalt</translation>
+        <translation type="vanished">Analysiere den Inhalt</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="264"/>
@@ -2184,9 +2184,9 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="repository.cpp" line="270"/>
-        <source>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
-        <oldsource>Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/</oldsource>
-        <translation>Bitte laden Sie eine neuere Version von Npackd von http://code.google.com/p/windows-package-manager/ herunter</translation>
+        <source>Please download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
+        <oldsource>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</oldsource>
+        <translation type="unfinished">Bitte laden Sie eine neuere Version von Npackd von http://code.google.com/p/windows-package-manager/ herunter</translation>
     </message>
     <message>
         <location filename="repository.cpp" line="284"/>
@@ -2201,11 +2201,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
-        <translation>Kann das/die Paket(e) nicht installieren, da die folgenden Dateien aktuell benutzt werden (bitte schließen Sie die zugehörigen Programme): %1</translation>
+        <translation type="vanished">Kann das/die Paket(e) nicht installieren, da die folgenden Dateien aktuell benutzt werden (bitte schließen Sie die zugehörigen Programme): %1</translation>
     </message>
     <message>
         <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
-        <translation>Kann Paket %1 nicht deinstallieren, da einige Dateien oder Verzeichnisse unterhalb von %2 aktuell benutzt werden.</translation>
+        <translation type="vanished">Kann Paket %1 nicht deinstallieren, da einige Dateien oder Verzeichnisse unterhalb von %2 aktuell benutzt werden.</translation>
     </message>
     <message>
         <location filename="scandiskthirdpartypm.cpp" line="26"/>
@@ -2224,7 +2224,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find locked package versions: %1</source>
-        <translation>Kann die Versionen des gesperrten Pakets nicht ermitteln: %1</translation>
+        <translation type="vanished">Kann die Versionen des gesperrten Pakets nicht ermitteln: %1</translation>
     </message>
     <message>
         <location filename="settingsframe.cpp" line="100"/>
@@ -2732,7 +2732,7 @@ p, li { white-space: pre-wrap; }
         <translation>Component-Based Servicing</translation>
     </message>
     <message>
-        <location filename="fileloader.cpp" line="121"/>
+        <location filename="fileloader.cpp" line="124"/>
         <location filename="packageframe.cpp" line="286"/>
         <source>Cannot open the file %1</source>
         <translation>Kann die Datei %1 nicht öffnen</translation>
@@ -2803,7 +2803,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Installation Directory:</source>
-        <translation>Installationsverzeichnis:</translation>
+        <translation type="vanished">Installationsverzeichnis:</translation>
     </message>
     <message>
         <location filename="settingsframe.ui" line="102"/>

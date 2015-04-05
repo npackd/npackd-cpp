@@ -9,12 +9,11 @@
 #include "downloadsizefinder.h"
 #include "downloader.h"
 #include "job.h"
+#include "concurrent.h"
 
 extern HWND defaultPasswordWindow;
 
-DownloadSizeFinder::DownloadSizeFinder()
-{
-}
+QThreadPool DownloadSizeFinder::threadPool;
 
 int64_t DownloadSizeFinder::downloadOrQueue(const QString &url, QString *err)
 {
@@ -32,7 +31,8 @@ int64_t DownloadSizeFinder::downloadOrQueue(const QString &url, QString *err)
     } else {
         this->mutex.unlock();
 
-        QFuture<DownloadFile> future = QtConcurrent::run(this,
+
+        QFuture<DownloadFile> future = run(&threadPool, this,
                 &DownloadSizeFinder::downloadRunnable, url);
         QFutureWatcher<DownloadFile>* w =
                 new QFutureWatcher<DownloadFile>(this);
@@ -62,7 +62,7 @@ void DownloadSizeFinder::watcherFinished()
     w->deleteLater();
 }
 
-DownloadSizeFinder::DownloadFile DownloadSizeFinder::downloadRunnable(
+DownloadFile DownloadSizeFinder::downloadRunnable(
         const QString& url)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
@@ -75,7 +75,7 @@ DownloadSizeFinder::DownloadFile DownloadSizeFinder::downloadRunnable(
 
     CoInitialize(NULL);
 
-    DownloadSizeFinder::DownloadFile r;
+    DownloadFile r;
     r.url = url;
     r.size = 0;
 
@@ -108,4 +108,9 @@ DownloadSizeFinder::DownloadFile DownloadSizeFinder::downloadRunnable(
     */
 
     return r;
+}
+
+DownloadSizeFinder::DownloadSizeFinder()
+{
+
 }

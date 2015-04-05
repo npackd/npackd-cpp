@@ -101,7 +101,8 @@ HEADERS += mainwindow.h \
     visiblejobs.h \
     clprocessor.h \
     progresstree2.h \
-    downloadsizefinder.h
+    downloadsizefinder.h \
+    concurrent.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \

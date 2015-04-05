@@ -2009,102 +2009,102 @@ p, li { white-space: pre-wrap; }
         <translation>Вставка данных в таблицу лицензий</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="29"/>
+        <location filename="downloader.cpp" line="30"/>
         <source>Connecting</source>
         <translation>Соединение</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="136"/>
+        <location filename="downloader.cpp" line="138"/>
         <source>Cancelled by the user</source>
         <translation>Отменено пользователем</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="139"/>
+        <location filename="downloader.cpp" line="141"/>
         <source>Invalid handle</source>
         <translation>Недопустимый дескриптор</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="143"/>
+        <location filename="downloader.cpp" line="145"/>
         <source>Unknown error %1 from InternetErrorDlg</source>
         <translation>Неизвестная ошибка %1 в InternetErrorDlg</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="159"/>
+        <location filename="downloader.cpp" line="161"/>
         <source>The HTTP proxy requires authentication.</source>
         <translation>HTTP прокси требует аутентификации.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="160"/>
-        <location filename="downloader.cpp" line="187"/>
+        <location filename="downloader.cpp" line="162"/>
+        <location filename="downloader.cpp" line="189"/>
         <source>Username</source>
         <translation>Имя пользователя</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="162"/>
-        <location filename="downloader.cpp" line="189"/>
+        <location filename="downloader.cpp" line="164"/>
+        <location filename="downloader.cpp" line="191"/>
         <source>Password</source>
         <translation>Пароль</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="185"/>
+        <location filename="downloader.cpp" line="187"/>
         <source>The HTTP server requires authentication.</source>
         <translation>HTTP сервер требует аутентификации.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="214"/>
+        <location filename="downloader.cpp" line="216"/>
         <source>Cannot handle HTTP status code %1</source>
         <translation>Невозможно обработать HTTP статус код %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="241"/>
+        <location filename="downloader.cpp" line="243"/>
         <location filename="packageversion.cpp" line="860"/>
         <source>Downloading</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="315"/>
+        <location filename="downloader.cpp" line="317"/>
         <source>Reading the data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="480"/>
-        <location filename="downloader.cpp" line="496"/>
-        <location filename="downloader.cpp" line="502"/>
-        <location filename="downloader.cpp" line="536"/>
+        <location filename="downloader.cpp" line="481"/>
+        <location filename="downloader.cpp" line="497"/>
+        <location filename="downloader.cpp" line="503"/>
+        <location filename="downloader.cpp" line="537"/>
         <source>zlib error %1</source>
         <translation>Ошибка zlib %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="523"/>
-        <location filename="downloader.cpp" line="588"/>
+        <location filename="downloader.cpp" line="524"/>
+        <location filename="downloader.cpp" line="590"/>
         <source>%L0 of %L1 bytes</source>
         <translation>%L0 из %L1 байт</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="529"/>
-        <location filename="downloader.cpp" line="594"/>
+        <location filename="downloader.cpp" line="530"/>
+        <location filename="downloader.cpp" line="596"/>
         <location filename="wpmutils.cpp" line="2087"/>
         <source>%L0 bytes</source>
         <translation>%L0 байт</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="641"/>
+        <location filename="downloader.cpp" line="647"/>
         <source>Cannot download a file from a relative path %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="646"/>
+        <location filename="downloader.cpp" line="652"/>
         <source>Unsupported URL scheme: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="656"/>
-        <location filename="downloader.cpp" line="724"/>
+        <location filename="downloader.cpp" line="662"/>
+        <location filename="downloader.cpp" line="747"/>
         <source>Error opening file: %1</source>
         <translation>Ошибка открытия файла %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="698"/>
+        <location filename="downloader.cpp" line="721"/>
         <source>Cannot process relative file name %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2208,7 +2208,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="405"/>
-        <location filename="mainwindow.cpp" line="890"/>
+        <location filename="mainwindow.cpp" line="893"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Невозможно выйти пока запущены задания</translation>
     </message>
@@ -2437,30 +2437,30 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="383"/>
-        <location filename="mainwindow.cpp" line="826"/>
-        <location filename="mainwindow.cpp" line="1752"/>
+        <location filename="mainwindow.cpp" line="829"/>
+        <location filename="mainwindow.cpp" line="1755"/>
         <location filename="uiutils.cpp" line="191"/>
         <source>Install/Uninstall</source>
         <translation>Установка/Удаление</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1022"/>
-        <location filename="mainwindow.cpp" line="1076"/>
+        <location filename="mainwindow.cpp" line="1025"/>
+        <location filename="mainwindow.cpp" line="1079"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Ошибка при поиске самой новой установленной версии для %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1299"/>
+        <location filename="mainwindow.cpp" line="1302"/>
         <source>Initializing</source>
         <translation>Инициализация</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1570"/>
+        <location filename="mainwindow.cpp" line="1573"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1676"/>
+        <location filename="mainwindow.cpp" line="1679"/>
         <source>About</source>
         <translation>О</translation>
     </message>
@@ -2470,13 +2470,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="374"/>
-        <location filename="mainwindow.cpp" line="818"/>
+        <location filename="mainwindow.cpp" line="821"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="375"/>
-        <location filename="mainwindow.cpp" line="819"/>
+        <location filename="mainwindow.cpp" line="822"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2486,37 +2486,37 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1677"/>
+        <location filename="mainwindow.cpp" line="1680"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1725"/>
+        <location filename="mainwindow.cpp" line="1728"/>
         <source>Jobs</source>
         <translation>Задания</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1746"/>
+        <location filename="mainwindow.cpp" line="1749"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1822"/>
+        <location filename="mainwindow.cpp" line="1825"/>
         <source>%1 package(s) detected</source>
         <translation>%1 пакет(ы) обнаружен(ы)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1827"/>
+        <location filename="mainwindow.cpp" line="1830"/>
         <source>Package detection status</source>
         <translation>Статус обнаружения пакета</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1851"/>
+        <location filename="mainwindow.cpp" line="1854"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Невозможно обновить репозитории сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2009"/>
+        <location filename="mainwindow.cpp" line="2012"/>
         <source>Cannot open the URL %1</source>
         <translation>Не удалось открыть URL %1</translation>
     </message>
@@ -3111,8 +3111,8 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="repository.cpp" line="270"/>
-        <source>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
-        <oldsource>Plese download a newer version of Npackd from http://code.google.com/p/windows-package-manager/</oldsource>
+        <source>Please download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
+        <oldsource>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</oldsource>
         <translation type="unfinished">Пожалуйста, скачайте свежую версию Npackd с http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
@@ -3659,7 +3659,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fileloader.cpp" line="121"/>
+        <location filename="fileloader.cpp" line="124"/>
         <location filename="packageframe.cpp" line="286"/>
         <source>Cannot open the file %1</source>
         <translation type="unfinished"></translation>
