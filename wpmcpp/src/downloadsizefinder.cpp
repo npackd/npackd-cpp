@@ -14,10 +14,11 @@
 extern HWND defaultPasswordWindow;
 
 QThreadPool DownloadSizeFinder::threadPool;
+DownloadSizeFinder::_init DownloadSizeFinder::_initializer;
 
 int64_t DownloadSizeFinder::downloadOrQueue(const QString &url, QString *err)
 {
-    int64_t r = -1;
+    int64_t r = -2;
     *err = "";
 
     this->mutex.lock();
@@ -30,7 +31,6 @@ int64_t DownloadSizeFinder::downloadOrQueue(const QString &url, QString *err)
         this->mutex.unlock();
     } else {
         this->mutex.unlock();
-
 
         QFuture<DownloadFile> future = run(&threadPool, this,
                 &DownloadSizeFinder::downloadRunnable, url);

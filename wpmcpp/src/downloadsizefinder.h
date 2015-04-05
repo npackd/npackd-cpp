@@ -46,7 +46,16 @@ class DownloadSizeFinder: public QObject
     DownloadFile downloadRunnable(const QString &url);
 public:
     static QThreadPool threadPool;
-
+private:
+    static class _init
+    {
+    public:
+        _init() {
+            if (threadPool.maxThreadCount() > 2)
+                threadPool.setMaxThreadCount(2);
+        }
+    } _initializer;
+public:
     /**
      * The thread is not started.
      */
@@ -58,7 +67,8 @@ public:
      * @brief download a file. This function does not block.
      * @param url this file will be downloaded
      * @param err error message or ""
-     * @return size or -1 if the file is being downloaded
+     * @return size or -2 if the file is being downloaded or -1 if the size
+     *     is unknown
      */
     int64_t downloadOrQueue(const QString& url, QString* err);
 signals:

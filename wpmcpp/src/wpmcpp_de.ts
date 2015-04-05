@@ -1644,37 +1644,37 @@ p, li { white-space: pre-wrap; }
         <translation>berechne</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="203"/>
+        <location filename="packageitemmodel.cpp" line="205"/>
         <source>Icon</source>
         <translation>Symbol</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="206"/>
+        <location filename="packageitemmodel.cpp" line="208"/>
         <source>Title</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="209"/>
+        <location filename="packageitemmodel.cpp" line="211"/>
         <source>Description</source>
         <translation>Beschreibung</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="212"/>
+        <location filename="packageitemmodel.cpp" line="214"/>
         <source>Available</source>
         <translation>Verfügbar</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="215"/>
+        <location filename="packageitemmodel.cpp" line="217"/>
         <source>Installed</source>
         <translation>Installiert</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="218"/>
+        <location filename="packageitemmodel.cpp" line="220"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="221"/>
+        <location filename="packageitemmodel.cpp" line="223"/>
         <source>Download size</source>
         <translation>Download-Größe</translation>
     </message>

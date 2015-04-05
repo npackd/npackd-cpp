@@ -2506,37 +2506,37 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="203"/>
+        <location filename="packageitemmodel.cpp" line="205"/>
         <source>Icon</source>
         <translation>Icône</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="206"/>
+        <location filename="packageitemmodel.cpp" line="208"/>
         <source>Title</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="209"/>
+        <location filename="packageitemmodel.cpp" line="211"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="212"/>
+        <location filename="packageitemmodel.cpp" line="214"/>
         <source>Available</source>
         <translation>Disponible</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="215"/>
+        <location filename="packageitemmodel.cpp" line="217"/>
         <source>Installed</source>
         <translation>Installé</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="218"/>
+        <location filename="packageitemmodel.cpp" line="220"/>
         <source>License</source>
         <translation>Licence</translation>
     </message>
     <message>
-        <location filename="packageitemmodel.cpp" line="221"/>
+        <location filename="packageitemmodel.cpp" line="223"/>
         <source>Download size</source>
         <translation type="unfinished"></translation>
     </message>

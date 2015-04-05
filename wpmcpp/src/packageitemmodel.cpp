@@ -138,12 +138,14 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                             cached->newestDownloadURL, &err);
                     if (!err.isEmpty())
                         v = "";
-                    else if (sz == -1)
+                    else if (sz == -2)
                         v = QObject::tr("computing");
+                    else if (sz == -1)
+                        v = "";
                     else
-                    v = QString::number(
-                        ((double) sz) / (1024.0 * 1024.0), 'f', 1) +
-                        " MiB";
+                        v = QString::number(
+                            ((double) sz) / (1024.0 * 1024.0), 'f', 1) +
+                            " MiB";
                 }
 
                 r = qVariantFromValue(v);
