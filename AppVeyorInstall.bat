@@ -21,6 +21,8 @@ goto :eof
 
 :coverity
 wget https://scan.coverity.com/download/cxx/win_64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip
-7z e -y coverity_tool.zip
+7z x -y coverity_tool.zip
+for /f "delims=" %%x in ('dir /b cov-*') do set name=%%x
+ren "%name%" cov-analysis
 goto :eof
 

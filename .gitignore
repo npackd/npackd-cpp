@@ -8,4 +8,5 @@ wpmcpp/build/
 cov-int/
 npackdcl/ftests/build/
 npackdcl/tests/build/
+cov-analysis/
 
