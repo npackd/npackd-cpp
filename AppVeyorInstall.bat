@@ -20,7 +20,9 @@ if "%coverity%" equ "yes" goto coverity
 goto :eof
 
 :coverity
-wget https://scan.coverity.com/download/cxx/win_64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip
+"%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8
+dir "C:\Program Files (x86)"
+"C:\Program Files (x86)\Gow\bin\wget" https://scan.coverity.com/download/cxx/win_64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip
 7z x -y coverity_tool.zip
 for /f "delims=" %%x in ('dir /b cov-*') do set name=%%x
 ren "%name%" cov-analysis
