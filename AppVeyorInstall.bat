@@ -16,4 +16,11 @@ goto :eof
 
 :bits64
 "%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v %version% || exit /b %errorlevel%
+if "%coverity%" equ "yes" goto coverity
+goto :eof
+
+:coverity
+wget https://scan.coverity.com/download/cxx/win_64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip
+7z e -y coverity_tool.zip
+goto :eof
 

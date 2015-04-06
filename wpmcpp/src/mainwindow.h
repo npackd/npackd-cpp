@@ -311,6 +311,7 @@ private slots:
     void on_actionShow_changelog_triggered();
     void on_actionToggle_toolbar_triggered(bool checked);
     void on_mainToolBar_visibilityChanged(bool visible);
+    void monitoredJobCompleted();
 };
 
 #endif // MAINWINDOW_H

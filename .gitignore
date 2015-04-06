@@ -6,4 +6,6 @@ wpmcpp/build/
 *.orig
 *.user
 cov-int/
+npackdcl/ftests/build/
+npackdcl/tests/build/
 

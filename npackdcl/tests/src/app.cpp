@@ -62,7 +62,9 @@ void App::test()
     QVERIFY(a.getVersionString() == "8.4");
     QVERIFY(a.isNormalized());
 
-    QVERIFY(Version("2.8.7.4.8.9") > Version("2.8.6.4.8.8"));
+    a.setVersion("2.8.7.4.8.9");
+    b.setVersion("2.8.6.4.8.8");
+    QVERIFY(a > b);
 }
 
 void App::testCommandLine()

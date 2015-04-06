@@ -260,7 +260,8 @@ signals:
     void changed(Job* s);
 
     /**
-     * Job was completed with an error message or successfully.
+     * Job was completed with an error message or successfully. This signal is
+     * only emitted once and only on this task (child jobs are not considered).
      */
     void jobCompleted();
 

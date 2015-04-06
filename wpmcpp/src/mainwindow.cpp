@@ -601,6 +601,15 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
     return r;
 }
 
+void MainWindow::monitoredJobCompleted()
+{
+    Job* job = (Job*) sender();
+    if (!job->getErrorMessage().isEmpty())
+        addErrorMessage(job->getErrorMessage(),
+                job->getTitle() + ": " + job->getErrorMessage(),
+                true, QMessageBox::Critical);
+}
+
 void MainWindow::monitoredJobChanged(Job* state)
 {
     time_t now;
@@ -613,9 +622,6 @@ void MainWindow::monitoredJobChanged(Job* state)
     }
 
     if (state->isCompleted() && !state->parentJob) {
-        if (!state->getErrorMessage().isEmpty())
-            addErrorMessage(state->getTitle() + ": " +
-                    state->getErrorMessage(), state->getErrorMessage());
         VisibleJobs::getDefault()->unregisterJob(state);
         pt->removeJob(state);
         updateProgressTabTitle();
@@ -627,6 +633,10 @@ void MainWindow::monitor(Job* job)
 {
     connect(job, SIGNAL(changed(Job*)), this,
             SLOT(monitoredJobChanged(Job*)),
+            Qt::QueuedConnection);
+
+    connect(job, SIGNAL(jobCompleted()), this,
+            SLOT(monitoredJobCompleted()),
             Qt::QueuedConnection);
 
     VisibleJobs::getDefault()->runningJobs.append(job);
