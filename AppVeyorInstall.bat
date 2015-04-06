@@ -22,7 +22,7 @@ goto :eof
 :coverity
 "%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8
 dir "C:\Program Files (x86)"
-"C:\Program Files (x86)\Gow\bin\wget" https://scan.coverity.com/download/cxx/win_64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip
+"C:\Program Files (x86)\Gow\bin\wget" https://scan.coverity.com/download/cxx/win_64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip --no-check-certificate
 7z x -y coverity_tool.zip
 for /f "delims=" %%x in ('dir /b cov-*') do set name=%%x
 ren "%name%" cov-analysis
