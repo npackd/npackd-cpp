@@ -93,7 +93,7 @@ bool AbstractRepository::includesRemoveItself(
     return res;
 }
 
-void AbstractRepository::processWithCoInitialize(Job *job,
+void AbstractRepository::processWithCoInitializeAndFree(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
@@ -107,6 +107,8 @@ void AbstractRepository::processWithCoInitialize(Job *job,
     CoInitialize(NULL);
     process(job, install_, programCloseType);
     CoUninitialize();
+
+    qDeleteAll(install_);
 
     /*
     if (b)

@@ -222,10 +222,11 @@ public:
     /**
      * @brief processes the given operations. Calls CoInitialize/CoUninitialize.
      * @param job job
-     * @param install operations that should be performed
+     * @param install operations that should be performed. The objects will be
+     *     freed
      * @param programCloseType how to close running applications
      */
-    void processWithCoInitialize(Job *job,
+    void processWithCoInitializeAndFree(Job *job,
             const QList<InstallOperation *> &install_, DWORD programCloseType);
 };
 

@@ -608,6 +608,12 @@ void MainWindow::monitoredJobCompleted()
         addErrorMessage(job->getErrorMessage(),
                 job->getTitle() + ": " + job->getErrorMessage(),
                 true, QMessageBox::Critical);
+
+    VisibleJobs::getDefault()->unregisterJob(job);
+    pt->removeJob(job);
+    updateProgressTabTitle();
+    job->disconnect();
+    job->deleteLater();
 }
 
 void MainWindow::monitoredJobChanged(Job* state)
@@ -619,13 +625,6 @@ void MainWindow::monitoredJobChanged(Job* state)
         VisibleJobs::getDefault()->monitoredJobLastChanged = now;
 
         updateProgressTabTitle();
-    }
-
-    if (state->isCompleted() && !state->parentJob) {
-        VisibleJobs::getDefault()->unregisterJob(state);
-        pt->removeJob(state);
-        updateProgressTabTitle();
-        state->deleteLater();
     }
 }
 
@@ -845,7 +844,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
                 monitor(job);
 
                 QtConcurrent::run(AbstractRepository::getDefault_(),
-                        &AbstractRepository::processWithCoInitialize,
+                        &AbstractRepository::processWithCoInitializeAndFree,
                         job, install,
                         WPMUtils::getCloseProcessType());
 

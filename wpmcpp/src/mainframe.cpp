@@ -24,7 +24,13 @@ MainFrame::MainFrame(QWidget *parent) :
     this->categoryCombosEvents = true;
 
     QTableView* t = this->ui->tableWidget;
+
+    QItemSelectionModel *sm = t->selectionModel();
+    QAbstractItemModel* m = t->model();
     t->setModel(new PackageItemModel(QStringList()));
+    delete sm;
+    delete m;
+
     t->setEditTriggers(QTableWidget::NoEditTriggers);
     t->setSortingEnabled(false);
     t->horizontalHeader()->setSectionsMovable(true);
@@ -48,8 +54,15 @@ MainFrame::MainFrame(QWidget *parent) :
 
 MainFrame::~MainFrame()
 {
+    QTableView* t = this->ui->tableWidget;
+    QItemSelectionModel *sm = t->selectionModel();
+    QAbstractItemModel* m = t->model();
+
     qDeleteAll(this->selectedPackages);
     delete ui;
+
+    delete sm;
+    delete m;
 }
 
 void MainFrame::saveColumns() const

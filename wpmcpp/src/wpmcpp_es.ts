@@ -1747,12 +1747,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QObject</name>
     <message>
-        <location filename="abstractrepository.cpp" line="143"/>
+        <location filename="abstractrepository.cpp" line="145"/>
         <source>Cannot find the package version %1 %2: %3</source>
         <translation>No se encuentra la versión del paquete %1 %2: %3</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="151"/>
+        <location filename="abstractrepository.cpp" line="153"/>
         <source>Cannot find the package version %1 %2</source>
         <translation>Imposible de encontrar versión del paquete %1 %2</translation>
     </message>
@@ -1761,32 +1761,32 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Cerrando procesos en ejecución</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="175"/>
+        <location filename="abstractrepository.cpp" line="177"/>
         <source>Stopping the package %1 of %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="195"/>
+        <location filename="abstractrepository.cpp" line="197"/>
         <source>Installing %1</source>
         <translation>Instalando %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="198"/>
+        <location filename="abstractrepository.cpp" line="200"/>
         <source>Uninstalling %1</source>
         <translation>Desinstalando %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="264"/>
+        <location filename="abstractrepository.cpp" line="266"/>
         <source>No installable version found for the package %1</source>
         <translation>No se encontró una versión instalable para el paquete %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="271"/>
+        <location filename="abstractrepository.cpp" line="273"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>No se encuentra la versión más nueva para %1: %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="277"/>
+        <location filename="abstractrepository.cpp" line="279"/>
         <source>No installed version found for the package %1</source>
         <translation>No se encontró una versión instalada del paquete %1</translation>
     </message>
@@ -2161,23 +2161,23 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Porfavor descarga la versión de 64 bits desde http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
-        <location filename="mainframe.cpp" line="120"/>
+        <location filename="mainframe.cpp" line="133"/>
         <source>Uncategorized</source>
         <translation>Sin categoría</translation>
     </message>
     <message>
-        <location filename="mainframe.cpp" line="128"/>
-        <location filename="mainframe.cpp" line="139"/>
+        <location filename="mainframe.cpp" line="141"/>
+        <location filename="mainframe.cpp" line="152"/>
         <source>All</source>
         <translation>Todo</translation>
     </message>
     <message>
-        <location filename="mainframe.cpp" line="174"/>
+        <location filename="mainframe.cpp" line="187"/>
         <source>Found in %1 ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainframe.cpp" line="222"/>
+        <location filename="mainframe.cpp" line="235"/>
         <source>Choose columns</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2188,7 +2188,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="405"/>
-        <location filename="mainwindow.cpp" line="903"/>
+        <location filename="mainwindow.cpp" line="902"/>
         <source>Cannot exit while jobs are running</source>
         <translation>No puede salir mientras las tareas se están ejecutando</translation>
     </message>
@@ -2417,30 +2417,30 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="383"/>
-        <location filename="mainwindow.cpp" line="839"/>
-        <location filename="mainwindow.cpp" line="1765"/>
+        <location filename="mainwindow.cpp" line="838"/>
+        <location filename="mainwindow.cpp" line="1764"/>
         <location filename="uiutils.cpp" line="191"/>
         <source>Install/Uninstall</source>
         <translation>Instalar/Desinstalar</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1035"/>
-        <location filename="mainwindow.cpp" line="1089"/>
+        <location filename="mainwindow.cpp" line="1034"/>
+        <location filename="mainwindow.cpp" line="1088"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Error encontrando la versión más nueva instalada para %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1312"/>
+        <location filename="mainwindow.cpp" line="1311"/>
         <source>Initializing</source>
         <translation>Inicializando</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1583"/>
+        <location filename="mainwindow.cpp" line="1582"/>
         <source>Settings</source>
         <translation>Preferencias</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1689"/>
+        <location filename="mainwindow.cpp" line="1688"/>
         <source>About</source>
         <translation>Acerca de</translation>
     </message>
@@ -2450,13 +2450,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="374"/>
-        <location filename="mainwindow.cpp" line="831"/>
+        <location filename="mainwindow.cpp" line="830"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation>Cambios elegidos requieren una actualización de esta instancia Npackd. Estás seguro?</translation>
     </message>
     <message>
         <location filename="clprocessor.cpp" line="375"/>
-        <location filename="mainwindow.cpp" line="832"/>
+        <location filename="mainwindow.cpp" line="831"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
@@ -2466,32 +2466,32 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1690"/>
+        <location filename="mainwindow.cpp" line="1689"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Administrador de paquetes de software para Windows (R)&lt;br&gt;&lt;a href=&quot;https://npackd.appspot.com/&quot;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1738"/>
+        <location filename="mainwindow.cpp" line="1737"/>
         <source>Jobs</source>
         <translation>Tareas</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1759"/>
+        <location filename="mainwindow.cpp" line="1758"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>No se puede iniciar el escaneo ahora. El paquete %1 está bloqueado por una instalación/desinstalación en ejecución.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1835"/>
+        <location filename="mainwindow.cpp" line="1834"/>
         <source>%1 package(s) detected</source>
         <translation>%1 paquete(s) detectados</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1840"/>
+        <location filename="mainwindow.cpp" line="1839"/>
         <source>Package detection status</source>
         <translation>Estado de la detección de paquetes</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1864"/>
+        <location filename="mainwindow.cpp" line="1863"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Imposible recargar los repositorios ahora. El paquete %1 está bloqueado por una instalación/desinstalación ejecutándose.</translation>
     </message>
@@ -2504,7 +2504,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">No se puede iniciar esta acción mientras la recarga de los repositorios está en progreso</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2022"/>
+        <location filename="mainwindow.cpp" line="2021"/>
         <source>Cannot open the URL %1</source>
         <translation>No se puede abrir la URL %1</translation>
     </message>

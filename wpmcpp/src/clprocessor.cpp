@@ -383,7 +383,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
                 Job* job = new Job(QObject::tr("Install/Uninstall"));
 
                 QtConcurrent::run(AbstractRepository::getDefault_(),
-                        &AbstractRepository::processWithCoInitialize,
+                        &AbstractRepository::processWithCoInitializeAndFree,
                         job, install,
                         WPMUtils::getCloseProcessType());
 
