@@ -164,15 +164,6 @@ void ProgressTree2::removeJob(Job *job)
     }
 }
 
-void ProgressTree2::setNarrowColumns()
-{
-    setColumnWidth(0, 110);
-    setColumnWidth(1, 60);
-    setColumnWidth(2, 60);
-    setColumnWidth(3, 100);
-    setColumnWidth(4, 70);
-}
-
 void ProgressTree2::subJobCreated(Job* sub)
 {
     findItem(sub, true);
@@ -200,24 +191,6 @@ void ProgressTree2::monitoredJobChanged(Job* state)
     if (state->isCompleted()) {
         if (item) {
             setItemWidget(item, 4, 0);
-        }
-
-        Job* job = state;
-
-        if (!job->parentJob && !job->getErrorMessage().isEmpty() &&
-                !MainWindow::getInstance()) {
-            QString jobTitle = job->getTitle();
-            QString title = QObject::tr("Error") + ": " + jobTitle +
-                        ": " + WPMUtils::getFirstLine(job->getErrorMessage());
-            QString msg = job->getFullTitle() + "\n" + job->getErrorMessage();
-            QMessageBox mb;
-            mb.setWindowTitle(title);
-            mb.setText(msg);
-            mb.setIcon(QMessageBox::Warning);
-            mb.setStandardButtons(QMessageBox::Ok);
-            mb.setDefaultButton(QMessageBox::Ok);
-            mb.setDetailedText(msg);
-            mb.exec();
         }
     }
 }

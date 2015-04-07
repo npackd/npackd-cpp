@@ -48,11 +48,6 @@ public:
      * @param job this job will be removed
      */
     void removeJob(Job* job);
-
-    /**
-     * @brief set the widths of the columns for a small dialog
-     */
-    void setNarrowColumns();
 private slots:
     void cancelClicked();
     void monitoredJobChanged(Job* state);

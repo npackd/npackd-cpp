@@ -41,7 +41,11 @@ void CLProcessor::monitorAndWaitFor(Job* job)
 
     ProgressTree2* pf = new ProgressTree2(d);
     pf->addJob(job);
-    pf->setNarrowColumns();
+    pf->setColumnWidth(0, 270);
+    pf->setColumnWidth(1, 60);
+    pf->setColumnWidth(2, 60);
+    pf->setColumnWidth(3, 100);
+    pf->setColumnWidth(4, 70);
     layout->insertWidget(0, pf);
 
     d->setLayout(layout);
@@ -50,7 +54,7 @@ void CLProcessor::monitorAndWaitFor(Job* job)
             SLOT(accept()), Qt::QueuedConnection);
 
 
-    d->resize(450, 200);
+    d->resize(600, 200);
 
     if (!job->isCompleted()) {
         d->exec();
@@ -94,12 +98,8 @@ QString CLProcessor::remove()
         }
     }
 
-    bool confirmed = false;
-    if (err.isEmpty())
-        confirmed = UIUtils::confirmInstallOperations(0, ops, &err);
-
-    if (err.isEmpty() && confirmed) {
-        process(ops, programCloseType);
+    if (err.isEmpty()) {
+        err = process(ops, programCloseType);
     }
 
     qDeleteAll(installed);
@@ -206,7 +206,7 @@ QString CLProcessor::add()
     // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
 
     if (err.isEmpty()) {
-        process(ops, pct);
+        err = process(ops, pct);
     }
 
     qDeleteAll(ops);
@@ -317,7 +317,7 @@ QString CLProcessor::update()
     */
 
     if (job->shouldProceed() && !up2date) {
-        process(ops, programCloseType);
+        err = process(ops, programCloseType);
     }
 
     /*

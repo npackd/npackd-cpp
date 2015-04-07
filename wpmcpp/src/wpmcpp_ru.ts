@@ -3012,7 +3012,6 @@ p, li { white-space: pre-wrap; }
         <location filename="clprocessor.cpp" line="541"/>
         <location filename="clprocessor.cpp" line="583"/>
         <location filename="clprocessor.cpp" line="589"/>
-        <location filename="progresstree2.cpp" line="210"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
