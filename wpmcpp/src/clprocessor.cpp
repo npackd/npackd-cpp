@@ -53,7 +53,6 @@ void CLProcessor::monitorAndWaitFor(Job* job)
     QObject::connect(job, SIGNAL(jobCompleted()), d,
             SLOT(accept()), Qt::QueuedConnection);
 
-
     d->resize(600, 200);
 
     if (!job->isCompleted()) {

@@ -1,7 +1,7 @@
 version: 1.20.1.{build}
 branches:
   only:
-  - default
+  - master
 clone_folder: c:\projects\Npackd
 environment:
   version: 1.20.1
