@@ -69,11 +69,27 @@ void App::addRemove()
     if (!admin)
         QSKIP("disabled");
 
+    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+            contains("installed successfully"));
+    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+            contains("is already installed in"));
+    QVERIFY(captureNpackdCLOutput("rm -p io.mpv.mpv-64 -v 0.4").
+            contains("removed successfully"));
+}
+
+void App::addRemoveRunning()
+{
+    if (!admin)
+        QSKIP("disabled");
+
     QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
             contains("installed successfully"));
     QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
             contains("is already installed in"));
-    QVERIFY(captureNpackdCLOutput("rm -p io.mpv.mpv-64 -v 0.4").
+    QString dir = captureNpackdCLOutput("path -p FARManager").trimmed();
+    QProcess::execute("cmd.exe /C start \"" + dir + "\\Far.exe");
+    Sleep(5000);
+    QVERIFY(captureNpackdCLOutput("rm -p FARManager").
             contains("removed successfully"));
 }
 
@@ -131,6 +147,8 @@ void App::which()
     QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\"").
             contains("com.farmanager.FARManager"));
     QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\\Far.exe\"").
+            contains("com.farmanager.FARManager"));
+    QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\\NonExisting.exe\"").
             contains("com.farmanager.FARManager"));
     QVERIFY(captureNpackdCLOutput("rm -p FARManager").
             contains("removed successfully"));

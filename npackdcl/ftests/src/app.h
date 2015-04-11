@@ -24,6 +24,11 @@ private slots:
     void addRemove();
 
     /**
+     * @brief "add"/"remove" for a running program
+     */
+    void addRemoveRunning();
+
+    /**
      * @brief "add" should not create another installed version for a detected
      *     package in the same directory. For example, installing
      *     net.poedit.POEdit in "C:\ProgramFiles" should not result in another
