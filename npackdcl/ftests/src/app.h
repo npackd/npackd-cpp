@@ -32,6 +32,11 @@ private slots:
     void addDoesntProduceDetected();
 
     /**
+     * @brief "add" without the version number
+     */
+    void addWithoutVersion();
+
+    /**
      * @brief "npackdcl path" must be fast
      */
     void pathIsFast();
@@ -75,6 +80,11 @@ private slots:
      * @brief "help"
      */
     void help();
+
+    /**
+     * @brief "which"
+     */
+    void which();
 };
 
 #endif // APP_H

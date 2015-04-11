@@ -21,10 +21,6 @@ noted.
     - start npackdcl.exe without parameters and *with* administrator
         privileges
     - => NPACKD_CL should be defined on the system level
-16. removing a package without specifying the version number
-    - npackdcl add -p FARManager
-    - npackdcl remove -p FARManager
-    => the package is uninstalled
 17. "npackdcl which"
     - npackdcl which -f "C:\ProgramFiles\AccessEnum"
     => AccessEnum 1.32 (com.microsoft.AccessEnum) is installed in C:\ProgramFiles\AccessEnum
@@ -40,12 +36,6 @@ noted.
 21. "npackdcl info" shows installed versions
     - npackdcl info -p JDK
     => information about installed JDK versions is printed
-22. "npackdcl check"
-    - npackdcl check
-    => "all dependencies are installed" should be printed
-    - uninstall JRE manually
-    - npackdcl check
-    => "ABC depends on JRE, which is not installed"
 23. "npackdcl remove-repo" should also be able to remove the last one
     - npackdcl list-repos
     - remove all defined repositories one by one
@@ -68,9 +58,6 @@ noted.
 28. npackdcl which as non-admin
     - "npackdcl which -f C:\ProgramFiles\MinGW-w64\lib\libgmp.a" as a non-admin
     => package information is shown
-29. npackd search as non-dmin
-    - npackdcl search -q qt
-    => list of found packages is shown
 31. --debug
     - npackdcl detect --debug
     => all messages are outputted

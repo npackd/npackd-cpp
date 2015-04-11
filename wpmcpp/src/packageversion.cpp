@@ -1452,7 +1452,8 @@ void PackageVersion::executeBatchFile(
 void PackageVersion::executeFile(
         Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
-        const QString& outputFile, const QStringList& env)
+        const QString& outputFile, const QStringList& env,
+        bool writeUTF16LEBOM)
 {
     QString initialTitle = job->getTitle();
 
@@ -1575,7 +1576,7 @@ void PackageVersion::executeFile(
             job->setErrorMessage(f.errorString());
     }
 
-    if (job->shouldProceed()) {
+    if (job->shouldProceed() && writeUTF16LEBOM) {
         if (f.write("\xff\xfe") == -1)
             job->setErrorMessage(f.errorString());
     }

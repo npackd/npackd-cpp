@@ -34,7 +34,7 @@ QString App::captureNpackdCLOutput(const QString& params)
     PackageVersion::executeFile(
             job, where,
             npackdcl,
-            params, "Output.log", env);
+            params, "Output.log", env, false);
     // qDebug() << job->getErrorMessage();
     delete job;
 
@@ -95,11 +95,45 @@ void App::addDoesntProduceDetected()
     QVERIFY(p2 < 0);
 }
 
+void App::addWithoutVersion()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+            contains("installed successfully"));
+
+    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+            contains("is already installed"));
+
+    QVERIFY(captureNpackdCLOutput("rm -p FARManager").
+            contains("removed successfully"));
+}
+
 void App::help()
 {
     QVERIFY(captureNpackdCLOutput("help").contains("ncl update"));
 
     QVERIFY(captureNpackdCLOutput("").contains("Missing command"));
+}
+
+void App::which()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+            contains("installed successfully"));
+    QString dir = captureNpackdCLOutput("path -p FARManager").trimmed();
+    QDir d;
+    QVERIFY2(d.exists(dir), dir.toLatin1());
+
+    QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\"").
+            contains("com.farmanager.FARManager"));
+    QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\\Far.exe\"").
+            contains("com.farmanager.FARManager"));
+    QVERIFY(captureNpackdCLOutput("rm -p FARManager").
+            contains("removed successfully"));
 }
 
 void App::list()

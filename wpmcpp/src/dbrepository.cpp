@@ -185,7 +185,8 @@ Package *DBRepository::findPackage_(const QString &name)
     Package* r = 0;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE "
+    if (!q.prepare("SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE, "
+            "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
             "FROM PACKAGE WHERE NAME = :NAME LIMIT 1"))
         err = getErrorString(q);
 
@@ -202,6 +203,27 @@ Package *DBRepository::findPackage_(const QString &name)
         r->setIcon(q.value(2).toString());
         r->description = q.value(3).toString();
         r->license = q.value(4).toString();
+        int cat0 = q.value(5).toInt();
+        int cat1 = q.value(6).toInt();
+        int cat2 = q.value(7).toInt();
+        int cat3 = q.value(8).toInt();
+        int cat4 = q.value(9).toInt();
+        QString c;
+        if (cat0 > 0) {
+            c.append(findCategory(cat0));
+            if (cat1 > 0) {
+                c.append('/').append(findCategory(cat1));
+                if (cat2 > 0) {
+                    c.append('/').append(findCategory(cat2));
+                    if (cat3 > 0) {
+                        c.append('/').append(findCategory(cat3));
+                        if (cat4 > 0)
+                            c.append('/').append(findCategory(cat4));
+                    }
+                }
+            }
+        }
+        r->categories.append(c);
 
         if (err.isEmpty())
             err = readLinks(r);

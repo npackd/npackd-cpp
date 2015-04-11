@@ -114,11 +114,13 @@ public:
      * @param nativeArguments all native arguments
      * @param outputFile the output will be saved here
      * @param env additional environemnt variables
+     * @param write writeUTF16LEBOM write UTF-16 LE BOM mark at the beginning of
+     *     the output file?
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             const QString& outputFile,
-            const QStringList& env);
+            const QStringList& env, bool writeUTF16LEBOM=true);
 
     /**
      * @brief string ID for the specified package version
