@@ -469,7 +469,7 @@ void MainWindow::prepare()
 void MainWindow::updateProgressTabTitle()
 {
     int n = VisibleJobs::getDefault()->runningJobs.count();
-    time_t max = 0;
+    time_t max = -1;
     double maxProgress = 0;
     for (int i = 0; i < n; i++) {
         Job* state = VisibleJobs::getDefault()->runningJobs.at(i);
@@ -481,6 +481,9 @@ void MainWindow::updateProgressTabTitle()
             maxProgress = state->getProgress();
         }
     }
+    if (max < 0)
+        max = 0;
+
     int maxProgress_ = lround(maxProgress * 100);
     QTime rest = WPMUtils::durationToTime(max);
 
