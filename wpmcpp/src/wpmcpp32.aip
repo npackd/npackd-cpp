@@ -15,10 +15,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="http://code.google.com/p/windows-package-manager/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{B3250412-0085-4688-9457-44273780A8C7} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{B6913C6A-4E20-4A5D-983C-D4090F793288} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.19.13" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.20.2" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{EABC4270-7D7F-47BF-B388-AC63606E8DAC}"/>
@@ -35,10 +35,10 @@
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="LICENSE.txt" ComponentId="{507BF63A-EED4-48DA-B832-0F5D850D4812}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="SHORTCUTDIR" ComponentId="{B2BF57D5-7084-4DDA-BA48-F7D4CA801747}" Directory_="SHORTCUTDIR" Attributes="0"/>
-    <ROW Component="exchndl.dll" ComponentId="{107F002F-4B25-484A-B5DC-52CD6568BF7B}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
-    <ROW Component="wpmcpp.exe" ComponentId="{5E540DB0-03BD-4A94-9625-1115B3CDECD8}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
+    <ROW Component="LICENSE.txt" ComponentId="{079B479E-26D9-48C8-A098-39A728FD7EE7}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{E82CE226-1AC5-4608-9C4E-C29A944699E8}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="exchndl.dll" ComponentId="{1EEC2DAB-3A0F-44F1-81D4-E1ABE8B26D12}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
+    <ROW Component="wpmcpp.exe" ComponentId="{7430469A-EF6B-4B9A-A1AA-DEB1507873C3}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt SHORTCUTDIR exchndl.dll wpmcpp.exe"/>

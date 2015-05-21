@@ -37,7 +37,7 @@
         <location filename="licenseform.ui" line="76"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
-        <translation type="unfinished">Имя Пакета:</translation>
+        <translation>Внутреннее имя:</translation>
     </message>
     <message>
         <location filename="licenseform.ui" line="86"/>
@@ -152,12 +152,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="94"/>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>Просмотр</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="106"/>
         <source>Main toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Главная панель инструментов</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="144"/>
@@ -365,42 +365,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="327"/>
         <source>Choose columns...</source>
-        <translation type="unfinished"></translation>
+        <translation>Быбрать столбцы...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="330"/>
         <source>choose the columns for the table with the packages</source>
-        <translation type="unfinished"></translation>
+        <translation>выберите столбцы для таблицы с пакетами</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="333"/>
         <source>Ctrl+M</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+M</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="338"/>
         <source>Show changelog</source>
-        <translation type="unfinished"></translation>
+        <translation>Журнал изменений</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="341"/>
         <source>opens the web page that contains the recent changes in the selected package</source>
-        <translation type="unfinished"></translation>
+        <translation>открывает страницу интернета, которая содержит недавние изменения в выбранном пакете</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="344"/>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="352"/>
         <source>Toggle toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать панель инструментов</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="355"/>
         <source>shows or hides the toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>показывает или скрывает панель инструментов</translation>
     </message>
 </context>
 <context>
@@ -478,7 +478,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageframe.ui" line="151"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
-        <translation type="unfinished">Имя Пакета:</translation>
+        <translation>Внутреннее имя:</translation>
     </message>
     <message>
         <location filename="packageframe.ui" line="161"/>
@@ -489,7 +489,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageframe.ui" line="171"/>
         <source>Package home page:</source>
         <oldsource>Package Home Page:</oldsource>
-        <translation type="unfinished">Домашняя Страница Пакета:</translation>
+        <translation>Домашняя Страница Пакета:</translation>
     </message>
     <message>
         <location filename="packageframe.ui" line="184"/>
@@ -534,17 +534,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="packageframe.ui" line="269"/>
         <source>Change log:</source>
-        <translation type="unfinished"></translation>
+        <translation>Журнал изменений:</translation>
     </message>
     <message>
         <location filename="packageframe.ui" line="282"/>
         <source>change log</source>
-        <translation type="unfinished"></translation>
+        <translation>журнал изменений</translation>
     </message>
     <message>
         <location filename="packageframe.ui" line="302"/>
         <source>Screen shots:</source>
-        <translation type="unfinished"></translation>
+        <translation>Скриншоты:</translation>
     </message>
 </context>
 <context>
@@ -610,7 +610,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageversionform.ui" line="193"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
-        <translation type="unfinished">Имя Пакета:</translation>
+        <translation>Внутреннее имя:</translation>
     </message>
     <message>
         <location filename="packageversionform.ui" line="203"/>
@@ -690,7 +690,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageversionform.ui" line="303"/>
         <source>Important files:</source>
         <oldsource>Important Files:</oldsource>
-        <translation type="unfinished">Важные Файлы:</translation>
+        <translation>Важные Файлы:</translation>
     </message>
     <message>
         <location filename="packageversionform.ui" line="313"/>
@@ -729,7 +729,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageversionform.ui" line="153"/>
         <source>Installation path:</source>
         <oldsource>Installation Path:</oldsource>
-        <translation type="unfinished">Путь Установки:</translation>
+        <translation>Путь Установки:</translation>
     </message>
     <message>
         <source>Package Home Page:</source>
@@ -739,7 +739,7 @@ p, li { white-space: pre-wrap; }
         <location filename="packageversionform.ui" line="173"/>
         <source>Detection info:</source>
         <oldsource>Detection Info:</oldsource>
-        <translation type="unfinished">Информация о распознании:</translation>
+        <translation>Информация о распознании:</translation>
     </message>
 </context>
 <context>
@@ -1779,7 +1779,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="abstractrepository.cpp" line="177"/>
         <source>Stopping the package %1 of %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Останавливаю пакет %1 из %2</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="197"/>
@@ -1865,12 +1865,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="dbrepository.cpp" line="1952"/>
         <source>Detaching the temporary database</source>
-        <translation type="unfinished"></translation>
+        <translation>Отделяю временную базу данных</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1970"/>
         <source>Reorganizing the database</source>
-        <translation type="unfinished"></translation>
+        <translation>Преобразую базу данных</translation>
     </message>
     <message>
         <source>Creating a temporary file</source>
@@ -1914,7 +1914,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="dbrepository.cpp" line="1483"/>
         <source>Updating the temporary database</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновляю базу данных</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1858"/>
@@ -1976,17 +1976,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="dbrepository.cpp" line="1188"/>
         <source>Clearing the links table</source>
-        <translation type="unfinished"></translation>
+        <translation>Очищаю таблицу ссылок</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1235"/>
         <source>Downloading %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Загружаю %1</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1306"/>
         <source>Unzipping the repository failed: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка при распаковке репозитория: %1</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1314"/>

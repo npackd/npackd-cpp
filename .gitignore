@@ -10,3 +10,7 @@ npackdcl/ftests/build/
 npackdcl/tests/build/
 cov-analysis/
 
+
+vimorgrep/build/
+*.back.aip
+**/*-cache/

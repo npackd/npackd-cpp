@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="9.2" version="11.4" Modules="simple" RootPath="." Language="en" Id="{04DE8303-22E7-409E-812B-56D06405BC5A}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="9.2" version="11.8" Modules="simple" RootPath="." Language="en" Id="{04DE8303-22E7-409E-812B-56D06405BC5A}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiValidationComponent">
     <ROW Table="File" Column="Sequence" MinValue="1" MaxValue="32767" Description="Sequence with respect to the media images; order must track cabinet order." Options="0" ColumnType="2" ColumnIndex="7" ColumnSize="2" MsiKey="File#Sequence"/>
     <ROW Table="Media" Column="LastSequence" MinValue="0" MaxValue="32767" Description="File sequence number for the last file for this media." Options="0" ColumnType="2" ColumnIndex="1" ColumnSize="2" MsiKey="Media#LastSequence"/>
@@ -16,10 +16,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="http://code.google.com/p/windows-package-manager/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{390E2D24-F301-43AC-AD90-E0259EA9F22F} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{C1CC73AA-6940-4CA9-B2EE-5636A7298622} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="NpackdCL" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.19.13" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.20.2" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{B57EADCE-24E8-4D80-8611-25F58745FA25}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -32,11 +32,11 @@
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="LICENSE.txt" ComponentId="{112951EB-2DE3-4AA5-90C6-6589DBB3C0B7}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="ProductInformation" ComponentId="{864933DF-3FC6-4198-8AB9-7D1A2BF680A9}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="exchndl.dll" ComponentId="{F18256E6-633A-46EB-9F0A-898D5ED48B30}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
-    <ROW Component="ncl.exe" ComponentId="{B4C1AABC-BE6D-4DE1-863C-D74468CEFE1C}" Directory_="APPDIR" Attributes="0" KeyPath="ncl.exe"/>
-    <ROW Component="npackdcl.exe" ComponentId="{7A4AD202-1589-4017-B17A-6B38C5222A7F}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
+    <ROW Component="LICENSE.txt" ComponentId="{68BE1EA5-F0F2-48F1-8040-45C30EDCCD5E}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
+    <ROW Component="ProductInformation" ComponentId="{28AADF04-4559-41F2-9B4B-637BD7589DEA}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="exchndl.dll" ComponentId="{EFAA3B14-C167-4F0E-A37C-F763C32CA181}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
+    <ROW Component="ncl.exe" ComponentId="{10378D76-5E4D-4FEC-9C6E-0A557CCF4D41}" Directory_="APPDIR" Attributes="0" KeyPath="ncl.exe"/>
+    <ROW Component="npackdcl.exe" ComponentId="{1D0185D1-D989-4C23-8F19-42421ACCA859}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation exchndl.dll ncl.exe npackdcl.exe"/>
