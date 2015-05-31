@@ -822,8 +822,10 @@ void MainWindow::process(QList<InstallOperation*> &install,
     QString err;
 
     bool confirmed = false;
+    QString title;
     if (err.isEmpty())
-        confirmed = UIUtils::confirmInstallOperations(this, install, &err);
+        confirmed = UIUtils::confirmInstallOperations(this, install, &title,
+            &err);
 
     if (err.isEmpty()) {
         if (confirmed) {
@@ -832,13 +834,13 @@ void MainWindow::process(QList<InstallOperation*> &install,
             if (rep->includesRemoveItself(install)) {
                 QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
                 if (UIUtils::confirm(this, QObject::tr("Warning"), txt, txt)) {
-                    Job* job = new Job();
+                    Job* job = new Job(title);
                     UIUtils::processWithSelfUpdate(job, install,
                             programCloseType);
                     delete job;
                 }
             } else {
-                Job* job = new Job(QObject::tr("Install/Uninstall"));
+                Job* job = new Job(title);
 
                 connect(job, SIGNAL(jobCompleted()), this,
                         SLOT(processThreadFinished()),
@@ -1311,7 +1313,8 @@ void MainWindow::closeDetailTabs()
 
 void MainWindow::recognizeAndLoadRepositories(bool useCache)
 {
-    Job* job = new Job(QObject::tr("Initializing"));
+    Job* job = new Job(
+            QObject::tr("Reloading repositories and detecting installed software"));
 
     connect(job, SIGNAL(jobCompleted()), this,
             SLOT(recognizeAndLoadRepositoriesThreadFinished()),
@@ -1764,7 +1767,7 @@ void MainWindow::on_actionScan_Hard_Drives_triggered()
         return;
     }
 
-    Job* job = new Job(QObject::tr("Install/Uninstall"));
+    Job* job = new Job(QObject::tr("Scanning the hard drives"));
     ScanHardDrivesThread* it = new ScanHardDrivesThread(job);
 
     connect(it, SIGNAL(finished()), this,

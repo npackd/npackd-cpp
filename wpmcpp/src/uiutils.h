@@ -43,11 +43,12 @@ public:
      * @brief confirms the specified operations
      * @param parent parent widget or 0
      * @param install operations
+     * @param title the title for the job will be stored here
      * @param err error message will be stored here
      * @return true = confirmed
      */
     static bool confirmInstallOperations(QWidget *parent,
-            QList<InstallOperation *> &install, QString *err);
+            QList<InstallOperation *> &install, QString *title, QString *err);
 };
 
 #endif // UIUTILS_H

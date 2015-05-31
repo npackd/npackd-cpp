@@ -362,8 +362,9 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
     QString err;
 
     bool confirmed = false;
+    QString title;
     if (err.isEmpty())
-        confirmed = UIUtils::confirmInstallOperations(0, install, &err);
+        confirmed = UIUtils::confirmInstallOperations(0, install, &title, &err);
 
     if (err.isEmpty()) {
         if (confirmed) {
@@ -372,14 +373,14 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
             if (rep->includesRemoveItself(install)) {
                 QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
                 if (UIUtils::confirm(0, QObject::tr("Warning"), txt, txt)) {
-                    Job* job = new Job();
+                    Job* job = new Job(title);
                     UIUtils::processWithSelfUpdate(job, install,
                             programCloseType);
                     err = job->getErrorMessage();
                     delete job;
                 }
             } else {
-                Job* job = new Job(QObject::tr("Install/Uninstall"));
+                Job* job = new Job(title);
 
                 QtConcurrent::run(AbstractRepository::getDefault_(),
                         &AbstractRepository::processWithCoInitializeAndFree,

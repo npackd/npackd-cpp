@@ -1414,17 +1414,20 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
             QTemporaryFile of;
             of.setFileTemplate("NpackdXXXXXX.log");
             of.setAutoRemove(false);
+            QString filename;
             if (of.open()) {
+                filename = WPMUtils::normalizePath(of.fileName());
                 of.close();
-
-                // ignoring the error here
-                QFile::copy(out, of.fileName());
+                if (of.remove()) {
+                    // ignoring the error here
+                    QFile::copy(out, filename);
+                }
             }
 
             job->setErrorMessage(QString(
                     QObject::tr("%1. Full output was saved in %2")).arg(
                     job->getErrorMessage()).
-                    arg(WPMUtils::normalizePath(of.fileName())));
+                    arg(filename));
         } else {
             job->setErrorMessage(QString(
                     QObject::tr("%1. No output was generated")).arg(

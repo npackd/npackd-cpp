@@ -1767,11 +1767,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="197"/>
+        <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Instalando %1</translation>
     </message>
     <message>
         <location filename="abstractrepository.cpp" line="200"/>
+        <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Desinstalando %1</translation>
     </message>
@@ -2188,7 +2190,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.cpp" line="405"/>
-        <location filename="mainwindow.cpp" line="905"/>
+        <location filename="mainwindow.cpp" line="907"/>
         <source>Cannot exit while jobs are running</source>
         <translation>No puede salir mientras las tareas se están ejecutando</translation>
     </message>
@@ -2218,60 +2220,58 @@ p, li { white-space: pre-wrap; }
         <translation>El paquete %1 está bloqueado por una instalación/desinstalación ejecutándose.</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="138"/>
         <source>Installing</source>
-        <translation>Instalando</translation>
+        <translation type="vanished">Instalando</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="141"/>
         <source>Uninstalling</source>
-        <translation>Desinstalando</translation>
+        <translation type="vanished">Desinstalando</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="147"/>
-        <location filename="uiutils.cpp" line="153"/>
+        <location filename="uiutils.cpp" line="146"/>
+        <location filename="uiutils.cpp" line="152"/>
         <source>The package %1 will be uninstalled.</source>
         <translation>El paquete %1 sera desinstalado.</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="150"/>
+        <location filename="uiutils.cpp" line="149"/>
         <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
         <translation>El directorio correspondiente %1 será completamente eliminado. No hay forma de restaurar los archivos. Los procesos bloqueando los archivos serán cerrados.</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="161"/>
-        <location filename="uiutils.cpp" line="166"/>
+        <location filename="uiutils.cpp" line="160"/>
+        <location filename="uiutils.cpp" line="165"/>
         <source>%1 package(s) will be installed:</source>
         <translation>%1 paquete(s) serán instalados:</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="175"/>
-        <location filename="uiutils.cpp" line="183"/>
-        <location filename="uiutils.cpp" line="208"/>
-        <location filename="uiutils.cpp" line="215"/>
+        <location filename="uiutils.cpp" line="174"/>
+        <location filename="uiutils.cpp" line="182"/>
+        <location filename="uiutils.cpp" line="207"/>
+        <location filename="uiutils.cpp" line="214"/>
         <source>%1 package(s) will be uninstalled:</source>
         <translation>%1 paquete(s) serán desinstalados:</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="180"/>
-        <location filename="uiutils.cpp" line="233"/>
+        <location filename="uiutils.cpp" line="179"/>
+        <location filename="uiutils.cpp" line="232"/>
         <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
         <translation>Los directorios correspondiente serán completamente eliminados. No hay forma de restaurar los archivos. Los procesos bloqueando los archivos serán cerrados.</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="187"/>
+        <location filename="uiutils.cpp" line="186"/>
         <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
         <translation>Instalando %1 paquetes, desinstalando %2 paquetes, actualizando %3 paquetes</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="195"/>
-        <location filename="uiutils.cpp" line="202"/>
+        <location filename="uiutils.cpp" line="194"/>
+        <location filename="uiutils.cpp" line="201"/>
         <source>%3 package(s) will be updated:</source>
         <translation>%3 paquete(s) serán actualizados:</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="221"/>
-        <location filename="uiutils.cpp" line="228"/>
+        <location filename="uiutils.cpp" line="220"/>
+        <location filename="uiutils.cpp" line="227"/>
         <source>%3 package(s) will be installed:</source>
         <translation>%3 paquete(s) serán instalados:</translation>
     </message>
@@ -2280,8 +2280,8 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">El paquete %1 será desinstalado. El directorio correspondiente %2 será completamente eliminado. No hay forma de restaurar los archivos.</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="145"/>
-        <location filename="uiutils.cpp" line="173"/>
+        <location filename="uiutils.cpp" line="144"/>
+        <location filename="uiutils.cpp" line="172"/>
         <source>Uninstall</source>
         <translation>Desinstalar</translation>
     </message>
@@ -2329,63 +2329,63 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Actualizando</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="503"/>
+        <location filename="clprocessor.cpp" line="504"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation>nombre interno del paquete (e.j. com.ejemplo.Editor o solamente Editor)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="504"/>
+        <location filename="clprocessor.cpp" line="505"/>
         <source>package</source>
         <translation>Paquete</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="505"/>
+        <location filename="clprocessor.cpp" line="506"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation>rango de versiones (e.j. [1.5,2))</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="506"/>
+        <location filename="clprocessor.cpp" line="507"/>
         <source>range</source>
         <translation>rango</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="507"/>
+        <location filename="clprocessor.cpp" line="508"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation>número de versión (e.j. 1.5.12)</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="508"/>
+        <location filename="clprocessor.cpp" line="509"/>
         <source>version</source>
         <translation>versión</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="522"/>
+        <location filename="clprocessor.cpp" line="523"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation>lista de maneras de cerrar aplicaciones en ejecución (c=cerrar, k=forzar cierre). El valor por defecto es &apos;c&apos;.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="523"/>
+        <location filename="clprocessor.cpp" line="524"/>
         <source>[c][k]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="538"/>
+        <location filename="clprocessor.cpp" line="539"/>
         <source>Error parsing the command line: %1</source>
         <translation>Error analizando la línea de comandos: %1</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="579"/>
+        <location filename="clprocessor.cpp" line="580"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation>Comando erróneo: %1. Intenta npackdg help</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="586"/>
+        <location filename="clprocessor.cpp" line="587"/>
         <source>Unexpected argument: %1</source>
         <translation>Argumento inesperado: %1</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="157"/>
+        <location filename="uiutils.cpp" line="156"/>
         <source>Installing %1 packages</source>
         <translation>Instalando %1 paquetes</translation>
     </message>
@@ -2394,12 +2394,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 paquete(s) serán instalados: %2</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="159"/>
+        <location filename="uiutils.cpp" line="158"/>
         <source>Install</source>
         <translation>Instalar</translation>
     </message>
     <message>
-        <location filename="uiutils.cpp" line="171"/>
+        <location filename="uiutils.cpp" line="170"/>
         <source>Uninstalling %1 packages</source>
         <translation>Desinstalando %1 paquetes</translation>
     </message>
@@ -2416,31 +2416,27 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">%1 paquete(s) será desinstalados: %2 (los directorios correspondientes serán completamente eliminados, no hay forma de restaurar los archivos) y %3 paquete(s) serán instalados: %4.</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="382"/>
-        <location filename="mainwindow.cpp" line="841"/>
-        <location filename="mainwindow.cpp" line="1767"/>
-        <location filename="uiutils.cpp" line="191"/>
+        <location filename="uiutils.cpp" line="190"/>
         <source>Install/Uninstall</source>
         <translation>Instalar/Desinstalar</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1037"/>
-        <location filename="mainwindow.cpp" line="1091"/>
+        <location filename="mainwindow.cpp" line="1039"/>
+        <location filename="mainwindow.cpp" line="1093"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Error encontrando la versión más nueva instalada para %1: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1314"/>
         <source>Initializing</source>
-        <translation>Inicializando</translation>
+        <translation type="vanished">Inicializando</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1585"/>
+        <location filename="mainwindow.cpp" line="1588"/>
         <source>Settings</source>
         <translation>Preferencias</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1691"/>
+        <location filename="mainwindow.cpp" line="1694"/>
         <source>About</source>
         <translation>Acerca de</translation>
     </message>
@@ -2449,14 +2445,14 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - gestor de paquetes de software para Windows(R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="373"/>
-        <location filename="mainwindow.cpp" line="833"/>
+        <location filename="clprocessor.cpp" line="374"/>
+        <location filename="mainwindow.cpp" line="835"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation>Cambios elegidos requieren una actualización de esta instancia Npackd. Estás seguro?</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="374"/>
-        <location filename="mainwindow.cpp" line="834"/>
+        <location filename="clprocessor.cpp" line="375"/>
+        <location filename="mainwindow.cpp" line="836"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
@@ -2466,32 +2462,42 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1692"/>
+        <location filename="mainwindow.cpp" line="1317"/>
+        <source>Reloading repositories and detecting installed software</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1695"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Administrador de paquetes de software para Windows (R)&lt;br&gt;&lt;a href=&quot;https://npackd.appspot.com/&quot;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1740"/>
+        <location filename="mainwindow.cpp" line="1743"/>
         <source>Jobs</source>
         <translation>Tareas</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1761"/>
+        <location filename="mainwindow.cpp" line="1764"/>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>No se puede iniciar el escaneo ahora. El paquete %1 está bloqueado por una instalación/desinstalación en ejecución.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1837"/>
+        <location filename="mainwindow.cpp" line="1770"/>
+        <source>Scanning the hard drives</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1840"/>
         <source>%1 package(s) detected</source>
         <translation>%1 paquete(s) detectados</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1842"/>
+        <location filename="mainwindow.cpp" line="1845"/>
         <source>Package detection status</source>
         <translation>Estado de la detección de paquetes</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1866"/>
+        <location filename="mainwindow.cpp" line="1869"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Imposible recargar los repositorios ahora. El paquete %1 está bloqueado por una instalación/desinstalación ejecutándose.</translation>
     </message>
@@ -2504,7 +2510,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">No se puede iniciar esta acción mientras la recarga de los repositorios está en progreso</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2024"/>
+        <location filename="mainwindow.cpp" line="2027"/>
         <source>Cannot open the URL %1</source>
         <translation>No se puede abrir la URL %1</translation>
     </message>
@@ -2659,7 +2665,7 @@ p, li { white-space: pre-wrap; }
         <translation>Chequeo de virus fallido. El archivo no es seguro.</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1425"/>
+        <location filename="packageversion.cpp" line="1428"/>
         <source>%1. Full output was saved in %2</source>
         <translation>%1. Salida competa fue guardada en %2</translation>
     </message>
@@ -2871,12 +2877,12 @@ p, li { white-space: pre-wrap; }
         <translation>bloqueado</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1633"/>
+        <location filename="packageversion.cpp" line="1636"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Proceso %1 finalizó con el código %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1610"/>
+        <location filename="packageversion.cpp" line="1613"/>
         <source>%1 minutes</source>
         <translation>%1 minutos</translation>
     </message>
@@ -2887,100 +2893,100 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1430"/>
+        <location filename="packageversion.cpp" line="1433"/>
         <source>%1. No output was generated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1702"/>
+        <location filename="packageversion.cpp" line="1705"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Etiqueta vacía &lt;path&gt; bajo &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1709"/>
+        <location filename="packageversion.cpp" line="1712"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Mal SHA1 en &lt;detect-file&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1751"/>
+        <location filename="packageversion.cpp" line="1754"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Error en el atributo &apos;paquete&apos; en &lt;version&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1766"/>
+        <location filename="packageversion.cpp" line="1769"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Link de descarga inválido para %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1778"/>
+        <location filename="packageversion.cpp" line="1781"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Versión inválida para %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1790"/>
+        <location filename="packageversion.cpp" line="1793"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>SHA1 inválido para %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1820"/>
+        <location filename="packageversion.cpp" line="1823"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation>SHA-1 inválida para %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1833"/>
+        <location filename="packageversion.cpp" line="1836"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation>SHA-256 inválida para %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1849"/>
+        <location filename="packageversion.cpp" line="1852"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Mal valor para el traibuto &apos;type&apos; para%1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1864"/>
+        <location filename="packageversion.cpp" line="1867"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Valor del atributo &apos;Ruta&apos; vacío para &lt;important-file&gt; para %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1871"/>
+        <location filename="packageversion.cpp" line="1874"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Mas de un &lt;important-file&gt; con el mismo atributo &apos;Ruta&apos; %1 para %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1881"/>
+        <location filename="packageversion.cpp" line="1884"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Valor del atributo &apos;titulo&apos; vacío para &lt;important-file&gt; para %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1910"/>
+        <location filename="packageversion.cpp" line="1913"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>Duplicar entrada &lt;file&gt; para %1 en %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1928"/>
+        <location filename="packageversion.cpp" line="1931"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>&lt;detect-file&gt; inválido para %1:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1943"/>
+        <location filename="packageversion.cpp" line="1946"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>Duplicar entrada &lt;detect-file&gt; para %1 en %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1972"/>
+        <location filename="packageversion.cpp" line="1975"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>Duplicar &lt;dependency&gt; para %1 en %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1990"/>
+        <location filename="packageversion.cpp" line="1993"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Mal MSI GUID para %1: %2</translation>
     </message>
@@ -2992,10 +2998,10 @@ p, li { white-space: pre-wrap; }
         <translation>N/A</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="398"/>
-        <location filename="clprocessor.cpp" line="540"/>
-        <location filename="clprocessor.cpp" line="582"/>
-        <location filename="clprocessor.cpp" line="588"/>
+        <location filename="clprocessor.cpp" line="399"/>
+        <location filename="clprocessor.cpp" line="541"/>
+        <location filename="clprocessor.cpp" line="583"/>
+        <location filename="clprocessor.cpp" line="589"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>

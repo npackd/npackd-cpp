@@ -35,7 +35,7 @@ QString UIUtils::createPackageVersionsHTML(const QStringList& names)
 }
 
 bool UIUtils::confirmInstallOperations(QWidget* parent,
-        QList<InstallOperation*> &install, QString* err)
+        QList<InstallOperation*> &install, QString* title, QString* err)
 {
     QList<PackageVersion*> pvs;
 
@@ -129,16 +129,15 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
 
     bool b = false;
     QString msg;
-    QString title;
     QString dialogTitle;
     QString detailedMessage;
     if (installNames.count() == 1 && uninstallNames.count() == 0 &&
             updateNames.count() == 0) {
         b = true;
-        title = QObject::tr("Installing");
+        *title = QObject::tr("Installing %1").arg(installNames.at(0));
     } else if (installNames.count() == 0 && uninstallNames.count() == 1 &&
             updateNames.count() == 0) {
-        title = QObject::tr("Uninstalling");
+        *title = QObject::tr("Uninstalling %1").arg(uninstallNames.at(0));
 
         PackageVersion* pv = pvs.at(0);
 
@@ -154,7 +153,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 arg(pv->toString());
     } else if (installNames.count() > 0 && uninstallNames.count() == 0 &&
             updateNames.count() == 0) {
-        title = QString(QObject::tr("Installing %1 packages")).arg(
+        *title = QString(QObject::tr("Installing %1 packages")).arg(
                 installNames.count());
         dialogTitle = QObject::tr("Install");
         msg = QString("<html><head/><body><h2>") +
@@ -168,7 +167,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 installNames.join("\n");
     } else if (installNames.count() == 0 && uninstallNames.count() > 0 &&
             updateNames.count() == 0) {
-        title = QString(QObject::tr("Uninstalling %1 packages")).arg(
+        *title = QString(QObject::tr("Uninstalling %1 packages")).arg(
                 uninstallNames.count());
         dialogTitle = QObject::tr("Uninstall");
         msg = QString("<html><head/><body><h2>") +
@@ -184,7 +183,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 arg(uninstallNames.count()) + "\n" +
                 uninstallNames.join("\n");
     } else {
-        title = QObject::tr("Installing %1 packages, uninstalling %2 packages, updating %3 packages").
+        *title = QObject::tr("Installing %1 packages, uninstalling %2 packages, updating %3 packages").
                 arg(installNames.count()).
                 arg(uninstallNames.count()).
                 arg(updateNames.count());
