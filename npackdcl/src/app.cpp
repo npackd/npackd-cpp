@@ -993,6 +993,7 @@ void App::processInstallOperations(Job *job,
             file_.replace('/', '\\');
             QString prg = WPMUtils::findCmdExe();
             QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
+            QString winDir = WPMUtils::getWindowsDir();
 
             WPMUtils::outputTextConsole(
                     (QObject::tr("Starting update process %1 with parameters %2") + "\n").
@@ -1019,7 +1020,7 @@ void App::processInstallOperations(Job *job,
                     (wchar_t*) args.utf16(),
                     0, 0, TRUE,
                     0 /*CREATE_UNICODE_ENVIRONMENT*/, 0,
-                    0, &startupInfo, &pinfo);
+                    (wchar_t*) winDir.utf16(), &startupInfo, &pinfo);
 
             if (success) {
                 CloseHandle(pinfo.hThread);

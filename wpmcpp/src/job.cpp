@@ -62,15 +62,16 @@ void Job::complete()
 {
     bool completed_;
     this->mutex.lock();
+    bool f = false;
     completed_ = this->completed;
     if (!completed_) {
         this->completed = true;
-        emit jobCompleted();
+        f = true;
     }
     this->mutex.unlock();
 
-    if (!completed_)
-        fireChange();
+    if (f)
+        emit jobCompleted();
 }
 
 void Job::completeWithProgress()

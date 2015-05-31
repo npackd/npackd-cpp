@@ -377,6 +377,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
         QString file_ = batchFileName;
         file_.replace('/', '\\');
         QString prg = WPMUtils::findCmdExe();
+        QString winDir = WPMUtils::getWindowsDir();
 
         QString args = "\"" + prg + "\" /U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
 
@@ -393,7 +394,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
                 (wchar_t*) args.utf16(),
                 0, 0, TRUE,
                 CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, 0,
-                0, &startupInfo, &pinfo);
+                (wchar_t*) winDir.utf16(), &startupInfo, &pinfo);
 
         if (success) {
             CloseHandle(pinfo.hThread);
