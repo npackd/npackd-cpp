@@ -1541,7 +1541,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.cpp" line="1317"/>
         <source>Reloading repositories and detecting installed software</source>
-        <translation type="unfinished"></translation>
+        <translation>Lade die Repositories neu und ermittle die installierten Sofware</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1695"/>
@@ -1561,7 +1561,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.cpp" line="1770"/>
         <source>Scanning the hard drives</source>
-        <translation type="unfinished"></translation>
+        <translation>Durchsuche die Festplatten</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1840"/>
