@@ -108,6 +108,8 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
                 HTTP_ADDREQ_FLAG_ADD));
     }
 
+    DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
+
     // qDebug() << "download.5";
     while (job->shouldProceed()) {
         // qDebug() << "download.5.1";
@@ -122,6 +124,19 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
                 break;
             }
         }
+
+        // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
+        if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
+                HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
+            QString errMsg;
+            WPMUtils::formatMessage(GetLastError(), &errMsg);
+            job->setErrorMessage(errMsg);
+            break;
+        }
+
+        // 2XX
+        if (dwStatus / 100 == 2)
+            break;
 
         if (parentWindow) {
             void* p;
@@ -146,16 +161,6 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
                 break;
             }
         } else {
-            // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
-            DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
-            if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
-                    HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
-                QString errMsg;
-                WPMUtils::formatMessage(GetLastError(), &errMsg);
-                job->setErrorMessage(errMsg);
-                break;
-            }
-
             QString username, password;
             if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
                 WPMUtils::outputTextConsole("\n" + QObject::tr("The HTTP proxy requires authentication.") + "\n");
@@ -209,8 +214,6 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
                     job->setErrorMessage(errMsg);
                     goto out;
                 }
-            } else if (dwStatus == HTTP_STATUS_OK) {
-                break;
             } else {
                 job->setErrorMessage(QString(
                         QObject::tr("Cannot handle HTTP status code %1")).
@@ -238,6 +241,22 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
     };
 
 out:
+    if (job->shouldProceed()) {
+        // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
+        if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
+                HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
+            QString errMsg;
+            WPMUtils::formatMessage(GetLastError(), &errMsg);
+            job->setErrorMessage(errMsg);
+        } else {
+            // 2XX
+            if (dwStatus / 100 != 2) {
+                job->setErrorMessage(QString(
+                        QObject::tr("HTTP status code %1")).arg(dwStatus));
+            }
+        }
+    }
+
     if (job->shouldProceed()) {
         job->setProgress(0.03);
         job->setTitle(initialTitle + " / " + QObject::tr("Downloading"));

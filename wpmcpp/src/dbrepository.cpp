@@ -1241,9 +1241,6 @@ void DBRepository::load(Job* job, bool useCache)
         }
 
         for (int i = 0; i < urls.count(); i++) {
-            if (!job->shouldProceed())
-                break;
-
             files[i].waitForFinished();
 
             job->setProgress((i + 1.0) / urls.count() * 0.5);
@@ -1302,8 +1299,8 @@ void DBRepository::loadOne(Job* job, QFile* f) {
                 Job* sub = job->newSubJob(0.1, QObject::tr("Extracting"));
                 WPMUtils::unzip(sub, f->fileName(), dir->path() + "\\");
                 if (!sub->getErrorMessage().isEmpty()) {
-                    job->setErrorMessage(QString(
-                            QObject::tr("Unzipping the repository failed: %1")).
+                    job->setErrorMessage(
+                            QObject::tr("Unzipping the repository %1 failed: %2").
                             arg(f->fileName()).
                             arg(sub->getErrorMessage()));
                 } else {

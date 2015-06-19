@@ -92,20 +92,15 @@ bool Job::isCancelled() const
 
 void Job::cancel()
 {
-    bool cancelRequested_;
-    Job* parentJob_;
     this->mutex.lock();
-    cancelRequested_ = this->cancelRequested;
-    parentJob_ = parentJob;
-    if (!cancelRequested_) {
+    bool changed = false;
+    if (!this->cancelRequested && this->errorMessage.isEmpty()) {
         this->cancelRequested = true;
+        changed = true;
     }
     this->mutex.unlock();
 
-    if (!cancelRequested_) {
-        if (parentJob_)
-            parentJob_->cancel();
-
+    if (changed) {
         fireChange();
 
         this->mutex.lock();
@@ -320,16 +315,24 @@ bool Job::shouldProceed() const
 void Job::setErrorMessage(const QString &errorMessage)
 {
     this->mutex.lock();
-    this->errorMessage = errorMessage;
-    if (!this->errorMessage.isEmpty() && parentJob &&
-            updateParentErrorMessage) {
-        QString msg = title + ": " + errorMessage;
-        if (parentJob->getErrorMessage().isEmpty())
+    bool changed = false;
+    if (this->errorMessage.isEmpty() && this->errorMessage != errorMessage) {
+        this->errorMessage = errorMessage;
+        if (parentJob && updateParentErrorMessage) {
+            QString msg = title + ": " + errorMessage;
             parentJob->setErrorMessage(msg);
-        else
-            parentJob->setErrorMessage(parentJob->getErrorMessage() + "; " +
-                    msg);
+        }
+        changed = true;
     }
     this->mutex.unlock();
-    fireChange();
+
+    if (changed) {
+        fireChange();
+
+        this->mutex.lock();
+        for (int i = 0; i < childJobs.count(); i++) {
+            childJobs.at(i)->cancel();
+        }
+        this->mutex.unlock();
+    }
 }
