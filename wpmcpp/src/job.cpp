@@ -58,8 +58,30 @@ time_t Job::getStarted()
     return started_;
 }
 
+void Job::waitFor()
+{
+    waitForChildren();
+    while (!isCompleted()) {
+        Sleep(100);
+    }
+}
+
+void Job::waitForChildren()
+{
+    this->mutex.lock();
+    for (int i = 0; i < this->childJobs.count(); i++) {
+        Job* ch = this->childJobs.at(i);
+        if (!ch->isCompleted()) {
+            ch->waitFor();
+        }
+    }
+    this->mutex.unlock();
+}
+
 void Job::complete()
 {
+    waitForChildren();
+
     bool completed_;
     this->mutex.lock();
     bool f = false;

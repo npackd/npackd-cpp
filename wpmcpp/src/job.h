@@ -252,6 +252,16 @@ public:
      * @return start time for this job
      */
     time_t getStarted();
+
+    /**
+     * @brief waitFor waits till this job is completed
+     */
+    void waitFor();
+
+    /**
+     * @brief waitFor waits till all children are completed
+     */
+    void waitForChildren();
 signals:
     /**
      * This signal will be fired each time something in this object
