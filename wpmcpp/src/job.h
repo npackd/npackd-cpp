@@ -114,6 +114,8 @@ public:
      * This must be called in order to complete the job regardless of
      * setProgress, errors or cancellation state.
      *
+     * This method does not wait to child jobs.
+     *
      * @threadsafe
      */
     void complete();
@@ -254,7 +256,7 @@ public:
     time_t getStarted();
 
     /**
-     * @brief waitFor waits till this job is completed
+     * @brief waitFor waits till this job and all its children are completed
      */
     void waitFor();
 

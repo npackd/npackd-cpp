@@ -16,10 +16,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="http://code.google.com/p/windows-package-manager/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{26BB8DB3-6112-4DEE-9CF9-1B03EF523C30} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{F57F67B7-B446-4FCD-90A8-DD21B412B4EF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="NpackdCL" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.20.3" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.20.4" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{B57EADCE-24E8-4D80-8611-25F58745FA25}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -32,11 +32,11 @@
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="LICENSE.txt" ComponentId="{40B8E795-7B2F-492D-B4FE-3E4645465FC4}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="ProductInformation" ComponentId="{C29374FE-D1B2-4001-A3EA-32C4C469F0AC}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="exchndl.dll" ComponentId="{80D2FF74-A184-4ADC-A881-D5BD09BF76FD}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
-    <ROW Component="ncl.exe" ComponentId="{29D1A709-E814-4AD0-A616-883EFC35B154}" Directory_="APPDIR" Attributes="0" KeyPath="ncl.exe"/>
-    <ROW Component="npackdcl.exe" ComponentId="{B578C3CF-3BDF-4A0E-B0EF-0A5CB0CBD336}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
+    <ROW Component="LICENSE.txt" ComponentId="{9B3CAAD0-9FA5-4A2E-94E2-8026C1157FC2}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
+    <ROW Component="ProductInformation" ComponentId="{07E1ADD7-9C36-46C5-9A6A-0FF23226D2DE}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="exchndl.dll" ComponentId="{5FC7261D-AA57-4374-AB15-4EDCD6F83511}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
+    <ROW Component="ncl.exe" ComponentId="{A777339C-4D48-4161-95FE-2A41A24F81FE}" Directory_="APPDIR" Attributes="0" KeyPath="ncl.exe"/>
+    <ROW Component="npackdcl.exe" ComponentId="{0176D4B7-AFBE-44D3-A702-E0E56F651F31}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation exchndl.dll ncl.exe npackdcl.exe"/>

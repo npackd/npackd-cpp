@@ -80,7 +80,7 @@ void Job::waitForChildren()
 
 void Job::complete()
 {
-    waitForChildren();
+    // waitForChildren();
 
     bool completed_;
     this->mutex.lock();
