@@ -1271,6 +1271,13 @@ void PackageVersion::install(Job* job, const QString& where)
         installationScripts.release();
 
     if (job->shouldProceed()) {
+        QString err = InstalledPackages::getDefault()->setPackageVersionPath(
+                this->package, this->version, where);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
         QString err = DBRepository::getDefault()->updateStatus(this->package);
         if (!err.isEmpty())
             job->setErrorMessage(err);
