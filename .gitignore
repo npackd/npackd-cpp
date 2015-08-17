@@ -14,3 +14,5 @@ cov-analysis/
 vimorgrep/build/
 *.back.aip
 **/*-cache/
+nih/*
+hierarchy.zip
