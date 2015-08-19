@@ -204,7 +204,7 @@ void Job::fireChange(Job* s)
 void Job::setProgress(double progress)
 {
     this->mutex.lock();
-    if (progress > 1) {
+    if (progress > 1.0001) {
         qDebug() << "Job: progress =" << progress << "in" << this->title;
     }
     if (progress < this->progress) {

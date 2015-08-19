@@ -577,14 +577,13 @@ void PackageVersion::uninstall(Job* job)
     if (job->getErrorMessage().isEmpty()) {
         if (d.exists()) {
             Job* rjob = job->newSubJob(0.54, QObject::tr("Deleting files"));
+
+            // the errors occured while deleting the directory are ignored
             removeDirectory(rjob, d.absolutePath());
-            if (!rjob->getErrorMessage().isEmpty())
-                job->setErrorMessage(rjob->getErrorMessage());
-            else {
-                QString err = setPath("");
-                if (!err.isEmpty())
-                    job->setErrorMessage(err);
-            }
+
+            QString err = setPath("");
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
         }
     }
 

@@ -111,6 +111,8 @@ FORMS += mainwindow.ui \
     packageframe.ui \
     mainframe.ui
 TRANSLATIONS = wpmcpp_es.ts wpmcpp_ru.ts wpmcpp_fr.ts wpmcpp_de.ts
+
+# for the Windows restart manager add -lrstrmgr
 LIBS += -lquazip \
     -lz \
     -lole32 \
