@@ -23,6 +23,8 @@ private:
     CommandLine cl;
     CLProgress clp;
 
+    bool debug;
+
     /**
      * @brief defines the NPACKD_CL variable and adds the NpackdCL package to
      *     the local repository

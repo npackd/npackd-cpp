@@ -52,10 +52,12 @@ private:
      * @param path .bat file
      * @param outputFile the output will be saved here
      * @param env additional environemnt variables
+     * @param printScriptOutput true = redirect the script output to the default
+     *     output stream
      */
     static void executeBatchFile(Job* job, const QString& where,
             const QString& path, const QString& outputFile,
-            const QStringList& env);
+            const QStringList& env, bool printScriptOutput);
 
     static PackageVersionFile* createPackageVersionFile(QDomElement* e,
             QString* err);
@@ -72,10 +74,13 @@ private:
      *     relative to "where"
      * @param outputFile output file
      * @param env additional environment variables
+     * @param printScriptOutput true = redirect the script output to the default
+     *     output stream
      */
     void executeFile2(Job *job, const QString &where, const QString &path,
             const QString &outputFile,
-            const QStringList &env);
+            const QStringList &env,
+            bool printScriptOutput);
 
     void deleteShortcuts(const QString& dir,
             Job* job, bool menu, bool desktop, bool quickLaunch);
@@ -116,11 +121,14 @@ public:
      * @param env additional environemnt variables
      * @param write writeUTF16LEBOM write UTF-16 LE BOM mark at the beginning of
      *     the output file?
+     * @param printScriptOutput true = redirect the output to the default output
+     *     stream
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             const QString& outputFile,
-            const QStringList& env, bool writeUTF16LEBOM=true);
+            const QStringList& env, bool writeUTF16LEBOM=true,
+            bool printScriptOutput=false);
 
     /**
      * @brief string ID for the specified package version
@@ -364,15 +372,19 @@ public:
      *
      * @param job job for this method
      * @param where a non-existing directory
+     * @param printScriptOutput true = redirect the script output to the default
+     *     output stream
      */
-    void install(Job* job, const QString& where);
+    void install(Job* job, const QString& where, bool printScriptOutput);
 
     /**
      * Uninstalls this package version.
      *
      * @param job job for this method
+     * @param printScriptOutput true = redirect the script output to the default
+     *     output stream
      */
-    void uninstall(Job* job);
+    void uninstall(Job* job, bool printScriptOutput);
 
     /**
      * @return status like "locked, installed"
@@ -434,8 +446,10 @@ public:
      * @param [ownership:callser] job
      * @param programCloseType how to close running programs. Multiple flags
      *     may be combined here using OR.
+     * @param printScriptOutput true = redirect the script output to the default
+     *     output stream
      */
-    void stop(Job *job, int programCloseType);
+    void stop(Job *job, int programCloseType, bool printScriptOutput);
 };
 
 Q_DECLARE_METATYPE(PackageVersion);

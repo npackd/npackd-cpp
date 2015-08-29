@@ -105,7 +105,7 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
     */
 
     CoInitialize(NULL);
-    process(job, install_, programCloseType);
+    process(job, install_, programCloseType, false);
     CoUninitialize();
 
     qDeleteAll(install_);
@@ -117,7 +117,8 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
 }
 
 void AbstractRepository::process(Job *job,
-        const QList<InstallOperation *> &install_, DWORD programCloseType)
+        const QList<InstallOperation *> &install_, DWORD programCloseType,
+        bool printScriptOutput)
 {
     QList<InstallOperation *> install = install_;
 
@@ -176,7 +177,7 @@ void AbstractRepository::process(Job *job,
                 Job* sub = job->newSubJob(0.1 / n,
                         QObject::tr("Stopping the package %1 of %2").
                         arg(i + 1).arg(n));
-                pv->stop(sub, programCloseType);
+                pv->stop(sub, programCloseType, printScriptOutput);
                 if (!sub->getErrorMessage().isEmpty()) {
                     job->setErrorMessage(sub->getErrorMessage());
                     break;
@@ -202,9 +203,10 @@ void AbstractRepository::process(Job *job,
 
             Job* sub = job->newSubJob(0.9 / n, txt, true, true);
             if (op->install)
-                pv->install(sub, pv->getPreferredInstallationDirectory());
+                pv->install(sub, pv->getPreferredInstallationDirectory(),
+                        printScriptOutput);
             else
-                pv->uninstall(sub);
+                pv->uninstall(sub, printScriptOutput);
 
             if (!job->getErrorMessage().isEmpty())
                 break;

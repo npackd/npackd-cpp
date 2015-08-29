@@ -90,7 +90,9 @@ int App::process()
     }
     // cl.dump();
 
-    if (cl.isPresent("debug")) {
+    this->debug = cl.isPresent("debug");
+
+    if (debug) {
         clp.setUpdateRate(0);
     }
 
@@ -1036,7 +1038,7 @@ void App::processInstallOperations(Job *job,
 
         job->complete();
     } else {
-        rep->process(job, ops, programCloseType);
+        rep->process(job, ops, programCloseType, debug);
     }
 }
 

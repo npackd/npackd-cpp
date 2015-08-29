@@ -462,7 +462,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
     job->complete();
 }
 
-void PackageVersion::uninstall(Job* job)
+void PackageVersion::uninstall(Job* job, bool printScriptOutput)
 {
     if (!installed()) {
         job->setProgress(1);
@@ -556,7 +556,7 @@ void PackageVersion::uninstall(Job* job)
 
             this->executeFile2(sub, d.absolutePath(), uninstallationScript,
                     ".Npackd\\Uninstall.log",
-                    env);
+                    env, printScriptOutput);
 
             if (!sub->getErrorMessage().isEmpty())
                 job->setErrorMessage(sub->getErrorMessage());
@@ -983,7 +983,8 @@ QString PackageVersion::getPreferredInstallationDirectory()
                 this->version.getVersionString(), "");
 }
 
-void PackageVersion::install(Job* job, const QString& where)
+void PackageVersion::install(Job* job, const QString& where,
+        bool printScriptOutput)
 {
     if (installed()) {
         job->setProgress(1);
@@ -1236,7 +1237,7 @@ void PackageVersion::install(Job* job, const QString& where)
             addDependencyVars(&env);
 
             this->executeFile2(exec, d.absolutePath(), installationScript,
-                    ".Npackd\\Install.log", env);
+                    ".Npackd\\Install.log", env, printScriptOutput);
             if (!exec->getErrorMessage().isEmpty())
                 job->setErrorMessage(exec->getErrorMessage());
             else {
@@ -1409,12 +1410,12 @@ QString PackageVersion::getStatus() const
 void PackageVersion::executeFile2(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile,
-        const QStringList& env)
+        const QStringList& env, bool printScriptOutput)
 {
-    executeBatchFile(job, where, path, outputFile, env);
+    executeBatchFile(job, where, path, outputFile, env, printScriptOutput);
 
     if (!job->getErrorMessage().isEmpty()) {
-        QString out = where + "\\" + path;
+        QString out = where + "\\" + outputFile;
 
         if (QFile::exists(out)) {
             QTemporaryFile of;
@@ -1445,7 +1446,8 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
 void PackageVersion::executeBatchFile(
         Job* job, const QString& where,
         const QString& path,
-        const QString& outputFile, const QStringList& env)
+        const QString& outputFile, const QStringList& env,
+        bool printScriptOutput)
 {
     QDir d(where);
 
@@ -1455,14 +1457,14 @@ void PackageVersion::executeBatchFile(
 
     executeFile(job, d.absolutePath(), exe,
             "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
-            d.absolutePath() + "\\" + outputFile, env);
+            d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput);
 }
 
 void PackageVersion::executeFile(
         Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         const QString& outputFile, const QStringList& env,
-        bool writeUTF16LEBOM)
+        bool writeUTF16LEBOM, bool printScriptOutput)
 {
     QString initialTitle = job->getTitle();
 
@@ -1591,6 +1593,29 @@ void PackageVersion::executeFile(
     }
 
     if (job->shouldProceed()) {
+        HANDLE hStdout;
+        bool consoleOutput;
+        if (printScriptOutput) {
+            hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+            // we do not check GetLastError here as it sometimes returns
+            // 2=The system cannot find the file specified.
+            // GetFileType returns 0 if an error occures so that the == check below
+            // is sufficient
+            DWORD ft = GetFileType(hStdout);
+            consoleOutput = (ft & ~(FILE_TYPE_REMOTE)) ==
+                    FILE_TYPE_CHAR;
+
+            DWORD consoleMode;
+            if (consoleOutput) {
+                if (!GetConsoleMode(hStdout, &consoleMode))
+                    consoleOutput = false;
+            }
+        } else {
+            hStdout = INVALID_HANDLE_VALUE;
+            consoleOutput = false;
+        }
+
         DWORD ec = 0;
         const int BUFSIZE = 1024;
         char* chBuf = new char[BUFSIZE];
@@ -1604,6 +1629,14 @@ void PackageVersion::executeFile(
                     &dwRead, NULL);
             if (!bSuccess || dwRead == 0)
                 break;
+
+            if (hStdout != INVALID_HANDLE_VALUE) {
+                DWORD dwWritten;
+                if (consoleOutput)
+                    WriteConsoleW(hStdout, chBuf, dwRead / 2, &dwWritten, 0);
+                else
+                    WriteFile(hStdout, chBuf, dwRead, &dwWritten, 0);
+            }
 
             if (f.write(chBuf, dwRead) == -1) {
                 job->setErrorMessage(f.errorString());
@@ -2139,7 +2172,7 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
     return r;
 }
 
-void PackageVersion::stop(Job* job, int programCloseType)
+void PackageVersion::stop(Job* job, int programCloseType, bool printScriptOutput)
 {
     bool me = false;
     QString myPackage = InstalledPackages::getDefault()->packageName;
@@ -2167,7 +2200,7 @@ void PackageVersion::stop(Job* job, int programCloseType)
         addDependencyVars(&env);
 
         this->executeFile2(exec, d.absolutePath(), ".Npackd\\Stop.bat",
-                ".Npackd\\Stop.log", env);
+                ".Npackd\\Stop.log", env, printScriptOutput);
         if (!exec->getErrorMessage().isEmpty()) {
             job->setErrorMessage(exec->getErrorMessage());
         } else {

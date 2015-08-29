@@ -131,9 +131,11 @@ public:
      * @param job job
      * @param install operations that should be performed
      * @param programCloseType how to close running applications
+     * @param printScriptOutput true = redirect the script output to the
+     *     standard output
      */
     void process(Job* job, const QList<InstallOperation*> &install,
-            DWORD programCloseType);
+            DWORD programCloseType, bool printScriptOutput);
 
     /**
      * Finds all installed package versions.
