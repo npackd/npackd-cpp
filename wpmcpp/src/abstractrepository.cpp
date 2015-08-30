@@ -190,6 +190,30 @@ void AbstractRepository::process(Job *job,
 
     // 90% for removing/installing the packages
     if (job->shouldProceed()) {
+        QStringList wheres;
+
+        // downloading packages
+        for (int i = 0; i < install.count(); i++) {
+            InstallOperation* op = install.at(i);
+            PackageVersion* pv = pvs.at(i);
+            if (op->install) {
+                QString txt = QObject::tr("Downloading %1").arg(
+                        pv->toString());
+
+                Job* sub = job->newSubJob(0.7 / n, txt, true, true);
+                QString where = pv->getPreferredInstallationDirectory();
+                wheres.append(where);
+                pv->download_(sub, where);
+            } else {
+                wheres.append("");
+                job->setProgress(job->getProgress() + 0.7 / n);
+            }
+
+            if (!job->getErrorMessage().isEmpty())
+                break;
+        }
+
+        // installing/removing packages
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
@@ -201,11 +225,12 @@ void AbstractRepository::process(Job *job,
                 txt = QString(QObject::tr("Uninstalling %1")).arg(
                         pv->toString());
 
-            Job* sub = job->newSubJob(0.9 / n, txt, true, true);
-            if (op->install)
-                pv->install(sub, pv->getPreferredInstallationDirectory(),
+            Job* sub = job->newSubJob(0.2 / n, txt, true, true);
+            if (op->install) {
+                QString where = wheres.at(i);
+                pv->install(sub, where,
                         printScriptOutput);
-            else
+            } else
                 pv->uninstall(sub, printScriptOutput);
 
             if (!job->getErrorMessage().isEmpty())

@@ -983,15 +983,8 @@ QString PackageVersion::getPreferredInstallationDirectory()
                 this->version.getVersionString(), "");
 }
 
-void PackageVersion::install(Job* job, const QString& where,
-        bool printScriptOutput)
+void PackageVersion::download_(Job* job, const QString& where)
 {
-    if (installed()) {
-        job->setProgress(1);
-        job->complete();
-        return;
-    }
-
     if (!this->download.isValid()) {
         job->setErrorMessage(QObject::tr("No download URL"));
         job->complete();
@@ -1063,7 +1056,7 @@ void PackageVersion::install(Job* job, const QString& where,
             job->setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
                     arg(f->fileName()));
         } else {
-            Job* djob = job->newSubJob(0.58,
+            Job* djob = job->newSubJob(0.8,
                     QObject::tr("Downloading & computing hash sum"));
             Downloader::download(djob, this->download, f,
                     this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
@@ -1082,7 +1075,7 @@ void PackageVersion::install(Job* job, const QString& where,
                 job->setErrorMessage(QObject::tr("Cannot open the file: %0").
                         arg(f->fileName()));
             } else {
-                double rest = 0.63 - job->getProgress();
+                double rest = 0.9 - job->getProgress();
                 Job* djob = job->newSubJob(rest,
                         QObject::tr("Downloading & computing hash sum (2nd try)"));
                 Downloader::download(djob, this->download, f,
@@ -1094,7 +1087,7 @@ void PackageVersion::install(Job* job, const QString& where,
                 f->close();
             }
         } else {
-            job->setProgress(0.63);
+            job->setProgress(0.9);
         }
     }
 
@@ -1105,15 +1098,15 @@ void PackageVersion::install(Job* job, const QString& where,
                         QObject::tr("Hash sum %1 found, but %2 was expected. The file has changed.")).arg(dsha1).
                         arg(this->sha1));
             } else {
-                job->setProgress(0.64);
+                job->setProgress(0.91);
             }
         } else {
-            job->setProgress(0.64);
+            job->setProgress(0.91);
         }
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.05,
+        Job* sub = job->newSubJob(0.01,
                 QObject::tr("Checking for viruses"));
         bool safe = isFileSafe(f->fileName(), this->download.toString());
         if (!safe) {
@@ -1148,7 +1141,7 @@ void PackageVersion::install(Job* job, const QString& where,
                         arg(d.absolutePath()).
                         arg(djob->getErrorMessage()));
             else if (!job->isCancelled())
-                job->setProgress(0.75);
+                job->setProgress(0.98);
         } else {
             job->setTitle(initialTitle + " / " +
                     QObject::tr("Renaming the downloaded file"));
@@ -1165,7 +1158,7 @@ void PackageVersion::install(Job* job, const QString& where,
                 job->setErrorMessage(QString(QObject::tr("Cannot rename %0 to %1")).
                         arg(f->fileName()).arg(t));
             } else {
-                job->setProgress(0.75);
+                job->setProgress(0.98);
             }
         }
     }
@@ -1176,9 +1169,35 @@ void PackageVersion::install(Job* job, const QString& where,
         if (!errMsg.isEmpty()) {
             job->setErrorMessage(errMsg);
         } else {
-            job->setProgress(0.85);
+            job->setProgress(0.99);
         }
     }
+
+    if (f && f->exists())
+        f->remove();
+
+    delete f;
+
+    if (job->shouldProceed()) {
+        job->setProgress(1);
+    }
+
+    job->complete();
+}
+
+void PackageVersion::install(Job* job, const QString& where,
+        bool printScriptOutput)
+{
+    if (installed()) {
+        job->setProgress(1);
+        job->complete();
+        return;
+    }
+
+    QString initialTitle = job->getTitle();
+
+    // qDebug() << "install.2";
+    QDir d(where);
 
     QString installationScript;
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
@@ -1205,7 +1224,7 @@ void PackageVersion::install(Job* job, const QString& where,
                 installationScriptAcquired = installationScripts.
                         tryAcquire(1, 10000);
                 if (installationScriptAcquired) {
-                    job->setProgress(0.86);
+                    job->setProgress(0.01);
                     break;
                 }
 
@@ -1215,21 +1234,24 @@ void PackageVersion::install(Job* job, const QString& where,
                         arg(seconds / 60));
             }
         } else {
-            job->setProgress(0.86);
+            job->setProgress(0.01);
         }
     }
     job->setTitle(initialTitle);
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!installationScript.isEmpty()) {
-            Job* exec = job->newSubJob(0.09,
+            Job* exec = job->newSubJob(0.9,
                     QObject::tr("Running the installation script (this may take some time)"));
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
 
             QStringList env;
             env.append("NPACKD_PACKAGE_BINARY");
-            env.append(binary);
+
+            // TODO:
+            env.append(""/*binary*/);
+
             QString err = addBasicVars(&env);
             if (!err.isEmpty())
                 job->setErrorMessage(err);
@@ -1263,7 +1285,7 @@ void PackageVersion::install(Job* job, const QString& where,
             AbstractRepository::getDefault_()->updateNpackdCLEnvVar();
         }
 
-        job->setProgress(0.95);
+        job->setProgress(0.91);
     }
     job->setTitle(initialTitle);
 
@@ -1300,11 +1322,6 @@ void PackageVersion::install(Job* job, const QString& where,
         Job* rjob = job->newSubJob(0.01, QObject::tr("Deleting files"));
         removeDirectory(rjob, d.absolutePath());
     }
-
-    if (f && f->exists())
-        f->remove();
-
-    delete f;
 
     if (job->shouldProceed()) {
         job->setProgress(1);

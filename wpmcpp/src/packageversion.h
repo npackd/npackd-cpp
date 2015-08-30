@@ -368,14 +368,24 @@ public:
     QString getPreferredInstallationDirectory();
 
     /**
-     * Installs this package (without dependencies).
+     * Installs this package without dependencies. The directory should already
+     * exist and be prepared by this->download(...)
      *
      * @param job job for this method
-     * @param where a non-existing directory
+     * @param where target directory
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
      */
     void install(Job* job, const QString& where, bool printScriptOutput);
+
+    /**
+     * Downloads the package binary, checks its hash sum, checks the binary for
+     * viruses, unpacks it in case of a .zip file, stores the text files.
+     *
+     * @param job job for this method
+     * @param where a non-existing directory for the package
+     */
+    void download_(Job* job, const QString& where);
 
     /**
      * Uninstalls this package version.
