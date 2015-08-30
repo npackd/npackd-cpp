@@ -972,6 +972,12 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
     return errMsg->isEmpty();
 }
 
+QString PackageVersion::getIdealInstallationDirectory()
+{
+    return WPMUtils::getInstallationDirectory() + "\\" +
+            WPMUtils::makeValidFilename(this->getPackageTitle(), '_');
+}
+
 QString PackageVersion::getPreferredInstallationDirectory()
 {
     QString name = WPMUtils::getInstallationDirectory() + "\\" +

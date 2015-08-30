@@ -228,6 +228,13 @@ void AbstractRepository::process(Job *job,
             Job* sub = job->newSubJob(0.2 / n, txt, true, true);
             if (op->install) {
                 QString where = wheres.at(i);
+                QString ideal = pv->getIdealInstallationDirectory();
+                QDir d;
+                if (!d.exists(ideal) &&
+                        !WPMUtils::pathEquals(ideal, where)) {
+                    if (d.rename(where, ideal))
+                        where = ideal;
+                }
                 pv->install(sub, where,
                         printScriptOutput);
             } else

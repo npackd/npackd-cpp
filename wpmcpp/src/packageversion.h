@@ -368,6 +368,12 @@ public:
     QString getPreferredInstallationDirectory();
 
     /**
+     * @return a maybe existing directory where this package would normally
+     *     installed (e.g. C:\Program Files\My_Prog)
+     */
+    QString getIdealInstallationDirectory();
+
+    /**
      * Installs this package without dependencies. The directory should already
      * exist and be prepared by this->download(...)
      *
