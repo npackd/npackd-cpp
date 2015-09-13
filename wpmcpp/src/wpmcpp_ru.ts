@@ -1782,29 +1782,29 @@ p, li { white-space: pre-wrap; }
         <translation>Останавливаю пакет %1 из %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="224"/>
+        <location filename="abstractrepository.cpp" line="222"/>
         <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Установка %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="227"/>
+        <location filename="abstractrepository.cpp" line="225"/>
         <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Удаление %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="302"/>
+        <location filename="abstractrepository.cpp" line="300"/>
         <source>No installable version found for the package %1</source>
         <translation>Ниодной версии для установки не обнаружено для пакета %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="309"/>
+        <location filename="abstractrepository.cpp" line="307"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>Невозможно найти самую новую инсталлированную версию для %1: %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="315"/>
+        <location filename="abstractrepository.cpp" line="313"/>
         <source>No installed version found for the package %1</source>
         <translation>Ниодной установленной версии не обнаружено для пакета %1</translation>
     </message>
@@ -1981,7 +1981,7 @@ p, li { white-space: pre-wrap; }
         <translation>Очищаю таблицу ссылок</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="202"/>
+        <location filename="abstractrepository.cpp" line="200"/>
         <location filename="dbrepository.cpp" line="1235"/>
         <source>Downloading %1</source>
         <translation>Загружаю %1</translation>

@@ -831,29 +831,29 @@ p, li { white-space: pre-wrap; }
         <translation>Stoppe das Paket %1 von %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="224"/>
+        <location filename="abstractrepository.cpp" line="222"/>
         <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Installiere %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="227"/>
+        <location filename="abstractrepository.cpp" line="225"/>
         <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Deinstalliere %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="302"/>
+        <location filename="abstractrepository.cpp" line="300"/>
         <source>No installable version found for the package %1</source>
         <translation>Keine installierbare Version des Pakets %1 gefunden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="309"/>
+        <location filename="abstractrepository.cpp" line="307"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>Kann neueste installierte Version von %1: %2 nicht finden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="315"/>
+        <location filename="abstractrepository.cpp" line="313"/>
         <source>No installed version found for the package %1</source>
         <translation>Keine installierte Version des Pakets %1 gefunden</translation>
     </message>
@@ -1030,7 +1030,7 @@ p, li { white-space: pre-wrap; }
         <translation>Leere die Tabelle mit den Links</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="202"/>
+        <location filename="abstractrepository.cpp" line="200"/>
         <location filename="dbrepository.cpp" line="1235"/>
         <source>Downloading %1</source>
         <translation>%1 herunterladen</translation>
