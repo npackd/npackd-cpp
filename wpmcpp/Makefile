@@ -121,7 +121,7 @@ prep: compile $(WHERE)/zip
 	copy LICENSE.txt $(WHERE)\zip
 	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
 	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip\npackdg.exe
-	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
+#	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
 ifeq (32,$(BITS))
 	copy "$(MINGWUTILS)\bin\exchndl.dll" $(WHERE)\zip
 endif
