@@ -203,8 +203,8 @@ public:
     QString getErrorMessage() const;
 
     /**
-     * Sets an error message for this job. The error message does *not*
-     * automatically propagate to the parent job.
+     * Sets an error message for this job. The error message only propagates
+     * to the parent job if updateParentErrorMessage is true.
      *
      * @param errorMessage new error message
      * @threadsafe

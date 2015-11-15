@@ -358,3 +358,4 @@ void Job::setErrorMessage(const QString &errorMessage)
         this->mutex.unlock();
     }
 }
+

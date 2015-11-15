@@ -554,12 +554,16 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput)
             }
             */
 
+            QString lastOutputLines;
             this->executeFile2(sub, d.absolutePath(), uninstallationScript,
                     ".Npackd\\Uninstall.log",
-                    env, printScriptOutput);
+                    env, printScriptOutput, &lastOutputLines);
 
             if (!sub->getErrorMessage().isEmpty())
-                job->setErrorMessage(sub->getErrorMessage());
+                job->setErrorMessage(sub->getErrorMessage() + "\r\n" +
+                        QObject::tr("The last lines of the output from the removal script:") +
+                        "\r\n...\r\n" +
+                        lastOutputLines);
 
             if (ush != INVALID_HANDLE_VALUE) {
                 CloseHandle(ush);
@@ -1264,10 +1268,15 @@ void PackageVersion::install(Job* job, const QString& where,
 
             addDependencyVars(&env);
 
+            QString lastOutputLines;
             this->executeFile2(exec, d.absolutePath(), installationScript,
-                    ".Npackd\\Install.log", env, printScriptOutput);
+                    ".Npackd\\Install.log", env, printScriptOutput,
+                    &lastOutputLines);
             if (!exec->getErrorMessage().isEmpty())
-                job->setErrorMessage(exec->getErrorMessage());
+                job->setErrorMessage(exec->getErrorMessage() + "\r\n" +
+                        QObject::tr("The last lines of the output from the installation script:") +
+                        "\r\n...\r\n" +
+                        lastOutputLines);
             else {
                 QString path = d.absolutePath();
                 path.replace('/', '\\');
@@ -1433,9 +1442,11 @@ QString PackageVersion::getStatus() const
 void PackageVersion::executeFile2(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile,
-        const QStringList& env, bool printScriptOutput)
+        const QStringList& env, bool printScriptOutput,
+        QString *lastOutputLines)
 {
-    executeBatchFile(job, where, path, outputFile, env, printScriptOutput);
+    executeBatchFile(job, where, path, outputFile, env, printScriptOutput,
+            lastOutputLines);
 
     if (!job->getErrorMessage().isEmpty()) {
         QString out = where + "\\" + outputFile;
@@ -1466,11 +1477,10 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
     }
 }
 
-void PackageVersion::executeBatchFile(
-        Job* job, const QString& where,
+void PackageVersion::executeBatchFile(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const QStringList& env,
-        bool printScriptOutput)
+        bool printScriptOutput, QString *lastOutputLines)
 {
     QDir d(where);
 
@@ -1480,14 +1490,15 @@ void PackageVersion::executeBatchFile(
 
     executeFile(job, d.absolutePath(), exe,
             "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
-            d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput);
+            d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput,
+            lastOutputLines);
 }
 
-void PackageVersion::executeFile(
-        Job* job, const QString& where,
+void PackageVersion::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         const QString& outputFile, const QStringList& env,
-        bool writeUTF16LEBOM, bool printScriptOutput)
+        bool writeUTF16LEBOM, bool printScriptOutput,
+        QString *lastOutputLines)
 {
     QString initialTitle = job->getTitle();
 
@@ -1639,6 +1650,8 @@ void PackageVersion::executeFile(
             consoleOutput = false;
         }
 
+        int64_t outputLen = 0;
+        QByteArray lastLines;
         DWORD ec = 0;
         const int BUFSIZE = 1024;
         char* chBuf = new char[BUFSIZE];
@@ -1652,6 +1665,19 @@ void PackageVersion::executeFile(
                     &dwRead, NULL);
             if (!bSuccess || dwRead == 0)
                 break;
+
+            outputLen += dwRead;
+
+            if (lastOutputLines) {
+                lastLines.append(chBuf, dwRead);
+
+                // 1024 bytes = 10 lines of UTF-16 text
+                if (lastLines.length() > 1024) {
+                    // always keep an even number of bytes
+                    lastLines.remove(0, lastLines.length() - 1024 -
+                            lastLines.length() % 2);
+                }
+            }
 
             if (hStdout != INVALID_HANDLE_VALUE) {
                 DWORD dwWritten;
@@ -1676,6 +1702,12 @@ void PackageVersion::executeFile(
                     arg(seconds / 60));
         }
         delete[] chBuf;
+
+        if (lastOutputLines) {
+            *lastOutputLines = QString::fromUtf16(
+                    (const ushort*) lastLines.data(),
+                    lastLines.length() / 2);
+        }
 
         // ignore possible errors here
         f.close();
@@ -2195,7 +2227,8 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
     return r;
 }
 
-void PackageVersion::stop(Job* job, int programCloseType, bool printScriptOutput)
+void PackageVersion::stop(Job* job, int programCloseType,
+        bool printScriptOutput)
 {
     bool me = false;
     QString myPackage = InstalledPackages::getDefault()->packageName;
@@ -2211,7 +2244,7 @@ void PackageVersion::stop(Job* job, int programCloseType, bool printScriptOutput
     if (me) {
         job->setProgress(0.5);
     } else if (QFile::exists(d.absolutePath() + "\\.Npackd\\Stop.bat")) {
-        Job* exec = job->newSubJob(0.5);
+        Job* exec = job->newSubJob(0.5, QObject::tr("Executing the stop script"));
         if (!d.exists(".Npackd"))
             d.mkdir(".Npackd");
 
@@ -2222,10 +2255,15 @@ void PackageVersion::stop(Job* job, int programCloseType, bool printScriptOutput
 
         addDependencyVars(&env);
 
+        QString lastOutputLines;
         this->executeFile2(exec, d.absolutePath(), ".Npackd\\Stop.bat",
-                ".Npackd\\Stop.log", env, printScriptOutput);
+                ".Npackd\\Stop.log", env, printScriptOutput,
+                &lastOutputLines);
         if (!exec->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(exec->getErrorMessage());
+            job->setErrorMessage(exec->getErrorMessage() + "\r\n" +
+                    QObject::tr("The last lines of the output from the package stop script:") +
+                    "\r\n...\r\n" +
+                    lastOutputLines);
         } else {
             QString path = d.absolutePath();
             path.replace('/', '\\');

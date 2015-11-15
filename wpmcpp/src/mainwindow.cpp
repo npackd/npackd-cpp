@@ -607,10 +607,11 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
 void MainWindow::monitoredJobCompleted()
 {
     Job* job = (Job*) sender();
-    if (!job->getErrorMessage().isEmpty())
+    if (!job->getErrorMessage().isEmpty()) {
         addErrorMessage(job->getErrorMessage(),
                 job->getTitle() + ": " + job->getErrorMessage(),
                 true, QMessageBox::Critical);
+    }
 
     VisibleJobs::getDefault()->unregisterJob(job);
     pt->removeJob(job);
@@ -1852,7 +1853,21 @@ void MainWindow::hardDriveScanThreadFinished()
 void MainWindow::addErrorMessage(const QString& msg, const QString& details,
         bool autoHide, QMessageBox::Icon icon)
 {
-    MessageFrame* label = new MessageFrame(this->centralWidget(), msg,
+    bool dots = false;
+    QString m = msg.trimmed();
+    if (m.length() > 200) {
+        m = m.left(200).trimmed();
+        dots = true;
+    }
+    QStringList sl = m.split("\n");
+    if (sl.count() > 2) {
+        m = sl.at(0) + "\n" + sl.at(1);
+        dots = true;
+    }
+    if (dots)
+        m += "...";
+
+    MessageFrame* label = new MessageFrame(this->centralWidget(), m,
             details, autoHide ? 30 : 0, icon);
     QVBoxLayout* layout = static_cast<QVBoxLayout*>(
             this->centralWidget()->layout());
