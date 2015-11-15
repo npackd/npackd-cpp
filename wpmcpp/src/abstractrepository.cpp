@@ -191,6 +191,7 @@ void AbstractRepository::process(Job *job,
     // 90% for removing/installing the packages
     if (job->shouldProceed()) {
         QStringList wheres;
+        QStringList binaries;
 
         // downloading packages
         for (int i = 0; i < install.count(); i++) {
@@ -203,9 +204,11 @@ void AbstractRepository::process(Job *job,
                 Job* sub = job->newSubJob(0.7 / n, txt, true, true);
                 QString where = pv->getPreferredInstallationDirectory();
                 wheres.append(where);
-                pv->download_(sub, where);
+                QString binary = pv->download_(sub, where);
+                binaries.append(binary);
             } else {
                 wheres.append("");
+                binaries.append("");
                 job->setProgress(job->getProgress() + 0.7 / n);
             }
 
@@ -228,6 +231,7 @@ void AbstractRepository::process(Job *job,
             Job* sub = job->newSubJob(0.2 / n, txt, true, true);
             if (op->install) {
                 QString where = wheres.at(i);
+                QString binary = binaries.at(i);
                 QString ideal = pv->getIdealInstallationDirectory();
                 QDir d;
                 if (!d.exists(ideal) &&
@@ -235,7 +239,7 @@ void AbstractRepository::process(Job *job,
                     if (d.rename(where, ideal))
                         where = ideal;
                 }
-                pv->install(sub, where,
+                pv->install(sub, where, binary,
                         printScriptOutput);
             } else
                 pv->uninstall(sub, printScriptOutput);

@@ -993,12 +993,12 @@ QString PackageVersion::getPreferredInstallationDirectory()
                 this->version.getVersionString(), "");
 }
 
-void PackageVersion::download_(Job* job, const QString& where)
+QString PackageVersion::download_(Job* job, const QString& where)
 {
     if (!this->download.isValid()) {
         job->setErrorMessage(QObject::tr("No download URL"));
         job->complete();
-        return;
+        return "";
     }
 
     QString initialTitle = job->getTitle();
@@ -1193,9 +1193,12 @@ void PackageVersion::download_(Job* job, const QString& where)
     }
 
     job->complete();
+
+    return binary;
 }
 
 void PackageVersion::install(Job* job, const QString& where,
+        const QString& binary,
         bool printScriptOutput)
 {
     if (installed()) {
@@ -1258,9 +1261,7 @@ void PackageVersion::install(Job* job, const QString& where,
 
             QStringList env;
             env.append("NPACKD_PACKAGE_BINARY");
-
-            // TODO:
-            env.append(""/*binary*/);
+            env.append(binary);
 
             QString err = addBasicVars(&env);
             if (!err.isEmpty())

@@ -831,29 +831,29 @@ p, li { white-space: pre-wrap; }
         <translation>Stoppe das Paket %1 von %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="222"/>
+        <location filename="abstractrepository.cpp" line="225"/>
         <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Installiere %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="225"/>
+        <location filename="abstractrepository.cpp" line="228"/>
         <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Deinstalliere %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="300"/>
+        <location filename="abstractrepository.cpp" line="304"/>
         <source>No installable version found for the package %1</source>
         <translation>Keine installierbare Version des Pakets %1 gefunden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="307"/>
+        <location filename="abstractrepository.cpp" line="311"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>Kann neueste installierte Version von %1: %2 nicht finden</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="313"/>
+        <location filename="abstractrepository.cpp" line="317"/>
         <source>No installed version found for the package %1</source>
         <translation>Keine installierte Version des Pakets %1 gefunden</translation>
     </message>
@@ -1030,7 +1030,7 @@ p, li { white-space: pre-wrap; }
         <translation>Leere die Tabelle mit den Links</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="200"/>
+        <location filename="abstractrepository.cpp" line="201"/>
         <location filename="dbrepository.cpp" line="1235"/>
         <source>Downloading %1</source>
         <translation>%1 herunterladen</translation>
@@ -1724,13 +1724,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="504"/>
-        <location filename="packageversion.cpp" line="1230"/>
+        <location filename="packageversion.cpp" line="1233"/>
         <source>Waiting while other (un)installation scripts are running</source>
         <translation>Warte, da andere (De-)Installationsskripte gerade laufen</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="517"/>
-        <location filename="packageversion.cpp" line="1243"/>
+        <location filename="packageversion.cpp" line="1246"/>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
         <translation>Warte, da andere (De-)Installationsskripte gerade laufen (%1 Minuten)</translation>
     </message>
@@ -1746,7 +1746,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="604"/>
-        <location filename="packageversion.cpp" line="1299"/>
+        <location filename="packageversion.cpp" line="1300"/>
         <source>Updating NPACKD_CL</source>
         <translation>Aktualisiere NPACKD_CL</translation>
     </message>
@@ -1766,28 +1766,28 @@ p, li { white-space: pre-wrap; }
         <translation>Die Antivirus-Überprüfung is fehlgeschlagen. Diese Datei ist nicht sicher.</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1277"/>
+        <location filename="packageversion.cpp" line="1278"/>
         <source>The last lines of the output from the installation script:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1469"/>
+        <location filename="packageversion.cpp" line="1470"/>
         <source>%1. Full output was saved in %2</source>
         <translation>%1. Gesamte Ausgabe wurde in %2 gespeichert</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2247"/>
+        <location filename="packageversion.cpp" line="2248"/>
         <source>Executing the stop script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2264"/>
+        <location filename="packageversion.cpp" line="2265"/>
         <source>The last lines of the output from the package stop script:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="583"/>
-        <location filename="packageversion.cpp" line="1337"/>
+        <location filename="packageversion.cpp" line="1338"/>
         <source>Deleting files</source>
         <translation>Lösche Dateien</translation>
     </message>
@@ -1927,12 +1927,12 @@ p, li { white-space: pre-wrap; }
         <translation>Kann %0 nicht in %1 umbenennen</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1255"/>
+        <location filename="packageversion.cpp" line="1258"/>
         <source>Running the installation script (this may take some time)</source>
         <translation>Installationskript ausführen (dies kann einige Zeit dauern)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1334"/>
+        <location filename="packageversion.cpp" line="1335"/>
         <source>Deleting start menu, desktop and quick launch shortcuts</source>
         <translation>Verknüpfungen aus Startmenü, Desktop und Schnellstartleiste löschen</translation>
     </message>
@@ -1967,86 +1967,86 @@ p, li { white-space: pre-wrap; }
         <translation>%L1 Dateien</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1398"/>
+        <location filename="packageversion.cpp" line="1399"/>
         <source>Could not create file %1</source>
         <translation>Kann Datei %1 nicht erstellen</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1403"/>
+        <location filename="packageversion.cpp" line="1404"/>
         <source>Could not create directory %1</source>
         <translation>Kann Verzeichnis %1 nicht erstellen</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1420"/>
+        <location filename="packageversion.cpp" line="1421"/>
         <source>installed</source>
         <translation>installiert</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1424"/>
+        <location filename="packageversion.cpp" line="1425"/>
         <source>updateable</source>
         <translation>aktualisierbar</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1426"/>
+        <location filename="packageversion.cpp" line="1427"/>
         <source>obsolete</source>
         <translation>veraltet</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1434"/>
+        <location filename="packageversion.cpp" line="1435"/>
         <source>locked</source>
         <translation>gesperrt</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1730"/>
+        <location filename="packageversion.cpp" line="1731"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Prozess %1 wurde mit dem Code %2 beendet</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1701"/>
+        <location filename="packageversion.cpp" line="1702"/>
         <source>%1 minutes</source>
         <translation>%1 Minuten</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1474"/>
+        <location filename="packageversion.cpp" line="1475"/>
         <source>%1. No output was generated</source>
         <translation>%1. Keine Ausgabe wurde erzeugt</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1799"/>
+        <location filename="packageversion.cpp" line="1800"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Leerer Tag &lt;path&gt; unterhalb von &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1806"/>
+        <location filename="packageversion.cpp" line="1807"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Falscher SHA1 in &lt;detect-file&gt;:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1848"/>
+        <location filename="packageversion.cpp" line="1849"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1863"/>
+        <location filename="packageversion.cpp" line="1864"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Keine gültige Download-Adresse für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1875"/>
+        <location filename="packageversion.cpp" line="1876"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Keine gültige Version für %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1887"/>
+        <location filename="packageversion.cpp" line="1888"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Ungültige SHA1 für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1917"/>
+        <location filename="packageversion.cpp" line="1918"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation>Ungültige SHA-1 für %1: </translation>
     </message>
@@ -2059,56 +2059,56 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Unbekannter Typ der Hash-Summe %1 für %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1930"/>
+        <location filename="packageversion.cpp" line="1931"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation>Ungültige SHA-256 für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1946"/>
+        <location filename="packageversion.cpp" line="1947"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Falscher Wert für das Attribut &apos;type&apos; für %1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1961"/>
+        <location filename="packageversion.cpp" line="1962"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;path&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1968"/>
+        <location filename="packageversion.cpp" line="1969"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Mehr als ein &lt;important-file&gt; mit demselben &apos;path&apos;-Attribut %1 für %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1978"/>
+        <location filename="packageversion.cpp" line="1979"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Leerer &apos;title&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2007"/>
+        <location filename="packageversion.cpp" line="2008"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2025"/>
+        <location filename="packageversion.cpp" line="2026"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>Ungültige Datei &lt;detect-file&gt; für %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2040"/>
+        <location filename="packageversion.cpp" line="2041"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2069"/>
+        <location filename="packageversion.cpp" line="2070"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>Doppeltes &lt;dependency&gt; für %1 in %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2087"/>
+        <location filename="packageversion.cpp" line="2088"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Falsche MSI-GUID für %1: %2</translation>
     </message>

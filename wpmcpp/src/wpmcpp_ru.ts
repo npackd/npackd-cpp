@@ -1782,29 +1782,29 @@ p, li { white-space: pre-wrap; }
         <translation>Останавливаю пакет %1 из %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="222"/>
+        <location filename="abstractrepository.cpp" line="225"/>
         <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Установка %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="225"/>
+        <location filename="abstractrepository.cpp" line="228"/>
         <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Удаление %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="300"/>
+        <location filename="abstractrepository.cpp" line="304"/>
         <source>No installable version found for the package %1</source>
         <translation>Ниодной версии для установки не обнаружено для пакета %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="307"/>
+        <location filename="abstractrepository.cpp" line="311"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>Невозможно найти самую новую инсталлированную версию для %1: %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="313"/>
+        <location filename="abstractrepository.cpp" line="317"/>
         <source>No installed version found for the package %1</source>
         <translation>Ниодной установленной версии не обнаружено для пакета %1</translation>
     </message>
@@ -1981,7 +1981,7 @@ p, li { white-space: pre-wrap; }
         <translation>Очищаю таблицу ссылок</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="200"/>
+        <location filename="abstractrepository.cpp" line="201"/>
         <location filename="dbrepository.cpp" line="1235"/>
         <source>Downloading %1</source>
         <translation>Загружаю %1</translation>
@@ -2659,13 +2659,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="504"/>
-        <location filename="packageversion.cpp" line="1230"/>
+        <location filename="packageversion.cpp" line="1233"/>
         <source>Waiting while other (un)installation scripts are running</source>
         <translation>Ожидание пока другие скрипты установки или удаления запущены</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="517"/>
-        <location filename="packageversion.cpp" line="1243"/>
+        <location filename="packageversion.cpp" line="1246"/>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
         <translation>Ожидание пока другие скрипты установки или удаления запущены (%1 минут)</translation>
     </message>
@@ -2690,13 +2690,13 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1469"/>
+        <location filename="packageversion.cpp" line="1470"/>
         <source>%1. Full output was saved in %2</source>
         <translation>%1. Полный вывод был сохранён в %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="583"/>
-        <location filename="packageversion.cpp" line="1337"/>
+        <location filename="packageversion.cpp" line="1338"/>
         <source>Deleting files</source>
         <translation>Удаление файлов</translation>
     </message>
@@ -2836,12 +2836,12 @@ p, li { white-space: pre-wrap; }
         <translation>Невозможно переименовать %0 в %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1255"/>
+        <location filename="packageversion.cpp" line="1258"/>
         <source>Running the installation script (this may take some time)</source>
         <translation>Запуск скрипта установки (это может занять некоторое время)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1334"/>
+        <location filename="packageversion.cpp" line="1335"/>
         <source>Deleting start menu, desktop and quick launch shortcuts</source>
         <translation>Удаление ярлыков  в меню Пуск, Панели быстрого запуска и на Рабочем столе</translation>
     </message>
@@ -2876,42 +2876,42 @@ p, li { white-space: pre-wrap; }
         <translation>%L1 файлы</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1398"/>
+        <location filename="packageversion.cpp" line="1399"/>
         <source>Could not create file %1</source>
         <translation>Невозможно создать файл %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1403"/>
+        <location filename="packageversion.cpp" line="1404"/>
         <source>Could not create directory %1</source>
         <translation>Невозможно создать директорию %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1420"/>
+        <location filename="packageversion.cpp" line="1421"/>
         <source>installed</source>
         <translation>уставлено</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1424"/>
+        <location filename="packageversion.cpp" line="1425"/>
         <source>updateable</source>
         <translation>доступна свежая версия</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1426"/>
+        <location filename="packageversion.cpp" line="1427"/>
         <source>obsolete</source>
         <translation>устаревший</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1434"/>
+        <location filename="packageversion.cpp" line="1435"/>
         <source>locked</source>
         <translation>заблокированный</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1730"/>
+        <location filename="packageversion.cpp" line="1731"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Процесс %1 завершился кодом %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1701"/>
+        <location filename="packageversion.cpp" line="1702"/>
         <source>%1 minutes</source>
         <translation>%1 минут</translation>
     </message>
@@ -2922,120 +2922,120 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="604"/>
-        <location filename="packageversion.cpp" line="1299"/>
+        <location filename="packageversion.cpp" line="1300"/>
         <source>Updating NPACKD_CL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1277"/>
+        <location filename="packageversion.cpp" line="1278"/>
         <source>The last lines of the output from the installation script:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1474"/>
+        <location filename="packageversion.cpp" line="1475"/>
         <source>%1. No output was generated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1799"/>
+        <location filename="packageversion.cpp" line="1800"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1806"/>
+        <location filename="packageversion.cpp" line="1807"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>Неверная SHA1 у &lt;detect-file&gt;: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1848"/>
+        <location filename="packageversion.cpp" line="1849"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1863"/>
+        <location filename="packageversion.cpp" line="1864"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Нет действительных ссылкок URL для %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1875"/>
+        <location filename="packageversion.cpp" line="1876"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>Нет действительных версиий %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1887"/>
+        <location filename="packageversion.cpp" line="1888"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Неверная SHA1 у %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1917"/>
+        <location filename="packageversion.cpp" line="1918"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1930"/>
+        <location filename="packageversion.cpp" line="1931"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1946"/>
+        <location filename="packageversion.cpp" line="1947"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Неверное значение атрибута &apos;тип&apos; у %1: %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1961"/>
+        <location filename="packageversion.cpp" line="1962"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Пустое значение атрибута &apos;путь&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1968"/>
+        <location filename="packageversion.cpp" line="1969"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Больше чем один &lt;important-file&gt; с таким же атрибутом &apos;путь&apos; %1 для %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1978"/>
+        <location filename="packageversion.cpp" line="1979"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>Пустое значение атрибута &apos;название&apos; у &lt;important-file&gt; для %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2007"/>
+        <location filename="packageversion.cpp" line="2008"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>Дубликат тэга &lt;file&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2025"/>
+        <location filename="packageversion.cpp" line="2026"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>Несуществующий &lt;detect-file&gt; для %1: </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2040"/>
+        <location filename="packageversion.cpp" line="2041"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2069"/>
+        <location filename="packageversion.cpp" line="2070"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>Дубликат &lt;dependency&gt; для %1 в %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2087"/>
+        <location filename="packageversion.cpp" line="2088"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Неверный MSI GUID для %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2247"/>
+        <location filename="packageversion.cpp" line="2248"/>
         <source>Executing the stop script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2264"/>
+        <location filename="packageversion.cpp" line="2265"/>
         <source>The last lines of the output from the package stop script:</source>
         <translation type="unfinished"></translation>
     </message>

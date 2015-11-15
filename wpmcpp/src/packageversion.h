@@ -388,10 +388,13 @@ public:
      *
      * @param job job for this method
      * @param where target directory
+     * @param binary the full name of the downloaded binary
+     *     or "" for packages of type "zip"
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
      */
-    void install(Job* job, const QString& where, bool printScriptOutput);
+    void install(Job* job, const QString& where, const QString &binary,
+            bool printScriptOutput);
 
     /**
      * Downloads the package binary, checks its hash sum, checks the binary for
@@ -399,8 +402,10 @@ public:
      *
      * @param job job for this method
      * @param where a non-existing directory for the package
+     * @return the full name of the downloaded file or "" for packages of
+     *     type "zip"
      */
-    void download_(Job* job, const QString& where);
+    QString download_(Job* job, const QString& where);
 
     /**
      * Uninstalls this package version.
