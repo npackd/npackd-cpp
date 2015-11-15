@@ -1993,107 +1993,113 @@ p, li { white-space: pre-wrap; }
         <translation>Insertando datos en la tabla de licencias</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="30"/>
+        <location filename="downloader.cpp" line="37"/>
         <source>Connecting</source>
         <translation>Conectando</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="153"/>
+        <location filename="downloader.cpp" line="176"/>
+        <location filename="downloader.cpp" line="186"/>
+        <location filename="downloader.cpp" line="216"/>
         <source>Cancelled by the user</source>
         <translation>Cancelado por el usuario</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="156"/>
+        <location filename="downloader.cpp" line="178"/>
+        <location filename="downloader.cpp" line="188"/>
+        <location filename="downloader.cpp" line="218"/>
         <source>Invalid handle</source>
         <translation>Manejo inválido</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="160"/>
+        <location filename="downloader.cpp" line="181"/>
+        <location filename="downloader.cpp" line="191"/>
+        <location filename="downloader.cpp" line="221"/>
         <source>Unknown error %1 from InternetErrorDlg</source>
         <translation>Error desconocido %1 de InternetErrorDlg</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="166"/>
+        <location filename="downloader.cpp" line="369"/>
         <source>The HTTP proxy requires authentication.</source>
         <translation>El proxy HTTP requiere autenticación.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="167"/>
-        <location filename="downloader.cpp" line="194"/>
+        <location filename="downloader.cpp" line="370"/>
+        <location filename="downloader.cpp" line="392"/>
         <source>Username</source>
         <translation>Nombre de usuario</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="169"/>
-        <location filename="downloader.cpp" line="196"/>
+        <location filename="downloader.cpp" line="372"/>
+        <location filename="downloader.cpp" line="394"/>
         <source>Password</source>
         <translation>Contraseña</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="192"/>
+        <location filename="downloader.cpp" line="390"/>
         <source>The HTTP server requires authentication.</source>
         <translation>El servidor HTTP requiere atenticación.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="219"/>
+        <location filename="downloader.cpp" line="411"/>
         <source>Cannot handle HTTP status code %1</source>
         <translation>No se puede manejar código de estado HTTP %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="255"/>
+        <location filename="downloader.cpp" line="258"/>
         <source>HTTP status code %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="262"/>
+        <location filename="downloader.cpp" line="265"/>
         <location filename="packageversion.cpp" line="863"/>
         <source>Downloading</source>
         <translation>Descargando</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="336"/>
+        <location filename="downloader.cpp" line="339"/>
         <source>Reading the data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="500"/>
-        <location filename="downloader.cpp" line="516"/>
-        <location filename="downloader.cpp" line="522"/>
-        <location filename="downloader.cpp" line="556"/>
+        <location filename="downloader.cpp" line="559"/>
+        <location filename="downloader.cpp" line="575"/>
+        <location filename="downloader.cpp" line="581"/>
+        <location filename="downloader.cpp" line="615"/>
         <source>zlib error %1</source>
         <translation>Error zlib %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="543"/>
-        <location filename="downloader.cpp" line="609"/>
+        <location filename="downloader.cpp" line="602"/>
+        <location filename="downloader.cpp" line="668"/>
         <source>%L0 of %L1 bytes</source>
         <translation>%L0 de %L1 bytes</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="549"/>
-        <location filename="downloader.cpp" line="615"/>
+        <location filename="downloader.cpp" line="608"/>
+        <location filename="downloader.cpp" line="674"/>
         <location filename="wpmutils.cpp" line="2156"/>
         <source>%L0 bytes</source>
         <translation>%L0 bytes</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="666"/>
+        <location filename="downloader.cpp" line="725"/>
         <source>Cannot download a file from a relative path %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="671"/>
+        <location filename="downloader.cpp" line="730"/>
         <source>Unsupported URL scheme: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="681"/>
-        <location filename="downloader.cpp" line="766"/>
+        <location filename="downloader.cpp" line="740"/>
+        <location filename="downloader.cpp" line="825"/>
         <source>Error opening file: %1</source>
         <translation>Error abriendo archivo: %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="740"/>
+        <location filename="downloader.cpp" line="799"/>
         <source>Cannot process relative file name %1</source>
         <translation type="unfinished"></translation>
     </message>

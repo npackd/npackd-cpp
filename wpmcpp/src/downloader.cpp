@@ -18,6 +18,13 @@
 #include "wpmutils.h"
 
 HWND defaultPasswordWindow = 0;
+QMutex loginDialogMutex;
+
+DWORD __stdcall myInternetAuthNotifyCallback(DWORD_PTR dwContext,
+        DWORD dwReturn, LPVOID lpReserved) {
+    qDebug() << "myInternetAuthNotifyCallback" << dwReturn;
+    return 0;
+}
 
 int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         QFile* file,
@@ -114,15 +121,9 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
     while (job->shouldProceed()) {
         // qDebug() << "download.5.1";
 
+        DWORD sendRequestError = 0;
         if (!HttpSendRequestW(hResourceHandle, 0, 0, 0, 0)) {
-            DWORD e = GetLastError();
-            if (e) {
-                // qDebug() << "error in HttpSendRequestW";
-                QString errMsg;
-                WPMUtils::formatMessage(e, &errMsg);
-                job->setErrorMessage(errMsg);
-                break;
-            }
+            sendRequestError = GetLastError();
         }
 
         // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
@@ -135,110 +136,112 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         }
 
         // 2XX
-        if (dwStatus / 100 == 2)
-            break;
+        if (sendRequestError == 0) {
+            if (dwStatus / 100 == 2)
+                break;
+        }
 
         if (parentWindow) {
-            void* p;
+            INTERNET_AUTH_NOTIFY_DATA nd = {};
+            nd.cbStruct = sizeof(nd);
+            nd.pfnNotify = &myInternetAuthNotifyCallback;
+
+            void* p = &nd;
+
             DWORD flags = FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
                           FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                          FLAGS_ERROR_UI_FLAGS_GENERATE_DATA;
-            DWORD r = InternetErrorDlg(parentWindow,
-                    hResourceHandle, ERROR_SUCCESS, flags, &p);
-            if (r == ERROR_SUCCESS)
-                break;
-            else if (r == ERROR_INTERNET_FORCE_RETRY)
-                ; // nothing
-            else if (r == ERROR_CANCELLED) {
+                          FLAGS_ERROR_UI_FLAGS_GENERATE_DATA; // |
+                          // FLAGS_ERROR_UI_SERIALIZE_DIALOGS;
+
+            // both calls to InternetErrorDlg should be enclosed by one
+            // mutex, so that only one dialog will be shown
+            loginDialogMutex.lock();
+            DWORD r;
+            //do {
+                r = InternetErrorDlg(parentWindow,
+                        hResourceHandle, sendRequestError,
+                        flags | FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
+            //} while (r == ERROR_INTERNET_DIALOG_PENDING);
+
+            //qDebug() << "111:" << r;
+            if (r == ERROR_SUCCESS) {
+                r = InternetErrorDlg(parentWindow,
+                        hResourceHandle, sendRequestError, flags, &p);
+
+                //qDebug() << "222:" << r;
+                if (r == ERROR_INTERNET_FORCE_RETRY) {
+                    // the call above set the password and we should retry the
+                    // request
+                } else if (r == ERROR_CANCELLED) {
+                    job->setErrorMessage(QObject::tr("Cancelled by the user"));
+                } else if (r == ERROR_INVALID_HANDLE) {
+                    job->setErrorMessage(QObject::tr("Invalid handle"));
+                } else {
+                    job->setErrorMessage(QString(
+                            QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
+                }
+            } else if (r == ERROR_INTERNET_FORCE_RETRY) {
+                // nothing
+            } else if (r == ERROR_CANCELLED) {
                 job->setErrorMessage(QObject::tr("Cancelled by the user"));
-                break;
             } else if (r == ERROR_INVALID_HANDLE) {
                 job->setErrorMessage(QObject::tr("Invalid handle"));
-                break;
             } else {
                 job->setErrorMessage(QString(
                         QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
-                break;
             }
+            loginDialogMutex.unlock();
         } else {
-            QString username, password;
-            if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
-                WPMUtils::outputTextConsole("\n" + QObject::tr("The HTTP proxy requires authentication.") + "\n");
-                WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
-                username = WPMUtils::inputTextConsole();
-                WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
-                password = WPMUtils::inputPasswordConsole();
+            void* p = 0;
 
-                if (!InternetSetOptionW(hConnectHandle,
-                        INTERNET_OPTION_PROXY_USERNAME,
-                        (void*) username.utf16(),
-                        username.length() + 1)) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(GetLastError(), &errMsg);
-                    job->setErrorMessage(errMsg);
-                    goto out;
+            DWORD flags = FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                          FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                          FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
+                          FLAGS_ERROR_UI_FLAGS_NO_UI;
+            DWORD r = InternetErrorDlg(0,
+                    hResourceHandle, sendRequestError, flags, &p);
+            //qDebug() << "333" << r;
+            if (r == ERROR_SUCCESS) {
+                loginDialogMutex.lock();
+                QString e = inputPassword(hConnectHandle, dwStatus); // nothing
+                loginDialogMutex.unlock();
+                //qDebug() << "inputPassword: " << e;
+                if (!e.isEmpty()) {
+                    job->setErrorMessage(e);
                 }
-                if (!InternetSetOptionW(hConnectHandle,
-                        INTERNET_OPTION_PROXY_PASSWORD,
-                        (void*) password.utf16(),
-                        password.length() + 1)) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(GetLastError(), &errMsg);
-                    job->setErrorMessage(errMsg);
-                    goto out;
-                }
-            } else if (dwStatus == HTTP_STATUS_DENIED) {
-                WPMUtils::outputTextConsole("\n" +
-                        QObject::tr("The HTTP server requires authentication.") +
-                        "\n");
-                WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
-                username = WPMUtils::inputTextConsole();
-                WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
-                password = WPMUtils::inputPasswordConsole();
-
-                if (!InternetSetOptionW(hConnectHandle,
-                        INTERNET_OPTION_USERNAME,
-                        (void*) username.utf16(),
-                        username.length() + 1)) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(GetLastError(), &errMsg);
-                    job->setErrorMessage(errMsg);
-                    goto out;
-                }
-                if (!InternetSetOptionW(hConnectHandle,
-                        INTERNET_OPTION_PASSWORD,
-                        (void*) password.utf16(),
-                        password.length() + 1)) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(GetLastError(), &errMsg);
-                    job->setErrorMessage(errMsg);
-                    goto out;
-                }
+            } else if (r == ERROR_INTERNET_FORCE_RETRY) {
+                // the call above set the password and we should retry the
+                // request
+            } else if (r == ERROR_CANCELLED) {
+                job->setErrorMessage(QObject::tr("Cancelled by the user"));
+            } else if (r == ERROR_INVALID_HANDLE) {
+                job->setErrorMessage(QObject::tr("Invalid handle"));
             } else {
                 job->setErrorMessage(QString(
-                        QObject::tr("Cannot handle HTTP status code %1")).
-                        arg(dwStatus));
-                break;
-            }
-
-            // read all the data before re-sending the request
-            char smallBuffer[4 * 1024];
-            while (true) {
-                DWORD read;
-                if (!InternetReadFile(hResourceHandle, &smallBuffer,
-                        sizeof(smallBuffer), &read)) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(GetLastError(), &errMsg);
-                    job->setErrorMessage(errMsg);
-                    goto out;
-                }
-
-                // qDebug() << "read some bytes " << read;
-                if (read == 0)
-                    break;
+                        QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
             }
         }
-    };
+
+        if (!job->shouldProceed())
+            break;
+
+        // read all the data before re-sending the request
+        char smallBuffer[4 * 1024];
+        while (true) {
+            DWORD read;
+            if (!InternetReadFile(hResourceHandle, &smallBuffer,
+                    sizeof(smallBuffer), &read)) {
+                QString errMsg;
+                WPMUtils::formatMessage(GetLastError(), &errMsg);
+                job->setErrorMessage(errMsg);
+                goto out;
+            }
+
+            // qDebug() << "read some bytes " << read;
+            if (read == 0)
+                break;
+        }
+    }; // while (job->shouldProceed())
 
 out:
     if (job->shouldProceed()) {
@@ -354,6 +357,62 @@ out:
     job->complete();
 
     return contentLength;
+}
+
+QString Downloader::inputPassword(HINTERNET hConnectHandle, DWORD dwStatus)
+{
+    QString result;
+
+    QString username, password;
+    if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
+        WPMUtils::outputTextConsole("\n" +
+                QObject::tr("The HTTP proxy requires authentication.") + "\n");
+        WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
+        username = WPMUtils::inputTextConsole();
+        WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
+        password = WPMUtils::inputPasswordConsole();
+
+        if (!InternetSetOptionW(hConnectHandle,
+                INTERNET_OPTION_PROXY_USERNAME,
+                (void*) username.utf16(),
+                username.length() + 1)) {
+            WPMUtils::formatMessage(GetLastError(), &result);
+        }
+
+        if (result.isEmpty() && !InternetSetOptionW(hConnectHandle,
+                INTERNET_OPTION_PROXY_PASSWORD,
+                (void*) password.utf16(),
+                password.length() + 1)) {
+            WPMUtils::formatMessage(GetLastError(), &result);
+        }
+    } else if (dwStatus == HTTP_STATUS_DENIED) {
+        WPMUtils::outputTextConsole("\n" +
+                QObject::tr("The HTTP server requires authentication.") +
+                "\n");
+        WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
+        username = WPMUtils::inputTextConsole();
+        WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
+        password = WPMUtils::inputPasswordConsole();
+
+        if (!InternetSetOptionW(hConnectHandle,
+                INTERNET_OPTION_USERNAME,
+                (void*) username.utf16(),
+                username.length() + 1)) {
+            WPMUtils::formatMessage(GetLastError(), &result);
+        }
+
+        if (result.isEmpty() && !InternetSetOptionW(hConnectHandle,
+                INTERNET_OPTION_PASSWORD,
+                (void*) password.utf16(),
+                password.length() + 1)) {
+            WPMUtils::formatMessage(GetLastError(), &result);
+        }
+    } else {
+        result = QString(QObject::tr("Cannot handle HTTP status code %1")).
+                arg(dwStatus);
+    }
+
+    return result;
 }
 
 bool Downloader::internetReadFileFully(HINTERNET resourceHandle,

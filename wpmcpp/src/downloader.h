@@ -103,7 +103,9 @@ class Downloader: QObject
      */
     static void copyFile(Job *job, const QString &source, QFile *file,
             QString *sha1,
-            QCryptographicHash::Algorithm alg);
+                         QCryptographicHash::Algorithm alg);
+
+    static QString inputPassword(HINTERNET hConnectHandle, DWORD dwStatus);
 public:
     /**
      * @brief a download request
