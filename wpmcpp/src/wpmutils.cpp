@@ -2090,15 +2090,10 @@ QList<PackageVersion*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
 
 Package* WPMUtils::findOnePackage(const QString& package, QString* err)
 {
-    Package* p = 0;
-
     AbstractRepository* rep = AbstractRepository::getDefault_();
-    if (package.contains('.')) {
-        p = rep->findPackage_(package);
-        if (!p) {
-            *err = QObject::tr("Unknown package: %1").arg(package);
-        }
-    } else {
+    Package* p = rep->findPackage_(package);
+
+    if (!p) {
         QList<Package*> packages = rep->findPackagesByShortName(package);
 
         if (packages.count() == 0) {

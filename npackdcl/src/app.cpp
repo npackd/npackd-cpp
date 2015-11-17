@@ -827,26 +827,12 @@ QString App::update()
     if (job->shouldProceed()) {
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
-            QList<Package*> packages;
-            if (package.contains('.')) {
-                Package* p = rep->findPackage_(package);
-                if (p)
-                    packages.append(p);
-            } else {
-                packages = rep->findPackagesByShortName(package);
-            }
-
-            if (job->shouldProceed()) {
-                if (packages.count() == 0) {
-                    job->setErrorMessage("Unknown package: " + package);
-                } else if (packages.count() > 1) {
-                    job->setErrorMessage("Ambiguous package name");
-                } else {
-                    toUpdate.append(packages.at(0)->clone());
-                }
-            }
-
-            qDeleteAll(packages);
+            QString err;
+            Package* p = WPMUtils::findOnePackage(package, &err);
+            if (p)
+                toUpdate.append(p);
+            else
+                job->setErrorMessage(err);
 
             if (!job->shouldProceed())
                 break;
@@ -1049,7 +1035,7 @@ QString App::add()
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
-                "Reading list of installed packages from the registry");
+                "Reading the list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
         if (!err.isEmpty())

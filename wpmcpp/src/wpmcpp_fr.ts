@@ -2025,7 +2025,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="downloader.cpp" line="608"/>
         <location filename="downloader.cpp" line="674"/>
-        <location filename="wpmutils.cpp" line="2156"/>
+        <location filename="wpmutils.cpp" line="2151"/>
         <source>%L0 bytes</source>
         <translation>%L0 octets</translation>
     </message>
@@ -2271,76 +2271,69 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="276"/>
         <location filename="wpmutils.cpp" line="1995"/>
-        <location filename="wpmutils.cpp" line="2099"/>
-        <location filename="wpmutils.cpp" line="2105"/>
+        <location filename="wpmutils.cpp" line="2100"/>
         <source>Unknown package: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="279"/>
-        <source>Ambiguous package name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="clprocessor.cpp" line="295"/>
+        <location filename="clprocessor.cpp" line="280"/>
         <source>Planning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="504"/>
+        <location filename="clprocessor.cpp" line="489"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="505"/>
+        <location filename="clprocessor.cpp" line="490"/>
         <source>package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="506"/>
+        <location filename="clprocessor.cpp" line="491"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="507"/>
+        <location filename="clprocessor.cpp" line="492"/>
         <source>range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="508"/>
+        <location filename="clprocessor.cpp" line="493"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="509"/>
+        <location filename="clprocessor.cpp" line="494"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="523"/>
+        <location filename="clprocessor.cpp" line="508"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="524"/>
+        <location filename="clprocessor.cpp" line="509"/>
         <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="539"/>
+        <location filename="clprocessor.cpp" line="524"/>
         <source>Error parsing the command line: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="580"/>
+        <location filename="clprocessor.cpp" line="565"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="587"/>
+        <location filename="clprocessor.cpp" line="572"/>
         <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2405,13 +2398,13 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - gestionnaire de paquets pour Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="374"/>
+        <location filename="clprocessor.cpp" line="359"/>
         <location filename="mainwindow.cpp" line="836"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="375"/>
+        <location filename="clprocessor.cpp" line="360"/>
         <location filename="mainwindow.cpp" line="837"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
@@ -2777,28 +2770,28 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Ouverture du fichier ZIP</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2178"/>
+        <location filename="wpmutils.cpp" line="2173"/>
         <source>Cannot open the ZIP file %1: %2</source>
         <translation>Impossible d&apos;ouvrir le fichier ZIP %1 : %2</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1299"/>
-        <location filename="wpmutils.cpp" line="2189"/>
+        <location filename="wpmutils.cpp" line="2184"/>
         <source>Extracting</source>
         <translation>Extraction</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2199"/>
+        <location filename="wpmutils.cpp" line="2194"/>
         <source>Error unzipping the file %1: Error %2 in %3</source>
         <translation>Erreur lors de l&apos;extraction du fichier %1 : Erreur %2 dans %3</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2219"/>
+        <location filename="wpmutils.cpp" line="2214"/>
         <source>Cannot create directory %1</source>
         <translation>Impossible de créer le dossier %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2228"/>
+        <location filename="wpmutils.cpp" line="2223"/>
         <source>%L1 files</source>
         <translation>%L1 fichiers</translation>
     </message>
@@ -2974,10 +2967,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clprocessor.cpp" line="399"/>
-        <location filename="clprocessor.cpp" line="541"/>
-        <location filename="clprocessor.cpp" line="583"/>
-        <location filename="clprocessor.cpp" line="589"/>
+        <location filename="clprocessor.cpp" line="384"/>
+        <location filename="clprocessor.cpp" line="526"/>
+        <location filename="clprocessor.cpp" line="568"/>
+        <location filename="clprocessor.cpp" line="574"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
@@ -3530,7 +3523,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2115"/>
+        <location filename="wpmutils.cpp" line="2110"/>
         <source>More than one package was found: %1</source>
         <translation type="unfinished"></translation>
     </message>
