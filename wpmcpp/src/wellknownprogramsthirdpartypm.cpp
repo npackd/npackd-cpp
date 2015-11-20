@@ -432,10 +432,6 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
         if (!err.isEmpty())
             job->setErrorMessage(err);
         delete pv;
-
-        InstalledPackageVersion* ipv = new InstalledPackageVersion(packageName,
-                version, WPMUtils::getExeDir());
-        installed->append(ipv);
     }
 
     if (job->shouldProceed())
