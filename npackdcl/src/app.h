@@ -24,6 +24,7 @@ private:
     CLProgress clp;
 
     bool debug;
+    bool interactive;
 
     /**
      * @brief defines the NPACKD_CL variable and adds the NpackdCL package to
@@ -54,8 +55,9 @@ private:
     QString printDependencies(bool onlyInstalled,
             const QString parentPrefix, int level, PackageVersion *pv);
     void processInstallOperations(Job *job,
-            const QList<InstallOperation *> &ops, DWORD programCloseType);
-    QStringList  sortPackageVersionsByPackageTitle(
+            const QList<InstallOperation *> &ops, DWORD programCloseType,
+            bool interactive=true);
+    QStringList sortPackageVersionsByPackageTitle(
             QList<PackageVersion *> *list);
 public slots:
     /**

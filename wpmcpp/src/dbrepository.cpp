@@ -1212,7 +1212,7 @@ QString DBRepository::clear()
     return "";
 }
 
-void DBRepository::load(Job* job, bool useCache)
+void DBRepository::load(Job* job, bool useCache, bool interactive)
 {
     QString err;
     QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
@@ -1234,9 +1234,12 @@ void DBRepository::load(Job* job, bool useCache)
             Job* s = job->newSubJob(0.1,
                     QObject::tr("Downloading %1").
                     arg(url->toDisplayString()), false, true);
+
+            Downloader::Request request = *url;
+            request.useCache = useCache;
+            request.interactive = interactive;
             QFuture<QTemporaryFile*> future = QtConcurrent::run(
-                    Downloader::download2, s, *url,
-                    useCache);
+                    Downloader::downloadToTemporary, s, request);
             files.append(future);
         }
 
@@ -1337,7 +1340,7 @@ void DBRepository::loadOne(Job* job, QFile* f) {
     job->complete();
 }
 
-void DBRepository::updateF5(Job* job)
+void DBRepository::updateF5(Job* job, bool interactive)
 {
     bool transactionStarted = false;
     if (job->shouldProceed()) {
@@ -1365,7 +1368,7 @@ void DBRepository::updateF5(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.27,
                 QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"));
-        load(sub, true);
+        load(sub, true, interactive);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }

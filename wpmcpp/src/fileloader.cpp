@@ -95,8 +95,14 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
         if (f.open(QFile::ReadWrite)) {
             QString mime;
             Job* job = new Job();
-            Downloader::download(job, url, &f, 0, QCryptographicHash::Sha1,
-                    true, &mime, false, 15);
+            Downloader::Request request = QUrl(url);
+            request.file = &f;
+            request.useCache = true;
+            request.mime = &mime;
+            request.keepConnection = false;
+            request.timeout = 15;
+
+            Downloader::download(job, request);
             f.close();
 
             if (!job->getErrorMessage().isEmpty()) {

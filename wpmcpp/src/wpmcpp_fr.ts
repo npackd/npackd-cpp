@@ -1765,7 +1765,7 @@ p, li { white-space: pre-wrap; }
         <translation>L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1874"/>
+        <location filename="dbrepository.cpp" line="1877"/>
         <source>Starting an SQL transaction</source>
         <translation>Démarrage d&apos;une transaction SQL</translation>
     </message>
@@ -1805,74 +1805,74 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1345"/>
+        <location filename="dbrepository.cpp" line="1348"/>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1367"/>
+        <location filename="dbrepository.cpp" line="1370"/>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1403"/>
+        <location filename="dbrepository.cpp" line="1406"/>
         <source>Commiting the SQL transaction (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1949"/>
+        <location filename="dbrepository.cpp" line="1952"/>
         <source>Detaching the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1967"/>
+        <location filename="dbrepository.cpp" line="1970"/>
         <source>Reorganizing the database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1375"/>
+        <location filename="dbrepository.cpp" line="1378"/>
         <source>Refreshing the installation status (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1395"/>
+        <location filename="dbrepository.cpp" line="1398"/>
         <source>Updating the status for installed packages in the database (tempdb)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1461"/>
+        <location filename="dbrepository.cpp" line="1464"/>
         <source>Error creating a temporary file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1480"/>
+        <location filename="dbrepository.cpp" line="1483"/>
         <source>Updating the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1503"/>
-        <location filename="dbrepository.cpp" line="1896"/>
+        <location filename="dbrepository.cpp" line="1506"/>
+        <location filename="dbrepository.cpp" line="1899"/>
         <source>Transferring the data from the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1855"/>
+        <location filename="dbrepository.cpp" line="1858"/>
         <source>Attaching the temporary database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1928"/>
+        <location filename="dbrepository.cpp" line="1931"/>
         <source>Commiting the SQL transaction</source>
         <translation>Application de la transaction SQL</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1357"/>
-        <location filename="dbrepository.cpp" line="1886"/>
+        <location filename="dbrepository.cpp" line="1360"/>
+        <location filename="dbrepository.cpp" line="1889"/>
         <source>Clearing the database</source>
         <translation>Effacement de la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1573"/>
+        <location filename="dbrepository.cpp" line="1576"/>
         <source>Updating statuses</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1893,12 +1893,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Mise à jour des paquets installées dans la base de données</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1433"/>
+        <location filename="dbrepository.cpp" line="1436"/>
         <source>Reading categories</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1383"/>
+        <location filename="dbrepository.cpp" line="1386"/>
         <source>Removing packages without versions</source>
         <translation>Suppression des paquets sans version associée</translation>
     </message>
@@ -1914,139 +1914,145 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1303"/>
+        <location filename="dbrepository.cpp" line="1306"/>
         <source>Unzipping the repository %1 failed: %2</source>
         <oldsource>Unzipping the repository failed: %1</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1311"/>
+        <location filename="dbrepository.cpp" line="1314"/>
         <source>Rep.xml is missing in a repository in ZIP format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1524"/>
+        <location filename="dbrepository.cpp" line="1527"/>
         <source>Inserting data in the packages table</source>
         <translation>Insertion des données dans la table des paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1534"/>
+        <location filename="dbrepository.cpp" line="1537"/>
         <source>Inserting data in the package versions table</source>
         <translation>Insertion des données dans la table des versions de paquets</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1544"/>
+        <location filename="dbrepository.cpp" line="1547"/>
         <source>Inserting data in the licenses table</source>
         <translation>Insertion des données dans la table des licences</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="37"/>
+        <location filename="downloader.cpp" line="38"/>
         <source>Connecting</source>
         <translation>Connexion</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="176"/>
-        <location filename="downloader.cpp" line="186"/>
-        <location filename="downloader.cpp" line="216"/>
+        <location filename="downloader.cpp" line="188"/>
+        <location filename="downloader.cpp" line="201"/>
+        <location filename="downloader.cpp" line="235"/>
         <source>Cancelled by the user</source>
         <translation>Annulé par l&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="178"/>
-        <location filename="downloader.cpp" line="188"/>
-        <location filename="downloader.cpp" line="218"/>
+        <location filename="downloader.cpp" line="190"/>
+        <location filename="downloader.cpp" line="203"/>
+        <location filename="downloader.cpp" line="237"/>
         <source>Invalid handle</source>
         <translation>Traitement invalide</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="181"/>
-        <location filename="downloader.cpp" line="191"/>
-        <location filename="downloader.cpp" line="221"/>
+        <location filename="downloader.cpp" line="193"/>
+        <location filename="downloader.cpp" line="206"/>
+        <location filename="downloader.cpp" line="240"/>
         <source>Unknown error %1 from InternetErrorDlg</source>
         <translation>Erreur inconnue %1 de InternetErrorDlg</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="369"/>
+        <location filename="downloader.cpp" line="388"/>
         <source>The HTTP proxy requires authentication.</source>
         <translation>Le proxy HTTP requiert une authentification.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="370"/>
-        <location filename="downloader.cpp" line="392"/>
+        <location filename="downloader.cpp" line="389"/>
+        <location filename="downloader.cpp" line="411"/>
         <source>Username</source>
         <translation>Nom d&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="372"/>
-        <location filename="downloader.cpp" line="394"/>
+        <location filename="downloader.cpp" line="391"/>
+        <location filename="downloader.cpp" line="413"/>
         <source>Password</source>
         <translation>Mot de passe</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="390"/>
+        <location filename="downloader.cpp" line="409"/>
         <source>The HTTP server requires authentication.</source>
         <translation>Le serveur HTTP requiert une authentification.</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="411"/>
+        <location filename="downloader.cpp" line="430"/>
         <source>Cannot handle HTTP status code %1</source>
         <translation>Impossible de traiter le code de statut HTTP %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="258"/>
+        <location filename="downloader.cpp" line="277"/>
         <source>HTTP status code %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="265"/>
-        <location filename="packageversion.cpp" line="863"/>
+        <location filename="downloader.cpp" line="127"/>
+        <source>Too many retries during the download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="downloader.cpp" line="284"/>
+        <location filename="packageversion.cpp" line="862"/>
         <source>Downloading</source>
         <translation>Téléchargement</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="339"/>
+        <location filename="downloader.cpp" line="358"/>
         <source>Reading the data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="559"/>
-        <location filename="downloader.cpp" line="575"/>
-        <location filename="downloader.cpp" line="581"/>
-        <location filename="downloader.cpp" line="615"/>
+        <location filename="downloader.cpp" line="578"/>
+        <location filename="downloader.cpp" line="594"/>
+        <location filename="downloader.cpp" line="600"/>
+        <location filename="downloader.cpp" line="634"/>
         <source>zlib error %1</source>
         <translation>Erreur zlib %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="602"/>
-        <location filename="downloader.cpp" line="668"/>
+        <location filename="downloader.cpp" line="621"/>
+        <location filename="downloader.cpp" line="687"/>
         <source>%L0 of %L1 bytes</source>
         <translation>%L0 de %L1 octets</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="608"/>
-        <location filename="downloader.cpp" line="674"/>
+        <location filename="downloader.cpp" line="627"/>
+        <location filename="downloader.cpp" line="693"/>
         <location filename="wpmutils.cpp" line="2151"/>
         <source>%L0 bytes</source>
         <translation>%L0 octets</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="725"/>
+        <location filename="downloader.cpp" line="744"/>
         <source>Cannot download a file from a relative path %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="730"/>
+        <location filename="downloader.cpp" line="749"/>
         <source>Unsupported URL scheme: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="740"/>
-        <location filename="downloader.cpp" line="825"/>
+        <location filename="downloader.cpp" line="759"/>
+        <location filename="downloader.cpp" line="844"/>
+        <location filename="downloader.cpp" line="870"/>
         <source>Error opening file: %1</source>
         <translation>Erreur lors de l&apos;ouverture du fichier: %1</translation>
     </message>
     <message>
-        <location filename="downloader.cpp" line="799"/>
+        <location filename="downloader.cpp" line="818"/>
         <source>Cannot process relative file name %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2410,7 +2416,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1494"/>
+        <location filename="dbrepository.cpp" line="1497"/>
         <source>Error opening the database: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2579,13 +2585,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="504"/>
-        <location filename="packageversion.cpp" line="1233"/>
+        <location filename="packageversion.cpp" line="1248"/>
         <source>Waiting while other (un)installation scripts are running</source>
         <translation>En attente de la fin des autres scripts d&apos;installation/désinstallation</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="517"/>
-        <location filename="packageversion.cpp" line="1246"/>
+        <location filename="packageversion.cpp" line="1261"/>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
         <translation>En attente de la fin des autres scripts d&apos;installation/désinstallation (%1 minutes)</translation>
     </message>
@@ -2595,28 +2601,28 @@ p, li { white-space: pre-wrap; }
         <translation>Exécution du script de désinstallation (peut durer un certain temps)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1108"/>
+        <location filename="packageversion.cpp" line="1123"/>
         <source>Hash sum %1 found, but %2 was expected. The file has changed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1120"/>
+        <location filename="packageversion.cpp" line="1135"/>
         <source>Checking for viruses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1123"/>
+        <location filename="packageversion.cpp" line="1138"/>
         <source>Antivirus check failed. The file is not safe.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1470"/>
+        <location filename="packageversion.cpp" line="1485"/>
         <source>%1. Full output was saved in %2</source>
         <translation>%1. La sortie complète a été enregistrée à l&apos;emplacement %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="583"/>
-        <location filename="packageversion.cpp" line="1338"/>
+        <location filename="packageversion.cpp" line="1353"/>
         <source>Deleting files</source>
         <translation>Suppression des fichiers</translation>
     </message>
@@ -2652,7 +2658,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="855"/>
-        <location filename="packageversion.cpp" line="999"/>
+        <location filename="packageversion.cpp" line="1000"/>
         <source>No download URL</source>
         <translation>Pas de lien de télécharement</translation>
     </message>
@@ -2685,49 +2691,49 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Préparation</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1012"/>
+        <location filename="packageversion.cpp" line="1013"/>
         <source>Creating directory</source>
         <translation>Création du dossier</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1015"/>
-        <location filename="packageversion.cpp" line="1028"/>
+        <location filename="packageversion.cpp" line="1016"/>
+        <location filename="packageversion.cpp" line="1029"/>
         <source>Cannot create directory: %0</source>
         <translation>Impossible de créer le dossier : %0</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1025"/>
+        <location filename="packageversion.cpp" line="1026"/>
         <source>Creating .Npackd sub-directory</source>
         <translation>Création du sous-dossier .Npackd</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1040"/>
+        <location filename="packageversion.cpp" line="1041"/>
         <source>Waiting for a free HTTP connection</source>
         <translation>En attente d&apos;une connexion HTTP libre</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1052"/>
+        <location filename="packageversion.cpp" line="1053"/>
         <source>Waiting for a free HTTP connection (%1 minutes)</source>
         <translation>En attente d&apos;une connexion HTTP libre (%1 minutes)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1070"/>
+        <location filename="packageversion.cpp" line="1071"/>
         <source>Downloading &amp; computing hash sum</source>
         <translation>Téléchargement et calcul du checksum</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1066"/>
-        <location filename="packageversion.cpp" line="1085"/>
+        <location filename="packageversion.cpp" line="1067"/>
+        <location filename="packageversion.cpp" line="1093"/>
         <source>Cannot open the file: %0</source>
         <translation>Impossible d&apos;ouvrir le fichier %0</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1090"/>
+        <location filename="packageversion.cpp" line="1098"/>
         <source>Downloading &amp; computing hash sum (2nd try)</source>
         <translation>Téléchargement et calcul du checksum (2e essai)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1094"/>
+        <location filename="packageversion.cpp" line="1109"/>
         <source>Error downloading %1: %2</source>
         <translation>Erreur lors du téléchargment de %1 : %2</translation>
     </message>
@@ -2736,32 +2742,32 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1146"/>
+        <location filename="packageversion.cpp" line="1161"/>
         <source>Extracting files</source>
         <translation>Extraction des fichiers</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1150"/>
+        <location filename="packageversion.cpp" line="1165"/>
         <source>Error unzipping file into directory %0: %1</source>
         <translation>Error lors de l&apos;extraction du fichier dans le dossier %0 : %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1157"/>
+        <location filename="packageversion.cpp" line="1172"/>
         <source>Renaming the downloaded file</source>
         <translation>Renommage du fichier téléchargé</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1168"/>
+        <location filename="packageversion.cpp" line="1183"/>
         <source>Cannot rename %0 to %1</source>
         <translation>Impossible de renommer %0 en %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1258"/>
+        <location filename="packageversion.cpp" line="1273"/>
         <source>Running the installation script (this may take some time)</source>
         <translation>Lancement du script d&apos;installation (peut prendre un certain temps)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1335"/>
+        <location filename="packageversion.cpp" line="1350"/>
         <source>Deleting start menu, desktop and quick launch shortcuts</source>
         <translation>Suppression des raccourcis du menu démarrer, du bureau et de la barre de lancement rapide</translation>
     </message>
@@ -2775,7 +2781,7 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible d&apos;ouvrir le fichier ZIP %1 : %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1299"/>
+        <location filename="dbrepository.cpp" line="1302"/>
         <location filename="wpmutils.cpp" line="2184"/>
         <source>Extracting</source>
         <translation>Extraction</translation>
@@ -2796,42 +2802,42 @@ p, li { white-space: pre-wrap; }
         <translation>%L1 fichiers</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1399"/>
+        <location filename="packageversion.cpp" line="1414"/>
         <source>Could not create file %1</source>
         <translation>Impossible de créer le fichier %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1404"/>
+        <location filename="packageversion.cpp" line="1419"/>
         <source>Could not create directory %1</source>
         <translation>Impossible de créer le dossier %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1421"/>
+        <location filename="packageversion.cpp" line="1436"/>
         <source>installed</source>
         <translation>installé</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1425"/>
+        <location filename="packageversion.cpp" line="1440"/>
         <source>updateable</source>
         <translation>pouvant être mis à jour</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1427"/>
+        <location filename="packageversion.cpp" line="1442"/>
         <source>obsolete</source>
         <translation>obsolète</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1435"/>
+        <location filename="packageversion.cpp" line="1450"/>
         <source>locked</source>
         <translation>bloqué</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1731"/>
+        <location filename="packageversion.cpp" line="1746"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Le processus %1 s&apos;est terminé avec le code de retour %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1702"/>
+        <location filename="packageversion.cpp" line="1717"/>
         <source>%1 minutes</source>
         <translation>%1 minute(s)</translation>
     </message>
@@ -2842,120 +2848,120 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="604"/>
-        <location filename="packageversion.cpp" line="1300"/>
+        <location filename="packageversion.cpp" line="1315"/>
         <source>Updating NPACKD_CL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1278"/>
+        <location filename="packageversion.cpp" line="1293"/>
         <source>The last lines of the output from the installation script:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1475"/>
+        <location filename="packageversion.cpp" line="1490"/>
         <source>%1. No output was generated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1800"/>
+        <location filename="packageversion.cpp" line="1815"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Etiquette &lt;path&gt; vide dans &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1807"/>
+        <location filename="packageversion.cpp" line="1822"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>SHA1 incorrect dans &lt;detect-file&gt; :</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1849"/>
+        <location filename="packageversion.cpp" line="1864"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Erreur de l&apos;attribut &apos;package&apos; dans &lt;version&gt; : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1864"/>
+        <location filename="packageversion.cpp" line="1879"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Le lien de téléchargement%1 n&apos;est pas valide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1876"/>
+        <location filename="packageversion.cpp" line="1891"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>La version du paquet %1 est invalide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1888"/>
+        <location filename="packageversion.cpp" line="1903"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Le SHA1 de %1 est invalide : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1918"/>
+        <location filename="packageversion.cpp" line="1933"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1931"/>
+        <location filename="packageversion.cpp" line="1946"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1947"/>
+        <location filename="packageversion.cpp" line="1962"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Valeur incorrecte pour l&apos;attribut &apos;type&apos; dans %1 : %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1962"/>
+        <location filename="packageversion.cpp" line="1977"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>La valeur de l&apos;attribut &apos;path&apos; pour &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1969"/>
+        <location filename="packageversion.cpp" line="1984"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Il y a plus d&apos;un &lt;important-file&gt; avec le même attribut &apos;path&apos; %1 pour %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1979"/>
+        <location filename="packageversion.cpp" line="1994"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>La valeur de l&apos;attribut &apos;title&apos; de &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2008"/>
+        <location filename="packageversion.cpp" line="2023"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>L&apos;entrée &lt;file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2026"/>
+        <location filename="packageversion.cpp" line="2041"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>&lt;detect-file&gt; est invalide pour %1 : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2041"/>
+        <location filename="packageversion.cpp" line="2056"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>L&apos;entrée &lt;detect-file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2070"/>
+        <location filename="packageversion.cpp" line="2085"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>L&apos;entrée &lt;dependency&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2088"/>
+        <location filename="packageversion.cpp" line="2103"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Le GUID MSI pour %1 est invalide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2248"/>
+        <location filename="packageversion.cpp" line="2263"/>
         <source>Executing the stop script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2265"/>
+        <location filename="packageversion.cpp" line="2280"/>
         <source>The last lines of the output from the package stop script:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2999,17 +3005,17 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible d&apos;ouvrir %1 en écriture</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1255"/>
+        <location filename="dbrepository.cpp" line="1258"/>
         <source>Repository %1 of %2</source>
         <translation>Dépôt %1 de %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1262"/>
+        <location filename="dbrepository.cpp" line="1265"/>
         <source>Error loading the repository %1: %2</source>
         <translation>Erreur lors du chargement du dépôt %1 : %2</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1277"/>
+        <location filename="dbrepository.cpp" line="1280"/>
         <location filename="settingsframe.cpp" line="109"/>
         <source>No repositories defined</source>
         <translation>Aucun dépôt défini</translation>
@@ -3035,7 +3041,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
-        <location filename="dbrepository.cpp" line="1321"/>
+        <location filename="dbrepository.cpp" line="1324"/>
         <source>Parsing XML</source>
         <translation>Extraction du XML</translation>
     </message>
@@ -3609,7 +3615,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fileloader.cpp" line="124"/>
+        <location filename="fileloader.cpp" line="130"/>
         <location filename="packageframe.cpp" line="286"/>
         <source>Cannot open the file %1</source>
         <translation type="unfinished"></translation>

@@ -133,9 +133,11 @@ public:
      * @param programCloseType how to close running applications
      * @param printScriptOutput true = redirect the script output to the
      *     standard output
+     * @param interactive true = allow the interaction with the user
      */
     void process(Job* job, const QList<InstallOperation*> &install,
-            DWORD programCloseType, bool printScriptOutput);
+            DWORD programCloseType, bool printScriptOutput,
+            bool interactive=true);
 
     /**
      * Finds all installed package versions.

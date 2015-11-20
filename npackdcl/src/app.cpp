@@ -80,8 +80,10 @@ int App::process()
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("file", 'f', "file or directory", "file", false);
     cl.add("end-process", 'e',
-        "list of ways to close running applications (c=close, k=kill). The default value is 'c'.",
-        "[c][k]", false);
+            "list of ways to close running applications (c=close, k=kill). The default value is 'c'.",
+            "[c][k]", false);
+    cl.add("non-interactive", 'n',
+            "assume that there is no user and do not ask for input", "", false);
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -89,6 +91,8 @@ int App::process()
         return 1;
     }
     // cl.dump();
+
+    this->interactive = !cl.isPresent("non-interactive");
 
     this->debug = cl.isPresent("debug");
 
@@ -218,7 +222,8 @@ void App::usage()
         "Usage:",
         "    ncl help",
         "        prints this help",
-        "    ncl add (--package=<package> [--version=<version>])+",
+        "    ncl add (--package=<package> [--version=<version>])+ ",
+        "            [--non-interactive]",
         "        installs packages. The newest available version will be installed, ",
         "        if none is specified.",
         "        Short package names can be used here",
@@ -230,6 +235,7 @@ void App::usage()
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
         "    ncl update (--package=<package>)+ [--end-process=<types>]",
+        "            [--non-interactive]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
@@ -252,7 +258,7 @@ void App::usage()
         "        removes a repository from the list",
         "    ncl list-repos",
         "        list currently defined repositories",
-        "    ncl detect",
+        "    ncl detect [--non-interactive]",
         "        detect packages from the MSI database and software control panel",
         "    ncl check",
         "        checks the installed packages for missing dependencies",
@@ -866,7 +872,7 @@ QString App::update()
 
     if (job->shouldProceed() && !up2date) {
         Job* ijob = job->newSubJob(0.85, "Updating");
-        processInstallOperations(ijob, ops, programCloseType);
+        processInstallOperations(ijob, ops, programCloseType, interactive);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
                     arg(ijob->getErrorMessage()));
@@ -893,7 +899,8 @@ QString App::update()
 }
 
 void App::processInstallOperations(Job *job,
-        const QList<InstallOperation *> &ops, DWORD programCloseType)
+        const QList<InstallOperation *> &ops, DWORD programCloseType,
+        bool interactive)
 {
     DBRepository* rep = DBRepository::getDefault();
 
@@ -1024,7 +1031,7 @@ void App::processInstallOperations(Job *job,
 
         job->complete();
     } else {
-        rep->process(job, ops, programCloseType, debug);
+        rep->process(job, ops, programCloseType, debug, interactive);
     }
 }
 
@@ -1588,7 +1595,7 @@ QString App::detect()
     }
 
     DBRepository* rep = DBRepository::getDefault();
-    rep->updateF5(job);
+    rep->updateF5(job, interactive);
     QString r = job->getErrorMessage();
     if (job->getErrorMessage().isEmpty()) {
         WPMUtils::outputTextConsole("Package detection completed successfully\n");

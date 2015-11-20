@@ -402,10 +402,11 @@ public:
      *
      * @param job job for this method
      * @param where a non-existing directory for the package
+     * @param interactive true = allow the interaction with the user
      * @return the full name of the downloaded file or "" for packages of
      *     type "zip"
      */
-    QString download_(Job* job, const QString& where);
+    QString download_(Job* job, const QString& where, bool interactive=true);
 
     /**
      * Uninstalls this package version.

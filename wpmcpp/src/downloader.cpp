@@ -30,7 +30,8 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         QFile* file,
         QString* mime, QString* contentDisposition,
         HWND parentWindow, QString* sha1, bool useCache,
-        QCryptographicHash::Algorithm alg, bool keepConnection, int timeout)
+        QCryptographicHash::Algorithm alg, bool keepConnection, int timeout,
+        bool interactive)
 {
     QString initialTitle = job->getTitle();
 
@@ -118,7 +119,15 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
     DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
 
     // qDebug() << "download.5";
+    int retries = 0;
     while (job->shouldProceed()) {
+        retries++;
+        if (retries >= 5) {
+            job->setErrorMessage(
+                    QObject::tr("Too many retries during the download"));
+            break;
+        }
+
         // qDebug() << "download.5.1";
 
         DWORD sendRequestError = 0;
@@ -165,20 +174,26 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
 
             //qDebug() << "111:" << r;
             if (r == ERROR_SUCCESS) {
-                r = InternetErrorDlg(parentWindow,
-                        hResourceHandle, sendRequestError, flags, &p);
+                if (interactive) {
+                    r = InternetErrorDlg(parentWindow,
+                            hResourceHandle, sendRequestError, flags, &p);
 
-                //qDebug() << "222:" << r;
-                if (r == ERROR_INTERNET_FORCE_RETRY) {
-                    // the call above set the password and we should retry the
-                    // request
-                } else if (r == ERROR_CANCELLED) {
-                    job->setErrorMessage(QObject::tr("Cancelled by the user"));
-                } else if (r == ERROR_INVALID_HANDLE) {
-                    job->setErrorMessage(QObject::tr("Invalid handle"));
+                    //qDebug() << "222:" << r;
+                    if (r == ERROR_SUCCESS) {
+                        // retry
+                    } else if (r == ERROR_INTERNET_FORCE_RETRY) {
+                        // the call above set the password and we should retry the
+                        // request
+                    } else if (r == ERROR_CANCELLED) {
+                        job->setErrorMessage(QObject::tr("Cancelled by the user"));
+                    } else if (r == ERROR_INVALID_HANDLE) {
+                        job->setErrorMessage(QObject::tr("Invalid handle"));
+                    } else {
+                        job->setErrorMessage(QString(
+                                QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
+                    }
                 } else {
-                    job->setErrorMessage(QString(
-                            QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
+                    // retry
                 }
             } else if (r == ERROR_INTERNET_FORCE_RETRY) {
                 // nothing
@@ -202,12 +217,16 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
                     hResourceHandle, sendRequestError, flags, &p);
             //qDebug() << "333" << r;
             if (r == ERROR_SUCCESS) {
-                loginDialogMutex.lock();
-                QString e = inputPassword(hConnectHandle, dwStatus); // nothing
-                loginDialogMutex.unlock();
-                //qDebug() << "inputPassword: " << e;
-                if (!e.isEmpty()) {
-                    job->setErrorMessage(e);
+                if (interactive) {
+                    loginDialogMutex.lock();
+                    QString e = inputPassword(hConnectHandle, dwStatus); // nothing
+                    loginDialogMutex.unlock();
+                    //qDebug() << "inputPassword: " << e;
+                    if (!e.isEmpty()) {
+                        job->setErrorMessage(e);
+                    }
+                } else {
+                    // retry
                 }
             } else if (r == ERROR_INTERNET_FORCE_RETRY) {
                 // the call above set the password and we should retry the
@@ -699,14 +718,14 @@ void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,
 
 void Downloader::download(Job* job, const QUrl& url, QFile* file,
         QString* sha1, QCryptographicHash::Algorithm alg, bool useCache,
-        QString *mime, bool keepConnection, int timeout)
+        QString *mime, bool keepConnection, int timeout, bool interactive)
 {
     QString contentDisposition;
 
     if (url.scheme() == "https" || url.scheme() == "http")
         downloadWin(job, url, L"GET", file, mime, &contentDisposition,
                 defaultPasswordWindow, sha1, useCache, alg, keepConnection,
-                timeout);
+                timeout, interactive);
     else if (url.toString().startsWith("data:image/png;base64,")) {
         if (file) {
             QString dataURL_ = url.toString().mid(22);
@@ -774,14 +793,14 @@ Downloader::Response Downloader::download(Job *job,
         const Downloader::Request &request)
 {
     Downloader::Response r;
-    r.file = request.file;
 
     // TODO:
-    // request.interactive, request.parentWindow
-    // request.keepConnection, httpMethod
+    // request.parentWindow
+    // httpMethod
     download(job, request.url, request.file,
             request.hashSum ? &r.hashSum : 0, request.alg,
-            request.useCache, &r.mimeType);
+            request.useCache, &r.mimeType, request.keepConnection,
+            request.timeout, request.interactive);
 
     return r;
 }
@@ -832,8 +851,29 @@ QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
     return file;
 }
 
-QTemporaryFile* Downloader::download2(Job* job, const QUrl &url,
-        bool useCache)
+QTemporaryFile* Downloader::downloadToTemporary(Job* job,
+        const Downloader::Request &request)
 {
-    return download(job, url, 0, QCryptographicHash::Sha1, useCache, 0);
+    QTemporaryFile* file = new QTemporaryFile();
+    Downloader::Request r2(request);
+    r2.file = file;
+
+    if (file->open()) {
+        download(job, r2);
+        file->close();
+
+        if (job->isCancelled() || !job->getErrorMessage().isEmpty()) {
+            delete file;
+            file = 0;
+        }
+    } else {
+        job->setErrorMessage(QString(QObject::tr("Error opening file: %1")).
+                arg(file->fileName()));
+        delete file;
+        file = 0;
+        job->complete();
+    }
+
+    return file;
 }
+

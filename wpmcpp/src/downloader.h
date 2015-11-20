@@ -76,6 +76,7 @@ class Downloader: QObject
      * @param alg algorithm that should be used to compute the hash sum
      * @param keepConnection true = keep the connection open
      * @param timeout download timeout in seconds
+     * @param interactive is the interaction with the user allowed?
      * @return "content-length" or -1 if unknown
      */
     static int64_t downloadWin(Job* job, const QUrl& url,
@@ -83,7 +84,7 @@ class Downloader: QObject
             QString* mime, QString* contentDisposition,
             HWND parentWindow=0, QString* sha1=0, bool useCache=false,
             QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
-            bool keepConnection=true, int timeout=300);
+            bool keepConnection=true, int timeout=300, bool interactive=true);
 
     /**
      * Copies a file.
@@ -106,6 +107,46 @@ class Downloader: QObject
                          QCryptographicHash::Algorithm alg);
 
     static QString inputPassword(HINTERNET hConnectHandle, DWORD dwStatus);
+
+    /**
+     * Downloads a file.
+     *
+     * @param job job for this method
+     * @param url this URL will be downloaded. http://, https://, file:// and
+     *     data:image/png;base64, are supported
+     * @param sha1 if not null, SHA1 will be computed and stored here
+     * @param file the content will be stored here. 0 means that the data will
+     *     be read and discarded
+     * @param alg algorithm that should be used for computing the hash sum
+     * @param mime if not null, MIME type will be stored here
+     * @param useCache true = use Windows Internet cache on the local disk
+     * @param keepConnection true = keep the HTTP connection open
+     * @param timeout download timeout for HTTP in seconds
+     * @param interactive is the user interaction allowed?
+     */
+    static void download(Job* job, const QUrl& url, QFile* file,
+            QString* sha1=0,
+            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
+            bool useCache=true,
+            QString* mime=0,
+            bool keepConnection=true, int timeout=300,
+            bool interactive=true);
+
+    /**
+     * @param job job for this method
+     * @param url this URL will be downloaded. http://, https://, file:// and
+     *     data:image/png;base64, are supported
+     * @param sha1 if not null, SHA1 will be computed and stored here
+     * @param alg algorithm that should be used for computing the hash sum
+     * @param useCache true = use Windows Internet cache on the local disk
+     * @param mime if not null, MIME type will be stored here
+     * @return temporary file or 0 if an error occured. The file is closed.
+     */
+    static QTemporaryFile* download(Job* job, const QUrl& url,
+            QString* sha1=0,
+            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
+            bool useCache=true,
+            QString* mime=0);
 public:
     /**
      * @brief a download request
@@ -160,13 +201,23 @@ public:
         bool createTemporaryFile;
 
         /**
+         * @brief timeout in seconds
+         */
+        int timeout;
+
+        /**
+         * @brief the MIME type of the download will be stored here, it not 0
+         */
+        QString* mime;
+
+        /**
          * @param url http:/https:/file: URL
          */
-        Request(const QUrl& url): file(0), interactive(false),
+        Request(const QUrl& url): file(0), interactive(true),
                 parentWindow(0), url(url), hashSum(false),
                 alg(QCryptographicHash::Sha256), useCache(true),
-                keepConnection(false), httpMethod("GET"),
-                createTemporaryFile(false) {
+                keepConnection(true), httpMethod("GET"),
+                createTemporaryFile(false), timeout(300), mime(0) {
         }
     };
 
@@ -176,12 +227,6 @@ public:
     class Response
     {
     public:
-        /**
-         * the response data was stored here. This is only a reference,
-         * the object will not be freed with Response.
-         */
-        QFile* file;
-
         /** computed hash sum, if requested */
         QString hashSum;
 
@@ -197,59 +242,6 @@ public:
     static Response download(Job* job, const Request& request);
 
     /**
-     * @param job job for this method
-     * @param url this URL will be downloaded. http://, https://, file:// and
-     *     data:image/png;base64, are supported
-     * @param sha1 if not null, SHA1 will be computed and stored here
-     * @param alg algorithm that should be used for computing the hash sum
-     * @param useCache true = use Windows Internet cache on the local disk
-     * @param mime if not null, MIME type will be stored here
-     * @return temporary file or 0 if an error occured. The file is closed.
-     */
-    static QTemporaryFile* download(Job* job, const QUrl& url,
-            QString* sha1=0,
-            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
-            bool useCache=true,
-            QString* mime=0);
-
-    /**
-     * QtConcurrent::run only supports 5 arguments
-     *
-     * @param job job for this method
-     * @param url this URL will be downloaded. http://, https://, file:// and
-     *     data:image/png;base64, are supported
-     * @param sha1 if not null, SHA1 will be computed and stored here
-     * @param alg algorithm that should be used for computing the hash sum
-     * @param useCache true = use Windows Internet cache on the local disk
-     * @param mime if not null, MIME type will be stored here
-     * @return temporary file or 0 if an error occured. The file is closed.
-     */
-    static QTemporaryFile* download2(Job* job, const QUrl& url,
-            bool useCache=true);
-
-    /**
-     * Downloads a file.
-     *
-     * @param job job for this method
-     * @param url this URL will be downloaded. http://, https://, file:// and
-     *     data:image/png;base64, are supported
-     * @param sha1 if not null, SHA1 will be computed and stored here
-     * @param file the content will be stored here. 0 means that the data will
-     *     be read and discarded
-     * @param alg algorithm that should be used for computing the hash sum
-     * @param mime if not null, MIME type will be stored here
-     * @param useCache true = use Windows Internet cache on the local disk
-     * @param keepConnection true = keep the HTTP connection open
-     * @param timeout download timeout for HTTP in seconds
-     */
-    static void download(Job* job, const QUrl& url, QFile* file,
-            QString* sha1=0,
-            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
-            bool useCache=true,
-            QString* mime=0,
-            bool keepConnection=true, int timeout=300);
-
-    /**
      * @brief retrieves the content-length header for an URL.
      * @param job job object
      * @param url http:, https: or file:
@@ -257,7 +249,16 @@ public:
      * @return the content-length header value or -1 if unknown
      */
     static int64_t getContentLength(Job *job, const QUrl &url,
-            HWND parentWindow);
+                                    HWND parentWindow);
+
+    /**
+     * @brief HTTP download to a temporary file
+     * @param job job
+     * @param request HTTP request
+     * @return the created temporary file or 0 if an error occured
+     */
+    static QTemporaryFile *downloadToTemporary(Job *job,
+            const Downloader::Request &request);
 };
 
 #endif // DOWNLOADER_H

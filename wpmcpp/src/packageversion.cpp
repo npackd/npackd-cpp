@@ -859,9 +859,9 @@ QString PackageVersion::downloadAndComputeSHA1(Job* job)
 
     QString r;
 
-    QTemporaryFile* f = 0;
     Job* djob = job->newSubJob(0.95, QObject::tr("Downloading"));
-    f = Downloader::download(djob, this->download);
+    Downloader::Request request(this->download);
+    QTemporaryFile* f = Downloader::downloadToTemporary(djob, request);
     if (!djob->getErrorMessage().isEmpty())
         job->setErrorMessage(QString(QObject::tr("Download failed: %1")).
                 arg(djob->getErrorMessage()));
@@ -993,7 +993,8 @@ QString PackageVersion::getPreferredInstallationDirectory()
                 this->version.getVersionString(), "");
 }
 
-QString PackageVersion::download_(Job* job, const QString& where)
+QString PackageVersion::download_(Job* job, const QString& where,
+        bool interactive)
 {
     if (!this->download.isValid()) {
         job->setErrorMessage(QObject::tr("No download URL"));
@@ -1068,8 +1069,15 @@ QString PackageVersion::download_(Job* job, const QString& where)
         } else {
             Job* djob = job->newSubJob(0.8,
                     QObject::tr("Downloading & computing hash sum"));
-            Downloader::download(djob, this->download, f,
-                    this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
+
+            Downloader::Request request(this->download);
+            request.file = f;
+            if (!this->sha1.isEmpty())
+                request.hashSum = true;
+            request.alg = this->hashSumType;
+            request.interactive = interactive;
+            Downloader::Response response = Downloader::download(djob, request);
+            dsha1 = response.hashSum;
             downloadOK = !djob->isCancelled() &&
                     djob->getErrorMessage().isEmpty();
             f->close();
@@ -1088,8 +1096,15 @@ QString PackageVersion::download_(Job* job, const QString& where)
                 double rest = 0.9 - job->getProgress();
                 Job* djob = job->newSubJob(rest,
                         QObject::tr("Downloading & computing hash sum (2nd try)"));
-                Downloader::download(djob, this->download, f,
-                        this->sha1.isEmpty() ? 0 : &dsha1, this->hashSumType);
+                Downloader::Request request(this->download);
+                request.file = f;
+                if (!this->sha1.isEmpty())
+                    request.hashSum = true;
+                request.alg = this->hashSumType;
+                request.interactive = interactive;
+                Downloader::Response response =
+                        Downloader::download(djob, request);
+                dsha1 = response.hashSum;
                 if (!djob->getErrorMessage().isEmpty())
                     job->setErrorMessage(QObject::tr("Error downloading %1: %2").
                         arg(this->download.toString()).arg(

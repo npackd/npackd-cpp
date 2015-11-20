@@ -118,7 +118,7 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
 
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
-        bool printScriptOutput)
+        bool printScriptOutput, bool interactive)
 {
     QList<InstallOperation *> install = install_;
 
@@ -204,7 +204,7 @@ void AbstractRepository::process(Job *job,
                 Job* sub = job->newSubJob(0.7 / n, txt, true, true);
                 QString where = pv->getPreferredInstallationDirectory();
                 wheres.append(where);
-                QString binary = pv->download_(sub, where);
+                QString binary = pv->download_(sub, where, interactive);
                 binaries.append(binary);
             } else {
                 wheres.append("");

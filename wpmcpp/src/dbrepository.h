@@ -88,8 +88,9 @@ private:
      *
      * @param job job for this method
      * @param useCache true = cache will be used
+     * @param interactive true = allow the interaction with the user
      */
-    void load(Job *job, bool useCache);
+    void load(Job *job, bool useCache, bool interactive);
 
     void loadOne(Job *job, QFile *f);
 
@@ -228,8 +229,9 @@ public:
      *    repositories from the Internet are loaded and the MSI database and
      *    "Software" control panel data will be scanned.
      * @param job job
+     * @param interactive true = allow the interaction with the user
      */
-    void updateF5(Job *job);
+    void updateF5(Job *job, bool interactive=true);
 
     /**
      * @brief updateF5() that can be used with QtConcurrent::Run
