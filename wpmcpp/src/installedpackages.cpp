@@ -279,7 +279,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
         Package* p = r->findPackage_(ipv->package);
 
-        path = WPMUtils::normalizePath(WPMUtils::getInstallationDirectory()) +
+        path = WPMUtils::normalizePath(WPMUtils::getInstallationDirectory(),
+                false) +
                 "\\NpackdDetected\\" +
                 WPMUtils::makeValidFilename(p ? p->title : ipv->package, '_');
         if (d.exists(path)) {
@@ -764,6 +765,8 @@ QString InstalledPackages::readRegistryDatabase()
 
             if (dir.isEmpty())
                 continue;
+
+            dir = WPMUtils::normalizePath(dir, false);
 
             InstalledPackageVersion* ipv = new InstalledPackageVersion(
                     packageName, version, dir);

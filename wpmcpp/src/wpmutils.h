@@ -129,10 +129,11 @@ public:
      * - replace multiple occurences of \
      *
      * @param path a file/directory path
+     * @param lowerCase true = call .toLower()
      * @return normalized path
      * @threadsafe
      */
-    static QString normalizePath(const QString& path);
+    static QString normalizePath(const QString& path, bool lowerCase=true);
 
     /**
      * @param commandLine command line

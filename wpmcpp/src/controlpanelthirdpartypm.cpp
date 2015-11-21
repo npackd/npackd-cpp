@@ -241,7 +241,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
 
     if (useThisEntry) {
         if (!dir.isEmpty()) {
-            dir = WPMUtils::normalizePath(dir);
+            dir = WPMUtils::normalizePath(dir, false);
         }
     }
 

@@ -764,11 +764,13 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
     }
 
     if (res.isEmpty()) {
-        InstallOperation* io = new InstallOperation();
-        io->install = true;
-        io->package = this->package;
-        io->version = this->version;
-        ops.append(io);
+        if (!this->installed()) {
+            InstallOperation* io = new InstallOperation();
+            io->install = true;
+            io->package = this->package;
+            io->version = this->version;
+            ops.append(io);
+        }
         installed.append(this->clone());
     }
 
@@ -1473,7 +1475,7 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
             of.setAutoRemove(false);
             QString filename;
             if (of.open()) {
-                filename = WPMUtils::normalizePath(of.fileName());
+                filename = WPMUtils::normalizePath(of.fileName(), false);
                 of.close();
                 if (of.remove()) {
                     // ignoring the error here

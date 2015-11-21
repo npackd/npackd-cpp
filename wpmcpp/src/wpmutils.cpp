@@ -147,9 +147,13 @@ QString WPMUtils::getProgramFilesDir()
     return ret;
 }
 
-QString WPMUtils::normalizePath(const QString& path)
+QString WPMUtils::normalizePath(const QString& path, bool lowerCase)
 {
-    QString r = path.toLower();
+    QString r;
+    if (lowerCase)
+        r = path.toLower();
+    else
+        r = path;
     r.replace('/', '\\');
     while (r.contains("\\\\"))
         r.replace("\\\\", "\\");
@@ -2057,23 +2061,6 @@ QList<PackageVersion*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
                                         arg(p->title).arg(p->name).arg(version);
                             }
                         }
-                    }
-                }
-            }
-
-            if (err->isEmpty() && pv) {
-                if (add) {
-                    if (pv->installed()) {
-                        WPMUtils::outputTextConsole(QObject::tr(
-                                "%1 is already installed in %2").
-                                arg(pv->toString()).
-                                arg(pv->getPath()) + "\n");
-                    }
-                } else {
-                    if (!pv->installed()) {
-                        WPMUtils::outputTextConsole(QObject::tr(
-                                "%1 is not installed").
-                                arg(pv->toString()) + "\n");
                     }
                 }
             }

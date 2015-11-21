@@ -223,7 +223,7 @@ void App::usage()
         "    ncl help",
         "        prints this help",
         "    ncl add (--package=<package> [--version=<version>])+ ",
-        "            [--non-interactive] --file=<installation directory>",
+        "            [--non-interactive] [--file=<installation directory>]",
         "        installs packages. The newest available version will be installed, ",
         "        if none is specified.",
         "        Short package names can be used here",
@@ -1071,10 +1071,21 @@ QString App::add()
     if (job->shouldProceed()) {
         if (!file.isNull()) {
             QDir d;
-            file = WPMUtils::normalizePath(d.absoluteFilePath(file));
+            file = WPMUtils::normalizePath(d.absoluteFilePath(file), false);
 
-            if (toInstall.size() > 1) {
-                job->setErrorMessage("The installation directory can only be specified if one package version should be installed.");
+            if (toInstall.size() != 1) {
+                job->setErrorMessage(
+                        "The installation directory can only be specified if one package version should be installed.");
+            } else {
+                PackageVersion* pv = toInstall.at(0);
+                QString ip = InstalledPackages::getDefault()->
+                        getPath(pv->package, pv->version);
+
+                if (pv->installed() && !WPMUtils::pathEquals(ip, file)) {
+                    job->setErrorMessage(QString(
+                            "The package version %1 is already installed in %2.").
+                            arg(pv->toString(), ip));
+                }
             }
         }
     }

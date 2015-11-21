@@ -255,12 +255,14 @@ void AbstractRepository::process(Job *job,
                     if (d.exists(where) && !WPMUtils::pathEquals(where, dir)) {
                         // we should install in a particular directory, but it
                         // exists.
-                        Job* djob = sub->newSubJob(100);
+                        Job* djob = sub->newSubJob(1,
+                                QObject::tr("Deleting temporary directory %1").
+                                arg(dir));
                         QDir ddir(dir);
                         WPMUtils::removeDirectory(djob, ddir);
                         job->setErrorMessage(QObject::tr(
                                 "Cannot install %1 into %2. The directory already exists.").
-                                arg(pv->toString(true)).arg(dir));
+                                arg(pv->toString(true)).arg(where));
                         break;
                     }
                 }

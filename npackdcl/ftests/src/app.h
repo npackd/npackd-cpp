@@ -24,6 +24,11 @@ private slots:
     void addRemove();
 
     /**
+     * @brief "add" --file=<installation directory>
+     */
+    void addToDir();
+
+    /**
      * @brief "add"/"remove" for a running program
      */
     void addRemoveRunning();

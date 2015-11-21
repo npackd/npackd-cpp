@@ -64,12 +64,44 @@ void App::addRemove()
     if (!admin)
         QSKIP("disabled");
 
-    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+    captureNpackdCLOutput("rm -p active-directory-explorer").
+            contains("removed successfully");
+
+    QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer").
             contains("installed successfully"));
-    QVERIFY(captureNpackdCLOutput("add -p FARManager").
-            contains("is already installed in"));
-    QVERIFY(captureNpackdCLOutput("rm -p io.mpv.mpv-64 -v 0.4").
+    QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer").
+            contains("installed successfully"));
+    QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));
+}
+
+void App::addToDir()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    captureNpackdCLOutput("rm -p active-directory-explorer").
+            contains("removed successfully");
+
+    QString output = captureNpackdCLOutput(
+            "add -p active-directory-explorer -f \"C:\\Program Files\\ADE\"");
+    QVERIFY2(output.contains(
+            "installed successfully in C:\\Program Files\\ADE"),
+            output.toLatin1());
+
+    output = captureNpackdCLOutput("add -p active-directory-explorer");
+    QVERIFY2(output.contains(
+            "installed successfully in C:\\Program Files\\ADE"),
+            output.toLatin1());
+
+    output = captureNpackdCLOutput(
+            "add -p active-directory-explorer -f \"C:\\Program Files\\ADE2\"");
+    QVERIFY2(output.contains(
+            "is already installed in C:\\Program Files\\ADE"),
+            output.toLatin1());
+
+    output = captureNpackdCLOutput("rm -p active-directory-explorer");
+    QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
 void App::addRemoveRunning()
@@ -77,14 +109,12 @@ void App::addRemoveRunning()
     if (!admin)
         QSKIP("disabled");
 
-    QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
+    QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer").
             contains("installed successfully"));
-    QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
-            contains("is already installed in"));
-    QString dir = captureNpackdCLOutput("path -p FARManager").trimmed();
-    QProcess::execute("cmd.exe /C start \"" + dir + "\\Far.exe");
+    QString dir = captureNpackdCLOutput("path -p active-directory-explorer").trimmed();
+    QProcess::execute("cmd.exe /C start \"\" \"" + dir + "\\ADExplorer.exe");
     Sleep(5000);
-    QVERIFY(captureNpackdCLOutput("rm -p FARManager").
+    QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));
 }
 
@@ -95,15 +125,17 @@ void App::addDoesntProduceDetected()
 
     captureNpackdCLOutput("rm -p net.poedit.POEdit -v 1.7.3.1");
 
+    captureNpackdCLOutput("set-install-dir -f \"C:\\Program Files\"");
+
     QVERIFY(captureNpackdCLOutput("add -p net.poedit.POEdit -v 1.7.3.1").
             contains("installed successfully"));
 
     QString s = captureNpackdCLOutput("info -p net.poedit.POEdit");
-    int p = s.indexOf("C:\\ProgramFiles\\Poedit");
-    QVERIFY(p > 0);
+    int p = s.indexOf("C:\\Program Files\\Poedit");
+    QVERIFY2(p > 0, s.toLatin1());
 
-    int p2 = s.indexOf("C:\\ProgramFiles\\Poedit", p + 1);
-    QVERIFY(p2 < 0);
+    int p2 = s.indexOf("C:\\Program Files\\Poedit", p + 1);
+    QVERIFY2(p2 < 0, s.toLatin1());
 }
 
 void App::addWithoutVersion()
@@ -111,13 +143,13 @@ void App::addWithoutVersion()
     if (!admin)
         QSKIP("disabled");
 
-    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+    QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer").
             contains("installed successfully"));
 
-    QVERIFY(captureNpackdCLOutput("add -p FARManager").
-            contains("is already installed"));
+    QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer").
+            contains("installed successfully"));
 
-    QVERIFY(captureNpackdCLOutput("rm -p FARManager").
+    QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));
 }
 
@@ -133,19 +165,19 @@ void App::which()
     if (!admin)
         QSKIP("disabled");
 
-    QVERIFY(captureNpackdCLOutput("add -p FARManager").
+    QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer").
             contains("installed successfully"));
-    QString dir = captureNpackdCLOutput("path -p FARManager").trimmed();
+    QString dir = captureNpackdCLOutput("path -p active-directory-explorer").trimmed();
     QDir d;
     QVERIFY2(d.exists(dir), dir.toLatin1());
 
     QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\"").
-            contains("com.farmanager.FARManager"));
-    QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\\Far.exe\"").
-            contains("com.farmanager.FARManager"));
+            contains("active-directory-explorer"));
+    QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\\ADExplorer.exe\"").
+            contains("active-directory-explorer"));
     QVERIFY(captureNpackdCLOutput("which -f \"" + dir + "\\NonExisting.exe\"").
-            contains("com.farmanager.FARManager"));
-    QVERIFY(captureNpackdCLOutput("rm -p FARManager").
+            contains("active-directory-explorer"));
+    QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));
 }
 
