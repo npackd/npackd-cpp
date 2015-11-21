@@ -223,7 +223,7 @@ void App::usage()
         "    ncl help",
         "        prints this help",
         "    ncl add (--package=<package> [--version=<version>])+ ",
-        "            [--non-interactive]",
+        "            [--non-interactive] --file=<installation directory>",
         "        installs packages. The newest available version will be installed, ",
         "        if none is specified.",
         "        Short package names can be used here",
@@ -900,7 +900,7 @@ QString App::update()
 
 void App::processInstallOperations(Job *job,
         const QList<InstallOperation *> &ops, DWORD programCloseType,
-        bool interactive)
+        bool interactive, const QString& where)
 {
     DBRepository* rep = DBRepository::getDefault();
 
@@ -1031,7 +1031,7 @@ void App::processInstallOperations(Job *job,
 
         job->complete();
     } else {
-        rep->process(job, ops, programCloseType, debug, interactive);
+        rep->process(job, ops, programCloseType, debug, interactive, where);
     }
 }
 
@@ -1067,6 +1067,18 @@ QString App::add()
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
+    QString file = cl.get("file");
+    if (job->shouldProceed()) {
+        if (!file.isNull()) {
+            QDir d;
+            file = WPMUtils::normalizePath(d.absoluteFilePath(file));
+
+            if (toInstall.size() > 1) {
+                job->setErrorMessage("The installation directory can only be specified if one package version should be installed.");
+            }
+        }
+    }
+
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     QList<InstallOperation*> ops;
     if (job->shouldProceed()) {
@@ -1092,7 +1104,8 @@ QString App::add()
 
     if (job->shouldProceed() && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.9, "Installing");
-        processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW);
+        processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW,
+                interactive, file);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
                     arg(ijob->getErrorMessage()));

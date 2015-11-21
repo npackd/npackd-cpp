@@ -1726,29 +1726,29 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="225"/>
+        <location filename="abstractrepository.cpp" line="227"/>
         <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Installation de %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="228"/>
+        <location filename="abstractrepository.cpp" line="230"/>
         <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Désinstallation de %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="304"/>
+        <location filename="abstractrepository.cpp" line="306"/>
         <source>No installable version found for the package %1</source>
         <translation>Il ný a pas de version installable trouvée pour le paquet %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="311"/>
+        <location filename="abstractrepository.cpp" line="313"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>Impossible de trouver la dernière version installée pour le paquet %1 : %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="317"/>
+        <location filename="abstractrepository.cpp" line="319"/>
         <source>No installed version found for the package %1</source>
         <translation>Pas de version installée trouvée pour le paquet %1</translation>
     </message>

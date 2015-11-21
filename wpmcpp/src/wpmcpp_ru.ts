@@ -1782,29 +1782,29 @@ p, li { white-space: pre-wrap; }
         <translation>Останавливаю пакет %1 из %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="225"/>
+        <location filename="abstractrepository.cpp" line="227"/>
         <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Установка %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="228"/>
+        <location filename="abstractrepository.cpp" line="230"/>
         <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Удаление %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="304"/>
+        <location filename="abstractrepository.cpp" line="306"/>
         <source>No installable version found for the package %1</source>
         <translation>Ниодной версии для установки не обнаружено для пакета %1</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="311"/>
+        <location filename="abstractrepository.cpp" line="313"/>
         <source>Cannot find the newest installed version for %1: %2</source>
         <translation>Невозможно найти самую новую инсталлированную версию для %1: %2</translation>
     </message>
     <message>
-        <location filename="abstractrepository.cpp" line="317"/>
+        <location filename="abstractrepository.cpp" line="319"/>
         <source>No installed version found for the package %1</source>
         <translation>Ниодной установленной версии не обнаружено для пакета %1</translation>
     </message>

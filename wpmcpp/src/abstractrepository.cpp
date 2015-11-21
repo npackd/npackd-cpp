@@ -118,7 +118,7 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
 
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
-        bool printScriptOutput, bool interactive)
+        bool printScriptOutput, bool interactive, const QString& where)
 {
     QList<InstallOperation *> install = install_;
 
@@ -190,7 +190,10 @@ void AbstractRepository::process(Job *job,
 
     // 90% for removing/installing the packages
     if (job->shouldProceed()) {
-        QStringList wheres;
+        // where the binary was downloaded
+        QStringList dirs;
+
+        // names of the binaries
         QStringList binaries;
 
         // downloading packages
@@ -202,12 +205,17 @@ void AbstractRepository::process(Job *job,
                         pv->toString());
 
                 Job* sub = job->newSubJob(0.7 / n, txt, true, true);
-                QString where = pv->getPreferredInstallationDirectory();
-                wheres.append(where);
-                QString binary = pv->download_(sub, where, interactive);
+
+                QString dir = where;
+                if (dir.isEmpty())
+                    dir = pv->getIdealInstallationDirectory();
+                dir = WPMUtils::findNonExistingFile(dir, "");
+                dirs.append(dir);
+
+                QString binary = pv->download_(sub, dir, interactive);
                 binaries.append(binary);
             } else {
-                wheres.append("");
+                dirs.append("");
                 binaries.append("");
                 job->setProgress(job->getProgress() + 0.7 / n);
             }
@@ -230,17 +238,34 @@ void AbstractRepository::process(Job *job,
 
             Job* sub = job->newSubJob(0.2 / n, txt, true, true);
             if (op->install) {
-                QString where = wheres.at(i);
+                QString dir = dirs.at(i);
                 QString binary = binaries.at(i);
-                QString ideal = pv->getIdealInstallationDirectory();
+
                 QDir d;
-                if (!d.exists(ideal) &&
-                        !WPMUtils::pathEquals(ideal, where)) {
-                    if (d.rename(where, ideal))
-                        where = ideal;
+                if (where.isEmpty()) {
+                    // if we are not forced to install in a particular
+                    // directory, we try to use the ideal location
+                    QString ideal = pv->getIdealInstallationDirectory();
+                    if (!d.exists(ideal) &&
+                            !WPMUtils::pathEquals(ideal, dir)) {
+                        if (d.rename(dir, ideal))
+                            dir = ideal;
+                    }
+                } else {
+                    if (d.exists(where) && !WPMUtils::pathEquals(where, dir)) {
+                        // we should install in a particular directory, but it
+                        // exists.
+                        Job* djob = sub->newSubJob(100);
+                        QDir ddir(dir);
+                        WPMUtils::removeDirectory(djob, ddir);
+                        job->setErrorMessage(QObject::tr(
+                                "Cannot install %1 into %2. The directory already exists.").
+                                arg(pv->toString(true)).arg(dir));
+                        break;
+                    }
                 }
-                pv->install(sub, where, binary,
-                        printScriptOutput);
+
+                pv->install(sub, dir, binary, printScriptOutput);
             } else
                 pv->uninstall(sub, printScriptOutput);
 

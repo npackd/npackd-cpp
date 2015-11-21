@@ -134,10 +134,12 @@ public:
      * @param printScriptOutput true = redirect the script output to the
      *     standard output
      * @param interactive true = allow the interaction with the user
+     * @param where exact installation directory for 1 package or "" for
+     *     default directory
      */
     void process(Job* job, const QList<InstallOperation*> &install,
             DWORD programCloseType, bool printScriptOutput,
-            bool interactive=true);
+            bool interactive=true, const QString &where="");
 
     /**
      * Finds all installed package versions.
