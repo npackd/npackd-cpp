@@ -329,10 +329,13 @@ public:
      *     installed. The list
      *     will be changed by this method. Normally this is an empty list and
      *     objects will be added to it on different recursion levels.
+     * @param where target directory for the installation or "" if the
+     *     directory should be chosen automatically
      * @return error message or ""
      */
     QString planInstallation(QList<PackageVersion*>& installed,
-            QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid);
+            QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
+            const QString &where="");
 
     /**
      * Plans un-installation of this package and all the dependent recursively.

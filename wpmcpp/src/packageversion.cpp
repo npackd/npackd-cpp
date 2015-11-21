@@ -672,7 +672,8 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir)
 }
 
 QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
-        QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid)
+        QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
+        const QString& where)
 {
     QString res;
 
@@ -769,6 +770,7 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
             io->install = true;
             io->package = this->package;
             io->version = this->version;
+            io->where = where;
             ops.append(io);
         }
         installed.append(this->clone());
@@ -980,14 +982,18 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 
 QString PackageVersion::getIdealInstallationDirectory()
 {
-    return WPMUtils::getInstallationDirectory() + "\\" +
-            WPMUtils::makeValidFilename(this->getPackageTitle(), '_');
+    return WPMUtils::normalizePath(
+            WPMUtils::getInstallationDirectory() + "\\" +
+            WPMUtils::makeValidFilename(this->getPackageTitle(), '_'),
+            false);
 }
 
 QString PackageVersion::getPreferredInstallationDirectory()
 {
-    QString name = WPMUtils::getInstallationDirectory() + "\\" +
-            WPMUtils::makeValidFilename(this->getPackageTitle(), '_');
+    QString name = WPMUtils::normalizePath(
+            WPMUtils::getInstallationDirectory() + "\\" +
+            WPMUtils::makeValidFilename(this->getPackageTitle(), '_'),
+            false);
     if (!QFileInfo(name).exists())
         return name;
     else

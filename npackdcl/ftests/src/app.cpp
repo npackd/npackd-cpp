@@ -104,6 +104,31 @@ void App::addToDir()
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
+void App::updateKeepDirectories()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    captureNpackdCLOutput("rm -p akelpad");
+
+    QString output = captureNpackdCLOutput(
+            "add -p akelpad -v 4.9.3 -f \"C:\\Program Files\\AkelPad\"");
+    QVERIFY2(output.contains(
+            "installed successfully in C:\\Program Files\\AkelPad"),
+            output.toLatin1());
+
+    output = captureNpackdCLOutput("update -p akelpad -k");
+    QVERIFY2(output.contains(
+            "The packages were updated successfully"),
+            output.toLatin1());
+
+    QVERIFY(captureNpackdCLOutput("path -p akelpad") ==
+            "C:\\Program Files\\AkelPad");
+
+    output = captureNpackdCLOutput("rm -p akelpad");
+    QVERIFY2(output.contains("removed successfully"), output.toLatin1());
+}
+
 void App::addRemoveRunning()
 {
     if (!admin)
@@ -111,8 +136,9 @@ void App::addRemoveRunning()
 
     QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer").
             contains("installed successfully"));
-    QString dir = captureNpackdCLOutput("path -p active-directory-explorer").trimmed();
-    QProcess::execute("cmd.exe /C start \"\" \"" + dir + "\\ADExplorer.exe");
+    QString dir = captureNpackdCLOutput("path -p active-directory-explorer").
+            trimmed();
+    QProcess::execute("cmd.exe /C start \"\" \"" + dir + "\\ADExplorer.exe\"");
     Sleep(5000);
     QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));

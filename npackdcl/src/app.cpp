@@ -84,6 +84,8 @@ int App::process()
             "[c][k]", false);
     cl.add("non-interactive", 'n',
             "assume that there is no user and do not ask for input", "", false);
+    cl.add("keep-directories", 'k',
+            "use the same directories for updated packages", "", false);
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -235,7 +237,7 @@ void App::usage()
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
         "    ncl update (--package=<package>)+ [--end-process=<types>]",
-        "            [--non-interactive]",
+        "            [--non-interactive] [--keep-directories]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
@@ -782,17 +784,6 @@ QString App::update()
     job->setTitle("Updating packages");
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.01,
-                "Reading list of installed packages from the registry");
-        InstalledPackages* ip = InstalledPackages::getDefault();
-        QString err = ip->readRegistryDatabase();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
-            sub->completeWithProgress();
-    }
-
-    if (job->shouldProceed()) {
         Job* rjob = job->newSubJob(0.05,
                 "Detecting installed software");
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
@@ -845,10 +836,12 @@ QString App::update()
         }
     }
 
+    bool keepDirectories = !cl.isPresent("keep-directories");
+
     QList<InstallOperation*> ops;
     bool up2date = false;
     if (job->shouldProceed()) {
-        QString err = rep->planUpdates(toUpdate, ops);
+        QString err = rep->planUpdates(toUpdate, ops, keepDirectories);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -900,7 +893,7 @@ QString App::update()
 
 void App::processInstallOperations(Job *job,
         const QList<InstallOperation *> &ops, DWORD programCloseType,
-        bool interactive, const QString& where)
+        bool interactive)
 {
     DBRepository* rep = DBRepository::getDefault();
 
@@ -1031,7 +1024,7 @@ void App::processInstallOperations(Job *job,
 
         job->complete();
     } else {
-        rep->process(job, ops, programCloseType, debug, interactive, where);
+        rep->process(job, ops, programCloseType, debug, interactive);
     }
 }
 
@@ -1040,22 +1033,11 @@ QString App::add()
     Job* job = clp.createJob();
     job->setTitle("Installing packages");
 
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.01,
-                "Reading the list of installed packages from the registry");
-        InstalledPackages* ip = InstalledPackages::getDefault();
-        QString err = ip->readRegistryDatabase();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
-            sub->completeWithProgress();
-    }
+    InstalledPackages* ip = InstalledPackages::getDefault();
 
     if (job->shouldProceed()) {
-        Job* rjob = job->newSubJob(0.09,
-                "Detecting installed software");
-        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob);
+        Job* rjob = job->newSubJob(0.1, "Detecting installed software");
+        ip->refresh(DBRepository::getDefault(), rjob);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
@@ -1078,13 +1060,12 @@ QString App::add()
                         "The installation directory can only be specified if one package version should be installed.");
             } else {
                 PackageVersion* pv = toInstall.at(0);
-                QString ip = InstalledPackages::getDefault()->
-                        getPath(pv->package, pv->version);
+                QString ip_ = ip->getPath(pv->package, pv->version);
 
-                if (pv->installed() && !WPMUtils::pathEquals(ip, file)) {
+                if (pv->installed() && !WPMUtils::pathEquals(ip_, file)) {
                     job->setErrorMessage(QString(
                             "The package version %1 is already installed in %2.").
-                            arg(pv->toString(), ip));
+                            arg(pv->toString(), ip_));
                 }
             }
         }
@@ -1103,7 +1084,7 @@ QString App::add()
         for (int i = 0; i < toInstall.size(); i++) {
             PackageVersion* pv = toInstall.at(i);
             if (job->shouldProceed())
-                err = pv->planInstallation(installed, ops, avoid);
+                err = pv->planInstallation(installed, ops, avoid, file);
             if (!err.isEmpty()) {
                 job->setErrorMessage(err);
             }
@@ -1116,7 +1097,7 @@ QString App::add()
     if (job->shouldProceed() && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.9, "Installing");
         processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW,
-                interactive, file);
+                interactive);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
                     arg(ijob->getErrorMessage()));

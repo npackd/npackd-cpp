@@ -118,7 +118,7 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
 
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
-        bool printScriptOutput, bool interactive, const QString& where)
+        bool printScriptOutput, bool interactive)
 {
     QList<InstallOperation *> install = install_;
 
@@ -206,7 +206,7 @@ void AbstractRepository::process(Job *job,
 
                 Job* sub = job->newSubJob(0.7 / n, txt, true, true);
 
-                QString dir = where;
+                QString dir = op->where;
                 if (dir.isEmpty())
                     dir = pv->getIdealInstallationDirectory();
                 dir = WPMUtils::findNonExistingFile(dir, "");
@@ -242,7 +242,7 @@ void AbstractRepository::process(Job *job,
                 QString binary = binaries.at(i);
 
                 QDir d;
-                if (where.isEmpty()) {
+                if (op->where.isEmpty()) {
                     // if we are not forced to install in a particular
                     // directory, we try to use the ideal location
                     QString ideal = pv->getIdealInstallationDirectory();
@@ -252,7 +252,8 @@ void AbstractRepository::process(Job *job,
                             dir = ideal;
                     }
                 } else {
-                    if (d.exists(where) && !WPMUtils::pathEquals(where, dir)) {
+                    if (d.exists(op->where) &&
+                            !WPMUtils::pathEquals(op->where, dir)) {
                         // we should install in a particular directory, but it
                         // exists.
                         Job* djob = sub->newSubJob(1,
@@ -262,7 +263,7 @@ void AbstractRepository::process(Job *job,
                         WPMUtils::removeDirectory(djob, ddir);
                         job->setErrorMessage(QObject::tr(
                                 "Cannot install %1 into %2. The directory already exists.").
-                                arg(pv->toString(true)).arg(where));
+                                arg(pv->toString(true)).arg(op->where));
                         break;
                     }
                 }
@@ -310,7 +311,7 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 
 
 QString AbstractRepository::planUpdates(const QList<Package*> packages,
-        QList<InstallOperation*>& ops)
+        QList<InstallOperation*>& ops, bool keepDirectories)
 {
     QString err;
 
@@ -371,7 +372,12 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
             QString err = newesti.at(i)->planUninstallation(
                     installedCopy, ops2);
             if (err.isEmpty()) {
-                err = newest.at(i)->planInstallation(installedCopy, ops2, avoid);
+                QString where;
+                if (keepDirectories)
+                    where = newesti.at(i)->getPath();
+
+                err = newest.at(i)->planInstallation(installedCopy, ops2,
+                        avoid, where);
                 if (err.isEmpty()) {
                     if (ops2.count() == 2) {
                         used[i] = true;
@@ -390,8 +396,13 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
     if (err.isEmpty()) {
         for (int i = 0; i < newest.count(); i++) {
             if (!used[i]) {
+                QString where;
+                if (keepDirectories)
+                    where = newesti.at(i)->getPath();
+
                 QList<PackageVersion*> avoid;
-                err = newest.at(i)->planInstallation(installed, ops, avoid);
+                err = newest.at(i)->planInstallation(installed, ops, avoid,
+                        where);
                 if (!err.isEmpty())
                     break;
             }

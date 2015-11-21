@@ -29,6 +29,11 @@ private slots:
     void addToDir();
 
     /**
+     * @brief "update" --keep-directories
+     */
+    void updateKeepDirectories();
+
+    /**
      * @brief "add"/"remove" for a running program
      */
     void addRemoveRunning();

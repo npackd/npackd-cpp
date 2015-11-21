@@ -20,6 +20,12 @@ public:
     /** package version */
     Version version;
 
+    /**
+     * the directory where the package version should be installed on "" if the
+     * the installation directory should be determined automatically.
+     */
+    QString where;
+
     InstallOperation();
 
     /**

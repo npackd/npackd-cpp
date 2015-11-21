@@ -134,12 +134,10 @@ public:
      * @param printScriptOutput true = redirect the script output to the
      *     standard output
      * @param interactive true = allow the interaction with the user
-     * @param where exact installation directory for 1 package or "" for
-     *     default directory
      */
     void process(Job* job, const QList<InstallOperation*> &install,
             DWORD programCloseType, bool printScriptOutput,
-            bool interactive=true, const QString &where="");
+            bool interactive=true);
 
     /**
      * Finds all installed package versions.
@@ -155,10 +153,12 @@ public:
      * @param packages these packages should be updated. No duplicates are
      *     allowed here
      * @param ops installation operations will be appended here
+     * @param keepDirectories true = use the same directories for the updated
+     *     versions
      * @return error message or ""
      */
     QString planUpdates(const QList<Package*> packages,
-            QList<InstallOperation*>& ops);
+            QList<InstallOperation*>& ops, bool keepDirectories=false);
 
     /**
      * @brief saves (creates or updates) the data about a package
