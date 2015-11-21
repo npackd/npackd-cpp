@@ -1,3 +1,5 @@
+#include <shlobj.h>
+
 #include <QStringList>
 #include <QCoreApplication>
 #include <QDir>
@@ -8,18 +10,11 @@
 #include "wpmutils.h"
 #include "clprogress.h"
 #include "hrtimer.h"
+#include "dbrepository.h"
 
 App::App()
 {
-    HANDLE hToken;
-    OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hToken);
-
-    DWORD infoLen;
-    TOKEN_ELEVATION_TYPE elevationType;
-    GetTokenInformation(
-            hToken, TokenElevationType,
-            &elevationType, sizeof(elevationType), &infoLen);
-    this->admin = elevationType == TokenElevationTypeFull;
+    this->admin = true;
 }
 
 QString App::captureNpackdCLOutput(const QString& params)
