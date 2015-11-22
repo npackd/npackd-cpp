@@ -79,7 +79,7 @@ QString CLProcessor::remove()
     QList<PackageVersion*> toRemove;
     if (err.isEmpty()) {
         toRemove =
-                WPMUtils::getPackageVersionOptions(cl, &err, false);
+                PackageVersion::getPackageVersionOptions(cl, &err, false);
     }
 
     QList<PackageVersion*> installed;
@@ -175,7 +175,7 @@ QString CLProcessor::add()
     }
 
     QList<PackageVersion*> toInstall =
-            WPMUtils::getPackageVersionOptions(cl, &err, true);
+            PackageVersion::getPackageVersionOptions(cl, &err, true);
 
     DWORD pct = WPMUtils::CLOSE_WINDOW;
     if (err.isEmpty()) {
@@ -263,7 +263,7 @@ QString CLProcessor::update()
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
             QString err;
-            Package* p = WPMUtils::findOnePackage(package, &err);
+            Package* p = AbstractRepository::findOnePackage(package, &err);
             if (p)
                 toUpdate.append(p);
             else

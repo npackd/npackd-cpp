@@ -44,6 +44,13 @@ public:
     static void setRepositoryURLs(QList<QUrl*>& urls, QString *err);
 
     /**
+     * @brief checks a value for the installation directory
+     * @param dir a directory
+     * @return error message or ""
+     */
+    static QString checkInstallationDirectory(const QString& dir);
+
+    /**
      * @return default repository
      */
     static AbstractRepository* getDefault_();
@@ -52,6 +59,14 @@ public:
      * @param d default repository
      */
     static void setDefault_(AbstractRepository* d);
+
+    /**
+     * @param package full or short package name
+     * @param err error message will be stored here
+     * @return [ownership:caller] found package or 0. The returned value is
+     *     only 0 if the error is not empty
+     */
+    static Package *findOnePackage(const QString &package, QString *err);
 
     /**
      * @brief creates a new instance

@@ -581,3 +581,59 @@ QString AbstractRepository::getPackageTitleAndName(const QString &name)
 
     return res;
 }
+
+Package* AbstractRepository::findOnePackage(
+        const QString& package, QString* err)
+{
+    AbstractRepository* rep = AbstractRepository::getDefault_();
+    Package* p = rep->findPackage_(package);
+
+    if (!p) {
+        QList<Package*> packages = rep->findPackagesByShortName(package);
+
+        if (packages.count() == 0) {
+            *err = QObject::tr("Unknown package: %1").arg(package);
+        } else if (packages.count() > 1) {
+            QString names;
+            for (int i = 0; i < packages.count(); ++i) {
+                if (i != 0)
+                    names.append(", ");
+                Package* pi = packages.at(i);
+                names.append(pi->title).append(" (").append(pi->name).
+                        append(")");
+            }
+            *err = QObject::tr("More than one package was found: %1").
+                    arg(names);
+            qDeleteAll(packages);
+        } else {
+            p = packages.at(0);
+        }
+    }
+
+    return p;
+}
+
+QString AbstractRepository::checkInstallationDirectory(const QString &dir)
+{
+    QString err;
+    if (err.isEmpty() && dir.isEmpty())
+        err = QObject::tr("The installation directory cannot be empty");
+
+    if (err.isEmpty() && !QDir(dir).exists())
+        err = QObject::tr("The installation directory does not exist");
+
+    if (err.isEmpty()) {
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        InstalledPackageVersion* ipv = ip->findOwner(dir);
+        if (ipv) {
+            AbstractRepository* r = AbstractRepository::getDefault_();
+            err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").arg(
+                    dir).
+                    arg(r->getPackageTitleAndName(ipv->package)).
+                    arg(ipv->version.getVersionString());
+            delete ipv;
+        }
+    }
+    return err;
+}
+

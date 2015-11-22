@@ -2040,7 +2040,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="downloader.cpp" line="627"/>
         <location filename="downloader.cpp" line="693"/>
-        <location filename="wpmutils.cpp" line="2138"/>
+        <location filename="wpmutils.cpp" line="1974"/>
         <source>%L0 bytes</source>
         <translation>%L0 octets</translation>
     </message>
@@ -2282,13 +2282,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="clprocessor.cpp" line="254"/>
-        <location filename="wpmutils.cpp" line="1991"/>
+        <location filename="packageversion.cpp" line="926"/>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1999"/>
-        <location filename="wpmutils.cpp" line="2087"/>
+        <location filename="abstractrepository.cpp" line="595"/>
+        <location filename="packageversion.cpp" line="934"/>
         <source>Unknown package: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2595,13 +2595,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="504"/>
-        <location filename="packageversion.cpp" line="1256"/>
+        <location filename="packageversion.cpp" line="1363"/>
         <source>Waiting while other (un)installation scripts are running</source>
         <translation>En attente de la fin des autres scripts d&apos;installation/désinstallation</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="517"/>
-        <location filename="packageversion.cpp" line="1269"/>
+        <location filename="packageversion.cpp" line="1376"/>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
         <translation>En attente de la fin des autres scripts d&apos;installation/désinstallation (%1 minutes)</translation>
     </message>
@@ -2611,28 +2611,28 @@ p, li { white-space: pre-wrap; }
         <translation>Exécution du script de désinstallation (peut durer un certain temps)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1131"/>
+        <location filename="packageversion.cpp" line="1238"/>
         <source>Hash sum %1 found, but %2 was expected. The file has changed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1143"/>
+        <location filename="packageversion.cpp" line="1250"/>
         <source>Checking for viruses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1146"/>
+        <location filename="packageversion.cpp" line="1253"/>
         <source>Antivirus check failed. The file is not safe.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1493"/>
+        <location filename="packageversion.cpp" line="1600"/>
         <source>%1. Full output was saved in %2</source>
         <translation>%1. La sortie complète a été enregistrée à l&apos;emplacement %2</translation>
     </message>
     <message>
         <location filename="packageversion.cpp" line="583"/>
-        <location filename="packageversion.cpp" line="1361"/>
+        <location filename="packageversion.cpp" line="1468"/>
         <source>Deleting files</source>
         <translation>Suppression des fichiers</translation>
     </message>
@@ -2668,7 +2668,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="859"/>
-        <location filename="packageversion.cpp" line="1008"/>
+        <location filename="packageversion.cpp" line="1115"/>
         <source>No download URL</source>
         <translation>Pas de lien de télécharement</translation>
     </message>
@@ -2687,12 +2687,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">SHA1 invalide : %1 était attendu mais %2 a été trouvé</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="924"/>
+        <location filename="packageversion.cpp" line="1031"/>
         <source>Shortcut target %1 does not exist</source>
         <translation>La cible du raccourci %1 n&apos;existe pas</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="973"/>
+        <location filename="packageversion.cpp" line="1080"/>
         <source>Shortcut creation from %1 to %2 failed: %3</source>
         <translation>Echec de la créaction de raccourci de %1 vers %2 : %3</translation>
     </message>
@@ -2701,49 +2701,49 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Préparation</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1021"/>
+        <location filename="packageversion.cpp" line="1128"/>
         <source>Creating directory</source>
         <translation>Création du dossier</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1024"/>
-        <location filename="packageversion.cpp" line="1037"/>
+        <location filename="packageversion.cpp" line="1131"/>
+        <location filename="packageversion.cpp" line="1144"/>
         <source>Cannot create directory: %0</source>
         <translation>Impossible de créer le dossier : %0</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1034"/>
+        <location filename="packageversion.cpp" line="1141"/>
         <source>Creating .Npackd sub-directory</source>
         <translation>Création du sous-dossier .Npackd</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1049"/>
+        <location filename="packageversion.cpp" line="1156"/>
         <source>Waiting for a free HTTP connection</source>
         <translation>En attente d&apos;une connexion HTTP libre</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1061"/>
+        <location filename="packageversion.cpp" line="1168"/>
         <source>Waiting for a free HTTP connection (%1 minutes)</source>
         <translation>En attente d&apos;une connexion HTTP libre (%1 minutes)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1079"/>
+        <location filename="packageversion.cpp" line="1186"/>
         <source>Downloading &amp; computing hash sum</source>
         <translation>Téléchargement et calcul du checksum</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1075"/>
-        <location filename="packageversion.cpp" line="1101"/>
+        <location filename="packageversion.cpp" line="1182"/>
+        <location filename="packageversion.cpp" line="1208"/>
         <source>Cannot open the file: %0</source>
         <translation>Impossible d&apos;ouvrir le fichier %0</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1106"/>
+        <location filename="packageversion.cpp" line="1213"/>
         <source>Downloading &amp; computing hash sum (2nd try)</source>
         <translation>Téléchargement et calcul du checksum (2e essai)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1117"/>
+        <location filename="packageversion.cpp" line="1224"/>
         <source>Error downloading %1: %2</source>
         <translation>Erreur lors du téléchargment de %1 : %2</translation>
     </message>
@@ -2752,32 +2752,32 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1169"/>
+        <location filename="packageversion.cpp" line="1276"/>
         <source>Extracting files</source>
         <translation>Extraction des fichiers</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1173"/>
+        <location filename="packageversion.cpp" line="1280"/>
         <source>Error unzipping file into directory %0: %1</source>
         <translation>Error lors de l&apos;extraction du fichier dans le dossier %0 : %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1180"/>
+        <location filename="packageversion.cpp" line="1287"/>
         <source>Renaming the downloaded file</source>
         <translation>Renommage du fichier téléchargé</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1191"/>
+        <location filename="packageversion.cpp" line="1298"/>
         <source>Cannot rename %0 to %1</source>
         <translation>Impossible de renommer %0 en %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1281"/>
+        <location filename="packageversion.cpp" line="1388"/>
         <source>Running the installation script (this may take some time)</source>
         <translation>Lancement du script d&apos;installation (peut prendre un certain temps)</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1358"/>
+        <location filename="packageversion.cpp" line="1465"/>
         <source>Deleting start menu, desktop and quick launch shortcuts</source>
         <translation>Suppression des raccourcis du menu démarrer, du bureau et de la barre de lancement rapide</translation>
     </message>
@@ -2786,68 +2786,68 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Ouverture du fichier ZIP</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2160"/>
+        <location filename="wpmutils.cpp" line="1996"/>
         <source>Cannot open the ZIP file %1: %2</source>
         <translation>Impossible d&apos;ouvrir le fichier ZIP %1 : %2</translation>
     </message>
     <message>
         <location filename="dbrepository.cpp" line="1302"/>
-        <location filename="wpmutils.cpp" line="2171"/>
+        <location filename="wpmutils.cpp" line="2007"/>
         <source>Extracting</source>
         <translation>Extraction</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2181"/>
+        <location filename="wpmutils.cpp" line="2017"/>
         <source>Error unzipping the file %1: Error %2 in %3</source>
         <translation>Erreur lors de l&apos;extraction du fichier %1 : Erreur %2 dans %3</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2201"/>
+        <location filename="wpmutils.cpp" line="2037"/>
         <source>Cannot create directory %1</source>
         <translation>Impossible de créer le dossier %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2210"/>
+        <location filename="wpmutils.cpp" line="2046"/>
         <source>%L1 files</source>
         <translation>%L1 fichiers</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1422"/>
+        <location filename="packageversion.cpp" line="1529"/>
         <source>Could not create file %1</source>
         <translation>Impossible de créer le fichier %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1427"/>
+        <location filename="packageversion.cpp" line="1534"/>
         <source>Could not create directory %1</source>
         <translation>Impossible de créer le dossier %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1444"/>
+        <location filename="packageversion.cpp" line="1551"/>
         <source>installed</source>
         <translation>installé</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1448"/>
+        <location filename="packageversion.cpp" line="1555"/>
         <source>updateable</source>
         <translation>pouvant être mis à jour</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1450"/>
+        <location filename="packageversion.cpp" line="1557"/>
         <source>obsolete</source>
         <translation>obsolète</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1458"/>
+        <location filename="packageversion.cpp" line="1565"/>
         <source>locked</source>
         <translation>bloqué</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1754"/>
+        <location filename="packageversion.cpp" line="1861"/>
         <source>Process %1 exited with the code %2</source>
         <translation>Le processus %1 s&apos;est terminé avec le code de retour %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1725"/>
+        <location filename="packageversion.cpp" line="1832"/>
         <source>%1 minutes</source>
         <translation>%1 minute(s)</translation>
     </message>
@@ -2858,120 +2858,120 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="packageversion.cpp" line="604"/>
-        <location filename="packageversion.cpp" line="1323"/>
+        <location filename="packageversion.cpp" line="1430"/>
         <source>Updating NPACKD_CL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1301"/>
+        <location filename="packageversion.cpp" line="1408"/>
         <source>The last lines of the output from the installation script:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1498"/>
+        <location filename="packageversion.cpp" line="1605"/>
         <source>%1. No output was generated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1823"/>
+        <location filename="packageversion.cpp" line="1930"/>
         <location filename="repositoryxmlhandler.cpp" line="307"/>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
         <translation>Etiquette &lt;path&gt; vide dans &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1830"/>
+        <location filename="packageversion.cpp" line="1937"/>
         <location filename="repositoryxmlhandler.cpp" line="313"/>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
         <translation>SHA1 incorrect dans &lt;detect-file&gt; :</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1872"/>
+        <location filename="packageversion.cpp" line="1979"/>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
         <translation>Erreur de l&apos;attribut &apos;package&apos; dans &lt;version&gt; : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1887"/>
+        <location filename="packageversion.cpp" line="1994"/>
         <location filename="repositoryxmlhandler.cpp" line="271"/>
         <source>Not a valid download URL for %1: %2</source>
         <translation>Le lien de téléchargement%1 n&apos;est pas valide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1899"/>
+        <location filename="packageversion.cpp" line="2006"/>
         <location filename="repositoryxmlhandler.cpp" line="135"/>
         <source>Not a valid version for %1: %2</source>
         <translation>La version du paquet %1 est invalide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1911"/>
+        <location filename="packageversion.cpp" line="2018"/>
         <source>Invalid SHA1 for %1: </source>
         <translation>Le SHA1 de %1 est invalide : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1941"/>
+        <location filename="packageversion.cpp" line="2048"/>
         <source>Invalid SHA-1 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1954"/>
+        <location filename="packageversion.cpp" line="2061"/>
         <source>Invalid SHA-256 for %1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1970"/>
+        <location filename="packageversion.cpp" line="2077"/>
         <location filename="repositoryxmlhandler.cpp" line="149"/>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
         <translation>Valeur incorrecte pour l&apos;attribut &apos;type&apos; dans %1 : %3</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1985"/>
+        <location filename="packageversion.cpp" line="2092"/>
         <location filename="repositoryxmlhandler.cpp" line="159"/>
         <source>Empty &apos;path&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>La valeur de l&apos;attribut &apos;path&apos; pour &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1992"/>
+        <location filename="packageversion.cpp" line="2099"/>
         <location filename="repositoryxmlhandler.cpp" line="165"/>
         <source>More than one &lt;important-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation>Il y a plus d&apos;un &lt;important-file&gt; avec le même attribut &apos;path&apos; %1 pour %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2002"/>
+        <location filename="packageversion.cpp" line="2109"/>
         <location filename="repositoryxmlhandler.cpp" line="177"/>
         <source>Empty &apos;title&apos; attribute value for &lt;important-file&gt; for %1</source>
         <translation>La valeur de l&apos;attribut &apos;title&apos; de &lt;important-file&gt; est vide pour %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2031"/>
+        <location filename="packageversion.cpp" line="2138"/>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
         <translation>L&apos;entrée &lt;file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2049"/>
+        <location filename="packageversion.cpp" line="2156"/>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
         <translation>&lt;detect-file&gt; est invalide pour %1 : </translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2064"/>
+        <location filename="packageversion.cpp" line="2171"/>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
         <translation>L&apos;entrée &lt;detect-file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2093"/>
+        <location filename="packageversion.cpp" line="2200"/>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
         <translation>L&apos;entrée &lt;dependency&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2111"/>
+        <location filename="packageversion.cpp" line="2218"/>
         <source>Wrong MSI GUID for %1: %2</source>
         <translation>Le GUID MSI pour %1 est invalide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2271"/>
+        <location filename="packageversion.cpp" line="2378"/>
         <source>Executing the stop script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="2288"/>
+        <location filename="packageversion.cpp" line="2395"/>
         <source>The last lines of the output from the package stop script:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3125,17 +3125,17 @@ p, li { white-space: pre-wrap; }
         <translation>Il est impossible de modifier les paramètres car le paquet %1 est bloqué par une installation/désinstallation en cours.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="490"/>
+        <location filename="abstractrepository.cpp" line="620"/>
         <source>The installation directory cannot be empty</source>
         <translation>Le dossier d&apos;installation ne peut être vide</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="493"/>
+        <location filename="abstractrepository.cpp" line="623"/>
         <source>The installation directory does not exist</source>
         <translation>Le dossier d&apos;installation n&apos;existe pas</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="500"/>
+        <location filename="abstractrepository.cpp" line="630"/>
         <source>Cannot change the installation directory to %1. %2 %3 is installed there</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3283,253 +3283,253 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="commandline.cpp" line="191"/>
-        <location filename="wpmutils.cpp" line="176"/>
+        <location filename="wpmutils.cpp" line="173"/>
         <source>CommandLineToArgvW failed</source>
         <translation>Echec de CommandLineToArgvW</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="447"/>
+        <location filename="wpmutils.cpp" line="444"/>
         <source>A GUID must be 38 characters long</source>
         <translation>Un GUID doit être d&apos;une longueur de 38 caractéres</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="465"/>
+        <location filename="wpmutils.cpp" line="462"/>
         <source>Wrong character at position %1</source>
         <translation>Caractère invalide à la position %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="527"/>
+        <location filename="wpmutils.cpp" line="500"/>
         <source>Error %1</source>
         <translation>Erreur %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="531"/>
+        <location filename="wpmutils.cpp" line="504"/>
         <source>Error %1: %2</source>
         <translation>Erreur %1 : %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="982"/>
+        <location filename="wpmutils.cpp" line="955"/>
         <source>Empty package name</source>
         <translation>Nom de paquet vide</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="986"/>
+        <location filename="wpmutils.cpp" line="959"/>
         <source>Empty segment at position %1 in %2</source>
         <translation>Segment vide à la position %1 dans %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="991"/>
-        <location filename="wpmutils.cpp" line="1000"/>
+        <location filename="wpmutils.cpp" line="964"/>
+        <location filename="wpmutils.cpp" line="973"/>
         <source>-- at position %1 in %2</source>
         <translation>-- à la position %1 dans %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1010"/>
+        <location filename="wpmutils.cpp" line="983"/>
         <source>Wrong character at position 1 in %1</source>
         <translation>Caractère invalide à la position 1 dans %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1022"/>
-        <location filename="wpmutils.cpp" line="1033"/>
-        <location filename="wpmutils.cpp" line="1103"/>
-        <location filename="wpmutils.cpp" line="1122"/>
+        <location filename="wpmutils.cpp" line="995"/>
+        <location filename="wpmutils.cpp" line="1006"/>
+        <location filename="wpmutils.cpp" line="1076"/>
+        <location filename="wpmutils.cpp" line="1095"/>
         <source>Wrong character at position %1 in %2</source>
         <translation>Caractère invalide à la position %1 dans %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1096"/>
-        <location filename="wpmutils.cpp" line="1115"/>
+        <location filename="wpmutils.cpp" line="1069"/>
+        <location filename="wpmutils.cpp" line="1088"/>
         <source>Wrong length: %1</source>
         <translation>Longueur invalide : %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1277"/>
+        <location filename="wpmutils.cpp" line="1250"/>
         <source>Cannot determine MSI product location for GUID %1</source>
         <translation>Impossible de déterminer l&apos;emplacement du MSI pour le GUID %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1300"/>
+        <location filename="wpmutils.cpp" line="1273"/>
         <source>Cannot determine MSI component location for GUID %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1505"/>
+        <location filename="wpmutils.cpp" line="1478"/>
         <source>The source and destination files are the same file.</source>
         <translation>Les fichiers source et de destination sont identiques.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1508"/>
+        <location filename="wpmutils.cpp" line="1481"/>
         <source>Multiple file paths were specified in the source buffer, but only one destination file path.</source>
         <translation>Plusieurs chemins on été spécifiés dans le tampon source mais un seul chemin de fichier de destination.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1511"/>
+        <location filename="wpmutils.cpp" line="1484"/>
         <source>Rename operation was specified but the destination path is a different directory. Use the move operation instead.</source>
         <translation>L&apos;opération de remommage a été spécifiée mais le chemin de destination est un dossier différent. Veuillez plutôt utiliser l&apos;opération de déplacement.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1514"/>
+        <location filename="wpmutils.cpp" line="1487"/>
         <source>The source is a root directory, which cannot be moved or renamed.</source>
         <translation>La source est un dossier racine qui ne peut pas être déplacé ou renommé.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1517"/>
+        <location filename="wpmutils.cpp" line="1490"/>
         <source>The operation was canceled by the user, or silently canceled if the appropriate flags were supplied to SHFileOperation.</source>
         <translation>L&apos;opération a été annulée par l&apos;utilisateur ou silencieusement annnulée si le flag approprié a été fournie à SHFileOperation.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1520"/>
+        <location filename="wpmutils.cpp" line="1493"/>
         <source>The destination is a subtree of the source.</source>
         <translation>La destination est un sous-répertoire de la source.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1523"/>
+        <location filename="wpmutils.cpp" line="1496"/>
         <source>Security settings denied access to the source.</source>
         <translation>Les paramètres de sécurité ont interdit l&apos;accès à la source.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1526"/>
+        <location filename="wpmutils.cpp" line="1499"/>
         <source>The source or destination path exceeded or would exceed MAX_PATH.</source>
         <translation>La source ou le dossier de destination excèdent ou pourraient excèder MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1529"/>
+        <location filename="wpmutils.cpp" line="1502"/>
         <source>The operation involved multiple destination paths, which can fail in the case of a move operation.</source>
         <translation>L&apos;opération a impliqué des chemins de destination multiples pouvant échouer lors d&apos;un déplacement.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1532"/>
+        <location filename="wpmutils.cpp" line="1505"/>
         <source>The path in the source or destination or both was invalid.</source>
         <translation>Le chemin de la source, de la destination ou des deux est invalide.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1535"/>
+        <location filename="wpmutils.cpp" line="1508"/>
         <source>The source and destination have the same parent folder.</source>
         <translation>La source et la destination on le même dossier parent.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1538"/>
+        <location filename="wpmutils.cpp" line="1511"/>
         <source>The destination path is an existing file.</source>
         <translation>Le chemin de destination est un fichier existant.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1541"/>
+        <location filename="wpmutils.cpp" line="1514"/>
         <source>The destination path is an existing folder.</source>
         <translation>Le chemin de destination est un dossier existant.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1544"/>
+        <location filename="wpmutils.cpp" line="1517"/>
         <source>The name of the file exceeds MAX_PATH.</source>
         <translation>Le nom du fichier excède MAX_PATH.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1547"/>
+        <location filename="wpmutils.cpp" line="1520"/>
         <source>The destination is a read-only CD-ROM, possibly unformatted.</source>
         <translation>La destination est un CD-ROM en lecture seule, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1550"/>
+        <location filename="wpmutils.cpp" line="1523"/>
         <source>The destination is a read-only DVD, possibly unformatted.</source>
         <translation>La destination est un DVD en lecture seule, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1553"/>
+        <location filename="wpmutils.cpp" line="1526"/>
         <source>The destination is a writable CD-ROM, possibly unformatted.</source>
         <translation>La destination est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1556"/>
+        <location filename="wpmutils.cpp" line="1529"/>
         <source>The file involved in the operation is too large for the destination media or file system.</source>
         <translation>Le fichier impliqué dans l&apos;opération est trop large pour le média ou le système de fichier de destination.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1559"/>
+        <location filename="wpmutils.cpp" line="1532"/>
         <source>The source is a read-only CD-ROM, possibly unformatted.</source>
         <translation>La source est un CD-ROM, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1562"/>
+        <location filename="wpmutils.cpp" line="1535"/>
         <source>The source is a read-only DVD, possibly unformatted.</source>
         <translation>La source est un DVD, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1565"/>
+        <location filename="wpmutils.cpp" line="1538"/>
         <source>The source is a writable CD-ROM, possibly unformatted.</source>
         <translation>La source est un CD-ROM inscriptible, potentiellement non-formaté.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1568"/>
+        <location filename="wpmutils.cpp" line="1541"/>
         <source>MAX_PATH was exceeded during the operation.</source>
         <translation>MAX_PATH a été dépassé durant l&apos;opération.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1571"/>
+        <location filename="wpmutils.cpp" line="1544"/>
         <source>An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later.</source>
         <translation>Une erreur inconnue est survenue. Ceci peut-être dû à un chemin invalide dans la source ou la destination. Cette erreur ne se produit pas sous Windows Vista ou supérieur.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1574"/>
+        <location filename="wpmutils.cpp" line="1547"/>
         <source>An unspecified error occurred on the destination.</source>
         <translation>Un erreur non spécifiée est survenue sur la destination.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1577"/>
+        <location filename="wpmutils.cpp" line="1550"/>
         <source>Destination is a root directory and cannot be renamed.</source>
         <translation>La destination est un dossier racine est ne peut pas etre renommée.</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1604"/>
+        <location filename="wpmutils.cpp" line="1577"/>
         <source>Error deleting %1: %2</source>
         <translation>Erreur lors de la suppression de %1 : %2</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1696"/>
+        <location filename="wpmutils.cpp" line="1669"/>
         <source>Cannot delete the file: %1</source>
         <translation>Impossible de supprimer le fichier : %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1711"/>
+        <location filename="wpmutils.cpp" line="1684"/>
         <source>Cannot delete the directory: %1</source>
         <translation>Impossible de supprimer le dossier : %1</translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1954"/>
+        <location filename="wpmutils.cpp" line="1927"/>
         <source>Empty list of program close types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="1963"/>
+        <location filename="wpmutils.cpp" line="1936"/>
         <source>Invalid program close type: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2014"/>
+        <location filename="packageversion.cpp" line="949"/>
         <source>No installable version was found for the package %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2022"/>
+        <location filename="packageversion.cpp" line="957"/>
         <source>Package %1 (%2) is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2033"/>
+        <location filename="packageversion.cpp" line="968"/>
         <source>More than one version of the package %1 (%2) is installed: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2042"/>
-        <location filename="wpmutils.cpp" line="2060"/>
+        <location filename="packageversion.cpp" line="977"/>
+        <location filename="packageversion.cpp" line="995"/>
         <source>Package version not found: %1 (%2) %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2053"/>
+        <location filename="packageversion.cpp" line="988"/>
         <source>Cannot parse version: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="wpmutils.cpp" line="2097"/>
+        <location filename="abstractrepository.cpp" line="605"/>
         <source>More than one package was found: %1</source>
         <translation type="unfinished"></translation>
     </message>

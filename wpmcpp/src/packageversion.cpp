@@ -903,6 +903,113 @@ QString PackageVersion::getPackageTitle(
     return pn;
 }
 
+QList<PackageVersion*> PackageVersion::getPackageVersionOptions(const CommandLine& cl,
+        QString* err, bool add)
+{
+    QList<PackageVersion*> ret;
+    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
+
+    AbstractRepository* rep = AbstractRepository::getDefault_();
+
+    for (int i = 0; i < pos.size(); i++) {
+        if (!err->isEmpty())
+            break;
+
+        CommandLine::ParsedOption* po = pos.at(i);
+        if (po->opt->nameMathes("package")) {
+            CommandLine::ParsedOption* ponext = 0;
+            if (i + 1 < pos.size())
+                ponext = pos.at(i + 1);
+
+            QString package = po->value;
+            if (!Package::isValidName(package)) {
+                *err = QObject::tr("Invalid package name: %1").arg(package);
+            }
+
+            Package* p = 0;
+            if (err->isEmpty()) {
+                p = AbstractRepository::findOnePackage(package, err);
+                if (err->isEmpty()) {
+                    if (!p)
+                        *err = QObject::tr("Unknown package: %1").arg(package);
+                }
+            }
+
+            PackageVersion* pv = 0;
+            if (err->isEmpty()) {
+                QString version;
+                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                    version = ponext->value;
+                if (version.isNull()) {
+                    if (add) {
+                        pv = rep->findNewestInstallablePackageVersion_(
+                                p->name, err);
+                        if (err->isEmpty()) {
+                            if (!pv) {
+                                *err = QObject::tr("No installable version was found for the package %1 (%2)").
+                                        arg(p->title).arg(p->name);
+                            }
+                        }
+                    } else {
+                        QList<InstalledPackageVersion*> ipvs =
+                                InstalledPackages::getDefault()->getByPackage(p->name);
+                        if (ipvs.count() == 0) {
+                            *err = QObject::tr(
+                                    "Package %1 (%2) is not installed").
+                                    arg(p->title).arg(p->name);
+                        } else if (ipvs.count() > 1) {
+                            QString vns;
+                            for (int i = 0; i < ipvs.count(); i++) {
+                                InstalledPackageVersion* ipv = ipvs.at(i);
+                                if (!vns.isEmpty())
+                                    vns.append(", ");
+                                vns.append(ipv->version.getVersionString());
+                            }
+                            *err = QObject::tr(
+                                    "More than one version of the package %1 (%2) "
+                                    "is installed: %3").arg(p->title).arg(p->name).
+                                    arg(vns);
+                        } else {
+                            pv = rep->findPackageVersion_(p->name,
+                                    ipvs.at(0)->version, err);
+                            if (err->isEmpty()) {
+                                if (!pv) {
+                                    *err = QObject::tr("Package version not found: %1 (%2) %3").
+                                            arg(p->title).arg(p->name).arg(version);
+                                }
+                            }
+                        }
+                        qDeleteAll(ipvs);
+                    }
+                } else {
+                    i++;
+                    Version v;
+                    if (!v.setVersion(version)) {
+                        *err = QObject::tr("Cannot parse version: %1").
+                                arg(version);
+                    } else {
+                        pv = rep->findPackageVersion_(p->name, v,
+                                err);
+                        if (err->isEmpty()) {
+                            if (!pv) {
+                                *err = QObject::tr("Package version not found: %1 (%2) %3").
+                                        arg(p->title).arg(p->name).arg(version);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (pv)
+                ret.append(pv);
+
+            delete p;
+        }
+    }
+
+    return ret;
+}
+
 bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 {
     *errMsg = "";

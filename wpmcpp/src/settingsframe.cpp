@@ -109,7 +109,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         err = QObject::tr("No repositories defined");
 
     if (err.isEmpty()) {
-        err = WPMUtils::checkInstallationDirectory(getInstallationDirectory());
+        err = AbstractRepository::checkInstallationDirectory(getInstallationDirectory());
     }
 
     QList<QUrl*> urls;

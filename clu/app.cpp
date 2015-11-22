@@ -5,7 +5,7 @@
 
 #include "app.h"
 
-#include "..\wpmcpp\wpmutils.h"
+#include "wpmutils.h"
 
 App::App()
 {

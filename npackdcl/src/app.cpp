@@ -370,7 +370,7 @@ QString App::setInstallPath()
     }
 
     if (r.isEmpty()) {
-        r = WPMUtils::checkInstallationDirectory(file);
+        r = AbstractRepository::checkInstallationDirectory(file);
     }
 
     if (r.isEmpty()) {
@@ -746,7 +746,7 @@ QString App::path()
     if (job->shouldProceed() && path.isEmpty() && !package.contains('.')) {
         QString err = DBRepository::getDefault()->openDefault("default", true);
         if (err.isEmpty()) {
-            Package* p = WPMUtils::findOnePackage(package, &err);
+            Package* p = AbstractRepository::findOnePackage(package, &err);
             if (!err.isEmpty()) {
                 delete p;
                 p = 0;
@@ -825,7 +825,7 @@ QString App::update()
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
             QString err;
-            Package* p = WPMUtils::findOnePackage(package, &err);
+            Package* p = AbstractRepository::findOnePackage(package, &err);
             if (p)
                 toUpdate.append(p);
             else
@@ -1045,7 +1045,7 @@ QString App::add()
 
     QString err;
     QList<PackageVersion*> toInstall =
-            WPMUtils::getPackageVersionOptions(cl, &err, true);
+            PackageVersion::getPackageVersionOptions(cl, &err, true);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
@@ -1273,7 +1273,7 @@ QString App::remove()
 
     QString err;
     QList<PackageVersion*> toRemove =
-            WPMUtils::getPackageVersionOptions(cl, &err, false);
+            PackageVersion::getPackageVersionOptions(cl, &err, false);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
@@ -1373,7 +1373,7 @@ QString App::info()
     DBRepository* rep = DBRepository::getDefault();
     Package* p = 0;
     if (r.isEmpty()) {
-        p = WPMUtils::findOnePackage(package, &r);
+        p = AbstractRepository::findOnePackage(package, &r);
     }
 
     Version v;

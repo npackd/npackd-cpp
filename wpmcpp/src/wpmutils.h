@@ -13,7 +13,6 @@
 #include "job.h"
 #include "version.h"
 #include "commandline.h"
-#include "packageversion.h"
 #include "package.h"
 #include "hrtimer.h"
 
@@ -230,13 +229,6 @@ public:
      * @param dir the directory
      */
     static bool isUnder(const QString& file, const QString& dir);
-
-    /**
-     * @brief checks a value for the installation directory
-     * @param dir a directory
-     * @return error message or ""
-     */
-    static QString checkInstallationDirectory(const QString& dir);
 
     /**
      * @return directory where the packages will be installed. Typically
@@ -533,25 +525,6 @@ public:
      * @return program close type
      */
     static int getProgramCloseType(const CommandLine &cl, QString *err);
-
-    /**
-     * @brief parses the command line and returns the list of chosen package
-     *     versions
-     * @param cl command line
-     * @param err errors will be stored here
-     * @param add true = installing packages, false = removing packages
-     * @return [owner:caller] list of package versions
-     */
-    static QList<PackageVersion *> getPackageVersionOptions(
-            const CommandLine &cl, QString *err, bool add);
-
-    /**
-     * @param package full or short package name
-     * @param err error message will be stored here
-     * @return [ownership:caller] found package or 0. The returned value is
-     *     only 0 if the error is not empty
-     */
-    static Package *findOnePackage(const QString &package, QString *err);
 
     /**
      * @brief maps MSI components to the corresponding products

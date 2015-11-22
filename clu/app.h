@@ -1,7 +1,7 @@
 #ifndef APP_H
 #define APP_H
 
-#include "..\wpmcpp\commandline.h"
+#include "commandline.h"
 
 class App
 {
