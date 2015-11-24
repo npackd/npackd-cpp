@@ -252,19 +252,36 @@ void AbstractRepository::process(Job *job,
                             dir = ideal;
                     }
                 } else {
-                    if (d.exists(op->where) &&
-                            !WPMUtils::pathEquals(op->where, dir)) {
-                        // we should install in a particular directory, but it
-                        // exists.
-                        Job* djob = sub->newSubJob(1,
-                                QObject::tr("Deleting temporary directory %1").
-                                arg(dir));
-                        QDir ddir(dir);
-                        WPMUtils::removeDirectory(djob, ddir);
-                        job->setErrorMessage(QObject::tr(
-                                "Cannot install %1 into %2. The directory already exists.").
-                                arg(pv->toString(true)).arg(op->where));
-                        break;
+                    if (d.exists(op->where)) {
+                        if (!WPMUtils::pathEquals(op->where, dir)) {
+                            // we should install in a particular directory, but it
+                            // exists.
+                            Job* djob = sub->newSubJob(1,
+                                    QObject::tr("Deleting temporary directory %1").
+                                    arg(dir));
+                            QDir ddir(dir);
+                            WPMUtils::removeDirectory(djob, ddir);
+                            job->setErrorMessage(QObject::tr(
+                                    "Cannot install %1 into %2. The directory already exists.").
+                                    arg(pv->toString(true)).arg(op->where));
+                            break;
+                        }
+                    } else {
+                        if (d.rename(dir, op->where))
+                            dir = op->where;
+                        else {
+                            // we should install in a particular directory, but it
+                            // exists.
+                            Job* djob = sub->newSubJob(1,
+                                    QObject::tr("Deleting temporary directory %1").
+                                    arg(dir));
+                            QDir ddir(dir);
+                            WPMUtils::removeDirectory(djob, ddir);
+                            job->setErrorMessage(QObject::tr(
+                                    "Cannot install %1 into %2. Cannot rename %3.").
+                                    arg(pv->toString(true), op->where, dir));
+                            break;
+                        }
                     }
                 }
 

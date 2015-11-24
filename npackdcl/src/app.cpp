@@ -836,7 +836,7 @@ QString App::update()
         }
     }
 
-    bool keepDirectories = !cl.isPresent("keep-directories");
+    bool keepDirectories = cl.isPresent("keep-directories");
 
     QList<InstallOperation*> ops;
     bool up2date = false;

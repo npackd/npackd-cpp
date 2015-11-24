@@ -109,23 +109,23 @@ void App::updateKeepDirectories()
     if (!admin)
         QSKIP("disabled");
 
-    captureNpackdCLOutput("rm -p akelpad");
+    captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
 
     QString output = captureNpackdCLOutput(
-            "add -p akelpad -v 4.9.3 -f \"C:\\Program Files\\AkelPad\"");
+            "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
     QVERIFY2(output.contains(
-            "installed successfully in C:\\Program Files\\AkelPad"),
+            "installed successfully in C:\\Program Files\\ArecaBackup"),
             output.toLatin1());
 
-    output = captureNpackdCLOutput("update -p akelpad -k");
+    output = captureNpackdCLOutput("update -p org.areca-backup.ArecaBackup -k");
     QVERIFY2(output.contains(
             "The packages were updated successfully"),
             output.toLatin1());
 
-    QVERIFY(captureNpackdCLOutput("path -p akelpad") ==
-            "C:\\Program Files\\AkelPad");
+    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup") ==
+            "C:\\Program Files\\ArecaBackup");
 
-    output = captureNpackdCLOutput("rm -p akelpad");
+    output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
