@@ -51,6 +51,101 @@ const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
 
 HRTimer WPMUtils::timer(2);
 
+
+// definitions for .getProcessHandlesLockingDirectory2
+#define NT_SUCCESS(x) ((x) >= 0)
+const NTSTATUS STATUS_INFO_LENGTH_MISMATCH = 0xc0000004;
+
+#define SystemHandleInformation 16
+#define ObjectBasicInformation 0
+#define ObjectNameInformation 1
+#define ObjectTypeInformation 2
+
+typedef NTSTATUS (NTAPI *_NtQuerySystemInformation)(
+    ULONG SystemInformationClass,
+    PVOID SystemInformation,
+    ULONG SystemInformationLength,
+    PULONG ReturnLength
+    );
+typedef NTSTATUS (NTAPI *_NtDuplicateObject)(
+    HANDLE SourceProcessHandle,
+    HANDLE SourceHandle,
+    HANDLE TargetProcessHandle,
+    PHANDLE TargetHandle,
+    ACCESS_MASK DesiredAccess,
+    ULONG Attributes,
+    ULONG Options
+    );
+typedef NTSTATUS (NTAPI *_NtQueryObject)(
+    HANDLE ObjectHandle,
+    ULONG ObjectInformationClass,
+    PVOID ObjectInformation,
+    ULONG ObjectInformationLength,
+    PULONG ReturnLength
+    );
+
+typedef struct _UNICODE_STRING
+{
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR Buffer;
+} UNICODE_STRING, *PUNICODE_STRING;
+
+typedef struct _SYSTEM_HANDLE
+{
+    ULONG ProcessId;
+    BYTE ObjectTypeNumber;
+    BYTE Flags;
+    USHORT Handle;
+    PVOID Object;
+    ACCESS_MASK GrantedAccess;
+} SYSTEM_HANDLE, *PSYSTEM_HANDLE;
+
+typedef struct _SYSTEM_HANDLE_INFORMATION
+{
+    ULONG HandleCount;
+    SYSTEM_HANDLE Handles[1];
+} SYSTEM_HANDLE_INFORMATION, *PSYSTEM_HANDLE_INFORMATION;
+
+typedef enum _POOL_TYPE
+{
+    NonPagedPool,
+    PagedPool,
+    NonPagedPoolMustSucceed,
+    DontUseThisType,
+    NonPagedPoolCacheAligned,
+    PagedPoolCacheAligned,
+    NonPagedPoolCacheAlignedMustS
+} POOL_TYPE, *PPOOL_TYPE;
+
+typedef struct _OBJECT_TYPE_INFORMATION
+{
+    UNICODE_STRING Name;
+    ULONG TotalNumberOfObjects;
+    ULONG TotalNumberOfHandles;
+    ULONG TotalPagedPoolUsage;
+    ULONG TotalNonPagedPoolUsage;
+    ULONG TotalNamePoolUsage;
+    ULONG TotalHandleTableUsage;
+    ULONG HighWaterNumberOfObjects;
+    ULONG HighWaterNumberOfHandles;
+    ULONG HighWaterPagedPoolUsage;
+    ULONG HighWaterNonPagedPoolUsage;
+    ULONG HighWaterNamePoolUsage;
+    ULONG HighWaterHandleTableUsage;
+    ULONG InvalidAttributes;
+    GENERIC_MAPPING GenericMapping;
+    ULONG ValidAccess;
+    BOOLEAN SecurityRequired;
+    BOOLEAN MaintainHandleCount;
+    USHORT MaintainTypeList;
+    POOL_TYPE PoolType;
+    ULONG PagedPoolUsage;
+    ULONG NonPagedPoolUsage;
+} OBJECT_TYPE_INFORMATION, *POBJECT_TYPE_INFORMATION;
+
+// end of definitions for .getProcessHandlesLockingDirectory2
+
 WPMUtils::WPMUtils()
 {
 }
@@ -624,7 +719,9 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     //QString f = dir + "\\abc.txt";
     //test((PCWSTR) f.utf16());
 
-    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
+    QList<HANDLE> ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
+    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
+    ps.append(ps0);
 
     DWORD me = GetCurrentProcessId();
 
@@ -643,7 +740,9 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     if (cpt & KILL_PROCESS) {
         for (int i = 0; i < ps.size(); i++) {
             HANDLE hProc = ps.at(i);
-            if (GetProcessId(hProc) != me &&
+            DWORD processId = GetProcessId(hProc);
+
+            if (processId != 0 && processId != me &&
                     WPMUtils::isProcessRunning(hProc)) {
                 // TerminateProcess is asynchronous
                 if (TerminateProcess(hProc, 1000))
@@ -841,6 +940,281 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
         FreeLibrary(hInstLib);
     }
     return r;
+}
+
+// converts
+// "\Device\HarddiskVolume3"                                -> "E:"
+// "\Device\HarddiskVolume3\Temp"                           -> "E:\Temp"
+// "\Device\HarddiskVolume3\Temp\transparent.jpeg"          -> "E:\Temp\transparent.jpeg"
+// "\Device\Harddisk1\DP(1)0-0+6\foto.jpg"                  -> "I:\foto.jpg"
+// "\Device\TrueCryptVolumeP\Data\Passwords.txt"            -> "P:\Data\Passwords.txt"
+// "\Device\Floppy0\Autoexec.bat"                           -> "A:\Autoexec.bat"
+// "\Device\CdRom1\VIDEO_TS\VTS_01_0.VOB"                   -> "H:\VIDEO_TS\VTS_01_0.VOB"
+// "\Device\Serial1"                                        -> "COM1"
+// "\Device\USBSER000"                                      -> "COM4"
+// "\Device\Mup\ComputerName\C$\Boot.ini"                   -> "\\ComputerName\C$\Boot.ini"
+// "\Device\LanmanRedirector\ComputerName\C$\Boot.ini"      -> "\\ComputerName\C$\Boot.ini"
+// "\Device\LanmanRedirector\ComputerName\Shares\Dance.m3u" -> "\\ComputerName\Shares\Dance.m3u"
+// returns an error for any other device type
+QMap<QString, QString> mapDevices2Drives() {
+    QMap<QString, QString> devices2drives;
+
+    //DWORD u32_Error;
+
+    /*
+    if (wcsnicmp(u16_NTPath, L"\\Device\\Serial", 14) == 0 || // e.g. "Serial1"
+        wcsnicmp(u16_NTPath, L"\\Device\\UsbSer", 14) == 0)   // e.g. "USBSER000"
+    {
+        HKEY h_Key;
+        if (u32_Error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Hardware\\DeviceMap\\SerialComm", 0, KEY_QUERY_VALUE, &h_Key))
+            return u32_Error;
+
+        WCHAR u16_ComPort[50];
+
+        DWORD u32_Type;
+        DWORD u32_Size = sizeof(u16_ComPort);
+        if (u32_Error = RegQueryValueEx(h_Key, u16_NTPath, 0, &u32_Type, (BYTE*)u16_ComPort, &u32_Size))
+        {
+            RegCloseKey(h_Key);
+            return ERROR_UNKNOWN_PORT;
+        }
+
+        *ps_DosPath = u16_ComPort;
+        RegCloseKey(h_Key);
+        return 0;
+    }
+
+    if (wcsnicmp(u16_NTPath, L"\\Device\\LanmanRedirector\\", 25) == 0) // Win XP
+    {
+        *ps_DosPath  = L"\\\\";
+        *ps_DosPath += (u16_NTPath + 25);
+        return 0;
+    }
+
+    if (wcsnicmp(u16_NTPath, L"\\Device\\Mup\\", 12) == 0) // Win 7
+    {
+        *ps_DosPath  = L"\\\\";
+        *ps_DosPath += (u16_NTPath + 12);
+        return 0;
+    }
+    */
+
+    const size_t INITIAL_SIZE = 300;
+    WCHAR* drives = new WCHAR[INITIAL_SIZE + 1];
+    DWORD len = GetLogicalDriveStrings(INITIAL_SIZE, drives);
+    if (len > 0) {
+        if (len > INITIAL_SIZE) {
+            delete[] drives;
+            drives = new WCHAR[len + 1];
+            len = GetLogicalDriveStrings(INITIAL_SIZE, drives);
+        }
+        if (len > 0 && len <= INITIAL_SIZE) {
+            WCHAR* drv = drives;
+            while (*drv) {
+                QString logicalDrive;
+                logicalDrive.setUtf16((ushort*) drv, wcslen(drv));
+
+                if (logicalDrive.length() >= 2) {
+                    logicalDrive.chop(logicalDrive.length() - 2);
+
+                    WCHAR* devices = new WCHAR[2000];
+
+                    // may return multiple strings!
+                    // returns very weird strings for network shares
+                    if (QueryDosDevice((LPCWSTR) logicalDrive.utf16(), devices,
+                            2000)) {
+                        WCHAR* device = devices;
+                        while (*device) {
+                            QString logicalDevice;
+                            logicalDevice.setUtf16((ushort*) device,
+                                    wcslen(device));
+                            devices2drives.insert(
+                                    logicalDevice + "\\",
+                                    logicalDrive + "\\");
+
+                            device += wcslen(device) + 1;
+                        }
+                    }
+
+                    delete[] devices;
+                }
+
+                drv += wcslen(drv) + 1;
+            }
+        }
+    }
+
+    delete[] drives;
+
+    return devices2drives;
+}
+
+QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
+    QMap<QString, QString> devices2drives = mapDevices2Drives();
+
+    QList<HANDLE> result;
+
+    HMODULE module = GetModuleHandleA("ntdll.dll");
+    if (module == 0) {
+        return result;
+    }
+
+    _NtQuerySystemInformation NtQuerySystemInformation;
+    _NtDuplicateObject NtDuplicateObject;
+    _NtQueryObject NtQueryObject;
+    NtQuerySystemInformation = (_NtQuerySystemInformation)
+            GetProcAddress(module, "NtQuerySystemInformation");
+    NtDuplicateObject = (_NtDuplicateObject) GetProcAddress(module,
+            "NtDuplicateObject");
+    NtQueryObject = (_NtQueryObject) GetProcAddress(module, "NtQueryObject");
+
+    PSYSTEM_HANDLE_INFORMATION handleInfo;
+    ULONG handleInfoSize = 0x10000;
+    ULONG i;
+
+    handleInfo = (PSYSTEM_HANDLE_INFORMATION) malloc(handleInfoSize);
+
+    // NtQuerySystemInformation won't give us the correct buffer size,
+    // so we guess by doubling the buffer size.
+    NTSTATUS status;
+    while ((status = NtQuerySystemInformation(
+            SystemHandleInformation, handleInfo, handleInfoSize,
+            NULL)) == STATUS_INFO_LENGTH_MISMATCH) {
+        handleInfo = (PSYSTEM_HANDLE_INFORMATION) realloc(handleInfo,
+                handleInfoSize *= 2);
+    }
+
+    // NtQuerySystemInformation stopped giving us STATUS_INFO_LENGTH_MISMATCH.
+    if (!NT_SUCCESS(status)) {
+        handleInfo->HandleCount = 0;
+    }
+
+    QSet<ULONG> usedProcessIds;
+    for (i = 0; i < handleInfo->HandleCount; i++) {
+        bool ok = true;
+
+        SYSTEM_HANDLE handle = handleInfo->Handles[i];
+        HANDLE dupHandle = INVALID_HANDLE_VALUE;
+        POBJECT_TYPE_INFORMATION objectTypeInfo = 0;
+        PVOID objectNameInfo = 0;
+        UNICODE_STRING objectName = {};
+        ULONG returnLength = 0;
+
+        HANDLE processHandle = INVALID_HANDLE_VALUE;
+
+        if (usedProcessIds.contains(handle.ProcessId)) {
+            ok = false;
+        }
+
+        if (ok) {
+            if (!(processHandle = OpenProcess(PROCESS_DUP_HANDLE |
+                    PROCESS_QUERY_LIMITED_INFORMATION, FALSE,
+                    handle.ProcessId))) {
+                // Could not open PID %d! (Don't try to open a system process.)
+                ok = false;
+                processHandle = INVALID_HANDLE_VALUE;
+            }
+        }
+
+        if (ok) {
+            /* Duplicate the handle so we can query it. */
+            if (!NT_SUCCESS(NtDuplicateObject(
+                processHandle,
+                (HANDLE) (ULONG) handle.Handle,
+                GetCurrentProcess(),
+                &dupHandle,
+                0,
+                0,
+                0))) {
+                ok = false;
+                dupHandle = INVALID_HANDLE_VALUE;
+            }
+        }
+
+        if (ok) {
+            /* Query the object type. */
+            objectTypeInfo = (POBJECT_TYPE_INFORMATION)malloc(0x1000);
+            if (!NT_SUCCESS(NtQueryObject(
+                dupHandle,
+                ObjectTypeInformation,
+                objectTypeInfo,
+                0x1000,
+                NULL
+                )))
+            {
+                ok = false;
+            }
+        }
+
+        if (ok) {
+            // Query the object name (unless it has an access of
+            // 0x0012019f, on which NtQueryObject could hang.
+            if (handle.GrantedAccess == 0x0012019f) {
+                ok = false;
+            }
+        }
+
+        if (ok) {
+            objectNameInfo = malloc(0x1000);
+            if (!NT_SUCCESS(NtQueryObject(dupHandle, ObjectNameInformation,
+                    objectNameInfo, 0x1000, &returnLength))) {
+                /* Reallocate the buffer and try again. */
+                objectNameInfo = realloc(objectNameInfo, returnLength);
+                if (!NT_SUCCESS(NtQueryObject(dupHandle, ObjectNameInformation,
+                        objectNameInfo, returnLength, NULL))) {
+                    ok = false;
+                }
+            }
+        }
+
+        QString name, type;
+
+        if (ok) {
+            /* Cast our buffer into an UNICODE_STRING. */
+            objectName = *(PUNICODE_STRING) objectNameInfo;
+
+            /* Print the information! */
+            if (objectName.Length) {
+                name.setUtf16((const ushort*) objectName.Buffer,
+                        objectName.Length / 2);
+                type.setUtf16((const ushort*) objectTypeInfo->Name.Buffer,
+                        objectTypeInfo->Name.Length / 2);
+            } else {
+                ok = false;
+            }
+        }
+
+        if (ok) {
+            if (type == "File") {
+                QMapIterator<QString, QString> i(devices2drives);
+                while (i.hasNext()) {
+                    i.next();
+                    if (name.startsWith(i.key())) {
+                        name = i.value() + name.mid(i.key().length());
+                        if (WPMUtils::isUnderOrEquals(name, dir)) {
+                            result.append(processHandle);
+                            processHandle = INVALID_HANDLE_VALUE;
+                            usedProcessIds.insert(handle.ProcessId);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        free(objectTypeInfo);
+        free(objectNameInfo);
+
+        if (dupHandle != INVALID_HANDLE_VALUE)
+            CloseHandle(dupHandle);
+
+        if (processHandle != INVALID_HANDLE_VALUE)
+            CloseHandle(processHandle);
+    }
+
+    free(handleInfo);
+
+    return result;
 }
 
 // see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx

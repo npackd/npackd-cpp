@@ -43,6 +43,15 @@ private:
      */
     static QList<HANDLE> getProcessHandlesLockingDirectory(const QString &dir);
 
+    /**
+     * @brief searches for the processes that somehow lock the specified
+     *     directory
+     * @param dir a directory
+     * @return list of handles with PROCESS_QUERY_LIMITED_INFORMATION
+     *     permissions. These handles should be closed later using CloseHandle()
+     */
+    static QList<HANDLE> getProcessHandlesLockingDirectory2(const QString &dir);
+
     static QList<HWND> findProcessTopWindows(DWORD processID);
 public:
     /**
