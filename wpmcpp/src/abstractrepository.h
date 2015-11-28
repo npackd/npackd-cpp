@@ -170,10 +170,14 @@ public:
      * @param ops installation operations will be appended here
      * @param keepDirectories true = use the same directories for the updated
      *     versions
+     * @param install this determines the behaviour if no version is installed.
+     *     If true, installs the newest version. If false, an error will be
+     *     returned.
      * @return error message or ""
      */
     QString planUpdates(const QList<Package*> packages,
-            QList<InstallOperation*>& ops, bool keepDirectories=false);
+            QList<InstallOperation*>& ops, bool keepDirectories=false,
+            bool install=false);
 
     /**
      * @brief saves (creates or updates) the data about a package

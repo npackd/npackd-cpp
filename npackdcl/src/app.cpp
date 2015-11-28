@@ -86,6 +86,8 @@ int App::process()
             "assume that there is no user and do not ask for input", "", false);
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false);
+    cl.add("install", 'i',
+            "install a package it was not installed", "", false);
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -237,7 +239,7 @@ void App::usage()
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
         "    ncl update (--package=<package>)+ [--end-process=<types>]",
-        "            [--non-interactive] [--keep-directories]",
+        "            [--install] [--non-interactive] [--keep-directories]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
@@ -837,11 +839,12 @@ QString App::update()
     }
 
     bool keepDirectories = cl.isPresent("keep-directories");
+    bool install = cl.isPresent("install");
 
     QList<InstallOperation*> ops;
     bool up2date = false;
     if (job->shouldProceed()) {
-        QString err = rep->planUpdates(toUpdate, ops, keepDirectories);
+        QString err = rep->planUpdates(toUpdate, ops, keepDirectories, install);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {

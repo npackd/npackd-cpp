@@ -34,6 +34,11 @@ private slots:
     void updateKeepDirectories();
 
     /**
+     * @brief "update" --install
+     */
+    void updateInstall();
+
+    /**
      * @brief "add"/"remove" for a running program
      */
     void addRemoveRunning();

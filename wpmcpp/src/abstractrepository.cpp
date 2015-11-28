@@ -328,7 +328,8 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 
 
 QString AbstractRepository::planUpdates(const QList<Package*> packages,
-        QList<InstallOperation*>& ops, bool keepDirectories)
+        QList<InstallOperation*>& ops, bool keepDirectories,
+        bool install)
 {
     QString err;
 
@@ -359,12 +360,14 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
             }
 
             if (b == 0) {
-                err = QString(QObject::tr("No installed version found for the package %1")).
-                        arg(p->title);
-                break;
+                if (!install) {
+                    err = QString(QObject::tr("No installed version found for the package %1")).
+                            arg(p->title);
+                    break;
+                }
             }
 
-            if (a->version.compare(b->version) > 0) {
+            if (b == 0 || a->version.compare(b->version) > 0) {
                 newest.append(a);
                 newesti.append(b);
                 used.append(false);
@@ -386,22 +389,25 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
             QList<InstallOperation*> ops2;
             QList<PackageVersion*> installedCopy = installed;
 
-            QString err = newesti.at(i)->planUninstallation(
-                    installedCopy, ops2);
-            if (err.isEmpty()) {
-                QString where;
-                if (keepDirectories)
-                    where = newesti.at(i)->getPath();
-
-                err = newest.at(i)->planInstallation(installedCopy, ops2,
-                        avoid, where);
+            PackageVersion* b = newesti.at(i);
+            if (b) {
+                QString err = b->planUninstallation(
+                        installedCopy, ops2);
                 if (err.isEmpty()) {
-                    if (ops2.count() == 2) {
-                        used[i] = true;
-                        installed = installedCopy;
-                        ops.append(ops2[0]);
-                        ops.append(ops2[1]);
-                        ops2.clear();
+                    QString where;
+                    if (keepDirectories)
+                        where = b->getPath();
+
+                    err = newest.at(i)->planInstallation(installedCopy, ops2,
+                            avoid, where);
+                    if (err.isEmpty()) {
+                        if (ops2.count() == 2) {
+                            used[i] = true;
+                            installed = installedCopy;
+                            ops.append(ops2[0]);
+                            ops.append(ops2[1]);
+                            ops2.clear();
+                        }
                     }
                 }
             }
@@ -414,8 +420,9 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
         for (int i = 0; i < newest.count(); i++) {
             if (!used[i]) {
                 QString where;
-                if (keepDirectories)
-                    where = newesti.at(i)->getPath();
+                PackageVersion* b = newesti.at(i);
+                if (keepDirectories && b)
+                    where = b->getPath();
 
                 QList<PackageVersion*> avoid;
                 err = newest.at(i)->planInstallation(installed, ops, avoid,
@@ -429,9 +436,12 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
     if (err.isEmpty()) {
         for (int i = 0; i < newesti.count(); i++) {
             if (!used[i]) {
-                err = newesti.at(i)->planUninstallation(installed, ops);
-                if (!err.isEmpty())
-                    break;
+                PackageVersion* b = newesti.at(i);
+                if (b) {
+                    err = b->planUninstallation(installed, ops);
+                    if (!err.isEmpty())
+                        break;
+                }
             }
         }
     }
