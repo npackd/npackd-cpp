@@ -1120,7 +1120,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
             /* Duplicate the handle so we can query it. */
             if (!NT_SUCCESS(NtDuplicateObject(
                 processHandle,
-                (HANDLE) (ULONG) handle.Handle,
+                (HANDLE) (uintptr_t) handle.Handle,
                 GetCurrentProcess(),
                 &dupHandle,
                 0,
