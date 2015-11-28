@@ -59,8 +59,9 @@ QString AbstractRepository::updateNpackdCLEnvVar()
         QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &e);
 
         if (v != cur) {
-            if (WPMUtils::setSystemEnvVar("NPACKD_CL", v).isEmpty())
-                WPMUtils::fireEnvChanged();
+            if (WPMUtils::setSystemEnvVar("NPACKD_CL", v).isEmpty()) {
+                /* this is slow WPMUtils::fireEnvChanged() */;
+            }
         }
     }
 
