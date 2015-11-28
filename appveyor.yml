@@ -6,15 +6,15 @@ clone_folder: c:\projects\Npackd
 environment:
   version: 1.21
   matrix:
-  - bits: 64
-    prg: npackd
-    coverity: yes
   - bits: 32
     prg: npackdcl
   - bits: 64
     prg: npackd
   - bits: 32
     prg: npackd
+  - bits: 64
+    prg: npackd
+    coverity: yes
   covtoken:
     secure: yPwsn7ojqxg5m7pxyjIf3LV1GwoHd4m3q5iQrKCDzZ4=
 install:
