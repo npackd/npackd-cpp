@@ -122,8 +122,8 @@ void App::updateKeepDirectories()
             "The packages were updated successfully"),
             output.toLatin1());
 
-    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup") ==
-            "C:\\Program Files\\ArecaBackup");
+    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup").
+            trimmed() == "C:\\Program Files\\ArecaBackup");
 
     output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
