@@ -451,7 +451,7 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
     return r;
 }
 
-void InstalledPackages::refresh(DBRepository *rep, Job *job)
+void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
 {
     rep->currentRepository = 10000;
 
@@ -560,13 +560,17 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     // qDebug() << "InstalledPackages::refresh.2";
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.05,
-                QObject::tr("Detecting MSI packages"), true, true);
-        // MSI package detection should happen before the detection for
-        // control panel programs
-        AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
-        detect3rdParty(sub, rep, pm, true, "msi:");
-        delete pm;
+        if (detectMSI) {
+            Job* sub = job->newSubJob(0.05,
+                    QObject::tr("Detecting MSI packages"), true, true);
+            // MSI package detection should happen before the detection for
+            // control panel programs
+            AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
+            detect3rdParty(sub, rep, pm, true, "msi:");
+            delete pm;
+        } else {
+            job->setProgress(job->getProgress() + 0.05);
+        }
     }
 
      // qDebug() << "InstalledPackages::refresh.2.1";

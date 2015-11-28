@@ -222,8 +222,9 @@ public:
      *
      * @param rep repository that should be used
      * @param job job for this method
+     * @param should the MSI packages be also detected (+4 seconds)
      */
-    void refresh(DBRepository *rep, Job* job);
+    void refresh(DBRepository *rep, Job* job, bool detectMSI=true);
 
     /**
      * @brief returns the path of an installed package version

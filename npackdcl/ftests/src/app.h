@@ -62,6 +62,11 @@ private slots:
     void pathIsFast();
 
     /**
+     * @brief "npackdcl path --version"
+     */
+    void pathVersion();
+
+    /**
      * @brief "check"
      */
     void check();

@@ -59,6 +59,18 @@ void App::pathIsFast()
     QVERIFY2(t.getTime(1) < 0.1, qPrintable(QString("%1").arg(t.getTime(1))));
 }
 
+void App::pathVersion()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
+            contains("installed successfully"));
+
+    QVERIFY(captureNpackdCLOutput("path -p io.mpv.mpv-64 -v 0.4").
+            contains("mpv_64-bit"));
+}
+
 void App::addRemove()
 {
     if (!admin)

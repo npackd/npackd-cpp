@@ -254,7 +254,8 @@ void App::usage()
         "        All packages are shown by default.",
         "    ncl info --package=<package> [--version=<version>]",
         "        shows information about the specified package or package version",
-        "    ncl path --package=<package> [--versions=<versions>]",
+        "    ncl path --package=<package>",
+        "            [--version=<version> | --versions=<versions>]",
         "        searches for an installed package and prints its location",
         "    ncl add-repo --url=<repository>",
         "        appends a repository to the list",
@@ -710,6 +711,7 @@ QString App::path()
 
     QString package = cl.get("package");
     QString versions = cl.get("versions");
+    QString version = cl.get("version");
 
     if (job->shouldProceed()) {
         if (package.isNull()) {
@@ -727,14 +729,22 @@ QString App::path()
     if (job->shouldProceed()) {
         // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
         d.package = package;
-        if (versions.isNull()) {
-            d.min.setVersion(0, 0);
-            d.max.setVersion(std::numeric_limits<int>::max(), 0);
-        } else {
-            if (!d.setVersions(versions)) {
-                job->setErrorMessage("Cannot parse versions: " +
-                        versions);
+        if (version.isNull()) {
+            if (versions.isNull()) {
+                d.min.setVersion(0, 0);
+                d.max.setVersion(std::numeric_limits<int>::max(), 0);
+            } else {
+                if (!d.setVersions(versions)) {
+                    job->setErrorMessage("Cannot parse versions: " +
+                            versions);
+                }
             }
+        } else {
+            if (d.min.setVersion(version))
+                d.max = d.min;
+            else
+                job->setErrorMessage("Cannot parse version: " +
+                        version);
         }
     }
 
@@ -789,7 +799,7 @@ QString App::update()
         Job* rjob = job->newSubJob(0.05,
                 "Detecting installed software");
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob);
+                rjob, false);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
@@ -1040,7 +1050,7 @@ QString App::add()
 
     if (job->shouldProceed()) {
         Job* rjob = job->newSubJob(0.1, "Detecting installed software");
-        ip->refresh(DBRepository::getDefault(), rjob);
+        ip->refresh(DBRepository::getDefault(), rjob, false);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
@@ -1259,7 +1269,7 @@ QString App::remove()
         Job* rjob = job->newSubJob(0.09,
                 "Detecting installed software");
         InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob);
+                rjob, false);
         if (!rjob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(rjob->getErrorMessage());
         }
