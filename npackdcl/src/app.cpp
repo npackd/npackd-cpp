@@ -740,9 +740,11 @@ QString App::path()
                 }
             }
         } else {
-            if (d.min.setVersion(version))
+            if (d.min.setVersion(version)) {
                 d.max = d.min;
-            else
+                d.minIncluded = true;
+                d.maxIncluded = true;
+            } else
                 job->setErrorMessage("Cannot parse version: " +
                         version);
         }
