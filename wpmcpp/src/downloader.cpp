@@ -119,15 +119,8 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
     DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
 
     // qDebug() << "download.5";
-    int retries = 0;
+    int callNumber = 0;
     while (job->shouldProceed()) {
-        retries++;
-        if (retries >= 5) {
-            job->setErrorMessage(
-                    QObject::tr("Too many retries during the download"));
-            break;
-        }
-
         // qDebug() << "download.5.1";
 
         DWORD sendRequestError = 0;
@@ -150,96 +143,58 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
                 break;
         }
 
-        if (parentWindow) {
-            INTERNET_AUTH_NOTIFY_DATA nd = {};
-            nd.cbStruct = sizeof(nd);
-            nd.pfnNotify = &myInternetAuthNotifyCallback;
+        void* p = 0;
 
-            void* p = &nd;
+        // both calls to InternetErrorDlg should be enclosed by one
+        // mutex, so that only one dialog will be shown
+        loginDialogMutex.lock();
 
-            DWORD flags = FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                          FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                          FLAGS_ERROR_UI_FLAGS_GENERATE_DATA; // |
-                          // FLAGS_ERROR_UI_SERIALIZE_DIALOGS;
+        DWORD r;
 
-            // both calls to InternetErrorDlg should be enclosed by one
-            // mutex, so that only one dialog will be shown
-            loginDialogMutex.lock();
-            DWORD r;
-            //do {
+        if (interactive && callNumber >= 2) {
+            if (parentWindow) {
                 r = InternetErrorDlg(parentWindow,
                         hResourceHandle, sendRequestError,
-                        flags | FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
-            //} while (r == ERROR_INTERNET_DIALOG_PENDING);
-
-            //qDebug() << "111:" << r;
-            if (r == ERROR_SUCCESS) {
-                if (interactive) {
-                    r = InternetErrorDlg(parentWindow,
-                            hResourceHandle, sendRequestError, flags, &p);
-
-                    //qDebug() << "222:" << r;
-                    if (r == ERROR_SUCCESS) {
-                        // retry
-                    } else if (r == ERROR_INTERNET_FORCE_RETRY) {
-                        // the call above set the password and we should retry the
-                        // request
-                    } else if (r == ERROR_CANCELLED) {
-                        job->setErrorMessage(QObject::tr("Cancelled by the user"));
-                    } else if (r == ERROR_INVALID_HANDLE) {
-                        job->setErrorMessage(QObject::tr("Invalid handle"));
-                    } else {
-                        job->setErrorMessage(QString(
-                                QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
-                    }
-                } else {
-                    // retry
-                }
-            } else if (r == ERROR_INTERNET_FORCE_RETRY) {
-                // nothing
-            } else if (r == ERROR_CANCELLED) {
-                job->setErrorMessage(QObject::tr("Cancelled by the user"));
-            } else if (r == ERROR_INVALID_HANDLE) {
-                job->setErrorMessage(QObject::tr("Invalid handle"));
+                        FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                        FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                        FLAGS_ERROR_UI_FLAGS_GENERATE_DATA, &p);
             } else {
-                job->setErrorMessage(QString(
-                        QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
+                QString e = inputPassword(hConnectHandle, dwStatus);
+
+                //qDebug() << "inputPassword: " << e;
+                if (!e.isEmpty()) {
+                    job->setErrorMessage(e);
+                    r = ERROR_CANCELLED;
+                } else {
+                    r = ERROR_INTERNET_FORCE_RETRY;
+                }
             }
-            loginDialogMutex.unlock();
+            callNumber = 0;
         } else {
-            void* p = 0;
-
-            DWORD flags = FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                          FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                          FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
-                          FLAGS_ERROR_UI_FLAGS_NO_UI;
-            DWORD r = InternetErrorDlg(0,
-                    hResourceHandle, sendRequestError, flags, &p);
-            //qDebug() << "333" << r;
-            if (r == ERROR_SUCCESS) {
-                if (interactive) {
-                    loginDialogMutex.lock();
-                    QString e = inputPassword(hConnectHandle, dwStatus); // nothing
-                    loginDialogMutex.unlock();
-                    //qDebug() << "inputPassword: " << e;
-                    if (!e.isEmpty()) {
-                        job->setErrorMessage(e);
-                    }
-                } else {
-                    // retry
-                }
-            } else if (r == ERROR_INTERNET_FORCE_RETRY) {
-                // the call above set the password and we should retry the
-                // request
-            } else if (r == ERROR_CANCELLED) {
-                job->setErrorMessage(QObject::tr("Cancelled by the user"));
-            } else if (r == ERROR_INVALID_HANDLE) {
-                job->setErrorMessage(QObject::tr("Invalid handle"));
-            } else {
-                job->setErrorMessage(QString(
-                        QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
-            }
+            r = InternetErrorDlg(0,
+                   hResourceHandle, sendRequestError,
+                    FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                    FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                    FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
+                    FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
+            callNumber++;
         }
+
+        qDebug() << callNumber << r << dwStatus << url.toString();
+        if (r == ERROR_SUCCESS) {
+            job->setErrorMessage(QObject::tr("Cancelled by the user"));
+        } else if (r == ERROR_INTERNET_FORCE_RETRY) {
+            // nothing
+        } else if (r == ERROR_CANCELLED) {
+            job->setErrorMessage(QObject::tr("Cancelled by the user"));
+        } else if (r == ERROR_INVALID_HANDLE) {
+            job->setErrorMessage(QObject::tr("Invalid handle"));
+        } else {
+            job->setErrorMessage(QString(
+                    QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
+        }
+
+        loginDialogMutex.unlock();
 
         if (!job->shouldProceed())
             break;

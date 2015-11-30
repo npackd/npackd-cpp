@@ -156,6 +156,6 @@ upload: zip msi
 		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 
 translations:
-	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\lupdate.exe" ..\..\src\wpmcpp.pro
+	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\lupdate.exe" -locations none ..\..\src\wpmcpp.pro
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\lrelease.exe" ..\..\src\wpmcpp.pro
 
