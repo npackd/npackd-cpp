@@ -46,23 +46,6 @@ private:
     /** mutex for lockedPackageVersions */
     static QMutex lockedPackageVersionsMutex;
 
-    /**
-     * @param job job to monitor the progress. The error message will be set
-     *     to a non-empty string if the exit code of the process is not 0.
-     * @param where working directory
-     * @param path .bat file
-     * @param outputFile the output will be saved here
-     * @param env additional environemnt variables
-     * @param printScriptOutput true = redirect the script output to the default
-     *     output stream
-     * @param lastOutputLines if not 0, the last lines of the program output
-     *     will be stored here
-     */
-    static void executeBatchFile(Job* job, const QString& where,
-            const QString& path, const QString& outputFile,
-            const QStringList& env, bool printScriptOutput,
-            QString *lastOutputLines=0);
-
     static PackageVersionFile* createPackageVersionFile(QDomElement* e,
             QString* err);
     static Dependency* createDependency(QDomElement* e);
@@ -118,28 +101,6 @@ private:
     QString addBasicVars(QStringList *env);
     void addDependencyVars(QStringList* vars);
 public:
-    /**
-     * @param job job to monitor the progress. The error message will be set
-     *     to a non-empty string if the exit code of the process is not 0.
-     * @param where working directory
-     * @param path executable
-     * @param nativeArguments all native arguments
-     * @param outputFile the output will be saved here
-     * @param env additional environemnt variables
-     * @param write writeUTF16LEBOM write UTF-16 LE BOM mark at the beginning of
-     *     the output file?
-     * @param printScriptOutput true = redirect the output to the default output
-     *     stream
-     * @param lastOutputLines if not 0, the last lines of the program output
-     *     will be stored here
-     */
-    static void executeFile(Job* job, const QString& where,
-            const QString& path, const QString &nativeArguments,
-            const QString& outputFile,
-            const QStringList& env, bool writeUTF16LEBOM=true,
-            bool printScriptOutput=false,
-            QString* lastOutputLines=0);
-
     /**
      * @brief string ID for the specified package version
      * @param package full package name

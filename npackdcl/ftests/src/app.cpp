@@ -26,7 +26,7 @@ QString App::captureNpackdCLOutput(const QString& params)
 
     QStringList env;
     Job* job = new Job();
-    PackageVersion::executeFile(
+    WPMUtils::executeFile(
             job, where,
             npackdcl,
             params, "Output.log", env, false);

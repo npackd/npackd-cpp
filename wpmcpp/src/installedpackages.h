@@ -255,6 +255,17 @@ public:
      * @return [owner:caller] found installed version or 0. This is a copy.
      */
     InstalledPackageVersion *getNewestInstalled(const QString &package) const;
+
+    /**
+     * @brief notifies packages via the ".Npackd\InstallHook.bat" about an
+     *     installed package
+     * @param package package name
+     * @param version package version
+     * @param success true = successful installation
+     * @return error message
+     */
+    QString notifyInstalled(const QString& package,
+            const Version& version, bool success=true) const;
 signals:
     /**
      * @brief fired if a package version was installed or uninstalled

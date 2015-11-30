@@ -434,6 +434,48 @@ InstalledPackageVersion* InstalledPackages::getNewestInstalled(
     return r;
 }
 
+QString InstalledPackages::notifyInstalled(const QString &package,
+        const Version &version, bool success) const
+{
+    QString err;
+
+    QStringList paths = getAllInstalledPackagePaths();
+
+    QStringList env;
+    env.append("NPACKD_PACKAGE_NAME");
+    env.append(package);
+    env.append("NPACKD_PACKAGE_VERSION");
+    env.append(version.getVersionString());
+    env.append("NPACKD_CL");
+    env.append(AbstractRepository::getDefault_()->
+            computeNpackdCLEnvVar_(&err));
+    env.append("NPACKD_SUCCESS");
+    env.append(success ? "1" : "0");
+    err = ""; // ignore the error
+
+    // searching for a file in all installed package versions may take up to 5
+    // seconds if the data is not in the cache and only 20 milliseconds
+    // otherwise
+    for (int i = 0; i < paths.size(); i++) {
+        QString path = paths.at(i);
+        QString file = path + "\\.Npackd\\InstallHook.bat";
+        QFileInfo fi(file);
+        if (fi.exists()) {
+            // qDebug() << file;
+            Job* job = new Job("Notification");
+            WPMUtils::executeBatchFile(
+                    job, path, ".Npackd\\InstallHook.bat",
+                    ".Npackd\\InstallHook.log", env, true, 0);
+
+            // ignore the possible errors
+
+            delete job;
+        }
+    }
+
+    return "";
+}
+
 QStringList InstalledPackages::getAllInstalledPackagePaths() const
 {
     this->mutex.lock();

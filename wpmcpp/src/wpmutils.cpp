@@ -16,6 +16,7 @@
 #include <ole2.h>
 #include <wchar.h>
 #include <limits>
+#include <inttypes.h>
 
 //#define CCH_RM_MAX_APP_NAME 255
 //#define CCH_RM_MAX_SVC_NAME 63
@@ -2429,3 +2430,269 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 
     job->complete();
 }
+
+void WPMUtils::executeBatchFile(Job* job, const QString& where,
+        const QString& path,
+        const QString& outputFile, const QStringList& env,
+        bool printScriptOutput, QString *lastOutputLines)
+{
+    QDir d(where);
+
+    QString exe = WPMUtils::findCmdExe();
+    QString file = d.absolutePath() + "\\" + path;
+    file.replace('/', '\\');
+
+    executeFile(job, d.absolutePath(), exe,
+            "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
+            d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput,
+            lastOutputLines);
+}
+
+void WPMUtils::executeFile(Job* job, const QString& where,
+        const QString& path, const QString& nativeArguments,
+        const QString& outputFile, const QStringList& env,
+        bool writeUTF16LEBOM, bool printScriptOutput,
+        QString *lastOutputLines)
+{
+    QString initialTitle = job->getTitle();
+
+    time_t start = time(NULL);
+
+    LPWCH env2 = GetEnvironmentStrings();
+    QMap<QString, QString> env_;
+    LPWCH e = env2;
+    while (true) {
+        int len = wcslen(e);
+        if (!len)
+            break;
+
+        QString s;
+        s.setUtf16((const ushort*) e, len);
+        int p = s.indexOf('=');
+
+        QString name, value;
+        if (p >= 0) {
+            name = s.left(p);
+            value = s.mid(p + 1);
+        } else {
+            name = s;
+        }
+        env_.insert(name, value);
+
+        e += len + 1;
+
+        // qDebug() << name << value;
+    }
+    for (int i = 0; i + 1 < env.size(); i += 2) {
+        env_.insert(env.at(i), env.at(i + 1));
+    }
+    FreeEnvironmentStrings(env2);
+    QByteArray ba;
+    QMapIterator<QString, QString> i(env_);
+    while (i.hasNext()) {
+        i.next();
+        QString name = i.key();
+        QString value = i.value();
+        ba.append((char*) name.utf16(), name.length() * 2);
+        ba.append('=');
+        ba.append('\0');
+        ba.append((char*) value.utf16(), (value.length() + 1) * 2);
+    }
+    ba.append('\0');
+    ba.append('\0');
+
+    // qDebug() << ba;
+
+    PROCESS_INFORMATION pinfo;
+
+    SECURITY_ATTRIBUTES saAttr = {0};
+    saAttr.nLength = sizeof(saAttr);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+
+    HANDLE g_hChildStd_IN_Rd = NULL;
+    HANDLE g_hChildStd_IN_Wr = NULL;
+    HANDLE g_hChildStd_OUT_Rd = NULL;
+    HANDLE g_hChildStd_OUT_Wr = NULL;
+
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr,
+                &saAttr, 0));
+    }
+
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                SetHandleInformation(g_hChildStd_OUT_Rd,
+                HANDLE_FLAG_INHERIT, 0));
+    }
+
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0));
+    }
+
+    if (job->shouldProceed()) {
+        job->checkOSCall(
+                SetHandleInformation(g_hChildStd_IN_Wr,
+                HANDLE_FLAG_INHERIT, 0));
+    }
+
+    STARTUPINFOW startupInfo = {
+        sizeof(STARTUPINFO), 0, 0, 0,
+        (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+        (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
+
+    startupInfo.dwFlags |= STARTF_USESTDHANDLES;
+    startupInfo.hStdInput = g_hChildStd_IN_Rd;
+    startupInfo.hStdOutput = g_hChildStd_OUT_Wr;
+    startupInfo.hStdError = g_hChildStd_OUT_Wr;
+
+    bool success = false;
+
+    if (job->shouldProceed()) {
+        QString args = "\"" + path + "\"";
+        if (!nativeArguments.isEmpty())
+            args = args + ' ' + nativeArguments;
+        success = CreateProcess(
+                (wchar_t*) path.utf16(),
+                (wchar_t*) args.utf16(),
+                0, &saAttr, TRUE,
+                CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
+                ba.data(),
+                (wchar_t*) where.utf16(),
+                &startupInfo, &pinfo);
+
+        // ignore the possible errors here
+        CloseHandle(g_hChildStd_OUT_Wr);
+    }
+
+    QFile f(outputFile);
+    if (job->shouldProceed()) {
+        if (!f.open(QIODevice::WriteOnly))
+            job->setErrorMessage(f.errorString());
+    }
+
+    if (job->shouldProceed() && writeUTF16LEBOM) {
+        if (f.write("\xff\xfe") == -1)
+            job->setErrorMessage(f.errorString());
+    }
+
+    if (job->shouldProceed()) {
+        HANDLE hStdout;
+        bool consoleOutput;
+        if (printScriptOutput) {
+            hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+            // we do not check GetLastError here as it sometimes returns
+            // 2=The system cannot find the file specified.
+            // GetFileType returns 0 if an error occures so that the == check below
+            // is sufficient
+            DWORD ft = GetFileType(hStdout);
+            consoleOutput = (ft & ~(FILE_TYPE_REMOTE)) ==
+                    FILE_TYPE_CHAR;
+
+            DWORD consoleMode;
+            if (consoleOutput) {
+                if (!GetConsoleMode(hStdout, &consoleMode))
+                    consoleOutput = false;
+            }
+        } else {
+            hStdout = INVALID_HANDLE_VALUE;
+            consoleOutput = false;
+        }
+
+        int64_t outputLen = 0;
+        QByteArray lastLines;
+        DWORD ec = 0;
+        const int BUFSIZE = 1024;
+        char* chBuf = new char[BUFSIZE];
+        while (true) {
+            if (job->isCancelled()) {
+                break;
+            }
+
+            DWORD dwRead;
+            bool bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE,
+                    &dwRead, NULL);
+            if (!bSuccess || dwRead == 0)
+                break;
+
+            outputLen += dwRead;
+
+            if (lastOutputLines) {
+                lastLines.append(chBuf, dwRead);
+
+                // 1024 bytes = 10 lines of UTF-16 text
+                if (lastLines.length() > 1024) {
+                    // always keep an even number of bytes
+                    lastLines.remove(0, lastLines.length() - 1024 -
+                            lastLines.length() % 2);
+                }
+            }
+
+            if (hStdout != INVALID_HANDLE_VALUE) {
+                DWORD dwWritten;
+                if (consoleOutput)
+                    WriteConsoleW(hStdout, chBuf, dwRead / 2, &dwWritten, 0);
+                else
+                    WriteFile(hStdout, chBuf, dwRead, &dwWritten, 0);
+            }
+
+            if (f.write(chBuf, dwRead) == -1) {
+                job->setErrorMessage(f.errorString());
+                break;
+            }
+
+            time_t seconds = time(NULL) - start;
+            double percents = ((double) seconds) / 300; // 5 Minutes
+            if (percents > 0.9)
+                percents = 0.9;
+            job->setProgress(percents);
+            job->setTitle(initialTitle + " / " +
+                    QString(QObject::tr("%1 minutes")).
+                    arg(seconds / 60));
+        }
+        delete[] chBuf;
+
+        if (lastOutputLines) {
+            *lastOutputLines = QString::fromUtf16(
+                    (const ushort*) lastLines.data(),
+                    lastLines.length() / 2);
+        }
+
+        // ignore possible errors here
+        f.close();
+
+        // ignore possible errors here
+        CloseHandle(g_hChildStd_OUT_Rd);
+
+        if (GetExitCodeProcess(pinfo.hProcess, &ec) && ec == STILL_ACTIVE) {
+            if (job->isCancelled())
+                TerminateProcess(pinfo.hProcess, 0xFFFFFFFF);
+            WaitForSingleObject(pinfo.hProcess, INFINITE);
+        }
+
+        if (job->shouldProceed()) {
+            job->checkOSCall(GetExitCodeProcess(pinfo.hProcess, &ec));
+        }
+
+        if (ec != 0) {
+            job->setErrorMessage(
+                    QString(QObject::tr("Process %1 exited with the code %2")).
+                    arg(path).arg(ec));
+        }
+    }
+    job->setTitle(initialTitle);
+
+    if (success) {
+        // ignore possible errors here
+        CloseHandle(pinfo.hThread);
+        CloseHandle(pinfo.hProcess);
+    }
+
+    job->complete();
+}
+
