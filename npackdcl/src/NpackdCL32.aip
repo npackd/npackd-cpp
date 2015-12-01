@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="9.2" version="11.8" Modules="simple" RootPath="." Language="en" Id="{04DE8303-22E7-409E-812B-56D06405BC5A}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="9.2" version="12.5.1" Modules="simple" RootPath="." Language="en" Id="{04DE8303-22E7-409E-812B-56D06405BC5A}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiValidationComponent">
     <ROW Table="File" Column="Sequence" MinValue="1" MaxValue="32767" Description="Sequence with respect to the media images; order must track cabinet order." Options="0" ColumnType="2" ColumnIndex="7" ColumnSize="2" MsiKey="File#Sequence"/>
     <ROW Table="Media" Column="LastSequence" MinValue="0" MaxValue="32767" Description="File sequence number for the last file for this media." Options="0" ColumnType="2" ColumnIndex="1" ColumnSize="2" MsiKey="Media#LastSequence"/>
@@ -10,10 +10,10 @@
     <ROW Property="AI_UPGRADE" Value="No"/>
     <ROW Property="ALLUSERS" Value="2" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
-    <ROW Property="ARPHELPLINK" Value="http://code.google.com/p/windows-package-manager/"/>
+    <ROW Property="ARPHELPLINK" Value="https://npackd.appspot.com/"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPPRODUCTICON" Value="app_1.exe" Type="8"/>
-    <ROW Property="ARPURLINFOABOUT" Value="http://code.google.com/p/windows-package-manager/"/>
+    <ROW Property="ARPURLINFOABOUT" Value="https://npackd.appspot.com/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
     <ROW Property="ProductCode" Value="1033:{C91F6305-8ED0-46E9-A796-BDEB983D377E} " Type="16"/>
