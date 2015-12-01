@@ -176,7 +176,7 @@ void App::addRemoveRunning()
             contains("installed successfully"));
     QString dir = captureNpackdCLOutput("path -p active-directory-explorer").
             trimmed();
-    QProcess::execute("cmd.exe /C start \"\" \"" + dir + "\\ADExplorer.exe\"");
+    QProcess::startDetached(dir + "\\ADExplorer.exe");
     Sleep(5000);
     QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));
