@@ -671,40 +671,10 @@ void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,
         readDataFlat(job, hResourceHandle, file, sha1, contentLength, alg);
 }
 
-void Downloader::download(Job* job, const QUrl& url, QFile* file,
+void Downloader::download22(Job* job, const QUrl& url, QFile* file,
         QString* sha1, QCryptographicHash::Algorithm alg, bool useCache,
         QString *mime, bool keepConnection, int timeout, bool interactive)
 {
-    QString contentDisposition;
-
-    if (url.scheme() == "https" || url.scheme() == "http")
-        downloadWin(job, url, L"GET", file, mime, &contentDisposition,
-                defaultPasswordWindow, sha1, useCache, alg, keepConnection,
-                timeout, interactive);
-    else if (url.toString().startsWith("data:image/png;base64,")) {
-        if (file) {
-            QString dataURL_ = url.toString().mid(22);
-            QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
-            if (file->write(ba) < 0)
-                job->setErrorMessage(file->errorString());
-        }
-        job->complete();
-    } else if (url.scheme() == "file") {
-        QString localFile = url.toLocalFile();
-        QFileInfo fi(localFile);
-        if (fi.isAbsolute())
-            copyFile(job, localFile, file, sha1,  alg);
-        else {
-            job->setErrorMessage(
-                    QObject::tr("Cannot download a file from a relative path %1").
-                    arg(localFile));
-            job->complete();
-        }
-    } else {
-        job->setErrorMessage(QObject::tr("Unsupported URL scheme: %1").
-                arg(url.toDisplayString()));
-        job->complete();
-    }
 }
 
 void Downloader::copyFile(Job* job, const QString& source, QFile* file,
@@ -749,13 +719,37 @@ Downloader::Response Downloader::download(Job *job,
 {
     Downloader::Response r;
 
-    // TODO:
-    // request.parentWindow
-    // httpMethod
-    download(job, request.url, request.file,
-            request.hashSum ? &r.hashSum : 0, request.alg,
-            request.useCache, &r.mimeType, request.keepConnection,
-            request.timeout, request.interactive);
+    QString* sha1 = request.hashSum ? &r.hashSum : 0;
+    if (request.url.scheme() == "https" || request.url.scheme() == "http")
+        downloadWin(job, request.url, L"GET", request.file, &r.mimeType,
+                &r.contentDisposition,
+                defaultPasswordWindow, sha1, request.useCache,
+                request.alg, request.keepConnection,
+                request.timeout, request.interactive);
+    else if (request.url.toString().startsWith("data:image/png;base64,")) {
+        if (request.file) {
+            QString dataURL_ = request.url.toString().mid(22);
+            QByteArray ba = QByteArray::fromBase64(dataURL_.toLatin1());
+            if (request.file->write(ba) < 0)
+                job->setErrorMessage(request.file->errorString());
+        }
+        job->complete();
+    } else if (request.url.scheme() == "file") {
+        QString localFile = request.url.toLocalFile();
+        QFileInfo fi(localFile);
+        if (fi.isAbsolute())
+            copyFile(job, localFile, request.file, sha1, request.alg);
+        else {
+            job->setErrorMessage(
+                    QObject::tr("Cannot download a file from a relative path %1").
+                    arg(localFile));
+            job->complete();
+        }
+    } else {
+        job->setErrorMessage(QObject::tr("Unsupported URL scheme: %1").
+                arg(request.url.toDisplayString()));
+        job->complete();
+    }
 
     return r;
 }
@@ -779,31 +773,6 @@ int64_t Downloader::getContentLength(Job* job, const QUrl &url,
                 QCryptographicHash::Sha1, false, 15);
     }
     return result;
-}
-
-QTemporaryFile* Downloader::download(Job* job, const QUrl &url, QString* sha1,
-        QCryptographicHash::Algorithm alg,
-        bool useCache, QString *mime)
-{
-    QTemporaryFile* file = new QTemporaryFile();
-
-    if (file->open()) {
-        download(job, url, file, sha1, alg, useCache, mime);
-        file->close();
-
-        if (job->isCancelled() || !job->getErrorMessage().isEmpty()) {
-            delete file;
-            file = 0;
-        }
-    } else {
-        job->setErrorMessage(QString(QObject::tr("Error opening file: %1")).
-                arg(file->fileName()));
-        delete file;
-        file = 0;
-        job->complete();
-    }
-
-    return file;
 }
 
 QTemporaryFile* Downloader::downloadToTemporary(Job* job,

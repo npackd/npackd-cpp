@@ -124,29 +124,13 @@ class Downloader: QObject
      * @param timeout download timeout for HTTP in seconds
      * @param interactive is the user interaction allowed?
      */
-    static void download(Job* job, const QUrl& url, QFile* file,
+    static void download22(Job* job, const QUrl& url, QFile* file,
             QString* sha1=0,
             QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
             bool useCache=true,
             QString* mime=0,
             bool keepConnection=true, int timeout=300,
             bool interactive=true);
-
-    /**
-     * @param job job for this method
-     * @param url this URL will be downloaded. http://, https://, file:// and
-     *     data:image/png;base64, are supported
-     * @param sha1 if not null, SHA1 will be computed and stored here
-     * @param alg algorithm that should be used for computing the hash sum
-     * @param useCache true = use Windows Internet cache on the local disk
-     * @param mime if not null, MIME type will be stored here
-     * @return temporary file or 0 if an error occured. The file is closed.
-     */
-    static QTemporaryFile* download(Job* job, const QUrl& url,
-            QString* sha1=0,
-            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
-            bool useCache=true,
-            QString* mime=0);
 public:
     /**
      * @brief a download request
@@ -232,6 +216,9 @@ public:
 
         /** MIME type of the response */
         QString mimeType;
+
+        /** if not null, Content-Disposition will be stored here */
+        QString contentDisposition;
     };
 
     /**
