@@ -40,6 +40,8 @@ QString App::captureNpackdCLOutput(const QString& params)
 
     QString s(output);
 
+    qDebug() << s;
+
     return s;
 }
 

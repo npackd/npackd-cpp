@@ -107,30 +107,6 @@ class Downloader: QObject
                          QCryptographicHash::Algorithm alg);
 
     static QString inputPassword(HINTERNET hConnectHandle, DWORD dwStatus);
-
-    /**
-     * Downloads a file.
-     *
-     * @param job job for this method
-     * @param url this URL will be downloaded. http://, https://, file:// and
-     *     data:image/png;base64, are supported
-     * @param sha1 if not null, SHA1 will be computed and stored here
-     * @param file the content will be stored here. 0 means that the data will
-     *     be read and discarded
-     * @param alg algorithm that should be used for computing the hash sum
-     * @param mime if not null, MIME type will be stored here
-     * @param useCache true = use Windows Internet cache on the local disk
-     * @param keepConnection true = keep the HTTP connection open
-     * @param timeout download timeout for HTTP in seconds
-     * @param interactive is the user interaction allowed?
-     */
-    static void download22(Job* job, const QUrl& url, QFile* file,
-            QString* sha1=0,
-            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
-            bool useCache=true,
-            QString* mime=0,
-            bool keepConnection=true, int timeout=300,
-            bool interactive=true);
 public:
     /**
      * @brief a download request

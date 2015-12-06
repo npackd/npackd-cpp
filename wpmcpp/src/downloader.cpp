@@ -61,11 +61,18 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         job->setErrorMessage(errMsg);
     }
 
-    // change the timeout to 5 minutes
     if (job->shouldProceed()) {
+        // change the timeout to 5 minutes
         DWORD rec_timeout = timeout * 1000;
         InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
                 &rec_timeout, sizeof(rec_timeout));
+
+        // enable automatic gzip decoding
+        const DWORD INTERNET_OPTION_HTTP_DECODING = 65;
+        BOOL b = TRUE;
+        InternetSetOption(internet, INTERNET_OPTION_HTTP_DECODING,
+                &b, sizeof(b));
+
         job->setProgress(0.01);
     }
 
@@ -180,7 +187,9 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
             callNumber++;
         }
 
+        // TODO: remove
         qDebug() << callNumber << r << dwStatus << url.toString();
+
         if (r == ERROR_SUCCESS) {
             job->setErrorMessage(QObject::tr("Cancelled by the user"));
         } else if (r == ERROR_INTERNET_FORCE_RETRY) {
@@ -669,12 +678,6 @@ void Downloader::readData(Job* job, HINTERNET hResourceHandle, QFile* file,
         readDataGZip(job, hResourceHandle, file, sha1, contentLength, alg);
     else
         readDataFlat(job, hResourceHandle, file, sha1, contentLength, alg);
-}
-
-void Downloader::download22(Job* job, const QUrl& url, QFile* file,
-        QString* sha1, QCryptographicHash::Algorithm alg, bool useCache,
-        QString *mime, bool keepConnection, int timeout, bool interactive)
-{
 }
 
 void Downloader::copyFile(Job* job, const QString& source, QFile* file,
