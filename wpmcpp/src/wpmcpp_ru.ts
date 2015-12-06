@@ -533,7 +533,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>other packages that this one depends upon</source>
-        <translation>другие пакеты, от которых зависит этот</translation>
+        <translation type="vanished">другие пакеты, от которых зависит этот</translation>
     </message>
     <message>
         <source>Text files:</source>
@@ -3168,6 +3168,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Отмена</translation>
+    </message>
+    <message>
+        <source>This dependency is not installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the package version this dependency is resolved to</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

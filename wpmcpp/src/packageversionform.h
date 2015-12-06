@@ -51,6 +51,7 @@ private:
 
 private slots:
     void on_labelLicense_linkActivated(QString link);
+    void dependencyLinkActivated(const QString& link);
 };
 
 #endif // PACKAGEVERSIONFORM_H

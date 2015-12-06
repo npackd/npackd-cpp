@@ -73,7 +73,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>&amp;All</source>
-        <translation>&amp;Alle</translation>
+        <translation type="unfinished">A&amp;lle</translation>
     </message>
     <message>
         <source>show only packages with at least one version installed</source>
@@ -528,7 +528,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>other packages that this one depends upon</source>
-        <translation>andere Pakete, von denen dieses abhängt</translation>
+        <translation type="vanished">andere Pakete, von denen dieses abhängt</translation>
     </message>
     <message>
         <source>Text files:</source>
@@ -2253,6 +2253,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>This dependency is not installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the package version this dependency is resolved to</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

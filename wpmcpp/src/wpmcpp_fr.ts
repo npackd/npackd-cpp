@@ -523,10 +523,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>other packages that this one depends upon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Text files:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3087,6 +3083,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Annuler</translation>
+    </message>
+    <message>
+        <source>This dependency is not installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the package version this dependency is resolved to</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

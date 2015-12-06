@@ -188,7 +188,7 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         }
 
         // TODO: remove
-        qDebug() << callNumber << r << dwStatus << url.toString();
+        //qDebug() << callNumber << r << dwStatus << url.toString();
 
         if (r == ERROR_SUCCESS) {
             job->setErrorMessage(QObject::tr("Cancelled by the user"));

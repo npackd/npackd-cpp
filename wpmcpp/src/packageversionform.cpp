@@ -13,6 +13,7 @@
 #include "licenseform.h"
 #include "dbrepository.h"
 #include "installedpackages.h"
+#include "installedpackageversion.h"
 
 PackageVersionForm::PackageVersionForm(QWidget *parent) :
     QWidget(parent),
@@ -134,13 +135,27 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     }
     this->ui->textEditImportantFiles->setText(details);
 
-    details = "";
+    QLayoutItem *child;
+    while ((child = this->ui->frameDependencies->layout()->takeAt(0)) != 0) {
+        delete child;
+    }
     for (int i = 0; i < pv->dependencies.count(); i++) {
         Dependency* d = pv->dependencies.at(i);
-        details.append(d->toString());
-        details.append("\n");
+
+        QString txt = "<a href=\"" + QString::number(i) + "\">" +
+                d->toString() + "</a>";
+        QLabel* label = new QLabel(txt);
+        label->setMouseTracking(true);
+        label->setFocusPolicy(Qt::StrongFocus);
+        label->setToolTip(QObject::tr("Show the package version this dependency is resolved to"));
+        label->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                Qt::TextSelectableByKeyboard | Qt::LinksAccessibleByMouse |
+                Qt::LinksAccessibleByKeyboard);
+        connect(label, SIGNAL(linkActivated(QString)), this,
+                SLOT(dependencyLinkActivated(QString)));
+
+        this->ui->frameDependencies->layout()->addWidget(label);
     }
-    this->ui->textEditDependencies->setText(details);
 
     updateIcons();
 
@@ -191,5 +206,28 @@ void PackageVersionForm::on_labelLicense_linkActivated(QString link)
 
     delete lic;
     delete p;
+}
+
+void PackageVersionForm::dependencyLinkActivated(const QString &link)
+{
+    QString err;
+
+    bool ok;
+    int index = link.toInt(&ok);
+    if (ok && index < this->pv->dependencies.count()) {
+        Dependency* d = pv->dependencies.at(index);
+        InstalledPackageVersion* ipv = d->findHighestInstalledMatch();
+        if (ipv) {
+            MainWindow::getInstance()->openPackageVersion(
+                    ipv->package, ipv->version, true);
+        } else {
+            err = QObject::tr("This dependency is not installed");
+        }
+    } else {
+        err = "Invalid dependency link";
+    }
+
+    if (!err.isEmpty())
+        MainWindow::getInstance()->addErrorMessage(err);
 }
 
