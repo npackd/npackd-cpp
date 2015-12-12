@@ -143,6 +143,31 @@ void App::updateKeepDirectories()
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
+void App::addVersions()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+
+    QString output = captureNpackdCLOutput(
+            "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
+    QVERIFY2(output.contains(
+            "installed successfully in C:\\Program Files\\ArecaBackup"),
+            output.toLatin1());
+
+    output = captureNpackdCLOutput("add -p org.areca-backup.ArecaBackup -r [7.3,7.4)");
+    QVERIFY2(output.contains(
+            "installed successfully"),
+            output.toLatin1());
+
+    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup").
+            trimmed() == "C:\\Program Files\\ArecaBackup");
+
+    output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    QVERIFY2(output.contains("removed successfully"), output.toLatin1());
+}
+
 void App::updateInstall()
 {
     if (!admin)

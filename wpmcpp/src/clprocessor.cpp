@@ -79,7 +79,7 @@ QString CLProcessor::remove()
     QList<PackageVersion*> toRemove;
     if (err.isEmpty()) {
         toRemove =
-                PackageVersion::getPackageVersionOptions(cl, &err, false);
+                PackageVersion::getRemovePackageVersionOptions(cl, &err);
     }
 
     QList<PackageVersion*> installed;
@@ -175,7 +175,7 @@ QString CLProcessor::add()
     }
 
     QList<PackageVersion*> toInstall =
-            PackageVersion::getPackageVersionOptions(cl, &err, true);
+            PackageVersion::getAddPackageVersionOptions(cl, &err);
 
     DWORD pct = WPMUtils::CLOSE_WINDOW;
     if (err.isEmpty()) {

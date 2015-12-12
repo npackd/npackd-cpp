@@ -148,11 +148,19 @@ public:
      *     versions
      * @param cl command line
      * @param err errors will be stored here
-     * @param add true = installing packages, false = removing packages
      * @return [owner:caller] list of package versions
      */
-    static QList<PackageVersion *> getPackageVersionOptions(
-            const CommandLine &cl, QString *err, bool add);
+    static QList<PackageVersion *> getAddPackageVersionOptions(const CommandLine &cl, QString *err);
+
+    /**
+     * @brief parses the command line and returns the list of chosen package
+     *     versions
+     * @param cl command line
+     * @param err errors will be stored here
+     * @return [owner:caller] list of package versions
+     */
+    static QList<PackageVersion *> getRemovePackageVersionOptions(
+            const CommandLine &cl, QString *err);
 
     /** package version */
     Version version;

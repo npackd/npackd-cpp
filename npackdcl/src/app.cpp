@@ -62,32 +62,32 @@ QStringList App::sortPackageVersionsByPackageTitle(
 
 int App::process()
 {
-    cl.add("package", 'p',
-            "internal package name (e.g. com.example.Editor or just Editor)",
-            "package", true);
-    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
-            "range", false);
-    cl.add("version", 'v', "version number (e.g. 1.5.12)",
-            "version", false);
-    cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
-            "repository", false);
-    cl.add("status", 's', "filters package versions by status",
-            "status", false);
     cl.add("bare-format", 'b', "bare format (no heading or summary)",
             "", false);
-    cl.add("query", 'q', "search terms (e.g. editor)",
-            "search terms", false);
     cl.add("debug", 'd', "turn on the debug output", "", false);
-    cl.add("file", 'f', "file or directory", "file", false);
     cl.add("end-process", 'e',
             "list of ways to close running applications (c=close, k=kill). The default value is 'c'.",
             "[c][k]", false);
-    cl.add("non-interactive", 'n',
-            "assume that there is no user and do not ask for input", "", false);
-    cl.add("keep-directories", 'k',
-            "use the same directories for updated packages", "", false);
+    cl.add("file", 'f', "file or directory", "file", false);
     cl.add("install", 'i',
             "install a package it was not installed", "", false);
+    cl.add("keep-directories", 'k',
+            "use the same directories for updated packages", "", false);
+    cl.add("non-interactive", 'n',
+            "assume that there is no user and do not ask for input", "", false);
+    cl.add("package", 'p',
+            "internal package name (e.g. com.example.Editor or just Editor)",
+            "package", true);
+    cl.add("query", 'q', "search terms (e.g. editor)",
+            "search terms", false);
+    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
+            "range", false);
+    cl.add("status", 's', "filters package versions by status",
+            "status", false);
+    cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
+            "repository", false);
+    cl.add("version", 'v', "version number (e.g. 1.5.12)",
+            "version", false);
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -220,12 +220,10 @@ QString App::addNpackdCL()
 void App::usage()
 {
     WPMUtils::outputTextConsole(QString(
-            "NpackdCL %1 - Npackd command line tool\n").
+            "NCL %1 - Npackd command line tool\n").
             arg(NPACKD_VERSION));
     const char* lines[] = {
         "Usage:",
-        "    ncl help",
-        "        prints this help",
         "    ncl add (--package=<package>",
         "            [--version=<version> | --versions=<versions>])+ ",
         "            [--non-interactive] [--file=<installation directory>]",
@@ -249,6 +247,8 @@ void App::usage()
         "        are listed regardless of the --status switch.",
         "    ncl list-repos",
         "        list currently defined repositories",
+        "    ncl help",
+        "        prints this help",
         "    ncl path --package=<package>",
         "            [--version=<version> | --versions=<versions>]",
         "        searches for an installed package and prints its location",
@@ -1061,7 +1061,7 @@ QString App::add()
 
     QString err;
     QList<PackageVersion*> toInstall =
-            PackageVersion::getPackageVersionOptions(cl, &err, true);
+            PackageVersion::getAddPackageVersionOptions(cl, &err);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
@@ -1289,7 +1289,7 @@ QString App::remove()
 
     QString err;
     QList<PackageVersion*> toRemove =
-            PackageVersion::getPackageVersionOptions(cl, &err, false);
+            PackageVersion::getRemovePackageVersionOptions(cl, &err);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
