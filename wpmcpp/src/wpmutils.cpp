@@ -17,6 +17,7 @@
 #include <wchar.h>
 #include <limits>
 #include <inttypes.h>
+#include <lm.h>
 
 //#define CCH_RM_MAX_APP_NAME 255
 //#define CCH_RM_MAX_SVC_NAME 63
@@ -205,6 +206,10 @@ QString WPMUtils::programCloseType2String(DWORD programCloseType)
 
     if (programCloseType & WPMUtils::CLOSE_WINDOW) {
         r += "c";
+    }
+
+    if (programCloseType & WPMUtils::DISABLE_SHARES) {
+        r += "s";
     }
 
     if (programCloseType & WPMUtils::KILL_PROCESS) {
@@ -711,6 +716,27 @@ bool WPMUtils::isProcessRunning(HANDLE process)
     return r;
 }
 
+QString WPMUtils::disconnectFrom(LMSTR netname)
+{
+    QString err;
+
+    CONNECTION_INFO_1* ci;
+    DWORD entriesRead, totalEntries, resumeHandle;
+    resumeHandle = 0;
+    if (NetConnectionEnum(0, netname, 1,
+            (LPBYTE*) &ci, MAX_PREFERRED_LENGTH,
+            &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
+        for (int i = 0; i < (int) entriesRead; i++) {
+            NetSessionDel(0, ci[i].coni1_netname, ci[i].coni1_username);
+        }
+    } else {
+        formatMessage(GetLastError(), &err);
+    }
+    NetApiBufferFree(ci);
+
+    return err;
+}
+
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         DWORD cpt)
 {
@@ -721,8 +747,13 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     //test((PCWSTR) f.utf16());
 
     QList<HANDLE> ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
+
+    //qDebug() << "getProcessHandlesLockingDirectory";
+
     QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
     ps.append(ps0);
+
+    //qDebug() << "getProcessHandlesLockingDirectory2";
 
     DWORD me = GetCurrentProcessId();
 
@@ -738,6 +769,8 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         }
     }
 
+    //qDebug() << "Windows closed";
+
     if (cpt & KILL_PROCESS) {
         for (int i = 0; i < ps.size(); i++) {
             HANDLE hProc = ps.at(i);
@@ -750,6 +783,42 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
                     WaitForSingleObject(hProc, 30000);
             }
         }
+    }
+
+    // qDebug() << "Processes killed";
+
+    if (cpt & DISABLE_SHARES) {
+        SHARE_INFO_502* buf;
+        DWORD entriesRead, totalEntries, resumeHandle;
+        resumeHandle = 0;
+        if (NetShareEnum(0, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
+                &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
+            QString dirNormalized = normalizePath(dir);
+            const DWORD STYPE_MASK = 0xF0000000;
+            // qDebug() << entriesRead;
+            for (int i = 0; i < (int) entriesRead; i++) {
+                // qDebug() << "share " << buf[i].shi502_type;
+                if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
+                    QString path;
+                    path.setUtf16((const ushort*) buf[i].shi502_path,
+                            wcslen(buf[i].shi502_path));
+                    path = normalizePath(path);
+                    //qDebug() << "share found" << path;
+                    if (isUnderOrEquals(path, dirNormalized)) {
+                        //qDebug() << "share found" << path;
+                        QString netName;
+                        netName.setUtf16((const ushort*) buf[i].shi502_netname,
+                                wcslen(buf[i].shi502_netname));
+                        // NetShareDel(0, buf[i].shi502_netname, 0);
+                        // buf[i].shi502_max_uses = 0;
+                        //NetShareSetInfo(0, buf[i].shi502_netname, 502,
+                        //        (LPBYTE) &(buf[i]), 0);
+                        disconnectFrom(buf[i].shi502_netname);
+                    }
+                }
+            }
+        }
+        NetApiBufferFree(buf);
     }
 
     for (int i = 0; i < ps.size(); i++) {
@@ -1050,6 +1119,53 @@ QMap<QString, QString> mapDevices2Drives() {
     return devices2drives;
 }
 
+class MyThread : public QThread {
+public:
+    HANDLE h;
+    bool ok;
+    QString name;
+
+    MyThread(HANDLE h) {
+        this->h = h;
+        ok = false;
+    }
+
+    void run() {
+        HMODULE module = GetModuleHandleA("ntdll.dll");
+        _NtQueryObject NtQueryObject;
+        NtQueryObject = (_NtQueryObject) GetProcAddress(module, "NtQueryObject");
+
+        PVOID objectNameInfo = 0;
+        ULONG returnLength = 0;
+
+        objectNameInfo = malloc(0x1000);
+        ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
+                objectNameInfo, 0x1000, &returnLength));
+        if (!ok) {
+            /* Reallocate the buffer and try again. */
+            objectNameInfo = realloc(objectNameInfo, returnLength);
+            ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
+                    objectNameInfo, returnLength, NULL));
+        }
+
+        if (ok) {
+            UNICODE_STRING objectName = {};
+
+            /* Cast our buffer into an UNICODE_STRING. */
+            objectName = *(PUNICODE_STRING) objectNameInfo;
+
+            /* Print the information! */
+            if (objectName.Length) {
+                name.setUtf16((const ushort*) objectName.Buffer,
+                        objectName.Length / 2);
+            } else {
+                ok = false;
+            }
+        }
+    }
+};
+
+
 QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
     QMap<QString, QString> devices2drives = mapDevices2Drives();
 
@@ -1098,8 +1214,6 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
         HANDLE dupHandle = INVALID_HANDLE_VALUE;
         POBJECT_TYPE_INFORMATION objectTypeInfo = 0;
         PVOID objectNameInfo = 0;
-        UNICODE_STRING objectName = {};
-        ULONG returnLength = 0;
 
         HANDLE processHandle = INVALID_HANDLE_VALUE;
 
@@ -1114,6 +1228,8 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 // Could not open PID %d! (Don't try to open a system process.)
                 ok = false;
                 processHandle = INVALID_HANDLE_VALUE;
+
+                // qDebug() << "OpenProcess ok";
             }
         }
 
@@ -1129,8 +1245,12 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 0))) {
                 ok = false;
                 dupHandle = INVALID_HANDLE_VALUE;
+
+                // qDebug() << "NtDuplicateObject ok";
             }
         }
+
+        QString type;
 
         if (ok) {
             /* Query the object type. */
@@ -1140,10 +1260,14 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 ObjectTypeInformation,
                 objectTypeInfo,
                 0x1000,
-                NULL
-                )))
-            {
+                NULL))) {
                 ok = false;
+            } else {
+                // qDebug() << "NtQueryObject ok";
+                type.setUtf16((const ushort*) objectTypeInfo->Name.Buffer,
+                        objectTypeInfo->Name.Length / 2);
+                if (type != "File")
+                    ok = false;
             }
         }
 
@@ -1155,50 +1279,42 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
             }
         }
 
-        if (ok) {
-            objectNameInfo = malloc(0x1000);
-            if (!NT_SUCCESS(NtQueryObject(dupHandle, ObjectNameInformation,
-                    objectNameInfo, 0x1000, &returnLength))) {
-                /* Reallocate the buffer and try again. */
-                objectNameInfo = realloc(objectNameInfo, returnLength);
-                if (!NT_SUCCESS(NtQueryObject(dupHandle, ObjectNameInformation,
-                        objectNameInfo, returnLength, NULL))) {
-                    ok = false;
-                }
-            }
-        }
-
-        QString name, type;
+        QString name;
 
         if (ok) {
-            /* Cast our buffer into an UNICODE_STRING. */
-            objectName = *(PUNICODE_STRING) objectNameInfo;
+            /*
+            qDebug() << "NtQueryObject start" << handle.Flags
+                    << handle.GrantedAccess << handle.ProcessId
+                    << handle.ObjectTypeNumber << handle.Handle;
+                    */
 
-            /* Print the information! */
-            if (objectName.Length) {
-                name.setUtf16((const ushort*) objectName.Buffer,
-                        objectName.Length / 2);
-                type.setUtf16((const ushort*) objectTypeInfo->Name.Buffer,
-                        objectTypeInfo->Name.Length / 2);
+            // retrieving the name of a handle may hang for pipes
+            MyThread t(dupHandle);
+            t.start();
+            if (t.wait(1000) ) {
+                // Finished
+                ok = t.ok;
+                name = t.name;
             } else {
-                ok = false;
+                // Not finished
+                t.terminate();
             }
+
+            // qDebug() << "NtQueryObject end";
         }
 
         if (ok) {
-            if (type == "File") {
-                QMapIterator<QString, QString> i(devices2drives);
-                while (i.hasNext()) {
-                    i.next();
-                    if (name.startsWith(i.key())) {
-                        name = i.value() + name.mid(i.key().length());
-                        if (WPMUtils::isUnderOrEquals(name, dir)) {
-                            result.append(processHandle);
-                            processHandle = INVALID_HANDLE_VALUE;
-                            usedProcessIds.insert(handle.ProcessId);
-                        }
-                        break;
+            QMapIterator<QString, QString> i(devices2drives);
+            while (i.hasNext()) {
+                i.next();
+                if (name.startsWith(i.key())) {
+                    name = i.value() + name.mid(i.key().length());
+                    if (WPMUtils::isUnderOrEquals(name, dir)) {
+                        result.append(processHandle);
+                        processHandle = INVALID_HANDLE_VALUE;
+                        usedProcessIds.insert(handle.ProcessId);
                     }
+                    break;
                 }
             }
         }
@@ -2305,6 +2421,8 @@ int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
                 QChar t = v.at(i);
                 if (t == 'c')
                     r |= WPMUtils::CLOSE_WINDOW;
+                else if (t == 's')
+                    r |= WPMUtils::DISABLE_SHARES;
                 else if (t == 'k')
                     r |= WPMUtils::KILL_PROCESS;
                 else

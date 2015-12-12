@@ -122,7 +122,8 @@ LIBS += -lquazip \
     -lshell32 \
     -lversion \
     -lshlwapi \
-    -lmsi
+    -lmsi \
+    -lnetapi32
 CONFIG += embed_manifest_exe
 CONFIG += static
 CONFIG += qt

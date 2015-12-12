@@ -2246,9 +2246,7 @@ void PackageVersion::stop(Job* job, int programCloseType,
     } else {
         job->setProgress(0.5);
 
-        if (this->isDirectoryLocked())
-            WPMUtils::closeProcessesThatUseDirectory(getPath(),
-                    programCloseType);
+        WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType);
     }
 
     if (job->getErrorMessage().isEmpty())

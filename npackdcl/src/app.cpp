@@ -66,8 +66,8 @@ int App::process()
             "", false);
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("end-process", 'e',
-            "list of ways to close running applications (c=close, k=kill). The default value is 'c'.",
-            "[c][k]", false);
+            "list of ways to close running applications (c=close, k=kill, s=disconnect from file shares). The default value is 'c'.",
+            "[c][k][s]", false);
     cl.add("file", 'f', "file or directory", "file", false);
     cl.add("install", 'i',
             "install a package it was not installed", "", false);

@@ -53,12 +53,15 @@ private:
     static QList<HANDLE> getProcessHandlesLockingDirectory2(const QString &dir);
 
     static QList<HWND> findProcessTopWindows(DWORD processID);
+
+    static QString disconnectFrom(LPWSTR netname);
 public:
     /**
      * @brief how to close a process
      */
     static const int CLOSE_WINDOW = 1;
     static const int KILL_PROCESS = 2;
+    static const int DISABLE_SHARES = 4;
 
     static const char* UCS2LE_BOM;
 

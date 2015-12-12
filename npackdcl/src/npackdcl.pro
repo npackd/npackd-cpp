@@ -17,7 +17,8 @@ LIBS += -lquazip \
     -lpsapi \
     -lversion \
     -lshlwapi \
-    -lmsi
+    -lmsi \
+    -lnetapi32
 SOURCES += main.cpp \
     ../../wpmcpp/src/visiblejobs.cpp \
     ../../wpmcpp/src/repository.cpp \

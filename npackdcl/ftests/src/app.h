@@ -15,6 +15,8 @@ private:
     bool admin;
 
     QString captureNpackdCLOutput(const QString &params);
+    QString captureOutput(const QString &program, const QString &params,
+            const QString &where);
 public:
     App();
 private slots:
@@ -22,6 +24,11 @@ private slots:
      * @brief "add"/"remove"
      */
     void addRemove();
+
+    /**
+     * @brief "add"/"remove" with a file share
+     */
+    void addRemoveShare();
 
     /**
      * @brief "add" --file=<installation directory>

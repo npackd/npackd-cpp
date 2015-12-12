@@ -144,6 +144,13 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="checkBoxDeleteFileShares">
+           <property name="text">
+            <string>Disconnect users from file shares</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QCheckBox" name="checkBoxKillProcesses">
            <property name="toolTip">
             <string>forcefully terminates the process. All unsaved data will be lost.</string>

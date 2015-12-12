@@ -23,12 +23,17 @@ QString App::captureNpackdCLOutput(const QString& params)
 
     QString where = d.absolutePath();
     QString npackdcl = where + "\\npackdcl.exe";
+    return captureOutput(npackdcl, params, where);
+}
 
+QString App::captureOutput(const QString& program, const QString& params,
+        const QString& where)
+{
     QStringList env;
     Job* job = new Job();
     WPMUtils::executeFile(
             job, where,
-            npackdcl,
+            program,
             params, "Output.log", env, false);
     // qDebug() << job->getErrorMessage();
     delete job;
@@ -87,6 +92,32 @@ void App::addRemove()
             contains("installed successfully"));
     QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));
+}
+
+void App::addRemoveShare()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    captureNpackdCLOutput("rm -p active-directory-explorer").
+            contains("removed successfully");
+
+    QVERIFY(captureNpackdCLOutput("add -p active-directory-explorer "
+            "-f \"C:\\Program Files\\AD_addRemoveShare\"").
+            contains("installed successfully"));
+
+    captureOutput("C:\\Windows\\System32\\net.exe",
+            "share \"AD_addRemoveShare=C:\\Program Files\\AD_addRemoveShare\"",
+            "C:\\Windows");
+
+    QProcess::execute("explorer.exe \\\\localhost\\AD_addRemoveShare");
+
+    QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer -e s").
+            contains("removed successfully"));
+
+    QDir d;
+    QVERIFY2(!d.exists("C:\\Program Files\\AD_addRemoveShare"),
+            "C:\\Program Files\\AD_addRemoveShare");
 }
 
 void App::addToDir()

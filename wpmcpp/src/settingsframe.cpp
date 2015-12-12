@@ -71,6 +71,8 @@ void SettingsFrame::setCloseProcessType(DWORD v)
 {
     this->ui->checkBoxCloseWindows->setChecked(v &
             WPMUtils::CLOSE_WINDOW);
+    this->ui->checkBoxDeleteFileShares->setChecked(v &
+            WPMUtils::DISABLE_SHARES);
     this->ui->checkBoxKillProcesses->setChecked(v &
             WPMUtils::KILL_PROCESS);
 }
@@ -80,6 +82,8 @@ DWORD SettingsFrame::getCloseProcessType()
     DWORD cpt = 0;
     if (this->ui->checkBoxCloseWindows->isChecked())
         cpt |= WPMUtils::CLOSE_WINDOW;
+    if (this->ui->checkBoxDeleteFileShares->isChecked())
+        cpt |= WPMUtils::DISABLE_SHARES;
     if (this->ui->checkBoxKillProcesses->isChecked())
         cpt |= WPMUtils::KILL_PROCESS;
     return cpt;
