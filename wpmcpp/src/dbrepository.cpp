@@ -51,16 +51,56 @@ DBRepository::DBRepository()
     deleteLinkQuery = 0;
     replacePackageQuery = 0;
     selectCategoryQuery = 0;
+    insertInstalledQuery = 0;
 }
 
 DBRepository::~DBRepository()
 {
+    delete insertInstalledQuery;
     delete selectCategoryQuery;
     delete deleteLinkQuery;
     delete insertLinkQuery;
     delete insertPackageQuery;
     delete replacePackageQuery;
     delete savePackageVersionQuery;
+}
+
+QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> installed)
+{
+    QString err;
+
+    if (!insertInstalledQuery) {
+        insertInstalledQuery = new MySQLQuery(db);
+
+        QString insertSQL = "INSERT INTO INSTALLED "
+                "(PACKAGE, VERSION, WHEN, WHERE, DETECTION_INFO) "
+                "VALUES(:PACKAGE, :VERSION, :WHEN, :WHERE, :DETECTION_INFO)";
+
+        if (!insertInstalledQuery->prepare(insertSQL)) {
+            err = getErrorString(*insertInstalledQuery);
+            delete insertInstalledQuery;
+            return err;
+        }
+    }
+
+    for (int i = 0; i < installed.size(); i++) {
+        if (!err.isEmpty())
+            break;
+
+        InstalledPackageVersion* ipv = installed.at(i);
+        insertInstalledQuery->bindValue(":PACKAGE", ipv->package);
+        insertInstalledQuery->bindValue(":VERSION",
+                ipv->version.getVersionString());
+        insertInstalledQuery->bindValue(":WHEN", 0);
+        insertInstalledQuery->bindValue(":WHERE", ipv->directory);
+        insertInstalledQuery->bindValue(":DETECTION_INFO", ipv->detectionInfo);
+        if (!insertInstalledQuery->exec())
+            err = getErrorString(*insertInstalledQuery);
+    }
+
+    insertInstalledQuery->finish();
+
+    return err;
 }
 
 DBRepository* DBRepository::getDefault()
@@ -2059,6 +2099,19 @@ QString DBRepository::updateDatabase()
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE UNIQUE INDEX CATEGORY_ID ON CATEGORY(ID)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // INSTALLED is new in 1.21
+    if (err.isEmpty()) {
+        e = tableExists(&db, "INSTALLED", &err);
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE INSTALLED("
+                    "PACKAGE TEXT, VERSION TEXT, WHEN INTEGER, "
+                    "WHERE TEXT, DETECTION_INFO TEXT)");
             err = toString(db.lastError());
         }
     }

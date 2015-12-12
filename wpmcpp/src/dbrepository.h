@@ -9,6 +9,7 @@
 #include <QWeakPointer>
 #include <QMultiMap>
 #include <QCache>
+#include <QList>
 
 #include "package.h"
 #include "repository.h"
@@ -16,6 +17,7 @@
 #include "license.h"
 #include "abstractrepository.h"
 #include "mysqlquery.h"
+#include "installedpackageversion.h"
 
 /**
  * @brief A repository stored in an SQLite database.
@@ -41,6 +43,7 @@ private:
     MySQLQuery* selectCategoryQuery;
     MySQLQuery* insertLinkQuery;
     MySQLQuery* deleteLinkQuery;
+    MySQLQuery* insertInstalledQuery;
 
     QSqlDatabase db;
 
@@ -120,6 +123,13 @@ public:
     DBRepository();
 
     virtual ~DBRepository();
+
+    /**
+     * @brief replaces the list of installed package versions with the specified
+     * @param installed new list of installed versions
+     * @return error message
+     */
+    QString saveInstalled(const QList<InstalledPackageVersion*> installed);
 
     /**
      * @brief inserts or updates an existing license
