@@ -675,6 +675,8 @@ DWORD WPMUtils::getCloseProcessType()
 
 BOOL CALLBACK myEnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
+    qDebug() << "myEnumWindowsProc";
+
     QList<HWND>* p = (QList<HWND>*) lParam;
     p->append(hwnd);
     return TRUE;
@@ -687,11 +689,100 @@ QList<HWND> WPMUtils::findTopWindows()
     return r;
 }
 
+QList<HWND> WPMUtils::enumDesktopWindows()
+{
+    qDebug() << "WPMUtils::enumDesktopWindows";
+
+    QList<HWND> res;
+
+    QStringList desktops = enumDesktops();
+    for (int i = 0; i < desktops.count(); i++) {
+        QString desktop = desktops.at(i);
+
+        qDebug() << desktop;
+
+        HDESK h = OpenDesktop((LPCWSTR) desktop.utf16(), 0, FALSE,
+                READ_CONTROL | DESKTOP_READOBJECTS);
+        if (h) {
+            qDebug() << "OpenDesktop ok";
+
+            EnumDesktopWindows(h, myEnumWindowsProc,
+                    reinterpret_cast<LPARAM>(&res));
+
+            CloseDesktop(h);
+        } else {
+            qDebug() << "OpenDesktop failed";
+        }
+    }
+
+    return res;
+}
+
+WINBOOL CALLBACK f2(LPWSTR lpszDesktop, LPARAM lParam)
+{
+    qDebug() << "f2";
+
+    QStringList* list = reinterpret_cast<QStringList*>(lParam);
+    QString ws;
+    ws.setUtf16((ushort*) lpszDesktop, wcslen(lpszDesktop));
+    list->append(ws);
+
+    qDebug() << ws;
+
+    return TRUE;
+}
+
+QStringList WPMUtils::enumDesktops()
+{
+    qDebug() << "WPMUtils::enumDesktops";
+
+    QStringList res;
+
+    QStringList wss = enumWindowStations();
+
+    for (int i = 0; i < wss.count(); i++) {
+        QString ws = wss.at(i);
+        HWINSTA h = OpenWindowStation((LPCWSTR) ws.utf16(), FALSE,
+                READ_CONTROL | WINSTA_ENUMDESKTOPS);
+        if (h) {
+            EnumDesktops(h, f2, reinterpret_cast<LPARAM>(&res));
+            CloseWindowStation(h);
+        }
+    }
+
+    return res;
+}
+
+WINBOOL CALLBACK f(LPWSTR lpszWindowStation, LPARAM lParam)
+{
+    qDebug() << "f";
+
+    QStringList* list = reinterpret_cast<QStringList*>(lParam);
+    QString ws;
+    ws.setUtf16((ushort*) lpszWindowStation, wcslen(lpszWindowStation));
+    list->append(ws);
+
+    qDebug() << ws;
+
+    return TRUE;
+}
+
+QStringList WPMUtils::enumWindowStations()
+{
+    qDebug() << "WPMUtils::enumWindowStations";
+
+    QStringList res;
+
+    EnumWindowStations(f, reinterpret_cast<LPARAM>(&res));
+
+    return res;
+}
+
 QList<HWND> WPMUtils::findProcessTopWindows(DWORD processID)
 {
     QList<HWND> r;
 
-    QList<HWND> tws = findTopWindows();
+    QList<HWND> tws = enumDesktopWindows(); // findTopWindows();
 
     for (int i = 0; i < tws.size(); i++) {
         DWORD pid;
@@ -1236,13 +1327,8 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
         if (ok) {
             /* Duplicate the handle so we can query it. */
             if (!NT_SUCCESS(NtDuplicateObject(
-                processHandle,
-                (HANDLE) (uintptr_t) handle.Handle,
-                GetCurrentProcess(),
-                &dupHandle,
-                0,
-                0,
-                0))) {
+                    processHandle, (HANDLE) (uintptr_t) handle.Handle,
+                    GetCurrentProcess(), &dupHandle, 0, 0, 0))) {
                 ok = false;
                 dupHandle = INVALID_HANDLE_VALUE;
 
@@ -1254,7 +1340,8 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
 
         if (ok) {
             /* Query the object type. */
-            objectTypeInfo = (POBJECT_TYPE_INFORMATION)malloc(0x1000);
+            objectTypeInfo = static_cast<POBJECT_TYPE_INFORMATION>(
+                    malloc(0x1000));
             if (!NT_SUCCESS(NtQueryObject(
                 dupHandle,
                 ObjectTypeInformation,
@@ -1298,6 +1385,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
             } else {
                 // Not finished
                 t.terminate();
+                ok = false;
             }
 
             // qDebug() << "NtQueryObject end";

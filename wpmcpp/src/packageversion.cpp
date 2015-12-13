@@ -2246,6 +2246,7 @@ void PackageVersion::stop(Job* job, int programCloseType,
     } else {
         job->setProgress(0.5);
 
+        qDebug() << "PackageVersion::stop";
         WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType);
     }
 

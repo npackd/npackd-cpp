@@ -614,6 +614,21 @@ public:
             const QStringList& env, bool printScriptOutput,
             QString *lastOutputLines=0);
 
+    /**
+     * @return list of window stations
+     */
+    static QStringList enumWindowStations();
+
+    /**
+     * @return list all desktops across all window stations
+     */
+    static QStringList enumDesktops();
+
+    /**
+     * @return list all top-level windows across all desktops and window
+     *     stations
+     */
+    static QList<HWND> enumDesktopWindows();
 };
 
 #endif // WPMUTILS_H
