@@ -31,7 +31,7 @@ void CLProgress::jobChanged(Job* s)
                         floor(s->getProgress() * 100 + 0.5), 4);
                 WPMUtils::outputTextConsole(txt);
             } else {
-                WPMUtils::outputTextConsole(s->getTitle() + "\r\n");
+                WPMUtils::writeln(s->getTitle());
             }
         }
     } else {
@@ -82,7 +82,7 @@ void CLProgress::jobChangedSimple(Job* s)
             hint = "... " + title.mid(n);
         }
 
-        WPMUtils::outputTextConsole(("[%1%] - " + hint + "\r\n").
+        WPMUtils::writeln(("[%1%] - " + hint).
                 arg(floor(progress * 100 + 0.5)));
 
         this->lastHint = title;

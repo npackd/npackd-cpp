@@ -313,6 +313,14 @@ public:
     static void outputTextConsole(const QString& txt, bool stdout_=true);
 
     /**
+     * Output text to the console. \r\n will be appended automatically.
+     *
+     * @param txt the text
+     * @param stdout_ true = stdout, false = stderr
+     */
+    static void writeln(const QString& txt, bool stdout_=true);
+
+    /**
      * Is the output redirected?
      *
      * @return true if the output is redirected (e.g. into a file)

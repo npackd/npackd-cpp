@@ -348,8 +348,8 @@ QString Downloader::inputPassword(HINTERNET hConnectHandle, DWORD dwStatus)
 
     QString username, password;
     if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
-        WPMUtils::outputTextConsole("\r\n" +
-                QObject::tr("The HTTP proxy requires authentication.") + "\r\n");
+        WPMUtils::writeln("\r\n" +
+                QObject::tr("The HTTP proxy requires authentication."));
         WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
         username = WPMUtils::inputTextConsole();
         WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
@@ -369,9 +369,9 @@ QString Downloader::inputPassword(HINTERNET hConnectHandle, DWORD dwStatus)
             WPMUtils::formatMessage(GetLastError(), &result);
         }
     } else if (dwStatus == HTTP_STATUS_DENIED) {
-        WPMUtils::outputTextConsole("\r\n" +
-                QObject::tr("The HTTP server requires authentication.") +
-                "\r\n");
+        WPMUtils::writeln("\r\n" +
+                QObject::tr("The HTTP server requires authentication.")
+                );
         WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
         username = WPMUtils::inputTextConsole();
         WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");

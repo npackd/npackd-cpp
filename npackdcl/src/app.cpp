@@ -91,7 +91,7 @@ int App::process()
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
-        WPMUtils::outputTextConsole("Error: " + err + "\r\n", false);
+        WPMUtils::writeln("Error: " + err, false);
         return 1;
     }
     // cl.dump();
@@ -108,12 +108,11 @@ int App::process()
 
     int r = 0;
     if (fr.count() == 0) {
-        WPMUtils::outputTextConsole("Missing command. Try npackdcl help\r\n",
+        WPMUtils::writeln("Missing command. Try npackdcl help",
                 false);
         r = 1;
     } else if (fr.count() > 1) {
-        WPMUtils::outputTextConsole("Unexpected argument: " +
-                fr.at(1) + "\r\n", false);
+        WPMUtils::writeln("Unexpected argument: " + fr.at(1), false);
         r = 1;
     } else {
         const QString cmd = fr.at(0);
@@ -184,7 +183,7 @@ int App::process()
             r = 0;
         else {
             r = 1;
-            WPMUtils::outputTextConsole(err + "\r\n", false);
+            WPMUtils::writeln(err, false);
         }
     }
 
@@ -219,8 +218,8 @@ QString App::addNpackdCL()
 
 void App::usage()
 {
-    WPMUtils::outputTextConsole(QString(
-            "NCL %1 - Npackd command line tool\r\n").
+    WPMUtils::writeln(QString(
+            "NCL %1 - Npackd command line tool").
             arg(NPACKD_VERSION));
     const char* lines[] = {
         "Usage:",
@@ -277,11 +276,11 @@ void App::usage()
         "Options:",
     };
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
-        WPMUtils::outputTextConsole(QString(lines[i]) + "\r\n");
+        WPMUtils::writeln(QString(lines[i]));
     }
     QStringList opts = this->cl.printOptions();
     for (int i = 0; i < opts.count(); i++) {
-        WPMUtils::outputTextConsole(opts.at(i) + "\r\n");
+        WPMUtils::writeln(opts.at(i));
     }
 
     const char* lines2[] = {
@@ -292,7 +291,7 @@ void App::usage()
         "See https://github.com/tim-lebedkov/npackd/wiki/CommandLine for more details.",
     };
     for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
-        WPMUtils::outputTextConsole(QString(lines2[i]) + "\r\n");
+        WPMUtils::writeln(QString(lines2[i]));
     }
 }
 
@@ -302,10 +301,10 @@ QString App::listRepos()
 
     QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
     if (err.isEmpty()) {
-        WPMUtils::outputTextConsole(QString("%1 repositories are defined:\r\n\r\n").
+        WPMUtils::writeln(QString("%1 repositories are defined:\r\n").
                 arg(urls.size()));
         for (int i = 0; i < urls.size(); i++) {
-            WPMUtils::outputTextConsole(urls.at(i)->toString() + "\r\n");
+            WPMUtils::writeln(urls.at(i)->toString());
         }
     }
     qDeleteAll(urls);
@@ -343,14 +342,14 @@ QString App::which()
             AbstractRepository* rep = AbstractRepository::getDefault_();
             Package* p = rep->findPackage_(f->package);
             QString title = p ? p->title : "?";
-            WPMUtils::outputTextConsole(QString(
-                    "%1 %2 (%3) is installed in \"%4\"\r\n").
+            WPMUtils::writeln(QString(
+                    "%1 %2 (%3) is installed in \"%4\"").
                     arg(title).arg(f->version.getVersionString()).
                     arg(f->package).arg(f->directory));
             delete p;
             delete f;
         } else
-            WPMUtils::outputTextConsole(QString("No package found for \"%1\"\r\n").
+            WPMUtils::writeln(QString("No package found for \"%1\"").
                     arg(file));
     }
 
@@ -434,8 +433,8 @@ QString App::check()
             for (int j = 0; j < pv->dependencies.count(); j++) {
                 Dependency* d = pv->dependencies.at(j);
                 if (!d->isInstalled()) {
-                    WPMUtils::outputTextConsole(QString(
-                            "%1 depends on %2, which is not installed\r\n").
+                    WPMUtils::writeln(QString(
+                            "%1 depends on %2, which is not installed").
                             arg(pv->toString(true)).
                             arg(d->toString(true)));
                     n++;
@@ -444,7 +443,7 @@ QString App::check()
         }
 
         if (n == 0)
-            WPMUtils::outputTextConsole("All dependencies are installed\r\n");
+            WPMUtils::writeln("All dependencies are installed");
 
     }
 
@@ -488,14 +487,14 @@ QString App::addRepo()
                 }
             }
             if (found >= 0) {
-                WPMUtils::outputTextConsole(
-                        "This repository is already registered: " + url + "\r\n");
+                WPMUtils::writeln(
+                        "This repository is already registered: " + url);
             } else {
                 urls.append(url_);
                 url_ = 0;
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
-                    WPMUtils::outputTextConsole("The repository was added successfully\r\n");
+                    WPMUtils::writeln("The repository was added successfully");
             }
         }
         qDeleteAll(urls);
@@ -548,18 +547,18 @@ QString App::list()
 
     if (err.isEmpty()) {
         if (!bare)
-            WPMUtils::outputTextConsole(QString("%1 package versions found:\r\n\r\n").
+            WPMUtils::writeln(QString("%1 package versions found:\r\n").
                     arg(list.count()));
 
         for (int i = 0; i < list.count(); i++) {
             PackageVersion* pv = list.at(i);
             if (!bare)
-                WPMUtils::outputTextConsole(pv->toString() +
-                        " (" + pv->package + ")\r\n");
+                WPMUtils::writeln(pv->toString() +
+                        " (" + pv->package + ")");
             else
-                WPMUtils::outputTextConsole(pv->package + " " +
+                WPMUtils::writeln(pv->package + " " +
                         pv->version.getVersionString() + " " +
-                        titles.at(i) + "\r\n");
+                        titles.at(i));
         }
     }
 
@@ -632,17 +631,17 @@ QString App::search()
         qSort(list.begin(), list.end(), packageLessThan);
 
         if (!bare)
-            WPMUtils::outputTextConsole(QString("%1 packages found:\r\n\r\n").
+            WPMUtils::writeln(QString("%1 packages found:\r\n").
                     arg(list.count()));
 
         for (int i = 0; i < list.count(); i++) {
             Package* p = list.at(i);
             if (!bare)
-                WPMUtils::outputTextConsole(p->title +
-                        " (" + p->name + ")\r\n");
+                WPMUtils::writeln(p->title +
+                        " (" + p->name + ")");
             else
-                WPMUtils::outputTextConsole(p->name + " " +
-                        p->title + "\r\n");
+                WPMUtils::writeln(p->name + " " +
+                        p->title);
         }
 
         qDeleteAll(list);
@@ -688,15 +687,15 @@ QString App::removeRepo()
                 }
             }
             if (found < 0) {
-                WPMUtils::outputTextConsole(
+                WPMUtils::writeln(
                         "The repository was not in the list: " +
-                        url + "\r\n");
+                        url);
             } else {
                 delete urls.takeAt(found);
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
-                    WPMUtils::outputTextConsole(
-                            "The repository was removed successfully\r\n");
+                    WPMUtils::writeln(
+                            "The repository was removed successfully");
             }
         }
         qDeleteAll(urls);
@@ -781,7 +780,7 @@ QString App::path()
 
     if (!path.isEmpty()) {
         path.replace('/', '\\');
-        WPMUtils::outputTextConsole(path + "\r\n");
+        WPMUtils::writeln(path);
     }
 
     job->complete();
@@ -896,9 +895,9 @@ QString App::update()
     if (job->isCancelled()) {
         r = "The package update was cancelled";
     } else if (up2date) {
-        WPMUtils::outputTextConsole("The packages are already up-to-date\r\n");
+        WPMUtils::writeln("The packages are already up-to-date");
     } else if (r.isEmpty()) {
-        WPMUtils::outputTextConsole("The packages were updated successfully\r\n");
+        WPMUtils::writeln("The packages were updated successfully");
     }
 
     delete job;
@@ -1000,8 +999,8 @@ void App::processInstallOperations(Job *job,
             QString args = "/U /E:ON /V:OFF /C \"\"" + file_ + "\"\"";
             QString winDir = WPMUtils::getWindowsDir();
 
-            WPMUtils::outputTextConsole(
-                    (QObject::tr("Starting update process %1 with parameters %2") + "\r\n").
+            WPMUtils::writeln(
+                    (QObject::tr("Starting update process %1 with parameters %2")).
                     arg(prg).arg(args));
 
             args = "\"" + prg + "\" " + args;
@@ -1126,8 +1125,8 @@ QString App::add()
     if (r.isEmpty()) {
         for (int i = 0; i < toInstall.size(); i++) {
             PackageVersion* pv = toInstall.at(i);
-            WPMUtils::outputTextConsole(QString(
-                    "The package %1 was installed successfully in %2\r\n").arg(
+            WPMUtils::writeln(QString(
+                    "The package %1 was installed successfully in %2").arg(
                     pv->toString()).arg(pv->getPath()));
         }
     }
@@ -1343,7 +1342,7 @@ QString App::remove()
     if (job->isCancelled()) {
         r = "The package removal was cancelled";
     } else if (r.isEmpty()) {
-        WPMUtils::outputTextConsole("The packages were removed successfully\r\n");
+        WPMUtils::writeln("The packages were removed successfully");
     }
 
     delete job;
@@ -1415,52 +1414,53 @@ QString App::info()
     }
 
     if (r.isEmpty()) {
-        WPMUtils::outputTextConsole("Title: " +
-                p->title + "\r\n");
+        WPMUtils::writeln("Title: " +
+                p->title);
         if (pv)
-            WPMUtils::outputTextConsole("Version: " +
-                    pv->version.getVersionString() + "\r\n");
-        WPMUtils::outputTextConsole("Description: " + p->description + "\r\n");
-        WPMUtils::outputTextConsole("License: " + p->license + "\r\n");
+            WPMUtils::writeln("Version: " +
+                    pv->version.getVersionString());
+        WPMUtils::writeln("Description: " + p->description);
+        WPMUtils::writeln("License: " + p->license);
+
         if (pv) {
-            WPMUtils::outputTextConsole("Installation path: " +
-                    pv->getPath() + "\r\n");
+            WPMUtils::writeln("Installation path: " +
+                    pv->getPath());
 
             InstalledPackages* ip = InstalledPackages::getDefault();
             InstalledPackageVersion* ipv = ip->find(pv->package, pv->version);
-            WPMUtils::outputTextConsole("Detection info: " +
-                    (ipv ? ipv->detectionInfo : "") + "\r\n");
+            WPMUtils::writeln("Detection info: " +
+                    (ipv ? ipv->detectionInfo : ""));
             delete ipv;
         }
-        WPMUtils::outputTextConsole("Internal package name: " +
-                p->name + "\r\n");
+        WPMUtils::writeln("Internal package name: " +
+                p->name);
         if (pv) {
-            WPMUtils::outputTextConsole("Status: " +
-                    pv->getStatus() + "\r\n");
-            WPMUtils::outputTextConsole("Download URL: " +
-                    pv->download.toString() + "\r\n");
+            WPMUtils::writeln("Status: " +
+                    pv->getStatus());
+            WPMUtils::writeln("Download URL: " +
+                    pv->download.toString());
         }
-        WPMUtils::outputTextConsole("Package home page: " + p->url + "\r\n");
-        WPMUtils::outputTextConsole("Change log: " + p->getChangeLog() + "\r\n");
-        WPMUtils::outputTextConsole("Categories: " +
-                p->categories.join(", ") + "\r\n");
-        WPMUtils::outputTextConsole("Icon: " + p->getIcon() + "\r\n");
+        WPMUtils::writeln("Package home page: " + p->url);
+        WPMUtils::writeln("Change log: " + p->getChangeLog());
+        WPMUtils::writeln("Categories: " +
+                p->categories.join(", "));
+        WPMUtils::writeln("Icon: " + p->getIcon());
         QList<QString> screenshots = p->links.values("screenshot");
-        WPMUtils::outputTextConsole("Screen shots: " +
-                (screenshots.count() > 0 ? screenshots.at(0) : "n/a") +
-                "\r\n");
+        WPMUtils::writeln("Screen shots: " +
+                (screenshots.count() > 0 ? screenshots.at(0) : "n/a")
+                );
         for (int i = 1; i < screenshots.count(); i++) {
-            WPMUtils::outputTextConsole("    " + screenshots.at(i) + "\r\n");
+            WPMUtils::writeln("    " + screenshots.at(i));
         }
 
         if (pv) {
-            WPMUtils::outputTextConsole(QString("Type: ") +
-                    (pv->type == 0 ? "zip" : "one-file") + "\r\n");
+            WPMUtils::writeln(QString("Type: ") +
+                    (pv->type == 0 ? "zip" : "one-file"));
 
-            WPMUtils::outputTextConsole(QString("Hash sum: ") +
+            WPMUtils::writeln(QString("Hash sum: ") +
                     (pv->hashSumType == QCryptographicHash::Sha1 ?
                     "SHA-1" : "SHA-256") +
-                    ": " + pv->sha1 + "\r\n");
+                    ": " + pv->sha1);
 
             QString details;
             for (int i = 0; i < pv->importantFiles.count(); i++) {
@@ -1471,7 +1471,7 @@ QString App::info()
                 details.append(pv->importantFiles.at(i));
                 details.append(")");
             }
-            WPMUtils::outputTextConsole("Important files: " + details + "\r\n");
+            WPMUtils::writeln("Important files: " + details);
         }
 
         if (pv) {
@@ -1481,7 +1481,7 @@ QString App::info()
                     details.append("; ");
                 details.append(pv->files.at(i)->path);
             }
-            WPMUtils::outputTextConsole("Text files: " + details + "\r\n");
+            WPMUtils::writeln("Text files: " + details);
         }
 
         if (!pv) {
@@ -1494,24 +1494,24 @@ QString App::info()
                 versions.append(opv->version.getVersionString());
             }
             qDeleteAll(pvs);
-            WPMUtils::outputTextConsole("Versions: " + versions + "\r\n");
+            WPMUtils::writeln("Versions: " + versions);
         }
 
         if (!pv) {
             InstalledPackages* ip = InstalledPackages::getDefault();
             QList<InstalledPackageVersion*> ipvs = ip->getByPackage(p->name);
             if (ipvs.count() > 0) {
-                WPMUtils::outputTextConsole(QString("%1 versions are installed:\r\n").
+                WPMUtils::writeln(QString("%1 versions are installed:").
                         arg(ipvs.count()));
                 for (int i = 0; i < ipvs.count(); ++i) {
                     InstalledPackageVersion* ipv = ipvs.at(i);
                     if (!ipv->getDirectory().isEmpty())
-                        WPMUtils::outputTextConsole("    " +
+                        WPMUtils::writeln("    " +
                                 ipv->version.getVersionString() +
-                                " in " + ipv->getDirectory() + "\r\n");
+                                " in " + ipv->getDirectory());
                 }
             } else {
-                WPMUtils::outputTextConsole("No versions are installed\r\n");
+                WPMUtils::writeln("No versions are installed");
             }
             qDeleteAll(ipvs);
         }
@@ -1520,7 +1520,7 @@ QString App::info()
 
     if (r.isEmpty()) {
         if (pv) {
-            WPMUtils::outputTextConsole("Dependency tree:\r\n");
+            WPMUtils::writeln("Dependency tree:");
             r = printDependencies(pv->installed(), "", 1, pv);
         }
     }
@@ -1579,7 +1579,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
                 before = ' ';
         }
 
-        WPMUtils::outputTextConsole(parentPrefix + prefix + before + s + "\r\n");
+        WPMUtils::writeln(parentPrefix + prefix + before + s);
 
         if (pvd) {
             QString nestedPrefix;
@@ -1620,7 +1620,7 @@ QString App::detect()
     rep->updateF5(job, interactive);
     QString r = job->getErrorMessage();
     if (job->getErrorMessage().isEmpty()) {
-        WPMUtils::outputTextConsole("Package detection completed successfully\r\n");
+        WPMUtils::writeln("Package detection completed successfully");
     }
     delete job;
 

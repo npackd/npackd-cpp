@@ -2198,6 +2198,11 @@ QString WPMUtils::makeValidFilename(const QString &name, QChar rep)
     return r;
 }
 
+void WPMUtils::writeln(const QString& txt, bool stdout_)
+{
+    outputTextConsole(txt + "\r\n", stdout_);
+}
+
 void WPMUtils::outputTextConsole(const QString& txt, bool stdout_)
 {
     HANDLE hStdout;
