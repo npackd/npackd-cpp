@@ -65,6 +65,8 @@ public:
 
     static const char* UCS2LE_BOM;
 
+    static const char* CRLF;
+
     static HRTimer timer;
 
     /**

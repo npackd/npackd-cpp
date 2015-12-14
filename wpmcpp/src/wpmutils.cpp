@@ -51,6 +51,8 @@
 
 const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
 
+const char* WPMUtils::CRLF = "\r\n";
+
 HRTimer WPMUtils::timer(2);
 
 
@@ -481,11 +483,11 @@ int __cdecl test(PCWSTR pszFile)
     DWORD dwSession;
     WCHAR szSessionKey[CCH_RM_SESSION_KEY+1] = { 0 };
     DWORD dwError = RmStartSession(&dwSession, 0, szSessionKey);
-    wprintf(L"RmStartSession returned %d\n", dwError);
+    wprintf(L"RmStartSession returned %d\r\n", dwError);
     if (dwError == ERROR_SUCCESS) {
         dwError = RmRegisterResources(dwSession, 1, &pszFile,
                                       0, NULL, 0, NULL);
-        wprintf(L"RmRegisterResources(%ls) returned %d\n",
+        wprintf(L"RmRegisterResources(%ls) returned %d\r\n",
                 pszFile, dwError);
         if (dwError == ERROR_SUCCESS) {
             DWORD dwReason = RmRebootReasonNone;
@@ -495,16 +497,16 @@ int __cdecl test(PCWSTR pszFile)
             RM_PROCESS_INFO rgpi[10];
             dwError = RmGetList(dwSession, &nProcInfoNeeded,
                                 &nProcInfo, rgpi, &dwReason);
-            wprintf(L"RmGetList returned %d\n", dwError);
+            wprintf(L"RmGetList returned %d\r\n", dwError);
             if (dwError == ERROR_SUCCESS) {
-                wprintf(L"RmGetList returned %d infos (%d needed)\n",
+                wprintf(L"RmGetList returned %d infos (%d needed)\r\n",
                         nProcInfo, nProcInfoNeeded);
                 for (i = 0; i < nProcInfo; i++) {
-                    wprintf(L"%d.ApplicationType = %d\n", i,
+                    wprintf(L"%d.ApplicationType = %d\r\n", i,
                             rgpi[i].ApplicationType);
-                    wprintf(L"%d.strAppName = %ls\n", i,
+                    wprintf(L"%d.strAppName = %ls\r\n", i,
                             rgpi[i].strAppName);
-                    wprintf(L"%d.Process.dwProcessId = %d\n", i,
+                    wprintf(L"%d.Process.dwProcessId = %d\r\n", i,
                             rgpi[i].Process.dwProcessId);
                     HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,
                                                   FALSE, rgpi[i].Process.dwProcessId);
@@ -518,7 +520,7 @@ int __cdecl test(PCWSTR pszFile)
                             DWORD cch = MAX_PATH;
                             if (QueryFullProcessImageNameW(hProcess, 0, sz, &cch) &&
                                     cch <= MAX_PATH) {
-                                wprintf(L"  = %ls\n", sz);
+                                wprintf(L"  = %ls\r\n", sz);
                             }
                         }
                         CloseHandle(hProcess);
@@ -1298,6 +1300,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
             } else {
                 // Not finished
                 t.terminate();
+                ok = false;
             }
 
             // qDebug() << "NtQueryObject end";
@@ -1420,13 +1423,13 @@ QString WPMUtils::getShellDir(int type)
                     GetProcAddress(hInstLib, "SHGetKnownFolderPath");
 
             if (lpfSHGetKnownFolderPath) {
-                outputTextConsole("not null\n");
+                outputTextConsole("not null\r\n");
                 PWSTR s;
                 const DWORD KF_FLAG_DONT_VERIFY = 0x00004000;
                 if (SUCCEEDED(lpfSHGetKnownFolderPath(FOLDERID_ProgramFilesX64,
                         KF_FLAG_DONT_VERIFY,
                         0, &s))) {
-                    outputTextConsole("S_OK\n");
+                    outputTextConsole("S_OK\r\n");
                     ret = QString::fromUtf16(reinterpret_cast<ushort*>(s));
                     CoTaskMemFree(s);
                 }

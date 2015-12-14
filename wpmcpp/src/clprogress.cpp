@@ -31,7 +31,7 @@ void CLProgress::jobChanged(Job* s)
                         floor(s->getProgress() * 100 + 0.5), 4);
                 WPMUtils::outputTextConsole(txt);
             } else {
-                WPMUtils::outputTextConsole(s->getTitle() + "\n");
+                WPMUtils::outputTextConsole(s->getTitle() + "\r\n");
             }
         }
     } else {
@@ -82,7 +82,7 @@ void CLProgress::jobChangedSimple(Job* s)
             hint = "... " + title.mid(n);
         }
 
-        WPMUtils::outputTextConsole(("[%1%] - " + hint + "\n").
+        WPMUtils::outputTextConsole(("[%1%] - " + hint + "\r\n").
                 arg(floor(progress * 100 + 0.5)));
 
         this->lastHint = title;
@@ -94,7 +94,7 @@ Job* CLProgress::createJob()
     HANDLE hOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     GetConsoleScreenBufferInfo(hOutputHandle, &progressPos);
     if (progressPos.dwCursorPosition.Y >= progressPos.dwSize.Y - 1) {
-        // WPMUtils::outputTextConsole("\n");
+        // WPMUtils::outputTextConsole("\r\n");
         progressPos.dwCursorPosition.Y--;
     }
 

@@ -93,16 +93,15 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
         QString fn = dir.path() + "\\" + filename;
         QFile f(fn);
         if (f.open(QFile::ReadWrite)) {
-            QString mime;
             Job* job = new Job();
             Downloader::Request request = QUrl(url);
             request.file = &f;
             request.useCache = true;
-            request.mime = &mime;
             request.keepConnection = false;
             request.timeout = 15;
 
-            Downloader::download(job, request);
+            Downloader::Response response = Downloader::download(job, request);
+            QString mime = response.mimeType;
             f.close();
 
             if (!job->getErrorMessage().isEmpty()) {
@@ -121,6 +120,8 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
                     ext = ".bmp";
                 else
                     ext = ".png";
+
+                // qDebug() << ext;
                 f.close();
                 f.rename(fn + ext);
                 r.file = filename + ext;

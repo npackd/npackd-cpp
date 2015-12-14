@@ -578,7 +578,8 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
         if (!err.isEmpty()) {
             r = MainWindow::brokenIcon;
         } else if (!filename.isEmpty()) {
-            QPixmap pm(filename);
+            QPixmap pm;
+            pm.load(filename);
 
             /* gray
             QStyleOption opt(0);
@@ -594,7 +595,7 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
 
                 screenshots.insert(url, r);
             } else {
-                r = MainWindow::genericAppIcon;
+                r = MainWindow::brokenIcon;
                 screenshots.insert(url, r);
             }
         } else {
@@ -1844,7 +1845,7 @@ void MainWindow::hardDriveScanThreadFinished()
     fillList();
 
     addTextTab(QObject::tr("Package detection status"),
-            detected.join("\n"));
+            detected.join("\r\n"));
 
     this->hardDriveScanRunning = false;
     this->updateActions();
@@ -1859,9 +1860,9 @@ void MainWindow::addErrorMessage(const QString& msg, const QString& details,
         m = m.left(200).trimmed();
         dots = true;
     }
-    QStringList sl = m.split("\n");
+    QStringList sl = m.split("\r\n");
     if (sl.count() > 2) {
-        m = sl.at(0) + "\n" + sl.at(1);
+        m = sl.at(0) + "\r\n" + sl.at(1);
         dots = true;
     }
     if (dots)

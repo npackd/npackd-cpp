@@ -131,7 +131,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
         details.append(pv->importantFilesTitles.at(i));
         details.append(" (");
         details.append(pv->importantFiles.at(i));
-        details.append(")\n");
+        details.append(")\r\n");
     }
     this->ui->textEditImportantFiles->setText(details);
 

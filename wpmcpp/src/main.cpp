@@ -29,8 +29,6 @@
 #include "uiutils.h"
 #include "clprocessor.h"
 
-Q_IMPORT_PLUGIN(QICOPlugin)
-
 // Modern and efficient C++ Thread Pool Library
 // https://github.com/vit-vit/CTPL
 
@@ -69,7 +67,7 @@ int main(int argc, char *argv[])
 #if !defined(__x86_64__)
     if (WPMUtils::is64BitWindows()) {
         QMessageBox::critical(0, "Error",
-                QObject::tr("The 32 bit version of Npackd requires a 32 bit operating system.") + "\n" +
+                QObject::tr("The 32 bit version of Npackd requires a 32 bit operating system.") + "\r\n" +
                 QObject::tr("Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads"));
         return 1;
     }

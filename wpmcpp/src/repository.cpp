@@ -266,7 +266,7 @@ QString Repository::checkSpecVersion(const QString &specVersion)
     } else {
         if (specVersion_.compare(Version(4, 0)) >= 0)
             err = QString(
-                    QObject::tr("Incompatible repository specification version: %1.") + " \n" +
+                    QObject::tr("Incompatible repository specification version: %1.") + " \r\n" +
                     QObject::tr("Please download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads")).
                     arg(specVersion);
     }

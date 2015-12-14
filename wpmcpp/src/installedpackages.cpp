@@ -941,7 +941,7 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
     /*WPMUtils::outputTextConsole(
             "InstalledPackages::saveToRegistry " + ipv->directory + " " +
             ipv->package + " " + ipv->version.getVersionString() + " " +
-            ipv->detectionInfo + "\n");*/
+            ipv->detectionInfo + "\r\n");*/
 
     if (!ipv->directory.isEmpty()) {
         WindowsRegistry wr = machineWR.createSubKey(keyName + "\\" + pn, &r);

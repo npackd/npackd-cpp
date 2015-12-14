@@ -15,9 +15,9 @@ int App::listMSI()
 {
     QStringList sl = WPMUtils::findInstalledMSIProductNames();
 
-    WPMUtils::outputTextConsole("Installed MSI Products\n");
+    WPMUtils::outputTextConsole("Installed MSI Products\r\n");
     for (int i = 0; i < sl.count(); i++) {
-        WPMUtils::outputTextConsole(sl.at(i) + "\n");
+        WPMUtils::outputTextConsole(sl.at(i) + "\r\n");
     }
 
     return 0;
@@ -34,7 +34,7 @@ int App::process()
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
-        WPMUtils::outputTextConsole("Error: " + err + "\n");
+        WPMUtils::outputTextConsole("Error: " + err + "\r\n");
         return 1;
     }
 
@@ -47,7 +47,7 @@ int App::process()
     if (fr.count() == 0) {
         help();
     } else if (fr.count() > 1) {
-        WPMUtils::outputTextConsole("Unexpected argument: " + fr.at(1) + "\n", false);
+        WPMUtils::outputTextConsole("Unexpected argument: " + fr.at(1) + "\r\n", false);
         r = 1;
     } else if (fr.at(0) == "help") {
         help();
@@ -62,7 +62,7 @@ int App::process()
     } else if (fr.at(0) == "uninstall-from-cp") {
         r = uninstallFromCP();
     } else {
-        WPMUtils::outputTextConsole("Wrong command: " + fr.at(0) + "\n", false);
+        WPMUtils::outputTextConsole("Wrong command: " + fr.at(0) + "\r\n", false);
         r = 1;
     }
 
@@ -77,7 +77,7 @@ int App::getProductCode()
 
     if (ret == 0) {
         if (file.isNull()) {
-            WPMUtils::outputTextConsole("Missing option: --file\n", false);
+            WPMUtils::outputTextConsole("Missing option: --file\r\n", false);
             ret = 1;
         }
     }
@@ -92,14 +92,14 @@ int App::getProductCode()
             if (!r) {
                 QString s;
                 s.setUtf16((ushort*) guid, pcchValueBuf);
-                WPMUtils::outputTextConsole(s + "\n");
+                WPMUtils::outputTextConsole(s + "\r\n");
             } else {
                 WPMUtils::outputTextConsole(
-                        "Cannot get the value of the ProductCode property\n", false);
+                        "Cannot get the value of the ProductCode property\r\n", false);
                 ret = 1;
             }
         } else {
-            WPMUtils::outputTextConsole("Cannot open the MSI file\n", false);
+            WPMUtils::outputTextConsole("Cannot open the MSI file\r\n", false);
             ret = 1;
         }
     }
@@ -115,7 +115,7 @@ int App::uninstallFromCP()
 
     if (ret == 0) {
         if (label.isNull()) {
-            WPMUtils::outputTextConsole("Missing option: --label\n", false);
+            WPMUtils::outputTextConsole("Missing option: --label\r\n", false);
             ret = 1;
         }
     }
@@ -130,14 +130,14 @@ int App::uninstallFromCP()
             if (!r) {
                 QString s;
                 s.setUtf16((ushort*) guid, pcchValueBuf);
-                WPMUtils::outputTextConsole(s + "\n");
+                WPMUtils::outputTextConsole(s + "\r\n");
             } else {
                 WPMUtils::outputTextConsole(
-                        "Cannot get the value of the ProductCode property\n", false);
+                        "Cannot get the value of the ProductCode property\r\n", false);
                 ret = 1;
             }
         } else {
-            WPMUtils::outputTextConsole("Cannot open the MSI file\n", false);
+            WPMUtils::outputTextConsole("Cannot open the MSI file\r\n", false);
             ret = 1;
         }
     }
@@ -165,7 +165,7 @@ int App::help()
         "Options:",
     };
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
-        WPMUtils::outputTextConsole(QString(lines[i]) + "\n");
+        WPMUtils::outputTextConsole(QString(lines[i]) + "\r\n");
     }
     this->cl.printOptions();
     const char* lines2[] = {
@@ -174,7 +174,7 @@ int App::help()
         "If the output is redirected, the texts will be encoded as UTF-8.",
     };
     for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
-        WPMUtils::outputTextConsole(QString(lines2[i]) + "\n");
+        WPMUtils::outputTextConsole(QString(lines2[i]) + "\r\n");
     }
 
     return 0;
@@ -188,14 +188,14 @@ int App::addPath()
 
     if (r == 0) {
         if (path.isNull()) {
-            WPMUtils::outputTextConsole("Missing option: --path\n", false);
+            WPMUtils::outputTextConsole("Missing option: --path\r\n", false);
             r = 1;
         }
     }
 
     if (r == 0) {
         if (path.contains(';')) {
-            WPMUtils::outputTextConsole("The path cannot contain a semicolon\n",
+            WPMUtils::outputTextConsole("The path cannot contain a semicolon\r\n",
                     false);
             r = 1;
         }
@@ -228,19 +228,19 @@ int App::addPath()
                     err = WPMUtils::setSystemEnvVar("PATH", curPath, true);
                     if (!err.isEmpty()) {
                         r = 1;
-                        WPMUtils::outputTextConsole(err + "\n", false);
+                        WPMUtils::outputTextConsole(err + "\r\n", false);
                     } else {
                         WPMUtils::fireEnvChanged();
                     }
                 } else {
                     r = 1;
                     WPMUtils::outputTextConsole(
-                            "The new PATH value would be too long\n", false);
+                            "The new PATH value would be too long\r\n", false);
                 }
             }
         } else {
             r = 1;
-            WPMUtils::outputTextConsole(err + "\n", false);
+            WPMUtils::outputTextConsole(err + "\r\n", false);
         }
     }
 
@@ -255,14 +255,14 @@ int App::removePath()
 
     if (r == 0) {
         if (path.isNull()) {
-            WPMUtils::outputTextConsole("Missing option: --path\n", false);
+            WPMUtils::outputTextConsole("Missing option: --path\r\n", false);
             r = 1;
         }
     }
 
     if (r == 0) {
         if (path.contains(';')) {
-            WPMUtils::outputTextConsole("The path cannot contain a semicolon\n",
+            WPMUtils::outputTextConsole("The path cannot contain a semicolon\r\n",
                     false);
             r = 1;
         }
@@ -294,19 +294,19 @@ int App::removePath()
                     err = WPMUtils::setSystemEnvVar("PATH", curPath, true);
                     if (!err.isEmpty()) {
                         r = 1;
-                        WPMUtils::outputTextConsole(err + "\n", false);
+                        WPMUtils::outputTextConsole(err + "\r\n", false);
                     } else {
                         WPMUtils::fireEnvChanged();
                     }
                 } else {
                     r = 1;
                     WPMUtils::outputTextConsole(
-                            "The new PATH value would be too long\n", false);
+                            "The new PATH value would be too long\r\n", false);
                 }
             }
         } else {
             r = 1;
-            WPMUtils::outputTextConsole(err + "\n", false);
+            WPMUtils::outputTextConsole(err + "\r\n", false);
         }
     }
 

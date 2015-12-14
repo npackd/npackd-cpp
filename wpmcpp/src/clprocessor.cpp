@@ -202,7 +202,7 @@ QString CLProcessor::add()
 
     qDeleteAll(installed);
 
-    // debug: WPMUtils::outputTextConsole(QString("%1\n").arg(ops.size()));
+    // debug: WPMUtils::outputTextConsole(QString("%1\r\n").arg(ops.size()));
 
     if (err.isEmpty()) {
         err = process(ops, pct);
@@ -325,10 +325,10 @@ QString CLProcessor::update()
         r = QObject::tr("The package update was cancelled");
     } else if (up2date) {
         WPMUtils::outputTextConsole(
-                QObject::tr("The packages are already up-to-date\n"));
+                QObject::tr("The packages are already up-to-date\r\n"));
     } else if (r.isEmpty()) {
         WPMUtils::outputTextConsole(
-                QObject::tr("The packages were updated successfully\n"));
+                QObject::tr("The packages were updated successfully\r\n"));
     }
     */
 
@@ -469,8 +469,8 @@ void CLProcessor::usage()
 
     QMessageBox mb(0);
     mb.setWindowTitle(QString(
-            "Npackd %1\n").arg(NPACKD_VERSION));
-    mb.setText("npackdg [command] [options]\n"
+            "Npackd %1\r\n").arg(NPACKD_VERSION));
+    mb.setText("npackdg [command] [options]\r\n"
             "Here is [command] one of add, remove, rm or help");
     mb.setIcon(QMessageBox::Information);
     mb.setStandardButtons(QMessageBox::Ok);

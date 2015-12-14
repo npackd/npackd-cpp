@@ -166,18 +166,13 @@ public:
         int timeout;
 
         /**
-         * @brief the MIME type of the download will be stored here, it not 0
-         */
-        QString* mime;
-
-        /**
          * @param url http:/https:/file: URL
          */
         Request(const QUrl& url): file(0), interactive(true),
                 parentWindow(0), url(url), hashSum(false),
                 alg(QCryptographicHash::Sha256), useCache(true),
                 keepConnection(true), httpMethod("GET"),
-                createTemporaryFile(false), timeout(300), mime(0) {
+                createTemporaryFile(false), timeout(300) {
         }
     };
 

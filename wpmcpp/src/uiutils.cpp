@@ -163,8 +163,8 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 createPackageVersionsHTML(installNames) +
                 "</b></body>";
         detailedMessage = QObject::tr("%1 package(s) will be installed:").
-                arg(installNames.count()) + "\n" +
-                installNames.join("\n");
+                arg(installNames.count()) + "\r\n" +
+                installNames.join("\r\n");
     } else if (installNames.count() == 0 && uninstallNames.count() > 0 &&
             updateNames.count() == 0) {
         *title = QString(QObject::tr("Uninstalling %1 packages")).arg(
@@ -180,8 +180,8 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 toHtmlEscaped() +
                 "</body>";
         detailedMessage = QObject::tr("%1 package(s) will be uninstalled:").
-                arg(uninstallNames.count()) + "\n" +
-                uninstallNames.join("\n");
+                arg(uninstallNames.count()) + "\r\n" +
+                uninstallNames.join("\r\n");
     } else {
         *title = QObject::tr("Installing %1 packages, uninstalling %2 packages, updating %3 packages").
                 arg(installNames.count()).
@@ -197,10 +197,10 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                     createPackageVersionsHTML(updateNames) +
                     "</b>";
             if (!detailedMessage.isEmpty())
-                detailedMessage += "\n\n";
+                detailedMessage += "\r\n\r\n";
             detailedMessage += QObject::tr("%3 package(s) will be updated:").
-                    arg(updateNames.count()) + "\n" +
-                    updateNames.join("\n");
+                    arg(updateNames.count()) + "\r\n" +
+                    updateNames.join("\r\n");
         }
         if (uninstallNames.count() > 0) {
             msg += "<h2>" +
@@ -210,10 +210,10 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                     createPackageVersionsHTML(uninstallNames) +
                     "</b>";
             if (!detailedMessage.isEmpty())
-                detailedMessage += "\n\n";
+                detailedMessage += "\r\n\r\n";
             detailedMessage += QObject::tr("%1 package(s) will be uninstalled:").
-                    arg(uninstallNames.count()) + "\n" +
-                    uninstallNames.join("\n");
+                    arg(uninstallNames.count()) + "\r\n" +
+                    uninstallNames.join("\r\n");
         }
         if (installNames.count() > 0) {
             msg += "<h2>" +
@@ -223,10 +223,10 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                     createPackageVersionsHTML(installNames) +
                     "</b>";
             if (!detailedMessage.isEmpty())
-                detailedMessage += "\n\n";
+                detailedMessage += "\r\n\r\n";
             detailedMessage += QObject::tr("%3 package(s) will be installed:").
-                    arg(installNames.count()) + "\n" +
-                    installNames.join("\n");
+                    arg(installNames.count()) + "\r\n" +
+                    installNames.join("\r\n");
         }
         msg += "<br><br>" +
                 QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
@@ -269,7 +269,7 @@ bool UIUtils::confirm(QWidget* parent, QString title, QString text,
     QString shortText;
     if (keep < lines.count()) {
         lines = lines.mid(0, keep);
-        shortText = lines.join("\n") + "...";
+        shortText = lines.join("\r\n") + "...";
     } else {
         shortText = text;
     }

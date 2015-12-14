@@ -348,8 +348,8 @@ QString Downloader::inputPassword(HINTERNET hConnectHandle, DWORD dwStatus)
 
     QString username, password;
     if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
-        WPMUtils::outputTextConsole("\n" +
-                QObject::tr("The HTTP proxy requires authentication.") + "\n");
+        WPMUtils::outputTextConsole("\r\n" +
+                QObject::tr("The HTTP proxy requires authentication.") + "\r\n");
         WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
         username = WPMUtils::inputTextConsole();
         WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
@@ -369,9 +369,9 @@ QString Downloader::inputPassword(HINTERNET hConnectHandle, DWORD dwStatus)
             WPMUtils::formatMessage(GetLastError(), &result);
         }
     } else if (dwStatus == HTTP_STATUS_DENIED) {
-        WPMUtils::outputTextConsole("\n" +
+        WPMUtils::outputTextConsole("\r\n" +
                 QObject::tr("The HTTP server requires authentication.") +
-                "\n");
+                "\r\n");
         WPMUtils::outputTextConsole(QObject::tr("Username") + ": ");
         username = WPMUtils::inputTextConsole();
         WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
@@ -736,6 +736,7 @@ Downloader::Response Downloader::download(Job *job,
             if (request.file->write(ba) < 0)
                 job->setErrorMessage(request.file->errorString());
         }
+        r.mimeType = "image/png";
         job->complete();
     } else if (request.url.scheme() == "file") {
         QString localFile = request.url.toLocalFile();
@@ -748,6 +749,7 @@ Downloader::Response Downloader::download(Job *job,
                     arg(localFile));
             job->complete();
         }
+        r.mimeType = "image/png";
     } else {
         job->setErrorMessage(QObject::tr("Unsupported URL scheme: %1").
                 arg(request.url.toDisplayString()));
