@@ -3181,6 +3181,10 @@ p, li { white-space: pre-wrap; }
         <source>Cannot parse a version range: %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Deleting %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

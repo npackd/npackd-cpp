@@ -189,14 +189,14 @@ void AbstractRepository::process(Job *job,
         }
     }
 
-    // 90% for removing/installing the packages
+    // where the binary was downloaded
+    QStringList dirs;
+
+    // names of the binaries
+    QStringList binaries;
+
+    // 70% for downloading the binaries
     if (job->shouldProceed()) {
-        // where the binary was downloaded
-        QStringList dirs;
-
-        // names of the binaries
-        QStringList binaries;
-
         // downloading packages
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
@@ -221,10 +221,29 @@ void AbstractRepository::process(Job *job,
                 job->setProgress(job->getProgress() + 0.7 / n);
             }
 
-            if (!job->getErrorMessage().isEmpty())
+            if (!job->shouldProceed())
                 break;
         }
+    }
 
+    // removing the binaries if we should not proceed
+    if (!job->shouldProceed()) {
+        for (int i = 0; i < dirs.count(); i++) {
+            QString dir = dirs.at(i);
+            if (!dir.isEmpty()) {
+                QString txt = QObject::tr("Deleting %1").arg(dir);
+
+                Job* sub = job->newSubJob(0.2 / dirs.count(), txt, true, false);
+                QDir dir;
+                WPMUtils::removeDirectory(sub, dir);
+            } else {
+                job->setProgress(job->getProgress() + 0.2 / dirs.count());
+            }
+        }
+    }
+
+    // 20% for removing/installing the packages
+    if (job->shouldProceed()) {
         // installing/removing packages
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);

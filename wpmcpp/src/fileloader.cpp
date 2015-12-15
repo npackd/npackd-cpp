@@ -107,6 +107,10 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
             if (!job->getErrorMessage().isEmpty()) {
                 r.error = job->getErrorMessage();
             } else {
+                // supported extensions:
+                // "bmp", "cur", "dds", "gif", "icns", "ico", "jp2", "jpeg",
+                // "jpg", "mng", "pbm", "pgm", "png", "ppm", "tga", "tif",
+                // "tiff", "wbmp", "webp", "xbm", "xpm"
                 QString ext;
                 if (mime == "image/png")
                     ext = ".png";

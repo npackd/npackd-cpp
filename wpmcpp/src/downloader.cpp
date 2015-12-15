@@ -191,7 +191,9 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         //qDebug() << callNumber << r << dwStatus << url.toString();
 
         if (r == ERROR_SUCCESS) {
-            job->setErrorMessage(QObject::tr("Cancelled by the user"));
+            QString errMsg;
+            WPMUtils::formatMessage(sendRequestError, &errMsg);
+            job->setErrorMessage(errMsg);
         } else if (r == ERROR_INTERNET_FORCE_RETRY) {
             // nothing
         } else if (r == ERROR_CANCELLED) {
