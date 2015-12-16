@@ -36,6 +36,11 @@ private slots:
     void addToDir();
 
     /**
+     * @brief "add" --file=<installation directory> for an existing dir
+     */
+    void addToExistingDir();
+
+    /**
      * @brief "update" --keep-directories
      */
     void updateKeepDirectories();

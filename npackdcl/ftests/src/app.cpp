@@ -149,6 +149,25 @@ void App::addToDir()
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
+void App::addToExistingDir()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    captureNpackdCLOutput("rm -p active-directory-explorer").
+            contains("removed successfully");
+
+    QString path = "C:\\Program Files\\AD_addToExistingDir";
+    QDir d;
+    d.mkpath(path);
+
+    QString output = captureNpackdCLOutput(
+            "add -p active-directory-explorer -f \"" + path + "\"");
+    QVERIFY2(output.contains(
+            "directory already exists"),
+            output.toLatin1());
+}
+
 void App::updateKeepDirectories()
 {
     if (!admin)
