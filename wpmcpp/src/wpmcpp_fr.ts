@@ -3100,6 +3100,10 @@ p, li { white-space: pre-wrap; }
         <source>Deleting %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Directory %1 already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

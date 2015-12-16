@@ -29,6 +29,8 @@ QString App::captureNpackdCLOutput(const QString& params)
 QString App::captureOutput(const QString& program, const QString& params,
         const QString& where)
 {
+    qDebug() << program << params;
+
     QStringList env;
     Job* job = new Job();
     WPMUtils::executeFile(
@@ -166,6 +168,31 @@ void App::addToExistingDir()
     QVERIFY2(output.contains(
             "directory already exists"),
             output.toLatin1());
+}
+
+void App::updateToDir()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+
+    QString output = captureNpackdCLOutput(
+            "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
+    QVERIFY2(output.contains(
+            "installed successfully in C:\\Program Files\\ArecaBackup"),
+            output.toLatin1());
+
+    output = captureNpackdCLOutput("update -p org.areca-backup.ArecaBackup -f \"C:\\Program Files\\ArecaBackupNew\"");
+    QVERIFY2(output.contains(
+            "The packages were updated successfully"),
+            output.toLatin1());
+
+    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup").
+            trimmed() == "C:\\Program Files\\ArecaBackupNew");
+
+    output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
 void App::updateKeepDirectories()

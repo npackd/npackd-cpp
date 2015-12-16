@@ -41,6 +41,11 @@ private slots:
     void addToExistingDir();
 
     /**
+     * @brief "update" -f
+     */
+    void updateToDir();
+
+    /**
      * @brief "update" --keep-directories
      */
     void updateKeepDirectories();

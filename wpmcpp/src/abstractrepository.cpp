@@ -208,13 +208,24 @@ void AbstractRepository::process(Job *job,
                 Job* sub = job->newSubJob(0.7 / n, txt, true, true);
 
                 QString dir = op->where;
-                if (dir.isEmpty())
+                if (dir.isEmpty()) {
                     dir = pv->getIdealInstallationDirectory();
-                dir = WPMUtils::findNonExistingFile(dir, "");
-                dirs.append(dir);
+                    dir = WPMUtils::findNonExistingFile(dir, "");
+                }
 
-                QString binary = pv->download_(sub, dir, interactive);
-                binaries.append(binary);
+                QDir d;
+                if (d.exists(dir)) {
+                    sub->setErrorMessage(
+                            QObject::tr("Directory %1 already exists").
+                            arg(dir));
+                    dirs.append("");
+                    binaries.append("");
+                } else {
+                    dirs.append(dir);
+
+                    QString binary = pv->download_(sub, dir, interactive);
+                    binaries.append(binary);
+                }
             } else {
                 dirs.append("");
                 binaries.append("");
@@ -226,21 +237,7 @@ void AbstractRepository::process(Job *job,
         }
     }
 
-    // removing the binaries if we should not proceed
-    if (!job->shouldProceed()) {
-        for (int i = 0; i < dirs.count(); i++) {
-            QString dir = dirs.at(i);
-            if (!dir.isEmpty()) {
-                QString txt = QObject::tr("Deleting %1").arg(dir);
-
-                Job* sub = job->newSubJob(0.2 / dirs.count(), txt, true, false);
-                QDir dir;
-                WPMUtils::removeDirectory(sub, dir);
-            } else {
-                job->setProgress(job->getProgress() + 0.2 / dirs.count());
-            }
-        }
-    }
+    int processed = 0;
 
     // 20% for removing/installing the packages
     if (job->shouldProceed()) {
@@ -309,8 +306,26 @@ void AbstractRepository::process(Job *job,
             } else
                 pv->uninstall(sub, printScriptOutput);
 
-            if (!job->getErrorMessage().isEmpty())
+            if (!job->shouldProceed())
                 break;
+
+            processed = i + 1;
+        }
+    }
+
+    // removing the binaries if we should not proceed
+    if (!job->shouldProceed()) {
+        for (int i = processed; i < dirs.count(); i++) {
+            QString dir = dirs.at(i);
+            if (!dir.isEmpty()) {
+                QString txt = QObject::tr("Deleting %1").arg(dir);
+
+                Job* sub = job->newSubJob(0.2 / dirs.count(), txt, true, false);
+                QDir dir;
+                WPMUtils::removeDirectory(sub, dir);
+            } else {
+                job->setProgress(job->getProgress() + 0.2 / dirs.count());
+            }
         }
     }
 
@@ -349,7 +364,7 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 
 QString AbstractRepository::planUpdates(const QList<Package*> packages,
         QList<InstallOperation*>& ops, bool keepDirectories,
-        bool install)
+        bool install, const QString &where_)
 {
     QString err;
 
@@ -415,7 +430,9 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                         installedCopy, ops2);
                 if (err.isEmpty()) {
                     QString where;
-                    if (keepDirectories)
+                    if (i == 0 && !where_.isEmpty())
+                        where = where_;
+                    else if (keepDirectories)
                         where = b->getPath();
 
                     err = newest.at(i)->planInstallation(installedCopy, ops2,

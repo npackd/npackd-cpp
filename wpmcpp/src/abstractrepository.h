@@ -173,11 +173,13 @@ public:
      * @param install this determines the behaviour if no version is installed.
      *     If true, installs the newest version. If false, an error will be
      *     returned.
+     * @param where_ where to install the new version. This parameter will only
+     *     be used if only one package should be updated
      * @return error message or ""
      */
     QString planUpdates(const QList<Package*> packages,
             QList<InstallOperation*>& ops, bool keepDirectories=false,
-            bool install=false);
+            bool install=false, const QString& where_="");
 
     /**
      * @brief saves (creates or updates) the data about a package

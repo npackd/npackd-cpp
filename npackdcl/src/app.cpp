@@ -266,7 +266,8 @@ void App::usage()
         "    ncl set-install-dir --file=<directory>",
         "        changes the directory where packages will be installed",
         "    ncl update (--package=<package>)+ [--end-process=<types>]",
-        "            [--install] [--non-interactive] [--keep-directories]",
+        "            [--install] [--keep-directories]",
+        "            [--non-interactive] [--file=<installation directory>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
@@ -834,6 +835,19 @@ QString App::update()
         }
     }
 
+    QString file = cl.get("file");
+    if (job->shouldProceed()) {
+        if (!file.isNull()) {
+            QDir d;
+            file = WPMUtils::normalizePath(d.absoluteFilePath(file), false);
+
+            if (packages_.size() != 1) {
+                job->setErrorMessage(
+                        "The installation directory can only be specified if one package should be updated.");
+            }
+        }
+    }
+
     QList<Package*> toUpdate;
 
     if (job->shouldProceed()) {
@@ -857,7 +871,8 @@ QString App::update()
     QList<InstallOperation*> ops;
     bool up2date = false;
     if (job->shouldProceed()) {
-        QString err = rep->planUpdates(toUpdate, ops, keepDirectories, install);
+        QString err = rep->planUpdates(toUpdate, ops, keepDirectories, install,
+                file);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
