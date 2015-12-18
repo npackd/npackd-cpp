@@ -102,6 +102,7 @@ int App::process()
 
     if (debug) {
         clp.setUpdateRate(0);
+        MySQLQuery::debug = true;
     }
 
     QStringList fr = cl.getFreeArguments();

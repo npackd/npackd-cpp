@@ -35,7 +35,8 @@ private:
 
     QMap<int, QString> categories;
 
-    MySQLQuery* savePackageVersionQuery;
+    MySQLQuery* replacePackageVersionQuery;
+    MySQLQuery* insertPackageVersionQuery;
     MySQLQuery* insertPackageQuery;
     MySQLQuery* replacePackageQuery;
     MySQLQuery* selectCategoryQuery;

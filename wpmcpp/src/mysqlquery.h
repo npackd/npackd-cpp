@@ -4,8 +4,14 @@
 #include <QSqlQuery>
 #include <QSqlDatabase>
 
+/**
+ * @brief SQL query
+ */
 class MySQLQuery: public QSqlQuery {
 public:
+    /** true = print the SQL statements */
+    static bool debug;
+
     explicit MySQLQuery(QSqlDatabase db);
     bool exec(const QString& query);
     bool exec();

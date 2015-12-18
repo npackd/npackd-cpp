@@ -1,4 +1,7 @@
 #include "mysqlquery.h"
+#include "wpmutils.h"
+
+bool MySQLQuery::debug = false;
 
 MySQLQuery::MySQLQuery(QSqlDatabase db) : QSqlQuery(db)
 {
@@ -6,6 +9,9 @@ MySQLQuery::MySQLQuery(QSqlDatabase db) : QSqlQuery(db)
 
 bool MySQLQuery::exec(const QString &query)
 {
+    if (debug)
+        WPMUtils::writeln(query);
+
     //DWORD start = GetTickCount();
     bool r = QSqlQuery::exec(query);
     // qDebug() << query << (GetTickCount() - start);
@@ -14,6 +20,9 @@ bool MySQLQuery::exec(const QString &query)
 
 bool MySQLQuery::exec()
 {
+    if (debug)
+        WPMUtils::writeln(this->lastQuery());
+
     //DWORD start = GetTickCount();
     bool r = QSqlQuery::exec();
     // qDebug() << this->lastQuery() << (GetTickCount() - start);

@@ -45,7 +45,8 @@ DBRepository DBRepository::def;
 DBRepository::DBRepository()
 {
     currentRepository = -1;
-    savePackageVersionQuery = 0;
+    replacePackageVersionQuery = 0;
+    insertPackageVersionQuery = 0;
     insertPackageQuery = 0;
     insertLinkQuery = 0;
     deleteLinkQuery = 0;
@@ -60,7 +61,8 @@ DBRepository::~DBRepository()
     delete insertLinkQuery;
     delete insertPackageQuery;
     delete replacePackageQuery;
-    delete savePackageVersionQuery;
+    delete replacePackageVersionQuery;
+    delete insertPackageVersionQuery;
 }
 
 DBRepository* DBRepository::getDefault()
@@ -1057,49 +1059,57 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 {
     QString err;
 
-    if (!savePackageVersionQuery) {
-        savePackageVersionQuery = new MySQLQuery(db);
-        QString sql = "INSERT OR ";
-        if (replace)
-            sql += "REPLACE";
-        else
-            sql += "IGNORE";
-        sql += " INTO PACKAGE_VERSION "
+    if (!replacePackageVersionQuery) {
+        replacePackageVersionQuery = new MySQLQuery(db);
+        insertPackageVersionQuery = new MySQLQuery(db);
+
+        QString sql = " INTO PACKAGE_VERSION "
                 "(NAME, PACKAGE, URL, "
                 "CONTENT, MSIGUID, DETECT_FILE_COUNT)"
                 "VALUES(:NAME, :PACKAGE, "
                 ":URL, :CONTENT, :MSIGUID, "
                 ":DETECT_FILE_COUNT)";
-        if (!savePackageVersionQuery->prepare(sql)) {
-            err = getErrorString(*savePackageVersionQuery);
-            delete savePackageVersionQuery;
+
+        if (!replacePackageVersionQuery->prepare("INSERT OR REPLACE " + sql)) {
+            err = getErrorString(*replacePackageVersionQuery);
+            delete replacePackageVersionQuery;
+            return err;
+        }
+        if (!insertPackageVersionQuery->prepare("INSERT OR IGNORE " + sql)) {
+            err = getErrorString(*insertPackageVersionQuery);
+            delete insertPackageVersionQuery;
             return err;
         }
     }
 
     if (err.isEmpty()) {
+        MySQLQuery* q;
+        if (replace)
+            q = replacePackageVersionQuery;
+        else
+            q = insertPackageVersionQuery;
+
         Version v = p->version;
         v.normalize();
-        savePackageVersionQuery->bindValue(":REPOSITORY",
+        q->bindValue(":REPOSITORY",
                 this->currentRepository);
-        savePackageVersionQuery->bindValue(":NAME",
+        q->bindValue(":NAME",
                 v.getVersionString());
-        savePackageVersionQuery->bindValue(":PACKAGE", p->package);
-        savePackageVersionQuery->bindValue(":URL", p->download.toString());
-        savePackageVersionQuery->bindValue(":MSIGUID", p->msiGUID);
-        savePackageVersionQuery->bindValue(":DETECT_FILE_COUNT",
+        q->bindValue(":PACKAGE", p->package);
+        q->bindValue(":URL", p->download.toString());
+        q->bindValue(":MSIGUID", p->msiGUID);
+        q->bindValue(":DETECT_FILE_COUNT",
                 p->detectFiles.count());
 
         QByteArray file;
         file.reserve(1024);
         QXmlStreamWriter w(&file);
         p->toXML(&w);
-        savePackageVersionQuery->bindValue(":CONTENT", QVariant(file));
-        if (!savePackageVersionQuery->exec())
-            err = getErrorString(*savePackageVersionQuery);
+        q->bindValue(":CONTENT", QVariant(file));
+        if (!q->exec())
+            err = getErrorString(*q);
+        q->finish();
     }
-
-    savePackageVersionQuery->finish();
 
     return err;
 }

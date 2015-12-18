@@ -187,7 +187,6 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
             callNumber++;
         }
 
-        // TODO: remove
         //qDebug() << callNumber << r << dwStatus << url.toString();
 
         if (r == ERROR_SUCCESS) {
