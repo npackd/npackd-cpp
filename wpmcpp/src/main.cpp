@@ -38,9 +38,7 @@ int main(int argc, char *argv[])
     //CoInitialize(NULL);
     //WPMUtils::createMSTask();
 
-#if !defined(__x86_64__)
     LoadLibrary(L"exchndl.dll");
-#endif
 
     AbstractRepository::setDefault_(DBRepository::getDefault());
 

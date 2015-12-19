@@ -16,9 +16,7 @@
 
 int main(int argc, char *argv[])
 {
-#if !defined(__x86_64__)
     LoadLibrary(L"exchndl.dll");
-#endif
 
     QCoreApplication ca(argc, argv);
 

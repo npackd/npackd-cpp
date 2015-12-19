@@ -221,10 +221,18 @@ void PackageVersionForm::dependencyLinkActivated(const QString &link)
             MainWindow::getInstance()->openPackageVersion(
                     ipv->package, ipv->version, true);
         } else {
-            err = QObject::tr("This dependency is not installed");
+            QList<PackageVersion*> avoid;
+            PackageVersion* pv = d->findBestMatchToInstall(avoid, &err);
+            if (pv) {
+                MainWindow::getInstance()->openPackageVersion(
+                        pv->package, pv->version, true);
+                delete pv;
+            } else {
+                err = QObject::tr("This dependency is not available");
+            }
         }
     } else {
-        err = "Invalid dependency link";
+        err = QObject::tr("Invalid dependency link");
     }
 
     if (!err.isEmpty())
