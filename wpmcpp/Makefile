@@ -1,12 +1,12 @@
 # This is the main build file for Npackd. It builds both 32 bit and 64 bit
 # versions.
 
-# Parameter: release32, gprof32, release64, gprof64
+# Parameter: release32, release64
 PROFILE=release32
 
 # ------------------------------------------------------------------------------
 
-.PHONY: all printvars clean compile prep zip msi gprof drmemory upload translations
+.PHONY: all printvars clean compile prep zip msi drmemory upload translations
 
 SHELL:=cmd.exe
 
@@ -30,14 +30,6 @@ endif
 ifeq ($(PROFILE),release64)
 CONFIG=release
 WHERE=build\64\release
-endif
-ifeq ($(PROFILE),gprof32)
-CONFIG=gprof
-WHERE=build\32\gprof
-endif
-ifeq ($(PROFILE),gprof64)
-CONFIG=gprof
-WHERE=build\64\gprof
 endif
 
 RPAREN=)
@@ -132,12 +124,6 @@ zip: prep
 msi: prep
 	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\wpmcpp$(BITS).aip /SetVersion $(VERSION)
 	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\wpmcpp$(BITS).aip
-
-gprof: $(WHERE)\wpmcpp.exe $(WHERE)\gmon.out
-# use --no-demangle to find out a mangled function name
-# -f _ZN12DBRepository8updateF5EP3Job
-# -qDBRepository::updateF5(Job*) 
-	$(MINGW)\bin\gprof.exe -a -F _ZN12DBRepository8updateF5EP3Job $(WHERE)\wpmcpp.exe $(WHERE)\gmon.out >> GProf.txt
 
 ifeq (32,$(BITS))
 memcheck: compile

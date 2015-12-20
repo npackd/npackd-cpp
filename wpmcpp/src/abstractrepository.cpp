@@ -691,8 +691,8 @@ QString AbstractRepository::checkInstallationDirectory(const QString &dir)
         InstalledPackageVersion* ipv = ip->findOwner(dir);
         if (ipv) {
             AbstractRepository* r = AbstractRepository::getDefault_();
-            err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").arg(
-                    dir).
+            err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").
+                    arg(dir).
                     arg(r->getPackageTitleAndName(ipv->package)).
                     arg(ipv->version.getVersionString());
             delete ipv;

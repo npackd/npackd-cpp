@@ -1,11 +1,11 @@
 # This is the main build file for NpackdCL.
 
-# Parameter: release32, gprof32
+# Parameter: release32
 PROFILE=release32
 
 # ------------------------------------------------------------------------------
 
-.PHONY: all printvars clean compile prep zip msi gprof drmemory upload
+.PHONY: all printvars clean compile prep zip msi drmemory upload
 
 SHELL:=cmd.exe
 
@@ -32,16 +32,6 @@ endif
 ifeq ($(PROFILE),release64)
 CONFIG=release
 WHERE=build\64\release
-endif
-
-ifeq ($(PROFILE),gprof32)
-CONFIG=gprof
-WHERE=build\32\gprof
-endif
-
-ifeq ($(PROFILE),gprof64)
-CONFIG=gprof
-WHERE=build\64\gprof
 endif
 
 RPAREN=)
@@ -115,12 +105,6 @@ $(WHERE)\zip\ncl.exe:
 msi: zip
 	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\$(PROJECT)$(BITS).aip /SetVersion $(VERSION)
 	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\$(PROJECT)$(BITS).aip
-
-gprof: $(WHERE)\$(PROJECT).exe $(WHERE)\gmon.out
-# use --no-demangle to find out a mangled function name
-# -f _ZN12DBRepository8updateF5EP3Job
-# -qDBRepository::updateF5(Job*) 
-	$(MINGW)\bin\gprof.exe -a -F _ZN12DBRepository8updateF5EP3Job $(WHERE)\$(PROJECT).exe $(WHERE)\gmon.out >> GProf.txt
 
 ifeq (32,$(BITS))
 drmemory: compile
