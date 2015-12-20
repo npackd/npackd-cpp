@@ -207,11 +207,13 @@ void AbstractRepository::process(Job *job,
 
                 Job* sub = job->newSubJob(0.7 / n, txt, true, true);
 
+                // dir is not the final installation directory. It can be
+                // changed later during the installation.
                 QString dir = op->where;
                 if (dir.isEmpty()) {
                     dir = pv->getIdealInstallationDirectory();
-                    dir = WPMUtils::findNonExistingFile(dir, "");
                 }
+                dir = WPMUtils::findNonExistingFile(dir, "");
 
                 QDir d;
                 if (d.exists(dir)) {

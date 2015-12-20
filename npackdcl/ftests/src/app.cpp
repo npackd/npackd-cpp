@@ -166,7 +166,7 @@ void App::addToExistingDir()
     QString output = captureNpackdCLOutput(
             "add -p active-directory-explorer -f \"" + path + "\"");
     QVERIFY2(output.contains(
-            "directory already exists"),
+            "already exists"),
             output.toLatin1());
 }
 
