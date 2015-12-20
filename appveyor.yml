@@ -6,6 +6,8 @@ clone_folder: c:\projects\Npackd
 environment:
   version: 1.21
   matrix:
+  - bits: 64
+    prg: npackdcl
   - bits: 32
     prg: npackdcl
   - bits: 64
