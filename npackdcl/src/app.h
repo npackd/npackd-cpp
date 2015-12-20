@@ -46,6 +46,7 @@ private:
     QString detect();
     QString listRepos();
     QString which();
+    QString where();
     QString check();
     QString getInstallPath();
     QString setInstallPath();

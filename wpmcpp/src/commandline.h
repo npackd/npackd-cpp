@@ -35,6 +35,12 @@ public:
         bool multiple;
 
         /**
+         * the list of allowed commands for this option or an empty list if this
+         * option is "global" and should be available in all options
+         */
+        QStringList allowedCommands;
+
+        /**
          * does this option matches the specified name
          *
          * @param name short or long name for an option
@@ -78,9 +84,11 @@ public:
      * @param valueDescription description of the value for this option.
      *     If "", a value is not possible.
      * @param multiple true if multiple occurences of this option are allowed
+     * @param allowedCommands comma separated list of allowed commands or an
+     *     an empty string if this command is "global"
      */
     void add(QString name, char name2, QString description, QString valueDescription,
-            bool multiple);
+            bool multiple, const QString& allowedCommands="");
 
     /**
      * Print the option description

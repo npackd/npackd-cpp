@@ -136,7 +136,7 @@ CommandLine::Option* CommandLine::findOption(const QString& name)
 }
 
 void CommandLine::add(QString name, char name2, QString description,
-        QString valueDescription, bool multiple)
+        QString valueDescription, bool multiple, const QString &allowedCommands)
 {
     Option* opt = new Option();
     opt->name = name;
@@ -144,6 +144,8 @@ void CommandLine::add(QString name, char name2, QString description,
     opt->description = description;
     opt->valueDescription = valueDescription;
     opt->multiple = multiple;
+    opt->allowedCommands = allowedCommands.split(',');
+
     this->options.append(opt);
 }
 

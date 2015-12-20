@@ -70,16 +70,17 @@ int App::process()
             "[c][k][s]", false);
     cl.add("file", 'f', "file or directory", "file", false);
     cl.add("install", 'i',
-            "install a package it was not installed", "", false);
+            "install a package if it was not installed", "", false);
     cl.add("keep-directories", 'k',
-            "use the same directories for updated packages", "", false);
+            "use the same directories for updated packages", "", false,
+            "update");
     cl.add("non-interactive", 'n',
             "assume that there is no user and do not ask for input", "", false);
     cl.add("package", 'p',
             "internal package name (e.g. com.example.Editor or just Editor)",
             "package", true);
     cl.add("query", 'q', "search terms (e.g. editor)",
-            "search terms", false);
+            "search terms", false, "search");
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
             "range", false);
     cl.add("status", 's', "filters package versions by status",
@@ -118,7 +119,22 @@ int App::process()
     } else {
         const QString cmd = fr.at(0);
 
-        if (cmd == "help") {
+        QList<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
+        for (int i = 0; i < parsed.count(); i++) {
+            CommandLine::Option* opt = parsed.at(i)->opt;
+            if (opt->allowedCommands.count() > 0) {
+                // qDebug() << "1" << opt->allowedCommands.count();
+                if (!opt->allowedCommands.contains(cmd)) {
+                    err = "The option --" + opt->name +
+                            " is not allowed for the command \"" + cmd + "\"";
+                    break;
+                }
+            }
+        }
+
+        if (!err.isEmpty()) {
+            // nothing
+        } else if (cmd == "help") {
             usage();
         } else if (cmd == "path") {
             err = path();
@@ -156,6 +172,8 @@ int App::process()
             err = DBRepository::getDefault()->openDefault("default", true);
             if (err.isEmpty())
                 err = which();
+        } else if (cmd == "where") {
+            err = where();
         } else if (cmd == "list") {
             err = DBRepository::getDefault()->openDefault("default", true);
             if (err.isEmpty())
@@ -220,15 +238,15 @@ QString App::addNpackdCL()
 void App::usage()
 {
     WPMUtils::writeln(QString(
-            "NCL %1 - Npackd command line tool").
+            "ncl %1 - Npackd command line tool").
             arg(NPACKD_VERSION));
     const char* lines[] = {
         "Usage:",
         "    ncl add (--package=<package>",
         "            [--version=<version> | --versions=<versions>])+ ",
         "            [--non-interactive] [--file=<installation directory>]",
-        "        installs packages. The newest available version will be installed, ",
-        "        if none is specified.",
+        "        installs packages. The newest available version will be ",
+        "        installed, if none is specified.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
         "    ncl add-repo --url=<repository>",
@@ -236,9 +254,11 @@ void App::usage()
         "    ncl check",
         "        checks the installed packages for missing dependencies",
         "    ncl detect [--non-interactive]",
-        "        detect packages from the MSI database and software control panel",
+        "        download repositories and detect packages from the MSI ",
+        "        database and software control panel",
         "    ncl info --package=<package> [--version=<version>]",
-        "        shows information about the specified package or package version",
+        "        shows information about the specified package or package",
+        "        version",
         "    ncl install-dir",
         "        prints the directory where packages will be installed",
         "    ncl list [--status=installed | all] [--bare-format]",
@@ -273,6 +293,9 @@ void App::usage()
         "        and installing the newest version. ",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
+        "    ncl where --file=<relative path>",
+        "        finds all installed packages with the specified file or",
+        "            directory",
         "    ncl which --file=<file>",
         "        finds the package that owns the specified file or directory",
         "Options:",
@@ -353,6 +376,32 @@ QString App::which()
         } else
             WPMUtils::writeln(QString("No package found for \"%1\"").
                     arg(file));
+    }
+
+    return r;
+}
+
+QString App::where()
+{
+    QString r;
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    r = ip->readRegistryDatabase();
+
+    QString file = cl.get("file");
+    if (r.isEmpty()) {
+        if (file.isNull()) {
+            r = "Missing option: --file";
+        }
+    }
+
+    if (r.isEmpty()) {
+        QStringList paths = ip->getAllInstalledPackagePaths();
+        for (int i = 0; i < paths.count(); i++) {
+            QFileInfo fi(paths[i], file);
+            if (fi.exists())
+                WPMUtils::writeln(paths[i] + "\\" + file);
+        }
     }
 
     return r;

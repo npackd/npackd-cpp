@@ -387,6 +387,12 @@ void App::search()
             contains("packages found"));
 }
 
+void App::where()
+{
+    QVERIFY(captureNpackdCLOutput("where -f .Npackd\\Install.bat").
+            contains("\\.Npackd\\Install.bat"));
+}
+
 void App::info()
 {
     QVERIFY(captureNpackdCLOutput("info -p io.mpv.mpv").

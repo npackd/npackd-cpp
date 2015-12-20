@@ -109,6 +109,11 @@ private slots:
     void search();
 
     /**
+     * @brief "where"
+     */
+    void where();
+
+    /**
      * @brief "add-repo"/"remove-repo"
      */
     void addRemoveRepo();
