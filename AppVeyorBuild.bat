@@ -4,9 +4,9 @@ rem This script is used by AppVeyor to build the project.
 
 where appveyor
 
-if %bits% equ 64 goto bits64
-
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
+
+if %bits% equ 64 goto bits64
 
 set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads\bin\mingw32-make.exe
 goto start
