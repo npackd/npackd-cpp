@@ -145,6 +145,10 @@ void CommandLine::add(QString name, char name2, QString description,
     opt->valueDescription = valueDescription;
     opt->multiple = multiple;
     opt->allowedCommands = allowedCommands.split(',');
+    if (opt->allowedCommands.count() == 1 &&
+            opt->allowedCommands.at(0).isEmpty()) {
+        opt->allowedCommands.clear();
+    }
 
     this->options.append(opt);
 }
