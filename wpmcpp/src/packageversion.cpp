@@ -472,6 +472,8 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput)
 
     QString initialTitle = job->getTitle();
 
+    QString where = getPath();
+
     QDir d(getPath());
 
     QFuture<void> deleteShortcutsFuture;
@@ -578,6 +580,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput)
     // Uninstall.bat may have deleted some files
     d.refresh();
 
+    bool success = false;
     if (job->getErrorMessage().isEmpty()) {
         if (d.exists()) {
             Job* rjob = job->newSubJob(0.54, QObject::tr("Deleting files"));
@@ -588,6 +591,8 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput)
             QString err = setPath("");
             if (!err.isEmpty())
                 job->setErrorMessage(err);
+            else
+                success = true;
         }
     }
 
@@ -609,6 +614,16 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput)
     job->setTitle(initialTitle);
 
     deleteShortcutsFuture.waitForFinished();
+
+    if (success)
+        WPMUtils::reportEvent(QObject::tr(
+                "The package %1 was removed successfully from %2").
+                arg(this->toString(true), where));
+    else
+        WPMUtils::reportEvent(QObject::tr(
+                "The removal of the package %1 from %2 failed: %3").
+                arg(this->toString(true), where, job->getErrorMessage()),
+                EVENTLOG_ERROR_TYPE);
 
     job->complete();
 }
@@ -1540,6 +1555,7 @@ void PackageVersion::install(Job* job, const QString& where,
     if (installationScriptAcquired)
         installationScripts.release();
 
+    bool success = false;
     if (job->shouldProceed()) {
         QString err = InstalledPackages::getDefault()->setPackageVersionPath(
                 this->package, this->version, where);
@@ -1547,6 +1563,12 @@ void PackageVersion::install(Job* job, const QString& where,
         //        this->version); // integrate in setPackageVersionPath?
         if (!err.isEmpty())
             job->setErrorMessage(err);
+        else {
+            WPMUtils::reportEvent(QObject::tr(
+                    "The package %1 was installed successfully in %2").
+                    arg(this->toString(true), where));
+            success = true;
+        }
     }
 
     if (job->shouldProceed()) {
@@ -1575,6 +1597,13 @@ void PackageVersion::install(Job* job, const QString& where,
 
     if (job->shouldProceed()) {
         job->setProgress(1);
+    }
+
+    if (!success) {
+        WPMUtils::reportEvent(QObject::tr(
+                "The installation of the package %1 in %2 failed: %3").
+                arg(this->toString(true), where, job->getErrorMessage()),
+                EVENTLOG_ERROR_TYPE);
     }
 
     job->complete();

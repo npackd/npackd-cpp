@@ -2278,6 +2278,22 @@ p, li { white-space: pre-wrap; }
         <source>Invalid dependency link</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>The package %1 was installed successfully in %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The package %1 was removed successfully from %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The removal of the package %1 from %2 failed: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The installation of the package %1 in %2 failed: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

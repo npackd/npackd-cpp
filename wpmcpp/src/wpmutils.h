@@ -22,6 +22,8 @@
 class WPMUtils
 {
 private:
+    static HANDLE hEventLog;
+
     WPMUtils();
 
     static bool isProcessRunning(HANDLE process);
@@ -624,6 +626,14 @@ public:
             const QStringList& env, bool printScriptOutput,
             QString *lastOutputLines=0);
 
+    /**
+     * @brief reports an event using the Windows Log API
+     * @param msg message
+     * @param wType information type as in ReportEvent
+     *      (e.g. EVENTLOG_INFORMATION_TYPE)
+     */
+    static void reportEvent(const QString& msg,
+            WORD wType=EVENTLOG_INFORMATION_TYPE);
 };
 
 #endif // WPMUTILS_H

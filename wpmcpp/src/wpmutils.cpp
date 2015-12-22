@@ -49,6 +49,8 @@
 #include "windowsregistry.h"
 #include "mstask.h"
 
+HANDLE WPMUtils::hEventLog = 0;
+
 const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
 
 const char* WPMUtils::CRLF = "\r\n";
@@ -2571,7 +2573,24 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
     executeFile(job, d.absolutePath(), exe,
             "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
             d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput,
-            lastOutputLines);
+                lastOutputLines);
+}
+
+void WPMUtils::reportEvent(const QString &msg, WORD wType)
+{
+    if (hEventLog == 0) {
+        hEventLog = RegisterEventSource(NULL, L"Npackd");
+    }
+
+    if (hEventLog) {
+        // qDebug() << "ReportEvent";
+        LPCWSTR strings[1];
+        strings[0] = (LPCWSTR) msg.utf16();
+
+        ReportEvent(hEventLog, wType, 0, 1, NULL,
+                1, 0, strings,
+                NULL);
+    }
 }
 
 void WPMUtils::executeFile(Job* job, const QString& where,
