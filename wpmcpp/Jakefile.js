@@ -49,6 +49,49 @@ task("qmake", ["printvars"], function(params) {
 	cp.execSync(c, { stdio: 'inherit' });
 });
 
+desc('Delete temporary files and directories');
+task('clean', ["printvars"], function (params) {
+	console.log("Cleaning...");
+    var c = "rmdir /s /q \"" + WHERE + "\"";
+	cp.execSync(c, { stdio: 'inherit' });
+});
+
+desc('Prepare');
+task('prep', ["compile"], function (params) {
+	console.log("Preparing...");
+    var c = "rmdir /s /q \"" + WHERE + "\"";
+	cp.execSync(c, { stdio: 'inherit' });
+    /*
+	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
+	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
+	copy LICENSE.txt $(WHERE)\zip
+	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
+	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip\npackdg.exe
+	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
+ifeq (32,$(BITS))
+	copy "$(MINGWUTILS)\bin\exchndl.dll" $(WHERE)\zip
+endif
+ */
+});
+
+desc('Create the .zip file');
+task('zip', ["prep"], function (params) {
+	console.log("Zipping...");
+    var c = "cd $(WHERE)\\zip && \"$(SEVENZIP)\\7z\" a ..\\Npackd$(BITS)-$(VERSION).zip *";
+	cp.execSync(c, { stdio: 'inherit' });
+});
+
+desc('Create the .msi file');
+task('msi', ["prep"], function (params) {
+	console.log("Creating the .msi file...");
+    var c = "cd $(WHERE)\\zip && \"$(SEVENZIP)\\7z\" a ..\\Npackd$(BITS)-$(VERSION).zip *";
+	cp.execSync(c, { stdio: 'inherit' });
+    /*
+	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\wpmcpp$(BITS).aip /SetVersion $(VERSION)
+	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\wpmcpp$(BITS).aip
+    */
+});
+
 desc('Compile the program');
 task('compile', ["printvars"], function (params) {
 	console.log("Compiling...");
