@@ -19,7 +19,10 @@ private:
             const QString &where);
 public:
     App();
+
 private slots:
+    void init();
+
     /**
      * @brief "add"/"remove"
      */
@@ -112,6 +115,11 @@ private slots:
      * @brief "where"
      */
     void where();
+
+    /**
+     * @brief "set-repo"
+     */
+    void setRepo();
 
     /**
      * @brief "add-repo"/"remove-repo"

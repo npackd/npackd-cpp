@@ -17,6 +17,15 @@ App::App()
     this->admin = true;
 }
 
+void App::init()
+{
+    captureNpackdCLOutput("set-repo "
+            "-u https://npackd.appspot.com/rep/xml?tag=stable "
+            "-u https://npackd.appspot.com/rep/xml?tag=stable64 "
+            "-u https://npackd.appspot.com/rep/recent-xml "
+            "-u https://npackd.appspot.com/rep/xml?tag=libs ");
+}
+
 QString App::captureNpackdCLOutput(const QString& params)
 {
     QDir d(WPMUtils::getExeDir() + "\\..\\..\\..\\..\\build\\32\\release");
@@ -391,6 +400,14 @@ void App::where()
 {
     QVERIFY(captureNpackdCLOutput("where -f .Npackd\\Install.bat").
             contains("\\.Npackd\\Install.bat"));
+}
+
+void App::setRepo()
+{
+    QVERIFY(captureNpackdCLOutput("set-repo -u file:///C:/Users/t/projects/npackd-cpp/TestRepository2.xml").
+            contains("repositories were changed successfully"));
+    QVERIFY(captureNpackdCLOutput("list-repos").
+            contains("file:///C:/Users/t/projects/npackd-cpp/TestRepository2.xml"));
 }
 
 void App::info()

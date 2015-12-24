@@ -156,6 +156,8 @@ int App::process()
             }
         } else if (cmd == "add-repo") {
             err = addRepo();
+        } else if (cmd == "set-repo") {
+            err = setRepo();
         } else if (cmd == "remove-repo") {
             err = removeRepo();
         } else if (cmd == "list-repos") {
@@ -280,6 +282,8 @@ void App::usage()
         "        (e.g. App instead of com.example.App)",
         "    ncl remove-repo --url=<repository>",
         "        removes a repository from the list",
+        "    ncl set-repo (--url=<repository>)+",
+        "        changes the currently defined repositories",
         "    ncl search [--query=<search terms>] [--status=installed | all]",
         "            [--bare-format]",
         "        full text search. Lists found packages sorted by package name.",
@@ -552,6 +556,46 @@ QString App::addRepo()
     }
 
     delete url_;
+
+    return err;
+}
+
+QString App::setRepo()
+{
+    QString err;
+
+    QStringList urls_ = cl.getAll("url");
+
+    if (err.isEmpty()) {
+        if (urls_.count() == 0) {
+            err = "Missing option: --url";
+        }
+    }
+
+    if (err.isEmpty()) {
+        QList<QUrl*> urls;
+        for (int i = 0; i < urls_.count(); i++) {
+            if (!err.isEmpty())
+                break;
+
+            QString url = urls_.at(i);
+            QUrl* url_ = new QUrl();
+            url_->setUrl(url, QUrl::StrictMode);
+            if (!url_->isValid()) {
+                err = "Invalid URL: " + url;
+            } else {
+                urls.append(url_);
+            }
+        }
+
+        if (err.isEmpty()) {
+            AbstractRepository::setRepositoryURLs(urls, &err);
+            if (err.isEmpty())
+                WPMUtils::writeln("The repositories were changed successfully");
+        }
+
+        qDeleteAll(urls);
+    }
 
     return err;
 }
