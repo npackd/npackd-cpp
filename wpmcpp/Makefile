@@ -101,7 +101,7 @@ $(WHERE):
 	-mkdir $(WHERE)
 
 # rem note how && directly follows \bin. Otherwise the path would contain a space
-$(WHERE)/../Makefile: translations src/wpmcpp.pro $(WHERE) 
+$(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE) 
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 
 compile: printvars $(WHERE) $(WHERE)/../Makefile
