@@ -107,9 +107,8 @@ $(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE)
 compile: printvars $(WHERE) $(WHERE)/../Makefile
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
 
-prep: compile $(WHERE)/zip
+prep: translations compile $(WHERE)/zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
-	set path=$(MINGW)\bin&& "$(QT)\qtbase\bin\lrelease.exe" ..\..\..\src\wpmcpp.pro
 	copy LICENSE.txt $(WHERE)\zip
 	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
 	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip\npackdg.exe
