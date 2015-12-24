@@ -811,28 +811,29 @@ QString InstalledPackages::readRegistryDatabase()
                 }
             }
 
-            if (dir.isEmpty())
-                continue;
-
-            dir = WPMUtils::normalizePath(dir, false);
-
-            InstalledPackageVersion* ipv = new InstalledPackageVersion(
-                    packageName, version, dir);
-            ipv->detectionInfo = entryWR.get("DetectionInfo", &err);
-            if (!err.isEmpty()) {
-                // ignore
-                ipv->detectionInfo = "";
-                err = "";
-            }
-
-            if (!ipv->directory.isEmpty()) {
-                /*
-                qDebug() << "adding " << ipv->package <<
-                        ipv->version.getVersionString() << "in" <<
-                        ipv->directory;*/
-                ipvs.append(ipv);
+            if (dir.isEmpty()) {
+                packagesWR.remove(name);
             } else {
-                delete ipv;
+                dir = WPMUtils::normalizePath(dir, false);
+
+                InstalledPackageVersion* ipv = new InstalledPackageVersion(
+                        packageName, version, dir);
+                ipv->detectionInfo = entryWR.get("DetectionInfo", &err);
+                if (!err.isEmpty()) {
+                    // ignore
+                    ipv->detectionInfo = "";
+                    err = "";
+                }
+
+                if (!ipv->directory.isEmpty()) {
+                    /*
+                    qDebug() << "adding " << ipv->package <<
+                            ipv->version.getVersionString() << "in" <<
+                            ipv->directory;*/
+                    ipvs.append(ipv);
+                } else {
+                    delete ipv;
+                }
             }
         }
     }
