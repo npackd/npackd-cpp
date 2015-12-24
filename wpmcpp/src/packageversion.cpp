@@ -1563,12 +1563,8 @@ void PackageVersion::install(Job* job, const QString& where,
         //        this->version); // integrate in setPackageVersionPath?
         if (!err.isEmpty())
             job->setErrorMessage(err);
-        else {
-            WPMUtils::reportEvent(QObject::tr(
-                    "The package %1 was installed successfully in %2").
-                    arg(this->toString(true), where));
+        else
             success = true;
-        }
     }
 
     if (job->shouldProceed()) {
@@ -1595,15 +1591,19 @@ void PackageVersion::install(Job* job, const QString& where,
         removeDirectory(rjob, d.absolutePath());
     }
 
-    if (job->shouldProceed()) {
-        job->setProgress(1);
-    }
-
-    if (!success) {
+    if (success) {
+        WPMUtils::reportEvent(QObject::tr(
+                "The package %1 was installed successfully in %2").
+                arg(this->toString(true), where));
+    } else {
         WPMUtils::reportEvent(QObject::tr(
                 "The installation of the package %1 in %2 failed: %3").
                 arg(this->toString(true), where, job->getErrorMessage()),
                 EVENTLOG_ERROR_TYPE);
+    }
+
+    if (job->shouldProceed()) {
+        job->setProgress(1);
     }
 
     job->complete();

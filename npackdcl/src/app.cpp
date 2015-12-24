@@ -267,7 +267,7 @@ void App::usage()
         "        lists package versions sorted by package name and version.",
         "        Please note that since 1.18 only installed package versions",
         "        are listed regardless of the --status switch.",
-        "    ncl list-repos",
+        "    ncl list-repos [--bare-format]",
         "        list currently defined repositories",
         "    ncl help",
         "        prints this help",
@@ -326,12 +326,17 @@ void App::usage()
 
 QString App::listRepos()
 {
+    bool bare = cl.isPresent("bare-format");
+
     QString err;
 
     QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
     if (err.isEmpty()) {
-        WPMUtils::writeln(QString("%1 repositories are defined:\r\n").
-                arg(urls.size()));
+        if (!bare) {
+            WPMUtils::writeln(QString("%1 repositories are defined:").
+                    arg(urls.size()));
+            WPMUtils::writeln("");
+        }
         for (int i = 0; i < urls.size(); i++) {
             WPMUtils::writeln(urls.at(i)->toString());
         }
