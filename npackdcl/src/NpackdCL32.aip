@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="9.2" version="12.5.1" Modules="simple" RootPath="." Language="en" Id="{04DE8303-22E7-409E-812B-56D06405BC5A}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="9.2" version="12.6.1" Modules="simple" RootPath="." Language="en" Id="{04DE8303-22E7-409E-812B-56D06405BC5A}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiValidationComponent">
     <ROW Table="File" Column="Sequence" MinValue="1" MaxValue="32767" Description="Sequence with respect to the media images; order must track cabinet order." Options="0" ColumnType="2" ColumnIndex="7" ColumnSize="2" MsiKey="File#Sequence"/>
     <ROW Table="Media" Column="LastSequence" MinValue="0" MaxValue="32767" Description="File sequence number for the last file for this media." Options="0" ColumnType="2" ColumnIndex="1" ColumnSize="2" MsiKey="Media#LastSequence"/>
@@ -26,6 +26,8 @@
     <ROW Property="WindowsType9XDisplay" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
     <ROW Property="WindowsTypeNT40" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
     <ROW Property="WindowsTypeNT40Display" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50Display" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
@@ -34,20 +36,18 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="LICENSE.txt" ComponentId="{CFB73385-E11A-487C-A726-EC25BA9E9B5B}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
     <ROW Component="ProductInformation" ComponentId="{49ADC35E-0FE6-48E5-BCBD-7E13F264B4DE}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="exchndl.dll" ComponentId="{3C2DFEA1-5BB3-43FB-ACF8-F763677E6850}" Directory_="APPDIR" Attributes="0" KeyPath="exchndl.dll"/>
     <ROW Component="ncl.exe" ComponentId="{BDF37242-4340-48EE-97E9-8CF246CE2022}" Directory_="APPDIR" Attributes="0" KeyPath="ncl.exe"/>
     <ROW Component="npackdcl.exe" ComponentId="{2351B06C-B722-4395-B56C-D6C28FE4CECF}" Directory_="APPDIR" Attributes="0" KeyPath="npackdcl.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation exchndl.dll ncl.exe npackdcl.exe"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt ProductInformation ncl.exe npackdcl.exe"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
     <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="..\CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="ncl.exe"/>
     <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="..\LICENSE.txt" SelfReg="false" NextFile="npackdcl.exe"/>
-    <ROW File="exchndl.dll" Component_="exchndl.dll" FileName="exchndl.dll" Attributes="0" SourcePath="..\build\32\release\zip\exchndl.dll" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
     <ROW File="ncl.exe" Component_="ncl.exe" FileName="ncl.exe" Attributes="0" SourcePath="..\build\32\release\zip\ncl.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="npackdcl.exe" Component_="npackdcl.exe" FileName="npackdcl.exe" Attributes="0" SourcePath="..\build\32\release\zip\npackdcl.exe" SelfReg="false" NextFile="exchndl.dll"/>
+    <ROW File="npackdcl.exe" Component_="npackdcl.exe" FileName="npackdcl.exe" Attributes="0" SourcePath="..\build\32\release\zip\npackdcl.exe" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="..\build\32\release" PackageFileName="NpackdCL-[|ProductVersion]" Languages="en" InstallationType="4" UseLargeSchema="true"/>
@@ -132,7 +132,8 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
     <ROW Condition="(VersionNT &lt;&gt; 400)" Description="[ProductName] cannot be installed on the following Windows versions: [WindowsTypeNT40Display]" DescriptionLocId="AI.LaunchCondition.NoNT40" IsPredefined="true" Builds="DefaultBuild"/>
-    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]" DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT &lt;&gt; 500)" Description="[ProductName] cannot be installed on [WindowsTypeNT50Display]." DescriptionLocId="AI.LaunchCondition.NoNT50" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]." DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
     <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>

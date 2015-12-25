@@ -35,7 +35,6 @@ endif
 RPAREN=)
 AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 20$(RPAREN)")
 SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 20$(RPAREN)")
-MINGWUTILS=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.mingw.MinGWUtilities" "--versions=[0.3, 0.3]")
 PUTTY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=uk.org.greenend.chiark.sgtatham.Putty" "--versions=[0.62, 2$(RPAREN)")
 VERSION=$(shell cmd /c type version.txt)
 
@@ -56,7 +55,6 @@ printvars:
 	@echo AI=$(AI)
 	@echo SEVENZIP=$(SEVENZIP)
 	@echo QUAZIP=$(QUAZIP)
-	@echo MINGWUTILS=$(MINGWUTILS)
 	@echo PUTTY=$(PUTTY)
 	@echo WHERE=$(WHERE)
 	@echo CONFIG=$(CONFIG)
@@ -84,9 +82,6 @@ endif
 ifndef QUAZIP
 	$(error QUAZIP is not defined)
 endif
-ifndef MINGWUTILS
-	$(error MINGWUTILS is not defined)
-endif
 ifndef PUTTY
 	$(error PUTTY is not defined)
 endif
@@ -113,9 +108,6 @@ prep: translations compile $(WHERE)/zip
 	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
 	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip\npackdg.exe
 	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
-ifeq (32,$(BITS))
-	copy "$(MINGWUTILS)\bin\exchndl.dll" $(WHERE)\zip
-endif
 
 zip: prep
 	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\Npackd$(BITS)-$(VERSION).zip *
