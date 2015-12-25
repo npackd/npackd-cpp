@@ -105,7 +105,7 @@ $(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE)
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 
 compile: printvars $(WHERE) $(WHERE)/../Makefile
-	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe" -j 3
+	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe"
 
 prep: translations compile $(WHERE)/zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
@@ -141,6 +141,6 @@ upload: zip msi
 		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 
 translations:
-	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\lupdate.exe" -locations none ..\..\src\wpmcpp.pro
-	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\lrelease.exe" ..\..\src\wpmcpp.pro
+	set path=$(MINGW)\bin&&"$(QT)\qtbase\bin\lupdate.exe" -locations none src\wpmcpp.pro
+	set path=$(MINGW)\bin&&"$(QT)\qtbase\bin\lrelease.exe" src\wpmcpp.pro
 
