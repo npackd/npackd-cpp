@@ -104,8 +104,3 @@ QMAKE_LFLAGS_RELEASE += -Wl,-Map,npackdcl_release.map
 QMAKE_CXXFLAGS_RELEASE += -g
 QMAKE_LFLAGS_RELEASE -= -Wl,-s
 
-gprof {
-    QMAKE_CXXFLAGS+=-pg
-    QMAKE_LFLAGS+=-pg
-}
-
