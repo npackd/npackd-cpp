@@ -90,7 +90,7 @@ public:
     bool autoFulfilledIf(const Dependency& dep);
 
     /**
-     * @return [ownership:callser] the newest package version that matches this
+     * @return [ownership:caller] the newest package version that matches this
      *     dependency and are installed
      */
     InstalledPackageVersion* findHighestInstalledMatch() const;

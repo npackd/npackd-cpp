@@ -216,7 +216,7 @@ void MainWindow::showDetails()
                             findPackage_(p->name);
                     if (p_) {
                         pf->fillForm(p_);
-                        QIcon icon = getPackageVersionIcon(p->name);
+                        QIcon icon = getPackageIcon(p->name);
                         QString t = p->title;
                         if (t.isEmpty())
                             t = p->name;
@@ -250,13 +250,13 @@ void MainWindow::updateIcon(const QString& url)
         PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
         if (pvf) {
             pvf->updateIcons();
-            QIcon icon = getPackageVersionIcon(pvf->pv->package);
+            QIcon icon = getPackageIcon(pvf->pv->package);
             this->ui->tabWidget->setTabIcon(i, icon);
         }
         PackageFrame* pf = dynamic_cast<PackageFrame*>(w);
         if (pf) {
             pf->updateIcons(url);
-            QIcon icon = getPackageVersionIcon(pf->p->name);
+            QIcon icon = getPackageIcon(pf->p->name);
             this->ui->tabWidget->setTabIcon(i, icon);
         }
     }
@@ -330,7 +330,7 @@ void MainWindow::updateStatusInDetailTabs()
     }
 }
 
-QIcon MainWindow::getPackageVersionIcon(const QString& package)
+QIcon MainWindow::getPackageIcon(const QString& package)
 {
     MainWindow* mw = MainWindow::getInstance();
     AbstractRepository* r = AbstractRepository::getDefault_();
@@ -1506,11 +1506,32 @@ void MainWindow::openPackageVersion(const QString& package,
             addErrorMessage(err, err, true, QMessageBox::Critical);
         if (pv_) {
             pvf->fillForm(pv_);
-            QIcon icon = getPackageVersionIcon(package);
+            QIcon icon = getPackageIcon(package);
             this->ui->tabWidget->addTab(pvf, icon, pv_->toString());
             index = this->ui->tabWidget->count() - 1;
         }
     }
+    if (select)
+        this->ui->tabWidget->setCurrentIndex(index);
+}
+
+void MainWindow::openPackage(const QString& package, bool select)
+{
+    int index = this->findPackageTab(package);
+    if (index < 0) {
+        PackageFrame* pf = new PackageFrame(this->ui->tabWidget);
+        Package* p_ = DBRepository::getDefault()->findPackage_(package);
+        if (p_) {
+            pf->fillForm(p_);
+            QIcon icon = getPackageIcon(package);
+            QString t = p_->title;
+            if (t.isEmpty())
+                t = package;
+            this->ui->tabWidget->addTab(pf, icon, t);
+            index = this->ui->tabWidget->count() - 1;
+        }
+    }
+
     if (select)
         this->ui->tabWidget->setCurrentIndex(index);
 }

@@ -132,7 +132,7 @@ public:
      * @param package full package name
      * @return icon for the specified package
      */
-    static QIcon getPackageVersionIcon(const QString& package);
+    static QIcon getPackageIcon(const QString& package);
 
     /**
      * @return the only instance of this class
@@ -238,6 +238,15 @@ public:
      */
     void openPackageVersion(const QString& package,
             const Version& version, bool select);
+
+    /**
+     * @brief opens a new tab for the specified package. A new tab will
+     *     not be created if there is already a tab for the package. The
+     *     package should exist.
+     * @param package full package name
+     * @param select true = select the newly created tab
+     */
+    void openPackage(const QString& package, bool select);
 
     /**
      * @brief opens a new tab for the specified license. A new tab will

@@ -25,7 +25,7 @@ PackageVersionForm::PackageVersionForm(QWidget *parent) :
 
 void PackageVersionForm::updateIcons()
 {
-    QIcon icon = MainWindow::getPackageVersionIcon(this->pv->package);
+    QIcon icon = MainWindow::getPackageIcon(this->pv->package);
     QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
     this->ui->labelIcon->setPixmap(pixmap);
 }
@@ -143,11 +143,29 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
         Dependency* d = pv->dependencies.at(i);
 
         QString txt = "<a href=\"" + QString::number(i) + "\">" +
-                d->toString() + "</a>";
+                d->toString() + "</a> ";
+
+        /*
+        InstalledPackageVersion* ipv = d->findHighestInstalledMatch();
+        if (ipv) {
+            txt += "resolved to " + ipv->version.getVersionString();
+            delete ipv;
+        } else {
+            QList<PackageVersion*> avoid;
+            PackageVersion* pv = d->findBestMatchToInstall(avoid, &err);
+            if (pv) {
+                txt += "resolved to " + pv->version.getVersionString();
+                delete pv;
+            } else {
+                txt += QObject::tr("This dependency is not available");
+            }
+        }
+        */
+
         QLabel* label = new QLabel(txt);
         label->setMouseTracking(true);
         label->setFocusPolicy(Qt::StrongFocus);
-        label->setToolTip(QObject::tr("Show the package version this dependency is resolved to"));
+        label->setToolTip(QObject::tr("Show the package for this dependency"));
         label->setTextInteractionFlags(Qt::TextSelectableByMouse |
                 Qt::TextSelectableByKeyboard | Qt::LinksAccessibleByMouse |
                 Qt::LinksAccessibleByKeyboard);
@@ -216,21 +234,7 @@ void PackageVersionForm::dependencyLinkActivated(const QString &link)
     int index = link.toInt(&ok);
     if (ok && index < this->pv->dependencies.count()) {
         Dependency* d = pv->dependencies.at(index);
-        InstalledPackageVersion* ipv = d->findHighestInstalledMatch();
-        if (ipv) {
-            MainWindow::getInstance()->openPackageVersion(
-                    ipv->package, ipv->version, true);
-        } else {
-            QList<PackageVersion*> avoid;
-            PackageVersion* pv = d->findBestMatchToInstall(avoid, &err);
-            if (pv) {
-                MainWindow::getInstance()->openPackageVersion(
-                        pv->package, pv->version, true);
-                delete pv;
-            } else {
-                err = QObject::tr("This dependency is not available");
-            }
-        }
+        MainWindow::getInstance()->openPackage(d->package, true);
     } else {
         err = QObject::tr("Invalid dependency link");
     }
