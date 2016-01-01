@@ -37,6 +37,10 @@
 #include <QDockWidget>
 #include <QTreeWidget>
 #include <QtConcurrent/QtConcurrentRun>
+#include <QUrlQuery>
+#include <QInputDialog>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -619,6 +623,20 @@ void MainWindow::monitoredJobCompleted()
     updateProgressTabTitle();
     job->disconnect();
     job->deleteLater();
+}
+
+QString MainWindow::inputAuthCode()
+{
+    bool ok;
+    QString t = QInputDialog::getText(
+            MainWindow::getInstance(),
+            QObject::tr("Input authorization code"),
+            QObject::tr("Please switch to the browser, copy the authorization code and paste it here"),
+            QLineEdit::Normal, "", &ok);
+    if (!ok)
+        t = "";
+
+    return t;
 }
 
 void MainWindow::monitoredJobChanged(Job* state)
@@ -1607,6 +1625,8 @@ void MainWindow::on_actionSettings_triggered()
         d->setInstallationDirectory(WPMUtils::getInstallationDirectory());
 
         d->setCloseProcessType(WPMUtils::getCloseProcessType());
+
+        d->setSendInformation(WPMUtils::getSendInformation() & 1);
 
         this->ui->tabWidget->addTab(d, QObject::tr("Settings"));
         this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);

@@ -56,37 +56,6 @@ class Downloader: QObject
             PVOID buffer, DWORD bufferSize, PDWORD bufferLength);
 
     /**
-     * It would be nice to handle redirects explicitely so
-     *    that the file name could be derived
-     *    from the last URL:
-     *    http://www.experts-exchange.com/Programming/System/Windows__Programming/MFC/Q_20096714.html
-     * Manual authentication:     
-     *    http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
-     *
-     * @param job job object
-     * @param url http: or https:
-     * @param verb e.g. L"GET"
-     * @param file the content will be stored here, 0 = do not read the content
-     * @param parentWindow window handle or 0 if not UI is required
-     * @param mime if not null, MIME type will be stored here
-     * @param contentDisposition if not null, Content-Disposition will be
-     *     stored here
-     * @param sha1 if not null, SHA1 will be computed and stored here
-     * @param useCache true = use Windows Internet cache on the local disk
-     * @param alg algorithm that should be used to compute the hash sum
-     * @param keepConnection true = keep the connection open
-     * @param timeout download timeout in seconds
-     * @param interactive is the interaction with the user allowed?
-     * @return "content-length" or -1 if unknown
-     */
-    static int64_t downloadWin(Job* job, const QUrl& url,
-            LPCWSTR verb, QFile* file,
-            QString* mime, QString* contentDisposition,
-            HWND parentWindow=0, QString* sha1=0, bool useCache=false,
-            QCryptographicHash::Algorithm alg=QCryptographicHash::Sha1,
-            bool keepConnection=true, int timeout=300, bool interactive=true);
-
-    /**
      * Copies a file.
      *
      * This functionality also offers the possibility to have a full
@@ -155,15 +124,20 @@ public:
         QString httpMethod;
 
         /**
-         * if true and file==0 a new QTemporary file will be created to store
-         * the downloaded file->
-         */
-        bool createTemporaryFile;
-
-        /**
          * @brief timeout in seconds
          */
         int timeout;
+
+        /**
+         * @brief this data will be uploaded during the request
+         */
+        QByteArray postData;
+
+        /**
+         * @brief header names and values
+         *     Example: "Content-Type: application/x-www-form-urlencoded"
+         */
+        QString headers;
 
         /**
          * @param url http:/https:/file: URL
@@ -172,7 +146,7 @@ public:
                 parentWindow(0), url(url), hashSum(false),
                 alg(QCryptographicHash::Sha256), useCache(true),
                 keepConnection(true), httpMethod("GET"),
-                createTemporaryFile(false), timeout(300) {
+                timeout(300) {
         }
     };
 
@@ -217,6 +191,22 @@ public:
      */
     static QTemporaryFile *downloadToTemporary(Job *job,
             const Downloader::Request &request);
+private:
+    /**
+     * It would be nice to handle redirects explicitely so
+     *    that the file name could be derived
+     *    from the last URL:
+     *    http://www.experts-exchange.com/Programming/System/Windows__Programming/MFC/Q_20096714.html
+     * Manual authentication:
+     *    http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
+     *
+     * @param job job object
+     * @param request HTTP request
+     * @param response HTTP response
+     * @return "content-length" or -1 if unknown
+     */
+    static int64_t downloadWin(Job* job, const Downloader::Request& request,
+            Response *response);
 };
 
 #endif // DOWNLOADER_H

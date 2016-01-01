@@ -128,16 +128,14 @@ bool Dependency::autoFulfilledIf(const Dependency& dep)
         if (left < 0)
             leftOK = true;
         else if (left == 0)
-            leftOK = this->minIncluded ||
-                    (!this->minIncluded && !dep.minIncluded);
+            leftOK = this->minIncluded || !dep.minIncluded;
         else
             leftOK = false;
         bool rightOK;
         if (right > 0)
             rightOK = true;
         else if (right == 0)
-            rightOK = this->maxIncluded ||
-                    (!this->maxIncluded && !dep.maxIncluded);
+            rightOK = this->maxIncluded || !dep.maxIncluded;
         else
             rightOK = false;
 

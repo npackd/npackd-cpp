@@ -26,13 +26,22 @@ DWORD __stdcall myInternetAuthNotifyCallback(DWORD_PTR dwContext,
     return 0;
 }
 
-int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
-        QFile* file,
-        QString* mime, QString* contentDisposition,
-        HWND parentWindow, QString* sha1, bool useCache,
-        QCryptographicHash::Algorithm alg, bool keepConnection, int timeout,
-        bool interactive)
+int64_t Downloader::downloadWin(Job* job, const Request& request,
+        Downloader::Response* response)
 {
+    QUrl url = request.url;
+    QString verb = request.httpMethod;
+    QFile* file = request.file;
+    QString* mime = &response->mimeType;
+    QString* contentDisposition = &response->contentDisposition;
+    HWND parentWindow = defaultPasswordWindow;
+    QString* sha1 = &response->hashSum;
+    bool useCache = request.useCache;
+    QCryptographicHash::Algorithm alg = request.alg;
+    bool keepConnection = request.keepConnection;
+    int timeout = request.timeout;
+    bool interactive = request.interactive;
+
     QString initialTitle = job->getTitle();
 
     job->setTitle(initialTitle + " / " + QObject::tr("Connecting"));
@@ -106,7 +115,8 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         if (!useCache)
             flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
                     INTERNET_FLAG_RELOAD;
-        hResourceHandle = HttpOpenRequestW(hConnectHandle, verb,
+        hResourceHandle = HttpOpenRequestW(hConnectHandle,
+                reinterpret_cast<LPCWSTR>(verb.utf16()),
                 (WCHAR*) resource.utf16(),
                 0, 0, ppszAcceptTypes,
                 flags, 0);
@@ -131,7 +141,10 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
         // qDebug() << "download.5.1";
 
         DWORD sendRequestError = 0;
-        if (!HttpSendRequestW(hResourceHandle, 0, 0, 0, 0)) {
+        if (!HttpSendRequestW(hResourceHandle,
+                reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
+                const_cast<char*>(request.postData.data()),
+                request.postData.length())) {
             sendRequestError = GetLastError();
         }
 
@@ -144,11 +157,19 @@ int64_t Downloader::downloadWin(Job* job, const QUrl& url, LPCWSTR verb,
             break;
         }
 
+        qDebug() << callNumber <<
+                sendRequestError << dwStatus << request.httpMethod <<
+                request.url.toString();
+
         // 2XX
         if (sendRequestError == 0) {
-            if (dwStatus / 100 == 2)
+            DWORD hundreds = dwStatus / 100;
+            if (hundreds == 2 || hundreds == 5)
                 break;
         }
+
+        // the InternetErrorDlg calls below can either handle
+        // sendRequestError <> 0 or HTTP error code <> 2xx
 
         void* p = 0;
 
@@ -725,11 +746,7 @@ Downloader::Response Downloader::download(Job *job,
 
     QString* sha1 = request.hashSum ? &r.hashSum : 0;
     if (request.url.scheme() == "https" || request.url.scheme() == "http")
-        downloadWin(job, request.url, L"GET", request.file, &r.mimeType,
-                &r.contentDisposition,
-                defaultPasswordWindow, sha1, request.useCache,
-                request.alg, request.keepConnection,
-                request.timeout, request.interactive);
+        downloadWin(job, request, &r);
     else if (request.url.toString().startsWith("data:image/png;base64,")) {
         if (request.file) {
             QString dataURL_ = request.url.toString().mid(22);
@@ -775,8 +792,16 @@ int64_t Downloader::getContentLength(Job* job, const QUrl &url,
         }
         job->complete();
     } else {
-        result = downloadWin(job, url, L"HEAD", 0, 0, 0, parentWindow, 0, false,
-                QCryptographicHash::Sha1, false, 15);
+        Request req(url);
+        req.httpMethod = "HEAD";
+        req.parentWindow = parentWindow;
+        req.useCache = false;
+        req.alg = QCryptographicHash::Sha1;
+        req.keepConnection = false;
+        req.timeout = 15;
+
+        Response resp;
+        result = downloadWin(job, req, &resp);
     }
     return result;
 }
