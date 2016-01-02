@@ -19,7 +19,7 @@ goto start
 if %prg% equ npackdcl goto npackdcl
 
 :npackd
-if "%coverity%" equ "yes" goto coverity
+if "%target%" equ "coverity" goto coverity
 "%make%" -C wpmcpp zip msi PROFILE=release%bits% || exit /b %errorlevel%
 tree . /f
 appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.zip || exit /b %errorlevel%

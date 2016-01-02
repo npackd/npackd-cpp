@@ -36,6 +36,7 @@ RPAREN=)
 AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10, 20$(RPAREN)")
 SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 20$(RPAREN)")
 PUTTY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=uk.org.greenend.chiark.sgtatham.Putty" "--versions=[0.62, 2$(RPAREN)")
+DRMEMORY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=drmemory" "--versions=[1, 20$(RPAREN)")
 VERSION=$(shell cmd /c type version.txt)
 
 all:
@@ -99,10 +100,10 @@ $(WHERE):
 $(WHERE)/../Makefile: src/wpmcpp.pro $(WHERE) 
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(QT)\qtbase\bin\qmake.exe" ..\..\src\wpmcpp.pro -r -spec win32-g++ CONFIG+=$(CONFIG)
 
-compile: printvars $(WHERE) $(WHERE)/../Makefile
+compile: printvars translations $(WHERE) $(WHERE)/../Makefile
 	set path=$(MINGW)\bin&&set quazip_path=$(QUAZIP)&& cd $(WHERE)\.. && "$(MINGW)\bin\mingw32-make.exe"
 
-prep: translations compile $(WHERE)/zip
+prep: compile $(WHERE)/zip
 	cd $(WHERE) && copy ..\wpmcpp_release.map Npackd$(BITS)-$(VERSION).map
 	copy LICENSE.txt $(WHERE)\zip
 	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
@@ -118,10 +119,10 @@ msi: prep
 
 ifeq (32,$(BITS))
 memcheck: compile
-	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -report_leak_max 100000 -- wpmcpp.exe
+	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -report_leak_max 100000 -- wpmcpp.exe
 
 drmemory: compile
-	cd $(WHERE) && "C:\ProgramFiles\Dr._Memory\bin\drmemory.exe" -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
+	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
 endif
 
 upload: zip msi

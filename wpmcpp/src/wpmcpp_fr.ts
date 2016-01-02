@@ -3085,10 +3085,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Annuler</translation>
     </message>
     <message>
-        <source>Show the package version this dependency is resolved to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot parse a version range: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3098,10 +3094,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Directory %1 already exists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This dependency is not available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3122,6 +3114,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The installation of the package %1 in %2 failed: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the package for this dependency</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

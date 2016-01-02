@@ -157,9 +157,11 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             break;
         }
 
+        /*
         qDebug() << callNumber <<
                 sendRequestError << dwStatus << request.httpMethod <<
                 request.url.toString();
+        */
 
         // 2XX
         if (sendRequestError == 0) {

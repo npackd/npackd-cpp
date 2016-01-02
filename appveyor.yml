@@ -16,7 +16,7 @@ environment:
     prg: npackd
   - bits: 64
     prg: npackd
-    coverity: yes
+    target: coverity
   covtoken:
     secure: yPwsn7ojqxg5m7pxyjIf3LV1GwoHd4m3q5iQrKCDzZ4=
 #init:
