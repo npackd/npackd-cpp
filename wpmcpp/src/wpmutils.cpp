@@ -35,13 +35,6 @@
 #include <QProcessEnvironment>
 #include <QBuffer>
 #include <QByteArray>
-#include <QDesktopServices>
-#include <QInputDialog>
-#include <QLineEdit>
-#include <QJsonParseError>
-#include <QUrlQuery>
-#include <QJsonDocument>
-#include <QJsonObject>
 
 #include <quazip.h>
 #include <quazipfile.h>
@@ -55,8 +48,6 @@
 #include "version.h"
 #include "windowsregistry.h"
 #include "mstask.h"
-#include "downloader.h"
-#include "mainwindow.h"
 
 HANDLE WPMUtils::hEventLog = 0;
 
@@ -670,17 +661,6 @@ void WPMUtils::setCloseProcessType(DWORD cpt)
     }
 }
 
-void WPMUtils::setSendInformation(DWORD cpt)
-{
-    WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
-    QString err;
-    WindowsRegistry npackd = m.createSubKey("Software\\Npackd\\Npackd", &err,
-            KEY_ALL_ACCESS);
-    if (err.isEmpty()) {
-        npackd.setDWORD("sendInformation", cpt);
-    }
-}
-
 DWORD WPMUtils::getCloseProcessType()
 {
     DWORD cpt = CLOSE_WINDOW;
@@ -690,22 +670,6 @@ DWORD WPMUtils::getCloseProcessType()
             HKEY_LOCAL_MACHINE, "Software\\Npackd\\Npackd", false, KEY_READ);
     if (err.isEmpty()) {
         DWORD v = npackd.getDWORD("closeProcessType", &err);
-        if (err.isEmpty())
-            cpt = v;
-    }
-
-    return cpt;
-}
-
-DWORD WPMUtils::getSendInformation()
-{
-    DWORD cpt = 0;
-
-    WindowsRegistry npackd;
-    QString err = npackd.open(
-            HKEY_LOCAL_MACHINE, "Software\\Npackd\\Npackd", false, KEY_READ);
-    if (err.isEmpty()) {
-        DWORD v = npackd.getDWORD("sendInformation", &err);
         if (err.isEmpty())
             cpt = v;
     }
@@ -2627,97 +2591,6 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
                 1, 0, strings,
                 NULL);
     }
-}
-
-void WPMUtils::notify(Job* job_,
-        const QString &package, const Version &version,
-        bool install, bool success)
-{
-    // 40% for getting the authentication code
-    QString t;
-    QUrl auth("https://accounts.google.com/o/oauth2/v2/auth?"
-            "response_type=code&"
-            "client_id=222041139141-vqv00o07p54ql0saefqkq59nupcgamih.apps.googleusercontent.com&"
-            "redirect_uri=urn:ietf:wg:oauth:2.0:oob&"
-            "scope=email");
-    if (!QDesktopServices::openUrl(auth))
-        job_->setErrorMessage(QObject::tr("Cannot open the URL %1").
-                arg(auth.toString()));
-    else {
-        MainWindow* mw = MainWindow::getInstance();
-        QMetaObject::invokeMethod(mw, "inputAuthCode",
-                Qt::BlockingQueuedConnection,
-                Q_RETURN_ARG(QString, t));
-
-        if (!t.isEmpty())
-            job_->setProgress(0.4);
-        else
-            job_->cancel();
-    }
-
-    // 50% for requesting the authorization token
-    QString accessToken, refreshToken;
-    if (job_->shouldProceed()) {
-        QTemporaryFile f;
-        f.open();
-
-        Downloader::Request req(
-                QUrl("https://www.googleapis.com/oauth2/v4/token"));
-        QUrlQuery q;
-        q.addQueryItem("code", t);
-        q.addQueryItem("client_id",
-                "222041139141-vqv00o07p54ql0saefqkq59nupcgamih.apps.googleusercontent.com");
-        q.addQueryItem("client_secret", "7XKWAcpXNT_bqZPySrO4a7zN");
-        q.addQueryItem("redirect_uri", "urn:ietf:wg:oauth:2.0:oob");
-        q.addQueryItem("grant_type", "authorization_code");
-        req.postData = q.toString(QUrl::FullyEncoded).toUtf8();
-        req.httpMethod = "POST";
-        req.file = &f;
-        req.headers = "Content-Type: application/x-www-form-urlencoded";
-
-        Job* job = job_->newSubJob(0.5,
-                QObject::tr("Requesting authorization token"),
-                true, true);
-        Downloader::download(job, req);
-
-        qDebug() << job->getErrorMessage();
-
-        if (job->shouldProceed()) {
-            f.seek(0);
-
-            QJsonParseError jerror;
-            QJsonDocument jdoc = QJsonDocument::fromJson(
-                    f.readAll(), &jerror);
-            if (jerror.error == QJsonParseError::NoError) {
-                QJsonObject obj = jdoc.object();
-
-                refreshToken = obj["refresh_token"].toString();
-                accessToken = obj["access_token"].toString();
-
-                qDebug() << refreshToken << accessToken;
-            }
-        }
-    }
-
-    // 10% for sending the information
-    if (job_->shouldProceed()) {
-        Job* sub = job_->newSubJob(0.1,
-                QObject::tr("Sending information"), true, true);
-
-        Downloader::Request req(
-                QUrl("https://npackd.appspot.com/api/notify?package=" +
-                package + "&version=" + version.getVersionString() +
-                "&install=" + (install ? "1" : "0") +
-                "&success=" + (success ? "1" : "0")));
-        req.useCache = false;
-        req.keepConnection = false;
-        req.timeout = 15;
-        req.headers = "Authorization: Bearer " + accessToken;
-
-        Downloader::download(sub, req);
-    }
-
-    job_->complete();
 }
 
 void WPMUtils::executeFile(Job* job, const QString& where,

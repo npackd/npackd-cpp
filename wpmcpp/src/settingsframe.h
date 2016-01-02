@@ -47,22 +47,11 @@ public:
      * @param v how to close programs
      */
     void setCloseProcessType(DWORD v);
-
-    /**
-     * @return true = send information about the success of an installation/
-     *     removal to https://npackd.appspot.com
-     */
-    bool getSendInformation();
-
-    /**
-     * @param v true = send information about the success of an installation/
-     *     removal to https://npackd.appspot.com
-     */
-    void setSendInformation(bool v);
 private slots:
     void on_buttonBox_accepted();
 
     void on_buttonBox_clicked(QAbstractButton *button);
+
 private:
     Ui::SettingsFrame *ui;
 };

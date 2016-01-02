@@ -1577,7 +1577,7 @@ void PackageVersion::install(Job* job, const QString& where,
         QString err;
         this->createShortcuts(d.absolutePath(), &err);
         if (err.isEmpty())
-            job->setProgress(0.97);
+            job->setProgress(0.98);
         else
             job->setErrorMessage(err);
     }
@@ -1589,16 +1589,6 @@ void PackageVersion::install(Job* job, const QString& where,
 
         Job* rjob = job->newSubJob(0.01, QObject::tr("Deleting files"));
         removeDirectory(rjob, d.absolutePath());
-    }
-
-    if (!job->isCancelled()) {
-        if ((WPMUtils::getSendInformation() & 1) == 1) {
-            Job* sub = job->newSubJob(0.01,
-                    QObject::tr("Sending information to https://npackd.appspot.com"));
-            WPMUtils::notify(sub, this->package, this->version, true, success);
-        } else {
-            job->setProgress(1);
-        }
     }
 
     if (success) {

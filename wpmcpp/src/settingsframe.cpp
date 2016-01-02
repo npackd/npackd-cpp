@@ -74,17 +74,7 @@ void SettingsFrame::setCloseProcessType(DWORD v)
     this->ui->checkBoxDeleteFileShares->setChecked(v &
             WPMUtils::DISABLE_SHARES);
     this->ui->checkBoxKillProcesses->setChecked(v &
-                                                WPMUtils::KILL_PROCESS);
-}
-
-bool SettingsFrame::getSendInformation()
-{
-    return this->ui->checkBoxSend->isChecked();
-}
-
-void SettingsFrame::setSendInformation(bool v)
-{
-    this->ui->checkBoxSend->setChecked(v);
+            WPMUtils::KILL_PROCESS);
 }
 
 DWORD SettingsFrame::getCloseProcessType()
@@ -142,7 +132,6 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     if (err.isEmpty()) {
         WPMUtils::setInstallationDirectory(getInstallationDirectory());
         WPMUtils::setCloseProcessType(getCloseProcessType());
-        WPMUtils::setSendInformation(getSendInformation() ? 1 : 0);
     }
 
     bool repsChanged = false;

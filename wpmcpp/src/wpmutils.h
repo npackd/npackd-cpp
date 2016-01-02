@@ -543,19 +543,6 @@ public:
     static DWORD getCloseProcessType();
 
     /**
-     * @return should we send information about a package installation/removal
-     *     to https://npackd.appspot.com? 1 = yes, 0 = no
-     */
-    static DWORD getSendInformation();
-
-    /**
-     * @brief should we send information about a package installation/removal
-     *     to https://npackd.appspot.com?
-     * @param cpt 1 = yes, 0 = no
-     */
-    static void setSendInformation(DWORD cpt);
-
-    /**
      * @brief parses the command line and returns the chosen program close type
      * @param cl command line
      * @param err error message will be stored here
@@ -647,21 +634,6 @@ public:
      */
     static void reportEvent(const QString& msg,
             WORD wType=EVENTLOG_INFORMATION_TYPE);
-
-    /**
-     * @brief notifies the API at https://npackd.appspot.com about an
-     *     installation or removal of a package version
-     *
-     * @param job job
-     * @param package package name
-     * @param version package version
-     * @param install true = install, false = remove
-     * @param success true = success
-     */
-    static void notify(Job *job,
-            const QString& package,
-            const Version& version,
-            bool install, bool success);
 };
 
 #endif // WPMUTILS_H

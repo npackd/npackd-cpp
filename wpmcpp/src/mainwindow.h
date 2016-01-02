@@ -321,8 +321,6 @@ private slots:
     void on_actionToggle_toolbar_triggered(bool checked);
     void on_mainToolBar_visibilityChanged(bool visible);
     void monitoredJobCompleted();
-public slots:
-    QString inputAuthCode();
 };
 
 #endif // MAINWINDOW_H
