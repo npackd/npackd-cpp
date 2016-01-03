@@ -2030,10 +2030,12 @@ void MainWindow::on_actionUninstall_triggered()
 
     QList<InstallOperation*> ops;
     QList<PackageVersion*> installed;
+    QList<PackageVersion*> toDelete;
 
     if (err.isEmpty()) {
         installed = AbstractRepository::getDefault_()->
                 getInstalled_(&err);
+        toDelete = installed;
     }
 
     if (err.isEmpty()) {
@@ -2050,7 +2052,7 @@ void MainWindow::on_actionUninstall_triggered()
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
-    qDeleteAll(installed);
+    qDeleteAll(toDelete);
     qDeleteAll(pvs);
 }
 
