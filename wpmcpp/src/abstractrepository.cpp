@@ -82,6 +82,8 @@ bool AbstractRepository::includesRemoveItself(
                     op->package, op->version, &err);
             if (err.isEmpty() && pv) {
                 QString path = pv->getPath();
+                delete pv;
+
                 if (WPMUtils::pathEquals(exeDir, path) ||
                         WPMUtils::isUnder(exeDir, path)) {
                     res = true;

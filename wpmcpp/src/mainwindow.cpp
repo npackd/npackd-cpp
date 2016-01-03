@@ -1975,6 +1975,7 @@ void MainWindow::on_actionInstall_triggered()
         for (int i = 0; i < pvs.count(); i++) {
             PackageVersion* pv = pvs.at(i);
 
+            qDeleteAll(avoid);
             avoid.clear();
             err = pv->planInstallation(installed, ops, avoid);
             if (!err.isEmpty())
