@@ -1988,6 +1988,7 @@ void MainWindow::on_actionInstall_triggered()
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
+    qDeleteAll(avoid);
     qDeleteAll(installed);
     qDeleteAll(pvs);
 }
