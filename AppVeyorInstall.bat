@@ -30,5 +30,5 @@ if "%target%" equ "coverity" (
     ren "%name%" cov-analysis
 )
 
-tree "C:\Program Files (x86)"
+rem tree "C:\Program Files (x86)"
 
