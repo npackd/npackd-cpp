@@ -2054,6 +2054,10 @@ QString WPMUtils::getShellFileOperationErrorMessage(int res)
 
 QString WPMUtils::moveToRecycleBin(QString dir)
 {
+    WPMUtils::reportEvent(QObject::tr(
+            "Moving %1 to the recycle bin").
+            arg(dir));
+
     SHFILEOPSTRUCTW f;
     memset(&f, 0, sizeof(f));
     WCHAR* from = new WCHAR[dir.length() + 2];
@@ -2141,8 +2145,14 @@ QString WPMUtils::createLink(LPCWSTR lpszPathObj, LPCWSTR lpszPathLink,
     return r;
 }
 
-void WPMUtils::removeDirectory(Job* job, QDir &aDir)
+void WPMUtils::removeDirectory(Job* job, QDir &aDir, bool firstLevel)
 {
+    if (firstLevel) {
+        WPMUtils::reportEvent(QObject::tr(
+                "Deleting %1").
+                arg(aDir.absolutePath()));
+    }
+
     if (aDir.exists()) {
         QFileInfoList entries = aDir.entryInfoList(
                 QDir::NoDotAndDotDot |
@@ -2154,7 +2164,7 @@ void WPMUtils::removeDirectory(Job* job, QDir &aDir)
             if (entryInfo.isDir()) {
                 QDir dd(path);
                 Job* sub = job->newSubJob(1 / ((double) count + 1));
-                removeDirectory(sub, dd);
+                removeDirectory(sub, dd, false);
                 if (!sub->getErrorMessage().isEmpty())
                     job->setErrorMessage(sub->getErrorMessage());
                 // if (!ok)

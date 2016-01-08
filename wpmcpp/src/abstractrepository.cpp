@@ -325,8 +325,8 @@ void AbstractRepository::process(Job *job,
                 QString txt = QObject::tr("Deleting %1").arg(dir);
 
                 Job* sub = job->newSubJob(0.01 / dirs.count(), txt, true, false);
-                QDir dir;
-                WPMUtils::removeDirectory(sub, dir);
+                QDir d(dir);
+                WPMUtils::removeDirectory(sub, d);
             } else {
                 job->setProgress(job->getProgress() + 0.01 / dirs.count());
             }

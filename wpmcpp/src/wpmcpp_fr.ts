@@ -3120,6 +3120,10 @@ p, li { white-space: pre-wrap; }
         <source>Show the package for this dependency</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Moving %1 to the recycle bin</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

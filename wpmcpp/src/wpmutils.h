@@ -97,8 +97,9 @@ public:
      *
      * @param job progress for this task
      * @param aDir this directory will be deleted
+     * @param firstLevel true = first level will be deleted
      */
-    static void removeDirectory(Job* job, QDir &aDir);
+    static void removeDirectory(Job* job, QDir &aDir, bool firstLevel=true);
 
     /**
      * Uses the Shell's IShellLink and IPersistFile interfaces
