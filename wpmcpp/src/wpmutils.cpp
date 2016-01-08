@@ -2056,7 +2056,7 @@ QString WPMUtils::moveToRecycleBin(QString dir)
 {
     WPMUtils::reportEvent(QObject::tr(
             "Moving %1 to the recycle bin").
-            arg(dir));
+            arg(dir.replace('/', '\\')));
 
     SHFILEOPSTRUCTW f;
     memset(&f, 0, sizeof(f));
@@ -2150,7 +2150,7 @@ void WPMUtils::removeDirectory(Job* job, QDir &aDir, bool firstLevel)
     if (firstLevel) {
         WPMUtils::reportEvent(QObject::tr(
                 "Deleting %1").
-                arg(aDir.absolutePath()));
+                arg(aDir.absolutePath().replace('/', '\\')));
     }
 
     if (aDir.exists()) {
