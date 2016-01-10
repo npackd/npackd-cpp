@@ -279,7 +279,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
         Package* p = r->findPackage_(ipv->package);
 
-        path = WPMUtils::normalizePath(WPMUtils::getInstallationDirectory(),
+        path = WPMUtils::normalizePath(WPMUtils::getProgramFilesDir(),
                 false) +
                 "\\NpackdDetected\\" +
                 WPMUtils::makeValidFilename(p ? p->title : ipv->package, '_');
