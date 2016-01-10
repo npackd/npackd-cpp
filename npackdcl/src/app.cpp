@@ -899,12 +899,11 @@ QString App::update()
     job->setTitle("Updating packages");
 
     if (job->shouldProceed()) {
-        Job* rjob = job->newSubJob(0.05,
-                "Detecting installed software");
-        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob, false);
-        if (!rjob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(rjob->getErrorMessage());
+        QString err = InstalledPackages::getDefault()->readRegistryDatabase();
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        } else {
+            job->setProgress(0.05);
         }
     }
 
@@ -1166,10 +1165,11 @@ QString App::add()
     InstalledPackages* ip = InstalledPackages::getDefault();
 
     if (job->shouldProceed()) {
-        Job* rjob = job->newSubJob(0.1, "Detecting installed software");
-        ip->refresh(DBRepository::getDefault(), rjob, false);
-        if (!rjob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(rjob->getErrorMessage());
+        QString err = InstalledPackages::getDefault()->readRegistryDatabase();
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        } else {
+            job->setProgress(0.1);
         }
     }
 
@@ -1383,12 +1383,11 @@ QString App::remove()
     }
 
     if (job->shouldProceed()) {
-        Job* rjob = job->newSubJob(0.09,
-                "Detecting installed software");
-        InstalledPackages::getDefault()->refresh(DBRepository::getDefault(),
-                rjob, false);
-        if (!rjob->getErrorMessage().isEmpty()) {
-            job->setErrorMessage(rjob->getErrorMessage());
+        QString err = InstalledPackages::getDefault()->readRegistryDatabase();
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        } else {
+            job->setProgress(0.1);
         }
     }
 
