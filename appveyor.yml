@@ -4,7 +4,7 @@ branches:
   - master
 clone_folder: c:\projects\Npackd
 environment:
-  version: 1.21
+  version: 1.21.1
   matrix:
   - bits: 64
     prg: npackdcl
