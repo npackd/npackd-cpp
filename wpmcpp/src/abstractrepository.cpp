@@ -171,26 +171,6 @@ void AbstractRepository::process(Job *job,
 
     int n = install.count();
 
-    // 10% for stopping the packages
-    if (job->shouldProceed()) {
-        for (int i = 0; i < install.count(); i++) {
-            InstallOperation* op = install.at(i);
-            PackageVersion* pv = pvs.at(i);
-            if (!op->install) {
-                Job* sub = job->newSubJob(0.1 / n,
-                        QObject::tr("Stopping the package %1 of %2").
-                        arg(i + 1).arg(n));
-                pv->stop(sub, programCloseType, printScriptOutput);
-                if (!sub->getErrorMessage().isEmpty()) {
-                    job->setErrorMessage(sub->getErrorMessage());
-                    break;
-                }
-            } else {
-                job->setProgress(0.1 / n * (i + 1));
-            }
-        }
-    }
-
     // where the binary was downloaded
     QStringList dirs;
 
@@ -238,6 +218,26 @@ void AbstractRepository::process(Job *job,
 
             if (!job->shouldProceed())
                 break;
+        }
+    }
+
+    // 10% for stopping the packages
+    if (job->shouldProceed()) {
+        for (int i = 0; i < install.count(); i++) {
+            InstallOperation* op = install.at(i);
+            PackageVersion* pv = pvs.at(i);
+            if (!op->install) {
+                Job* sub = job->newSubJob(0.1 / n,
+                        QObject::tr("Stopping the package %1 of %2").
+                        arg(i + 1).arg(n));
+                pv->stop(sub, programCloseType, printScriptOutput);
+                if (!sub->getErrorMessage().isEmpty()) {
+                    job->setErrorMessage(sub->getErrorMessage());
+                    break;
+                }
+            } else {
+                job->setProgress(job->getProgress() + 0.1 / n);
+            }
         }
     }
 
