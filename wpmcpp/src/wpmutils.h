@@ -635,6 +635,13 @@ public:
      */
     static void reportEvent(const QString& msg,
             WORD wType=EVENTLOG_INFORMATION_TYPE);
+
+    /**
+     * @brief returns the class name of a window or an empty string
+     * @param w a window
+     * @return class name
+     */
+    static QString getClassName(HWND w);
 };
 
 #endif // WPMUTILS_H

@@ -849,6 +849,15 @@ QString WPMUtils::findFirstExeLockingDirectory(const QString &dir)
     return r;
 }
 
+QString WPMUtils::getClassName(HWND w)
+{
+    WCHAR cn[257];
+    int n = GetClassName(w, cn, 257);
+    QString r;
+    r.setUtf16(reinterpret_cast<const ushort*>(cn), n);
+    return r;
+}
+
 void WPMUtils::closeProcessWindows(HANDLE process,
         const QList<HWND>& processWindows)
 {
@@ -857,7 +866,8 @@ void WPMUtils::closeProcessWindows(HANDLE process,
         HWND w = processWindows.at(i);
         if (w != 0 && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
-                IsWindowVisible(w)) {
+                IsWindowVisible(w) &&
+                getClassName(w) != "Shell_TrayWnd") {
             FLASHWINFO fwi = {};
             fwi.cbSize = sizeof(fwi);
             fwi.hwnd = w;
@@ -877,7 +887,8 @@ void WPMUtils::closeProcessWindows(HANDLE process,
             if (w) {
                 if (!IsWindow(w) ||
                         GetAncestor(w, GA_PARENT) != GetDesktopWindow() ||
-                        !IsWindowVisible(w)) {
+                        !IsWindowVisible(w) ||
+                        getClassName(w) == "Shell_TrayWnd") {
                     ws[i] = 0;
                 } else {
                     c++;
@@ -903,7 +914,8 @@ void WPMUtils::closeProcessWindows(HANDLE process,
         HWND w = processWindows.at(i);
         if (w != 0 && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
-                IsWindowVisible(w)) {
+                IsWindowVisible(w) &&
+                getClassName(w) != "Shell_TrayWnd") {
             FLASHWINFO fwi = {};
             fwi.cbSize = sizeof(fwi);
             fwi.hwnd = w;
