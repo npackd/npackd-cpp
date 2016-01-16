@@ -93,8 +93,10 @@ private:
      *
      * @param job progress for this task
      * @param dir this directory will be deleted
+     * @param programCloseType how to close running programs. Multiple flags
+     *     may be combined here using OR.
      */
-    void removeDirectory(Job* job, const QString& dir);
+    void removeDirectory(Job* job, const QString& dir, int programCloseType=0);
 
     void emitStatusChanged();
 
@@ -376,9 +378,11 @@ public:
      *     or "" for packages of type "zip"
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
+     * @param programCloseType how to close running programs. Multiple flags
+     *     may be combined here using OR.
      */
     void install(Job* job, const QString& where, const QString &binary,
-            bool printScriptOutput);
+            bool printScriptOutput, int programCloseType=0);
 
     /**
      * Downloads the package binary, checks its hash sum, checks the binary for
@@ -398,8 +402,10 @@ public:
      * @param job job for this method
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
+     * @param programCloseType how to close running programs. Multiple flags
+     *     may be combined here using OR.
      */
-    void uninstall(Job* job, bool printScriptOutput);
+    void uninstall(Job* job, bool printScriptOutput, int programCloseType=0);
 
     /**
      * @return status like "locked, installed"

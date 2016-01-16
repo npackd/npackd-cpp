@@ -2353,15 +2353,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change directory to %1</source>
-        <translation>Imposible cambiar directorio a %1</translation>
+        <translation type="vanished">Imposible cambiar directorio a %1</translation>
     </message>
     <message>
         <source>Cannot create directory %0%1</source>
-        <translation>Imposible crear directorio %0%1</translation>
+        <translation type="vanished">Imposible crear directorio %0%1</translation>
     </message>
     <message>
         <source>Cannot rename %1 to %2 in %3</source>
-        <translation>Imposible renombrar %1 a %2 en %3</translation>
+        <translation type="vanished">Imposible renombrar %1 a %2 en %3</translation>
     </message>
     <message>
         <source>Error searching for the dependency matches: %1</source>
@@ -3195,6 +3195,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Moving %1 to the recycle bin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleting the directory %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

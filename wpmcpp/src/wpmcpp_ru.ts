@@ -2361,15 +2361,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change directory to %1</source>
-        <translation>Невозможно изменить директорию на %1</translation>
+        <translation type="vanished">Невозможно изменить директорию на %1</translation>
     </message>
     <message>
         <source>Cannot create directory %0%1</source>
-        <translation>Невозможно создать директорию %0%1</translation>
+        <translation type="vanished">Невозможно создать директорию %0%1</translation>
     </message>
     <message>
         <source>Cannot rename %1 to %2 in %3</source>
-        <translation>Невозможно переименовать %1 в %2 в %3</translation>
+        <translation type="vanished">Невозможно переименовать %1 в %2 в %3</translation>
     </message>
     <message>
         <source>Error searching for the best dependency match: %1</source>
@@ -3207,6 +3207,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Moving %1 to the recycle bin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleting the directory %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

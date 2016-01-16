@@ -2284,15 +2284,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change directory to %1</source>
-        <translation>Impossible de renommer le dossier en %1</translation>
+        <translation type="vanished">Impossible de renommer le dossier en %1</translation>
     </message>
     <message>
         <source>Cannot create directory %0%1</source>
-        <translation>Impossible de créer de dossier %0%1</translation>
+        <translation type="vanished">Impossible de créer de dossier %0%1</translation>
     </message>
     <message>
         <source>Cannot rename %1 to %2 in %3</source>
-        <translation>Impossible de renommer %1 en %2 dans le dossier %3</translation>
+        <translation type="vanished">Impossible de renommer %1 en %2 dans le dossier %3</translation>
     </message>
     <message>
         <source>Error searching for the best dependency match: %1</source>
@@ -3122,6 +3122,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Moving %1 to the recycle bin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleting the directory %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

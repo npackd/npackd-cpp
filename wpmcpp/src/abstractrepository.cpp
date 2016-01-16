@@ -306,9 +306,10 @@ void AbstractRepository::process(Job *job,
                     }
                 }
 
-                pv->install(sub, dir, binary, printScriptOutput);
+                pv->install(sub, dir, binary, printScriptOutput,
+                        programCloseType);
             } else
-                pv->uninstall(sub, printScriptOutput);
+                pv->uninstall(sub, printScriptOutput, programCloseType);
 
             if (!job->shouldProceed())
                 break;

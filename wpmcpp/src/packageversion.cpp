@@ -23,6 +23,8 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QTemporaryDir>
+
 #include <zlib.h>
 
 //#include "msoav2.h"
@@ -462,7 +464,8 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
     job->complete();
 }
 
-void PackageVersion::uninstall(Job* job, bool printScriptOutput)
+void PackageVersion::uninstall(Job* job, bool printScriptOutput,
+        int programCloseType)
 {
     if (!installed()) {
         job->setProgress(1);
@@ -586,7 +589,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput)
             Job* rjob = job->newSubJob(0.54, QObject::tr("Deleting files"));
 
             // the errors occured while deleting the directory are ignored
-            removeDirectory(rjob, d.absolutePath());
+            removeDirectory(rjob, d.absolutePath(), programCloseType);
 
             QString err = setPath("");
             if (!err.isEmpty())
@@ -628,60 +631,79 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput)
     job->complete();
 }
 
-void PackageVersion::removeDirectory(Job* job, const QString& dir)
+void PackageVersion::removeDirectory(Job* job, const QString& dir,
+        int programCloseType)
 {
+    // for a .dll loaded in another process it is possible to:
+    // - rename the .dll file
+    // - move the .dll file to another directory
+    // - move the directory with the .dll to another directory
+
     QDir d(dir);
 
-    WPMUtils::moveToRecycleBin(d.absolutePath());
-    job->setProgress(0.3);
+    QTemporaryDir tempDir;
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    int n = 0;
+    while (job->shouldProceed() && n < 10) {
         d.refresh();
         if (d.exists()) {
-            Sleep(5000); // 5 Seconds
+            qDebug() << "moving to recycly bin" << d.absolutePath();
             WPMUtils::moveToRecycleBin(d.absolutePath());
+        } else {
+            break;
         }
-        job->setProgress(0.6);
-    }
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+        d.refresh();
+        if (d.exists() && tempDir.isValid()) {
+            qDebug() << "renaming" << d.absolutePath() << " to " <<
+                    tempDir.path() + "\\" + d.dirName();
+            d.rename(d.absolutePath(), tempDir.path() + "\\" + d.dirName());
+        } else {
+            break;
+        }
+
         d.refresh();
         if (d.exists()) {
-            Sleep(5000); // 5 Seconds
-            QString oldName = d.dirName();
-            if (!d.cdUp())
-                job->setErrorMessage(QObject::tr("Cannot change directory to %1").arg(
-                        d.absolutePath() + "\\.."));
-            else {
-                QString trash = ".NpackdTrash";
-                if (!d.exists(trash)) {
-                    if (!d.mkdir(trash))
-                        job->setErrorMessage(QString(
-                                QObject::tr("Cannot create directory %0\%1")).
-                                arg(d.absolutePath()).arg(trash));
-                }
-                if (d.exists(trash)) {
-                    QString nn = trash + "\\" + oldName + "_%1";
-                    int i = 0;
-                    while (true) {
-                        QString newName = nn.arg(i);
-                        if (!d.exists(newName)) {
-                            if (!d.rename(oldName, newName)) {
-                                job->setErrorMessage(QString(
-                                        QObject::tr("Cannot rename %1 to %2 in %3")).
-                                        arg(oldName).arg(newName).
-                                        arg(d.absolutePath()));
-                            }
-                            break;
-                        } else {
-                            i++;
-                        }
-                    }
-                }
+            if (!d.exists(d.rootPath() + ".NpackdTrash"))
+                d.mkpath(d.rootPath() + ".NpackdTrash");
+
+            QTemporaryDir tempDir2(d.rootPath() + "\\.NpackdTrash\\" +
+                    d.dirName());
+            if (tempDir2.isValid()) {
+                qDebug() << "renaming" << d.absolutePath() << " to " <<
+                        tempDir2.path() + "\\" + d.dirName();
+                d.rename(d.absolutePath(), tempDir2.path() + "\\" + d.dirName());
             }
+        } else {
+            break;
         }
-        job->setProgress(1);
+
+        d.refresh();
+        if (d.exists()) {
+            Job* sub = job->newSubJob(0.01,
+                    QObject::tr("Deleting the directory %1").arg(
+                    d.absolutePath().replace('/', '\\')));
+
+            qDebug() << "deleting" << d.absolutePath();
+            WPMUtils::removeDirectory(sub, d);
+        } else {
+            break;
+        }
+
+        d.refresh();
+        if (d.exists()) {
+            WPMUtils::closeProcessesThatUseDirectory(dir, programCloseType);
+        } else {
+            break;
+        }
+
+        // 5 seconds
+        Sleep(5000);
+
+        n++;
     }
+
+    job->setProgress(1);
 
     job->complete();
 }
@@ -1446,7 +1468,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
 
 void PackageVersion::install(Job* job, const QString& where,
         const QString& binary,
-        bool printScriptOutput)
+        bool printScriptOutput, int programCloseType)
 {
     if (installed()) {
         job->setProgress(1);
@@ -1588,7 +1610,7 @@ void PackageVersion::install(Job* job, const QString& where,
         deleteShortcuts(d.absolutePath(), sub, true, true, true);
 
         Job* rjob = job->newSubJob(0.01, QObject::tr("Deleting files"));
-        removeDirectory(rjob, d.absolutePath());
+        removeDirectory(rjob, d.absolutePath(), programCloseType);
     }
 
     if (success) {
@@ -2274,8 +2296,6 @@ void PackageVersion::stop(Job* job, int programCloseType,
         }
     } else {
         job->setProgress(0.5);
-
-        WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType);
     }
 
     if (job->getErrorMessage().isEmpty())

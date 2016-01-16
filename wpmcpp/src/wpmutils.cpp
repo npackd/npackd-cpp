@@ -893,6 +893,8 @@ void WPMUtils::closeProcessWindows(HANDLE process,
                 } else {
                     c++;
                     if ((GetWindowLong(w, GWL_STYLE) & WS_DISABLED) == 0) {
+                        qDebug() << "WM_CLOSE to " <<
+                                GetProcessId(process) << getClassName(w);
                         PostMessage(w, WM_CLOSE, 0, 0);
                     }
                 }
@@ -1326,7 +1328,8 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 i.next();
                 if (name.startsWith(i.key())) {
                     name = i.value() + name.mid(i.key().length());
-                    if (WPMUtils::isUnderOrEquals(name, dir)) {
+                    if (QFileInfo(name).isFile() &&
+                            WPMUtils::isUnder(name, dir)) {
                         result.append(processHandle);
                         processHandle = INVALID_HANDLE_VALUE;
                         usedProcessIds.insert(handle.ProcessId);
