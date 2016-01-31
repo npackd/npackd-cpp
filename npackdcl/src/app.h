@@ -35,6 +35,7 @@ private:
 
     void usage();
     QString path();
+    QString place();
     QString add();
     QString remove();
     QString addRepo();

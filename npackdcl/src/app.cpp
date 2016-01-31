@@ -138,6 +138,8 @@ int App::process()
             usage();
         } else if (cmd == "path") {
             err = path();
+        } else if (cmd == "place") {
+            err = place();
         } else if (cmd == "remove" || cmd == "rm") {
             err = DBRepository::getDefault()->openDefault();
             if (err.isEmpty()) {
@@ -274,6 +276,9 @@ void App::usage()
         "    ncl path --package=<package>",
         "            [--version=<version> | --versions=<versions>]",
         "        searches for an installed package and prints its location",
+        "    ncl place --package=<package>",
+        "            --version=<version> --file=<directory>",
+        "        registers a package version installed without Npackd",
         "    ncl remove|rm (--package=<package> [--version=<version>])+",
         "           [--end-process=<types>]",
         "        removes packages. The version number may be omitted, ",
@@ -882,6 +887,112 @@ QString App::path()
         path.replace('/', '\\');
         WPMUtils::writeln(path);
     }
+
+    job->complete();
+
+    QString r = job->getErrorMessage();
+
+    delete job;
+
+    return r;
+}
+
+QString App::place()
+{
+    Job* job = new Job();
+
+    QString package = cl.get("package");
+    QString version = cl.get("version");
+    QString where = cl.get("file");
+
+    if (job->shouldProceed()) {
+        if (package.isNull()) {
+            job->setErrorMessage("Missing option: --package");
+        }
+    }
+
+    if (job->shouldProceed()) {
+        if (!Package::isValidName(package)) {
+            job->setErrorMessage("Invalid package name: " + package);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        if (version.isNull()) {
+            job->setErrorMessage("Missing option: --version");
+        }
+    }
+
+    Version version_;
+    if (job->shouldProceed()) {
+        if (!version_.setVersion(version)) {
+            job->setErrorMessage("Invalid version number: " + version);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        if (where.isNull()) {
+            job->setErrorMessage("Missing option: --file");
+        }
+    }
+
+    if (job->shouldProceed()) {
+        QFileInfo fi(where);
+        if (!fi.exists()) {
+            job->setErrorMessage("Directory does not exist: " + where);
+        } else if (!fi.isDir()) {
+            job->setErrorMessage("Not a directory: " + where);
+        }
+    }
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    if (job->shouldProceed()) {
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        } else {
+            job->setProgress(0.1);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault();
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        } else {
+            job->setProgress(0.2);
+        }
+    }
+
+    bool success = false;
+    if (job->shouldProceed()) {
+        QString err = InstalledPackages::getDefault()->setPackageVersionPath(
+                package, version_, where);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else {
+            job->setProgress(0.7);
+            success = true;
+        }
+    }
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->updateStatus(package);
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        } else {
+            job->setProgress(0.99);
+        }
+    }
+
+    if (success) {
+        WPMUtils::reportEvent(QObject::tr(
+                "The package %1 %2 was placed successfully in %3").
+                arg(package, version, where));
+    }
+
+    if (job->shouldProceed())
+        job->setProgress(1);
 
     job->complete();
 

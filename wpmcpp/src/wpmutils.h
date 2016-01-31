@@ -59,6 +59,14 @@ private:
     static QString disconnectFrom(LPWSTR netname);
 public:
     /**
+     * @brief how to search for processes that prevent a directory from being
+     *      deleted
+     */
+    static const int RUNNING_EXE_IN_DIR = 1;
+    static const int LOADED_DLL_IN_DIR = 2;
+    static const int USED_FILE_IN_DIR = 4;
+
+    /**
      * @brief how to close a process
      */
     static const int CLOSE_WINDOW = 1;
@@ -521,9 +529,19 @@ public:
      * @brief closes all processes that lock the specified directory. This
      *     function ignores the current process.
      * @param dir a directory
+     * @param f how to find the processes that lock the directory. A combination
+     *     of LOADED_DLL_IN_DIR, RUNNING_EXE_IN_DIR, and USED_FILE_IN_DIR
      */
     static void closeProcessesThatUseDirectory(const QString& dir,
-            DWORD cpt=CLOSE_WINDOW);
+            DWORD cpt=CLOSE_WINDOW, int f=
+            LOADED_DLL_IN_DIR | RUNNING_EXE_IN_DIR | USED_FILE_IN_DIR);
+
+    /**
+     * @brief disconnects all users from all shares that include the specified
+     *     directory
+     * @param dir a directory
+     */
+    static void disconnectShareUsersFrom(const QString& dir);
 
     /**
      * @param dir the directory

@@ -693,6 +693,9 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
         d.refresh();
         if (d.exists()) {
             WPMUtils::closeProcessesThatUseDirectory(dir, programCloseType);
+
+            if (programCloseType & WPMUtils::DISABLE_SHARES)
+                WPMUtils::disconnectShareUsersFrom(dir);
         } else {
             break;
         }
@@ -1577,6 +1580,15 @@ void PackageVersion::install(Job* job, const QString& where,
     if (installationScriptAcquired)
         installationScripts.release();
 
+    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+        QString err;
+        this->createShortcuts(d.absolutePath(), &err);
+        if (err.isEmpty())
+            job->setProgress(0.98);
+        else
+            job->setErrorMessage(err);
+    }
+
     bool success = false;
     if (job->shouldProceed()) {
         QString err = InstalledPackages::getDefault()->setPackageVersionPath(
@@ -1592,15 +1604,6 @@ void PackageVersion::install(Job* job, const QString& where,
     if (job->shouldProceed()) {
         QString err = DBRepository::getDefault()->updateStatus(this->package);
         if (!err.isEmpty())
-            job->setErrorMessage(err);
-    }
-
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
-        QString err;
-        this->createShortcuts(d.absolutePath(), &err);
-        if (err.isEmpty())
-            job->setProgress(0.98);
-        else
             job->setErrorMessage(err);
     }
 
@@ -2295,6 +2298,10 @@ void PackageVersion::stop(Job* job, int programCloseType,
             }
         }
     } else {
+        WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType);
+
+        if (programCloseType & WPMUtils::DISABLE_SHARES)
+            WPMUtils::disconnectShareUsersFrom(getPath());
         job->setProgress(0.5);
     }
 

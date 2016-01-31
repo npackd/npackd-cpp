@@ -741,8 +741,43 @@ QString WPMUtils::disconnectFrom(LMSTR netname)
     return err;
 }
 
+void WPMUtils::disconnectShareUsersFrom(const QString &dir)
+{
+    SHARE_INFO_502* buf;
+    DWORD entriesRead, totalEntries, resumeHandle;
+    resumeHandle = 0;
+    if (NetShareEnum(0, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
+            &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
+        QString dirNormalized = normalizePath(dir);
+        const DWORD STYPE_MASK = 0xF0000000;
+        // qDebug() << entriesRead;
+        for (int i = 0; i < (int) entriesRead; i++) {
+            // qDebug() << "share " << buf[i].shi502_type;
+            if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
+                QString path;
+                path.setUtf16((const ushort*) buf[i].shi502_path,
+                        wcslen(buf[i].shi502_path));
+                path = normalizePath(path);
+                //qDebug() << "share found" << path;
+                if (isUnderOrEquals(path, dirNormalized)) {
+                    //qDebug() << "share found" << path;
+                    QString netName;
+                    netName.setUtf16((const ushort*) buf[i].shi502_netname,
+                            wcslen(buf[i].shi502_netname));
+                    // NetShareDel(0, buf[i].shi502_netname, 0);
+                    // buf[i].shi502_max_uses = 0;
+                    //NetShareSetInfo(0, buf[i].shi502_netname, 502,
+                    //        (LPBYTE) &(buf[i]), 0);
+                    disconnectFrom(buf[i].shi502_netname);
+                }
+            }
+        }
+    }
+    NetApiBufferFree(buf);
+}
+
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
-        DWORD cpt)
+        DWORD cpt, int f)
 {
     if (cpt == 0)
         return;
@@ -750,11 +785,18 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     //QString f = dir + "\\abc.txt";
     //test((PCWSTR) f.utf16());
 
-    QList<HANDLE> ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
+    QList<HANDLE> ps0;
+    if (f & RUNNING_EXE_IN_DIR) {
+        ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
+    }
 
     //qDebug() << "getProcessHandlesLockingDirectory";
 
-    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
+    QList<HANDLE> ps;
+    if (f & USED_FILE_IN_DIR) {
+        ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
+    }
+
     ps.append(ps0);
 
     //qDebug() << "getProcessHandlesLockingDirectory2";
@@ -790,40 +832,6 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     }
 
     // qDebug() << "Processes killed";
-
-    if (cpt & DISABLE_SHARES) {
-        SHARE_INFO_502* buf;
-        DWORD entriesRead, totalEntries, resumeHandle;
-        resumeHandle = 0;
-        if (NetShareEnum(0, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
-                &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
-            QString dirNormalized = normalizePath(dir);
-            const DWORD STYPE_MASK = 0xF0000000;
-            // qDebug() << entriesRead;
-            for (int i = 0; i < (int) entriesRead; i++) {
-                // qDebug() << "share " << buf[i].shi502_type;
-                if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
-                    QString path;
-                    path.setUtf16((const ushort*) buf[i].shi502_path,
-                            wcslen(buf[i].shi502_path));
-                    path = normalizePath(path);
-                    //qDebug() << "share found" << path;
-                    if (isUnderOrEquals(path, dirNormalized)) {
-                        //qDebug() << "share found" << path;
-                        QString netName;
-                        netName.setUtf16((const ushort*) buf[i].shi502_netname,
-                                wcslen(buf[i].shi502_netname));
-                        // NetShareDel(0, buf[i].shi502_netname, 0);
-                        // buf[i].shi502_max_uses = 0;
-                        //NetShareSetInfo(0, buf[i].shi502_netname, 502,
-                        //        (LPBYTE) &(buf[i]), 0);
-                        disconnectFrom(buf[i].shi502_netname);
-                    }
-                }
-            }
-        }
-        NetApiBufferFree(buf);
-    }
 
     for (int i = 0; i < ps.size(); i++) {
         CloseHandle(ps[i]);
