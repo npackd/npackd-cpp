@@ -92,30 +92,30 @@ int App::process()
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
-        WPMUtils::writeln("Error: " + err, false);
-        return 1;
+        err = "Error: " + err;
     }
+
     // cl.dump();
 
-    this->interactive = !cl.isPresent("non-interactive");
+    if (err.isEmpty()) {
+        this->interactive = !cl.isPresent("non-interactive");
 
-    this->debug = cl.isPresent("debug");
+        this->debug = cl.isPresent("debug");
 
-    if (debug) {
-        clp.setUpdateRate(0);
-        MySQLQuery::debug = true;
+        if (debug) {
+            clp.setUpdateRate(0);
+            MySQLQuery::debug = true;
+        }
     }
 
     QStringList fr = cl.getFreeArguments();
 
-    int r = 0;
-    if (fr.count() == 0) {
-        WPMUtils::writeln("Missing command. Try npackdcl help",
-                false);
-        r = 1;
+    if (!err.isEmpty()) {
+        // nothing. The error will be processed later.
+    } else if (fr.count() == 0) {
+        err = "Missing command. Try npackdcl help";
     } else if (fr.count() > 1) {
-        WPMUtils::writeln("Unexpected argument: " + fr.at(1), false);
-        r = 1;
+        err = "Unexpected argument: " + fr.at(1);
     } else {
         const QString cmd = fr.at(0);
 
@@ -201,13 +201,14 @@ int App::process()
         } else {
             err = "Wrong command: " + cmd + ". Try npackdcl help";
         }
+    }
 
-        if (err.isEmpty())
-            r = 0;
-        else {
-            r = 1;
-            WPMUtils::writeln(err, false);
-        }
+    int r = 0;
+    if (err.isEmpty())
+        r = 0;
+    else {
+        r = 1;
+        WPMUtils::writeln(err, false);
     }
 
     QCoreApplication::instance()->exit(r);

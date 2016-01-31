@@ -647,7 +647,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
     while (job->shouldProceed() && n < 10) {
         d.refresh();
         if (d.exists()) {
-            qDebug() << "moving to recycly bin" << d.absolutePath();
+            // qDebug() << "moving to recycly bin" << d.absolutePath();
             WPMUtils::moveToRecycleBin(d.absolutePath());
         } else {
             break;
@@ -655,8 +655,8 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
 
         d.refresh();
         if (d.exists() && tempDir.isValid()) {
-            qDebug() << "renaming" << d.absolutePath() << " to " <<
-                    tempDir.path() + "\\" + d.dirName();
+            // qDebug() << "renaming" << d.absolutePath() << " to " <<
+            //        tempDir.path() + "\\" + d.dirName();
             d.rename(d.absolutePath(), tempDir.path() + "\\" + d.dirName());
         } else {
             break;
@@ -670,8 +670,8 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
             QTemporaryDir tempDir2(d.rootPath() + "\\.NpackdTrash\\" +
                     d.dirName());
             if (tempDir2.isValid()) {
-                qDebug() << "renaming" << d.absolutePath() << " to " <<
-                        tempDir2.path() + "\\" + d.dirName();
+                // qDebug() << "renaming" << d.absolutePath() << " to " <<
+                //         tempDir2.path() + "\\" + d.dirName();
                 d.rename(d.absolutePath(), tempDir2.path() + "\\" + d.dirName());
             }
         } else {
@@ -684,7 +684,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
                     QObject::tr("Deleting the directory %1").arg(
                     d.absolutePath().replace('/', '\\')));
 
-            qDebug() << "deleting" << d.absolutePath();
+            // qDebug() << "deleting" << d.absolutePath();
             WPMUtils::removeDirectory(sub, d);
         } else {
             break;
