@@ -54,6 +54,11 @@ private slots:
     void updateKeepDirectories();
 
     /**
+     * @brief "place"
+     */
+    void place();
+
+    /**
      * @brief "add" --versions
      */
     void addVersions();

@@ -965,6 +965,22 @@ QString App::place()
         }
     }
 
+    if (job->shouldProceed()) {
+        QFileInfo fi(where);
+        InstalledPackageVersion* f = ip->findOwner(fi.absoluteFilePath());
+        if (f) {
+            AbstractRepository* rep = AbstractRepository::getDefault_();
+            Package* p = rep->findPackage_(f->package);
+            QString title = p ? p->title : "?";
+            job->setErrorMessage(QString(
+                    "%1 %2 (%3) is installed in \"%4\"").
+                    arg(title).arg(f->version.getVersionString()).
+                    arg(f->package).arg(f->directory));
+            delete p;
+            delete f;
+        }
+    }
+
     bool success = false;
     if (job->shouldProceed()) {
         QString err = InstalledPackages::getDefault()->setPackageVersionPath(
@@ -978,6 +994,18 @@ QString App::place()
     }
 
     if (job->shouldProceed()) {
+        DBRepository* rep = DBRepository::getDefault();
+
+        Package* p = new Package(package, package);
+        rep->savePackage(p, false);
+        delete p;
+
+        PackageVersion* pv = new PackageVersion(package, version_);
+        rep->savePackageVersion(pv, false);
+        delete pv;
+    }
+
+    if (job->shouldProceed()) {
         QString err = DBRepository::getDefault()->updateStatus(package);
         if (!err.isEmpty()) {
             job->setErrorMessage(err);
@@ -987,9 +1015,11 @@ QString App::place()
     }
 
     if (success) {
-        WPMUtils::reportEvent(QObject::tr(
+        QString msg = QString(
                 "The package %1 %2 was placed successfully in %3").
-                arg(package, version, where));
+                arg(package, version, where);
+        WPMUtils::writeln(msg);
+        WPMUtils::reportEvent(msg);
     }
 
     if (job->shouldProceed())
@@ -1484,7 +1514,7 @@ QString App::remove()
     job->setTitle("Removing packages");
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.01,
+        Job* sub = job->newSubJob(0.1,
                 "Reading list of installed packages from the registry");
         InstalledPackages* ip = InstalledPackages::getDefault();
         QString err = ip->readRegistryDatabase();
@@ -1492,15 +1522,6 @@ QString App::remove()
             job->setErrorMessage(err);
         else
             sub->completeWithProgress();
-    }
-
-    if (job->shouldProceed()) {
-        QString err = InstalledPackages::getDefault()->readRegistryDatabase();
-        if (!err.isEmpty()) {
-            job->setErrorMessage(err);
-        } else {
-            job->setProgress(0.1);
-        }
     }
 
     int programCloseType = WPMUtils::CLOSE_WINDOW;

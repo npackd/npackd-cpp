@@ -235,6 +235,29 @@ void App::updateKeepDirectories()
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
+void App::place()
+{
+    if (!admin)
+        QSKIP("disabled");
+
+    QTemporaryDir td;
+    if (td.isValid()) {
+        QString output = captureNpackdCLOutput(
+                "npackdcl place -p mytest -v 2.22 -f \"" + td.path() + "\"");
+        QVERIFY2(output.contains("successfully"),  output.toLatin1());
+
+        output = captureNpackdCLOutput(
+                "npackdcl place -p mytest2 -v 2.22 -f \"" + td.path() + "\"");
+        QVERIFY2(output.contains("mytest 2.22"),  output.toLatin1());
+
+        QVERIFY(captureNpackdCLOutput("path -p mytest").
+                trimmed() == td.path().replace('/', '\\'));
+
+        output = captureNpackdCLOutput("rm -p mytest");
+        QVERIFY2(output.contains("removed successfully"), output.toLatin1());
+    }
+}
+
 void App::addVersions()
 {
     if (!admin)
