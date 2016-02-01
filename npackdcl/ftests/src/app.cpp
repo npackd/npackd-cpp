@@ -243,11 +243,11 @@ void App::place()
     QTemporaryDir td;
     if (td.isValid()) {
         QString output = captureNpackdCLOutput(
-                "npackdcl place -p mytest -v 2.22 -f \"" + td.path() + "\"");
+                "place -p mytest -v 2.22 -f \"" + td.path() + "\"");
         QVERIFY2(output.contains("successfully"),  output.toLatin1());
 
         output = captureNpackdCLOutput(
-                "npackdcl place -p mytest2 -v 2.22 -f \"" + td.path() + "\"");
+                "place -p mytest2 -v 2.22 -f \"" + td.path() + "\"");
         QVERIFY2(output.contains("mytest 2.22"),  output.toLatin1());
 
         QVERIFY(captureNpackdCLOutput("path -p mytest").
