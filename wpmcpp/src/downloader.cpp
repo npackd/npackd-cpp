@@ -213,9 +213,14 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         //qDebug() << callNumber << r << dwStatus << url.toString();
 
         if (r == ERROR_SUCCESS) {
-            QString errMsg;
-            WPMUtils::formatMessage(sendRequestError, &errMsg);
-            job->setErrorMessage(errMsg);
+            if (sendRequestError) {
+                QString errMsg;
+                WPMUtils::formatMessage(sendRequestError, &errMsg);
+                job->setErrorMessage(errMsg);
+            } else {
+                job->setErrorMessage(QString(
+                        QObject::tr("HTTP status code %1")).arg(dwStatus));
+            }
         } else if (r == ERROR_INTERNET_FORCE_RETRY) {
             // nothing
         } else if (r == ERROR_CANCELLED) {
