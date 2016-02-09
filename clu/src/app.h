@@ -13,7 +13,6 @@ private:
     int removePath();
     int listMSI();
     int getProductCode();
-    int uninstallFromCP();
 public:
     App();
 

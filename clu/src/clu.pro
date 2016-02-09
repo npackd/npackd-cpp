@@ -50,3 +50,7 @@ INCLUDEPATH+=../../wpmcpp/src/
 
 QMAKE_LIBDIR+=$$(QUAZIP_PATH)/quazip/release
 
+QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
+    -Wno-missing-field-initializers -Wno-unused-parameter -fno-exceptions
+
+

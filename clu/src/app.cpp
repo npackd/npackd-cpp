@@ -59,8 +59,6 @@ int App::process()
         r = listMSI();
     } else if (fr.at(0) == "get-product-code") {
         r = getProductCode();
-    } else if (fr.at(0) == "uninstall-from-cp") {
-        r = uninstallFromCP();
     } else {
         WPMUtils::writeln("Wrong command: " + fr.at(0), false);
         r = 1;
@@ -107,44 +105,6 @@ int App::getProductCode()
     return ret;
 }
 
-int App::uninstallFromCP()
-{
-    int ret = 0;
-
-    QString label = cl.get("label");
-
-    if (ret == 0) {
-        if (label.isNull()) {
-            WPMUtils::writeln("Missing option: --label", false);
-            ret = 1;
-        }
-    }
-
-    if (ret == 0) {
-        MSIHANDLE hProduct;
-        UINT r = MsiOpenPackageW((WCHAR*) label.utf16(), &hProduct);
-        if (!r) {
-            WCHAR guid[40];
-            DWORD pcchValueBuf = 40;
-            r = MsiGetProductPropertyW(hProduct, L"ProductCode", guid, &pcchValueBuf);
-            if (!r) {
-                QString s;
-                s.setUtf16((ushort*) guid, pcchValueBuf);
-                WPMUtils::writeln(s);
-            } else {
-                WPMUtils::writeln(
-                        "Cannot get the value of the ProductCode property", false);
-                ret = 1;
-            }
-        } else {
-            WPMUtils::writeln("Cannot open the MSI file", false);
-            ret = 1;
-        }
-    }
-
-    return ret;
-}
-
 int App::help()
 {
     const char* lines[] = {
@@ -160,8 +120,6 @@ int App::help()
         "        lists all installed MSI packages",
         "    clu get-product-code --file=<file>",
         "        prints the product code of an MSI file",
-        "    clu uninstall-from-cp --label=<product label>",
-        "        uninstalls a program according to its label in \"Add and remove software\" control panel",
         "Options:",
     };
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
