@@ -21,7 +21,8 @@ LIBS += -lquazip \
     -lpsapi \
     -lversion \
     -lshlwapi \
-    -lmsi
+    -lmsi \
+    -lnetapi32
 
 SOURCES += main.cpp \
     app.cpp \
