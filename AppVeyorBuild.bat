@@ -20,11 +20,12 @@ if %prg% equ npackdcl goto npackdcl
 
 :npackd
 if "%target%" equ "coverity" goto coverity
-"%make%" -C wpmcpp zip msi PROFILE=release%bits% || exit /b %errorlevel%
+"%make%" -C wpmcpp zip msi zip-debug PROFILE=release%bits% || exit /b %errorlevel%
 tree . /f
 appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.zip || exit /b %errorlevel%
 appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.msi || exit /b %errorlevel%
 appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.map || exit /b %errorlevel%
+appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-debug-%version%.zip || exit /b %errorlevel%
 goto :eof
 
 :coverity

@@ -14,12 +14,14 @@ ifeq (32,$(findstring 32,$(PROFILE)))
 QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.9.2, 4.9.2]")
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.7.1, 0.7.1]")
+DRMINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=drmingw" "--versions=[0.7.7, 0.7.7]")
 BITS=32
 PACKAGE=com.googlecode.windows-package-manager.Npackd
 else
 QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.9.2, 4.9.2]")
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.7.1, 0.7.1]")
+DRMINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=drmingw64" "--versions=[0.7.7, 0.7.7]")
 BITS=64
 PACKAGE=com.googlecode.windows-package-manager.Npackd64
 endif
@@ -52,6 +54,7 @@ printvars:
 	@echo BITS=$(BITS)
 	@echo VERSION=$(VERSION)
 	@echo MINGW=$(MINGW)
+	@echo DRMINGW=$(DRMINGW)
 	@echo QT=$(QT)
 	@echo AI=$(AI)
 	@echo SEVENZIP=$(SEVENZIP)
@@ -74,6 +77,9 @@ endif
 ifndef MINGW
 	$(error MINGW is not defined)
 endif
+ifndef DRMINGW
+	$(error DRMINGW is not defined)
+endif
 ifndef AI
 	$(error AI is not defined)
 endif
@@ -90,7 +96,10 @@ endif
 clean: printvars
 	-rmdir /s /q $(WHERE)
 
-$(WHERE)/zip:
+$(WHERE)/zip-debug: $(WHERE)
+	-mkdir $(WHERE)\zip-debug
+
+$(WHERE)/zip: $(WHERE)
 	-mkdir $(WHERE)\zip
 
 $(WHERE):
@@ -109,6 +118,17 @@ prep: compile $(WHERE)/zip
 	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
 	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip\npackdg.exe
 	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
+
+zip-debug: compile $(WHERE)/zip-debug
+	copy LICENSE.txt $(WHERE)\zip-debug
+	copy CrystalIcons_LICENSE.txt $(WHERE)\zip-debug
+	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip-debug\npackdg.exe
+	copy "$(DRMINGW)\bin\exchndl.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\mgwhelp.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\dbghelp.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\symsrv.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\symsrv.yes" $(WHERE)\zip-debug
+	cd $(WHERE)\zip-debug && "$(SEVENZIP)\7z" a ..\Npackd$(BITS)-debug-$(VERSION).zip *
 
 zip: prep
 	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\Npackd$(BITS)-$(VERSION).zip *
