@@ -1188,6 +1188,8 @@ public:
                 ok = false;
             }
         }
+
+        free(objectNameInfo);
     }
 };
 
@@ -1196,6 +1198,8 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
     QMap<QString, QString> devices2drives = mapDevices2Drives();
 
     QList<HANDLE> result;
+
+    return result;
 
     HMODULE module = GetModuleHandleA("ntdll.dll");
     if (module == 0) {
@@ -1239,7 +1243,6 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
         SYSTEM_HANDLE handle = handleInfo->Handles[i];
         HANDLE dupHandle = INVALID_HANDLE_VALUE;
         POBJECT_TYPE_INFORMATION objectTypeInfo = 0;
-        PVOID objectNameInfo = 0;
 
         HANDLE processHandle = INVALID_HANDLE_VALUE;
 
@@ -1348,7 +1351,6 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
         }
 
         free(objectTypeInfo);
-        free(objectNameInfo);
 
         if (dupHandle != INVALID_HANDLE_VALUE)
             CloseHandle(dupHandle);
