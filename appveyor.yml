@@ -1,10 +1,10 @@
-version: 1.21.3.{build}
+version: 1.21.4.{build}
 branches:
   only:
   - master
 clone_folder: c:\projects\Npackd
 environment:
-  version: 1.21.3
+  version: 1.21.4
   matrix:
   - bits: 64
     prg: npackdcl

@@ -138,11 +138,11 @@ msi: prep
 	"$(AI)\bin\x86\AdvancedInstaller.com" /build src\wpmcpp$(BITS).aip
 
 ifeq (32,$(BITS))
-memcheck: compile
-	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -report_leak_max 100000 -- wpmcpp.exe
+# memcheck: compile
+# 	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
 
 drmemory: compile
-	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
+	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -report_leak_max 100000 -no_callstack_use_top_fp -- wpmcpp.exe
 endif
 
 upload: zip msi

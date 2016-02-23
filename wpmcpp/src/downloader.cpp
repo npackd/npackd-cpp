@@ -181,7 +181,16 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
         DWORD r;
 
-        if (interactive && callNumber >= 2) {
+        if (callNumber == 0) {
+            r = InternetErrorDlg(0,
+                   hResourceHandle, sendRequestError,
+                    FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                    FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                    FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
+                    FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
+            if (r == ERROR_SUCCESS && interactive)
+                r = ERROR_INTERNET_FORCE_RETRY;
+        } else if (interactive) {
             if (parentWindow) {
                 r = InternetErrorDlg(parentWindow,
                         hResourceHandle, sendRequestError,
@@ -199,15 +208,9 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                     r = ERROR_INTERNET_FORCE_RETRY;
                 }
             }
-            callNumber = 0;
         } else {
-            r = InternetErrorDlg(0,
-                   hResourceHandle, sendRequestError,
-                    FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                    FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                    FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
-                    FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
-            callNumber++;
+            // cannot help
+            r = ERROR_SUCCESS;
         }
 
         //qDebug() << callNumber << r << dwStatus << url.toString();
@@ -253,6 +256,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             if (read == 0)
                 break;
         }
+
+        callNumber++;
     }; // while (job->shouldProceed())
 
 out:
