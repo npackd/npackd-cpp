@@ -182,8 +182,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>plainTextEditReps</tabstop>
   <tabstop>comboBoxDir</tabstop>
   <tabstop>checkBoxCloseWindows</tabstop>
+  <tabstop>checkBoxDeleteFileShares</tabstop>
   <tabstop>checkBoxKillProcesses</tabstop>
-  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
  <connections/>
