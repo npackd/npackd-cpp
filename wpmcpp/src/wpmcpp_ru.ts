@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>LicenseForm</name>
     <message>
@@ -26,7 +26,7 @@
     </message>
     <message>
         <source>Download URL:</source>
-        <translation type="vanished">URL для загрузки:</translation>
+        <translation>URL для загрузки:</translation>
     </message>
     <message>
         <source>Internal name:</source>
@@ -533,7 +533,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>other packages that this one depends upon</source>
-        <translation type="vanished">другие пакеты, от которых зависит этот</translation>
+        <translation>другие пакеты, от которых зависит этот</translation>
     </message>
     <message>
         <source>Text files:</source>
@@ -553,7 +553,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>SHA1:</source>
-        <translation type="vanished">SHA1:</translation>
+        <translation>SHA1:</translation>
     </message>
     <message>
         <source>Important files:</source>
@@ -607,16 +607,16 @@ p, li { white-space: pre-wrap; }
     <name>ProgressFrame</name>
     <message>
         <source>Frame</source>
-        <translation type="vanished">Фрейм</translation>
+        <translation>Фрейм</translation>
     </message>
     <message>
         <source>Task / Step:</source>
         <translatorcomment>or Задача / Шаг:</translatorcomment>
-        <translation type="vanished">Задача / Этап:</translation>
+        <translation>Задача / Этап:</translation>
     </message>
     <message>
         <source>-</source>
-        <translation type="vanished">-</translation>
+        <translation>-</translation>
     </message>
     <message>
         <source>Elapsed time:</source>
@@ -630,7 +630,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Отмена</translation>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -1625,15 +1625,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Closing running processes</source>
-        <translation type="vanished">Как закрывать исполняемые процессы</translation>
+        <translation>Как закрывать исполняемые процессы</translation>
     </message>
     <message>
         <source>Directory %0 is locked</source>
-        <translation type="vanished">Директорий %0 заперт</translation>
+        <translation>Директорий %0 заперт</translation>
     </message>
     <message>
         <source>Directory %0 is locked by %1</source>
-        <translation type="vanished">Директорий %0 заперт программой %1</translation>
+        <translation>Директорий %0 заперт программой %1</translation>
     </message>
     <message>
         <source>Stopping the package %1 of %2</source>
@@ -1681,7 +1681,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Read invalid package version from the database: %1</source>
-        <translation type="vanished">Прочёл испорченную версию пакета из базы данных: %1</translation>
+        <translation>Прочёл испорченную версию пакета из базы данных: %1</translation>
     </message>
     <message>
         <source>Starting an SQL transaction</source>
@@ -1725,7 +1725,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Creating a temporary file</source>
-        <translation type="vanished">Создаю временный файл</translation>
+        <translation>Создаю временный файл</translation>
     </message>
     <message>
         <source>Error creating a temporary file</source>
@@ -1778,7 +1778,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Downloading the remote repositories and filling the local database</source>
-        <translation type="vanished">Загружаю удаленные репозитории и заполняю локальную базу данных</translation>
+        <translation>Загружаю удаленные репозитории и заполняю локальную базу данных</translation>
     </message>
     <message>
         <source>Updating statuses</source>
@@ -1794,11 +1794,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Refreshing the installation status</source>
-        <translation type="vanished">Обновление статуса установки</translation>
+        <translation>Обновление статуса установки</translation>
     </message>
     <message>
         <source>Updating the status for installed packages in the database</source>
-        <translation type="vanished">Обновление статуса установленных пакетов в базе данных</translation>
+        <translation>Обновление статуса установленных пакетов в базе данных</translation>
     </message>
     <message>
         <source>Reading categories</source>
@@ -1903,7 +1903,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unsupported URL scheme: %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Error opening file: %1</source>
@@ -2016,11 +2016,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Installing</source>
-        <translation type="vanished">Установка</translation>
+        <translation>Установка</translation>
     </message>
     <message>
         <source>Uninstalling</source>
-        <translation type="vanished">Удаление</translation>
+        <translation>Удаление</translation>
     </message>
     <message>
         <source>The package %1 will be uninstalled.</source>
@@ -2056,11 +2056,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find the package version</source>
-        <translation type="vanished">Невозможно найти версию пакета</translation>
+        <translation>Невозможно найти версию пакета</translation>
     </message>
     <message>
         <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
-        <translation type="vanished">Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
+        <translation>Пакет %1 будет удалён. Соответствующая директория %2 будет полностью очищена. Нет возможности восстановить файлы.</translation>
     </message>
     <message>
         <source>Uninstall</source>
@@ -2141,7 +2141,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be installed: %2</source>
-        <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
+        <translation>%1 пакет(ы) будет(ут) установлен(ы): %2</translation>
     </message>
     <message>
         <source>Install</source>
@@ -2153,15 +2153,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
-        <translation type="vanished">%1 пакет(ы) будет(ут) удален(ы): %2. Соответствующие директории будут полностью удалены; нет возможности восстановить файлы.</translation>
+        <translation>%1 пакет(ы) будет(ут) удален(ы): %2. Соответствующие директории будут полностью удалены; нет возможности восстановить файлы.</translation>
     </message>
     <message>
         <source>Installing %1 packages, uninstalling %2 packages</source>
-        <translation type="vanished">Установка %1 пакетов, удаление %2 пакетов</translation>
+        <translation>Установка %1 пакетов, удаление %2 пакетов</translation>
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
-        <translation type="vanished">%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
+        <translation>%1 пакет(ы) будет(ут) установлен(ы): %2 (соответствующие директории будут полностью удалены; нет возможности восстановить файлы) и %3 пакет(ы) будет(ут) установлен(ы): %4.</translation>
     </message>
     <message>
         <source>Install/Uninstall</source>
@@ -2173,7 +2173,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Initializing</source>
-        <translation type="vanished">Инициализация</translation>
+        <translation>Инициализация</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -2185,7 +2185,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - менеджер программных пакетов для Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
@@ -2361,15 +2361,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change directory to %1</source>
-        <translation type="vanished">Невозможно изменить директорию на %1</translation>
+        <translation>Невозможно изменить директорию на %1</translation>
     </message>
     <message>
         <source>Cannot create directory %0%1</source>
-        <translation type="vanished">Невозможно создать директорию %0%1</translation>
+        <translation>Невозможно создать директорию %0%1</translation>
     </message>
     <message>
         <source>Cannot rename %1 to %2 in %3</source>
-        <translation type="vanished">Невозможно переименовать %1 в %2 в %3</translation>
+        <translation>Невозможно переименовать %1 в %2 в %3</translation>
     </message>
     <message>
         <source>Error searching for the best dependency match: %1</source>
@@ -2397,7 +2397,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>
-        <translation type="vanished">Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
+        <translation>Неверная SHA1:%1 ожидалась, но %2 была получена</translation>
     </message>
     <message>
         <source>Shortcut target %1 does not exist</source>
@@ -2409,7 +2409,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Preparing</source>
-        <translation type="vanished">Подготовка</translation>
+        <translation>Подготовка</translation>
     </message>
     <message>
         <source>Creating directory</source>
@@ -2449,7 +2449,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
-        <translation type="vanished">Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
+        <translation>Хэш сумма (SHA1) %1 обнаружена, но %2 ожидалась. Файл был изменён.</translation>
     </message>
     <message>
         <source>Extracting files</source>
@@ -2477,7 +2477,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Opening ZIP file</source>
-        <translation type="vanished">Открытие ZIP файла</translation>
+        <translation>Открытие ZIP файла</translation>
     </message>
     <message>
         <source>Cannot open the ZIP file %1: %2</source>
@@ -2669,7 +2669,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Download failed: %2</source>
-        <translation type="vanished">Загрузка не удалась: %2</translation>
+        <translation>Загрузка не удалась: %2</translation>
     </message>
     <message>
         <source>Parsing the content</source>
@@ -2681,11 +2681,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Opening file</source>
-        <translation type="vanished">Открытие файла</translation>
+        <translation>Открытие файла</translation>
     </message>
     <message>
         <source>Cannot open the file</source>
-        <translation type="vanished">Невозможно открыть файл</translation>
+        <translation>Невозможно открыть файл</translation>
     </message>
     <message>
         <source>Parsing XML</source>
@@ -2693,7 +2693,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Analyzing the content</source>
-        <translation type="vanished">Анализ содержимого</translation>
+        <translation>Анализ содержимого</translation>
     </message>
     <message>
         <source>Invalid repository specification version: %1</source>
@@ -2722,11 +2722,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
-        <translation type="vanished">Пакет(ы) не может(гут) быть удален(ы), так как следующие файлы используются (пожалуйста, закройте соответствующие приложения): %1</translation>
+        <translation>Пакет(ы) не может(гут) быть удален(ы), так как следующие файлы используются (пожалуйста, закройте соответствующие приложения): %1</translation>
     </message>
     <message>
         <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
-        <translation type="vanished">Пакет %1 не может быть удалён, так как некоторые файлы или папки в %2 используются.</translation>
+        <translation>Пакет %1 не может быть удалён, так как некоторые файлы или папки в %2 используются.</translation>
     </message>
     <message>
         <source>Scanning %1</source>
@@ -2742,7 +2742,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find locked package versions: %1</source>
-        <translation type="vanished">Невозможно найти заблокированные версии пакетов: %1</translation>
+        <translation>Невозможно найти заблокированные версии пакетов: %1</translation>
     </message>
     <message>
         <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
@@ -3226,11 +3226,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Installation Directory:</source>
-        <translation type="vanished">Путь Установки:</translation>
+        <translation>Путь Установки:</translation>
     </message>
     <message>
         <source>Installation directory:</source>
-        <translation type="unfinished"></translation>
+        <translation>Путь установки:</translation>
     </message>
     <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -3303,7 +3303,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/windows-package-manager/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/windows-package-manager/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
-        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
@@ -3319,7 +3319,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Disconnect users from file shares</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>
