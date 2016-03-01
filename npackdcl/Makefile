@@ -15,12 +15,14 @@ ifeq (32,$(findstring 32,$(PROFILE)))
 QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.9.2, 4.9.2]")
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.7.1, 0.7.1]")
+DRMINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=drmingw" "--versions=[0.7.7, 0.7.7]")
 BITS=32
 PACKAGE=com.googlecode.windows-package-manager.NpackdCL
 else
 QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
 MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.9.2, 4.9.2]")
 QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.7.1, 0.7.1]")
+DRMINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=drmingw64" "--versions=[0.7.7, 0.7.7]")
 BITS=64
 endif
 
@@ -58,6 +60,7 @@ printvars:
 	@echo BITS=$(BITS)
 	@echo VERSION=$(VERSION)
 	@echo MINGW=$(MINGW)
+	@echo DRMINGW=$(DRMINGW)
 	@echo QUAZIP=$(QUAZIP)
 	@echo QT=$(QT)
 	@echo AI=$(AI)
@@ -70,6 +73,9 @@ printvars:
 
 clean: printvars
 	-rmdir /s /q $(WHERE)
+
+$(WHERE)/zip-debug: $(WHERE)
+	-mkdir $(WHERE)\zip-debug
 
 $(WHERE)/zip:
 	-mkdir $(WHERE)\zip
@@ -93,6 +99,17 @@ prep: compile $(WHERE)/zip
 
 zip: prep $(WHERE)\zip\ncl.exe
 	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip *
+
+zip-debug: compile $(WHERE)/zip-debug
+	copy LICENSE.txt $(WHERE)\zip-debug
+	copy CrystalIcons_LICENSE.txt $(WHERE)\zip-debug
+	copy $(WHERE)\$(PROJECT).exe $(WHERE)\zip-debug\$(PROJECT).exe
+	copy "$(DRMINGW)\bin\exchndl.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\mgwhelp.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\dbghelp.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\symsrv.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\symsrv.yes" $(WHERE)\zip-debug
+	cd $(WHERE)\zip-debug && "$(SEVENZIP)\7z" a ..\$(PROJECT)$(BITS)-debug-$(VERSION).zip *
 
 $(WHERE)\zip\ncl.exe:
 	$(EXEPROXY)\exeproxy exeproxy-copy $(WHERE)\zip\ncl.exe npackdcl.exe

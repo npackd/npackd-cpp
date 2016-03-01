@@ -39,5 +39,6 @@ goto :eof
 appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.zip || exit /b %errorlevel%
 appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.msi || exit /b %errorlevel%
 appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.map || exit /b %errorlevel%
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-debug-%version%.zip || exit /b %errorlevel%
 goto :eof
 
