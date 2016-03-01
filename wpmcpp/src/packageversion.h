@@ -369,6 +369,13 @@ public:
     QString getIdealInstallationDirectory();
 
     /**
+     * @return a maybe existing directory where this package would normally
+     *     installed as secondary location including the version number
+     *     (e.g. C:\Program Files\My_Prog-12.2.3)
+     */
+    QString getSecondaryInstallationDirectory();
+
+    /**
      * Installs this package without dependencies. The directory should already
      * exist and be prepared by this->download(...)
      *

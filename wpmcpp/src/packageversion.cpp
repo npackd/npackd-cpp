@@ -1237,6 +1237,15 @@ QString PackageVersion::getIdealInstallationDirectory()
             false);
 }
 
+QString PackageVersion::getSecondaryInstallationDirectory()
+{
+    return WPMUtils::normalizePath(
+            WPMUtils::getInstallationDirectory() + "\\" +
+            WPMUtils::makeValidFilename(this->getPackageTitle(), '_') +
+            "-" + this->version.getVersionString(),
+            false);
+}
+
 QString PackageVersion::getPreferredInstallationDirectory()
 {
     QString name = WPMUtils::normalizePath(

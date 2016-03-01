@@ -123,6 +123,8 @@ void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
         bool printScriptOutput, bool interactive)
 {
+    QDir d;
+
     QList<InstallOperation *> install = install_;
 
     // reoder the operations if a package is updated. In this case it is better
@@ -197,7 +199,6 @@ void AbstractRepository::process(Job *job,
                 }
                 dir = WPMUtils::findNonExistingFile(dir, "");
 
-                QDir d;
                 if (d.exists(dir)) {
                     sub->setErrorMessage(
                             QObject::tr("Directory %1 already exists").
@@ -262,15 +263,25 @@ void AbstractRepository::process(Job *job,
                 QString dir = dirs.at(i);
                 QString binary = binaries.at(i);
 
-                QDir d;
                 if (op->where.isEmpty()) {
                     // if we are not forced to install in a particular
                     // directory, we try to use the ideal location
-                    QString ideal = pv->getIdealInstallationDirectory();
-                    if (!d.exists(ideal) &&
-                            !WPMUtils::pathEquals(ideal, dir)) {
-                        if (d.rename(dir, ideal))
-                            dir = ideal;
+                    QString try_ = pv->getIdealInstallationDirectory();
+                    if (WPMUtils::pathEquals(try_, dir) ||
+                            (!d.exists(try_) && d.rename(dir, try_))) {
+                        dir = try_;
+                    } else {
+                        try_ = pv->getSecondaryInstallationDirectory();
+                        if (WPMUtils::pathEquals(try_, dir) ||
+                                (!d.exists(try_) && d.rename(dir, try_))) {
+                            dir = try_;
+                        } else {
+                            try_ = WPMUtils::findNonExistingFile(try_, "");
+                            if (WPMUtils::pathEquals(try_, dir) ||
+                                    (!d.exists(try_) && d.rename(dir, try_))) {
+                                dir = try_;
+                            }
+                        }
                     }
                 } else {
                     if (d.exists(op->where)) {
@@ -326,8 +337,8 @@ void AbstractRepository::process(Job *job,
                 QString txt = QObject::tr("Deleting %1").arg(dir);
 
                 Job* sub = job->newSubJob(0.01 / dirs.count(), txt, true, false);
-                QDir d(dir);
-                WPMUtils::removeDirectory(sub, d);
+                QDir ddir(dir);
+                WPMUtils::removeDirectory(sub, ddir);
             } else {
                 job->setProgress(job->getProgress() + 0.01 / dirs.count());
             }
