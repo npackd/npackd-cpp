@@ -35,7 +35,7 @@ curl --form token=%covtoken% --form email=tim.lebedkov@gmail.com --form file=@co
 goto :eof
 
 :npackdcl
-"%make%" -C npackdcl zip msi PROFILE=release%bits% || exit /b %errorlevel%
+"%make%" -C npackdcl zip msi zip-debug PROFILE=release%bits% || exit /b %errorlevel%
 appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.zip || exit /b %errorlevel%
 appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.msi || exit /b %errorlevel%
 appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.map || exit /b %errorlevel%
