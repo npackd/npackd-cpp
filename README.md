@@ -43,5 +43,7 @@ You can also distribute your own applications using Npackd: either through your 
 
 <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4c376eea7c4cc880"><img src="https://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a>
 
+Download statistics: http://www.somsubhra.com/github-release-stats/?username=tim-lebedkov&repository=npackd-cpp
+
 Windows is a registered trademark of Microsoft Corporation in the United States and other countries.
 
