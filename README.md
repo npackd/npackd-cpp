@@ -29,7 +29,7 @@ C:\> msiexec.exe /qb- /i https://bit.ly/npackdcl-1_20_5
 see [What is new in Npackd](https://github.com/tim-lebedkov/npackd/wiki/ChangeLog)
 
 ## News
-You can follow the news on [Twitter](http://twitter.com/Npackd)
+You can follow the news on [Twitter](http://twitter.com/Npackd) or via the [Forum](https://groups.google.com/forum/#!forum/npackd)
 
 ##Main features
   * synchronizes information about installed programs with the control panel "Add or remove software" and MSI package database. Allow uninstallation of those packages. 
