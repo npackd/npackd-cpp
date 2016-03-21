@@ -1,11 +1,18 @@
 ﻿# Npackd
 
+_(pronounced "unpacked") is an application store/package manager/marketplace for applications for Windows_
+
+[![Build artifacts](https://ci.appveyor.com/api/projects/status/github/tim-lebedkov/npackd-cpp)](https://ci.appveyor.com/project/tim-lebedkov/npackd-cpp)
+[![Coverity](https://scan.coverity.com/projects/4151/badge.svg?flat=1)](https://scan.coverity.com/projects/4151?tab=overview)
+[![License](http://img.shields.io/badge/license-GPL%203.0-blue.svg?style=flat)](http://choosealicense.com/licenses/gpl-3.0/)
+
+
 * Home page and repositories: https://npackd.appspot.com
 * Downloads: https://github.com/tim-lebedkov/npackd/wiki/Downloads
 
 ![Npackd](http://npackd.appspot.com/Npackd.png)
 
-Npackd (pronounced "unpacked") is an application store/package manager/marketplace for applications for Windows. It helps you to find and install software, keep your system up-to-date and uninstall it if no longer necessary. You can watch [this short video](https://www.youtube.com/watch?v=ZLJ8sv6siKQ) to better understand how it works. The process of installing and uninstalling applications is completely automated (silent or unattended installation and un-installation). There is also a [command line](https://github.com/tim-lebedkov/npackd/wiki/CommandLine) based version of Npackd which you can [install](https://github.com/tim-lebedkov/npackd/wiki/CommandLineInstallation) from the command line: 
+It helps you to find and install software, keep your system up-to-date and uninstall it if no longer necessary. You can watch [this short video](https://www.youtube.com/watch?v=ZLJ8sv6siKQ) to better understand how it works. The process of installing and uninstalling applications is completely automated (silent or unattended installation and un-installation). There is also a [command line](https://github.com/tim-lebedkov/npackd/wiki/CommandLine) based version of Npackd which you can [install](https://github.com/tim-lebedkov/npackd/wiki/CommandLineInstallation) from the command line: 
 
 Easy installation of the graphical user interface from the command line (64 bit):
 
@@ -20,10 +27,6 @@ C:\> msiexec.exe /qb- /i https://bit.ly/npackdcl-1_20_5
 ```
 
 see [What is new in Npackd](https://github.com/tim-lebedkov/npackd/wiki/ChangeLog)
-
-## Project status
-[![Build artifacts](https://ci.appveyor.com/api/projects/status/github/tim-lebedkov/npackd-cpp)](https://ci.appveyor.com/project/tim-lebedkov/npackd-cpp)
-[![Build artifacts](https://scan.coverity.com/projects/4151/badge.svg?flat=1)](https://scan.coverity.com/projects/4151?tab=overview)
 
 ## News
 You can follow the news on [Twitter](http://twitter.com/Npackd)
@@ -44,7 +47,7 @@ You can also distribute your own applications using Npackd: either through your 
   * dependencies
   * shortcuts in the start menu are automatically created/deleted
   * multiple program versions can be installed side-by-side
-  * cryptographic checksum for packages (SHA1)
+  * cryptographic checksum for packages (SHA1 and SHA-256)
   * prevents uninstallation of running programs
 
 [![Project Stats](https://www.openhub.net/p/windows-package-manager/widgets/project_thin_badge.gif)](https://www.openhub.net/p/windows-package-manager)
