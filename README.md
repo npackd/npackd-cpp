@@ -1,6 +1,6 @@
 ﻿# Npackd
 
-_(pronounced "unpacked") is an application store/package manager/marketplace for applications for Windows_
+_(pronounced "unpacked") is an application store/package manager/marketplace for Windows_
 
 [![Build artifacts](https://ci.appveyor.com/api/projects/status/github/tim-lebedkov/npackd-cpp)](https://ci.appveyor.com/project/tim-lebedkov/npackd-cpp)
 [![Coverity](https://scan.coverity.com/projects/4151/badge.svg?flat=1)](https://scan.coverity.com/projects/4151?tab=overview)
@@ -31,14 +31,6 @@ see [What is new in Npackd](https://github.com/tim-lebedkov/npackd/wiki/ChangeLo
 ## News
 You can follow the news on [Twitter](http://twitter.com/Npackd)
 
-## Third party tools working with Npackd:
-  * [Npackd plugin for chooie](https://github.com/TomPeters/chooie.Npackd)
-  * [Puppet package provider for Npackd](http://forge.puppetlabs.com/badgerious/npackd)
-  * [Npackd for Sublime Text Syntax - completions and snippets for creating Npackd XML files](https://sublime.wbond.net/packages/Npackd)
-
-##Distribute your applications using Npackd!
-You can also distribute your own applications using Npackd: either through your own repository or through the one mentioned above. All you have to do is to package your application as a ZIP file so it is accessible through HTTP and describe it as shown in RepositoryFormat. It is even easier if you already have an .msi or .exe installer. In most cases they can be reused without re-packaging.
-
 ##Main features
   * synchronizes information about installed programs with the control panel "Add or remove software" and MSI package database. Allow uninstallation of those packages. 
   * support for proxies (use the internet settings control panel to configure it)
@@ -50,9 +42,8 @@ You can also distribute your own applications using Npackd: either through your 
   * cryptographic checksum for packages (SHA1 and SHA-256)
   * prevents uninstallation of running programs
 
+##Statistics
 [![Project Stats](https://www.openhub.net/p/windows-package-manager/widgets/project_thin_badge.gif)](https://www.openhub.net/p/windows-package-manager)
-
-<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4c376eea7c4cc880"><img src="https://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a>
 
 Download statistics: http://www.somsubhra.com/github-release-stats/?username=tim-lebedkov&repository=npackd-cpp
 
