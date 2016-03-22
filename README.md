@@ -1,11 +1,10 @@
-﻿# Npackd
-
-_(pronounced "unpacked") is an application store/package manager/marketplace for Windows_
-
-[![Build artifacts](https://ci.appveyor.com/api/projects/status/github/tim-lebedkov/npackd-cpp)](https://ci.appveyor.com/project/tim-lebedkov/npackd-cpp)
+﻿[![Build artifacts](https://ci.appveyor.com/api/projects/status/github/tim-lebedkov/npackd-cpp)](https://ci.appveyor.com/project/tim-lebedkov/npackd-cpp)
 [![Coverity](https://scan.coverity.com/projects/4151/badge.svg?flat=1)](https://scan.coverity.com/projects/4151?tab=overview)
 [![License](http://img.shields.io/badge/license-GPL%203.0-blue.svg?style=flat)](http://choosealicense.com/licenses/gpl-3.0/)
 
+# Npackd
+
+_(pronounced "unpacked") is an application store/package manager/marketplace for Windows_
 
 * Home page and repositories: https://npackd.appspot.com
 * Downloads: https://github.com/tim-lebedkov/npackd/wiki/Downloads
