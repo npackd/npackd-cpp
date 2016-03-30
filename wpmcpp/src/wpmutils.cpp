@@ -2817,8 +2817,15 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 DWORD dwWritten;
                 if (consoleOutput)
                     WriteConsoleW(hStdout, chBuf, dwRead / 2, &dwWritten, 0);
-                else
-                    WriteFile(hStdout, chBuf, dwRead, &dwWritten, 0);
+                else {
+                    // convert to UTF-8
+                    QString s;
+                    s.setUtf16((const ushort*) chBuf, dwRead / 2);
+                    QByteArray ba = s.toUtf8();
+
+                    WriteFile(hStdout, ba.constData(), ba.length(),
+                            &dwWritten, 0);
+                }
             }
 
             if (f.write(chBuf, dwRead) == -1) {
