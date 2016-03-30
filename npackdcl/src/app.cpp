@@ -113,7 +113,7 @@ int App::process()
     if (!err.isEmpty()) {
         // nothing. The error will be processed later.
     } else if (fr.count() == 0) {
-        err = "Missing command. Try npackdcl help";
+        err = "Missing command. Try \"ncl help\"";
     } else if (fr.count() > 1) {
         err = "Unexpected argument: " + fr.at(1);
     } else {
@@ -560,7 +560,7 @@ QString App::addRepo()
                 url_ = 0;
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
-                    WPMUtils::writeln("The repository was added successfully");
+                    WPMUtils::writeln("The repository was added successfully. Run \"ncl detect\" to update the local database.");
             }
         }
         qDeleteAll(urls);
@@ -602,7 +602,7 @@ QString App::setRepo()
         if (err.isEmpty()) {
             AbstractRepository::setRepositoryURLs(urls, &err);
             if (err.isEmpty())
-                WPMUtils::writeln("The repositories were changed successfully");
+                WPMUtils::writeln("The repositories were changed successfully. Run \"ncl detect\" to update the local database.");
         }
 
         qDeleteAll(urls);
@@ -801,7 +801,7 @@ QString App::removeRepo()
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     WPMUtils::writeln(
-                            "The repository was removed successfully");
+                            "The repository was removed successfully. Run \"ncl detect\" to update the local database.");
             }
         }
         qDeleteAll(urls);
