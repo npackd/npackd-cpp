@@ -176,7 +176,7 @@ void AbstractRepository::process(Job *job,
     // where the binary was downloaded
     QStringList dirs;
 
-    // names of the binaries
+    // names of the binaries relative to the directory
     QStringList binaries;
 
     // 70% for downloading the binaries
@@ -209,7 +209,7 @@ void AbstractRepository::process(Job *job,
                     dirs.append(dir);
 
                     QString binary = pv->download_(sub, dir, interactive);
-                    binaries.append(binary);
+                    binaries.append(QFileInfo(binary).fileName());
                 }
             } else {
                 dirs.append("");

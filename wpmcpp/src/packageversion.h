@@ -381,7 +381,7 @@ public:
      *
      * @param job job for this method
      * @param where target directory
-     * @param binary the full name of the downloaded binary
+     * @param binary relative file name of the downloaded binary
      *     or "" for packages of type "zip"
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream

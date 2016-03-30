@@ -1542,7 +1542,7 @@ void PackageVersion::install(Job* job, const QString& where,
 
             QStringList env;
             env.append("NPACKD_PACKAGE_BINARY");
-            env.append(binary);
+            env.append(WPMUtils::normalizePath(where, false) + "\\" + binary);
 
             QString err = addBasicVars(&env);
             if (!err.isEmpty())
