@@ -901,8 +901,8 @@ void WPMUtils::closeProcessWindows(HANDLE process,
                 } else {
                     c++;
                     if ((GetWindowLong(w, GWL_STYLE) & WS_DISABLED) == 0) {
-                        qDebug() << "WM_CLOSE to " <<
-                                GetProcessId(process) << getClassName(w);
+                        //qDebug() << "WM_CLOSE to " <<
+                        //        GetProcessId(process) << getClassName(w);
                         PostMessage(w, WM_CLOSE, 0, 0);
                     }
                 }

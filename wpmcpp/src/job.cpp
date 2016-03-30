@@ -338,7 +338,7 @@ void Job::setErrorMessage(const QString &errorMessage)
 {
     this->mutex.lock();
     bool changed = false;
-    if (this->errorMessage.isEmpty() && this->errorMessage != errorMessage) {
+    if (!errorMessage.isEmpty() && this->errorMessage != errorMessage) {
         this->errorMessage = errorMessage;
         if (parentJob && updateParentErrorMessage) {
             QString msg = title + ": " + errorMessage;

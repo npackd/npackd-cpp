@@ -1752,11 +1752,14 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
 
         if (QFile::exists(out)) {
             QTemporaryFile of;
-            of.setFileTemplate("NpackdXXXXXX.log");
+            of.setFileTemplate(QDir::tempPath() + "\\NpackdXXXXXX.log");
             of.setAutoRemove(false);
             QString filename;
             if (of.open()) {
                 filename = WPMUtils::normalizePath(of.fileName(), false);
+
+                // qDebug() << "haha" << filename;
+
                 of.close();
                 if (of.remove()) {
                     // ignoring the error here
