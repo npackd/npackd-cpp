@@ -1430,7 +1430,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The last lines of the output from the installation script:</source>
-        <translation>Die letzten Zeilen der Ausgabe von dem Skript zum Installieren:</translation>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Installieren:</translation>
     </message>
     <message>
         <source>%1. Full output was saved in %2</source>
@@ -1442,7 +1442,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The last lines of the output from the package stop script:</source>
-        <translation>Die letzten Zeilen der Ausgabe von dem Skript zum Stoppen:</translation>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Stoppen:</translation>
     </message>
     <message>
         <source>Deleting files</source>

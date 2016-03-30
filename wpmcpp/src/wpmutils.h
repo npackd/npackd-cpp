@@ -618,15 +618,12 @@ public:
      *     the output file?
      * @param printScriptOutput true = redirect the output to the default output
      *     stream
-     * @param lastOutputLines if not 0, the last lines of the program output
-     *     will be stored here
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             const QString& outputFile,
             const QStringList& env, bool writeUTF16LEBOM=true,
-            bool printScriptOutput=false,
-            QString* lastOutputLines=0);
+            bool printScriptOutput=false);
 
     /**
      * @param job job to monitor the progress. The error message will be set
@@ -637,13 +634,10 @@ public:
      * @param env additional environemnt variables
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
-     * @param lastOutputLines if not 0, the last lines of the program output
-     *     will be stored here
      */
     static void executeBatchFile(Job* job, const QString& where,
             const QString& path, const QString& outputFile,
-            const QStringList& env, bool printScriptOutput,
-            QString *lastOutputLines=0);
+            const QStringList& env, bool printScriptOutput);
 
     /**
      * @brief reports an event using the Windows Log API

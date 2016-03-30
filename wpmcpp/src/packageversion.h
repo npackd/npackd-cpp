@@ -63,14 +63,11 @@ private:
      * @param env additional environment variables
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
-     * @param lastOutputLines if not 0, the last lines of the program output
-     *     will be stored here
      */
     void executeFile2(Job *job, const QString &where, const QString &path,
             const QString &outputFile,
             const QStringList &env,
-            bool printScriptOutput,
-            QString *lastOutputLines=0);
+            bool printScriptOutput);
 
     void deleteShortcuts(const QString& dir,
             Job* job, bool menu, bool desktop, bool quickLaunch);

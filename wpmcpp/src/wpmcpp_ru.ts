@@ -2540,10 +2540,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The last lines of the output from the installation script:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%1. No output was generated</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2617,10 +2613,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Executing the stop script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The last lines of the output from the package stop script:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

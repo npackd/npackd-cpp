@@ -2597,7 +2597,7 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 void WPMUtils::executeBatchFile(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const QStringList& env,
-        bool printScriptOutput, QString *lastOutputLines)
+        bool printScriptOutput)
 {
     QDir d(where);
 
@@ -2607,8 +2607,7 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
 
     executeFile(job, d.absolutePath(), exe,
             "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
-            d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput,
-                lastOutputLines);
+            d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput);
 }
 
 void WPMUtils::reportEvent(const QString &msg, WORD wType)
@@ -2631,8 +2630,7 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         const QString& outputFile, const QStringList& env,
-        bool writeUTF16LEBOM, bool printScriptOutput,
-        QString *lastOutputLines)
+        bool writeUTF16LEBOM, bool printScriptOutput)
 {
     QString initialTitle = job->getTitle();
 
@@ -2785,7 +2783,6 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         }
 
         int64_t outputLen = 0;
-        QByteArray lastLines;
         DWORD ec = 0;
         const int BUFSIZE = 1024;
         char* chBuf = new char[BUFSIZE];
@@ -2801,17 +2798,6 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 break;
 
             outputLen += dwRead;
-
-            if (lastOutputLines) {
-                lastLines.append(chBuf, dwRead);
-
-                // 1024 bytes = 10 lines of UTF-16 text
-                if (lastLines.length() > 1024) {
-                    // always keep an even number of bytes
-                    lastLines.remove(0, lastLines.length() - 1024 -
-                            lastLines.length() % 2);
-                }
-            }
 
             if (hStdout != INVALID_HANDLE_VALUE) {
                 DWORD dwWritten;
@@ -2843,12 +2829,6 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                     arg(seconds / 60));
         }
         delete[] chBuf;
-
-        if (lastOutputLines) {
-            *lastOutputLines = QString::fromUtf16(
-                    (const ushort*) lastLines.data(),
-                    lastLines.length() / 2);
-        }
 
         // ignore possible errors here
         f.close();
