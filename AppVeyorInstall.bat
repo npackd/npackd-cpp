@@ -23,6 +23,9 @@ if "%target%" equ "drmemory" (
     "%npackd_cl%\ncl" add -p drmemory || exit /b %errorlevel%
 )
 
+"%npackd_cl%\ncl" add -d -p com.advancedinstaller.AdvancedInstallerFreeware
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 if %bits% equ 64 goto bits64
 "%npackd_cl%\ncl" add -p npackd-dev-i686-w64 -v %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
