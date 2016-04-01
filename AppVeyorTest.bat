@@ -18,10 +18,18 @@ if %prg% equ npackdcl goto npackdcl
 goto :eof
 
 :npackdcl
-"%make%" -C npackdcl\tests compile PROFILE=release%bits% || exit /b %errorlevel%
-npackdcl\tests\build\%bits%\release\tests -v2 || exit /b %errorlevel%
-"%make%" -C npackdcl\ftests compile PROFILE=release%bits% || exit /b %errorlevel%
-npackdcl\ftests\build\%bits%\release\ftests -v2 || exit /b %errorlevel%
+"%make%" -C npackdcl\tests compile PROFILE=release%bits%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+npackdcl\tests\build\%bits%\release\tests -v2
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+"%make%" -C npackdcl\ftests compile PROFILE=release%bits%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+npackdcl\ftests\build\%bits%\release\ftests -v2
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 goto :eof
 
 

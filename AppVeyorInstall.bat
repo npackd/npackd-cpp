@@ -3,23 +3,36 @@ echo on
 rem This script is used by AppVeyor automatic builds to install the necessary
 rem software dependencies.
 
-msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.21.5/NpackdCL-1.21.5.msi || exit /b %errorlevel%
+msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.21.5/NpackdCL-1.21.5.msi
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL|| exit /b %errorlevel%
-"%npackd_cl%\ncl" add-repo --url=https://npackd.appspot.com/rep/recent-xml || exit /b %errorlevel%
-"%npackd_cl%\ncl" add-repo --url=https://npackd.appspot.com/rep/xml?tag=libs || exit /b %errorlevel%
-"%npackd_cl%\ncl" detect || exit /b %errorlevel%
-"%npackd_cl%\ncl" set-install-dir -f "C:\Program Files (x86)" || exit /b %errorlevel%
+"%npackd_cl%\ncl" add-repo --url=https://npackd.appspot.com/rep/recent-xml
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+"%npackd_cl%\ncl" add-repo --url=https://npackd.appspot.com/rep/xml?tag=libs
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+"%npackd_cl%\ncl" detect
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+"%npackd_cl%\ncl" set-install-dir -f "C:\Program Files (x86)"
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 if "%target%" equ "drmemory" (
     "%npackd_cl%\ncl" add -p drmemory || exit /b %errorlevel%
 )
 
 if %bits% equ 64 goto bits64
-"%npackd_cl%\ncl" add -d -p npackd-dev-i686-w64 -v %version% || exit /b %errorlevel%
+"%npackd_cl%\ncl" add -d -p npackd-dev-i686-w64 -v %version%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 goto :eof
 
 :bits64
-"%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v %version% || exit /b %errorlevel%
+"%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v %version%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 
 if "%target%" neq "coverity" goto end
 "%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8

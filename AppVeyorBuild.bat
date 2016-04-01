@@ -20,25 +20,50 @@ if %prg% equ npackdcl goto npackdcl
 
 :npackd
 if "%target%" equ "coverity" goto coverity
-"%make%" -C wpmcpp zip msi zip-debug PROFILE=release%bits% || exit /b %errorlevel%
+
+"%make%" -C wpmcpp zip msi zip-debug PROFILE=release%bits%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 tree . /f
-appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.zip || exit /b %errorlevel%
-appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.msi || exit /b %errorlevel%
-appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.map || exit /b %errorlevel%
-appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-debug-%version%.zip || exit /b %errorlevel%
+appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.msi
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-%version%.map
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact wpmcpp\build\%bits%\release\Npackd%bits%-debug-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 goto :eof
 
 :coverity
 "cov-analysis\bin\cov-build.exe" --dir cov-int "%make%" -C wpmcpp compile PROFILE=release%bits% || exit /b %errorlevel%
-7z a cov-int.zip cov-int || exit /b %errorlevel%
-curl --form token=%covtoken% --form email=tim.lebedkov@gmail.com --form file=@cov-int.zip --form version="Version" --form description="Description" https://scan.coverity.com/builds?project=Npackd || exit /b %errorlevel%
+7z a cov-int.zip cov-int
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+curl --form token=%covtoken% --form email=tim.lebedkov@gmail.com --form file=@cov-int.zip --form version="Version" --form description="Description" https://scan.coverity.com/builds?project=Npackd
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 goto :eof
 
 :npackdcl
-"%make%" -C npackdcl zip msi zip-debug PROFILE=release%bits% || exit /b %errorlevel%
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.zip || exit /b %errorlevel%
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.msi || exit /b %errorlevel%
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.map || exit /b %errorlevel%
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-debug-%version%.zip || exit /b %errorlevel%
+"%make%" -C npackdcl zip msi zip-debug PROFILE=release%bits%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.msi
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.map
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-debug-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 goto :eof
 
