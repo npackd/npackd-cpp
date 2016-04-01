@@ -536,7 +536,7 @@ QString App::addRepo()
     QUrl* url_ = 0;
     if (err.isEmpty()) {
         url_ = new QUrl();
-        url_->setUrl(url, QUrl::StrictMode);
+        url_->setUrl(url, QUrl::TolerantMode);
         if (!url_->isValid()) {
             err = "Invalid URL: " + url;
         }
@@ -591,7 +591,7 @@ QString App::setRepo()
 
             QString url = urls_.at(i);
             QUrl* url_ = new QUrl();
-            url_->setUrl(url, QUrl::StrictMode);
+            url_->setUrl(url, QUrl::TolerantMode);
             if (!url_->isValid()) {
                 err = "Invalid URL: " + url;
             } else {
@@ -776,7 +776,7 @@ QString App::removeRepo()
     QUrl* url_ = 0;
     if (err.isEmpty()) {
         url_ = new QUrl();
-        url_->setUrl(url, QUrl::StrictMode);
+        url_->setUrl(url, QUrl::TolerantMode);
         if (!url_->isValid()) {
             err = "Invalid URL: " + url;
         }
