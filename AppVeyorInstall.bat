@@ -15,11 +15,11 @@ if "%target%" equ "drmemory" (
 )
 
 if %bits% equ 64 goto bits64
-"%npackd_cl%\ncl" add -p npackd-dev-i686-w64 -v %version% || exit /b %errorlevel%
+"%npackd_cl%\ncl" add -d -p npackd-dev-i686-w64 -v %version% || exit /b %errorlevel%
 goto :eof
 
 :bits64
-"%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v %version% || exit /b %errorlevel%
+"%npackd_cl%\ncl" add -d -p npackd-dev-x86_64-w64 -v %version% || exit /b %errorlevel%
 
 if "%target%" neq "coverity" goto end
 "%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8
