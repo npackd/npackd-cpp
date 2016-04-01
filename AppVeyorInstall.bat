@@ -24,7 +24,7 @@ if "%target%" equ "drmemory" (
 )
 
 if %bits% equ 64 goto bits64
-"%npackd_cl%\ncl" add -d -p npackd-dev-i686-w64 -v %version%
+"%npackd_cl%\ncl" add -p npackd-dev-i686-w64 -v %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
