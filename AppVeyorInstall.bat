@@ -3,6 +3,9 @@ echo on
 rem This script is used by AppVeyor automatic builds to install the necessary
 rem software dependencies.
 
+rem clear the MSIE/WinINet cache
+RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
+
 msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.21.5/NpackdCL-1.21.5.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
