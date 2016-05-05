@@ -215,24 +215,26 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
         //qDebug() << callNumber << r << dwStatus << url.toString();
 
-        if (r == ERROR_SUCCESS) {
-            if (sendRequestError) {
-                QString errMsg;
-                WPMUtils::formatMessage(sendRequestError, &errMsg);
-                job->setErrorMessage(errMsg);
+        if (job->shouldProceed()) {
+            if (r == ERROR_SUCCESS) {
+                if (sendRequestError) {
+                    QString errMsg;
+                    WPMUtils::formatMessage(sendRequestError, &errMsg);
+                    job->setErrorMessage(errMsg);
+                } else {
+                    job->setErrorMessage(QString(
+                            QObject::tr("HTTP status code %1")).arg(dwStatus));
+                }
+            } else if (r == ERROR_INTERNET_FORCE_RETRY) {
+                // nothing
+            } else if (r == ERROR_CANCELLED) {
+                job->setErrorMessage(QObject::tr("Cancelled by the user"));
+            } else if (r == ERROR_INVALID_HANDLE) {
+                job->setErrorMessage(QObject::tr("Invalid handle"));
             } else {
                 job->setErrorMessage(QString(
-                        QObject::tr("HTTP status code %1")).arg(dwStatus));
+                        QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
             }
-        } else if (r == ERROR_INTERNET_FORCE_RETRY) {
-            // nothing
-        } else if (r == ERROR_CANCELLED) {
-            job->setErrorMessage(QObject::tr("Cancelled by the user"));
-        } else if (r == ERROR_INVALID_HANDLE) {
-            job->setErrorMessage(QObject::tr("Invalid handle"));
-        } else {
-            job->setErrorMessage(QString(
-                    QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
         }
 
         loginDialogMutex.unlock();
