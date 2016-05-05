@@ -17,6 +17,8 @@
 #include "job.h"
 #include "wpmutils.h"
 
+bool Downloader::debug = false;
+
 HWND defaultPasswordWindow = 0;
 QMutex loginDialogMutex;
 
@@ -125,6 +127,10 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             WPMUtils::formatMessage(GetLastError(), &errMsg);
             job->setErrorMessage(errMsg);
         }
+    }
+
+    if (debug) {
+        WPMUtils::outputTextConsole("HttpOpenRequestW succeeded");
     }
 
     if (job->shouldProceed()) {
@@ -651,6 +657,10 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
 void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         QString* sha1, int64_t contentLength, QCryptographicHash::Algorithm alg)
 {
+    if (debug) {
+        WPMUtils::outputTextConsole("Downloader::readDataFlat");
+    }
+
     QString initialTitle = job->getTitle();
 
     // download/compute SHA1 loop
@@ -661,13 +671,18 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
     int64_t alreadyRead = 0;
     DWORD bufferLength;
     do {
-        // gzip-header is at least 10 bytes long
         if (!InternetReadFile(hResourceHandle, buffer,
                 bufferSize, &bufferLength)) {
             QString errMsg;
             WPMUtils::formatMessage(GetLastError(), &errMsg);
             job->setErrorMessage(errMsg);
             break;
+        }
+
+        if (debug) {
+            WPMUtils::outputTextConsole(QString(
+                    "Downloader::readDataFlat InternetReadFile bufferLength=%1").
+                    arg(bufferLength));
         }
 
         if (bufferLength == 0)
