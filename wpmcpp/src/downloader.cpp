@@ -77,6 +77,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         DWORD rec_timeout = timeout * 1000;
         InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
                 &rec_timeout, sizeof(rec_timeout));
+        InternetSetOption(internet, INTERNET_OPTION_SEND_TIMEOUT,
+                &rec_timeout, sizeof(rec_timeout));
 
         // enable automatic gzip decoding
         const DWORD INTERNET_OPTION_HTTP_DECODING = 65;
@@ -689,7 +691,7 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         // bufferLength==0, but not the whole file was read
         if (bufferLength == 0 && contentLength > 0 &&
                 alreadyRead < contentLength) {
-            job->setErrorMessage(QObject::tr("Premature end of the file"));
+            job->setErrorMessage(QObject::tr("Premature end of the download"));
             break;
         }
 

@@ -3206,7 +3206,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Premature end of the file</source>
+        <source>Premature end of the download</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
