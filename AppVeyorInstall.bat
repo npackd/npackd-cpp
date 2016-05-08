@@ -32,6 +32,8 @@ if "%target%" equ "drmemory" (
     "%npackd_cl%\ncl" add -p drmemory || exit /b %errorlevel%
 )
 
+"%npackd_cl%\ncl" add -d -p ai
+
 rem fail fast if the Advanced Installer cannot be downloaded
 "%npackd_cl%\ncl" add -d -p com.advancedinstaller.AdvancedInstallerFreeware
 if %errorlevel% neq 0 exit /b %errorlevel%
