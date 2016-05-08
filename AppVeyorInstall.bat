@@ -6,7 +6,13 @@ rem software dependencies.
 rem clear the MSIE/WinINet cache
 RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 
+goto :ignore
+
 msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.21.6/NpackdCL-1.21.6.msi
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+:ignore
+https://ci.appveyor.com/api/buildjobs/dce7lnf9jpdhm68i/artifacts/NpackdCL-1.21.6.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL|| exit /b %errorlevel%
@@ -27,7 +33,7 @@ if "%target%" equ "drmemory" (
 )
 
 rem fail fast if the Advanced Installer cannot be downloaded
-"%npackd_cl%\ncl" add -p com.advancedinstaller.AdvancedInstallerFreeware
+"%npackd_cl%\ncl" add -d -p com.advancedinstaller.AdvancedInstallerFreeware
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if %bits% equ 64 goto bits64
