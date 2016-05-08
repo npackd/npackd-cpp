@@ -3120,6 +3120,10 @@ p, li { white-space: pre-wrap; }
         <source>Deleting the directory %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Premature end of the file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

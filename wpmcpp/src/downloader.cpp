@@ -130,7 +130,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     }
 
     if (debug) {
-        WPMUtils::outputTextConsole("HttpOpenRequestW succeeded");
+        WPMUtils::writeln("HttpOpenRequestW succeeded");
     }
 
     if (job->shouldProceed()) {
@@ -658,7 +658,7 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         QString* sha1, int64_t contentLength, QCryptographicHash::Algorithm alg)
 {
     if (debug) {
-        WPMUtils::outputTextConsole("Downloader::readDataFlat");
+        WPMUtils::writeln("Downloader::readDataFlat");
     }
 
     QString initialTitle = job->getTitle();
@@ -680,9 +680,17 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         }
 
         if (debug) {
-            WPMUtils::outputTextConsole(QString(
+            WPMUtils::writeln(QString(
                     "Downloader::readDataFlat InternetReadFile bufferLength=%1").
                     arg(bufferLength));
+        }
+
+        // a special case, not as documented in MSDN. InternetReadFile returns
+        // bufferLength==0, but not the whole file was read
+        if (bufferLength == 0 && contentLength > 0 &&
+                alreadyRead < contentLength) {
+            job->setErrorMessage(QObject::tr("Premature end of the file"));
+            break;
         }
 
         if (bufferLength == 0)
