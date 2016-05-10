@@ -136,9 +136,10 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     }
 
     if (job->shouldProceed()) {
-        job->checkOSCall(HttpAddRequestHeadersW(hResourceHandle,
+        // do not check for errors here
+        HttpAddRequestHeadersW(hResourceHandle,
                 L"Accept-Encoding: gzip, deflate", -1,
-                HTTP_ADDREQ_FLAG_ADD));
+                HTTP_ADDREQ_FLAG_ADD);
     }
 
     DWORD dwStatus, dwStatusSize = sizeof(dwStatus);

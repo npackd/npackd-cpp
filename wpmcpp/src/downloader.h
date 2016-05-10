@@ -149,7 +149,7 @@ public:
                 parentWindow(0), url(url), hashSum(false),
                 alg(QCryptographicHash::Sha256), useCache(true),
                 keepConnection(true), httpMethod("GET"),
-                timeout(300) {
+                timeout(600) {
         }
     };
 
