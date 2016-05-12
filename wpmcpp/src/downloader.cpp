@@ -142,12 +142,13 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 HTTP_ADDREQ_FLAG_ADD);
     }
 
-    DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
-
     // qDebug() << "download.5";
     int callNumber = 0;
     while (job->shouldProceed()) {
         // qDebug() << "download.5.1";
+
+        // NOTE: dwStatus is only valid if sendRequestError == 0
+        DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
 
         DWORD sendRequestError = 0;
         if (!HttpSendRequestW(hResourceHandle,
@@ -158,19 +159,21 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         }
 
         // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
-        if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
-                HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
-            QString errMsg;
-            WPMUtils::formatMessage(GetLastError(), &errMsg);
-            job->setErrorMessage(errMsg);
-            break;
+        if (sendRequestError == 0) {
+            if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
+                    HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
+                QString errMsg;
+                WPMUtils::formatMessage(GetLastError(), &errMsg);
+                job->setErrorMessage(errMsg);
+                break;
+            }
         }
 
-        /*
-        qDebug() << callNumber <<
-                sendRequestError << dwStatus << request.httpMethod <<
-                request.url.toString();
-        */
+        if (debug) {
+            WPMUtils::writeln(QString("Downloader::downloadWin callNumber=%1, "
+                    "sendRequestError=%2, dwStatus=%3").arg(callNumber,
+                    sendRequestError, dwStatus));
+        }
 
         // 2XX
         if (sendRequestError == 0) {
@@ -190,6 +193,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
         DWORD r;
 
+        // first call is processed differently
         if (callNumber == 0) {
             r = InternetErrorDlg(0,
                    hResourceHandle, sendRequestError,
@@ -199,27 +203,34 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                     FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
             if (r == ERROR_SUCCESS && interactive)
                 r = ERROR_INTERNET_FORCE_RETRY;
-        } else if (interactive) {
-            if (parentWindow) {
-                r = InternetErrorDlg(parentWindow,
-                        hResourceHandle, sendRequestError,
-                        FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                        FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                        FLAGS_ERROR_UI_FLAGS_GENERATE_DATA, &p);
-            } else {
-                QString e = inputPassword(hConnectHandle, dwStatus);
-
-                //qDebug() << "inputPassword: " << e;
-                if (!e.isEmpty()) {
-                    job->setErrorMessage(e);
-                    r = ERROR_CANCELLED;
-                } else {
-                    r = ERROR_INTERNET_FORCE_RETRY;
-                }
-            }
         } else {
-            // cannot help
-            r = ERROR_SUCCESS;
+            if (interactive) {
+                if (parentWindow) {
+                    r = InternetErrorDlg(parentWindow,
+                            hResourceHandle, sendRequestError,
+                            FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                            FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                            FLAGS_ERROR_UI_FLAGS_GENERATE_DATA, &p);
+                } else {
+                    if (sendRequestError == 0) {
+                        QString e = inputPassword(hConnectHandle, dwStatus);
+
+                        //qDebug() << "inputPassword: " << e;
+                        if (!e.isEmpty()) {
+                            job->setErrorMessage(e);
+                            r = ERROR_CANCELLED;
+                        } else {
+                            r = ERROR_INTERNET_FORCE_RETRY;
+                        }
+                    } else {
+                        // cannot help
+                        r = ERROR_SUCCESS;
+                    }
+                }
+            } else {
+                // cannot help
+                r = ERROR_SUCCESS;
+            }
         }
 
         //qDebug() << callNumber << r << dwStatus << url.toString();
@@ -273,6 +284,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
 out:
     if (job->shouldProceed()) {
+        DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
+
         // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
         if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
                 HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
@@ -387,7 +400,8 @@ out:
     return contentLength;
 }
 
-QString Downloader::inputPassword(HINTERNET hConnectHandle, DWORD dwStatus)
+QString Downloader::inputPassword(HINTERNET hConnectHandle,
+        DWORD dwStatus)
 {
     QString result;
 
