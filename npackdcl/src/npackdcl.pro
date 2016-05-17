@@ -1,11 +1,14 @@
 NPACKD_VERSION = $$system(type ..\\..\\wpmcpp\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
+DEFINES += QT_NO_DEBUG_OUTPUT
+
+PRECOMPILED_HEADER = stable.h
 
 QT += xml sql
 QT -= gui
 
 TARGET = npackdcl
-CONFIG += console
+CONFIG += console precompile_header
 CONFIG -= app_bundle
 TEMPLATE = app
 RC_FILE = npackdcl.rc
@@ -81,7 +84,8 @@ HEADERS += ../../wpmcpp/src/visiblejobs.h \
     ../../wpmcpp/src/repositoryxmlhandler.h \
     ../../wpmcpp/src/mysqlquery.h \
     ../../wpmcpp/src/installedpackagesthirdpartypm.h \
-    ../../wpmcpp/src/cbsthirdpartypm.h
+    ../../wpmcpp/src/cbsthirdpartypm.h \
+    stable.h
 FORMS += 
 
 CONFIG += static

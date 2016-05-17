@@ -4,9 +4,6 @@
 #include <time.h>
 
 #include <QtCore/QCoreApplication>
-#include <qdebug.h>
-#include <qstringlist.h>
-#include <qstring.h>
 
 #include "repository.h"
 #include "commandline.h"

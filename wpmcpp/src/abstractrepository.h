@@ -1,10 +1,7 @@
 #ifndef ABSTRACTREPOSITORY_H
 #define ABSTRACTREPOSITORY_H
 
-#include <windows.h>
-
-#include <QList>
-#include <QString>
+#include "stable.h"
 
 #include "packageversion.h"
 #include "package.h"
