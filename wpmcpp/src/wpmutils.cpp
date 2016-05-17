@@ -32,7 +32,6 @@
 #include <QCryptographicHash>
 #include <QFile>
 #include <QVariant>
-#include <QProcessEnvironment>
 #include <QBuffer>
 #include <QByteArray>
 
@@ -1906,10 +1905,6 @@ QString WPMUtils::findCmdExe()
     QString r = getWindowsDir() + "\\Sysnative\\cmd.exe";
     if (!QFileInfo(r).exists()) {
         r = getWindowsDir() + "\\system32\\cmd.exe";
-        if (!QFileInfo(r).exists()) {
-            QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
-            r = pe.value("COMSPEC", r);
-        }
     }
     return r;
 }

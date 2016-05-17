@@ -15,7 +15,6 @@
 #include <QUrl>
 #include <QDebug>
 #include <QIODevice>
-#include <QProcess>
 #include <QDomElement>
 #include <QDomDocument>
 #include <QMutex>

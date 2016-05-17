@@ -11,7 +11,6 @@
 #include <QWaitCondition>
 #include <QMutex>
 #include <QCryptographicHash>
-#include <QProcess>
 
 #include "downloader.h"
 #include "job.h"
