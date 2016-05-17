@@ -10,9 +10,10 @@ goto :ignore
 
 msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.21.6/NpackdCL-1.21.6.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
+REM https://ci.appveyor.com/api/buildjobs/s31vu7iq1tdgujip/artifacts/NpackdCL-1.21.6.msi
 
 :ignore
-msiexec.exe /qn /i https://ci.appveyor.com/api/buildjobs/s31vu7iq1tdgujip/artifacts/NpackdCL-1.21.6.msi
+msiexec.exe /qn /i https://github.com/tim-lebedkov/packages/releases/download/initial/NpackdCL-1.20.5.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL|| exit /b %errorlevel%
