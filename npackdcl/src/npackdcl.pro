@@ -99,12 +99,12 @@ QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
 QMAKE_CXXFLAGS -= -fexceptions
 QMAKE_LFLAGS += -static
 QMAKE_CXXFLAGS_RELEASE -= -O2
-QMAKE_CXXFLAGS_RELEASE += -Os
+QMAKE_CXXFLAGS_RELEASE += -Os -flto
 
 QMAKE_LFLAGS_RELEASE += -Wl,-Map,npackdcl_release.map
 
 # these 2 options can be used to add the debugging information to the "release"
 # build
-QMAKE_CXXFLAGS_RELEASE += -g
+QMAKE_CXXFLAGS_RELEASE += -g -flto
 QMAKE_LFLAGS_RELEASE -= -Wl,-s
 

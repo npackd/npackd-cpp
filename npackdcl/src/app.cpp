@@ -1,7 +1,6 @@
 #include <limits>
 #include <math.h>
 
-#include <QRegExp>
 #include <QScopedPointer>
 #include <QMultiMap>
 

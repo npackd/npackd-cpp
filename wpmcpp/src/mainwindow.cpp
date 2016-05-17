@@ -18,7 +18,6 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QRegExp>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <qinputdialog.h>
