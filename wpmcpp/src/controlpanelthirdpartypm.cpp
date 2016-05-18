@@ -178,7 +178,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
 
     //qDebug() << "CP: adding package " << p.data()->name << p.data()->title;
 
-    rep->savePackage(p.data());
+    rep->savePackage(p.data(), true);
 
     QDir d;
 
@@ -266,6 +266,6 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
                 "rem the program should be stopped by the uninstaller\r\n");
         pv->files.append(pvf);
 
-        rep->savePackageVersion(pv.data());
+        rep->savePackageVersion(pv.data(), true);
     }
 }

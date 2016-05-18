@@ -122,31 +122,10 @@ public:
 
     virtual ~DBRepository();
 
-    /**
-     * @brief inserts or updates an existing license
-     * @param p a license
-     * @param replace what to do if an entry already exists:
-     *     true = replace, false = ignore
-     * @return error message
-     */
     QString saveLicense(License* p, bool replace);
 
-    /**
-     * @brief inserts or updates an existing package version
-     * @param p a package version
-     * @param replace what to do if an entry already exists:
-     *     true = replace, false = ignore
-     * @return error message
-     */
     QString savePackageVersion(PackageVersion *p, bool replace);
 
-    /**
-     * @brief inserts or updates an existing package
-     * @param p a package
-     * @param replace what to do if an entry already exists:
-     *     true = replace, false = ignore
-     * @return error message
-     */
     QString savePackage(Package *p, bool replace);
 
     /**
@@ -239,12 +218,6 @@ public:
      * @param job job
      */
     void updateF5Runnable(Job* job);
-
-    QString savePackage(Package* p);
-
-    QString savePackageVersion(PackageVersion* p);
-
-    QString saveLicense(License* p);
 
     PackageVersion* findPackageVersionByMSIGUID_(
             const QString& guid, QString *err) const;

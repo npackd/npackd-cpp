@@ -315,47 +315,53 @@ Package *Repository::findPackage_(const QString &name)
     return p;
 }
 
-QString Repository::saveLicense(License *p)
+QString Repository::saveLicense(License *p, bool replace)
 {
     License* fp = findLicense(p->name);
-    if (!fp) {
-        fp = new License(p->name, p->title);
-        this->licenses.append(fp);
+    if (!fp || replace) {
+        if (!fp) {
+            fp = new License(p->name, p->title);
+            this->licenses.append(fp);
+        }
+        fp->title = p->title;
+        fp->url = p->url;
+        fp->description = p->description;
     }
-    fp->title = p->title;
-    fp->url = p->url;
-    fp->description = p->description;
 
     return "";
 }
 
-QString Repository::savePackage(Package *p)
+QString Repository::savePackage(Package *p, bool replace)
 {
     Package* fp = findPackage(p->name);
-    if (!fp) {
-        fp = new Package(p->name, p->title);
-        this->packages.append(fp);
+    if (!fp || replace) {
+        if (!fp) {
+            fp = new Package(p->name, p->title);
+            this->packages.append(fp);
+        }
+        fp->title = p->title;
+        fp->url = p->url;
+        fp->setIcon(p->getIcon());
+        fp->description = p->description;
+        fp->license = p->license;
+        fp->categories = p->categories;
     }
-    fp->title = p->title;
-    fp->url = p->url;
-    fp->setIcon(p->getIcon());
-    fp->description = p->description;
-    fp->license = p->license;
-    fp->categories = p->categories;
 
     return "";
 }
 
-QString Repository::savePackageVersion(PackageVersion *p)
+QString Repository::savePackageVersion(PackageVersion *p, bool replace)
 {
     PackageVersion* fp = findPackageVersion(p->package, p->version);
-    if (!fp) {
-        fp = new PackageVersion(p->package);
-        fp->version = p->version;
-        this->packageVersions.append(fp);
-        this->package2versions.insert(p->package, fp);
+    if (!fp || replace) {
+        if (!fp) {
+            fp = new PackageVersion(p->package);
+            fp->version = p->version;
+            this->packageVersions.append(fp);
+            this->package2versions.insert(p->package, fp);
+        }
+        fp->fillFrom(p);
     }
-    fp->fillFrom(p);
 
     return "";
 }

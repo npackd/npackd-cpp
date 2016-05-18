@@ -91,7 +91,7 @@ void CBSThirdPartyPM::detectOneCBSPackage(
         title.replace('-', ' ');
         QScopedPointer<Package> p(new Package(package, title));
         p->categories.append(QObject::tr("Component-Based Servicing"));
-        rep->savePackage(p.data());
+        rep->savePackage(p.data(), true);
     }
 
     // find the version number
@@ -110,7 +110,7 @@ void CBSThirdPartyPM::detectOneCBSPackage(
         PackageVersionFile* pvf = new PackageVersionFile(
                 ".Npackd\\Uninstall.bat", "\r\n"); // TODO
         pv->files.append(pvf);
-        rep->savePackageVersion(pv.data());
+        rep->savePackageVersion(pv.data(), true);
     }
 
     DWORD state = 0;
@@ -174,7 +174,7 @@ void CBSThirdPartyPM::detectOneCBSPackageUpdate(
             QScopedPointer<Package> p(new Package(packageName, title));
             p->description = title; // TODO
             p->categories.append(QObject::tr("Component-Based Servicing"));
-            rep->savePackage(p.data());
+            rep->savePackage(p.data(), true);
 
             Version version;
 
@@ -183,7 +183,7 @@ void CBSThirdPartyPM::detectOneCBSPackageUpdate(
             PackageVersionFile* pvf = new PackageVersionFile(
                     ".Npackd\\Uninstall.bat", "\r\n"); // TODO
             pv->files.append(pvf);
-            rep->savePackageVersion(pv.data());
+            rep->savePackageVersion(pv.data(), true);
 
             if (superPackageInstalled && value == 1) {
                 InstalledPackageVersion* ipv = new InstalledPackageVersion(

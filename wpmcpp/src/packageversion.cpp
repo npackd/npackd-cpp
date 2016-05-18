@@ -2148,6 +2148,25 @@ PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
     }
 }
 
+PackageVersion *PackageVersion::parse(const QByteArray &xml, QString *err, bool validate)
+{
+    PackageVersion* r = 0;
+
+    QDomDocument doc;
+    int errorLine, errorColumn;
+    if (!doc.setContent(xml, err, &errorLine, &errorColumn))
+        *err = QString(
+                QObject::tr("XML parsing failed at line %1, column %2: %3")).
+                arg(errorLine).arg(errorColumn).arg(*err);
+
+    if (err->isEmpty()) {
+        QDomElement root = doc.documentElement();
+        r = PackageVersion::parse(&root, err);
+    }
+
+    return r;
+}
+
 bool PackageVersion::contains(const QList<PackageVersion *> &list,
         PackageVersion *pv)
 {

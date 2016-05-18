@@ -229,7 +229,7 @@ QString App::addNpackdCL()
         pv = new PackageVersion(
                 "com.googlecode.windows-package-manager.NpackdCL");
         pv->version = myVersion;
-        r->savePackageVersion(pv);
+        r->savePackageVersion(pv, true);
     }
     delete pv;
     pv = 0;

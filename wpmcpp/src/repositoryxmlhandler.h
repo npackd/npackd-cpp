@@ -69,6 +69,14 @@ public:
 
     virtual ~RepositoryXMLHandler();
 
+    /**
+     * @brief enters a tag without it being visible in the XML. This method
+     * can be used to parse top level <version> tags.
+     *
+     * @param qName the name of the tag
+     */
+    void enter(const QString& qName);
+
     bool startElement(const QString& namespaceURI,
             const QString& localName, const QString& qName,
             const QXmlAttributes& atts);

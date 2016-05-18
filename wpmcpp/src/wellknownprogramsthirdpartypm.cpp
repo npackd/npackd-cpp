@@ -11,7 +11,7 @@ void WellKnownProgramsThirdPartyPM::scanDotNet(
     p->url = "http://msdn.microsoft.com/en-us/netframework/default.aspx";
     p->description = QObject::tr(".NET runtime");
 
-    QString err = rep->savePackage(p);
+    QString err = rep->savePackage(p, true);
     delete p;
 
     WindowsRegistry wr;
@@ -81,7 +81,7 @@ void WellKnownProgramsThirdPartyPM::detectOneDotNet(
     if (found) {
         PackageVersion* pv = new PackageVersion(package);
         pv->version = v;
-        rep->savePackageVersion(pv);
+        rep->savePackageVersion(pv, true);
         delete pv;
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package, v,
@@ -101,7 +101,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
     p->url = "http://www.microsoft.com/downloads/en/details.aspx?FamilyID=993c0bcf-3bcf-4009-be21-27e85e1857b1#Overview";
     p->description = QObject::tr("XML library");
     p->setChangeLog("http://msdn.microsoft.com/en-us/library/ms753751(v=vs.85).aspx");
-    err = rep->savePackage(p.data());
+    err = rep->savePackage(p.data(), true);
 
     Version v;
     Version nullNull(0, 0);
@@ -110,7 +110,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         v = WPMUtils::getDLLVersion("msxml.dll");
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data());
+            err = rep->savePackageVersion(pv.data(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -119,7 +119,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         v = WPMUtils::getDLLVersion("msxml2.dll");
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data());
+            err = rep->savePackageVersion(pv.data(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -129,7 +129,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             v.prepend(3);
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data());
+            err = rep->savePackageVersion(pv.data(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -138,7 +138,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         v = WPMUtils::getDLLVersion("msxml4.dll");
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data());
+            err = rep->savePackageVersion(pv.data(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -147,7 +147,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         v = WPMUtils::getDLLVersion("msxml5.dll");
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data());
+            err = rep->savePackageVersion(pv.data(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -156,7 +156,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         v = WPMUtils::getDLLVersion("msxml6.dll");
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data());
+            err = rep->savePackageVersion(pv.data(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -180,8 +180,8 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
         p32->description = QObject::tr("operating system");
         p32->url = "http://www.microsoft.com/windows/";
         QScopedPointer<PackageVersion> pv32(new PackageVersion(p32->name, v));
-        rep->savePackage(p32.data());
-        rep->savePackageVersion(pv32.data());
+        rep->savePackage(p32.data(), true);
+        rep->savePackageVersion(pv32.data(), true);
         installed->append(new InstalledPackageVersion(p32->name, v,
                 WPMUtils::getWindowsDir()));
     } else {
@@ -190,8 +190,8 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
         p64->description = QObject::tr("operating system");
         p64->url = "http://www.microsoft.com/windows/";
         QScopedPointer<PackageVersion> pv64(new PackageVersion(p64->name, v));
-        rep->savePackage(p64.data());
-        rep->savePackageVersion(pv64.data());
+        rep->savePackage(p64.data(), true);
+        rep->savePackageVersion(pv64.data(), true);
         installed->append(new InstalledPackageVersion(p64->name, v,
                 WPMUtils::getWindowsDir()));
     }
@@ -200,9 +200,9 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
             "Windows"));
     p->description = QObject::tr("operating system");
     p->url = "http://www.microsoft.com/windows/";
-    rep->savePackage(p.data());
+    rep->savePackage(p.data(), true);
     QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-    rep->savePackageVersion(pv.data());
+    rep->savePackageVersion(pv.data(), true);
 
     // "" is used here as the installation directory as Npackd does not allow
     // multiple package versions to be installed in the same directory
@@ -226,7 +226,7 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
     p->description = QObject::tr("Java runtime");
     p->url = "http://www.java.com/";
     p->setChangeLog("http://en.wikipedia.org/wiki/Java_version_history");
-    rep->savePackage(p.data());
+    rep->savePackage(p.data(), true);
 
     WindowsRegistry jreWR;
     QString err = jreWR.open(HKEY_LOCAL_MACHINE,
@@ -257,7 +257,7 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
                 continue;
 
             QScopedPointer<PackageVersion> pv(new PackageVersion(package, v));
-            rep->savePackageVersion(pv.data());
+            rep->savePackageVersion(pv.data(), true);
 
             installed->append(new InstalledPackageVersion(package, v, path));
         }
@@ -278,7 +278,7 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
     p->url = "http://www.oracle.com/technetwork/java/javase/overview/index.html";
     p->description = QObject::tr("Java development kit");
     p->setChangeLog("http://en.wikipedia.org/wiki/Java_version_history");
-    rep->savePackage(p.data());
+    rep->savePackage(p.data(), true);
 
     WindowsRegistry wr;
     QString err = wr.open(HKEY_LOCAL_MACHINE,
@@ -312,7 +312,7 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
 
                 QScopedPointer<PackageVersion> pv(
                         new PackageVersion(package, v));
-                rep->savePackageVersion(pv.data());
+                rep->savePackageVersion(pv.data(), true);
 
                 installed->append(new InstalledPackageVersion(package, v, path));
             }
@@ -330,7 +330,7 @@ QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
     p->url = "http://msdn.microsoft.com/en-us/library/cc185688(VS.85).aspx";
     p->description = QObject::tr("Package manager");
 
-    err = rep->savePackage(p.data());
+    err = rep->savePackage(p.data(), true);
 
     Version v;
     Version nullNull(0, 0);
@@ -338,7 +338,7 @@ QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
         v = WPMUtils::getDLLVersion("MSI.dll");
         if (v.compare(nullNull) > 0) {
             QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data());
+            err = rep->savePackageVersion(pv.data(), true);
 
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
@@ -391,7 +391,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
         p->url = "https://github.com/tim-lebedkov/npackd";
         p->description = "package manager";
 
-        err = rep->savePackage(p);
+        err = rep->savePackage(p, true);
         if (!err.isEmpty())
             job->setErrorMessage(err);
 
@@ -404,7 +404,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
         p->url = "https://github.com/tim-lebedkov/npackd";
         p->description = "package manager";
 
-        err = rep->savePackage(p);
+        err = rep->savePackage(p, true);
         if (!err.isEmpty())
             job->setErrorMessage(err);
 
@@ -417,7 +417,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
         p->url = "https://github.com/tim-lebedkov/npackd";
         p->description = "command line interface to Npackd";
 
-        err = rep->savePackage(p);
+        err = rep->savePackage(p, true);
         if (!err.isEmpty())
             job->setErrorMessage(err);
 
@@ -428,7 +428,7 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
         Version version;
         (void) version.setVersion(NPACKD_VERSION);
         PackageVersion* pv = new PackageVersion(packageName, version);
-        err = rep->savePackageVersion(pv);
+        err = rep->savePackageVersion(pv, true);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         delete pv;

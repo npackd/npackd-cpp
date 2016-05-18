@@ -138,11 +138,11 @@ public:
     QList<PackageVersion*> getPackageVersions_(const QString& package,
             QString *err) const;
 
-    QString savePackage(Package* p);
+    QString savePackage(Package* p, bool replace);
 
-    QString savePackageVersion(PackageVersion* p);
+    QString savePackageVersion(PackageVersion* p, bool replace);
 
-    QString saveLicense(License *p);
+    QString saveLicense(License *p, bool replace);
 
     PackageVersion* findPackageVersionByMSIGUID_(
             const QString& guid, QString *err) const;

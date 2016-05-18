@@ -73,6 +73,33 @@ public:
     virtual ~AbstractRepository();
 
     /**
+     * @brief inserts or updates an existing license
+     * @param p a license
+     * @param replace what to do if an entry already exists:
+     *     true = replace, false = ignore
+     * @return error message
+     */
+    virtual QString saveLicense(License* p, bool replace) = 0;
+
+    /**
+     * @brief inserts or updates an existing package version
+     * @param p a package version
+     * @param replace what to do if an entry already exists:
+     *     true = replace, false = ignore
+     * @return error message
+     */
+    virtual QString savePackageVersion(PackageVersion *p, bool replace) = 0;
+
+    /**
+     * @brief inserts or updates an existing package
+     * @param p a package
+     * @param replace what to do if an entry already exists:
+     *     true = replace, false = ignore
+     * @return error message
+     */
+    virtual QString savePackage(Package *p, bool replace) = 0;
+
+    /**
      * @param name
      * @return package title and name. Example: "AbiWord (com.abiword.AbiWord)"
      */
@@ -177,27 +204,6 @@ public:
     QString planUpdates(const QList<Package*> packages,
             QList<InstallOperation*>& ops, bool keepDirectories=false,
             bool install=false, const QString& where_="");
-
-    /**
-     * @brief saves (creates or updates) the data about a package
-     * @param p [ownership:caller] package
-     * @return error message
-     */
-    virtual QString savePackage(Package* p) = 0;
-
-    /**
-     * @brief saves (creates or updates) the data about a package
-     * @param p [ownership:caller] package version
-     * @return error message
-     */
-    virtual QString savePackageVersion(PackageVersion* p) = 0;
-
-    /**
-     * @brief saves (creates or updates) the data about a license
-     * @param p [ownership:caller] license
-     * @return error message
-     */
-    virtual QString saveLicense(License* p) = 0;
 
     /**
      * @brief searches for a package version by the associated MSI GUID

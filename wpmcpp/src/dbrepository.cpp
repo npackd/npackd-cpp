@@ -338,22 +338,7 @@ PackageVersion* DBRepository::findPackageVersion_(
     }
 
     if (err->isEmpty() && q.next()) {
-        QDomDocument doc;
-        int errorLine, errorColumn;
-        if (!doc.setContent(q.value(2).toByteArray(),
-                err, &errorLine, &errorColumn))
-            *err = QString(
-                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
-                    arg(errorLine).arg(errorColumn).arg(*err);
-
-        if (err->isEmpty()) {
-            QDomElement root = doc.documentElement();
-            PackageVersion* p = PackageVersion::parse(&root, err);
-
-            if (err->isEmpty()) {
-                r = p;
-            }
-        }
+        r = PackageVersion::parse(q.value(2).toByteArray(), err);
     }
 
     return r;
@@ -379,22 +364,10 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     }
 
     while (err->isEmpty() && q.next()) {
-        QDomDocument doc;
-        int errorLine, errorColumn;
-        if (!doc.setContent(q.value(0).toByteArray(),
-                err, &errorLine, &errorColumn)) {
-            *err = QString(
-                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
-                    arg(errorLine).arg(errorColumn).arg(*err);
-        }
-
-        QDomElement root = doc.documentElement();
-
-        if (err->isEmpty()) {
-            PackageVersion* pv = PackageVersion::parse(&root, err, false);
-            if (err->isEmpty())
-                r.append(pv);
-        }
+        PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
+                err, false);
+        if (err->isEmpty())
+            r.append(pv);
     }
 
     // qDebug() << vs.count();
@@ -423,22 +396,10 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
     }
 
     while (err->isEmpty() && q.next()) {
-        QDomDocument doc;
-        int errorLine, errorColumn;
-        if (!doc.setContent(q.value(0).toByteArray(),
-                err, &errorLine, &errorColumn)) {
-            *err = QString(
-                    QObject::tr("XML parsing failed at line %1, column %2: %3")).
-                    arg(errorLine).arg(errorColumn).arg(*err);
-        }
-
-        QDomElement root = doc.documentElement();
-
-        if (err->isEmpty()) {
-            PackageVersion* pv = PackageVersion::parse(&root, err);
-            if (err->isEmpty())
-                r.append(pv);
-        }
+        PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
+                err);
+        if (err->isEmpty())
+            r.append(pv);
     }
 
     // qDebug() << vs.count();
@@ -970,21 +931,6 @@ QString DBRepository::savePackage(Package *p, bool replace)
     return err;
 }
 
-QString DBRepository::savePackage(Package *p)
-{
-    return savePackage(p, true);
-}
-
-QString DBRepository::savePackageVersion(PackageVersion *p)
-{
-    return savePackageVersion(p, true);
-}
-
-QString DBRepository::saveLicense(License *p)
-{
-    return saveLicense(p, true);
-}
-
 QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
 {
     QString err;
@@ -1135,22 +1081,7 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
 
     if (err->isEmpty()) {
         if (q.next()) {
-            QDomDocument doc;
-            int errorLine, errorColumn;
-            if (!doc.setContent(q.value(2).toByteArray(),
-                    err, &errorLine, &errorColumn))
-                *err = QString(
-                        QObject::tr("XML parsing failed at line %1, column %2: %3")).
-                        arg(errorLine).arg(errorColumn).arg(*err);
-
-            if (err->isEmpty()) {
-                QDomElement root = doc.documentElement();
-                PackageVersion* p = PackageVersion::parse(&root, err);
-
-                if (err->isEmpty()) {
-                    r = p;
-                }
-            }
+            r = PackageVersion::parse(q.value(2).toByteArray(), err);
         }
     }
 

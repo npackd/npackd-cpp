@@ -133,6 +133,15 @@ public:
             bool validate=true);
 
     /**
+     * @param xml <version>
+     * @param err error message will be stored here
+     * @param validate true = perform all available validations
+     * @return created object or 0
+     */
+    static PackageVersion* parse(const QByteArray& xml, QString* err,
+            bool validate=true);
+
+    /**
      * @brief searches for a package version only using the package name and
      *     version number
      * @param list searching in this list

@@ -100,6 +100,11 @@ RepositoryXMLHandler::~RepositoryXMLHandler()
     delete lic;
 }
 
+void RepositoryXMLHandler::enter(const QString &qName)
+{
+    tags.append(qName);
+}
+
 bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
     const QString &localName,
     const QString &qName,

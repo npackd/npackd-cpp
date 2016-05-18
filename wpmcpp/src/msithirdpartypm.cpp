@@ -86,7 +86,7 @@ void MSIThirdPartyPM::scan(Job* job,
                     "rem the program should be stopped by the uninstaller\r\n");
             pv->files.append(pvf);
 
-            rep->savePackageVersion(pv.data());
+            rep->savePackageVersion(pv.data(), true);
 
             // qDebug() << "MSIThirdPartyPM::scan loop 1.3";
 
@@ -187,7 +187,7 @@ void MSIThirdPartyPM::scan(Job* job,
                 }
             }
 
-            rep->savePackage(p);
+            rep->savePackage(p, true);
             delete p;
             p = 0;
         }
