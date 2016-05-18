@@ -87,104 +87,6 @@ PackageVersion* Repository::findNewestInstallablePackageVersion(
     return r;
 }
 
-PackageVersion* Repository::createPackageVersion(QDomElement* e, QString* err)
-{
-    return PackageVersion::parse(e, err);
-}
-
-Package* Repository::createPackage(QDomElement* e, QString* err)
-{
-    *err = "";
-
-    QString name = e->attribute("name").trimmed();
-    *err = WPMUtils::validateFullPackageName(name);
-    if (!err->isEmpty()) {
-        err->prepend(QObject::tr("Error in attribute 'name' in <package>: "));
-    }
-
-    Package* a = new Package(name, name);
-
-    if (err->isEmpty()) {
-        a->title = XMLUtils::getTagContent(*e, "title");
-        a->url = XMLUtils::getTagContent(*e, "url");
-        a->description = XMLUtils::getTagContent(*e, "description");
-    }
-
-    if (err->isEmpty()) {
-        a->setIcon(XMLUtils::getTagContent(*e, "icon"));
-        if (!a->getIcon().isEmpty()) {
-            if (!Package::isValidURL(a->getIcon())) {
-                err->append(QString(
-                        QObject::tr("Invalid icon URL for %1: %2")).
-                        arg(a->title).arg(a->getIcon()));
-            }
-        }
-    }
-
-    if (err->isEmpty()) {
-        a->license = XMLUtils::getTagContent(*e, "license");
-    }
-
-    if (err->isEmpty()) {
-        QDomNodeList categories = e->elementsByTagName("category");
-        for (int i = 0; i < categories.count(); i++) {
-            QDomElement e = categories.at(i).toElement();
-            QString c = checkCategory(e.text().trimmed(), err);
-            if (!err->isEmpty()) {
-                *err = QObject::tr("Error in category tag for %1: %2").
-                        arg(a->title).arg(*err);
-                break;
-            }
-
-            if (a->categories.contains(c)) {
-                *err = QObject::tr("More than one <category> %1 for %2").
-                        arg(c).arg(a->title);
-            }
-
-            a->categories.append(c);
-        }
-    }
-
-    if (err->isEmpty())
-        return a;
-    else {
-        delete a;
-        return 0;
-    }
-}
-
-License* Repository::createLicense(QDomElement* e, QString* error)
-{
-    License* a = 0;
-    *error = "";
-
-    QString name = e->attribute("name");
-    *error = WPMUtils::validateFullPackageName(name);
-    if (!error->isEmpty()) {
-        error->prepend(QObject::tr("Error in attribute 'name' in <package>: "));
-    }
-
-    if (error->isEmpty()) {
-        a = new License(name, name);
-        QDomNodeList nl = e->elementsByTagName("title");
-        if (nl.count() != 0)
-            a->title = nl.at(0).firstChild().nodeValue();
-        nl = e->elementsByTagName("url");
-        if (nl.count() != 0)
-            a->url = nl.at(0).firstChild().nodeValue();
-        nl = e->elementsByTagName("description");
-        if (nl.count() != 0)
-            a->description = nl.at(0).firstChild().nodeValue();
-    }
-
-    if (!error->isEmpty()) {
-        delete a;
-        a = 0;
-    }
-
-    return a;
-}
-
 License* Repository::findLicense(const QString& name)
 {
     for (int i = 0; i < this->licenses.count(); i++) {
@@ -203,6 +105,7 @@ Package* Repository::findPackage(const QString& name)
     return 0;
 }
 
+/*
 QString Repository::writeTo(const QString& filename) const
 {
     QString r;
@@ -237,6 +140,7 @@ QString Repository::writeTo(const QString& filename) const
 
     return "";
 }
+*/
 
 PackageVersion* Repository::findPackageVersion(const QString& package,
         const Version& version) const

@@ -426,18 +426,6 @@ public:
     QString getStatus() const;
 
     /**
-     * @return XML representation of this package version
-     */
-    QString serialize() const;
-
-    /**
-     * Stores this object as XML.
-     *
-     * @param version <version>
-     */
-    void toXML(QDomElement* version) const;
-
-    /**
      * Stores this object as XML <version>.
      *
      * @param w output

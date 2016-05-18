@@ -3,7 +3,6 @@
 
 #include <QString>
 #include <QStringList>
-#include <QDomElement>
 #include <QStringList>
 #include <QMultiMap>
 #include <QXmlStreamWriter>
@@ -14,15 +13,6 @@
 class Package
 {
 public:
-    /**
-     * @param e <package>
-     * @param err error message will be stored here
-     * @param validate true = perform all available validations
-     * @return created object or 0
-     */
-    static Package* parse(QDomElement* e, QString* err,
-            bool validate=true);
-
     /**
      * @brief searches for the specified object in the specified list. Objects
      *     will be compared only by package name.
@@ -103,13 +93,6 @@ public:
      * @return true if name is a valid URL
      */
     static bool isValidURL(const QString &url);
-
-    /**
-     * Save the contents as XML.
-     *
-     * @param e <package>
-     */
-    void saveTo(QDomElement& e) const;
 
     /**
      * @return copy of this object

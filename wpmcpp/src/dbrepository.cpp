@@ -7,8 +7,6 @@
 #include <QSqlQuery>
 #include <QDir>
 #include <QVariant>
-#include <QDomDocument>
-#include <QDomElement>
 #include <QTextStream>
 #include <QByteArray>
 #include <QDebug>

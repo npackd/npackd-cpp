@@ -2173,55 +2173,6 @@ bool PackageVersion::contains(const QList<PackageVersion *> &list,
     return indexOf(list, pv) >= 0;
 }
 
-void PackageVersion::toXML(QDomElement* version) const {
-    QDomDocument doc = version->ownerDocument();
-    version->setAttribute("name", this->version.getVersionString());
-    version->setAttribute("package", this->package);
-    if (this->type == 1)
-        version->setAttribute("type", "one-file");
-    for (int i = 0; i < this->importantFiles.count(); i++) {
-        QDomElement importantFile = doc.createElement("important-file");
-        version->appendChild(importantFile);
-        importantFile.setAttribute("path", this->importantFiles.at(i));
-        importantFile.setAttribute("title", this->importantFilesTitles.at(i));
-    }
-    for (int i = 0; i < this->files.count(); i++) {
-        QDomElement file = doc.createElement("file");
-        version->appendChild(file);
-        file.setAttribute("path", this->files.at(i)->path);
-        file.appendChild(doc.createTextNode(files.at(i)->content));
-    }
-    if (this->download.isValid()) {
-        XMLUtils::addTextTag(*version, "url", this->download.toString());
-    }
-    if (!this->sha1.isEmpty()) {
-        if (this->hashSumType == QCryptographicHash::Sha1)
-            XMLUtils::addTextTag(*version, "sha1", this->sha1);
-        else {
-            XMLUtils::addTextTag(*version, "hash-sum", this->sha1);
-        }
-    }
-    for (int i = 0; i < this->dependencies.count(); i++) {
-        Dependency* d = this->dependencies.at(i);
-        QDomElement dependency = doc.createElement("dependency");
-        version->appendChild(dependency);
-        dependency.setAttribute("package", d->package);
-        dependency.setAttribute("versions", d->versionsToString());
-        if (!d->var.isEmpty())
-            XMLUtils::addTextTag(dependency, "variable", d->var);
-    }
-    if (!this->msiGUID.isEmpty()) {
-        XMLUtils::addTextTag(*version, "detect-msi", this->msiGUID);
-    }
-    for (int i = 0; i < detectFiles.count(); i++) {
-        DetectFile* df = this->detectFiles.at(i);
-        QDomElement detectFile = doc.createElement("detect-file");
-        version->appendChild(detectFile);
-        XMLUtils::addTextTag(detectFile, "path", df->path);
-        XMLUtils::addTextTag(detectFile, "sha1", df->sha1);
-    }
-}
-
 void PackageVersion::toXML(QXmlStreamWriter *w) const
 {
     w->writeStartElement("version");
@@ -2270,16 +2221,6 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeEndElement();
     }
     w->writeEndElement();
-}
-
-QString PackageVersion::serialize() const
-{
-    QDomDocument doc;
-    QDomElement version = doc.createElement("version");
-    doc.appendChild(version);
-    toXML(&version);
-
-    return doc.toString(4);
 }
 
 PackageVersionFile* PackageVersion::findFile(const QString& path) const

@@ -1722,7 +1722,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>More than one &lt;category&gt; %1 for %2</source>
-        <translation>Mehr als ein &lt;category&gt; %1 für %2</translation>
+        <translation type="vanished">Mehr als ein &lt;category&gt; %1 für %2</translation>
     </message>
     <message>
         <source>Empty sub-category for %1</source>
@@ -1730,7 +1730,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open %1 for writing</source>
-        <translation>Kann %1 nicht zum Schreiben öffnen</translation>
+        <translation type="vanished">Kann %1 nicht zum Schreiben öffnen</translation>
     </message>
     <message>
         <source>Repository %1 of %2</source>
@@ -2215,23 +2215,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in the attribute &apos;name&apos; in &lt;package&gt;: </source>
-        <translation>Fehler im Attribut &apos;name&apos; in &lt;package&gt;: </translation>
+        <translation type="vanished">Fehler im Attribut &apos;name&apos; in &lt;package&gt;: </translation>
     </message>
     <message>
         <source>Empty category</source>
-        <translation>Leere Kategorie</translation>
+        <translation type="vanished">Leere Kategorie</translation>
     </message>
     <message>
         <source>Empty attribute &apos;rel&apos; in &lt;link&gt;</source>
-        <translation>Leeres Attribut &apos;rel&apos; in &lt;link&gt;</translation>
+        <translation type="vanished">Leeres Attribut &apos;rel&apos; in &lt;link&gt;</translation>
     </message>
     <message>
         <source>Empty attribute &apos;href&apos; in &lt;link&gt;</source>
-        <translation>Leeres Attribut &apos;href&apos; in &lt;link&gt;</translation>
+        <translation type="vanished">Leeres Attribut &apos;href&apos; in &lt;link&gt;</translation>
     </message>
     <message>
         <source>Empty icon URL</source>
-        <translation>Leerer Icon URL</translation>
+        <translation type="vanished">Leerer Icon URL</translation>
     </message>
     <message>
         <source>Task / Step</source>

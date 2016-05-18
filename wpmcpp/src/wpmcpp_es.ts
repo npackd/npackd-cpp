@@ -2621,11 +2621,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>More than one &lt;category&gt; %1 for %2</source>
-        <translation>Más de una &lt;category&gt; %1 para %2</translation>
+        <translation type="vanished">Más de una &lt;category&gt; %1 para %2</translation>
     </message>
     <message>
         <source>Cannot open %1 for writing</source>
-        <translation>Imposible abrir %1 para escritura</translation>
+        <translation type="vanished">Imposible abrir %1 para escritura</translation>
     </message>
     <message>
         <source>Repository %1 of %2</source>
@@ -3106,26 +3106,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open the file %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error in the attribute &apos;name&apos; in &lt;package&gt;: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty category</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty attribute &apos;rel&apos; in &lt;link&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty attribute &apos;href&apos; in &lt;link&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty icon URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

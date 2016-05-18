@@ -2637,7 +2637,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>More than one &lt;category&gt; %1 for %2</source>
-        <translation>Больше одной &lt;category&gt; %1 для %2</translation>
+        <translation type="vanished">Больше одной &lt;category&gt; %1 для %2</translation>
     </message>
     <message>
         <source>Empty sub-category for %1</source>
@@ -2645,7 +2645,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open %1 for writing</source>
-        <translation>Невозможно открыть %1 для записи</translation>
+        <translation type="vanished">Невозможно открыть %1 для записи</translation>
     </message>
     <message>
         <source>Repository %1 of %2</source>
@@ -3118,26 +3118,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open the file %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error in the attribute &apos;name&apos; in &lt;package&gt;: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty category</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty attribute &apos;rel&apos; in &lt;link&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty attribute &apos;href&apos; in &lt;link&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty icon URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

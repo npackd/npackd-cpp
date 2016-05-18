@@ -25,11 +25,6 @@ class Repository: public AbstractRepository
 private:
     static Repository def;
 
-    static Package* createPackage(QDomElement* e, QString* err);
-    static License* createLicense(QDomElement* e, QString *error);
-    static PackageVersion* createPackageVersion(QDomElement* e,
-            QString* err);
-
     void addWindowsPackage();
 
     /**
@@ -133,7 +128,7 @@ public:
      * @param filename output file name
      * @return error message or ""
      */
-    QString writeTo(const QString& filename) const;
+    //QString writeTo(const QString& filename) const;
 
     QList<PackageVersion*> getPackageVersions_(const QString& package,
             QString *err) const;
