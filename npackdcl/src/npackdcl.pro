@@ -52,8 +52,7 @@ SOURCES += main.cpp \
     ../../wpmcpp/src/hrtimer.cpp \
     ../../wpmcpp/src/repositoryxmlhandler.cpp \
     ../../wpmcpp/src/mysqlquery.cpp \
-    ../../wpmcpp/src/installedpackagesthirdpartypm.cpp \
-    ../../wpmcpp/src/cbsthirdpartypm.cpp
+    ../../wpmcpp/src/installedpackagesthirdpartypm.cpp
 HEADERS += ../../wpmcpp/src/visiblejobs.h \
     ../../wpmcpp/src/repository.h \
     ../../wpmcpp/src/version.h \
@@ -84,7 +83,6 @@ HEADERS += ../../wpmcpp/src/visiblejobs.h \
     ../../wpmcpp/src/repositoryxmlhandler.h \
     ../../wpmcpp/src/mysqlquery.h \
     ../../wpmcpp/src/installedpackagesthirdpartypm.h \
-    ../../wpmcpp/src/cbsthirdpartypm.h \
     stable.h
 FORMS += 
 
