@@ -3,6 +3,7 @@
 
 #include <time.h>
 
+#include <QJsonObject>
 #include <QtCore/QCoreApplication>
 
 #include "repository.h"
@@ -22,6 +23,8 @@ private:
 
     bool debug;
     bool interactive;
+
+    static void printJSON(const QJsonObject & obj);
 
     /**
      * @brief defines the NPACKD_CL variable and adds the NpackdCL package to

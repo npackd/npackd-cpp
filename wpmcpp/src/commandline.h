@@ -85,7 +85,7 @@ public:
      *     If "", a value is not possible.
      * @param multiple true if multiple occurences of this option are allowed
      * @param allowedCommands comma separated list of allowed commands or an
-     *     an empty string if this command is "global"
+     *     an empty string if this option is "global"
      */
     void add(QString name, char name2, QString description, QString valueDescription,
             bool multiple, const QString& allowedCommands="");

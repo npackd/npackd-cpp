@@ -3,6 +3,9 @@
 
 #include <QScopedPointer>
 #include <QMultiMap>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 #include "app.h"
 #include "wpmutils.h"
@@ -69,6 +72,8 @@ int App::process()
     cl.add("file", 'f', "file or directory", "file", false);
     cl.add("install", 'i',
             "install a package if it was not installed", "", false);
+    cl.add("json", 'j', "json format for the output",
+            "", false, "list,list-repos,search");
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false,
             "update");
@@ -215,6 +220,22 @@ int App::process()
     return r;
 }
 
+void App::printJSON(const QJsonObject &obj)
+{
+    // WPMUtils::writeln does not work for very long texts
+
+    QJsonDocument d(obj);
+
+    QStringList sl = QString::fromUtf8(d.toJson(
+            QJsonDocument::Indented)).split("\n");
+    for (int i = 0; i < sl.count(); i++) {
+        if (i != sl.count() - 1)
+            WPMUtils::writeln(sl.at(i));
+        else
+            WPMUtils::outputTextConsole(sl.at(i));
+    }
+}
+
 QString App::addNpackdCL()
 {
     QString err;
@@ -265,11 +286,11 @@ void App::usage()
         "        version",
         "    ncl install-dir",
         "        prints the directory where packages will be installed",
-        "    ncl list [--status=installed | all] [--bare-format]",
+        "    ncl list [--status=installed | all] [--bare-format | --json]",
         "        lists package versions sorted by package name and version.",
         "        Please note that since 1.18 only installed package versions",
         "        are listed regardless of the --status switch.",
-        "    ncl list-repos [--bare-format]",
+        "    ncl list-repos [--bare-format | --json]",
         "        list currently defined repositories",
         "    ncl help",
         "        prints this help",
@@ -290,7 +311,7 @@ void App::usage()
         "    ncl set-repo (--url=<repository>)+",
         "        changes the currently defined repositories",
         "    ncl search [--query=<search terms>] [--status=installed | all]",
-        "            [--bare-format]",
+        "            [--bare-format | --json]",
         "        full text search. Lists found packages sorted by package name.",
         "        All packages are shown by default.",
         "    ncl set-install-dir --file=<directory>",
@@ -332,18 +353,30 @@ void App::usage()
 QString App::listRepos()
 {
     bool bare = cl.isPresent("bare-format");
+    bool json = cl.isPresent("json");
 
     QString err;
 
     QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
     if (err.isEmpty()) {
-        if (!bare) {
-            WPMUtils::writeln(QString("%1 repositories are defined:").
-                    arg(urls.size()));
-            WPMUtils::writeln("");
-        }
-        for (int i = 0; i < urls.size(); i++) {
-            WPMUtils::writeln(urls.at(i)->toString());
+        if (json) {
+            QJsonObject top;
+            QJsonArray repos;
+            for (int i = 0; i < urls.size(); i++) {
+                repos.append(urls.at(i)->toString());
+            }
+            top["repositories"] = repos;
+
+            printJSON(top);
+        } else {
+            if (!bare) {
+                WPMUtils::writeln(QString("%1 repositories are defined:").
+                        arg(urls.size()));
+                WPMUtils::writeln("");
+            }
+            for (int i = 0; i < urls.size(); i++) {
+                WPMUtils::writeln(urls.at(i)->toString());
+            }
         }
     }
     qDeleteAll(urls);
@@ -615,9 +648,10 @@ QString App::list()
     QString err;
 
     bool bare = cl.isPresent("bare-format");
+    bool json = cl.isPresent("json");
 
     Job* job;
-    if (bare)
+    if (bare || json)
         job = new Job();
     else
         job = clp.createJob();
@@ -651,19 +685,35 @@ QString App::list()
     }
 
     if (err.isEmpty()) {
-        if (!bare)
-            WPMUtils::writeln(QString("%1 package versions found:\r\n").
-                    arg(list.count()));
+        if (json) {
+            QJsonObject top;
+            QJsonArray pvs;
+            for (int i = 0; i < list.count(); i++) {
+                QJsonObject pv_;
+                PackageVersion* pv = list.at(i);
+                pv_["package"] = pv->package;
+                pv_["name"] = pv->version.getVersionString();
+                pv_["title"] = titles.at(i);
+                pvs.append(pv_);
+            }
+            top["versions"] = pvs;
 
-        for (int i = 0; i < list.count(); i++) {
-            PackageVersion* pv = list.at(i);
+            printJSON(top);
+        } else {
             if (!bare)
-                WPMUtils::writeln(pv->toString() +
-                        " (" + pv->package + ")");
-            else
-                WPMUtils::writeln(pv->package + " " +
-                        pv->version.getVersionString() + " " +
-                        titles.at(i));
+                WPMUtils::writeln(QString("%1 package versions found:\r\n").
+                        arg(list.count()));
+
+            for (int i = 0; i < list.count(); i++) {
+                PackageVersion* pv = list.at(i);
+                if (!bare)
+                    WPMUtils::writeln(pv->toString() +
+                            " (" + pv->package + ")");
+                else
+                    WPMUtils::writeln(pv->package + " " +
+                            pv->version.getVersionString() + " " +
+                            titles.at(i));
+            }
         }
     }
 
@@ -677,9 +727,16 @@ QString App::list()
 QString App::search()
 {
     bool bare = cl.isPresent("bare-format");
+    bool json = cl.isPresent("json");
+
     QString query = cl.get("query");
 
-    Job* job = clp.createJob();
+    Job* job;
+    if (bare || json)
+        job = new Job();
+    else
+        job = clp.createJob();
+
     job->setTitle("Searching for packages");
 
     bool onlyInstalled = false;
@@ -735,18 +792,34 @@ QString App::search()
     if (job->shouldProceed()) {
         qSort(list.begin(), list.end(), packageLessThan);
 
-        if (!bare)
-            WPMUtils::writeln(QString("%1 packages found:\r\n").
-                    arg(list.count()));
+        if (json) {
+            QJsonObject top;
 
-        for (int i = 0; i < list.count(); i++) {
-            Package* p = list.at(i);
+            QJsonArray ps;
+            for (int i = 0; i < list.count(); i++) {
+                Package* p = list.at(i);
+                QJsonObject p_;
+                p_["name"] = p->name;
+                p_["title"] = p->title;
+                ps.append(p_);
+            }
+            top["packages"] = ps;
+
+            printJSON(top);
+        } else {
             if (!bare)
-                WPMUtils::writeln(p->title +
-                        " (" + p->name + ")");
-            else
-                WPMUtils::writeln(p->name + " " +
-                        p->title);
+                WPMUtils::writeln(QString("%1 packages found:\r\n").
+                        arg(list.count()));
+
+            for (int i = 0; i < list.count(); i++) {
+                Package* p = list.at(i);
+                if (!bare)
+                    WPMUtils::writeln(p->title +
+                            " (" + p->name + ")");
+                else
+                    WPMUtils::writeln(p->name + " " +
+                            p->title);
+            }
         }
 
         qDeleteAll(list);
