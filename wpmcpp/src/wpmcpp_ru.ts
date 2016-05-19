@@ -3178,10 +3178,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Premature end of the download</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>

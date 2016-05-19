@@ -701,14 +701,6 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
                     arg(bufferLength));
         }
 
-        // a special case, not as documented in MSDN. InternetReadFile returns
-        // bufferLength==0, but not the whole file was read
-        if (bufferLength == 0 && contentLength > 0 &&
-                alreadyRead < contentLength) {
-            job->setErrorMessage(QObject::tr("Premature end of the download"));
-            break;
-        }
-
         if (bufferLength == 0)
             break;
 
@@ -856,6 +848,7 @@ int64_t Downloader::getContentLength(Job* job, const QUrl &url,
         Response resp;
         result = downloadWin(job, req, &resp);
     }
+
     return result;
 }
 

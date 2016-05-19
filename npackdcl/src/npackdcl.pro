@@ -95,16 +95,12 @@ INCLUDEPATH+=../../wpmcpp/src/
 QMAKE_LIBDIR+=$$(QUAZIP_PATH)/quazip/release
 
 QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
-    -Wno-missing-field-initializers -Wno-unused-parameter -fno-exceptions
+    -Wno-missing-field-initializers -Wno-unused-parameter
 QMAKE_CXXFLAGS -= -fexceptions
-QMAKE_LFLAGS += -static
 QMAKE_CXXFLAGS_RELEASE -= -O2
-QMAKE_CXXFLAGS_RELEASE += -Os -flto
+QMAKE_CXXFLAGS_RELEASE += -Os -g -flto
 
+QMAKE_LFLAGS += -static
+QMAKE_LFLAGS_RELEASE -= -Wl,-s -Os -flto
 QMAKE_LFLAGS_RELEASE += -Wl,-Map,npackdcl_release.map
-
-# these 2 options can be used to add the debugging information to the "release"
-# build
-QMAKE_CXXFLAGS_RELEASE += -g -flto
-QMAKE_LFLAGS_RELEASE -= -Wl,-s
 
