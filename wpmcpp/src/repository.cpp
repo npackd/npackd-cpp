@@ -15,7 +15,6 @@
 #include "wpmutils.h"
 #include "version.h"
 #include "windowsregistry.h"
-#include "xmlutils.h"
 #include "wpmutils.h"
 #include "installedpackages.h"
 #include "dbrepository.h"

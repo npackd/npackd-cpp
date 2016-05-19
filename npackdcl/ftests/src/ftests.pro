@@ -39,7 +39,6 @@ SOURCES += main.cpp \
     ..\..\..\wpmcpp\src\packageversionfile.cpp \
     ..\..\..\wpmcpp\src\dbrepository.cpp \
     ..\..\..\wpmcpp\src\license.cpp \
-    ..\..\..\wpmcpp\src\xmlutils.cpp \
     ..\..\..\wpmcpp\src\repository.cpp \
     ..\..\..\wpmcpp\src\job.cpp \
     ..\..\..\wpmcpp\src\hrtimer.cpp \
@@ -70,7 +69,6 @@ HEADERS += \
     ..\..\..\wpmcpp\src\packageversionfile.h \
     ..\..\..\wpmcpp\src\dbrepository.h \
     ..\..\..\wpmcpp\src\license.h \
-    ..\..\..\wpmcpp\src\xmlutils.h \
     ..\..\..\wpmcpp\src\repository.h \
     ..\..\..\wpmcpp\src\job.h \
     ..\..\..\wpmcpp\src\hrtimer.h \

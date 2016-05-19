@@ -25,7 +25,6 @@ SOURCES += main.cpp \
     uiutils.cpp \
     commandline.cpp \
     messageframe.cpp \
-    xmlutils.cpp \
     settingsframe.cpp \
     packageframe.cpp \
     selection.cpp \
@@ -72,7 +71,6 @@ HEADERS += mainwindow.h \
     uiutils.h \
     commandline.h \
     messageframe.h \
-    xmlutils.h \
     settingsframe.h \
     mstask.h \
     packageframe.h \

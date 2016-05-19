@@ -9,7 +9,6 @@
 #include <QUrl>
 #include <QStringList>
 #include <QSemaphore>
-#include <QDomElement>
 #include <QXmlStreamWriter>
 #include <QCryptographicHash>
 
@@ -45,11 +44,6 @@ private:
 
     /** mutex for lockedPackageVersions */
     static QMutex lockedPackageVersionsMutex;
-
-    static PackageVersionFile* createPackageVersionFile(QDomElement* e,
-            QString* err);
-    static Dependency* createDependency(QDomElement* e);
-    static DetectFile* createDetectFile(QDomElement* e, QString* err);
 
     bool createShortcuts(const QString& dir, QString* errMsg);
 
@@ -122,15 +116,6 @@ public:
      * @return [ownership:caller] the first found locked PackageVersion or 0
      */
     static PackageVersion* findLockedPackageVersion(QString* err);
-
-    /**
-     * @param e <version>
-     * @param err error message will be stored here
-     * @param validate true = perform all available validations
-     * @return created object or 0
-     */
-    static PackageVersion* parse(QDomElement* e, QString* err,
-            bool validate=true);
 
     /**
      * @param xml <version>

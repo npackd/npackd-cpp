@@ -1661,7 +1661,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>XML parsing failed at line %1, column %2: %3</source>
-        <translation>Análisis XML falló en la línea %1, columna %2: %3</translation>
+        <translation type="vanished">Análisis XML falló en la línea %1, columna %2: %3</translation>
     </message>
     <message>
         <source>Read invalid package version from the database: %1</source>
@@ -2541,7 +2541,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
-        <translation>Error en el atributo &apos;paquete&apos; en &lt;version&gt;: </translation>
+        <translation type="vanished">Error en el atributo &apos;paquete&apos; en &lt;version&gt;: </translation>
     </message>
     <message>
         <source>Not a valid download URL for %1: %2</source>
@@ -2553,15 +2553,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid SHA1 for %1: </source>
-        <translation>SHA1 inválido para %1: </translation>
+        <translation type="vanished">SHA1 inválido para %1: </translation>
     </message>
     <message>
         <source>Invalid SHA-1 for %1: </source>
-        <translation>SHA-1 inválida para %1: </translation>
+        <translation type="vanished">SHA-1 inválida para %1: </translation>
     </message>
     <message>
         <source>Invalid SHA-256 for %1: </source>
-        <translation>SHA-256 inválida para %1: </translation>
+        <translation type="vanished">SHA-256 inválida para %1: </translation>
     </message>
     <message>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
@@ -2581,23 +2581,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
-        <translation>Duplicar entrada &lt;file&gt; para %1 en %2</translation>
+        <translation type="vanished">Duplicar entrada &lt;file&gt; para %1 en %2</translation>
     </message>
     <message>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
-        <translation>&lt;detect-file&gt; inválido para %1:</translation>
+        <translation type="vanished">&lt;detect-file&gt; inválido para %1:</translation>
     </message>
     <message>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
-        <translation>Duplicar entrada &lt;detect-file&gt; para %1 en %2</translation>
+        <translation type="vanished">Duplicar entrada &lt;detect-file&gt; para %1 en %2</translation>
     </message>
     <message>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
-        <translation>Duplicar &lt;dependency&gt; para %1 en %2</translation>
+        <translation type="vanished">Duplicar &lt;dependency&gt; para %1 en %2</translation>
     </message>
     <message>
         <source>Wrong MSI GUID for %1: %2</source>
-        <translation>Mal MSI GUID para %1: %2</translation>
+        <translation type="vanished">Mal MSI GUID para %1: %2</translation>
     </message>
     <message>
         <source>Executing the stop script</source>
@@ -3175,6 +3175,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Premature end of the download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

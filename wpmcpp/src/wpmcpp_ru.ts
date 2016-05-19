@@ -1677,7 +1677,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>XML parsing failed at line %1, column %2: %3</source>
-        <translation>XML-анализатор завершился ошибкой в строке %1, колонке %2: %3</translation>
+        <translation type="vanished">XML-анализатор завершился ошибкой в строке %1, колонке %2: %3</translation>
     </message>
     <message>
         <source>Read invalid package version from the database: %1</source>
@@ -2553,7 +2553,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
-        <translation>Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
+        <translation type="vanished">Ошибка в атрибуте &apos;package&apos; в &lt;version&gt;:</translation>
     </message>
     <message>
         <source>Not a valid download URL for %1: %2</source>
@@ -2565,15 +2565,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid SHA1 for %1: </source>
-        <translation>Неверная SHA1 у %1: </translation>
-    </message>
-    <message>
-        <source>Invalid SHA-1 for %1: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid SHA-256 for %1: </source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Неверная SHA1 у %1: </translation>
     </message>
     <message>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
@@ -2593,23 +2585,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
-        <translation>Дубликат тэга &lt;file&gt; для %1 в %2</translation>
+        <translation type="vanished">Дубликат тэга &lt;file&gt; для %1 в %2</translation>
     </message>
     <message>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
-        <translation>Несуществующий &lt;detect-file&gt; для %1: </translation>
+        <translation type="vanished">Несуществующий &lt;detect-file&gt; для %1: </translation>
     </message>
     <message>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
-        <translation>Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
+        <translation type="vanished">Дубликат &lt;detect-file&gt; тэга для %1 в %2</translation>
     </message>
     <message>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
-        <translation>Дубликат &lt;dependency&gt; для %1 в %2</translation>
+        <translation type="vanished">Дубликат &lt;dependency&gt; для %1 в %2</translation>
     </message>
     <message>
         <source>Wrong MSI GUID for %1: %2</source>
-        <translation>Неверный MSI GUID для %1: %2</translation>
+        <translation type="vanished">Неверный MSI GUID для %1: %2</translation>
     </message>
     <message>
         <source>Executing the stop script</source>
@@ -3187,6 +3179,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Premature end of the download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

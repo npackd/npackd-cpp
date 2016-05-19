@@ -15,8 +15,6 @@
 #include <QUrl>
 #include <QDebug>
 #include <QIODevice>
-#include <QDomElement>
-#include <QDomDocument>
 #include <QMutex>
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrentRun>
@@ -38,10 +36,10 @@
 #include "repository.h"
 #include "version.h"
 #include "windowsregistry.h"
-#include "xmlutils.h"
 #include "installedpackages.h"
 #include "installedpackageversion.h"
 #include "dbrepository.h"
+#include "repositoryxmlhandler.h"
 
 QSemaphore PackageVersion::httpConnections(3);
 QSemaphore PackageVersion::installationScripts(1);
@@ -1826,344 +1824,28 @@ PackageVersion* PackageVersion::clone() const
     return r;
 }
 
-PackageVersionFile* PackageVersion::createPackageVersionFile(QDomElement* e,
-        QString* err)
-{
-    *err = "";
-
-    QString path = e->attribute("path");
-    QString content = e->firstChild().nodeValue();
-    PackageVersionFile* a = new PackageVersionFile(path, content);
-
-    return a;
-}
-
-DetectFile* PackageVersion::createDetectFile(QDomElement* e, QString* err)
-{
-    *err = "";
-
-    DetectFile* a = new DetectFile();
-    a->path = XMLUtils::getTagContent(*e, "path").trimmed();
-    a->path.replace('/', '\\');
-    if (a->path.isEmpty()) {
-        err->append(QObject::tr("Empty tag <path> under <detect-file>"));
-    }
-
-    if (err->isEmpty()) {
-        a->sha1 = XMLUtils::getTagContent(*e, "sha1").trimmed().toLower();
-        *err = WPMUtils::validateSHA1(a->sha1);
-        if (!err->isEmpty()) {
-            err->prepend(QObject::tr("Wrong SHA1 in <detect-file>: "));
-        }
-    }
-
-    if (err->isEmpty())
-        return a;
-    else {
-        delete a;
-        return 0;
-    }
-}
-
-Dependency* PackageVersion::createDependency(QDomElement* e)
-{
-    // qDebug() << "Repository::createDependency";
-
-    QString package = e->attribute("package").trimmed();
-
-    Dependency* d = new Dependency();
-    d->package = package;
-
-    d->var = XMLUtils::getTagContent(*e, "variable");
-
-    if (d->setVersions(e->attribute("versions")))
-        return d;
-    else {
-        delete d;
-        return 0;
-    }
-}
-
-PackageVersion* PackageVersion::parse(QDomElement* e, QString* err,
-        bool validate)
-{
-    *err = "";
-
-    // qDebug() << "Repository::createPackageVersion.1" << e->attribute("package");
-
-    QString packageName = e->attribute("package").trimmed();
-    if (validate) {
-        *err = WPMUtils::validateFullPackageName(packageName);
-        if (!err->isEmpty()) {
-            err->prepend(QObject::tr("Error in the attribute 'package' in <version>: "));
-        }
-    }
-
-    PackageVersion* a = new PackageVersion(packageName);
-
-    if (err->isEmpty()) {
-        QString url = XMLUtils::getTagContent(*e, "url").trimmed();
-        if (!url.isEmpty()) {
-            a->download.setUrl(url);
-            if (validate) {
-                QUrl d = a->download;
-                if (!d.isValid() || d.isRelative() ||
-                        (d.scheme() != "http" && d.scheme() != "https" &&
-                        d.scheme() != "file")) {
-                    err->append(QString(QObject::tr("Not a valid download URL for %1: %2")).
-                            arg(a->package).arg(url));
-                }
-            }
-        }
-    }
-
-    if (err->isEmpty()) {
-        QString name = e->attribute("name", "1.0").trimmed();
-        if (a->version.setVersion(name)) {
-            a->version.normalize();
-        } else {
-            err->append(QString(QObject::tr("Not a valid version for %1: %2")).
-                    arg(a->package).arg(name));
-        }
-    }
-
-    if (err->isEmpty()) {
-        a->sha1 = XMLUtils::getTagContent(*e, "sha1").trimmed().toLower();
-        a->hashSumType = QCryptographicHash::Sha1;
-        if (validate) {
-            if (!a->sha1.isEmpty()) {
-                *err = WPMUtils::validateSHA1(a->sha1);
-                if (!err->isEmpty()) {
-                    err->prepend(QString(QObject::tr("Invalid SHA1 for %1: ")).
-                            arg(a->toString()));
-                }
-            }
-        }
-    }
-
-    if (err->isEmpty()) {
-        QDomNode hashSumTag = e->firstChildElement("hash-sum");
-        if (!hashSumTag.isNull() && hashSumTag.isElement()) {
-            QDomNode txt = hashSumTag.firstChild();
-            QString hashSum;
-            if (txt.isText()) {
-                hashSum = txt.nodeValue().trimmed();
-            }
-            QDomElement hashSumElement = hashSumTag.toElement();
-
-            QString hashSumType = hashSumElement.
-                    attribute("type", "SHA-256").trimmed();
-
-            if (hashSumType == "SHA-1") {
-                // SHA-256 is the preferred hash sum
-                if (a->sha1.isEmpty()) {
-                    a->sha1 = hashSum;
-                    a->hashSumType = QCryptographicHash::Sha1;
-
-                    if (validate) {
-                        *err = WPMUtils::validateSHA1(a->sha1);
-                        if (!err->isEmpty()) {
-                            err->prepend(
-                                    QObject::tr("Invalid SHA-1 for %1: ").
-                                    arg(a->toString()));
-                        }
-                    }
-                }
-            } else if (hashSumType == "SHA-256" || hashSumType.isEmpty()) {
-                a->sha1 = hashSum;
-                a->hashSumType = QCryptographicHash::Sha256;
-
-                if (validate) {
-                    *err = WPMUtils::validateSHA256(a->sha1);
-                    if (!err->isEmpty()) {
-                        err->prepend(
-                                QObject::tr("Invalid SHA-256 for %1: ").
-                                arg(a->toString()));
-                    }
-                }
-            }
-        }
-    }
-
-    if (err->isEmpty()) {
-        QString type = e->attribute("type", "zip").trimmed();
-        if (type == "one-file")
-            a->type = 1;
-        else if (type == "" || type == "zip")
-            a->type = 0;
-        else {
-            err->append(QString(
-                    QObject::tr("Wrong value for the attribute 'type' for %1: %3")).
-                    arg(a->toString()).arg(type));
-        }
-    }
-
-    if (err->isEmpty()) {
-        QDomNodeList ifiles = e->elementsByTagName("important-file");
-        for (int i = 0; i < ifiles.count(); i++) {
-            QDomElement e = ifiles.at(i).toElement();
-            QString p = e.attribute("path").trimmed();
-            if (p.isEmpty())
-                p = e.attribute("name").trimmed();
-
-            if (p.isEmpty()) {
-                err->append(QString(
-                        QObject::tr("Empty 'path' attribute value for <important-file> for %1")).
-                        arg(a->toString()));
-                break;
-            }
-
-            if (a->importantFiles.contains(p)) {
-                err->append(QString(
-                        QObject::tr("More than one <important-file> with the same 'path' attribute %1 for %2")).
-                        arg(p).arg(a->toString()));
-                break;
-            }
-
-            a->importantFiles.append(p);
-
-            QString title = e.attribute("title").trimmed();
-            if (title.isEmpty()) {
-                err->append(QString(
-                        QObject::tr("Empty 'title' attribute value for <important-file> for %1")).
-                        arg(a->toString()));
-                break;
-            }
-
-            a->importantFilesTitles.append(title);
-        }
-    }
-
-    if (err->isEmpty()) {
-        QDomNodeList files = e->elementsByTagName("file");
-        for (int i = 0; i < files.count(); i++) {
-            QDomElement e = files.at(i).toElement();
-            PackageVersionFile* pvf = createPackageVersionFile(&e, err);
-            if (pvf) {
-                a->files.append(pvf);
-            } else {
-                break;
-            }
-        }
-    }
-
-    if (err->isEmpty()) {
-        for (int i = 0; i < a->files.count() - 1; i++) {
-            PackageVersionFile* fi = a->files.at(i);
-            for (int j = i + 1; j < a->files.count(); j++) {
-                PackageVersionFile* fj = a->files.at(j);
-                if (fi->path == fj->path) {
-                    err->append(QString(
-                        QObject::tr("Duplicate <file> entry for %1 in %2")).
-                            arg(fi->path).arg(a->toString()));
-                    goto out;
-                }
-            }
-        }
-    out:;
-    }
-
-    if (err->isEmpty()) {
-        QDomNodeList detectFiles = e->elementsByTagName("detect-file");
-        for (int i = 0; i < detectFiles.count(); i++) {
-            QDomElement e = detectFiles.at(i).toElement();
-            DetectFile* df = createDetectFile(&e, err);
-            if (df) {
-                a->detectFiles.append(df);
-            } else {
-                err->prepend(QString(
-                        QObject::tr("Invalid <detect-file> for %1: ")).
-                        arg(a->toString()));
-                break;
-            }
-        }
-    }
-
-    if (err->isEmpty()) {
-        if (validate) {
-            for (int i = 0; i < a->detectFiles.count() - 1; i++) {
-                DetectFile* fi = a->detectFiles.at(i);
-                for (int j = i + 1; j < a->detectFiles.count(); j++) {
-                    DetectFile* fj = a->detectFiles.at(j);
-                    if (fi->path == fj->path) {
-                        err->append(QString(
-                                QObject::tr("Duplicate <detect-file> entry for %1 in %2")).
-                                arg(fi->path).arg(a->toString()));
-                        goto out2;
-                    }
-                }
-            }
-        }
-    out2:;
-    }
-
-    if (err->isEmpty()) {
-        QDomNodeList deps = e->elementsByTagName("dependency");
-        for (int i = 0; i < deps.count(); i++) {
-            QDomElement e = deps.at(i).toElement();
-            Dependency* d = createDependency(&e);
-            if (d)
-                a->dependencies.append(d);
-        }
-    }
-
-    if (err->isEmpty()) {
-        if (validate) {
-            for (int i = 0; i < a->dependencies.count() - 1; i++) {
-                Dependency* fi = a->dependencies.at(i);
-                for (int j = i + 1; j < a->dependencies.count(); j++) {
-                    Dependency* fj = a->dependencies.at(j);
-                    if (fi->autoFulfilledIf(*fj) ||
-                            fj->autoFulfilledIf(*fi)) {
-                        err->append(QString(
-                                QObject::tr("Duplicate <dependency> for %1 in %2")).
-                                arg(fi->package).arg(a->toString()));
-                        goto out3;
-                    }
-                }
-            }
-        }
-    out3:;
-    }
-
-    if (err->isEmpty()) {
-        a->msiGUID = XMLUtils::getTagContent(*e, "detect-msi").trimmed().
-                toLower();
-        if (validate) {
-            if (!a->msiGUID.isEmpty()) {
-                *err = WPMUtils::validateGUID(a->msiGUID);
-                if (!err->isEmpty())
-                    *err = QString(
-                            QObject::tr("Wrong MSI GUID for %1: %2")).
-                            arg(a->toString()).arg(a->msiGUID);
-            }
-        }
-    }
-
-    if (err->isEmpty())
-        return a;
-    else {
-        delete a;
-        return 0;
-    }
-}
-
 PackageVersion *PackageVersion::parse(const QByteArray &xml, QString *err, bool validate)
 {
     PackageVersion* r = 0;
 
-    QDomDocument doc;
-    int errorLine, errorColumn;
-    if (!doc.setContent(xml, err, &errorLine, &errorColumn))
-        *err = QString(
-                QObject::tr("XML parsing failed at line %1, column %2: %3")).
-                arg(errorLine).arg(errorColumn).arg(*err);
-
-    if (err->isEmpty()) {
-        QDomElement root = doc.documentElement();
-        r = PackageVersion::parse(&root, err);
+    Repository rep;
+    RepositoryXMLHandler handler(&rep);
+    QXmlSimpleReader reader;
+    reader.setContentHandler(&handler);
+    reader.setErrorHandler(&handler);
+    QXmlInputSource inputSource;
+    inputSource.setData(xml);
+    handler.enter("root");
+    if (!reader.parse(inputSource))
+        *err = handler.errorString();
+    else {
+        if (rep.packageVersions.size() == 1) {
+            r = rep.packageVersions.takeAt(0);
+            *err = "";
+        } else {
+            *err = QObject::tr("Expected one package version");
+        }
     }
-
     return r;
 }
 

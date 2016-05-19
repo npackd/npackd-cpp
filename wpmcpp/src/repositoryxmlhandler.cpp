@@ -87,7 +87,7 @@ int RepositoryXMLHandler::findWhere()
     return r;
 }
 
-RepositoryXMLHandler::RepositoryXMLHandler(DBRepository *rep) :
+RepositoryXMLHandler::RepositoryXMLHandler(AbstractRepository *rep) :
         lic(0), p(0), pv(0), pvf(0), dep(0), df(0)
 {
     this->rep = rep;

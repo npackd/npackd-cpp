@@ -1617,7 +1617,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>XML parsing failed at line %1, column %2: %3</source>
-        <translation>L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
+        <translation type="vanished">L&apos;extraction XML a échoué à la ligne %1, colonne %2 : %3</translation>
     </message>
     <message>
         <source>Starting an SQL transaction</source>
@@ -2476,7 +2476,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
-        <translation>Erreur de l&apos;attribut &apos;package&apos; dans &lt;version&gt; : </translation>
+        <translation type="vanished">Erreur de l&apos;attribut &apos;package&apos; dans &lt;version&gt; : </translation>
     </message>
     <message>
         <source>Not a valid download URL for %1: %2</source>
@@ -2488,15 +2488,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid SHA1 for %1: </source>
-        <translation>Le SHA1 de %1 est invalide : </translation>
-    </message>
-    <message>
-        <source>Invalid SHA-1 for %1: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid SHA-256 for %1: </source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Le SHA1 de %1 est invalide : </translation>
     </message>
     <message>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
@@ -2516,23 +2508,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
-        <translation>L&apos;entrée &lt;file&gt; pour %1 dans %2 est dupliquée</translation>
+        <translation type="vanished">L&apos;entrée &lt;file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
-        <translation>&lt;detect-file&gt; est invalide pour %1 : </translation>
+        <translation type="vanished">&lt;detect-file&gt; est invalide pour %1 : </translation>
     </message>
     <message>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
-        <translation>L&apos;entrée &lt;detect-file&gt; pour %1 dans %2 est dupliquée</translation>
+        <translation type="vanished">L&apos;entrée &lt;detect-file&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
-        <translation>L&apos;entrée &lt;dependency&gt; pour %1 dans %2 est dupliquée</translation>
+        <translation type="vanished">L&apos;entrée &lt;dependency&gt; pour %1 dans %2 est dupliquée</translation>
     </message>
     <message>
         <source>Wrong MSI GUID for %1: %2</source>
-        <translation>Le GUID MSI pour %1 est invalide : %2</translation>
+        <translation type="vanished">Le GUID MSI pour %1 est invalide : %2</translation>
     </message>
     <message>
         <source>Executing the stop script</source>
@@ -3098,6 +3090,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Premature end of the download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

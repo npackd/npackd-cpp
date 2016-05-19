@@ -726,7 +726,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>XML parsing failed at line %1, column %2: %3</source>
-        <translation>XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
+        <translation type="vanished">XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
     </message>
     <message>
         <source>Read invalid package version from the database: %1</source>
@@ -1634,7 +1634,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
-        <translation>Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
+        <translation type="vanished">Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
     </message>
     <message>
         <source>Not a valid download URL for %1: %2</source>
@@ -1646,11 +1646,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid SHA1 for %1: </source>
-        <translation>Ungültige SHA1 für %1: </translation>
+        <translation type="vanished">Ungültige SHA1 für %1: </translation>
     </message>
     <message>
         <source>Invalid SHA-1 for %1: </source>
-        <translation>Ungültige SHA-1 für %1: </translation>
+        <translation type="vanished">Ungültige SHA-1 für %1: </translation>
     </message>
     <message>
         <source>SHA-1 and SHA-256 cannot be defined both for the same package version %1</source>
@@ -1662,7 +1662,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid SHA-256 for %1: </source>
-        <translation>Ungültige SHA-256 für %1: </translation>
+        <translation type="vanished">Ungültige SHA-256 für %1: </translation>
     </message>
     <message>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
@@ -1682,23 +1682,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
-        <translation>Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
+        <translation type="vanished">Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
-        <translation>Ungültige Datei &lt;detect-file&gt; für %1: </translation>
+        <translation type="vanished">Ungültige Datei &lt;detect-file&gt; für %1: </translation>
     </message>
     <message>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
-        <translation>Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
+        <translation type="vanished">Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
-        <translation>Doppeltes &lt;dependency&gt; für %1 in %2</translation>
+        <translation type="vanished">Doppeltes &lt;dependency&gt; für %1 in %2</translation>
     </message>
     <message>
         <source>Wrong MSI GUID for %1: %2</source>
-        <translation>Falsche MSI-GUID für %1: %2</translation>
+        <translation type="vanished">Falsche MSI-GUID für %1: %2</translation>
     </message>
     <message>
         <source>n/a</source>
@@ -2300,6 +2300,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Premature end of the download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

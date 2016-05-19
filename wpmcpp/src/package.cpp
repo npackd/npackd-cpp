@@ -1,7 +1,6 @@
 #include <QUrl>
 
 #include "package.h"
-#include "xmlutils.h"
 #include "wpmutils.h"
 
 int Package::indexOf(const QList<Package*> pvs, Package* f)

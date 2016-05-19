@@ -39,7 +39,6 @@ SOURCES += main.cpp \
     ../../wpmcpp/src/detectfile.cpp \
     app.cpp \
     ../../wpmcpp/src/commandline.cpp \
-    ../../wpmcpp/src/xmlutils.cpp \
     ../../wpmcpp/src/installedpackages.cpp \
     ../../wpmcpp/src/installedpackageversion.cpp \
     ../../wpmcpp/src/clprogress.cpp \
@@ -71,7 +70,6 @@ HEADERS += ../../wpmcpp/src/visiblejobs.h \
     ../../wpmcpp/src/installedpackages.h \
     ../../wpmcpp/src/installedpackageversion.h \
     ../../wpmcpp/src/commandline.h \
-    ../../wpmcpp/src/xmlutils.h \
     ../../wpmcpp/src/clprogress.h \
     ../../wpmcpp/src/dbrepository.h \
     ../../wpmcpp/src/abstractrepository.h \

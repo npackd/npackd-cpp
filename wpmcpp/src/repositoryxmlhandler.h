@@ -45,7 +45,7 @@ class RepositoryXMLHandler: public QXmlDefaultHandler
         TAG_SPEC_VERSION
     };
 
-    DBRepository* rep;
+    AbstractRepository* rep;
 
     License* lic;
     Package* p;
@@ -65,7 +65,7 @@ public:
      *
      * @param rep [owner:caller] data will be stored here
      */
-    RepositoryXMLHandler(DBRepository* rep);
+    RepositoryXMLHandler(AbstractRepository* rep);
 
     virtual ~RepositoryXMLHandler();
 
