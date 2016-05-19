@@ -73,7 +73,7 @@ int App::process()
     cl.add("install", 'i',
             "install a package if it was not installed", "", false);
     cl.add("json", 'j', "json format for the output",
-            "", false, "list,list-repos,search");
+            "", false, "list,list-repos,search,install-dir,which");
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false,
             "update");
@@ -284,7 +284,7 @@ void App::usage()
         "    ncl info --package=<package> [--version=<version>]",
         "        shows information about the specified package or package",
         "        version",
-        "    ncl install-dir",
+        "    ncl install-dir [--json]",
         "        prints the directory where packages will be installed",
         "    ncl list [--status=installed | all] [--bare-format | --json]",
         "        lists package versions sorted by package name and version.",
@@ -326,7 +326,7 @@ void App::usage()
         "    ncl where --file=<relative path>",
         "        finds all installed packages with the specified file or",
         "            directory",
-        "    ncl which --file=<file>",
+        "    ncl which --file=<file> [--json]",
         "        finds the package that owns the specified file or directory",
         "Options:",
     };
@@ -388,7 +388,15 @@ QString App::getInstallPath()
 {
     QString err;
 
-    WPMUtils::outputTextConsole(WPMUtils::getInstallationDirectory());
+    bool json = cl.isPresent("json");
+
+    if (json) {
+        QJsonObject top;
+        top["install-dir"] = WPMUtils::getInstallationDirectory();
+        printJSON(top);
+    } else {
+        WPMUtils::outputTextConsole(WPMUtils::getInstallationDirectory());
+    }
 
     return err;
 }
@@ -396,6 +404,8 @@ QString App::getInstallPath()
 QString App::which()
 {
     QString r;
+
+    bool json = cl.isPresent("json");
 
     InstalledPackages* ip = InstalledPackages::getDefault();
     r = ip->readRegistryDatabase();
@@ -414,15 +424,31 @@ QString App::which()
             AbstractRepository* rep = AbstractRepository::getDefault_();
             Package* p = rep->findPackage_(f->package);
             QString title = p ? p->title : "?";
-            WPMUtils::writeln(QString(
-                    "%1 %2 (%3) is installed in \"%4\"").
-                    arg(title).arg(f->version.getVersionString()).
-                    arg(f->package).arg(f->directory));
+
+            if (json) {
+                QJsonObject top;
+                QJsonObject v;
+                v["package"] = f->package;
+                v["name"] = f->version.getVersionString();
+                v["path"] = f->directory;
+                top["version"] = v;
+                printJSON(top);
+            } else {
+                WPMUtils::writeln(QString(
+                        "%1 %2 (%3) is installed in \"%4\"").
+                        arg(title).arg(f->version.getVersionString()).
+                        arg(f->package).arg(f->directory));
+            }
+
             delete p;
             delete f;
-        } else
-            WPMUtils::writeln(QString("No package found for \"%1\"").
-                    arg(file));
+        } else {
+            if (json)
+                printJSON(QJsonObject());
+            else
+                WPMUtils::writeln(QString("No package found for \"%1\"").
+                        arg(file));
+        }
     }
 
     return r;
