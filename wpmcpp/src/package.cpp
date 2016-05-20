@@ -1,4 +1,5 @@
 #include <QUrl>
+#include <QJsonArray>
 
 #include "package.h"
 #include "wpmutils.h"
@@ -121,6 +122,43 @@ void Package::toXML(QXmlStreamWriter *w) const
     }
 
     w->writeEndElement();
+}
+
+void Package::toJSON(QJsonObject& w) const
+{
+    w["name"] = this->name;
+    w["title"] = this->title;
+    if (!this->url.isEmpty())
+        w["url"] = this->url;
+    if (!this->description.isEmpty())
+        w["description"] = this->description;
+    if (!this->getIcon().isEmpty())
+        w["icon"] = this->getIcon();
+    if (!this->license.isEmpty())
+        w["license"] = this->license;
+
+    if (!this->categories.isEmpty()) {
+        QJsonArray category;
+        for (int i = 0; i < this->categories.count(); i++) {
+            category.append(this->categories.at(i));
+        }
+        w["categories"] = category;
+    }
+
+    QJsonArray link;
+    QList<QString> rels = links.uniqueKeys();
+    for (int i = 0; i < rels.size(); i++) {
+        QString rel = rels.at(i);
+        QList<QString> hrefs = links.values(rel);
+        for (int j = hrefs.size() - 1; j >= 0; j--) {
+            QJsonObject obj;
+            obj["rel"] = rel;
+            obj["href"] = hrefs.at(j);
+            link.append(obj);
+        }
+    }
+    if (!link.isEmpty())
+        w["links"] = link;
 }
 
 Package *Package::clone() const

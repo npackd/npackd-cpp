@@ -21,6 +21,7 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QTemporaryDir>
+#include <QJsonArray>
 
 #include <zlib.h>
 
@@ -1903,6 +1904,76 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeEndElement();
     }
     w->writeEndElement();
+}
+
+void PackageVersion::toJSON(QJsonObject& w) const
+{
+    w["name"] = this->version.getVersionString();
+    w["package"] = this->package;
+    if (this->type == 1)
+        w["type"] = "one-file";
+
+    if (!importantFiles.isEmpty()) {
+        QJsonArray a;
+        for (int i = 0; i < this->importantFiles.count(); i++) {
+            QJsonObject obj;
+            obj["path"] = this->importantFiles.at(i);
+            obj["title"] = this->importantFilesTitles.at(i);
+            a.append(obj);
+        }
+        w["importantFiles"] = a;
+    }
+
+    if (!files.isEmpty()) {
+        QJsonArray path;
+        for (int i = 0; i < this->files.count(); i++) {
+            QJsonObject obj;
+            obj["path"] = this->files.at(i)->path;
+            obj["content"] = files.at(i)->content;
+            path.append(obj);
+        }
+        w["files"] = path;
+    }
+
+    if (this->download.isValid()) {
+        w["url"] = this->download.toString();
+    }
+    if (!this->sha1.isEmpty()) {
+        if (this->hashSumType == QCryptographicHash::Sha1)
+            w["sha1"] = this->sha1;
+        else
+            w["hashSum"] = this->sha1;
+    }
+
+    if (dependencies.count() > 0) {
+        QJsonArray dependency;
+        for (int i = 0; i < this->dependencies.count(); i++) {
+            Dependency* d = this->dependencies.at(i);
+            QJsonObject obj;
+            obj["package"] = d->package;
+            obj["versions"] = d->versionsToString();
+            if (!d->var.isEmpty())
+                obj["variable"] = d->var;
+            dependency.append(obj);
+        }
+        w["dependencies"] = dependency;
+    }
+
+    if (!this->msiGUID.isEmpty()) {
+        w["detectMSI"] = this->msiGUID;
+    }
+
+    if (!detectFiles.isEmpty()) {
+        QJsonArray detectFile;
+        for (int i = 0; i < detectFiles.count(); i++) {
+            DetectFile* df = this->detectFiles.at(i);
+            QJsonObject obj;
+            obj["path"] = df->path;
+            obj["sha1"] = df->sha1;
+            detectFile.append(obj);
+        }
+        w["detectFiles"] = detectFile;
+    }
 }
 
 PackageVersionFile* PackageVersion::findFile(const QString& path) const

@@ -11,6 +11,7 @@
 #include <QSemaphore>
 #include <QXmlStreamWriter>
 #include <QCryptographicHash>
+#include <QJsonObject>
 
 #include "job.h"
 #include "packageversionfile.h"
@@ -27,6 +28,12 @@ class InstallOperation;
 
 /**
  * One version of a package (installed or not).
+ *
+ * Adding a new field:
+ * - add the variable definition
+ * - update toXML
+ * - update toJSON
+ * - update clone
  */
 class PackageVersion
 {
@@ -416,6 +423,13 @@ public:
      * @param w output
      */
     void toXML(QXmlStreamWriter* w) const;
+
+    /**
+     * Stores this object as JSON
+     *
+     * @param w output
+     */
+    void toJSON(QJsonObject &w) const;
 
     /**
      * @return a copy

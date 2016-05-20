@@ -6,9 +6,15 @@
 #include <QStringList>
 #include <QMultiMap>
 #include <QXmlStreamWriter>
+#include <QJsonObject>
 
 /**
  * A package declaration.
+ *
+ * Adding a field:
+ * - add the member variable
+ * - update toJSON
+ * - update toXML
  */
 class Package
 {
@@ -111,6 +117,13 @@ public:
      * @param w output
      */
     void toXML(QXmlStreamWriter *w) const;
+
+    /**
+     * Stores this object as JSON.
+     *
+     * @param w output
+     */
+    void toJSON(QJsonObject &w) const;
 };
 
 #endif // PACKAGE_H

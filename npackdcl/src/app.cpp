@@ -64,7 +64,7 @@ QStringList App::sortPackageVersionsByPackageTitle(
 int App::process()
 {
     cl.add("bare-format", 'b', "bare format (no heading or summary)",
-            "", false, "list,list-repos,search,install-dir,which,where");
+            "", false, "list,list-repos,search,install-dir,which,where,info");
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("end-process", 'e',
             "list of ways to close running applications (c=close, k=kill, s=disconnect from file shares). The default value is 'c'.",
@@ -73,7 +73,7 @@ int App::process()
     cl.add("install", 'i',
             "install a package if it was not installed", "", false);
     cl.add("json", 'j', "json format for the output",
-            "", false, "list,list-repos,search,install-dir,which,where");
+            "", false, "list,list-repos,search,install-dir,which,where,info");
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false,
             "update");
@@ -282,6 +282,7 @@ void App::usage()
         "        download repositories and detect packages from the MSI ",
         "        database and software control panel",
         "    ncl info --package=<package> [--version=<version>]",
+        "            [--bare-format | --json]",
         "        shows information about the specified package or package",
         "        version",
         "    ncl install-dir [--bare-format | --json]",
@@ -740,9 +741,7 @@ QString App::list()
             for (int i = 0; i < list.count(); i++) {
                 QJsonObject pv_;
                 PackageVersion* pv = list.at(i);
-                pv_["package"] = pv->package;
-                pv_["name"] = pv->version.getVersionString();
-                pv_["title"] = titles.at(i);
+                pv->toJSON(pv_);
                 pvs.append(pv_);
             }
             top["versions"] = pvs;
@@ -848,8 +847,7 @@ QString App::search()
             for (int i = 0; i < list.count(); i++) {
                 Package* p = list.at(i);
                 QJsonObject p_;
-                p_["name"] = p->name;
-                p_["title"] = p->title;
+                p->toJSON(p_);
                 ps.append(p_);
             }
             top["packages"] = ps;
@@ -1724,7 +1722,14 @@ QString App::info()
 {
     QString r;
 
-    Job* job = clp.createJob();
+    bool bare = cl.isPresent("bare-format");
+    bool json = cl.isPresent("json");
+
+    Job* job;
+    if (bare || json)
+        job = new Job();
+    else
+        job = clp.createJob();
     job->setTitle("Showing information");
 
     if (job->shouldProceed()) {
@@ -1781,114 +1786,126 @@ QString App::info()
     }
 
     if (r.isEmpty()) {
-        WPMUtils::writeln("Title: " +
-                p->title);
-        if (pv)
-            WPMUtils::writeln("Version: " +
-                    pv->version.getVersionString());
-        WPMUtils::writeln("Description: " + p->description);
-        WPMUtils::writeln("License: " + p->license);
+        if (json) {
+            QJsonObject top;
+            if (pv)
+                pv->toJSON(top);
+            else
+                p->toJSON(top);
+            printJSON(top);
+        } else {
+            WPMUtils::writeln("Title: " +
+                    p->title);
+            if (pv)
+                WPMUtils::writeln("Version: " +
+                        pv->version.getVersionString());
+            WPMUtils::writeln("Description: " + p->description);
+            WPMUtils::writeln("License: " + p->license);
 
-        if (pv) {
-            WPMUtils::writeln("Installation path: " +
-                    pv->getPath());
+            if (pv) {
+                WPMUtils::writeln("Installation path: " +
+                        pv->getPath());
 
-            InstalledPackages* ip = InstalledPackages::getDefault();
-            InstalledPackageVersion* ipv = ip->find(pv->package, pv->version);
-            WPMUtils::writeln("Detection info: " +
-                    (ipv ? ipv->detectionInfo : ""));
-            delete ipv;
-        }
-        WPMUtils::writeln("Internal package name: " +
-                p->name);
-        if (pv) {
-            WPMUtils::writeln("Status: " +
-                    pv->getStatus());
-            WPMUtils::writeln("Download URL: " +
-                    pv->download.toString());
-        }
-        WPMUtils::writeln("Package home page: " + p->url);
-        WPMUtils::writeln("Change log: " + p->getChangeLog());
-        WPMUtils::writeln("Categories: " +
-                p->categories.join(", "));
-        WPMUtils::writeln("Icon: " + p->getIcon());
-        QList<QString> screenshots = p->links.values("screenshot");
-        WPMUtils::writeln("Screen shots: " +
-                (screenshots.count() > 0 ? screenshots.at(0) : "n/a")
-                );
-        for (int i = 1; i < screenshots.count(); i++) {
-            WPMUtils::writeln("    " + screenshots.at(i));
-        }
-
-        if (pv) {
-            WPMUtils::writeln(QString("Type: ") +
-                    (pv->type == 0 ? "zip" : "one-file"));
-
-            WPMUtils::writeln(QString("Hash sum: ") +
-                    (pv->hashSumType == QCryptographicHash::Sha1 ?
-                    "SHA-1" : "SHA-256") +
-                    ": " + pv->sha1);
-
-            QString details;
-            for (int i = 0; i < pv->importantFiles.count(); i++) {
-                if (i != 0)
-                    details.append("; ");
-                details.append(pv->importantFilesTitles.at(i));
-                details.append(" (");
-                details.append(pv->importantFiles.at(i));
-                details.append(")");
+                InstalledPackages* ip = InstalledPackages::getDefault();
+                InstalledPackageVersion* ipv = ip->find(pv->package, pv->version);
+                WPMUtils::writeln("Detection info: " +
+                        (ipv ? ipv->detectionInfo : ""));
+                delete ipv;
             }
-            WPMUtils::writeln("Important files: " + details);
-        }
-
-        if (pv) {
-            QString details;
-            for (int i = 0; i < pv->files.count(); i++) {
-                if (i != 0)
-                    details.append("; ");
-                details.append(pv->files.at(i)->path);
+            WPMUtils::writeln("Internal package name: " +
+                    p->name);
+            if (pv) {
+                WPMUtils::writeln("Status: " +
+                        pv->getStatus());
+                WPMUtils::writeln("Download URL: " +
+                        pv->download.toString());
             }
-            WPMUtils::writeln("Text files: " + details);
-        }
-
-        if (!pv) {
-            QString versions;
-            QList<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &r);
-            for (int i = 0; i < pvs.count(); i++) {
-                PackageVersion* opv = pvs.at(i);
-                if (i != 0)
-                    versions.append(", ");
-                versions.append(opv->version.getVersionString());
+            WPMUtils::writeln("Package home page: " + p->url);
+            WPMUtils::writeln("Change log: " + p->getChangeLog());
+            WPMUtils::writeln("Categories: " +
+                    p->categories.join(", "));
+            WPMUtils::writeln("Icon: " + p->getIcon());
+            QList<QString> screenshots = p->links.values("screenshot");
+            WPMUtils::writeln("Screen shots: " +
+                    (screenshots.count() > 0 ? screenshots.at(0) : "n/a")
+                    );
+            for (int i = 1; i < screenshots.count(); i++) {
+                WPMUtils::writeln("    " + screenshots.at(i));
             }
-            qDeleteAll(pvs);
-            WPMUtils::writeln("Versions: " + versions);
-        }
 
-        if (!pv) {
-            InstalledPackages* ip = InstalledPackages::getDefault();
-            QList<InstalledPackageVersion*> ipvs = ip->getByPackage(p->name);
-            if (ipvs.count() > 0) {
-                WPMUtils::writeln(QString("%1 versions are installed:").
-                        arg(ipvs.count()));
-                for (int i = 0; i < ipvs.count(); ++i) {
-                    InstalledPackageVersion* ipv = ipvs.at(i);
-                    if (!ipv->getDirectory().isEmpty())
-                        WPMUtils::writeln("    " +
-                                ipv->version.getVersionString() +
-                                " in " + ipv->getDirectory());
+            if (pv) {
+                WPMUtils::writeln(QString("Type: ") +
+                        (pv->type == 0 ? "zip" : "one-file"));
+
+                WPMUtils::writeln(QString("Hash sum: ") +
+                        (pv->hashSumType == QCryptographicHash::Sha1 ?
+                        "SHA-1" : "SHA-256") +
+                        ": " + pv->sha1);
+
+                QString details;
+                for (int i = 0; i < pv->importantFiles.count(); i++) {
+                    if (i != 0)
+                        details.append("; ");
+                    details.append(pv->importantFilesTitles.at(i));
+                    details.append(" (");
+                    details.append(pv->importantFiles.at(i));
+                    details.append(")");
                 }
-            } else {
-                WPMUtils::writeln("No versions are installed");
+                WPMUtils::writeln("Important files: " + details);
             }
-            qDeleteAll(ipvs);
-        }
-    }
 
+            if (pv) {
+                QString details;
+                for (int i = 0; i < pv->files.count(); i++) {
+                    if (i != 0)
+                        details.append("; ");
+                    details.append(pv->files.at(i)->path);
+                }
+                WPMUtils::writeln("Text files: " + details);
+            }
+
+            if (!pv) {
+                QString versions;
+                QList<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &r);
+                for (int i = 0; i < pvs.count(); i++) {
+                    PackageVersion* opv = pvs.at(i);
+                    if (i != 0)
+                        versions.append(", ");
+                    versions.append(opv->version.getVersionString());
+                }
+                qDeleteAll(pvs);
+                WPMUtils::writeln("Versions: " + versions);
+            }
+
+            if (!pv) {
+                InstalledPackages* ip = InstalledPackages::getDefault();
+                QList<InstalledPackageVersion*> ipvs = ip->getByPackage(p->name);
+                if (ipvs.count() > 0) {
+                    WPMUtils::writeln(QString("%1 versions are installed:").
+                            arg(ipvs.count()));
+                    for (int i = 0; i < ipvs.count(); ++i) {
+                        InstalledPackageVersion* ipv = ipvs.at(i);
+                        if (!ipv->getDirectory().isEmpty())
+                            WPMUtils::writeln("    " +
+                                    ipv->version.getVersionString() +
+                                    " in " + ipv->getDirectory());
+                    }
+                } else {
+                    WPMUtils::writeln("No versions are installed");
+                }
+                qDeleteAll(ipvs);
+            }
+        }
+    }    
 
     if (r.isEmpty()) {
         if (pv) {
-            WPMUtils::writeln("Dependency tree:");
-            r = printDependencies(pv->installed(), "", 1, pv);
+            if (json) {
+                // nothing
+            } else {
+                WPMUtils::writeln("Dependency tree:");
+                r = printDependencies(pv->installed(), "", 1, pv);
+            }
         }
     }
 

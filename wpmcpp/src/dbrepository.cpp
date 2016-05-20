@@ -2106,9 +2106,6 @@ QString DBRepository::updateDatabase()
             err = toString(db.lastError());
         }
     }
-    if (err.isEmpty()) {
-        err = readCategories();
-    }
 
     // LINK. This table is new in Npackd 1.20.
     if (err.isEmpty()) {
@@ -2167,6 +2164,10 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     if (err.isEmpty()) {
         if (!readOnly)
             err = updateDatabase();
+    }
+
+    if (err.isEmpty()) {
+        err = readCategories();
     }
 
     return err;
