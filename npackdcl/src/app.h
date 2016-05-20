@@ -33,25 +33,25 @@ private:
      */
     QString addNpackdCL();
 
-    void usage();
-    QString path();
-    QString place();
-    QString add();
-    QString remove();
-    QString addRepo();
-    QString setRepo();
-    QString removeRepo();
-    QString search();
-    QString list();
-    QString info();
-    QString update();
-    QString detect();
-    QString listRepos();
-    QString which();
-    QString where();
-    QString check();
-    QString getInstallPath();
-    QString setInstallPath();
+    void usage(Job *job);
+    void path(Job* job);
+    void place(Job *job);
+    void add(Job *job);
+    void remove(Job *job);
+    void addRepo(Job *job);
+    void setRepo(Job *job);
+    void removeRepo(Job *job);
+    void search(Job *job);
+    void list(Job *job);
+    void info(Job *job);
+    void update(Job *job);
+    void detect(Job *job);
+    void listRepos(Job *job);
+    void which(Job *job);
+    void where(Job *job);
+    void check(Job *job);
+    void getInstallPath(Job *job);
+    void setInstallPath(Job *job);
 
     bool confirm(const QList<InstallOperation *> ops, QString *title,
             QString *err);

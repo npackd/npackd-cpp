@@ -52,7 +52,7 @@ QString App::captureOutput(const QString& program, const QString& params,
             job, where,
             program,
             params, "Output.log", env, false);
-    // qDebug() << job->getErrorMessage();
+    qDebug() << job->getErrorMessage();
     delete job;
 
     QFile f("Output.log");

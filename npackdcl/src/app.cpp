@@ -137,75 +137,60 @@ int App::process()
             }
         }
 
+        Job* job;
+        if (cl.isPresent("bare-format") || cl.isPresent("json"))
+            job = new Job();
+        else
+            job = clp.createJob();
+
         if (!err.isEmpty()) {
-            // nothing
+            job->setErrorMessage(err);
         } else if (cmd == "help") {
-            usage();
+            usage(job);
         } else if (cmd == "path") {
-            err = path();
+            path(job);
         } else if (cmd == "place") {
-            err = place();
+            place(job);
         } else if (cmd == "remove" || cmd == "rm") {
-            err = DBRepository::getDefault()->openDefault();
-            if (err.isEmpty()) {
-                /* we ignore the returned error as it should also work for non-admins */
-                addNpackdCL();
-
-                err = remove();
-            }
+            remove(job);
         } else if (cmd == "add") {
-            err = DBRepository::getDefault()->openDefault();
-            if (err.isEmpty()) {
-                /* we ignore the returned error as it should also work for non-admins */
-                addNpackdCL();
-
-                err = add();
-            }
+            add(job);
         } else if (cmd == "add-repo") {
-            err = addRepo();
+            addRepo(job);
         } else if (cmd == "set-repo") {
-            err = setRepo();
+            setRepo(job);
         } else if (cmd == "remove-repo") {
-            err = removeRepo();
+            removeRepo(job);
         } else if (cmd == "list-repos") {
-            err = listRepos();
+            listRepos(job);
         } else if (cmd == "search") {
-            err = DBRepository::getDefault()->openDefault("default", true);
-            if (err.isEmpty())
-                err = search();
+            search(job);
         } else if (cmd == "check") {
-            err = DBRepository::getDefault()->openDefault();
-            if (err.isEmpty())
-                err = check();
+            check(job);
         } else if (cmd == "which") {
-            err = DBRepository::getDefault()->openDefault("default", true);
-            if (err.isEmpty())
-                err = which();
+            which(job);
         } else if (cmd == "where") {
-            err = where();
+            where(job);
         } else if (cmd == "list") {
-            err = DBRepository::getDefault()->openDefault("default", true);
-            if (err.isEmpty())
-                err = list();
+            list(job);
         } else if (cmd == "info") {
-            err = DBRepository::getDefault()->openDefault("default", true);
-            if (err.isEmpty())
-                err = info();
+            info(job);
         } else if (cmd == "update") {
-            err = DBRepository::getDefault()->openDefault();
-            if (err.isEmpty())
-                err = update();
+            update(job);
         } else if (cmd == "detect") {
-            err = DBRepository::getDefault()->openDefault();
-            if (err.isEmpty())
-                err = detect();
+            detect(job);
         } else if (cmd == "set-install-dir") {
-            err = setInstallPath();
+            setInstallPath(job);
         } else if (cmd == "install-dir") {
-            err = getInstallPath();
+            getInstallPath(job);
         } else {
-            err = "Wrong command: " + cmd + ". Try npackdcl help";
+            job->setErrorMessage("Wrong command: " + cmd +
+                    ". Try npackdcl help");
         }
+
+        err = job->getErrorMessage();
+
+        delete job;
     }
 
     int r = 0;
@@ -261,7 +246,7 @@ QString App::addNpackdCL()
     return err;
 }
 
-void App::usage()
+void App::usage(Job* job)
 {
     WPMUtils::writeln(QString(
             "ncl %1 - Npackd command line tool").
@@ -350,9 +335,11 @@ void App::usage()
     for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
         WPMUtils::writeln(QString(lines2[i]));
     }
+
+    job->completeWithProgress();
 }
 
-QString App::listRepos()
+void App::listRepos(Job* job)
 {
     bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
@@ -380,16 +367,16 @@ QString App::listRepos()
                 WPMUtils::writeln(urls.at(i)->toString());
             }
         }
+    } else {
+        job->setErrorMessage(err);
     }
     qDeleteAll(urls);
 
-    return err;
+    job->complete();
 }
 
-QString App::getInstallPath()
+void App::getInstallPath(Job* job)
 {
-    QString err;
-
     bool json = cl.isPresent("json");
 
     if (json) {
@@ -400,27 +387,35 @@ QString App::getInstallPath()
         WPMUtils::outputTextConsole(WPMUtils::getInstallationDirectory());
     }
 
-    return err;
+    job->complete();
 }
 
-QString App::which()
+void App::which(Job* job)
 {
-    QString r;
-
     bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
 
     InstalledPackages* ip = InstalledPackages::getDefault();
-    r = ip->readRegistryDatabase();
+    if (job->shouldProceed()) {
+        QString r = ip->readRegistryDatabase();
+        if (!r.isEmpty())
+            job->setErrorMessage(r);
+    }
+
+    if (job->shouldProceed()) {
+        QString r = DBRepository::getDefault()->openDefault("default", true);
+        if (!r.isEmpty())
+            job->setErrorMessage(r);
+    }
 
     QString file = cl.get("file");
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (file.isNull()) {
-            r = "Missing option: --file";
+            job->setErrorMessage("Missing option: --file");
         }
     }
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         QFileInfo fi(file);
         InstalledPackageVersion* f = ip->findOwner(fi.absoluteFilePath());
         if (f) {
@@ -461,24 +456,26 @@ QString App::which()
         }
     }
 
-    return r;
+    job->complete();
 }
 
-QString App::where()
+void App::where(Job* job)
 {
-    QString r;
-
     InstalledPackages* ip = InstalledPackages::getDefault();
-    r = ip->readRegistryDatabase();
+    if (job->shouldProceed()) {
+        QString r = ip->readRegistryDatabase();
+        if (!r.isEmpty())
+            job->setErrorMessage(r);
+    }
 
     QString file = cl.get("file");
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (file.isNull()) {
-            r = "Missing option: --file";
+            job->setErrorMessage("Missing option: --file");
         }
     }
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         bool json = cl.isPresent("json");
 
         QStringList paths = ip->getAllInstalledPackagePaths();
@@ -502,41 +499,48 @@ QString App::where()
         }
     }
 
-    return r;
+    job->complete();
 }
 
-QString App::setInstallPath()
+void App::setInstallPath(Job* job)
 {
-    QString r;
-
     QString file = cl.get("file");
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (file.isNull()) {
-            r = "Missing option: --file";
+            job->setErrorMessage("Missing option: --file");
         }
     }
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         QFileInfo fi(file);
         file = fi.absoluteFilePath();
         file = WPMUtils::normalizePath(file, false);
     }
 
-    if (r.isEmpty()) {
-        r = AbstractRepository::checkInstallationDirectory(file);
+    if (job->shouldProceed()) {
+        QString r = AbstractRepository::checkInstallationDirectory(file);
+        if (!r.isEmpty())
+            job->setErrorMessage(r);
     }
 
-    if (r.isEmpty()) {
-        r = WPMUtils::setInstallationDirectory(file);
+    if (job->shouldProceed()) {
+        QString r = WPMUtils::setInstallationDirectory(file);
+        if (!r.isEmpty())
+            job->setErrorMessage(r);
     }
 
-    return r;
+    job->complete();
 }
 
-QString App::check()
+void App::check(Job* job)
 {
-    Job* job = clp.createJob();
     job->setTitle("Checking dependency integrity for the installed packages");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -598,34 +602,30 @@ QString App::check()
 
     qDeleteAll(list);
 
-    QString r = job->getErrorMessage();
-    delete job;
-
-    return r;
+    job->complete();
 }
 
-QString App::addRepo()
+void App::addRepo(Job* job)
 {
-    QString err;
-
     QString url = cl.get("url").trimmed();
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         if (url.isNull()) {
-            err = "Missing option: --url";
+            job->setErrorMessage("Missing option: --url");
         }
     }
 
     QUrl* url_ = 0;
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         url_ = new QUrl();
         url_->setUrl(url, QUrl::TolerantMode);
         if (!url_->isValid()) {
-            err = "Invalid URL: " + url;
+            job->setErrorMessage("Invalid URL: " + url);
         }
     }
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
+        QString err;
         QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
         if (err.isEmpty()) {
             int found = -1;
@@ -644,70 +644,73 @@ QString App::addRepo()
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     WPMUtils::writeln("The repository was added successfully. Run \"ncl detect\" to update the local database.");
+                else
+                    job->setErrorMessage(err);
             }
+        } else {
+            job->setErrorMessage(err);
         }
         qDeleteAll(urls);
     }
 
     delete url_;
 
-    return err;
+    job->complete();
 }
 
-QString App::setRepo()
+void App::setRepo(Job* job)
 {
-    QString err;
-
     QStringList urls_ = cl.getAll("url");
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         if (urls_.count() == 0) {
-            err = "Missing option: --url";
+            job->setErrorMessage("Missing option: --url");
         }
     }
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         QList<QUrl*> urls;
         for (int i = 0; i < urls_.count(); i++) {
-            if (!err.isEmpty())
+            if (!job->shouldProceed())
                 break;
 
             QString url = urls_.at(i);
             QUrl* url_ = new QUrl();
             url_->setUrl(url, QUrl::TolerantMode);
             if (!url_->isValid()) {
-                err = "Invalid URL: " + url;
+                job->setErrorMessage("Invalid URL: " + url);
             } else {
                 urls.append(url_);
             }
         }
 
-        if (err.isEmpty()) {
+        if (job->shouldProceed()) {
+            QString err;
             AbstractRepository::setRepositoryURLs(urls, &err);
             if (err.isEmpty())
                 WPMUtils::writeln("The repositories were changed successfully. Run \"ncl detect\" to update the local database.");
+            else
+                job->setErrorMessage(err);
         }
 
         qDeleteAll(urls);
     }
 
-    return err;
+    job->complete();
 }
 
-QString App::list()
+void App::list(Job* job)
 {
-    QString err;
-
     bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
 
-    Job* job;
-    if (bare || json)
-        job = new Job();
-    else
-        job = clp.createJob();
-
     job->setTitle("Listing package versions");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault("default", true);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -727,15 +730,19 @@ QString App::list()
         Job* sub = job->newSubJob(0.99,
                 "Getting the list of installed packages from the registry");
         AbstractRepository* rep = AbstractRepository::getDefault_();
+
+        QString err;
         list = rep->getInstalled_(&err);
         if (err.isEmpty()) {
             titles = sortPackageVersionsByPackageTitle(&list);
             sub->completeWithProgress();
             job->setProgress(1);
+        } else {
+            job->setErrorMessage(err);
         }
     }
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         if (json) {
             QJsonObject top;
             QJsonArray pvs;
@@ -768,25 +775,23 @@ QString App::list()
 
     qDeleteAll(list);
 
-    delete job;
-
-    return err;
+    job->complete();
 }
 
-QString App::search()
+void App::search(Job* job)
 {
     bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
 
     QString query = cl.get("query");
 
-    Job* job;
-    if (bare || json)
-        job = new Job();
-    else
-        job = clp.createJob();
-
     job->setTitle("Searching for packages");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault("default", true);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     bool onlyInstalled = false;
     if (job->shouldProceed()) {
@@ -875,34 +880,29 @@ QString App::search()
     }
 
     job->complete();
-    QString err = job->getErrorMessage();
-    delete job;
-
-    return err;
 }
 
-QString App::removeRepo()
+void App::removeRepo(Job* job)
 {
-    QString err;
-
     QString url = cl.get("url");
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         if (url.isNull()) {
-            err = "Missing option: --url";
+            job->setErrorMessage("Missing option: --url");
         }
     }
 
     QUrl* url_ = 0;
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
         url_ = new QUrl();
         url_->setUrl(url, QUrl::TolerantMode);
         if (!url_->isValid()) {
-            err = "Invalid URL: " + url;
+            job->setErrorMessage("Invalid URL: " + url);
         }
     }
 
-    if (err.isEmpty()) {
+    if (job->shouldProceed()) {
+        QString err;
         QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
         if (err.isEmpty()) {
             int found = -1;
@@ -922,20 +922,22 @@ QString App::removeRepo()
                 if (err.isEmpty())
                     WPMUtils::writeln(
                             "The repository was removed successfully. Run \"ncl detect\" to update the local database.");
+                else
+                    job->setErrorMessage(err);
             }
+        } else {
+            job->setErrorMessage(err);
         }
         qDeleteAll(urls);
     }
 
     delete url_;
 
-    return err;
+    job->complete();
 }
 
-QString App::path()
+void App::path(Job* job)
 {
-    Job* job = new Job();
-
     QString package = cl.get("package");
     QString versions = cl.get("versions");
     QString version = cl.get("version");
@@ -1018,18 +1020,10 @@ QString App::path()
     }
 
     job->complete();
-
-    QString r = job->getErrorMessage();
-
-    delete job;
-
-    return r;
 }
 
-QString App::place()
+void App::place(Job* job)
 {
-    Job* job = new Job();
-
     QString package = cl.get("package");
     QString version = cl.get("version");
     QString where = cl.get("file");
@@ -1154,19 +1148,18 @@ QString App::place()
         job->setProgress(1);
 
     job->complete();
-
-    QString r = job->getErrorMessage();
-
-    delete job;
-
-    return r;
 }
 
-QString App::update()
+void App::update(Job* job)
 {
     DBRepository* rep = DBRepository::getDefault();
-    Job* job = clp.createJob();
     job->setTitle("Updating packages");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     if (job->shouldProceed()) {
         QString err = InstalledPackages::getDefault()->readRegistryDatabase();
@@ -1272,22 +1265,16 @@ QString App::update()
     }
     qDeleteAll(ops);
 
-    job->complete();
-
     QString r = job->getErrorMessage();
-    if (job->isCancelled()) {
-        r = "The package update was cancelled";
-    } else if (up2date) {
+    if (up2date) {
         WPMUtils::writeln("The packages are already up-to-date");
     } else if (r.isEmpty()) {
         WPMUtils::writeln("The packages were updated successfully");
     }
 
-    delete job;
-
     qDeleteAll(toUpdate);
 
-    return r;
+    job->complete();
 }
 
 void App::processInstallOperations(Job *job,
@@ -1427,10 +1414,20 @@ void App::processInstallOperations(Job *job,
     }
 }
 
-QString App::add()
+void App::add(Job* job)
 {
-    Job* job = clp.createJob();
     job->setTitle("Installing packages");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        /* we ignore the returned error as it should also work for non-admins */
+        addNpackdCL();
+    }
 
     InstalledPackages* ip = InstalledPackages::getDefault();
 
@@ -1503,10 +1500,7 @@ QString App::add()
                     arg(ijob->getErrorMessage()));
     }
 
-    job->complete();
-
-    QString r = job->getErrorMessage();
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         for (int i = 0; i < toInstall.size(); i++) {
             PackageVersion* pv = toInstall.at(i);
             WPMUtils::writeln(QString(
@@ -1515,12 +1509,10 @@ QString App::add()
         }
     }
 
-    delete job;
-
     qDeleteAll(ops);
     qDeleteAll(toInstall);
 
-    return r;
+    job->complete();
 }
 
 bool App::confirm(const QList<InstallOperation*> install, QString* title,
@@ -1636,10 +1628,20 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
     return b;
 }
 
-QString App::remove()
+void App::remove(Job *job)
 {
-    Job* job = clp.createJob();
     job->setTitle("Removing packages");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        /* we ignore the returned error as it should also work for non-admins */
+        addNpackdCL();
+    }
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
@@ -1710,36 +1712,27 @@ QString App::remove()
                     arg(removeJob->getErrorMessage()));
     }
 
-    job->complete();
-
-    QString r = job->getErrorMessage();
-    if (job->isCancelled()) {
-        r = "The package removal was cancelled";
-    } else if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         WPMUtils::writeln("The packages were removed successfully");
     }
-
-    delete job;
 
     qDeleteAll(ops);
     qDeleteAll(toRemove);
 
-    return r;
+    job->complete();
 }
 
-QString App::info()
+void App::info(Job* job)
 {
-    QString r;
-
-    bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
 
-    Job* job;
-    if (bare || json)
-        job = new Job();
-    else
-        job = clp.createJob();
     job->setTitle("Showing information");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault("default", true);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     if (job->shouldProceed()) {
         InstalledPackages* ip = InstalledPackages::getDefault();
@@ -1755,46 +1748,52 @@ QString App::info()
     QString package = cl.get("package");
     QString version = cl.get("version");
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (package.isNull()) {
-            r = "Missing option: --package";
+            job->setErrorMessage("Missing option: --package");
         }
     }
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (!Package::isValidName(package)) {
-            r = "Invalid package name: " + package;
+            job->setErrorMessage("Invalid package name: " + package);
         }
     }
 
     DBRepository* rep = DBRepository::getDefault();
     Package* p = 0;
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
+        QString r;
         p = AbstractRepository::findOnePackage(package, &r);
+        if (!r.isEmpty())
+            job->setErrorMessage(r);
     }
 
     Version v;
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
         if (!version.isNull()) {
             if (!v.setVersion(version)) {
-                r = "Cannot parse version: " + version;
+                job->setErrorMessage("Cannot parse version: " + version);
             }
         }
     }
 
     PackageVersion* pv = 0;
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (!version.isNull()) {
+            QString r;
             pv = rep->findPackageVersion_(p->name, v, &r);
-            if (r.isEmpty() && !pv) {
-                r = QString("Package version %1 not found").
-                        arg(v.getVersionString());
+            if (!r.isEmpty())
+                job->setErrorMessage(r);
+            else if (!pv) {
+                job->setErrorMessage(QString("Package version %1 not found").
+                        arg(v.getVersionString()));
             }
         }
     }
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (json) {
             QJsonObject top;
             if (pv)
@@ -1874,13 +1873,18 @@ QString App::info()
             }
 
             if (!pv) {
-                QString versions;
-                QList<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &r);
-                for (int i = 0; i < pvs.count(); i++) {
-                    PackageVersion* opv = pvs.at(i);
-                    if (i != 0)
-                        versions.append(", ");
-                    versions.append(opv->version.getVersionString());
+                QString versions, r;
+                QList<PackageVersion*> pvs = rep->getPackageVersions_(
+                        p->name, &r);
+                if (r.isEmpty()) {
+                    for (int i = 0; i < pvs.count(); i++) {
+                        PackageVersion* opv = pvs.at(i);
+                        if (i != 0)
+                            versions.append(", ");
+                        versions.append(opv->version.getVersionString());
+                    }
+                } else {
+                    job->setErrorMessage(r);
                 }
                 qDeleteAll(pvs);
                 WPMUtils::writeln("Versions: " + versions);
@@ -1907,20 +1911,22 @@ QString App::info()
         }
     }    
 
-    if (r.isEmpty()) {
+    if (job->shouldProceed()) {
         if (pv) {
             if (json) {
                 // nothing
             } else {
                 WPMUtils::writeln("Dependency tree:");
-                r = printDependencies(pv->installed(), "", 1, pv);
+                QString r = printDependencies(pv->installed(), "", 1, pv);
+                if (!r.isEmpty())
+                    job->setErrorMessage(r);
             }
         }
     }
 
     delete pv;
 
-    return r;
+    job->complete();
 }
 
 QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
@@ -1993,10 +1999,15 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
     return err;
 }
 
-QString App::detect()
+void App::detect(Job* job)
 {
-    Job* job = clp.createJob();
     job->setTitle("Detecting packages");
+
+    if (job->shouldProceed()) {
+        QString err = DBRepository::getDefault()->openDefault();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -2011,11 +2022,9 @@ QString App::detect()
 
     DBRepository* rep = DBRepository::getDefault();
     rep->updateF5(job, interactive);
-    QString r = job->getErrorMessage();
     if (job->getErrorMessage().isEmpty()) {
         WPMUtils::writeln("Package detection completed successfully");
     }
-    delete job;
 
-    return r;
+    job->complete();
 }
