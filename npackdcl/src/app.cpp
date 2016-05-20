@@ -64,7 +64,7 @@ QStringList App::sortPackageVersionsByPackageTitle(
 int App::process()
 {
     cl.add("bare-format", 'b', "bare format (no heading or summary)",
-            "", false);
+            "", false, "list,list-repos,search,install-dir,which,where");
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("end-process", 'e',
             "list of ways to close running applications (c=close, k=kill, s=disconnect from file shares). The default value is 'c'.",
@@ -73,7 +73,7 @@ int App::process()
     cl.add("install", 'i',
             "install a package if it was not installed", "", false);
     cl.add("json", 'j', "json format for the output",
-            "", false, "list,list-repos,search,install-dir,which");
+            "", false, "list,list-repos,search,install-dir,which,where");
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false,
             "update");
@@ -284,7 +284,7 @@ void App::usage()
         "    ncl info --package=<package> [--version=<version>]",
         "        shows information about the specified package or package",
         "        version",
-        "    ncl install-dir [--json]",
+        "    ncl install-dir [--bare-format | --json]",
         "        prints the directory where packages will be installed",
         "    ncl list [--status=installed | all] [--bare-format | --json]",
         "        lists package versions sorted by package name and version.",
@@ -323,10 +323,10 @@ void App::usage()
         "        and installing the newest version. ",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        "    ncl where --file=<relative path>",
+        "    ncl where --file=<relative path> [--bare-format | --json]",
         "        finds all installed packages with the specified file or",
         "            directory",
-        "    ncl which --file=<file> [--json]",
+        "    ncl which --file=<file> [--bare-format | --json]",
         "        finds the package that owns the specified file or directory",
         "Options:",
     };
@@ -405,6 +405,7 @@ QString App::which()
 {
     QString r;
 
+    bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
 
     InstalledPackages* ip = InstalledPackages::getDefault();
@@ -433,6 +434,11 @@ QString App::which()
                 v["path"] = f->directory;
                 top["version"] = v;
                 printJSON(top);
+            } else if (bare) {
+                WPMUtils::writeln(QString(
+                        "%1\t%2\t%3\t%4").
+                        arg(title).arg(f->version.getVersionString()).
+                        arg(f->package).arg(f->directory));
             } else {
                 WPMUtils::writeln(QString(
                         "%1 %2 (%3) is installed in \"%4\"").
@@ -445,6 +451,8 @@ QString App::which()
         } else {
             if (json)
                 printJSON(QJsonObject());
+            else if (bare)
+                ; // nothing
             else
                 WPMUtils::writeln(QString("No package found for \"%1\"").
                         arg(file));
@@ -469,11 +477,26 @@ QString App::where()
     }
 
     if (r.isEmpty()) {
+        bool json = cl.isPresent("json");
+
         QStringList paths = ip->getAllInstalledPackagePaths();
-        for (int i = 0; i < paths.count(); i++) {
-            QFileInfo fi(paths[i], file);
-            if (fi.exists())
-                WPMUtils::writeln(paths[i] + "\\" + file);
+
+        if (json) {
+            QJsonObject top;
+            QJsonArray a;
+            for (int i = 0; i < paths.count(); i++) {
+                QFileInfo fi(paths[i], file);
+                if (fi.exists())
+                    a.append(paths[i] + "\\" + file);
+            }
+            top["paths"] = a;
+            printJSON(top);
+        } else {
+            for (int i = 0; i < paths.count(); i++) {
+                QFileInfo fi(paths[i], file);
+                if (fi.exists())
+                    WPMUtils::writeln(paths[i] + "\\" + file);
+            }
         }
     }
 
