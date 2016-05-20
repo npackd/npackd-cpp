@@ -68,10 +68,11 @@ int App::process()
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("end-process", 'e',
             "list of ways to close running applications (c=close, k=kill, s=disconnect from file shares). The default value is 'c'.",
-            "[c][k][s]", false);
-    cl.add("file", 'f', "file or directory", "file", false);
+            "[c][k][s]", false, "remove,rm,update");
+    cl.add("file", 'f', "file or directory", "file", false,
+            "add,place,set-install-dir,update,where,which");
     cl.add("install", 'i',
-            "install a package if it was not installed", "", false);
+            "install a package if it was not installed", "", false, "update");
     cl.add("json", 'j', "json format for the output",
             "", false, "list,list-repos,search,install-dir,which,where,info");
     cl.add("keep-directories", 'k',
@@ -81,17 +82,17 @@ int App::process()
             "assume that there is no user and do not ask for input", "", false);
     cl.add("package", 'p',
             "internal package name (e.g. com.example.Editor or just Editor)",
-            "package", true);
+            "package", true, "add,info,path,place,remove,update,rm");
     cl.add("query", 'q', "search terms (e.g. editor)",
             "search terms", false, "search");
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
-            "range", false);
+            "range", false, "add,path");
     cl.add("status", 's', "filters package versions by status",
-            "status", false);
+            "status", false, "list,search");
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
-            "repository", false);
+            "repository", false, "add-repo,remove-repo,set-repo");
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
-            "version", false);
+            "version", false, "add,info,path,place");
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -266,10 +267,10 @@ void App::usage()
             "ncl %1 - Npackd command line tool").
             arg(NPACKD_VERSION));
     const char* lines[] = {
-        "Usage:",
+        "Usage: ncl <command> [global options] [options]",
         "    ncl add (--package=<package>",
         "            [--version=<version> | --versions=<versions>])+ ",
-        "            [--non-interactive] [--file=<installation directory>]",
+        "            [--file=<installation directory>]",
         "        installs packages. The newest available version will be ",
         "        installed, if none is specified.",
         "        Short package names can be used here",
@@ -278,7 +279,7 @@ void App::usage()
         "        appends a repository to the list",
         "    ncl check",
         "        checks the installed packages for missing dependencies",
-        "    ncl detect [--non-interactive]",
+        "    ncl detect",
         "        download repositories and detect packages from the MSI ",
         "        database and software control panel",
         "    ncl info --package=<package> [--version=<version>]",
@@ -319,7 +320,7 @@ void App::usage()
         "        changes the directory where packages will be installed",
         "    ncl update (--package=<package>)+ [--end-process=<types>]",
         "            [--install] [--keep-directories]",
-        "            [--non-interactive] [--file=<installation directory>]",
+        "            [--file=<installation directory>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "        Short package names can be used here",
@@ -329,11 +330,11 @@ void App::usage()
         "            directory",
         "    ncl which --file=<file> [--bare-format | --json]",
         "        finds the package that owns the specified file or directory",
-        "Options:",
     };
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
         WPMUtils::writeln(QString(lines[i]));
     }
+
     QStringList opts = this->cl.printOptions();
     for (int i = 0; i < opts.count(); i++) {
         WPMUtils::writeln(opts.at(i));
@@ -393,7 +394,7 @@ QString App::getInstallPath()
 
     if (json) {
         QJsonObject top;
-        top["install-dir"] = WPMUtils::getInstallationDirectory();
+        top["installDir"] = WPMUtils::getInstallationDirectory();
         printJSON(top);
     } else {
         WPMUtils::outputTextConsole(WPMUtils::getInstallationDirectory());
@@ -433,7 +434,7 @@ QString App::which()
                 v["package"] = f->package;
                 v["name"] = f->version.getVersionString();
                 v["path"] = f->directory;
-                top["version"] = v;
+                top["installed"] = v;
                 printJSON(top);
             } else if (bare) {
                 WPMUtils::writeln(QString(
@@ -1005,7 +1006,15 @@ QString App::path()
 
     if (!path.isEmpty()) {
         path.replace('/', '\\');
-        WPMUtils::writeln(path);
+
+        bool json = cl.isPresent("json");
+        if (json) {
+            QJsonObject top;
+            top["path"] = path;
+            printJSON(top);
+        } else {
+            WPMUtils::writeln(path);
+        }
     }
 
     job->complete();

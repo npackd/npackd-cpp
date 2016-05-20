@@ -155,8 +155,6 @@ void CommandLine::add(QString name, char name2, QString description,
 
 QStringList CommandLine::printOptions() const
 {
-    QStringList result;
-
     QStringList names;
     int len = 0;
     for (int i = 0; i < this->options.count(); i++) {
@@ -175,12 +173,28 @@ QStringList CommandLine::printOptions() const
             len = s.length();
     }
 
+    QStringList result;
+
+    result.append("Global options:");
     for (int i = 0; i < this->options.count(); i++) {
         Option* opt = this->options.at(i);
-        QString s = names.at(i);
-        s += QString().fill(' ', len + 4 - s.length());
-        s.append(opt->description);
-        result.append(s);
+        if (opt->allowedCommands.isEmpty()) {
+            QString s = names.at(i);
+            s += QString().fill(' ', len + 4 - s.length());
+            s.append(opt->description);
+            result.append(s);
+        }
+    }
+
+    result.append("Options:");
+    for (int i = 0; i < this->options.count(); i++) {
+        Option* opt = this->options.at(i);
+        if (!opt->allowedCommands.isEmpty()) {
+            QString s = names.at(i);
+            s += QString().fill(' ', len + 4 - s.length());
+            s.append(opt->description);
+            result.append(s);
+        }
     }
 
     return result;
