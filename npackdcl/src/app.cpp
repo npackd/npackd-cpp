@@ -1743,8 +1743,6 @@ void App::info(Job* job)
             job->setProgress(0.01);
     }
 
-    delete job;
-
     QString package = cl.get("package");
     QString version = cl.get("version");
 
