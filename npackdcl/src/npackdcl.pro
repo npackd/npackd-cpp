@@ -98,9 +98,15 @@ QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
     -Wno-missing-field-initializers -Wno-unused-parameter
 QMAKE_CXXFLAGS -= -fexceptions
 QMAKE_CXXFLAGS_RELEASE -= -O2
-QMAKE_CXXFLAGS_RELEASE += -Os -g -flto
+QMAKE_CXXFLAGS_RELEASE += -Os -g
+contains(QT_ARCH, i386) {
+    QMAKE_CXXFLAGS_RELEASE += -flto
+}
 
 QMAKE_LFLAGS += -static
-QMAKE_LFLAGS_RELEASE -= -Wl,-s -Os -flto
+QMAKE_LFLAGS_RELEASE -= -Wl,-s -Os
 QMAKE_LFLAGS_RELEASE += -Wl,-Map,npackdcl_release.map
+contains(QT_ARCH, i386) {
+    QMAKE_LFLAGS_RELEASE += -flto
+}
 
