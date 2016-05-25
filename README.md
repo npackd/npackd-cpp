@@ -7,7 +7,6 @@
 _(pronounced "unpacked") is an application store/package manager/marketplace for Windows_
 
 * Home page and repositories: https://npackd.appspot.com
-* Downloads: https://github.com/tim-lebedkov/npackd/wiki/Downloads
 
 ![Npackd](http://npackd.appspot.com/Npackd.png)
 
