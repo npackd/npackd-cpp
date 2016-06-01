@@ -90,7 +90,7 @@ int App::process()
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
             "repository", false, "add-repo,remove-repo,set-repo");
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
-            "version", false, "add,info,path,place");
+            "version", false, "add,info,path,place,rm,remove");
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
             "range", true, "add,path,update");
 
@@ -1239,6 +1239,8 @@ void App::update(Job* job)
     QList<Dependency*> toUpdate2;
 
     if (job->shouldProceed()) {
+        // WPMUtils::writeln("Searching for options");
+
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
             QString versions = versions_.at(i);
@@ -1251,8 +1253,6 @@ void App::update(Job* job)
                 if (versions.isEmpty()) {
                     toUpdate.append(p);
                 } else {
-                    delete p;
-
                     Dependency* d = new Dependency();
                     if (!d->setVersions(versions)) {
                         delete d;
@@ -1263,7 +1263,11 @@ void App::update(Job* job)
                         d->package = p->name;
 
                         toUpdate2.append(d);
+
+                        WPMUtils::writeln(d->toString());
                     }
+
+                    delete p;
                 }
             }
 
@@ -1275,9 +1279,11 @@ void App::update(Job* job)
     bool keepDirectories = cl.isPresent("keep-directories");
     bool install = cl.isPresent("install");
 
+
     QList<InstallOperation*> ops;
     bool up2date = false;
     if (job->shouldProceed()) {
+        // WPMUtils::writeln("before planUpdate");
         QString err = rep->planUpdates(toUpdate, toUpdate2, ops,
                 keepDirectories, install, file);
         if (!err.isEmpty())
