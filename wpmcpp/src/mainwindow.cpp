@@ -1654,7 +1654,7 @@ void MainWindow::on_actionUpdate_triggered()
 
     QList<InstallOperation*> ops;
     if (err.isEmpty() && packages.count() > 0) {
-        err = r->planUpdates(packages, ops);
+        err = r->planUpdates(packages, QList<Dependency*>(), ops);
     }
 
     if (err.isEmpty()) {

@@ -382,6 +382,7 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 
 
 QString AbstractRepository::planUpdates(const QList<Package*> packages,
+        QList<Dependency*> ranges,
         QList<InstallOperation*>& ops, bool keepDirectories,
         bool install, const QString &where_)
 {
@@ -391,6 +392,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
     QList<PackageVersion*> newest, newesti;
     QList<bool> used;
 
+    // packages first
     if (err.isEmpty()) {
         for (int i = 0; i < packages.count(); i++) {
             Package* p = packages.at(i);
@@ -411,6 +413,55 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 err = QString(QObject::tr("Cannot find the newest installed version for %1: %2")).
                         arg(p->title).arg(err);
                 break;
+            }
+
+            if (b == 0) {
+                if (!install) {
+                    err = QString(QObject::tr("No installed version found for the package %1")).
+                            arg(p->title);
+                    break;
+                }
+            }
+
+            if (b == 0 || a->version.compare(b->version) > 0) {
+                newest.append(a);
+                newesti.append(b);
+                used.append(false);
+            }
+        }
+    }
+
+    // version ranges second
+    if (err.isEmpty()) {
+        for (int i = 0; i < ranges.count(); i++) {
+            Dependency* d = ranges.at(i);
+            QScopedPointer<Package> p(findPackage_(d->package));
+            if (!p.data()) {
+                err = QString(QObject::tr("Cannot find the package %1")).
+                        arg(d->package);
+                break;
+            }
+
+            PackageVersion* a = d->findBestMatchToInstall(
+                    QList<PackageVersion*>(), &err);
+            if (!err.isEmpty())
+                break;
+
+            if (a == 0) {
+                err = QString(QObject::tr("No installable version found for the package %1")).
+                        arg(p->title);
+                break;
+            }
+
+            InstalledPackageVersion* ipv = d->findHighestInstalledMatch();
+            PackageVersion* b = 0;
+            if (ipv) {
+                b = findPackageVersion_(ipv->package, ipv->version, &err);
+                if (!err.isEmpty()) {
+                    err = QString(QObject::tr("Cannot find the newest installed version for %1: %2")).
+                            arg(p->title).arg(err);
+                    break;
+                }
             }
 
             if (b == 0) {

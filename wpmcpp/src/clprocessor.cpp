@@ -278,7 +278,7 @@ QString CLProcessor::update()
     bool up2date = false;
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.12, QObject::tr("Planning"));
-        QString err = rep->planUpdates(toUpdate, ops);
+        QString err = rep->planUpdates(toUpdate, QList<Dependency*>(), ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {

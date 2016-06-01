@@ -191,6 +191,11 @@ public:
      *
      * @param packages these packages should be updated. No duplicates are
      *     allowed here
+     * @param ranges these packages should be updated. No duplicates are
+     *     allowed here. Only the versions in the specified range are considered
+     *     for an update. This means that the newest installed version from a
+     *     range will be uninstalled and the newest available in the range will
+     *     be installed.
      * @param ops installation operations will be appended here
      * @param keepDirectories true = use the same directories for the updated
      *     versions
@@ -202,6 +207,7 @@ public:
      * @return error message or ""
      */
     QString planUpdates(const QList<Package*> packages,
+            QList<Dependency *> ranges,
             QList<InstallOperation*>& ops, bool keepDirectories=false,
             bool install=false, const QString& where_="");
 

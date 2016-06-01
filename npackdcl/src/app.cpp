@@ -85,14 +85,14 @@ int App::process()
             "package", true, "add,info,path,place,remove,update,rm");
     cl.add("query", 'q', "search terms (e.g. editor)",
             "search terms", false, "search");
-    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
-            "range", false, "add,path");
     cl.add("status", 's', "filters package versions by status",
             "status", false, "list,search");
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
             "repository", false, "add-repo,remove-repo,set-repo");
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
             "version", false, "add,info,path,place");
+    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
+            "range", true, "add,path,update");
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -303,7 +303,8 @@ void App::usage(Job* job)
         "        All packages are shown by default.",
         "    ncl set-install-dir --file=<directory>",
         "        changes the directory where packages will be installed",
-        "    ncl update (--package=<package>)+ [--end-process=<types>]",
+        "    ncl update (--package=<package> [--versions=<versions>])+",
+        "            [--end-process=<types>]",
         "            [--install] [--keep-directories]",
         "            [--file=<installation directory>]",
         "        updates packages by uninstalling the currently installed",
@@ -1179,7 +1180,32 @@ void App::update(Job* job)
         }
     }
 
-    QStringList packages_ = cl.getAll("package");
+    QStringList packages_;
+    QStringList versions_;
+
+    QList<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
+    for (int i = 0; i < parsed.size(); ) {
+        CommandLine::ParsedOption* po = parsed.at(i);
+        if (po->opt->name == "package") {
+            packages_.append(po->value);
+            i++;
+
+            QString versions;
+            if (i < parsed.size()) {
+                po = parsed.at(i);
+                if (po->opt->name == "versions") {
+                    versions = po->value;
+                    i++;
+                }
+            }
+            versions_.append(versions);
+        } else if (po->opt->name == "versions") {
+            job->setErrorMessage("Missing option: --versions without --package");
+            break;
+        } else {
+            i++;
+        }
+    }
 
     if (job->shouldProceed()) {
         if (packages_.size() == 0) {
@@ -1210,16 +1236,36 @@ void App::update(Job* job)
     }
 
     QList<Package*> toUpdate;
+    QList<Dependency*> toUpdate2;
 
     if (job->shouldProceed()) {
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
+            QString versions = versions_.at(i);
+
             QString err;
             Package* p = AbstractRepository::findOnePackage(package, &err);
-            if (p)
-                toUpdate.append(p);
-            else
+            if (!p)
                 job->setErrorMessage(err);
+            else {
+                if (versions.isEmpty()) {
+                    toUpdate.append(p);
+                } else {
+                    delete p;
+
+                    Dependency* d = new Dependency();
+                    if (!d->setVersions(versions)) {
+                        delete d;
+                        job->setErrorMessage(err);
+                    } else {
+                        // this package name could be different from the one in
+                        // the command line if the short package name is used
+                        d->package = p->name;
+
+                        toUpdate2.append(d);
+                    }
+                }
+            }
 
             if (!job->shouldProceed())
                 break;
@@ -1232,8 +1278,8 @@ void App::update(Job* job)
     QList<InstallOperation*> ops;
     bool up2date = false;
     if (job->shouldProceed()) {
-        QString err = rep->planUpdates(toUpdate, ops, keepDirectories, install,
-                file);
+        QString err = rep->planUpdates(toUpdate, toUpdate2, ops,
+                keepDirectories, install, file);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -1273,6 +1319,7 @@ void App::update(Job* job)
     }
 
     qDeleteAll(toUpdate);
+    qDeleteAll(toUpdate2);
 
     job->complete();
 }
