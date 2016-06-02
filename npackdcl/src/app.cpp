@@ -258,8 +258,6 @@ void App::usage(Job* job)
         "            [--file=<installation directory>]",
         "        installs packages. The newest available version will be ",
         "        installed, if none is specified.",
-        "        Short package names can be used here",
-        "        (e.g. App instead of com.example.App)",
         "    ncl add-repo --url=<repository>",
         "        appends a repository to the list",
         "    ncl check",
@@ -291,8 +289,6 @@ void App::usage(Job* job)
         "           [--end-process=<types>]",
         "        removes packages. The version number may be omitted, ",
         "        if only one is installed.",
-        "        Short package names can be used here",
-        "        (e.g. App instead of com.example.App)",
         "    ncl remove-repo --url=<repository>",
         "        removes a repository from the list",
         "    ncl set-repo (--url=<repository>)+",
@@ -301,16 +297,16 @@ void App::usage(Job* job)
         "            [--bare-format | --json]",
         "        full text search. Lists found packages sorted by package name.",
         "        All packages are shown by default.",
-        "    ncl set-install-dir --file=<directory>",
-        "        changes the directory where packages will be installed",
+        "    ncl set-install-dir [--file=<directory>]",
+        "        changes the directory where packages will be installed. The",
+        "        default directory for program files is used if the --file",
+        "        parameter is missing.",
         "    ncl update (--package=<package> [--versions=<versions>])+",
         "            [--end-process=<types>]",
         "            [--install] [--keep-directories]",
         "            [--file=<installation directory>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
-        "        Short package names can be used here",
-        "        (e.g. App instead of com.example.App)",
         "    ncl where --file=<relative path> [--bare-format | --json]",
         "        finds all installed packages with the specified file or",
         "            directory",
@@ -328,6 +324,7 @@ void App::usage(Job* job)
 
     const char* lines2[] = {
         "",
+        "You can use short package names, e.g. App instead of com.example.App.",
         "The process exits with the code unequal to 0 if an error occures.",
         "If the output is redirected, the texts will be encoded as UTF-8.",
         "",
@@ -508,7 +505,7 @@ void App::setInstallPath(Job* job)
     QString file = cl.get("file");
     if (job->shouldProceed()) {
         if (file.isNull()) {
-            job->setErrorMessage("Missing option: --file");
+            file = WPMUtils::getProgramFilesDir();
         }
     }
 

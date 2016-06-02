@@ -150,6 +150,11 @@ private slots:
      * @brief "which"
      */
     void which();
+
+    /**
+     * @brief "install-dir/set-install-dir"
+     */
+    void installDir();
 };
 
 #endif // APP_H
