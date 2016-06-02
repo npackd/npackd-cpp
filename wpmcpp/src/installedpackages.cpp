@@ -434,6 +434,22 @@ InstalledPackageVersion* InstalledPackages::getNewestInstalled(
     return r;
 }
 
+bool InstalledPackages::isInstalled(const Dependency& dep)
+{
+    QList<InstalledPackageVersion*> installed = getAll();
+    bool res = false;
+    for (int i = 0; i < installed.count(); i++) {
+        InstalledPackageVersion* ipv = installed.at(i);
+        if (ipv->package == dep.package &&
+                dep.test(ipv->version)) {
+            res = true;
+            break;
+        }
+    }
+    qDeleteAll(installed);
+    return res;
+}
+
 QString InstalledPackages::notifyInstalled(const QString &package,
         const Version &version, bool success) const
 {

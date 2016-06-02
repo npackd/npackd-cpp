@@ -12,6 +12,7 @@
 #include "job.h"
 #include "abstractthirdpartypm.h"
 #include "dbrepository.h"
+#include "dependency.h"
 
 /**
  * @brief information about installed packages
@@ -266,6 +267,12 @@ public:
      */
     QString notifyInstalled(const QString& package,
             const Version& version, bool success=true) const;
+
+    /**
+     * @param dep a dependency
+     * @return true if a package, that satisfies this dependency, is installed
+     */
+    bool isInstalled(const Dependency& dep);
 signals:
     /**
      * @brief fired if a package version was installed or uninstalled

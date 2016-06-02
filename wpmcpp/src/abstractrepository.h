@@ -264,6 +264,56 @@ public:
      */
     void processWithCoInitializeAndFree(Job *job,
             const QList<InstallOperation *> &install_, DWORD programCloseType);
+
+    /**
+     * @param dep a dependency
+     * @param avoid list of package versions that should be avoided and cannot
+     *     be considered to be a match
+     * @param err error message will be stored here
+     * @return [ownership:caller] all package versions that matches this
+     *     dependency by
+     *     being installed. Returned objects should be destroyed later.
+     *     The returned objects are sorted by the package version number. The
+     *     first returned object has the highest version number.
+     */
+    QList<PackageVersion *> findAllMatchesToInstall(const Dependency& dep,
+            const QList<PackageVersion *> &avoid, QString *err);
+
+    /**
+     * @param dep a dependency
+     * @param avoid list of package versions that should be avoided and cannot
+     *     be considered to be a match
+     * @param err error message will be stored here
+     * @return [ownership:caller] the newest package version that matches this
+     *     dependency by
+     *     being installed. Returned object should be destroyed later.
+     */
+    PackageVersion* findBestMatchToInstall(const Dependency& dep,
+            const QList<PackageVersion*>& avoid,
+            QString *err);
+
+    /**
+     * @param dep a dependency
+     * @return [ownership:caller] the newest package version that matches this
+     *     dependency and are installed
+     */
+    InstalledPackageVersion* findHighestInstalledMatch(
+            const Dependency& dep) const;
+
+    /**
+     * @param dep a dependency
+     * @return [ownership:caller] all package versions that match
+     *     this dependency and are installed
+     */
+    QList<InstalledPackageVersion*> findAllInstalledMatches(
+            const Dependency& dep) const;
+
+    /**
+     * @param dep a dependency
+     * @param includeFullPackageName true = the full package name will be added
+     * @return human readable representation of this dependency
+     */
+    QString toString(const Dependency& dep, bool includeFullPackageName=false);
 };
 
 #endif // ABSTRACTREPOSITORY_H

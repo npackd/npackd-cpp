@@ -119,6 +119,127 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
     */
 }
 
+QList<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
+        const Dependency &dep, const QList<PackageVersion *> &avoid,
+        QString *err)
+{
+    QList<PackageVersion*> res;
+
+    QList<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
+    if (err->isEmpty()) {
+        for (int i = 0; i < pvs.count(); i++) {
+            PackageVersion* pv = pvs.at(i);
+            if (dep.test(pv->version) &&
+                    pv->download.isValid() &&
+                    PackageVersion::indexOf(avoid, pv) < 0) {
+                res.append(pv->clone());
+            }
+        }
+    }
+    qDeleteAll(pvs);
+
+    return res;
+}
+
+PackageVersion *AbstractRepository::findBestMatchToInstall(
+        const Dependency &dep, const QList<PackageVersion *> &avoid,
+        QString *err)
+{
+    PackageVersion* res = 0;
+
+    QList<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
+    if (err->isEmpty()) {
+        for (int i = 0; i < pvs.count(); i++) {
+            PackageVersion* pv = pvs.at(i);
+            if (dep.test(pv->version) &&
+                    pv->download.isValid() &&
+                    PackageVersion::indexOf(avoid, pv) < 0) {
+                if (res == 0 || pv->version.compare(res->version) > 0)
+                    res = pv;
+            }
+        }
+    }
+
+    if (res) {
+        res = res->clone();
+    }
+    qDeleteAll(pvs);
+
+    return res;
+}
+
+InstalledPackageVersion *AbstractRepository::findHighestInstalledMatch(
+        const Dependency &dep) const
+{
+    QList<InstalledPackageVersion*> list = findAllInstalledMatches(dep);
+    InstalledPackageVersion* res = 0;
+    for (int i = 0; i < list.count(); i++) {
+        InstalledPackageVersion* ipv = list.at(i);
+        if (res == 0 || ipv->version.compare(res->version) > 0)
+            res = ipv;
+    }
+    if (res)
+        res = res->clone();
+    qDeleteAll(list);
+
+    return res;
+}
+
+QList<InstalledPackageVersion *> AbstractRepository::findAllInstalledMatches(
+        const Dependency &dep) const
+{
+    QList<InstalledPackageVersion*> r;
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    QList<InstalledPackageVersion*> installed = ip->getAll();
+    for (int i = 0; i < installed.count(); i++) {
+        InstalledPackageVersion* ipv = installed.at(i);
+        if (ipv->package == dep.package &&
+                dep.test(ipv->version)) {
+            r.append(ipv->clone());
+        }
+    }
+    qDeleteAll(installed);
+    return r;
+}
+
+QString AbstractRepository::toString(const Dependency &dep,
+        bool includeFullPackageName)
+{
+    QString res;
+
+    Package* p = findPackage_(dep.package);
+    if (p)
+        res.append(p->title);
+    else
+        res.append(dep.package);
+    delete p;
+
+    if (includeFullPackageName) {
+        res.append(" (").append(dep.package).append(")");
+    }
+
+    res.append(" ");
+
+    if (dep.minIncluded)
+        res.append('[');
+    else
+        res.append('(');
+
+    res.append(dep.min.getVersionString());
+
+    res.append(", ");
+
+    res.append(dep.max.getVersionString());
+
+    if (dep.maxIncluded)
+        res.append(']');
+    else
+        res.append(')');
+
+    return res;
+}
+
+
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
         bool printScriptOutput, bool interactive)
@@ -442,7 +563,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 break;
             }
 
-            PackageVersion* a = d->findBestMatchToInstall(
+            PackageVersion* a = findBestMatchToInstall(*d,
                     QList<PackageVersion*>(), &err);
             if (!err.isEmpty())
                 break;
@@ -453,7 +574,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 break;
             }
 
-            InstalledPackageVersion* ipv = d->findHighestInstalledMatch();
+            InstalledPackageVersion* ipv = findHighestInstalledMatch(*d);
             PackageVersion* b = 0;
             if (ipv) {
                 b = findPackageVersion_(ipv->package, ipv->version, &err);

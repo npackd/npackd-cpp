@@ -565,6 +565,7 @@ void App::check(Job* job)
     }
 
     AbstractRepository* rep = AbstractRepository::getDefault_();
+    InstalledPackages* ip = InstalledPackages::getDefault();
     QList<PackageVersion*> list;
 
     if (job->shouldProceed()) {
@@ -586,11 +587,11 @@ void App::check(Job* job)
             PackageVersion* pv = list.at(i);
             for (int j = 0; j < pv->dependencies.count(); j++) {
                 Dependency* d = pv->dependencies.at(j);
-                if (!d->isInstalled()) {
+                if (!ip->isInstalled(*d)) {
                     WPMUtils::writeln(QString(
                             "%1 depends on %2, which is not installed").
                             arg(pv->toString(true)).
-                            arg(d->toString(true)));
+                            arg(rep->toString(*d, true)));
                     n++;
                 }
             }
@@ -1264,7 +1265,7 @@ void App::update(Job* job)
 
                         toUpdate2.append(d);
 
-                        WPMUtils::writeln(d->toString());
+                        // WPMUtils::writeln(d->toString());
                     }
 
                     delete p;
@@ -1985,6 +1986,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 {
     QString err;
 
+    AbstractRepository* rep = AbstractRepository::getDefault_();
     for (int i = 0; i < pv->dependencies.count(); ++i) {
         QString prefix;
         if (i == pv->dependencies.count() - 1)
@@ -1993,16 +1995,17 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
             prefix = (QString() + ((QChar)0x251c) + ((QChar)0x2500));
 
         Dependency* d = pv->dependencies.at(i);
-        InstalledPackageVersion* ipv = d->findHighestInstalledMatch();
+        InstalledPackageVersion* ipv = rep->findHighestInstalledMatch(*d);
 
         PackageVersion* pvd = 0;
 
         QString s;
         if (ipv) {
-            pvd = AbstractRepository::getDefault_()->
+            pvd = rep->
                     findPackageVersion_(ipv->package, ipv->version, &err);
         } else {
-            pvd = d->findBestMatchToInstall(QList<PackageVersion*>(), &err);
+            pvd = rep->findBestMatchToInstall(*d,
+                    QList<PackageVersion*>(), &err);
         }
         delete ipv;
 
@@ -2014,11 +2017,11 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
         QChar before;
         if (!pvd) {
             s = QString("Missing dependency on %1").
-                    arg(d->toString(true));
+                    arg(rep->toString(*d, true));
             before = ' ';
         } else {
             s = QString("%1 resolved to %2").
-                    arg(d->toString(true)).
+                    arg(rep->toString(*d, true)).
                     arg(pvd->version.getVersionString());
             if (!pvd->installed())
                 s += " (not yet installed)";

@@ -711,6 +711,8 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
 
     avoid.append(this->clone());
 
+    AbstractRepository* rep = AbstractRepository::getDefault_();
+
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
         bool depok = false;
@@ -751,7 +753,8 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
             */
 
             QString err;
-            QList<PackageVersion*> pvs = d->findAllMatchesToInstall(avoid, &err);
+            QList<PackageVersion*> pvs = rep->findAllMatchesToInstall(
+                    *d, avoid, &err);
             if (!err.isEmpty()) {
                 res = QString(QObject::tr("Error searching for the dependency matches: %1")).
                            arg(err);
@@ -760,7 +763,7 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
             }
             if (pvs.count() == 0) {
                 res = QString(QObject::tr("Unsatisfied dependency: %1")).
-                           arg(d->toString());
+                           arg(rep->toString(*d));
                 break;
             } else {
                 bool found = false;
@@ -789,7 +792,7 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
                 }
                 if (!found) {
                     res = QString(QObject::tr("Unsatisfied dependency: %1")).
-                               arg(d->toString());
+                               arg(rep->toString(*d));
                 }
             }
             qDeleteAll(pvs);
@@ -986,7 +989,7 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
                                 arg(versions);
                     } else {
                         InstalledPackageVersion* ipv =
-                                v.findHighestInstalledMatch();
+                                rep->findHighestInstalledMatch(v);
                         if (ipv) {
                             pv = rep->findPackageVersion_(ipv->package,
                                     ipv->version, err);
@@ -999,7 +1002,7 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
                             }
                             delete ipv;
                         } else {
-                            pv = v.findBestMatchToInstall(
+                            pv = rep->findBestMatchToInstall(v,
                                     QList<PackageVersion*>(), err);
                             if (err->isEmpty()) {
                                 if (!pv) {
@@ -1645,11 +1648,12 @@ QString PackageVersion::addBasicVars(QStringList* env)
 
 void PackageVersion::addDependencyVars(QStringList* vars)
 {
+    AbstractRepository* rep = AbstractRepository::getDefault_();
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
         if (!d->var.isEmpty()) {
             vars->append(d->var);
-            InstalledPackageVersion* ipv = d->findHighestInstalledMatch();
+            InstalledPackageVersion* ipv = rep->findHighestInstalledMatch(*d);
             if (ipv) {
                 vars->append(ipv->getDirectory());
                 delete ipv;
