@@ -391,11 +391,11 @@ void App::installDir()
 {
     QVERIFY(captureNpackdCLOutput(
             "set-install-dir -f \"C:\\Program Files (x86)\"").trimmed() == "");
-    QVERIFY(!captureNpackdCLOutput("install-dir").
+    QVERIFY(captureNpackdCLOutput("install-dir").
             contains("C:\\Program Files (x86)"));
 
     QVERIFY(captureNpackdCLOutput("set-install-dir").trimmed() == "");
-    QVERIFY(!captureNpackdCLOutput("install-dir").
+    QVERIFY(captureNpackdCLOutput("install-dir").
             contains("C:\\Program Files"));
 }
 
