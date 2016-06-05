@@ -131,7 +131,7 @@ zip-debug: compile $(WHERE)/zip-debug
 	cd $(WHERE)\zip-debug && "$(SEVENZIP)\7z" a ..\Npackd$(BITS)-debug-$(VERSION).zip *
 
 zip: prep
-	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\Npackd$(BITS)-$(VERSION).zip *
+	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\Npackd$(BITS)-$(VERSION).zip * -mx9
 
 msi: prep
 	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\wpmcpp$(BITS).aip /SetVersion $(VERSION)

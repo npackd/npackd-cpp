@@ -98,7 +98,7 @@ prep: compile $(WHERE)/zip
 	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdcl.exe
 
 zip: prep $(WHERE)\zip\ncl.exe
-	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip *
+	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip * -mx9
 
 zip-debug: compile $(WHERE)/zip-debug
 	copy LICENSE.txt $(WHERE)\zip-debug
