@@ -3181,6 +3181,10 @@ p, li { white-space: pre-wrap; }
         <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot find the package %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

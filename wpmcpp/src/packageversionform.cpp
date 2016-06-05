@@ -143,7 +143,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
         Dependency* d = pv->dependencies.at(i);
 
         QString txt = "<a href=\"" + QString::number(i) + "\">" +
-                r->toString(*d) + "</a> ";
+                r->toString(*d, false) + "</a> ";
 
         /*
         InstalledPackageVersion* ipv = d->findHighestInstalledMatch();

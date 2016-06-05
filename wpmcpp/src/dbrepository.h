@@ -115,6 +115,8 @@ public:
      */
     static DBRepository* getDefault();
 
+    using AbstractRepository::toString;
+
     /**
      * @brief -
      */
