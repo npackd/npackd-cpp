@@ -100,6 +100,7 @@ private:
 
     QString addBasicVars(QStringList *env);
     void addDependencyVars(QStringList* vars);
+    bool createExecutableShims(const QString &dir, QString *errMsg);
 public:
     /**
      * @brief string ID for the specified package version
@@ -173,6 +174,9 @@ public:
 
     /** titles for the important files */
     QStringList importantFilesTitles;
+
+    /** command line tools ("shim" executables for these will be created) */
+    QStringList cmdFiles;
 
     /**
      * Text files.

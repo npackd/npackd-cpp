@@ -19,6 +19,7 @@ class RepositoryXMLHandler: public QXmlDefaultHandler
     enum WHERE {
         TAG_VERSION,
         TAG_VERSION_IMPORTANT_FILE,
+        TAG_VERSION_CMD_FILE,
         TAG_VERSION_FILE,
         TAG_VERSION_DEPENDENCY,
         TAG_VERSION_DETECT_FILE,

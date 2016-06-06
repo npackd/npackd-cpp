@@ -29,6 +29,8 @@ int RepositoryXMLHandler::findWhere()
             if (tag1 == "version") {
                 if (tag2 == "important-file")
                     r = TAG_VERSION_IMPORTANT_FILE;
+                else if (tag2 == "cmd-file")
+                    r = TAG_VERSION_CMD_FILE;
                 else if (tag2 == "file")
                     r = TAG_VERSION_FILE;
                 else if (tag2 == "dependency")
@@ -186,6 +188,24 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
 
         if (error.isEmpty()) {
             pv->importantFilesTitles.append(title);
+        }
+    } else if (where == TAG_VERSION_CMD_FILE) {
+        QString p = atts.value("path");
+
+        if (p.isEmpty()) {
+            error = QObject::tr("Empty 'path' attribute value for <cmd-file> for %1").
+                    arg(pv->toString());
+        }
+
+        if (error.isEmpty()) {
+            if (pv->cmdFiles.contains(p)) {
+                error = QObject::tr("More than one <cmd-file> with the same 'path' attribute %1 for %2").
+                        arg(p).arg(pv->toString());
+            }
+        }
+
+        if (error.isEmpty()) {
+            pv->cmdFiles.append(p);
         }
     } else if (where == TAG_VERSION_FILE) {
         QString path = atts.value("path");

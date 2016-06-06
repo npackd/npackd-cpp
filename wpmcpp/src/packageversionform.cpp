@@ -135,6 +135,13 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     }
     this->ui->textEditImportantFiles->setText(details);
 
+    details = "";
+    for (int i = 0; i < pv->cmdFiles.count(); i++) {
+        details.append(pv->cmdFiles.at(i));
+        details.append("\r\n");
+    }
+    this->ui->textEditCmdFiles->setText(details);
+
     QLayoutItem *child;
     while ((child = this->ui->frameDependencies->layout()->takeAt(0)) != 0) {
         delete child;

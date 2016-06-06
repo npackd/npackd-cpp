@@ -83,6 +83,7 @@ HEADERS += \
     ..\..\..\wpmcpp\src\clprogress.h
 
 CONFIG += static
+CONFIG += c++11
 
 DEFINES+=QUAZIP_STATIC=1
 

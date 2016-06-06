@@ -597,6 +597,14 @@ p, li { white-space: pre-wrap; }
         <oldsource>Detection Info:</oldsource>
         <translation>Erkennungsinformationen:</translation>
     </message>
+    <message>
+        <source>Command line tools:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>an entry in the directory %allusersprofile%NpackdCommands will be created for each command line tool mentioned here</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgressFrame</name>
@@ -2304,6 +2312,18 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find the package %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Command line tool %1 does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty &apos;path&apos; attribute value for &lt;cmd-file&gt; for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More than one &lt;cmd-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

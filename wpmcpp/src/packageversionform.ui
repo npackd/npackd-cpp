@@ -40,7 +40,7 @@
         <x>0</x>
         <y>0</y>
         <width>492</width>
-        <height>775</height>
+        <height>852</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -320,14 +320,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="14" column="0">
+       <item row="15" column="0">
         <widget class="QLabel" name="label_12">
          <property name="text">
           <string>Dependencies:</string>
          </property>
         </widget>
        </item>
-       <item row="16" column="0">
+       <item row="17" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>Text files:</string>
@@ -337,7 +337,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="16" column="1">
+       <item row="17" column="1">
         <widget class="QTabWidget" name="tabWidgetTextFiles">
          <property name="minimumSize">
           <size>
@@ -363,7 +363,7 @@ p, li { white-space: pre-wrap; }
          </widget>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="15" column="1">
         <widget class="QFrame" name="frameDependencies">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -372,6 +372,23 @@ p, li { white-space: pre-wrap; }
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2"/>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>Command line tools:</string>
+         </property>
+         <property name="buddy">
+          <cstring>textEditCmdFiles</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QTextEdit" name="textEditCmdFiles">
+         <property name="toolTip">
+          <string>an entry in the directory %allusersprofile%NpackdCommands will be created for each command line tool mentioned here</string>
+         </property>
         </widget>
        </item>
       </layout>

@@ -85,6 +85,7 @@ HEADERS += ../../wpmcpp/src/visiblejobs.h \
 FORMS += 
 
 CONFIG += static
+CONFIG += c++11
 
 DEFINES+=QUAZIP_STATIC=1
 

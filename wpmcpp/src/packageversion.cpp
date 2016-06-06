@@ -1147,6 +1147,39 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
     return ret;
 }
 
+bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
+{
+    *errMsg = "";
+
+    QString target = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) +
+            "\\Npackd\\Commands\\";
+
+    QDir d(dir);
+    for (int i = 0; i < this->cmdFiles.count(); i++) {
+        QString file = this->cmdFiles.at(i);
+
+        QString path(file);
+        path.prepend("\\");
+        path.prepend(d.absolutePath());
+        path.replace('/' , '\\');
+
+        if (!d.exists(path)) {
+            *errMsg = QString(QObject::tr("Command line tool %1 does not exist")).
+                    arg(path);
+            break;
+        }
+
+    /* TODO
+        QScopedPointer<Job> job = new Job();
+        WPMUtils::executeFile(job, dir, "exeproxy.exe", "\"" + target + file +
+                "\" \"" + path + "\"", dir + "\\.Npackd\\Install.log",
+                QStringList());
+                */
+    }
+
+    return errMsg->isEmpty();
+}
+
 bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 {
     *errMsg = "";
@@ -1582,6 +1615,15 @@ void PackageVersion::install(Job* job, const QString& where,
         QString err;
         this->createShortcuts(d.absolutePath(), &err);
         if (err.isEmpty())
+            job->setProgress(0.97);
+        else
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        QString err;
+        this->createExecutableShims(d.absolutePath(), &err);
+        if (err.isEmpty())
             job->setProgress(0.98);
         else
             job->setErrorMessage(err);
@@ -1807,6 +1849,7 @@ PackageVersion* PackageVersion::clone() const
     PackageVersion* r = new PackageVersion(this->package, this->version);
     r->importantFiles = this->importantFiles;
     r->importantFilesTitles = this->importantFilesTitles;
+    r->cmdFiles = this->cmdFiles;
     for (int i = 0; i < this->files.count(); i++) {
         PackageVersionFile* f = this->files.at(i);
         r->files.append(f->clone());
@@ -1873,6 +1916,11 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeAttribute("title", this->importantFilesTitles.at(i));
         w->writeEndElement();
     }
+    for (int i = 0; i < this->cmdFiles.count(); i++) {
+        w->writeStartElement("cmd-file");
+        w->writeAttribute("path", this->cmdFiles.at(i));
+        w->writeEndElement();
+    }
     for (int i = 0; i < this->files.count(); i++) {
         w->writeStartElement("file");
         w->writeAttribute("path", this->files.at(i)->path);
@@ -1926,6 +1974,16 @@ void PackageVersion::toJSON(QJsonObject& w) const
             a.append(obj);
         }
         w["importantFiles"] = a;
+    }
+
+    if (!cmdFiles.isEmpty()) {
+        QJsonArray a;
+        for (int i = 0; i < this->cmdFiles.count(); i++) {
+            QJsonObject obj;
+            obj["path"] = this->cmdFiles.at(i);
+            a.append(obj);
+        }
+        w["cmdFiles"] = a;
     }
 
     if (!files.isEmpty()) {

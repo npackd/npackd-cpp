@@ -2744,13 +2744,15 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     QFile f(outputFile);
     if (job->shouldProceed()) {
-        if (!f.open(QIODevice::WriteOnly))
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Append))
             job->setErrorMessage(f.errorString());
     }
 
     if (job->shouldProceed() && writeUTF16LEBOM) {
-        if (f.write("\xff\xfe") == -1)
-            job->setErrorMessage(f.errorString());
+        if (f.pos() == 0) {
+            if (f.write("\xff\xfe") == -1)
+                job->setErrorMessage(f.errorString());
+        }
     }
 
     if (job->shouldProceed()) {

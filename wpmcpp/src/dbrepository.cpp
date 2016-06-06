@@ -1006,6 +1006,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
     if (!replacePackageVersionQuery) {
         replacePackageVersionQuery = new MySQLQuery(db);
         insertPackageVersionQuery = new MySQLQuery(db);
+        insertCmdFileQuery.reset(new MySQLQuery(db));
 
         QString sql = " INTO PACKAGE_VERSION "
                 "(NAME, PACKAGE, URL, "
@@ -1022,6 +1023,12 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         if (!insertPackageVersionQuery->prepare("INSERT OR IGNORE " + sql)) {
             err = getErrorString(*insertPackageVersionQuery);
             delete insertPackageVersionQuery;
+            return err;
+        }
+        if (!insertCmdFileQuery->prepare("INSERT OR IGNORE INTO CMD_FILE("
+                "PACKAGE, VERSION, PATH) VALUES (:PACKAGE, :VERSION, :PATH)")) {
+            err = getErrorString(*insertCmdFileQuery);
+            insertCmdFileQuery = 0;
             return err;
         }
     }
@@ -1052,6 +1059,26 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         q->bindValue(":CONTENT", QVariant(file));
         if (!q->exec())
             err = getErrorString(*q);
+        q->finish();
+    }
+
+    // save <cmd-file> entries
+    if (err.isEmpty()) {
+        MySQLQuery* q = insertCmdFileQuery.get();
+
+        for (int i = 0; i < p->cmdFiles.size(); i++) {
+            q->bindValue(":PACKAGE", p->package);
+            Version v = p->version;
+            v.normalize();
+            q->bindValue(":VERSION", v.getVersionString());
+            q->bindValue(":PATH", p->cmdFiles.at(i));
+            if (!q->exec())
+                err = getErrorString(*q);
+
+            if (!err.isEmpty())
+                break;
+        }
+
         q->finish();
     }
 
@@ -2124,6 +2151,27 @@ QString DBRepository::updateDatabase()
         if (!e) {
             db.exec("CREATE INDEX LINK_PACKAGE ON LINK("
                     "PACKAGE)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // CMD_FILE. This table is new in Npackd 1.22.
+    if (err.isEmpty()) {
+        e = tableExists(&db, "CMD_FILE", &err);
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE CMD_FILE("
+                    "PACKAGE TEXT NOT NULL, "
+                    "VERSION TEXT NOT NULL, "
+                    "PATH TEXT NOT NULL)");
+            err = toString(db.lastError());
+        }
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX CMD_FILE_PACKAGE_VERSION ON CMD_FILE("
+                    "PACKAGE, VERSION)");
             err = toString(db.lastError());
         }
     }

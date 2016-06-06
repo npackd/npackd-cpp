@@ -125,6 +125,7 @@ LIBS += -lquazip \
 CONFIG += embed_manifest_exe
 CONFIG += static
 CONFIG += qt
+CONFIG += c++11
 RC_FILE = wpmcpp.rc
 RESOURCES += wpmcpp.qrc
 DEFINES += QUAZIP_STATIC=1

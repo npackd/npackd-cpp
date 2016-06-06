@@ -1,6 +1,8 @@
 #ifndef DBREPOSITORY_H
 #define DBREPOSITORY_H
 
+#include <memory>
+
 #include <QString>
 #include <QSqlError>
 #include <QSqlDatabase>
@@ -37,6 +39,7 @@ private:
 
     MySQLQuery* replacePackageVersionQuery;
     MySQLQuery* insertPackageVersionQuery;
+    std::unique_ptr<MySQLQuery> insertCmdFileQuery;
     MySQLQuery* insertPackageQuery;
     MySQLQuery* replacePackageQuery;
     MySQLQuery* selectCategoryQuery;
