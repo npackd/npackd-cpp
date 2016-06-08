@@ -194,6 +194,17 @@ public:
             QString *err) const;
 
     /**
+     * @brief returns all package versions with a <cmd-file> entry with the
+     *     specified path
+     * @param path path to the command line tool
+     * @param err error message will be stored here
+     * @return [owner:caller] list of package versions sorted by full package
+     *     name and version
+     */
+    QList<PackageVersion*> findPackageVersionsWithCmdFile(const QString& path,
+            QString *err) const;
+
+    /**
      * @brief searches for packages that match the specified keywords
      * @param status filter for the package status if filterByStatus is true
      * @param statusInclude true = only return packages with the given status,

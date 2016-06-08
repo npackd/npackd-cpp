@@ -407,6 +407,42 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
     return r;
 }
 
+QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
+        const QString &path, QString *err) const
+{
+    *err = "";
+
+    QList<PackageVersion*> r;
+
+    MySQLQuery q(db);
+    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION PV "
+            "WHERE EXISTS (SELECT 1 FROM CMD_FILE WHERE "
+            "PACKAGE = PV.PACKAGE AND "
+            "VERSION = PV.NAME AND "
+            "PATH = :PATH)"))
+        *err = getErrorString(q);
+
+    if (err->isEmpty()) {
+        q.bindValue(":PATH", WPMUtils::normalizePath(path));
+        if (!q.exec()) {
+            *err = getErrorString(q);
+        }
+    }
+
+    while (err->isEmpty() && q.next()) {
+        PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
+                err);
+        if (err->isEmpty())
+            r.append(pv);
+    }
+
+    // qDebug() << vs.count();
+
+    qSort(r.begin(), r.end(), packageVersionLessThan3);
+
+    return r;
+}
+
 License *DBRepository::findLicense_(const QString& name, QString *err)
 {
     *err = "";
@@ -1071,7 +1107,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
             Version v = p->version;
             v.normalize();
             q->bindValue(":VERSION", v.getVersionString());
-            q->bindValue(":PATH", p->cmdFiles.at(i));
+            q->bindValue(":PATH", WPMUtils::normalizePath(p->cmdFiles.at(i)));
             if (!q->exec())
                 err = getErrorString(*q);
 

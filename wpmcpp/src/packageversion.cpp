@@ -1154,27 +1154,67 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
     QString target = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) +
             "\\Npackd\\Commands\\";
 
+    DBRepository* dbr = DBRepository::getDefault();
+
     QDir d(dir);
-    for (int i = 0; i < this->cmdFiles.count(); i++) {
-        QString file = this->cmdFiles.at(i);
 
-        QString path(file);
-        path.prepend("\\");
-        path.prepend(d.absolutePath());
-        path.replace('/' , '\\');
-
-        if (!d.exists(path)) {
-            *errMsg = QString(QObject::tr("Command line tool %1 does not exist")).
-                    arg(path);
-            break;
+    QString exeProxy = WPMUtils::getExeDir() + "\\exeproxy.exe";
+    if (!d.exists(exeProxy)) {
+        exeProxy = WPMUtils::getExeDir() + "\\ncl.exe";
+        if (!d.exists(exeProxy)) {
+            exeProxy = "";
         }
+    }
 
-    /* TODO
-        QScopedPointer<Job> job = new Job();
-        WPMUtils::executeFile(job, dir, "exeproxy.exe", "\"" + target + file +
-                "\" \"" + path + "\"", dir + "\\.Npackd\\Install.log",
-                QStringList());
-                */
+    if (exeProxy.isEmpty()) {
+        *errMsg = QObject::tr("Cannot find the EXE Proxy executable.");
+    }
+
+    if (errMsg->isEmpty()) {
+        for (int i = 0; i < this->cmdFiles.count(); i++) {
+            QString file = this->cmdFiles.at(i);
+
+            QString path(file);
+            path.prepend("\\");
+            path.prepend(d.absolutePath());
+            path.replace('/' , '\\');
+
+            if (!d.exists(path)) {
+                *errMsg = QString(QObject::tr("Command line tool %1 does not exist")).
+                        arg(path);
+                break;
+            }
+
+            QList<PackageVersion*> pvs = dbr->findPackageVersionsWithCmdFile(
+                    file, errMsg);
+            if (pvs.size() > 0) {
+                PackageVersion* last = 0;
+                for (int i = pvs.size() - 1; i >= 0; i--) {
+                    PackageVersion* pv = pvs.at(i);
+                    if (pv->installed()) {
+                        last = pv;
+                        break;
+                    }
+                }
+
+                QString targetExecutable;
+                if (last)
+                    targetExecutable = last->getPath();
+                else
+                    targetExecutable = dir;
+                targetExecutable += file;
+
+                std::unique_ptr<Job> job(new Job());
+
+                // TODO: find exeproxy.exe
+                WPMUtils::executeFile(job.get(), dir, exeProxy, "exeproxy-copy \"" +
+                        target + file + "\" \"" +
+                        targetExecutable + "\"",
+                        dir + "\\.Npackd\\Install.log",
+                        QStringList());
+            }
+            qDeleteAll(pvs);
+        }
     }
 
     return errMsg->isEmpty();
