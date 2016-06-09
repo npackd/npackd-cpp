@@ -2627,6 +2627,32 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& outputFile, const QStringList& env,
         bool writeUTF16LEBOM, bool printScriptOutput)
 {
+    QFile f(outputFile);
+    if (job->shouldProceed()) {
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Append))
+            job->setErrorMessage(f.errorString());
+    }
+
+    if (job->shouldProceed() && writeUTF16LEBOM) {
+        if (f.pos() == 0) {
+            if (f.write("\xff\xfe") == -1)
+                job->setErrorMessage(f.errorString());
+        }
+    }
+
+    executeFile(job, where, path, nativeArguments,
+            f, env, writeUTF16LEBOM, printScriptOutput);
+
+    // ignore possible errors here
+    f.close();
+}
+
+void WPMUtils::executeFile(Job* job, const QString& where,
+        const QString& path, const QString& nativeArguments,
+        QIODevice& outputFile, const QStringList& env,
+        bool writeUTF16LEBOM, bool printScriptOutput)
+
+{
     QString initialTitle = job->getTitle();
 
     time_t start = time(NULL);
@@ -2742,19 +2768,6 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         CloseHandle(g_hChildStd_OUT_Wr);
     }
 
-    QFile f(outputFile);
-    if (job->shouldProceed()) {
-        if (!f.open(QIODevice::WriteOnly | QIODevice::Append))
-            job->setErrorMessage(f.errorString());
-    }
-
-    if (job->shouldProceed() && writeUTF16LEBOM) {
-        if (f.pos() == 0) {
-            if (f.write("\xff\xfe") == -1)
-                job->setErrorMessage(f.errorString());
-        }
-    }
-
     if (job->shouldProceed()) {
         HANDLE hStdout;
         bool consoleOutput;
@@ -2811,8 +2824,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 }
             }
 
-            if (f.write(chBuf, dwRead) == -1) {
-                job->setErrorMessage(f.errorString());
+            if (outputFile.write(chBuf, dwRead) == -1) {
+                job->setErrorMessage(outputFile.errorString());
                 break;
             }
 
@@ -2826,9 +2839,6 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                     arg(seconds / 60));
         }
         delete[] chBuf;
-
-        // ignore possible errors here
-        f.close();
 
         // ignore possible errors here
         CloseHandle(g_hChildStd_OUT_Rd);

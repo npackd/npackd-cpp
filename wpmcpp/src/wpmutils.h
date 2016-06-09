@@ -621,6 +621,26 @@ public:
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
+            QIODevice& outputFile,
+            const QStringList& env, bool writeUTF16LEBOM=true,
+            bool printScriptOutput=false);
+
+    /**
+     * @param job job to monitor the progress. The error message will be set
+     *     to a non-empty string if the exit code of the process is not 0.
+     * @param where working directory
+     * @param path executable
+     * @param nativeArguments all native arguments
+     * @param outputFile the output will be saved here. The content will be
+     *     appended
+     * @param env additional environemnt variables
+     * @param write writeUTF16LEBOM write UTF-16 LE BOM mark at the beginning of
+     *     the output file?
+     * @param printScriptOutput true = redirect the output to the default output
+     *     stream
+     */
+    static void executeFile(Job* job, const QString& where,
+            const QString& path, const QString &nativeArguments,
             const QString& outputFile,
             const QStringList& env, bool writeUTF16LEBOM=true,
             bool printScriptOutput=false);

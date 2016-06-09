@@ -48,17 +48,16 @@ QString App::captureOutput(const QString& program, const QString& params,
 
     QStringList env;
     Job* job = new Job();
+    QBuffer buffer;
+    buffer.open(QBuffer::WriteOnly);
     WPMUtils::executeFile(
             job, where,
             program,
-            params, "Output.log", env, false);
+            params, buffer, env, false);
     qDebug() << job->getErrorMessage();
     delete job;
 
-    QFile f("Output.log");
-    f.open(QFile::ReadOnly);
-    QByteArray output = f.readAll();
-    f.close();
+    QByteArray output = buffer.data();
 
     QString s(output);
 
