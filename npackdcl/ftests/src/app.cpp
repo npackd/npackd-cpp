@@ -34,7 +34,7 @@ QString App::captureNpackdCLOutput(const QString& params)
     QString bits = "32";
 #endif
     QDir d(WPMUtils::getExeDir() + "\\..\\..\\..\\..\\build\\" + bits +
-            "\\release");
+            "\\release\\zip");
 
     QString where = d.absolutePath();
     QString npackdcl = where + "\\npackdcl.exe";
