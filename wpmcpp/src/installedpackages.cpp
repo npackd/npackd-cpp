@@ -463,7 +463,7 @@ QString InstalledPackages::notifyInstalled(const QString &package,
     env.append("NPACKD_PACKAGE_VERSION");
     env.append(version.getVersionString());
     env.append("NPACKD_CL");
-    env.append(AbstractRepository::getDefault_()->
+    env.append(DBRepository::getDefault()->
             computeNpackdCLEnvVar_(&err));
     env.append("NPACKD_SUCCESS");
     env.append(success ? "1" : "0");

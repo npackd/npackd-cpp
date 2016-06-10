@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QApplication>
 
+#include "dbrepository.h"
 #include "license.h"
 #include "packageitemmodel.h"
 #include "abstractrepository.h"
@@ -35,7 +36,7 @@ PackageItemModel::Info* PackageItemModel::createInfo(
 {
     Info* r = new Info();
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
 
     // error is ignored here
     QString err;
@@ -97,7 +98,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
 {
     QString p = this->packages.at(index.row());
     QVariant r;
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
     Info* cached = this->cache.object(p);
     bool insertIntoCache = false;
     if (!cached) {

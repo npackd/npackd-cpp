@@ -9,6 +9,7 @@
 #include <QListWidget>
 #include <QDialogButtonBox>
 
+#include "dbrepository.h"
 #include "mainwindow.h"
 #include "package.h"
 #include "packageitemmodel.h"
@@ -324,7 +325,7 @@ void MainFrame::tableWidget_selectionChanged()
     QAbstractItemModel* m = this->ui->tableWidget->model();
     QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
     QModelIndexList sel = sm->selectedRows();
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     for (int i = 0; i < sel.count(); i++) {
         QModelIndex index = m->index(sel.at(i).row(), 1);
         const QVariant v = index.data(Qt::UserRole);

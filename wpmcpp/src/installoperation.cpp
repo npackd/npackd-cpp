@@ -1,4 +1,5 @@
 #include "installoperation.h"
+#include "dbrepository.h"
 #include "abstractrepository.h"
 
 InstallOperation::InstallOperation()
@@ -8,7 +9,7 @@ InstallOperation::InstallOperation()
 
 PackageVersion *InstallOperation::findPackageVersion(QString* err) const
 {
-    return AbstractRepository::getDefault_()->findPackageVersion_(
+    return DBRepository::getDefault()->findPackageVersion_(
             this->package, this->version, err);
 }
 

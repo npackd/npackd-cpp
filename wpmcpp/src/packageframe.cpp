@@ -52,7 +52,7 @@ PackageFrame::~PackageFrame()
 void PackageFrame::reload()
 {
     if (this->p) {
-        AbstractRepository* r = AbstractRepository::getDefault_();
+        DBRepository* r = DBRepository::getDefault();
         Package* newp = r->findPackage_(p->name);
         if (newp)
             this->fillForm(newp);

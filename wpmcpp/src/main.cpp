@@ -40,8 +40,6 @@ int main(int argc, char *argv[])
 
     LoadLibrary(L"exchndl.dll");
 
-    AbstractRepository::setDefault_(DBRepository::getDefault());
-
     QApplication a(argc, argv);
 
     QString packageName;

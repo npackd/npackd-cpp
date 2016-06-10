@@ -602,7 +602,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
                 this->package == "com.googlecode.windows-package-manager.NpackdCL64") {
             job->setTitle(initialTitle + " / " +
                     QObject::tr("Updating NPACKD_CL"));
-            AbstractRepository::getDefault_()->updateNpackdCLEnvVar();
+            DBRepository::getDefault()->updateNpackdCLEnvVar();
         }
         job->setProgress(1);
     }
@@ -711,7 +711,7 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
 
     avoid.append(this->clone());
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
 
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
@@ -922,7 +922,7 @@ QString PackageVersion::downloadAndComputeSHA1(Job* job)
 QString PackageVersion::getPackageTitle(
         bool includeFullPackageName) const
 {
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
 
     QString pn;
     Package* package = rep->findPackage_(this->package);
@@ -944,7 +944,7 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
     QList<PackageVersion*> ret;
     QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
 
     for (int i = 0; i < pos.size(); i++) {
         if (!err->isEmpty())
@@ -1057,7 +1057,7 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
     QList<PackageVersion*> ret;
     QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
 
     for (int i = 0; i < pos.size(); i++) {
         if (!err->isEmpty())
@@ -1227,7 +1227,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
     QString packageTitle = this->getPackageTitle();
 
     QDir d(dir);
-    Package* p = AbstractRepository::getDefault_()->findPackage_(this->package);
+    Package* p = DBRepository::getDefault()->findPackage_(this->package);
     for (int i = 0; i < this->importantFiles.count(); i++) {
         QString ifile = this->importantFiles.at(i);
         QString ift = this->importantFilesTitles.at(i);
@@ -1641,7 +1641,7 @@ void PackageVersion::install(Job* job, const QString& where,
                 this->package == "com.googlecode.windows-package-manager.NpackdCL64") {
             job->setTitle(initialTitle + " / " +
                     QObject::tr("Updating NPACKD_CL"));
-            AbstractRepository::getDefault_()->updateNpackdCLEnvVar();
+            DBRepository::getDefault()->updateNpackdCLEnvVar();
         }
 
         job->setProgress(0.91);
@@ -1722,7 +1722,7 @@ QString PackageVersion::addBasicVars(QStringList* env)
     env->append("NPACKD_PACKAGE_VERSION");
     env->append(this->version.getVersionString());
     env->append("NPACKD_CL");
-    env->append(AbstractRepository::getDefault_()->
+    env->append(DBRepository::getDefault()->
             computeNpackdCLEnvVar_(&err));
 
     return err;
@@ -1730,7 +1730,7 @@ QString PackageVersion::addBasicVars(QStringList* env)
 
 void PackageVersion::addDependencyVars(QStringList* vars)
 {
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
         if (!d->var.isEmpty()) {
@@ -1782,7 +1782,7 @@ QString PackageVersion::getStatus() const
 {
     QString status;
     bool installed = this->installed();
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     QString err;
     PackageVersion* newest = r->findNewestInstallablePackageVersion_(
             this->package, &err);

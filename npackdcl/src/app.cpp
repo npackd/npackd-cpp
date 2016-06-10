@@ -226,7 +226,7 @@ QString App::addNpackdCL()
 {
     QString err;
 
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     Version myVersion;
     (void) myVersion.setVersion(NPACKD_VERSION);
     PackageVersion* pv = r->findPackageVersion_(
@@ -417,7 +417,7 @@ void App::which(Job* job)
         QFileInfo fi(file);
         InstalledPackageVersion* f = ip->findOwner(fi.absoluteFilePath());
         if (f) {
-            AbstractRepository* rep = AbstractRepository::getDefault_();
+            DBRepository* rep = DBRepository::getDefault();
             Package* p = rep->findPackage_(f->package);
             QString title = p ? p->title : "?";
 
@@ -561,7 +561,7 @@ void App::check(Job* job)
                 sub);
     }
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
     InstalledPackages* ip = InstalledPackages::getDefault();
     QList<PackageVersion*> list;
 
@@ -728,7 +728,7 @@ void App::list(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.99,
                 "Getting the list of installed packages from the registry");
-        AbstractRepository* rep = AbstractRepository::getDefault_();
+        DBRepository* rep = DBRepository::getDefault();
 
         QString err;
         list = rep->getInstalled_(&err);
@@ -1090,7 +1090,7 @@ void App::place(Job* job)
         QFileInfo fi(where);
         InstalledPackageVersion* f = ip->findOwner(fi.absoluteFilePath());
         if (f) {
-            AbstractRepository* rep = AbstractRepository::getDefault_();
+            DBRepository* rep = DBRepository::getDefault();
             Package* p = rep->findPackage_(f->package);
             QString title = p ? p->title : "?";
             job->setErrorMessage(QString(
@@ -1524,7 +1524,7 @@ void App::add(Job* job)
     if (job->shouldProceed()) {
         QString err;
         QList<PackageVersion*> installed =
-                AbstractRepository::getDefault_()->getInstalled_(&err);
+                DBRepository::getDefault()->getInstalled_(&err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
 
@@ -1720,7 +1720,7 @@ void App::remove(Job *job)
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
-    AbstractRepository* ar = AbstractRepository::getDefault_();
+    DBRepository* ar = DBRepository::getDefault();
     QList<InstallOperation*> ops;
     if (job->shouldProceed()) {
         QString err;
@@ -1983,7 +1983,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 {
     QString err;
 
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
     for (int i = 0; i < pv->dependencies.count(); ++i) {
         QString prefix;
         if (i == pv->dependencies.count() - 1)

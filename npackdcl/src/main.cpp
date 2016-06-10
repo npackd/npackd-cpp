@@ -20,8 +20,6 @@ int main(int argc, char *argv[])
 
     QCoreApplication ca(argc, argv);
 
-    AbstractRepository::setDefault_(DBRepository::getDefault());
-
     CoInitializeEx(0, COINIT_MULTITHREADED);
 
     qRegisterMetaType<Version>("Version");

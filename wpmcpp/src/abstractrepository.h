@@ -14,8 +14,6 @@
 class AbstractRepository
 {
 private:
-    static AbstractRepository* def;
-
     /**
      * @param hk root key
      * @param path registry path
@@ -46,16 +44,6 @@ public:
      * @return error message or ""
      */
     static QString checkInstallationDirectory(const QString& dir);
-
-    /**
-     * @return default repository
-     */
-    static AbstractRepository* getDefault_();
-
-    /**
-     * @param d default repository
-     */
-    static void setDefault_(AbstractRepository* d);
 
     /**
      * @param package full or short package name

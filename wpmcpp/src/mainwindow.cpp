@@ -332,7 +332,7 @@ void MainWindow::updateStatusInDetailTabs()
 QIcon MainWindow::getPackageIcon(const QString& package)
 {
     MainWindow* mw = MainWindow::getInstance();
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     Package* p = r->findPackage_(package);
 
     QIcon icon = MainWindow::genericAppIcon;
@@ -830,7 +830,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
     if (err.isEmpty()) {
         if (confirmed) {
-            AbstractRepository* rep = AbstractRepository::getDefault_();
+            DBRepository* rep = DBRepository::getDefault();
 
             if (rep->includesRemoveItself(install)) {
                 QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
@@ -849,8 +849,8 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
                 monitor(job);
 
-                QtConcurrent::run(AbstractRepository::getDefault_(),
-                        &AbstractRepository::processWithCoInitializeAndFree,
+                QtConcurrent::run((AbstractRepository*)rep,
+                        &DBRepository::processWithCoInitializeAndFree,
                         job, install,
                         WPMUtils::getCloseProcessType());
 
@@ -915,7 +915,7 @@ bool MainWindow::isUpdateEnabled(const QString& package)
     QString err;
 
     bool res = false;
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     PackageVersion* newest = r->findNewestInstallablePackageVersion_(
             package, &err);
     PackageVersion* newesti = r->findNewestInstalledPackageVersion_(
@@ -975,7 +975,7 @@ void MainWindow::updateInstallAction()
                         pv->download.isValid();
             }
         } else {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("Package");
             enabled = selected.count() > 0;
             for (int i = 0; i < selected.count(); i++) {
@@ -1024,7 +1024,7 @@ void MainWindow::updateShowFolderAction()
             }
             // qDebug() << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             QList<void*> selected = selection->getSelected("Package");
             enabled = selected.count() > 0;
             for (int i = 0; i < selected.count(); i++) {
@@ -1078,7 +1078,7 @@ void MainWindow::updateUninstallAction()
             }
             // qDebug() << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             QList<void*> selected = selection->getSelected("Package");
             enabled = selected.count() > 0;
             for (int i = 0; i < selected.count(); i++) {
@@ -1193,7 +1193,7 @@ void MainWindow::updateTestDownloadSiteAction()
                 }
             }
         } else {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
@@ -1220,7 +1220,7 @@ void MainWindow::updateShowChangelogAction()
     if (selection) {
         QList<void*> selected = selection->getSelected("PackageVersion");
         if (selected.count() > 0) {
-            AbstractRepository* r = Repository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             for (int i = 0; i < selected.count(); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
@@ -1262,7 +1262,7 @@ void MainWindow::updateGotoPackageURLAction()
     if (selection) {
         QList<void*> selected = selection->getSelected("PackageVersion");
         if (selected.count() > 0) {
-            AbstractRepository* r = Repository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             for (int i = 0; i < selected.count(); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
@@ -1557,7 +1557,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
                     urls.insert(url);
             }
         } else {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("PackageVersion");
             for (int i = 0; i < selected.count(); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
@@ -1617,7 +1617,7 @@ void MainWindow::on_actionUpdate_triggered()
     QString err;
 
     QList<Package*> packages;
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     if (err.isEmpty()) {
         Selection* sel = Selection::findCurrent();
         QList<void*> selected;
@@ -1681,7 +1681,7 @@ void MainWindow::on_actionTest_Download_Site_triggered()
                 urls.insert(pv->download.host());
             }
         } else {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             selected = sel->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
@@ -1942,7 +1942,7 @@ void MainWindow::on_actionInstall_triggered()
             selected = selection->getSelected("PackageVersion");
 
         if (selected.count() == 0) {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             if (selection)
                 selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
@@ -1967,7 +1967,7 @@ void MainWindow::on_actionInstall_triggered()
     QList<PackageVersion*> avoid;
 
     if (err.isEmpty()) {
-        installed = AbstractRepository::getDefault_()->getInstalled_(&err);
+        installed = DBRepository::getDefault()->getInstalled_(&err);
     }
 
     if (err.isEmpty()) {
@@ -2005,7 +2005,7 @@ void MainWindow::on_actionUninstall_triggered()
             selected = selection->getSelected("PackageVersion");
 
         if (selected.count() == 0) {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             if (selection)
                 selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
@@ -2033,7 +2033,7 @@ void MainWindow::on_actionUninstall_triggered()
     QList<PackageVersion*> toDelete;
 
     if (err.isEmpty()) {
-        installed = AbstractRepository::getDefault_()->
+        installed = DBRepository::getDefault()->
                 getInstalled_(&err);
         toDelete = installed;
     }
@@ -2077,7 +2077,7 @@ void MainWindow::on_actionOpen_folder_triggered()
 
     QList<PackageVersion*> pvs;
     if (selected.count() == 0) {
-        AbstractRepository* r = AbstractRepository::getDefault_();
+        DBRepository* r = DBRepository::getDefault();
         if (selection)
             selected = selection->getSelected("Package");
         for (int i = 0; i < selected.count(); i++) {
@@ -2135,7 +2135,7 @@ void MainWindow::on_actionShow_changelog_triggered()
                     urls.insert(url);
             }
         } else {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("PackageVersion");
             for (int i = 0; i < selected.count(); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(

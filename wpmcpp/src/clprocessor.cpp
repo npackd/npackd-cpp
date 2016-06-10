@@ -84,7 +84,7 @@ QString CLProcessor::remove()
 
     QList<PackageVersion*> installed;
     if (err.isEmpty()) {
-        installed = AbstractRepository::getDefault_()->getInstalled_(&err);
+        installed = DBRepository::getDefault()->getInstalled_(&err);
     }
 
     QList<InstallOperation*> ops;
@@ -187,7 +187,7 @@ QString CLProcessor::add()
 
     QList<PackageVersion*> installed;
     if (err.isEmpty()) {
-        installed = AbstractRepository::getDefault_()->getInstalled_(&err);
+        installed = DBRepository::getDefault()->getInstalled_(&err);
     }
 
     if (err.isEmpty()) {
@@ -353,7 +353,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
 
     if (err.isEmpty()) {
         if (confirmed) {
-            AbstractRepository* rep = AbstractRepository::getDefault_();
+            DBRepository* rep = DBRepository::getDefault();
 
             if (rep->includesRemoveItself(install)) {
                 QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
@@ -367,7 +367,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
             } else {
                 Job* job = new Job(title);
 
-                QtConcurrent::run(AbstractRepository::getDefault_(),
+                QtConcurrent::run((AbstractRepository*) rep,
                         &AbstractRepository::processWithCoInitializeAndFree,
                         job, install,
                         WPMUtils::getCloseProcessType());

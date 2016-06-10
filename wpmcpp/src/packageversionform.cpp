@@ -56,7 +56,7 @@ void PackageVersionForm::updateStatus()
 
 void PackageVersionForm::reload()
 {
-    AbstractRepository* r = AbstractRepository::getDefault_();
+    DBRepository* r = DBRepository::getDefault();
     QString err;
     PackageVersion* newpv = r->findPackageVersion_(
             this->pv->package, this->pv->version, &err);

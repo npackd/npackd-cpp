@@ -5,13 +5,6 @@
 #include "windowsregistry.h"
 #include "installedpackages.h"
 
-AbstractRepository* AbstractRepository::def = 0;
-
-AbstractRepository *AbstractRepository::getDefault_()
-{
-    return def;
-}
-
 QStringList AbstractRepository::getRepositoryURLs(HKEY hk, const QString& path,
         QString* err, bool* keyExists)
 {
@@ -40,12 +33,6 @@ QStringList AbstractRepository::getRepositoryURLs(HKEY hk, const QString& path,
     }
 
     return urls;
-}
-
-void AbstractRepository::setDefault_(AbstractRepository* d)
-{
-    delete def;
-    def = d;
 }
 
 QString AbstractRepository::updateNpackdCLEnvVar()
@@ -840,7 +827,7 @@ QString AbstractRepository::getPackageTitleAndName(const QString &name)
 Package* AbstractRepository::findOnePackage(
         const QString& package, QString* err)
 {
-    AbstractRepository* rep = AbstractRepository::getDefault_();
+    DBRepository* rep = DBRepository::getDefault();
     Package* p = rep->findPackage_(package);
 
     if (!p) {
@@ -881,7 +868,7 @@ QString AbstractRepository::checkInstallationDirectory(const QString &dir)
         InstalledPackages* ip = InstalledPackages::getDefault();
         InstalledPackageVersion* ipv = ip->findOwner(dir);
         if (ipv) {
-            AbstractRepository* r = AbstractRepository::getDefault_();
+            DBRepository* r = DBRepository::getDefault();
             err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").
                     arg(dir).
                     arg(r->getPackageTitleAndName(ipv->package)).

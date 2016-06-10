@@ -1,6 +1,7 @@
 #include "licenseform.h"
 #include "ui_licenseform.h"
 
+#include "dbrepository.h"
 #include "abstractrepository.h"
 
 LicenseForm::LicenseForm(QWidget *parent) :
@@ -38,7 +39,7 @@ void LicenseForm::fillForm(License* license)
 void LicenseForm::reload()
 {
     if (this->license) {
-        AbstractRepository* r = AbstractRepository::getDefault_();
+        DBRepository* r = DBRepository::getDefault();
         QString err;
         License* newLicense = r->findLicense_(this->license->name, &err);
         if (err.isEmpty() && newLicense)
