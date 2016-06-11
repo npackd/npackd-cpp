@@ -255,14 +255,18 @@ QString Repository::savePackage(Package *p, bool replace)
 QString Repository::savePackageVersion(PackageVersion *p, bool replace)
 {
     PackageVersion* fp = findPackageVersion(p->package, p->version);
-    if (!fp || replace) {
-        if (!fp) {
-            fp = new PackageVersion(p->package);
-            fp->version = p->version;
-            this->packageVersions.append(fp);
-            this->package2versions.insert(p->package, fp);
-        }
-        fp->fillFrom(p);
+    if (!fp) {
+        fp = p->clone();
+        this->packageVersions.append(fp);
+        this->package2versions.insert(p->package, fp);
+    } else if (replace) {
+        this->packageVersions.removeOne(fp);
+        this->package2versions.remove(p->package, fp);
+        delete fp;
+
+        fp = p->clone();
+        this->packageVersions.append(fp);
+        this->package2versions.insert(p->package, fp);
     }
 
     return "";

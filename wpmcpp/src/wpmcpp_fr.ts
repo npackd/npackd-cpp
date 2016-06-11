@@ -3120,6 +3120,10 @@ p, li { white-space: pre-wrap; }
         <source>Cannot find the EXE Proxy executable.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clearing the command line tool definitions</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

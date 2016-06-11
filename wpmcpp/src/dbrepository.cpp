@@ -408,7 +408,7 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
 }
 
 QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
-        const QString &path, QString *err) const
+        const QString &name, QString *err) const
 {
     *err = "";
 
@@ -419,11 +419,11 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
             "WHERE EXISTS (SELECT 1 FROM CMD_FILE WHERE "
             "PACKAGE = PV.PACKAGE AND "
             "VERSION = PV.NAME AND "
-            "PATH = :PATH)"))
+            "NAME = :NAME)"))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":PATH", WPMUtils::normalizePath(path));
+        q.bindValue(":NAME", name.toLower());
         if (!q.exec()) {
             *err = getErrorString(q);
         }
@@ -1061,8 +1061,9 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
             delete insertPackageVersionQuery;
             return err;
         }
-        if (!insertCmdFileQuery->prepare("INSERT OR IGNORE INTO CMD_FILE("
-                "PACKAGE, VERSION, PATH) VALUES (:PACKAGE, :VERSION, :PATH)")) {
+        if (!insertCmdFileQuery->prepare("INSERT INTO CMD_FILE("
+                "PACKAGE, VERSION, PATH, NAME) "
+                "VALUES (:PACKAGE, :VERSION, :PATH, :NAME)")) {
             err = getErrorString(*insertCmdFileQuery);
             insertCmdFileQuery = 0;
             return err;
@@ -1103,11 +1104,16 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         MySQLQuery* q = insertCmdFileQuery.get();
 
         for (int i = 0; i < p->cmdFiles.size(); i++) {
+            // qDebug() << p->package << p->version.getVersionString() << p->cmdFiles.at(i);
             q->bindValue(":PACKAGE", p->package);
             Version v = p->version;
             v.normalize();
             q->bindValue(":VERSION", v.getVersionString());
-            q->bindValue(":PATH", WPMUtils::normalizePath(p->cmdFiles.at(i)));
+
+            QString path = p->cmdFiles.at(i);
+            q->bindValue(":PATH", WPMUtils::normalizePath(path));
+
+            q->bindValue(":NAME", p->getCmdFileName(i).toLower());
             if (!q->exec())
                 err = getErrorString(*q);
 
@@ -1186,9 +1192,19 @@ QString DBRepository::clear()
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.13,
+        Job* sub = job->newSubJob(0.10,
                 QObject::tr("Clearing the links table"));
         QString err = exec("DELETE FROM LINK");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.03,
+                QObject::tr("Clearing the command line tool definitions"));
+        QString err = exec("DELETE FROM CMD_FILE");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1923,6 +1939,9 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
             err = exec("INSERT INTO LINK(PACKAGE, INDEX_, REL, HREF) "
                     "SELECT PACKAGE, INDEX_, REL, HREF FROM tempdb.LINK");
         if (err.isEmpty())
+            err = exec("INSERT INTO CMD_FILE(PACKAGE, VERSION, PATH, NAME) "
+                    "SELECT PACKAGE, VERSION, PATH, NAME FROM tempdb.CMD_FILE");
+        if (err.isEmpty())
             job->setProgress(0.90);
         else
             job->setErrorMessage(err);
@@ -2200,7 +2219,8 @@ QString DBRepository::updateDatabase()
             db.exec("CREATE TABLE CMD_FILE("
                     "PACKAGE TEXT NOT NULL, "
                     "VERSION TEXT NOT NULL, "
-                    "PATH TEXT NOT NULL)");
+                    "PATH TEXT NOT NULL, "
+                    "NAME TEXT NOT NULL)");
             err = toString(db.lastError());
         }
     }

@@ -206,6 +206,8 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
 
         if (error.isEmpty()) {
             pv->cmdFiles.append(WPMUtils::normalizePath(p));
+            //qDebug() << pv->package << pv->version.getVersionString() <<
+            //        p << "??";
         }
     } else if (where == TAG_VERSION_FILE) {
         QString path = atts.value("path");

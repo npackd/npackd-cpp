@@ -22,6 +22,7 @@
 #include <QFutureWatcher>
 #include <QTemporaryDir>
 #include <QJsonArray>
+#include <QBuffer>
 
 #include <zlib.h>
 
@@ -314,37 +315,6 @@ QString PackageVersion::getStringId() const
     return getStringId(this->package, this->version);
 }
 
-void PackageVersion::fillFrom(PackageVersion *pv)
-{
-    this->package = pv->package;
-    this->version = pv->version;
-    this->importantFiles = pv->importantFiles;
-    this->importantFilesTitles = pv->importantFilesTitles;
-    this->type = pv->type;
-    this->sha1 = pv->sha1;
-    this->hashSumType = pv->hashSumType;
-    this->download = pv->download;
-    this->msiGUID = pv->msiGUID;
-
-    qDeleteAll(this->files);
-    this->files.clear();
-    for (int i = 0; i < pv->files.count(); i++) {
-        this->files.append(pv->files.at(i)->clone());
-    }
-
-    qDeleteAll(this->detectFiles);
-    this->detectFiles.clear();
-    for (int i = 0; i < pv->detectFiles.count(); i++) {
-        this->detectFiles.append(pv->detectFiles.at(i)->clone());
-    }
-
-    qDeleteAll(this->dependencies);
-    this->dependencies.clear();
-    for (int i = 0; i < pv->dependencies.count(); i++) {
-        this->dependencies.append(pv->dependencies.at(i)->clone());
-    }
-}
-
 QString PackageVersion::getPath() const
 {
     return InstalledPackages::getDefault()->
@@ -575,10 +545,19 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     // Uninstall.bat may have deleted some files
     d.refresh();
 
+    if (job->shouldProceed()) {
+        QString err;
+        this->createExecutableShims("", &err);
+        if (err.isEmpty())
+            job->setProgress(0.46);
+        else
+            job->setErrorMessage(err);
+    }
+
     bool success = false;
     if (job->getErrorMessage().isEmpty()) {
         if (d.exists()) {
-            Job* rjob = job->newSubJob(0.54, QObject::tr("Deleting files"));
+            Job* rjob = job->newSubJob(0.53, QObject::tr("Deleting files"));
 
             // the errors occured while deleting the directory are ignored
             removeDirectory(rjob, d.absolutePath(), programCloseType);
@@ -1151,7 +1130,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
 {
     *errMsg = "";
 
-    QString target = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) +
+    QString sourceBasePath = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) +
             "\\Npackd\\Commands\\";
 
     DBRepository* dbr = DBRepository::getDefault();
@@ -1172,21 +1151,14 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
 
     if (errMsg->isEmpty()) {
         for (int i = 0; i < this->cmdFiles.count(); i++) {
-            QString file = this->cmdFiles.at(i);
+            QString cmdFilePath = this->cmdFiles.at(i);
+            cmdFilePath.replace('/', '\\');
 
-            QString path(file);
-            path.prepend("\\");
-            path.prepend(d.absolutePath());
-            path.replace('/' , '\\');
-
-            if (!d.exists(path)) {
-                *errMsg = QString(QObject::tr("Command line tool %1 does not exist")).
-                        arg(path);
-                break;
-            }
+            QString cmdFileName = getCmdFileName(i);
+            QString cmdFileNameLC = cmdFileName.toLower();
 
             QList<PackageVersion*> pvs = dbr->findPackageVersionsWithCmdFile(
-                    file, errMsg);
+                    cmdFileName, errMsg);
             if (pvs.size() > 0) {
                 PackageVersion* last = 0;
                 for (int i = pvs.size() - 1; i >= 0; i--) {
@@ -1197,27 +1169,54 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
                     }
                 }
 
-                QString targetExecutable;
-                if (last)
-                    targetExecutable = last->getPath();
-                else
-                    targetExecutable = dir;
-                targetExecutable += file;
+                QString sourcePath = sourceBasePath + cmdFileName;
+                if (d.exists(sourcePath))
+                    d.remove(sourcePath);
 
-                std::unique_ptr<Job> job(new Job());
+                if (last || !dir.isEmpty()) {
+                    QString targetPath;
+                    if (last) {
+                        targetPath = last->getPath() + "\\";
+                        for (int j = 0; j < last->cmdFiles.size(); j++) {
+                            QString fn = last->getCmdFileName(j);
+                            if (fn.toLower() == cmdFileNameLC) {
+                                targetPath.append(last->cmdFiles.at(j));
+                                break;
+                            }
+                        }
+                    } else {
+                        targetPath = dir + "\\" + cmdFilePath;
+                        if (!d.exists(targetPath)) {
+                            *errMsg = QString(QObject::tr("Command line tool %1 does not exist")).
+                                    arg(targetPath);
+                            break;
+                        }
+                    }
 
-                // TODO: find exeproxy.exe
-                WPMUtils::executeFile(job.get(), dir, exeProxy, "exeproxy-copy \"" +
-                        target + file + "\" \"" +
-                        targetExecutable + "\"",
-                        dir + "\\.Npackd\\Install.log",
-                        QStringList());
+                    std::unique_ptr<Job> job(new Job());
+
+                    QBuffer buffer;
+                    WPMUtils::executeFile(job.get(), dir, exeProxy,
+                            "exeproxy-copy \"" + sourcePath + "\" \"" +
+                            targetPath + "\"",
+                            buffer,
+                            QStringList());
+                }
             }
             qDeleteAll(pvs);
         }
     }
 
     return errMsg->isEmpty();
+}
+
+QString PackageVersion::getCmdFileName(int index)
+{
+    QString cmdFileName = cmdFiles.at(index);
+    int lastIndex = cmdFileName.lastIndexOf('\\');
+    if (lastIndex >= 0)
+        cmdFileName.remove(0, lastIndex + 1);
+    return cmdFileName;
 }
 
 bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
@@ -1958,6 +1957,8 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
     }
     for (int i = 0; i < this->cmdFiles.count(); i++) {
         w->writeStartElement("cmd-file");
+        //qDebug() << this->package << this->version.getVersionString() <<
+        //    this->cmdFiles.at(i) << "!";
         w->writeAttribute("path", this->cmdFiles.at(i));
         w->writeEndElement();
     }

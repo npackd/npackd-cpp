@@ -196,12 +196,12 @@ public:
     /**
      * @brief returns all package versions with a <cmd-file> entry with the
      *     specified path
-     * @param path path to the command line tool
+     * @param name name of the command line tool without \ or /
      * @param err error message will be stored here
      * @return [owner:caller] list of package versions sorted by full package
      *     name and version
      */
-    QList<PackageVersion*> findPackageVersionsWithCmdFile(const QString& path,
+    QList<PackageVersion*> findPackageVersionsWithCmdFile(const QString& name,
             QString *err) const;
 
     /**

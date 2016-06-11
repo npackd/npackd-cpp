@@ -100,6 +100,14 @@ private:
 
     QString addBasicVars(QStringList *env);
     void addDependencyVars(QStringList* vars);
+
+    /**
+     * @brief creates executable shims
+     * @param dir directory for this package version if it is being installed or
+     *     an empty string if it is being removed
+     * @param errMsg the error message will be stored here
+     * @return true = OK
+     */
     bool createExecutableShims(const QString &dir, QString *errMsg);
 public:
     /**
@@ -453,12 +461,6 @@ public:
     QString getStringId() const;
 
     /**
-     * @brief transfers all data from another object into this
-     * @param pv another package version
-     */
-    void fillFrom(PackageVersion* pv);
-
-    /**
      * @brief searches for a definition of a text file
      * @param path file path (case-insensitive)
      * @return [ownership:this] found file or 0
@@ -475,6 +477,14 @@ public:
      *     output stream
      */
     void stop(Job *job, int programCloseType, bool printScriptOutput);
+
+    /**
+     * @brief returns the file name without the path for a command line tool
+     *     with the specified index
+     * @param index index of the "cmd-file" tag
+     * @return the file name without the path
+     */
+    QString getCmdFileName(int index);
 };
 
 Q_DECLARE_METATYPE(PackageVersion);
