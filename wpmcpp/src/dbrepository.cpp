@@ -770,6 +770,33 @@ QString DBRepository::deleteLinks(const QString& name)
     return err;
 }
 
+QString DBRepository::deleteCmdFiles(const QString& name, const Version& version)
+{
+    QString err;
+
+    if (!deleteCmdFilesQuery) {
+        deleteCmdFilesQuery.reset(new MySQLQuery(db));
+        if (!deleteCmdFilesQuery->prepare(
+                "DELETE FROM CMD_FILE WHERE PACKAGE=:PACKAGE AND VERSION=:VERSION")) {
+            err = getErrorString(*deleteCmdFilesQuery);
+            deleteCmdFilesQuery.reset(0);
+            return err;
+        }
+    }
+
+    if (err.isEmpty()) {
+        deleteCmdFilesQuery->bindValue(":PACKAGE", name);
+        Version v(version);
+        v.normalize();
+        deleteCmdFilesQuery->bindValue(":VERSION", v.getVersionString());
+        if (!deleteCmdFilesQuery->exec())
+            err = getErrorString(*deleteCmdFilesQuery);
+        deleteCmdFilesQuery->finish();
+    }
+
+    return err;
+}
+
 QString DBRepository::saveLinks(Package* p)
 {
     QString err;
@@ -1070,6 +1097,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         }
     }
 
+    bool modified = false;
     if (err.isEmpty()) {
         MySQLQuery* q;
         if (replace)
@@ -1096,11 +1124,15 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         q->bindValue(":CONTENT", QVariant(file));
         if (!q->exec())
             err = getErrorString(*q);
+        modified = q->numRowsAffected() > 0;
         q->finish();
     }
 
     // save <cmd-file> entries
     if (err.isEmpty()) {
+        if (modified)
+            deleteCmdFiles(p->package, p->version);
+
         MySQLQuery* q = insertCmdFileQuery.get();
 
         for (int i = 0; i < p->cmdFiles.size(); i++) {

@@ -45,6 +45,7 @@ private:
     MySQLQuery* selectCategoryQuery;
     MySQLQuery* insertLinkQuery;
     MySQLQuery* deleteLinkQuery;
+    std::unique_ptr<MySQLQuery> deleteCmdFilesQuery;
 
     QSqlDatabase db;
 
@@ -107,6 +108,7 @@ private:
     QString deleteLinks(const QString &name);
     QString updateDatabase();
     void transferFrom(Job *job, const QString &databaseFilename);
+    QString deleteCmdFiles(const QString &name, const Version &version);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;
