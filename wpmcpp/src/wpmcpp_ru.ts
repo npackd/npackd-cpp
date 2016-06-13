@@ -1930,10 +1930,6 @@ p, li { white-space: pre-wrap; }
         <translation>Чтение реестра базы данных пакетов</translation>
     </message>
     <message>
-        <source>Correcting installation paths created by previous versions of Npackd</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Adding well-known packages</source>
         <translation>Редактирование известных пакетов</translation>
     </message>
@@ -1948,18 +1944,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Detecting MSI packages</source>
         <translation>Детектирую MSI пакеты</translation>
-    </message>
-    <message>
-        <source>Detecting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Processing detected packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saving</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Detecting software control panel packages</source>
@@ -1985,14 +1969,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>All</source>
         <translation>Все</translation>
-    </message>
-    <message>
-        <source>Found in %1 ms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose columns</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Packages</source>
@@ -2035,34 +2011,6 @@ p, li { white-space: pre-wrap; }
         <translation>Пакет %1 будет удалён.</translation>
     </message>
     <message>
-        <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 package(s) will be installed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 package(s) will be uninstalled:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%3 package(s) will be updated:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%3 package(s) will be installed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot find the package version</source>
         <translation type="vanished">Невозможно найти версию пакета</translation>
     </message>
@@ -2075,72 +2023,11 @@ p, li { white-space: pre-wrap; }
         <translation>Удаление</translation>
     </message>
     <message>
-        <source>Newer Npackd GUI was not found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error starting %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Missing option: --package</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unknown package: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Planning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>internal package name (e.g. com.example.Editor or just Editor)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>package</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>versions range (e.g. [1.5,2))</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>range</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>version number (e.g. 1.5.12)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
-        <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>[c][k]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error parsing the command line: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wrong command: %1. Try npackdg help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2204,10 +2091,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Error opening the database: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Reloading repositories and detecting installed software</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2260,10 +2143,6 @@ p, li { white-space: pre-wrap; }
         <translation>MSI пакеты</translation>
     </message>
     <message>
-        <source>MSI package with the GUID %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>unknown</source>
         <translation>неизвестный(ая)</translation>
     </message>
@@ -2278,14 +2157,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Error fetching package versions: %1</source>
         <translation>Ошибка при чтении версий пакетов: %1</translation>
-    </message>
-    <message>
-        <source>Error downloading the file %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>computing</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Icon</source>
@@ -2310,10 +2181,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>License</source>
         <translation>Лицензия</translation>
-    </message>
-    <message>
-        <source>Download size</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error storing the information about an installed package version in the Windows registry: %1</source>
@@ -3049,10 +2916,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>More than one package was found: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Npackd list of installed packages</source>
         <translation>Npackd-список установленных пакетов</translation>
     </message>
@@ -3065,20 +2928,8 @@ p, li { white-space: pre-wrap; }
         <translation>Ошибка в атрибут &apos;package&apos; в &lt;version&gt;: %1</translation>
     </message>
     <message>
-        <source>Error in attribute &apos;type&apos; in &lt;hash-sum&gt; in %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error in attribute &apos;versions&apos; in &lt;dependency&gt; in %1</source>
         <translation>Ошибка в атрибуте &apos;versions&apos; в &lt;dependency&gt; в 1%</translation>
-    </message>
-    <message>
-        <source>Empty &apos;rel&apos; attribute value for &lt;link&gt; for %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Not a valid href URL in &lt;link&gt; for %1: %2</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error saving the package version %1 %2: %3</source>
@@ -3087,10 +2938,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Invalid SHA1 for %1: %2</source>
         <translation>Неверный SHA1 для %1: %2</translation>
-    </message>
-    <message>
-        <source>Invalid SHA-256 for %1: %2</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wrong MSI GUID for %1: %2 (%3)</source>
@@ -3113,28 +2960,7 @@ p, li { white-space: pre-wrap; }
         <translation>Ошибка разбора XML в строке %1, столбце %2: %3</translation>
     </message>
     <message>
-        <source>Component-Based Servicing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot open the file %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Task / Step</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Elapsed time</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remaining time</source>
-        <oldsource>Estimated time</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3147,10 +2973,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Deleting %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Directory %1 already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3190,11 +3012,151 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Command line tool %1 does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot find the EXE Proxy executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Directory %1 already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Cannot find the package %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Command line tool %1 does not exist</source>
+        <source>More than one package was found: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Component-Based Servicing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Newer Npackd GUI was not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error starting %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing option: --package</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Planning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>internal package name (e.g. com.example.Editor or just Editor)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>package</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>versions range (e.g. [1.5,2))</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>version number (e.g. 1.5.12)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[c][k]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error parsing the command line: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong command: %1. Try npackdg help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected argument: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clearing the command line tool definitions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error opening the database: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Detecting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Processing detected packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Correcting installation paths created by previous versions of Npackd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Found in %1 ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose columns</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSI package with the GUID %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error downloading the file %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>computing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Task / Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elapsed time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remaining time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3206,11 +3168,47 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot find the EXE Proxy executable.</source>
+        <source>Error in attribute &apos;type&apos; in &lt;hash-sum&gt; in %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clearing the command line tool definitions</source>
+        <source>Empty &apos;rel&apos; attribute value for &lt;link&gt; for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not a valid href URL in &lt;link&gt; for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid SHA-256 for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be installed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be uninstalled:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%3 package(s) will be updated:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%3 package(s) will be installed:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

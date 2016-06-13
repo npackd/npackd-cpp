@@ -2311,11 +2311,19 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Command line tool %1 does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot find the EXE Proxy executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Cannot find the package %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Command line tool %1 does not exist</source>
+        <source>Clearing the command line tool definitions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2324,14 +2332,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>More than one &lt;cmd-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cannot find the EXE Proxy executable.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clearing the command line tool definitions</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

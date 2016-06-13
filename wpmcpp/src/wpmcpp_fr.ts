@@ -1584,28 +1584,12 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible de trouver la version %2 du paquet %1</translation>
     </message>
     <message>
-        <source>Stopping the package %1 of %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Installing %1</source>
         <translation>Installation de %1</translation>
     </message>
     <message>
         <source>Uninstalling %1</source>
         <translation>Désinstallation de %1</translation>
-    </message>
-    <message>
-        <source>Deleting temporary directory %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cannot install %1 into %2. The directory already exists.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cannot install %1 into %2. Cannot rename %3.</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No installable version found for the package %1</source>
@@ -1636,14 +1620,6 @@ p, li { white-space: pre-wrap; }
         <translation>Effacement de la table des paquets</translation>
     </message>
     <message>
-        <source>No records found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Not a number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Clearing the package versions table</source>
         <translation>Effacement de la table des versions de paquets</translation>
     </message>
@@ -1652,68 +1628,12 @@ p, li { white-space: pre-wrap; }
         <translation>Effacement de la table des licences</translation>
     </message>
     <message>
-        <source>Clearing the categories table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error saving the list of repositories in the database: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Starting an SQL transaction (tempdb)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Downloading the remote repositories and filling the local database (tempdb)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commiting the SQL transaction (tempdb)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Detaching the temporary database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reorganizing the database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Refreshing the installation status (tempdb)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Updating the status for installed packages in the database (tempdb)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error creating a temporary file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Updating the temporary database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transferring the data from the temporary database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Attaching the temporary database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Commiting the SQL transaction</source>
         <translation>Application de la transaction SQL</translation>
     </message>
     <message>
         <source>Clearing the database</source>
         <translation>Effacement de la base de données</translation>
-    </message>
-    <message>
-        <source>Updating statuses</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Downloading the remote repositories</source>
@@ -1732,29 +1652,8 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Mise à jour des paquets installées dans la base de données</translation>
     </message>
     <message>
-        <source>Reading categories</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Removing packages without versions</source>
         <translation>Suppression des paquets sans version associée</translation>
-    </message>
-    <message>
-        <source>Clearing the links table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Downloading %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unzipping the repository %1 failed: %2</source>
-        <oldsource>Unzipping the repository failed: %1</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rep.xml is missing in a repository in ZIP format</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Inserting data in the packages table</source>
@@ -1853,16 +1752,8 @@ p, li { white-space: pre-wrap; }
         <translation>Lecture de la base de données de paquets dans le registre</translation>
     </message>
     <message>
-        <source>Correcting installation paths created by previous versions of Npackd</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Adding well-known packages</source>
         <translation>Ajout des paquets fortement reconnus</translation>
-    </message>
-    <message>
-        <source>Setting the NPACKD_CL environment variable</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Reading the list of packages installed by Npackd</source>
@@ -1871,18 +1762,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Detecting MSI packages</source>
         <translation>Détection des paquets MSI</translation>
-    </message>
-    <message>
-        <source>Detecting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Processing detected packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saving</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Detecting software control panel packages</source>
@@ -1900,22 +1779,6 @@ p, li { white-space: pre-wrap; }
         <source>Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
         <oldsource>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</oldsource>
         <translation type="unfinished">Veuillez télécharger la version 64-bit depuis http://code.google.com/p/windows-package-manager/</translation>
-    </message>
-    <message>
-        <source>Uncategorized</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Found in %1 ms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose columns</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Packages</source>
@@ -1954,38 +1817,6 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Désinstallation</translation>
     </message>
     <message>
-        <source>The package %1 will be uninstalled.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 package(s) will be installed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 package(s) will be uninstalled:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%3 package(s) will be updated:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%3 package(s) will be installed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot find the package version</source>
         <translation type="vanished">Impossible de trouver la version du paquet</translation>
     </message>
@@ -1998,72 +1829,11 @@ p, li { white-space: pre-wrap; }
         <translation>Désinstaller</translation>
     </message>
     <message>
-        <source>Newer Npackd GUI was not found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error starting %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Missing option: --package</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unknown package: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Planning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>internal package name (e.g. com.example.Editor or just Editor)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>package</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>versions range (e.g. [1.5,2))</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>range</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>version number (e.g. 1.5.12)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
-        <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>[c][k]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error parsing the command line: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wrong command: %1. Try npackdg help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2127,10 +1897,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Error opening the database: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Reloading repositories and detecting installed software</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2179,20 +1945,8 @@ p, li { white-space: pre-wrap; }
         <translation>Base de données MSI</translation>
     </message>
     <message>
-        <source>MSI packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MSI package with the GUID %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>unknown</source>
         <translation>inconnu</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Installation path</source>
@@ -2203,24 +1957,12 @@ p, li { white-space: pre-wrap; }
         <translation>Erreur lors de la récupération des versions de paquets : %1</translation>
     </message>
     <message>
-        <source>Error downloading the file %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>computing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Icon</source>
         <translation>Icône</translation>
     </message>
     <message>
         <source>Title</source>
         <translation>Nom</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Available</source>
@@ -2233,10 +1975,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>License</source>
         <translation>Licence</translation>
-    </message>
-    <message>
-        <source>Download size</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error storing the information about an installed package version in the Windows registry: %1</source>
@@ -2603,10 +2341,6 @@ p, li { white-space: pre-wrap; }
         <translation>La version de spécification du dépôt est invalide : %1</translation>
     </message>
     <message>
-        <source>Error in category tag for %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Incompatible repository specification version: %1.</source>
         <translation>La version de spécification du dépôt est incompatible : %1.</translation>
     </message>
@@ -2660,60 +2394,12 @@ p, li { white-space: pre-wrap; }
         <translation>Le dossier d&apos;installation n&apos;existe pas</translation>
     </message>
     <message>
-        <source>Cannot change the installation directory to %1. %2 %3 is installed there</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%1 is not a valid repository address</source>
         <translation>%1 n&apos;est pas une adresse de dépôt valide</translation>
     </message>
     <message>
-        <source>.NET runtime</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Microsoft Core XML Services (MSXML)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>XML library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>operating system</source>
         <translation>système d&apos;exploitation</translation>
-    </message>
-    <message>
-        <source>Windows 32 bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Windows 64 bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>JRE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Java runtime</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>JDK 64 bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>JDK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Java development kit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Windows Installer</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Package manager</source>
@@ -2726,18 +2412,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Wrong registry value type (DWORD expected)</source>
         <translation>Valeur de registre incorrecte (DWORD attendu)</translation>
-    </message>
-    <message>
-        <source>Wrong registry value type (BINARY expected)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error opening registry node %1, using WOW6432 node: %2: %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error removing registry node %1: %2</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Missing option name: %1</source>
@@ -2960,92 +2634,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>More than one package was found: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Npackd list of installed packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Control panel software</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error in attribute &apos;type&apos; in &lt;hash-sum&gt; in %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error in attribute &apos;versions&apos; in &lt;dependency&gt; in %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Empty &apos;rel&apos; attribute value for &lt;link&gt; for %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Not a valid href URL in &lt;link&gt; for %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error saving the package version %1 %2: %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid SHA1 for %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid SHA-256 for %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wrong MSI GUID for %1: %2 (%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error saving the package %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>More than one &lt;category&gt; %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error saving the license %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>XML parsing error at line %1, column %2: %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Component-Based Servicing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot open the file %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Task / Step</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Elapsed time</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remaining time</source>
-        <oldsource>Estimated time</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3058,10 +2647,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Deleting %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Directory %1 already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3101,11 +2686,291 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Command line tool %1 does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot find the EXE Proxy executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Downloading %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Directory %1 already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopping the package %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleting temporary directory %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot install %1 into %2. The directory already exists.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot install %1 into %2. Cannot rename %3.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Cannot find the package %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Command line tool %1 does not exist</source>
+        <source>More than one package was found: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot change the installation directory to %1. %2 %3 is installed there</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Component-Based Servicing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Newer Npackd GUI was not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error starting %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing option: --package</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Planning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>internal package name (e.g. com.example.Editor or just Editor)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>package</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>versions range (e.g. [1.5,2))</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>version number (e.g. 1.5.12)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[c][k]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error parsing the command line: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong command: %1. Try npackdg help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected argument: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Control panel software</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No records found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not a number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clearing the links table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clearing the command line tool definitions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clearing the categories table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error saving the list of repositories in the database: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unzipping the repository %1 failed: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rep.xml is missing in a repository in ZIP format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Starting an SQL transaction (tempdb)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Downloading the remote repositories and filling the local database (tempdb)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refreshing the installation status (tempdb)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Updating the status for installed packages in the database (tempdb)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Commiting the SQL transaction (tempdb)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reading categories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error creating a temporary file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Updating the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error opening the database: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transferring the data from the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Updating statuses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attaching the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Detaching the temporary database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reorganizing the database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Detecting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Processing detected packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Correcting installation paths created by previous versions of Npackd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setting the NPACKD_CL environment variable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Npackd list of installed packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uncategorized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Found in %1 ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose columns</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSI packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSI package with the GUID %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error downloading the file %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>computing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Task / Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elapsed time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remaining time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3117,11 +2982,143 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot find the EXE Proxy executable.</source>
+        <source>Error in attribute &apos;type&apos; in &lt;hash-sum&gt; in %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clearing the command line tool definitions</source>
+        <source>Error in attribute &apos;versions&apos; in &lt;dependency&gt; in %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty &apos;rel&apos; attribute value for &lt;link&gt; for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not a valid href URL in &lt;link&gt; for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error saving the package version %1 %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid SHA1 for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid SHA-256 for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong MSI GUID for %1: %2 (%3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error saving the package %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error in category tag for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More than one &lt;category&gt; %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error saving the license %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XML parsing error at line %1, column %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The package %1 will be uninstalled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be installed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be uninstalled:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%3 package(s) will be updated:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%3 package(s) will be installed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.NET runtime</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Microsoft Core XML Services (MSXML)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XML library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows 32 bit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows 64 bit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JRE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Java runtime</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JDK 64 bit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JDK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Java development kit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Installer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong registry value type (BINARY expected)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error opening registry node %1, using WOW6432 node: %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error removing registry node %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
