@@ -123,7 +123,7 @@ prep: compile $(WHERE)/zip
 	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
 	copy $(WHERE)\wpmcpp.exe $(WHERE)\zip\npackdg.exe
 	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
-	copy $(EXEPROXY)\exeproxy.exe $(WHERE)\zip
+	copy "$(EXEPROXY)\exeproxy.exe" $(WHERE)\zip
 
 zip-debug: compile $(WHERE)/zip-debug
 	copy LICENSE.txt $(WHERE)\zip-debug
