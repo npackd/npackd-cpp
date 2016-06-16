@@ -108,7 +108,7 @@ private:
             bool replace, const QString& detectionInfoPrefix);
 public:
     /** package name for the current application */
-    QString packageName;
+    static QString packageName;
 
     /**
      * @return default instance

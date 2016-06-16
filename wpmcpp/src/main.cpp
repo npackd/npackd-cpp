@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 #else
     packageName = "com.googlecode.windows-package-manager.Npackd64";
 #endif
-    InstalledPackages::getDefault()->packageName = packageName;
+    InstalledPackages::packageName = packageName;
 
     QTranslator myappTranslator;
     bool r = myappTranslator.load(

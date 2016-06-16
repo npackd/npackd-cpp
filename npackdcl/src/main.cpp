@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<Version>("Version");
 
-    InstalledPackages::getDefault()->packageName =
+    InstalledPackages::packageName =
             "com.googlecode.windows-package-manager.NpackdCL";
 
     App app;

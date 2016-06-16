@@ -21,6 +21,8 @@
 
 InstalledPackages InstalledPackages::def;
 
+QString InstalledPackages::packageName;
+
 static bool installedPackageVersionLessThan(const InstalledPackageVersion* a,
         const InstalledPackageVersion* b)
 {
@@ -580,7 +582,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
                 // qDebug() << ipv->package <<ipv->directory;
                 if ((WPMUtils::isUnder(d, windowsDir) ||
                         WPMUtils::pathEquals(d, windowsDir)) &&
-                        ipv->package != packageName) {
+                        ipv->package != InstalledPackages::packageName) {
                     this->setPackageVersionPath(ipv->package, ipv->version, "");
                 }
             }
@@ -596,7 +598,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
         Job* sub = job->newSubJob(0.03,
                 QObject::tr("Adding well-known packages"), true, true);
         AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
-                this->packageName);
+                InstalledPackages::packageName);
         detect3rdParty(sub, rep, pm, false);
         delete pm;
     }

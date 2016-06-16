@@ -44,7 +44,7 @@ public:
      * Simplifies a list of operations.
      *
      * @param ops a list of operations. The list will be modified and
-     *     unnecessary operation removed and the objects destroyed.
+     *     unnecessary operations removed and the objects destroyed.
      */
     static void simplify(QList<InstallOperation*> ops);
 };

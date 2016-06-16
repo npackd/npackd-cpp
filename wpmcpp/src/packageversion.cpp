@@ -2097,7 +2097,7 @@ void PackageVersion::stop(Job* job, int programCloseType,
         bool printScriptOutput)
 {
     bool me = false;
-    QString myPackage = InstalledPackages::getDefault()->packageName;
+    QString myPackage = InstalledPackages::packageName;
     Version myVersion;
     (void) myVersion.setVersion(NPACKD_VERSION);
     if (this->package == myPackage && this->version == myVersion) {

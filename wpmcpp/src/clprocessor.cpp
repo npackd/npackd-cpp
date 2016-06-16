@@ -121,7 +121,8 @@ QString CLProcessor::startNewestNpackdg()
 
     QString exe;
     if (err.isEmpty()) {
-        InstalledPackageVersion* ipv = ip->getNewestInstalled(ip->packageName);
+        InstalledPackageVersion* ipv = ip->getNewestInstalled(
+                InstalledPackages::packageName);
 
         Version myVersion;
         (void) myVersion.setVersion(NPACKD_VERSION);
