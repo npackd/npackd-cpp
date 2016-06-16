@@ -32,18 +32,10 @@ private:
     InstalledPackages();
     virtual ~InstalledPackages();
 
-    void detectOneDotNet(const WindowsRegistry& wr, const QString& keyName);
-
     /**
      * @return error message
      */
     QString clearPackagesInNestedDirectories();
-
-    void detectMicrosoftInstaller();
-    void detectMSXML();
-    void detectJRE(bool w64bit);
-    void detectJDK(bool w64bit);
-    void detectWindows();
 
     /**
      * @brief processOneInstalled3rdParty
@@ -53,22 +45,6 @@ private:
      */
     void processOneInstalled3rdParty(DBRepository *r,
             InstalledPackageVersion *ipv);
-
-    /**
-     * @param exact if true, only exact matches to packages from current
-     *     repositories recognized as existing software (e.g. something like
-     *     com.mysoftware.MySoftware-2.2.3). This setting should help in rare
-     *     cases when Npackd 1.14 and 1.15 are used in parallel for some time
-     *     If the value is false, also
-     *     packages not known in current repositories are recognized as
-     *     installed.
-     */
-    void scanPre1_15Dir(bool exact);
-
-    /**
-     * Adds unknown in the repository, but installed packages.
-     */
-    void detectPre_1_15_Packages();
 
     /**
      * THIS METHOD IS NOT THREAD-SAFE
@@ -185,10 +161,11 @@ public:
      * @param package full package name
      * @param version package version
      * @param directory installation directory. This value cannot be empty.
+     * @param updateRegistry true = the Windows registry will be updated
      * @return error message
      */
     QString setPackageVersionPath(const QString& package, const Version& version,
-            const QString& directory);
+            const QString& directory, bool updateRegistry=true);
 
     /**
      * @param filePath full file or directory path

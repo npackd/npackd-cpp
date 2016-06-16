@@ -492,13 +492,21 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 QString AbstractRepository::planUpdates(const QList<Package*> packages,
         QList<Dependency*> ranges,
         QList<InstallOperation*>& ops, bool keepDirectories,
-        bool install, const QString &where_)
+        bool install, const QString &where_, bool safe)
 {
     QString err;
 
     QList<PackageVersion*> installed = getInstalled_(&err);
     QList<PackageVersion*> newest, newesti;
     QList<bool> used;
+
+    // get the list of installed packages
+    QSet<QString> before;
+    if (safe) {
+        for (int j = 0; j < installed.size(); j++) {
+            before.insert(installed.at(j)->package);
+        }
+    }
 
     // packages first
     if (err.isEmpty()) {
@@ -634,28 +642,54 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
     if (err.isEmpty()) {
         for (int i = 0; i < newest.count(); i++) {
             if (!used[i]) {
+                bool undo = false;
+
+                // another package should not be completly uninstalled
+                QList<PackageVersion*> installedCopy = installed;
+
+                int oldSize = ops.size();
+
                 QString where;
-                PackageVersion* b = newesti.at(i);
-                if (keepDirectories && b)
-                    where = b->getPath();
+                PackageVersion* a = newesti.at(i);
+                if (keepDirectories && a)
+                    where = a->getPath();
 
                 QList<PackageVersion*> avoid;
-                err = newest.at(i)->planInstallation(installed, ops, avoid,
+                err = newest.at(i)->planInstallation(installedCopy, ops, avoid,
                         where);
                 if (!err.isEmpty())
                     break;
-            }
-        }
-    }
 
-    if (err.isEmpty()) {
-        for (int i = 0; i < newesti.count(); i++) {
-            if (!used[i]) {
                 PackageVersion* b = newesti.at(i);
                 if (b) {
-                    err = b->planUninstallation(installed, ops);
-                    if (!err.isEmpty())
-                        break;
+                    if (safe) {
+                        err = b->planUninstallation(installedCopy, ops);
+                        if (!err.isEmpty())
+                            break;
+
+                        if ((ops.size() - oldSize) > 1) {
+                            QSet<QString> after = before;
+                            for (int j = 0; j < installedCopy.size(); j++) {
+                                after.remove(installedCopy.at(j)->package);
+                            }
+
+                            if (!after.isEmpty()) {
+                                undo = true;
+                            }
+                        }
+                    } else {
+                        err = b->planUninstallation(installedCopy, ops);
+
+                        if (!err.isEmpty())
+                            break;
+                    }
+                }
+
+                if (undo) {
+                    while (ops.size() > oldSize)
+                        delete ops.takeLast();
+                } else {
+                    installed = installedCopy;
                 }
             }
         }

@@ -192,18 +192,21 @@ public:
      *     returned.
      * @param where_ where to install the new version. This parameter will only
      *     be used if only one package should be updated
+     * @param safe true = do not update packages that would lead to other
+     *     packages being completely uninstalled. Completely means here that not
+     *     even one version of the package remains installed.
      * @return error message or ""
      */
     QString planUpdates(const QList<Package*> packages,
             QList<Dependency *> ranges,
             QList<InstallOperation*>& ops, bool keepDirectories=false,
-            bool install=false, const QString& where_="");
+            bool install=false, const QString& where_="", bool safe=false);
 
     /**
      * @brief searches for a package version by the associated MSI GUID
      * @param guid MSI package GUID
      * @param err error message will be stored here
-     * @return [ownership:new] found package version or 0
+     * @return [ownership:caller] found package version or 0
      */
     virtual PackageVersion* findPackageVersionByMSIGUID_(
             const QString& guid, QString* err) const = 0;
@@ -268,7 +271,7 @@ public:
             const QList<PackageVersion *> &avoid, QString *err);
 
     /**
-     * @param dep a dependency
+     * @+^123param dep a dependency
      * @param avoid list of package versions that should be avoided and cannot
      *     be considered to be a match
      * @param err error message will be stored here

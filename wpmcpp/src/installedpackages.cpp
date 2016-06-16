@@ -330,7 +330,7 @@ InstalledPackageVersion* InstalledPackages::findOrCreate(const QString& package,
 
 QString InstalledPackages::setPackageVersionPath(const QString& package,
         const Version& version,
-        const QString& directory)
+        const QString& directory, bool updateRegistry)
 {
     this->mutex.lock();
 

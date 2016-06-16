@@ -1130,6 +1130,9 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
 {
     *errMsg = "";
 
+    if (this->cmdFiles.size() == 0)
+        return true;
+
     QString sourceBasePath = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) +
             "\\Npackd\\Commands\\";
 

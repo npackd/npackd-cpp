@@ -470,7 +470,7 @@ public:
     /**
      * @brief stops this package version if it is running. This either executes
      *     .Npackd\Stop.bat or closes the running applications otherwise.
-     * @param [ownership:callser] job
+     * @param [ownership:caller] job
      * @param programCloseType how to close running programs. Multiple flags
      *     may be combined here using OR.
      * @param printScriptOutput true = redirect the script output to the default
