@@ -1,5 +1,6 @@
 #include <limits>
 #include <math.h>
+#include <memory>
 
 #include <QRegExp>
 #include <QScopedPointer>
@@ -65,6 +66,67 @@ void App::test()
     a.setVersion("2.8.7.4.8.9");
     b.setVersion("2.8.6.4.8.8");
     QVERIFY(a > b);
+}
+
+void App::testInstalledPackages()
+{
+    std::unique_ptr<InstalledPackages> ip(new InstalledPackages());
+
+    QList<InstalledPackageVersion*> packages = ip->getAll();
+    QVERIFY(packages.size() == 0);
+    qDeleteAll(packages);
+
+    InstalledPackageVersion* ipv = ip->find("test", Version(1, 2));
+    QVERIFY(ipv == nullptr);
+
+    QString err = ip->setPackageVersionPath(
+            "test", Version(1, 2), "C:\\test", false);
+    QVERIFY(err == "");
+
+    ipv = ip->find("test", Version(1, 2));
+    QVERIFY(ipv != nullptr);
+    QVERIFY(ipv->package == "test");
+    QVERIFY(ipv->version == Version(1, 2));
+
+    ipv = ip->findOwner("C:\\test");
+    QVERIFY(ipv != nullptr);
+    QVERIFY(ipv->package == "test");
+    QVERIFY(ipv->version == Version(1, 2));
+
+    ipv = ip->findOwner("C:\\test\\abc");
+    QVERIFY(ipv != nullptr);
+    QVERIFY(ipv->package == "test");
+    QVERIFY(ipv->version == Version(1, 2));
+
+    packages = ip->getAll();
+    QVERIFY(packages.size() == 1);
+    qDeleteAll(packages);
+
+    packages = ip->getByPackage("test");
+    QVERIFY(packages.size() == 1);
+    qDeleteAll(packages);
+
+    packages = ip->getByPackage("test2");
+    QVERIFY(packages.size() == 0);
+    qDeleteAll(packages);
+
+    QStringList paths = ip->getAllInstalledPackagePaths();
+    QVERIFY(paths.size() == 1);
+    QVERIFY(paths.at(0) == "C:\\test");
+
+    QVERIFY(ip->getPath("test", Version(1, 2)) == "C:\\test");
+
+    QVERIFY(ip->isInstalled("test", Version(1, 2)));
+
+    ipv = ip->getNewestInstalled("test");
+    QVERIFY(ipv != nullptr);
+    QVERIFY(ipv->package == "test");
+    QVERIFY(ipv->version == Version(1, 2));
+
+    Dependency d;
+    d.package = "test";
+    d.setVersions("[1, 2)");
+    QVERIFY(ip->isInstalled(d));
 }
 
 void App::testCommandLine()

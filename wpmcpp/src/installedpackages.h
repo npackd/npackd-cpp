@@ -29,9 +29,6 @@ private:
     /** please use the mutex to access the data */
     QMap<QString, InstalledPackageVersion*> data;
 
-    InstalledPackages();
-    virtual ~InstalledPackages();
-
     /**
      * @return error message
      */
@@ -90,6 +87,13 @@ public:
      * @return default instance
      */
     static InstalledPackages* getDefault();
+
+    /**
+     * -
+     */
+    InstalledPackages();
+
+    virtual ~InstalledPackages();
 
     /**
      * Reads the package statuses from the registry.

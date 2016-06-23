@@ -340,10 +340,12 @@ QString InstalledPackages::setPackageVersionPath(const QString& package,
     if (!ipv) {
         ipv = new InstalledPackageVersion(package, version, directory);
         this->data.insert(package + "/" + version.getVersionString(), ipv);
-        err = saveToRegistry(ipv);
+        if (updateRegistry)
+            err = saveToRegistry(ipv);
     } else {
         ipv->setPath(directory);
-        err = saveToRegistry(ipv);
+        if (updateRegistry)
+            err = saveToRegistry(ipv);
     }
 
     this->mutex.unlock();

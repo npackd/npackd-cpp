@@ -27,7 +27,12 @@ private slots:
     void test();
 
     /**
-     * Tests für CommandLine
+     * Tests for InstalledPackages
+     */
+    void testInstalledPackages();
+
+    /**
+     * Tests for CommandLine
      */
     void testCommandLine();
 };
