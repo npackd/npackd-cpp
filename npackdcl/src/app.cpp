@@ -1523,10 +1523,7 @@ void App::add(Job* job)
     QList<InstallOperation*> ops;
     if (job->shouldProceed()) {
         QString err;
-        QList<PackageVersion*> installed =
-                DBRepository::getDefault()->getInstalled_(&err);
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
+        InstalledPackages installed(InstalledPackages::getDefault());
 
         QList<PackageVersion*> avoid;
         for (int i = 0; i < toInstall.size(); i++) {
@@ -1537,7 +1534,6 @@ void App::add(Job* job)
                 job->setErrorMessage(err);
             }
         }
-        qDeleteAll(installed);
     }
 
     // debug: WPMUtils::outputTextConsole(QString("%1\r\n").arg(ops.size()));

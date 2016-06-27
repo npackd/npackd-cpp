@@ -2,9 +2,12 @@
 #define INSTALLEDPACKAGES_H
 
 #include <windows.h>
+#include <memory>
 
 #include <QMap>
 #include <QObject>
+#include <QSet>
+#include <QString>
 
 #include "installedpackageversion.h"
 #include "version.h"
@@ -13,6 +16,7 @@
 #include "abstractthirdpartypm.h"
 #include "dbrepository.h"
 #include "dependency.h"
+#include "repository.h"
 
 /**
  * @brief information about installed packages
@@ -92,6 +96,15 @@ public:
      * -
      */
     InstalledPackages();
+
+    /**
+     * Copy.
+     *
+     * @param other another instance
+     */
+    InstalledPackages(const InstalledPackages& other);
+
+    InstalledPackages& operator=(const InstalledPackages& other);
 
     virtual ~InstalledPackages();
 
@@ -253,7 +266,19 @@ public:
      * @param dep a dependency
      * @return true if a package, that satisfies this dependency, is installed
      */
-    bool isInstalled(const Dependency& dep);
+    bool isInstalled(const Dependency& dep) const;
+
+    /**
+     * @brief returns the packages with at least one version installed
+     * @return the package names
+     */
+    QSet<QString> getPackages() const;
+
+    /**
+     * @return [owner:caller] the first found package version with a missing
+     *     dependency or 0
+     */
+    InstalledPackageVersion *findFirstWithMissingDependency() const;
 signals:
     /**
      * @brief fired if a package version was installed or uninstalled

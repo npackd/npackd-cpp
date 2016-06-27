@@ -30,7 +30,6 @@
 #include "quazip.h"
 #include "quazipfile.h"
 
-#include "repository.h"
 #include "packageversion.h"
 #include "job.h"
 #include "downloader.h"
@@ -682,7 +681,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
     job->complete();
 }
 
-QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
+QString PackageVersion::planInstallation(InstalledPackages &installed,
         QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
         const QString& where)
 {
@@ -694,16 +693,7 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
 
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
-        bool depok = false;
-        for (int j = 0; j < installed.size(); j++) {
-            PackageVersion* pv = installed.at(j);
-            if ((pv->package != this->package || pv->version != this->version) &&
-                    pv->package == d->package &&
-                    d->test(pv->version)) {
-                depok = true;
-                break;
-            }
-        }
+        bool depok = installed.isInstalled(*d);
         if (!depok) {
             // we cannot just use Dependency->findBestMatchToInstall here as
             // it is possible that the highest match cannot be installed because
@@ -748,16 +738,13 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
                 bool found = false;
                 for (int j = 0; j < pvs.count(); j++) {
                     PackageVersion* pv = pvs.at(j);
-                    int installedCount = installed.count();
+                    InstalledPackages installed2(installed);
                     int opsCount = ops.count();
                     int avoidCount = avoid.count();
 
-                    res = pv->planInstallation(installed, ops, avoid);
+                    res = pv->planInstallation(installed2, ops, avoid);
                     if (!res.isEmpty()) {
                         // rollback
-                        while (installed.count() > installedCount) {
-                            delete installed.takeLast();
-                        }
                         while (ops.count() > opsCount) {
                             delete ops.takeLast();
                         }
@@ -766,6 +753,7 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
                         }
                     } else {
                         found = true;
+                        installed = installed2;
                         break;
                     }
                 }
@@ -779,64 +767,59 @@ QString PackageVersion::planInstallation(QList<PackageVersion*>& installed,
     }
 
     if (res.isEmpty()) {
-        if (!this->installed()) {
+        if (!installed.isInstalled(this->package, this->version)) {
             InstallOperation* io = new InstallOperation();
             io->install = true;
             io->package = this->package;
             io->version = this->version;
             io->where = where;
             ops.append(io);
+
+            QString where2 = where;
+            if (where2.isEmpty()) {
+                where2 = this->getIdealInstallationDirectory();
+                where2 = WPMUtils::findNonExistingFile(where2, "");
+            }
+            installed.setPackageVersionPath(this->package, this->version,
+                    where2, false);
         }
-        installed.append(this->clone());
     }
 
     return res;
 }
 
-QString PackageVersion::planUninstallation(QList<PackageVersion*>& installed,
+QString PackageVersion::planUninstallation(InstalledPackages &installed,
         QList<InstallOperation*>& ops)
 {
     // qDebug() << "PackageVersion::planUninstallation()" << this->toString();
     QString res;
 
-    if (!PackageVersion::contains(installed, this))
+    if (!installed.isInstalled(this->package, this->version))
         return res;
+
+    installed.setPackageVersionPath(this->package, this->version,
+            "", false);
+
+    DBRepository* dbr = DBRepository::getDefault();
 
     // this loop ensures that all the items in "installed" are processed
     // even if changes in the list were done in nested calls to
     // "planUninstallation"
     while (true) {
-        int oldCount = installed.count();
-        for (int i = 0; i < installed.count(); i++) {
-            PackageVersion* pv = installed.at(i);
-            if (pv->package != this->package || pv->version != this->version) {
-                for (int j = 0; j < pv->dependencies.count(); j++) {
-                    Dependency* d = pv->dependencies.at(j);
-                    if (d->package == this->package && d->test(this->version)) {
-                        int n = 0;
-                        for (int k = 0; k < installed.count(); k++) {
-                            PackageVersion* pv2 = installed.at(k);
-                            if (d->package == pv2->package &&
-                                    d->test(pv2->version)) {
-                                n++;
-                            }
-                            if (n > 1)
-                                break;
-                        }
-                        if (n <= 1) {
-                            res = pv->planUninstallation(installed, ops);
-                            if (!res.isEmpty())
-                                break;
-                        }
-                    }
-                }
-                if (!res.isEmpty())
-                    break;
-            }
-        }
+        QScopedPointer<InstalledPackageVersion> ipv(installed.
+                findFirstWithMissingDependency());
+        if (ipv.data()) {
+            QScopedPointer<PackageVersion> pv(dbr->findPackageVersion_(
+                    ipv.data()->package, ipv.data()->version, &res));
+            if (!res.isEmpty())
+                break;
 
-        if (oldCount == installed.count() || !res.isEmpty())
+            res = pv->planUninstallation(installed, ops);
+            if (!res.isEmpty())
+                break;
+        } else {
             break;
+        }
     }
 
     if (res.isEmpty()) {
@@ -845,7 +828,6 @@ QString PackageVersion::planUninstallation(QList<PackageVersion*>& installed,
         op->package = this->package;
         op->version = this->version;
         ops.append(op);
-        installed.removeAt(PackageVersion::indexOf(installed, this));
     }
 
     return res;

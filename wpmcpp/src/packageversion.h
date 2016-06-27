@@ -25,6 +25,7 @@
 DEFINE_GUID(UUID_ClientID,0x30ed381dL,0x59ea,0x4ca5,0xbd,0x1d,0x5e,0xe8,0xec,0x97,0xb2,0xbe);
 
 class InstallOperation;
+class InstalledPackages;
 
 /**
  * One version of a package (installed or not).
@@ -326,7 +327,7 @@ public:
      *     directory should be chosen automatically
      * @return error message or ""
      */
-    QString planInstallation(QList<PackageVersion*>& installed,
+    QString planInstallation(InstalledPackages& installed,
             QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
             const QString &where="");
 
@@ -341,7 +342,7 @@ public:
      *     elements will not be modified in any way.
      * @return error message or ""
      */
-    QString planUninstallation(QList<PackageVersion*>& installed,
+    QString planUninstallation(InstalledPackages& installed,
             QList<InstallOperation*>& ops);
 
     /**

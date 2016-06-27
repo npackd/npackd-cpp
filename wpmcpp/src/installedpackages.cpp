@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include <msi.h>
+#include <memory>
 
 #include <QDebug>
 
@@ -41,6 +42,28 @@ InstalledPackages* InstalledPackages::getDefault()
 
 InstalledPackages::InstalledPackages() : mutex(QMutex::Recursive)
 {
+}
+
+InstalledPackages::InstalledPackages(const InstalledPackages &other) :
+        QObject(), mutex(QMutex::Recursive)
+{
+    *this = other;
+}
+
+InstalledPackages &InstalledPackages::operator=(const InstalledPackages &other)
+{
+    this->mutex.lock();
+    qDeleteAll(this->data);
+    this->data.clear();
+    QList<InstalledPackageVersion*> ipvs = other.getAll();
+    for (int i = 0; i < ipvs.size(); i++) {
+        InstalledPackageVersion* ipv = ipvs.at(i);
+        this->data.insert(ipv->package + "/" +
+                ipv->version.getVersionString(), ipv);
+    }
+    this->mutex.unlock();
+    
+    return *this;
 }
 
 InstalledPackages::~InstalledPackages()
@@ -438,7 +461,7 @@ InstalledPackageVersion* InstalledPackages::getNewestInstalled(
     return r;
 }
 
-bool InstalledPackages::isInstalled(const Dependency& dep)
+bool InstalledPackages::isInstalled(const Dependency& dep) const
 {
     QList<InstalledPackageVersion*> installed = getAll();
     bool res = false;
@@ -452,6 +475,57 @@ bool InstalledPackages::isInstalled(const Dependency& dep)
     }
     qDeleteAll(installed);
     return res;
+}
+
+QSet<QString> InstalledPackages::getPackages() const
+{
+    this->mutex.lock();
+
+    QList<InstalledPackageVersion*> all = this->data.values();
+    QSet<QString> r;
+    for (int i = 0; i < all.count(); i++) {
+        InstalledPackageVersion* ipv = all.at(i);
+        if (ipv->installed())
+            r.insert(ipv->package);
+    }
+
+    this->mutex.unlock();
+
+    return r;
+}
+
+InstalledPackageVersion*
+        InstalledPackages::findFirstWithMissingDependency() const
+{
+    InstalledPackageVersion* r = 0;
+
+    this->mutex.lock();
+
+    DBRepository* dbr = DBRepository::getDefault();
+    QList<InstalledPackageVersion*> all = this->data.values();
+    for (int i = 0; i < all.count(); i++) {
+        InstalledPackageVersion* ipv = all.at(i);
+        if (ipv->installed()) {
+            QString err;
+            QScopedPointer<PackageVersion> pv(dbr->findPackageVersion_(
+                    ipv->package, ipv->version, &err));
+            if (err.isEmpty()) {
+                for (int j = 0; j < pv->dependencies.size(); j++) {
+                    if (!isInstalled(*pv->dependencies.at(j))) {
+                        r = ipv->clone();
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (r)
+            break;
+    }
+
+    this->mutex.unlock();
+
+    return r;
 }
 
 QString InstalledPackages::notifyInstalled(const QString &package,

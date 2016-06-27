@@ -82,13 +82,9 @@ QString CLProcessor::remove()
                 PackageVersion::getRemovePackageVersionOptions(cl, &err);
     }
 
-    QList<PackageVersion*> installed;
-    if (err.isEmpty()) {
-        installed = DBRepository::getDefault()->getInstalled_(&err);
-    }
-
     QList<InstallOperation*> ops;
     if (err.isEmpty()) {
+        InstalledPackages installed(*InstalledPackages::getDefault());
         for (int i = 0; i < toRemove.count(); i++) {
             PackageVersion* pv = toRemove.at(i);
             err = pv->planUninstallation(installed, ops);
@@ -101,7 +97,6 @@ QString CLProcessor::remove()
         err = process(ops, programCloseType);
     }
 
-    qDeleteAll(installed);
     qDeleteAll(toRemove);
 
     qDeleteAll(ops);
@@ -186,10 +181,7 @@ QString CLProcessor::add()
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     QList<InstallOperation*> ops;
 
-    QList<PackageVersion*> installed;
-    if (err.isEmpty()) {
-        installed = DBRepository::getDefault()->getInstalled_(&err);
-    }
+    InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
         QList<PackageVersion*> avoid;
@@ -200,8 +192,6 @@ QString CLProcessor::add()
                 break;
         }
     }
-
-    qDeleteAll(installed);
 
     // debug: WPMUtils::outputTextConsole(QString("%1\r\n").arg(ops.size()));
 

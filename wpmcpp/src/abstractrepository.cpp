@@ -496,16 +496,14 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
 {
     QString err;
 
-    QList<PackageVersion*> installed = getInstalled_(&err);
+    InstalledPackages installed(*InstalledPackages::getDefault());
     QList<PackageVersion*> newest, newesti;
     QList<bool> used;
 
     // get the list of installed packages
     QSet<QString> before;
     if (safe) {
-        for (int j = 0; j < installed.size(); j++) {
-            before.insert(installed.at(j)->package);
-        }
+        before = installed.getPackages();
     }
 
     // packages first
@@ -608,7 +606,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
         for (int i = 0; i < newest.count(); i++) {
             QList<PackageVersion*> avoid;
             QList<InstallOperation*> ops2;
-            QList<PackageVersion*> installedCopy = installed;
+            InstalledPackages installedCopy(installed);
 
             PackageVersion* b = newesti.at(i);
             if (b) {
@@ -645,7 +643,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 bool undo = false;
 
                 // another package should not be completly uninstalled
-                QList<PackageVersion*> installedCopy = installed;
+                InstalledPackages installedCopy(installed);
 
                 int oldSize = ops.size();
 
@@ -669,9 +667,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
 
                         if ((ops.size() - oldSize) > 1) {
                             QSet<QString> after = before;
-                            for (int j = 0; j < installedCopy.size(); j++) {
-                                after.remove(installedCopy.at(j)->package);
-                            }
+                            after.subtract(installedCopy.getPackages());
 
                             if (!after.isEmpty()) {
                                 undo = true;
@@ -699,7 +695,6 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
         InstallOperation::simplify(ops);
     }
 
-    qDeleteAll(installed);
     qDeleteAll(newest);
     qDeleteAll(newesti);
 

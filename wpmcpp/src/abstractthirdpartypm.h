@@ -3,7 +3,6 @@
 
 #include <QList>
 
-#include "installedpackageversion.h"
 #include "package.h"
 #include "packageversion.h"
 #include "installedpackageversion.h"

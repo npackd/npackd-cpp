@@ -1963,12 +1963,8 @@ void MainWindow::on_actionInstall_triggered()
     }
 
     QList<InstallOperation*> ops;
-    QList<PackageVersion*> installed;
+    InstalledPackages installed(*InstalledPackages::getDefault());
     QList<PackageVersion*> avoid;
-
-    if (err.isEmpty()) {
-        installed = DBRepository::getDefault()->getInstalled_(&err);
-    }
 
     if (err.isEmpty()) {
         for (int i = 0; i < pvs.count(); i++) {
@@ -1988,7 +1984,6 @@ void MainWindow::on_actionInstall_triggered()
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
     qDeleteAll(avoid);
-    qDeleteAll(installed);
     qDeleteAll(pvs);
 }
 
@@ -2029,16 +2024,10 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     QList<InstallOperation*> ops;
-    QList<PackageVersion*> installed;
-    QList<PackageVersion*> toDelete;
 
     if (err.isEmpty()) {
-        installed = DBRepository::getDefault()->
-                getInstalled_(&err);
-        toDelete = installed;
-    }
+        InstalledPackages installed(*InstalledPackages::getDefault());
 
-    if (err.isEmpty()) {
         for (int i = 0; i < pvs.count(); i++) {
             PackageVersion* pv = pvs.at(i);
             err = pv->planUninstallation(installed, ops);
@@ -2052,7 +2041,6 @@ void MainWindow::on_actionUninstall_triggered()
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
-    qDeleteAll(toDelete);
     qDeleteAll(pvs);
 }
 
