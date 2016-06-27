@@ -1523,7 +1523,7 @@ void App::add(Job* job)
     QList<InstallOperation*> ops;
     if (job->shouldProceed()) {
         QString err;
-        InstalledPackages installed(InstalledPackages::getDefault());
+        InstalledPackages installed(*InstalledPackages::getDefault());
 
         QList<PackageVersion*> avoid;
         for (int i = 0; i < toInstall.size(); i++) {
@@ -1716,11 +1716,10 @@ void App::remove(Job *job)
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
-    DBRepository* ar = DBRepository::getDefault();
     QList<InstallOperation*> ops;
     if (job->shouldProceed()) {
         QString err;
-        QList<PackageVersion*> installed = ar->getInstalled_(&err);
+        InstalledPackages installed(*InstalledPackages::getDefault());
         if (!err.isEmpty())
             job->setErrorMessage(err);
 
@@ -1734,7 +1733,6 @@ void App::remove(Job *job)
                 }
             }
         }
-        qDeleteAll(installed);
     }
 
     /**
