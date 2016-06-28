@@ -226,7 +226,6 @@ QString AbstractRepository::toString(const Dependency &dep,
     return res;
 }
 
-
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
         bool printScriptOutput, bool interactive)
@@ -487,7 +486,6 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 
     return ret;
 }
-
 
 QString AbstractRepository::planUpdates(const QList<Package*> packages,
         QList<Dependency*> ranges,

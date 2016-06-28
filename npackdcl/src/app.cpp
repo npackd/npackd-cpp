@@ -1277,13 +1277,12 @@ void App::update(Job* job)
     bool keepDirectories = cl.isPresent("keep-directories");
     bool install = cl.isPresent("install");
 
-
     QList<InstallOperation*> ops;
     bool up2date = false;
     if (job->shouldProceed()) {
         // WPMUtils::writeln("before planUpdate");
         QString err = rep->planUpdates(toUpdate, toUpdate2, ops,
-                keepDirectories, install, file);
+                keepDirectories, install, file, true);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+	<package name="test.Simple">
+		<title>Simple package test</title>
+		<description>Description of the new package.</description>
+		<icon>http://newpackage.example.com/icon32x32.png</icon>
+		<link href="http://newpackage.example.com" rel="homepage"/>
+		<link href="http://newpackage.example.com/icon.png" rel="icon"/>
+		<link href="http://newpackage.example.com/changelog.html" rel="changelog"/>
+		<link href="http://newpackage.example.com/screenshot.png" rel="screenshot"/>
+	</package>
+</root>
