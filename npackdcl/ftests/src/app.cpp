@@ -22,7 +22,7 @@ void App::init()
     QString rep = QUrl::fromLocalFile(QDir::currentPath() +
             "\\npackdcl\\ftests\\Rep.xml").toString();
     captureNpackdCLOutput("set-repo "
-            "-u " + rep +
+            "-u " + rep + " "
             "-u https://npackd.appspot.com/rep/xml?tag=stable "
             "-u https://npackd.appspot.com/rep/xml?tag=stable64 "
             "-u https://npackd.appspot.com/rep/recent-xml "
