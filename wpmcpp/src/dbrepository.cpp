@@ -479,8 +479,8 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     return r;
 }
 
-QStringList DBRepository::findPackages(Package::Status status,
-        bool filterByStatus,
+QStringList DBRepository::findPackages(Package::Status minStatus,
+        Package::Status maxStatus,
         const QString& query, int cat0, int cat1, QString *err) const
 {
     // qDebug() << "DBRepository::findPackages.0";
@@ -500,14 +500,14 @@ QStringList DBRepository::findPackages(Package::Status status,
             params.append(QString("%" + kw.toLower() + "%"));
         }
     }
-    if (filterByStatus) {
+    if (minStatus < maxStatus) {
         if (!where.isEmpty())
             where += " AND ";
-        if (status == Package::INSTALLED)
-            where += "STATUS >= :STATUS";
-        else
-            where += "STATUS = :STATUS";
-        params.append(QVariant((int) status));
+
+        where += "STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS";
+
+        params.append(QVariant((int) minStatus));
+        params.append(QVariant((int) maxStatus));
     }
 
     if (cat0 == 0) {
@@ -566,8 +566,8 @@ QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
     return r;
 }
 
-QList<QStringList> DBRepository::findCategories(Package::Status status,
-        bool filterByStatus,
+QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
+        Package::Status maxStatus,
         const QString& query, int level, int cat0, int cat1, QString *err) const
 {
     // qDebug() << "DBRepository::findPackages.0";
@@ -584,14 +584,13 @@ QList<QStringList> DBRepository::findCategories(Package::Status status,
         where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
         params.append(QString("%" + keywords.at(i).toLower() + "%"));
     }
-    if (filterByStatus) {
+    if (maxStatus > minStatus) {
         if (!where.isEmpty())
             where += " AND ";
-        if (status == Package::INSTALLED)
-            where += "STATUS >= :STATUS";
-        else
-            where += "STATUS = :STATUS";
-        params.append(QVariant((int) status));
+        where += "STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS";
+
+        params.append(QVariant((int) minStatus));
+        params.append(QVariant((int) maxStatus));
     }
 
     if (cat0 == 0) {
@@ -1611,13 +1610,7 @@ void DBRepository::updateStatusForInstalled(Job* job)
 
     QSet<QString> packages;
     if (job->shouldProceed()) {
-        QList<InstalledPackageVersion*> pvs = InstalledPackages::getDefault()->getAll();
-        for (int i = 0; i < pvs.count(); i++) {
-            InstalledPackageVersion* pv = pvs.at(i);
-            packages.insert(pv->package);
-        }
-        qDeleteAll(pvs);
-        pvs.clear();
+        packages = InstalledPackages::getDefault()->getPackages();
         job->setProgress(0.1);
     }
 
@@ -1876,7 +1869,10 @@ QString DBRepository::updateStatus(const QString& package)
             else
                 status = Package::UPDATEABLE;
         } else {
-            status = Package::NOT_INSTALLED;
+            if (newestInstallable)
+                status = Package::NOT_INSTALLED;
+            else
+                status = Package::NOT_INSTALLED_NOT_AVAILABLE;
         }
 
         MySQLQuery q(db);

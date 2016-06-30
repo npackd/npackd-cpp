@@ -111,7 +111,7 @@ private:
     QCache<QString, QIcon> icons;
 
     void updateDownloadSize(const QString &url);
-    _SearchResult search(Package::Status status, boolean statusInclude,
+    _SearchResult search(Package::Status minStatus, Package::Status maxStatus,
             const QString &query, int cat0, int cat1, QString *err);
 public:
     /** URL -> full path to the file or "" in case of an error */

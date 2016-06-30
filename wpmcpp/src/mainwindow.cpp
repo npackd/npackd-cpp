@@ -714,7 +714,8 @@ bool QCITableWidgetItem::operator<(const QTableWidgetItem &other) const
     return a.compare(b, Qt::CaseInsensitive) <= 0;
 }
 
-_SearchResult MainWindow::search(Package::Status status, boolean statusInclude,
+_SearchResult MainWindow::search(Package::Status minStatus,
+        Package::Status maxStatus,
         const QString& query, int cat0, int cat1, QString* err)
 {
     //DWORD start = GetTickCount();
@@ -723,20 +724,20 @@ _SearchResult MainWindow::search(Package::Status status, boolean statusInclude,
     *err = "";
 
     DBRepository* dbr = DBRepository::getDefault();
-    r.found = dbr->findPackages(status, statusInclude, query,
+    r.found = dbr->findPackages(minStatus, maxStatus, query,
             cat0, cat1, err);
 
     //DWORD search = GetTickCount();
     //qDebug() << "Only search" << (search - start) << query;
 
     if (err->isEmpty()) {
-        r.cats = dbr->findCategories(status, statusInclude, query, 0, -1, -1,
+        r.cats = dbr->findCategories(minStatus, maxStatus, query, 0, -1, -1,
                 err);
     }
 
     if (err->isEmpty()) {
         if (cat0 >= 0) {
-            r.cats1 = dbr->findCategories(status, statusInclude, query, 1,
+            r.cats1 = dbr->findCategories(minStatus, maxStatus, query, 1,
                     cat0, -1, err);
         }
     }
@@ -764,16 +765,19 @@ void MainWindow::fillList()
 
     //QSet<QString> requestedIcons;
     int statusFilter = this->mainFrame->getStatusFilter();
-    Package::Status status = Package::NOT_INSTALLED;
-    bool statusInclude = false;
+    Package::Status minStatus, maxStatus;
     switch (statusFilter) {
         case 1:
-            status = Package::INSTALLED;
-            statusInclude = true;
+            minStatus = Package::INSTALLED;
+            maxStatus = Package::UPDATEABLE;
             break;
         case 2:
-            status = Package::UPDATEABLE;
-            statusInclude = true;
+            minStatus = Package::UPDATEABLE;
+            maxStatus = Package::NOT_INSTALLED_NOT_AVAILABLE;
+            break;
+        default:
+            minStatus = Package::NOT_INSTALLED;
+            maxStatus = Package::NOT_INSTALLED_NOT_AVAILABLE;
             break;
     }
 
@@ -781,7 +785,7 @@ void MainWindow::fillList()
     int cat1 = this->mainFrame->getCategoryFilter(1);
 
     QString err;
-    _SearchResult sr = search(status, statusInclude, query, cat0, cat1, &err);
+    _SearchResult sr = search(minStatus, maxStatus, query, cat0, cat1, &err);
 
     if (err.isEmpty()) {
         this->mainFrame->setCategories(0, sr.cats);

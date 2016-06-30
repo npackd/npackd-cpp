@@ -824,7 +824,8 @@ void App::search(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01, "Searching for packages");
         QString err;
-        packageNames = rep->findPackages(Package::INSTALLED, onlyInstalled,
+        packageNames = rep->findPackages(Package::INSTALLED,
+                onlyInstalled ? Package::UPDATEABLE : Package::INSTALLED,
                 query, -1, -1, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);

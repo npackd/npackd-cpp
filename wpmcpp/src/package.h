@@ -28,8 +28,9 @@ public:
      */
     static int indexOf(const QList<Package*> pvs, Package* f);
 
-    /* status of a package */
-    enum Status {NOT_INSTALLED, INSTALLED, UPDATEABLE};
+    /* status of a package. The order of these constants is important. */
+    enum Status {NOT_INSTALLED, INSTALLED, UPDATEABLE,
+            NOT_INSTALLED_NOT_AVAILABLE};
 
     /** name of the package like "org.buggysoft.BuggyEditor" */
     QString name;

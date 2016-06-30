@@ -207,8 +207,10 @@ public:
             QString *err) const;
 
     /**
-     * @brief searches for packages that match the specified keywords
-     * @param status filter for the package status if filterByStatus is true
+     * @brief searches for packages that match the specified keywords. No filter
+     *     by the status will be applied if minStatus >= maxStatus
+     * @param minStatus filter for the package status >=
+     * @param maxStatus filter for the package status <
      * @param statusInclude true = only return packages with the given status,
      *     false = return all packages with the status not equal to the given
      * @param query search query (keywords)
@@ -219,7 +221,8 @@ public:
      * @param err error message will be stored here
      * @return found packages
      */
-    QStringList findPackages(Package::Status status, bool filterByStatus,
+    QStringList findPackages(Package::Status minStatus,
+            Package::Status maxStatus,
             const QString &query, int cat0, int cat1, QString* err) const;
 
     /**
@@ -250,10 +253,10 @@ public:
     QList<Package*> findPackagesByShortName(const QString &name);
 
     /**
-     * @brief searches for packages that match the specified keywords
-     * @param status filter for the package status if filterByStatus is true
-     * @param statusInclude true = only return packages with the given status,
-     *     false = return all packages with the status not equal to the given
+     * @brief searches for packages that match the specified keywords. No filter
+     *     for the status will be applied if minStatus >= maxStatus
+     * @param minStatus filter for the package status >=
+     * @param maxStatus filter for the package status <
      * @param query search query (keywords)
      * @param level level for the categories (0, 1, ...)
      * @param cat0 filter for the level 0 of categories. -1 means "All",
@@ -264,8 +267,9 @@ public:
      * @return categories for found packages: ID, COUNT, NAME. One category may
      *     have all values empty showing all un-categorized packages.
      */
-    QList<QStringList> findCategories(Package::Status status,
-            bool filterByStatus, const QString &query, int level, int cat0, int cat1, QString *err) const;
+    QList<QStringList> findCategories(Package::Status minStatus,
+            Package::Status maxStatus, const QString &query,
+            int level, int cat0, int cat1, QString *err) const;
 
     /**
      * @brief converts category IDs in titles
