@@ -67,6 +67,7 @@
     <addaction name="separator"/>
     <addaction name="actionShow_Details"/>
     <addaction name="actionShow_changelog"/>
+    <addaction name="actionRun"/>
     <addaction name="actionOpen_folder"/>
     <addaction name="actionGotoPackageURL"/>
     <addaction name="actionTest_Download_Site"/>
@@ -353,6 +354,17 @@
    </property>
    <property name="toolTip">
     <string>shows or hides the toolbar</string>
+   </property>
+  </action>
+  <action name="actionRun">
+   <property name="text">
+    <string>Run</string>
+   </property>
+   <property name="toolTip">
+    <string>executes the currently selected application</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
  </widget>

@@ -103,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
     t->addAction(this->ui->actionUpdate);
     t->addAction(this->ui->actionShow_Details);
     t->addAction(this->ui->actionShow_changelog);
+    t->addAction(this->ui->actionRun);
     t->addAction(this->ui->actionOpen_folder);
     t->addAction(this->ui->actionGotoPackageURL);
     t->addAction(this->ui->actionTest_Download_Site);
@@ -956,6 +957,7 @@ void MainWindow::updateActions()
     updateReloadRepositoriesAction();
     updateScanHardDrivesAction();
     updateShowFolderAction();
+    updateRunAction();
 }
 
 void MainWindow::updateInstallAction()
@@ -1257,6 +1259,59 @@ void MainWindow::updateShowChangelogAction()
     }
 
     this->ui->actionShow_changelog->setEnabled(enabled);
+}
+
+void MainWindow::updateRunAction()
+{
+    Selection* selection = Selection::findCurrent();
+
+    bool enabled = false;
+    if (selection) {
+        QList<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.count() > 0) {
+            enabled = selected.count() > 0;
+            for (int i = 0; i < selected.count(); i++) {
+                if (!enabled)
+                    break;
+
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
+
+                enabled = enabled &&
+                        pv && !pv->isLocked() &&
+                        pv->installed() &&
+                        pv->importantFiles.size() == 1;
+            }
+            // qDebug() << "MainWindow::updateUninstallAction 2:" << selected.count();
+        } else {
+            DBRepository* r = DBRepository::getDefault();
+            QList<void*> selected = selection->getSelected("Package");
+            enabled = selected.count() > 0;
+            for (int i = 0; i < selected.count(); i++) {
+                if (!enabled)
+                    break;
+
+                Package* p = static_cast<Package*>(selected.at(i));
+
+                QString err;
+                PackageVersion* pv = r->findNewestInstalledPackageVersion_(
+                        p->name, &err);
+                if (!err.isEmpty()) {
+                    err = QObject::tr("Error finding the newest installed version for %1: %2").
+                            arg(p->title).arg(err);
+                    addErrorMessage(err, err, true, QMessageBox::Critical);
+                }
+
+                enabled = enabled &&
+                        pv && !pv->isLocked() &&
+                        pv->installed() &&
+                        pv->importantFiles.size() == 1;
+
+                delete pv;
+            }
+        }
+    }
+    this->ui->actionRun->setEnabled(enabled);
 }
 
 void MainWindow::updateGotoPackageURLAction()
@@ -2158,3 +2213,56 @@ void MainWindow::on_mainToolBar_visibilityChanged(bool visible)
     this->ui->actionToggle_toolbar->setChecked(visible);
 }
 
+void MainWindow::on_actionRun_triggered()
+{
+    QString err;
+
+    QList<PackageVersion*> pvs;
+
+    if (err.isEmpty()) {
+        Selection* selection = Selection::findCurrent();
+        QList<void*> selected;
+        if (selection)
+            selected = selection->getSelected("PackageVersion");
+
+        if (selected.count() == 0) {
+            DBRepository* r = DBRepository::getDefault();
+            if (selection)
+                selected = selection->getSelected("Package");
+            for (int i = 0; i < selected.count(); i++) {
+                Package* p = static_cast<Package*>(selected.at(i));
+
+                QString err;
+                PackageVersion* pv = r->findNewestInstalledPackageVersion_(
+                        p->name, &err);
+                if (!err.isEmpty())
+                    addErrorMessage(err, err, true, QMessageBox::Critical);
+                if (pv) {
+                    pvs.append(pv);
+                }
+            }
+        } else {
+            for (int i = 0; i < selected.count(); i++) {
+                pvs.append(static_cast<PackageVersion*>(selected.at(i))->
+                        clone());
+            }
+        }
+    }
+
+    if (err.isEmpty()) {
+        for (int i = 0; i < pvs.count(); i++) {
+            PackageVersion* pv = pvs.at(i);
+            if (pv->importantFiles.size() == 1) {
+                QString impf = pv->importantFiles.at(0);
+
+                QString filename = pv->getPath() + "\\" + impf;
+
+                if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename)))
+                    addErrorMessage(QObject::tr("Cannot open the file %1").
+                            arg(filename));
+            }
+        }
+    }
+
+    qDeleteAll(pvs);
+}

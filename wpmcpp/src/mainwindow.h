@@ -93,6 +93,7 @@ private:
     void updateScanHardDrivesAction();
     void updateShowFolderAction();
     void updateShowChangelogAction();
+    void updateRunAction();
 
     /**
      * @param ps selected packages
@@ -321,6 +322,7 @@ private slots:
     void on_actionToggle_toolbar_triggered(bool checked);
     void on_mainToolBar_visibilityChanged(bool visible);
     void monitoredJobCompleted();
+    void on_actionRun_triggered();
 };
 
 #endif // MAINWINDOW_H

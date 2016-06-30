@@ -83,14 +83,14 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         }
     }
 
-    qDebug() << "saveInstalled";
+    //qDebug() << "saveInstalled";
 
     for (int i = 0; i < installed.size(); i++) {
         if (!err.isEmpty())
             break;
 
         InstalledPackageVersion* ipv = installed.at(i);
-        qDebug() << "saveInstalled" << ipv->package << ipv->version.getVersionString();
+        //qDebug() << "saveInstalled" << ipv->package << ipv->version.getVersionString();
         if (ipv->installed()) {
             insertInstalledQuery->bindValue(":PACKAGE", ipv->package);
             insertInstalledQuery->bindValue(":VERSION",
@@ -2191,7 +2191,6 @@ QString DBRepository::updateDatabase()
 
     // INSTALLED is new in 1.22
     if (err.isEmpty()) {
-        exec("DROP TABLE INSTALLED"); // TODO: remove this line
         e = tableExists(&db, "INSTALLED", &err);
     }
     if (err.isEmpty()) {

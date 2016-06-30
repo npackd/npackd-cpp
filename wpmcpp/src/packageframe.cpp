@@ -35,6 +35,7 @@ PackageFrame::PackageFrame(QWidget *parent) :
     t->addAction(mw->findChild<QAction*>("actionShow_changelog"));
     t->addAction(mw->findChild<QAction*>("actionTest_Download_Site"));
     t->addAction(mw->findChild<QAction*>("actionOpen_folder"));
+    t->addAction(mw->findChild<QAction*>("actionRun"));
 
     connect(this->ui->listWidgetScreenshots,
             SIGNAL(itemActivated(QListWidgetItem*)), this,

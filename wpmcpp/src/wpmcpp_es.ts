@@ -322,6 +322,18 @@ p, li { white-space: pre-wrap; }
         <source>shows or hides the toolbar</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>executes the currently selected application</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+R</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MessageFrame</name>
