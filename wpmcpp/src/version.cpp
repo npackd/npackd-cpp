@@ -215,6 +215,16 @@ bool Version::isNormalized() const
     return this->parts[this->nparts - 1] != 0;
 }
 
+QString Version::toComparableString() const
+{
+    QString r;
+    for (int i = 0; i < this->nparts; i++) {
+        if (i != 0)
+            r.append('.');
+        r.append(QString::number(this->parts[i]).rightJustified(10, '0'));
+    }
+    return r;
+}
 
 int Version::compare(const Version &other) const
 {

@@ -2334,6 +2334,10 @@ p, li { white-space: pre-wrap; }
         <source>More than one &lt;cmd-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clearing the table with information about installed packages</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

@@ -126,6 +126,13 @@ public:
      *     trailing zeros)
      */
     bool isNormalized() const;
+
+    /**
+     * @brief converts to a string that is comparable
+     * @return e.g. "0000000001.0000000002" for the version "1.2". All segments
+     *     will contain 10 characters.
+     */
+    QString toComparableString() const;
 };
 
 #endif // VERSION_H

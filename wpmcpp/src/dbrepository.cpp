@@ -73,8 +73,8 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         insertInstalledQuery = new MySQLQuery(db);
 
         QString insertSQL = "INSERT INTO INSTALLED "
-                "(PACKAGE, VERSION, WHEN, WHERE, DETECTION_INFO) "
-                "VALUES(:PACKAGE, :VERSION, :WHEN, :WHERE, :DETECTION_INFO)";
+                "(PACKAGE, VERSION, CVERSION, WHEN_, WHERE_, DETECTION_INFO) "
+                "VALUES(:PACKAGE, :VERSION, :CVERSION, :WHEN_, :WHERE_, :DETECTION_INFO)";
 
         if (!insertInstalledQuery->prepare(insertSQL)) {
             err = getErrorString(*insertInstalledQuery);
@@ -83,19 +83,27 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         }
     }
 
+    qDebug() << "saveInstalled";
+
     for (int i = 0; i < installed.size(); i++) {
         if (!err.isEmpty())
             break;
 
         InstalledPackageVersion* ipv = installed.at(i);
-        insertInstalledQuery->bindValue(":PACKAGE", ipv->package);
-        insertInstalledQuery->bindValue(":VERSION",
-                ipv->version.getVersionString());
-        insertInstalledQuery->bindValue(":WHEN", 0);
-        insertInstalledQuery->bindValue(":WHERE", ipv->directory);
-        insertInstalledQuery->bindValue(":DETECTION_INFO", ipv->detectionInfo);
-        if (!insertInstalledQuery->exec())
-            err = getErrorString(*insertInstalledQuery);
+        qDebug() << "saveInstalled" << ipv->package << ipv->version.getVersionString();
+        if (ipv->installed()) {
+            insertInstalledQuery->bindValue(":PACKAGE", ipv->package);
+            insertInstalledQuery->bindValue(":VERSION",
+                    ipv->version.getVersionString());
+            insertInstalledQuery->bindValue(":CVERSION",
+                    ipv->version.toComparableString());
+            insertInstalledQuery->bindValue(":WHEN_", 0);
+            insertInstalledQuery->bindValue(":WHERE_", ipv->directory);
+            insertInstalledQuery->bindValue(":DETECTION_INFO",
+                    ipv->detectionInfo);
+            if (!insertInstalledQuery->exec())
+                err = getErrorString(*insertInstalledQuery);
+        }
     }
 
     insertInstalledQuery->finish();
@@ -1283,9 +1291,21 @@ QString DBRepository::clear()
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.04,
+        Job* sub = job->newSubJob(0.02,
                 QObject::tr("Clearing the categories table"));
         QString err = exec("DELETE FROM CATEGORY");
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else {
+            sub->completeWithProgress();
+            job->setProgress(1);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.02,
+                QObject::tr("Clearing the table with information about installed packages"));
+        QString err = exec("DELETE FROM INSTALLED");
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -1471,11 +1491,19 @@ void DBRepository::updateF5(Job* job, bool interactive)
     }
 
     if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.06,
+                QObject::tr("Updating the status for installed packages in the database (tempdb)"));
+        updateStatusForInstalled(sub);
+        if (!sub->getErrorMessage().isEmpty())
+            job->setErrorMessage(sub->getErrorMessage());
+    }
+
+    if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
                 QObject::tr("Removing packages without versions"));
-        QString err = exec("DELETE FROM PACKAGE WHERE NOT EXISTS "
-                "(SELECT * FROM PACKAGE_VERSION "
-                "WHERE PACKAGE = PACKAGE.NAME)");
+        QString err = exec("DELETE FROM PACKAGE WHERE STATUS=0 AND NOT EXISTS "
+                "(SELECT 1 FROM PACKAGE_VERSION "
+                "WHERE PACKAGE = PACKAGE.NAME AND URL <>'')");
         if (err.isEmpty())
             sub->completeWithProgress();
         else
@@ -1483,11 +1511,15 @@ void DBRepository::updateF5(Job* job, bool interactive)
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.1,
-                QObject::tr("Updating the status for installed packages in the database (tempdb)"));
-        updateStatusForInstalled(sub);
-        if (!sub->getErrorMessage().isEmpty())
-            job->setErrorMessage(sub->getErrorMessage());
+        QList<InstalledPackageVersion*> installed =
+                InstalledPackages::getDefault()->getAll();
+        QString err = saveInstalled(installed);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(0.85);
+
+        qDeleteAll(installed);
     }
 
     if (job->shouldProceed()) {
@@ -2010,6 +2042,11 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
             err = exec("INSERT INTO CMD_FILE(PACKAGE, VERSION, PATH, NAME) "
                     "SELECT PACKAGE, VERSION, PATH, NAME FROM tempdb.CMD_FILE");
         if (err.isEmpty())
+            err = exec("INSERT INTO INSTALLED(PACKAGE, VERSION, CVERSION, "
+                    "WHEN_, WHERE_, DETECTION_INFO) "
+                    "SELECT PACKAGE, VERSION, CVERSION, WHEN_, WHERE_, "
+                    "DETECTION_INFO FROM tempdb.INSTALLED");
+        if (err.isEmpty())
             job->setProgress(0.90);
         else
             job->setErrorMessage(err);
@@ -2152,19 +2189,21 @@ QString DBRepository::updateDatabase()
         }
     }
 
-    // INSTALLED is new in 1.21
+    // INSTALLED is new in 1.22
     if (err.isEmpty()) {
+        exec("DROP TABLE INSTALLED"); // TODO: remove this line
         e = tableExists(&db, "INSTALLED", &err);
     }
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE INSTALLED("
-                    "PACKAGE TEXT, VERSION TEXT, WHEN INTEGER, "
-                    "WHERE TEXT, DETECTION_INFO TEXT)");
+                    "PACKAGE TEXT, VERSION TEXT, CVERSION TEXT, WHEN_ INTEGER, "
+                    "WHERE_ TEXT, DETECTION_INFO TEXT)");
             err = toString(db.lastError());
         }
     }
 
+    // PACKAGE_VERSION
     if (err.isEmpty()) {
         e = tableExists(&db, "PACKAGE_VERSION", &err);
     }

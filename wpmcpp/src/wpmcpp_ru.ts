@@ -3211,6 +3211,10 @@ p, li { white-space: pre-wrap; }
         <source>%3 package(s) will be installed:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clearing the table with information about installed packages</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
