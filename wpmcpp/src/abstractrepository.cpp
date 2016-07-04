@@ -4,6 +4,7 @@
 #include "wpmutils.h"
 #include "windowsregistry.h"
 #include "installedpackages.h"
+#include "downloader.h"
 
 QStringList AbstractRepository::getRepositoryURLs(HKEY hk, const QString& path,
         QString* err, bool* keyExists)
@@ -104,6 +105,107 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
     if (b)
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
     */
+}
+
+void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
+        const QList<PackageVersion *> &pvs, const QString& where)
+{
+    QDir d;
+
+    QThread::currentThread()->setPriority(QThread::LowestPriority);
+
+    CoInitialize(NULL);
+
+    if (job->shouldProceed()) {
+        if (!d.mkpath(where)) {
+            job->setErrorMessage(QObject::tr("Cannot create directory: %0").
+                    arg(where));
+        } else {
+            job->setProgress(0.01);
+        }
+    }
+
+    for (int i = 0; i < pvs.size(); i++) {
+        if (!job->shouldProceed())
+            break;
+
+        PackageVersion* pv = pvs.at(i);
+
+        Job* djob = job->newSubJob(0.9 / pvs.size(),
+                QObject::tr("Downloading & computing hash sum for %1").
+                arg(pv->getPackageTitle()), true, true);
+
+        QString fn = pv->download.path();
+        QStringList parts = fn.split('/');
+        fn = where + "\\" + parts.at(parts.count() - 1);
+
+        fn = WPMUtils::findNonExistingFile(fn, "");
+
+        // TODO: lock the HTTP connection?
+        pv->downloadTo(*djob, fn, true);
+
+        // TODO: the file name should always end with the right extension
+        // (e.g. .exe)
+        pv->download = QUrl::fromLocalFile(fn);
+    }
+
+    if (job->shouldProceed()) {
+        Repository* rep = new Repository();
+
+        for (int i = 0; i < pvs.size(); i++) {
+            if (!job->shouldProceed())
+                break;
+
+            PackageVersion* pv = pvs.at(i);
+            QString err = rep->savePackageVersion(pv, true);
+            if (!err.isEmpty()) {
+                job->setErrorMessage(err);
+                break;
+            }
+
+            QScopedPointer<Package> p(findPackage_(pv->package));
+            if (p) {
+                err = rep->savePackage(p.data(), false);
+                if (!err.isEmpty()) {
+                    job->setErrorMessage(err);
+                    break;
+                }
+                if (!p->license.isEmpty()) {
+                    QScopedPointer<License> lic(findLicense_(p->license, &err));
+                    if (lic) {
+                        err = rep->saveLicense(lic.data(), false);
+                        if (!err.isEmpty()) {
+                            job->setErrorMessage(err);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (job->shouldProceed()) {
+            QString xml = where + "\\Rep.xml";
+            QFile f(xml);
+            if (f.open(QFile::WriteOnly)) {
+                QXmlStreamWriter w(&f);
+                w.setAutoFormatting(true);
+                rep->toXML(w);
+                if (f.error() != QFile::NoError)
+                    job->setErrorMessage(f.errorString());
+            } else {
+                job->setErrorMessage(QObject::tr("Cannot open %1 for writing").
+                        arg(xml));
+            }
+        }
+
+        delete rep;
+    }
+
+    job->complete();
+
+    CoUninitialize();
+
+    qDeleteAll(pvs);
 }
 
 QList<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
@@ -756,7 +858,8 @@ void AbstractRepository::setRepositoryURLs(QList<QUrl*>& urls, QString* err)
                 WindowsRegistry r = wrr.createSubKey(QString("%1").arg(i + 1),
                         err, KEY_ALL_ACCESS);
                 if (err->isEmpty()) {
-                    r.set("repository", urls.at(i)->toString());
+                    r.set("repository", urls.at(i)->toString(
+                            QUrl::FullyEncoded));
                 }
             }
         }

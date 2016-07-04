@@ -73,6 +73,7 @@
     <addaction name="actionTest_Download_Site"/>
     <addaction name="actionReload_Repositories"/>
     <addaction name="actionAdd_package"/>
+    <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionScan_Hard_Drives"/>
     <addaction name="separator"/>
@@ -365,6 +366,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export...</string>
+   </property>
+   <property name="toolTip">
+    <string>exports the selected packages as a repository</string>
    </property>
   </action>
  </widget>

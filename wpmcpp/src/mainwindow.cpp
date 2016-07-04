@@ -36,6 +36,7 @@
 #include <QDockWidget>
 #include <QTreeWidget>
 #include <QtConcurrent/QtConcurrentRun>
+#include <QDialogButtonBox>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -60,6 +61,7 @@
 #include "scanharddrivesthread.h"
 #include "visiblejobs.h"
 #include "progresstree2.h"
+#include "exportrepositoryframe.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -107,6 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
     t->addAction(this->ui->actionOpen_folder);
     t->addAction(this->ui->actionGotoPackageURL);
     t->addAction(this->ui->actionTest_Download_Site);
+    t->addAction(this->ui->actionExport);
 
     t->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
     t->horizontalHeader()->addAction(this->ui->actionChoose_columns);
@@ -958,6 +961,7 @@ void MainWindow::updateActions()
     updateScanHardDrivesAction();
     updateShowFolderAction();
     updateRunAction();
+    updateExportAction();
 }
 
 void MainWindow::updateInstallAction()
@@ -1004,6 +1008,50 @@ void MainWindow::updateInstallAction()
     }
 
     this->ui->actionInstall->setEnabled(enabled);
+}
+
+void MainWindow::updateExportAction()
+{
+    Selection* selection = Selection::findCurrent();
+    bool enabled = false;
+    if (selection) {
+        QList<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.count() > 0) {
+            enabled = selected.count() > 0;
+            for (int i = 0; i < selected.count(); i++) {
+                if (!enabled)
+                    break;
+
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
+
+                enabled = enabled &&
+                        pv && !pv->isLocked() &&
+                        pv->download.isValid();
+            }
+        } else {
+            DBRepository* r = DBRepository::getDefault();
+            selected = selection->getSelected("Package");
+            enabled = selected.count() > 0;
+            for (int i = 0; i < selected.count(); i++) {
+                if (!enabled)
+                    break;
+
+                Package* p = static_cast<Package*>(selected.at(i));
+                QString err;
+                PackageVersion* pv  = r->findNewestInstallablePackageVersion_(
+                        p->name, &err);
+
+                enabled = enabled &&
+                        pv && !pv->isLocked() &&
+                        pv->download.isValid();
+
+                delete pv;
+            }
+        }
+    }
+
+    this->ui->actionExport->setEnabled(enabled);
 }
 
 void MainWindow::updateShowFolderAction()
@@ -2263,6 +2311,91 @@ void MainWindow::on_actionRun_triggered()
             }
         }
     }
+
+    qDeleteAll(pvs);
+}
+
+void MainWindow::on_actionExport_triggered()
+{
+    QString err;
+
+    QList<PackageVersion*> pvs;
+
+    if (err.isEmpty()) {
+        Selection* selection = Selection::findCurrent();
+        QList<void*> selected;
+        if (selection)
+            selected = selection->getSelected("PackageVersion");
+
+        if (selected.count() == 0) {
+            DBRepository* r = DBRepository::getDefault();
+            if (selection)
+                selected = selection->getSelected("Package");
+            for (int i = 0; i < selected.count(); i++) {
+                Package* p = static_cast<Package*>(selected.at(i));
+                PackageVersion* pv = r->findNewestInstallablePackageVersion_(
+                        p->name, &err);
+                if (!err.isEmpty())
+                    break;
+
+                if (pv)
+                    pvs.append(pv);
+            }
+        } else {
+            for (int i = 0; i < selected.count(); i++) {
+                pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
+            }
+        }
+    }
+
+    if (err.isEmpty()) {
+        QString txt;
+        for (int i = 0; i < pvs.size(); i++) {
+            PackageVersion* pv = pvs.at(i);
+            txt.append(pv->getPackageTitle());
+            txt.append(' ');
+            txt.append(pv->version.getVersionString());
+            txt.append('\n');
+        }
+
+        QDialog* d = new QDialog(this);
+        d->setWindowTitle(QObject::tr("Export"));
+        QVBoxLayout* layout = new QVBoxLayout();
+        d->setLayout(layout);
+
+        ExportRepositoryFrame* list = new ExportRepositoryFrame(d);
+        list->setPackageList(txt);
+
+        d->layout()->addWidget(list);
+
+        QDialogButtonBox* dbb = new QDialogButtonBox(QDialogButtonBox::Ok |
+                QDialogButtonBox::Cancel);
+        d->layout()->addWidget(dbb);
+        connect(dbb, SIGNAL(accepted()), d, SLOT(accept()));
+        connect(dbb, SIGNAL(rejected()), d, SLOT(reject()));
+
+        d->resize(600, 400);
+
+        if (d->exec()) {
+            err = list->getError();
+            if (err.isEmpty()) {
+                Job* job = new Job(QObject::tr("Export packages"));
+
+                monitor(job);
+
+                DBRepository* rep = DBRepository::getDefault();
+                QtConcurrent::run((AbstractRepository*)rep,
+                        &AbstractRepository::exportPackagesCoInitializeAndFree,
+                        job, pvs, list->getDirectory());
+
+                pvs.clear();
+            } else {
+                addErrorMessage(err, err, true, QMessageBox::Critical);
+            }
+        }
+        d->deleteLater();
+    } else
+        addErrorMessage(err, err, true, QMessageBox::Critical);
 
     qDeleteAll(pvs);
 }

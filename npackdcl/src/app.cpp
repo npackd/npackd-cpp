@@ -350,7 +350,7 @@ void App::listRepos(Job* job)
             QJsonObject top;
             QJsonArray repos;
             for (int i = 0; i < urls.size(); i++) {
-                repos.append(urls.at(i)->toString());
+                repos.append(urls.at(i)->toString(QUrl::FullyEncoded));
             }
             top["repositories"] = repos;
 
@@ -362,7 +362,7 @@ void App::listRepos(Job* job)
                 WPMUtils::writeln("");
             }
             for (int i = 0; i < urls.size(); i++) {
-                WPMUtils::writeln(urls.at(i)->toString());
+                WPMUtils::writeln(urls.at(i)->toString(QUrl::FullyEncoded));
             }
         }
     } else {
@@ -1869,7 +1869,7 @@ void App::info(Job* job)
                 WPMUtils::writeln("Status: " +
                         pv->getStatus());
                 WPMUtils::writeln("Download URL: " +
-                        pv->download.toString());
+                        pv->download.toString(QUrl::FullyEncoded));
             }
             WPMUtils::writeln("Package home page: " + p->url);
             WPMUtils::writeln("Change log: " + p->getChangeLog());

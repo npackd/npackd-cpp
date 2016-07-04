@@ -22,7 +22,7 @@ private:
      * @return list of repositories in the specified registry key
      */
     static QStringList getRepositoryURLs(HKEY hk, const QString &path,
-            QString *err, bool* keyExists);
+                                         QString *err, bool* keyExists);
 public:
     /**
      * @param err error message will be stored here
@@ -137,7 +137,7 @@ public:
      *     destroyed later.
      */
     PackageVersion* findNewestInstallablePackageVersion_(const QString& package,
-            QString *err) const;
+                                                         QString *err) const;
 
     /**
      * @param err error message will be stored here
@@ -163,8 +163,8 @@ public:
      * @param interactive true = allow the interaction with the user
      */
     void process(Job* job, const QList<InstallOperation*> &install,
-            DWORD programCloseType, bool printScriptOutput,
-            bool interactive=true);
+                 DWORD programCloseType, bool printScriptOutput,
+                 bool interactive=true);
 
     /**
      * Finds all installed package versions.
@@ -192,21 +192,19 @@ public:
      *     returned.
      * @param where_ where to install the new version. This parameter will only
      *     be used if only one package should be updated
-     * @param safe true = do not update packages that would lead to other
-     *     packages being completely uninstalled. Completely means here that not
-     *     even one version of the package remains installed.
      * @return error message or ""
      */
     QString planUpdates(const QList<Package*> packages,
-            QList<Dependency *> ranges,
-            QList<InstallOperation*>& ops, bool keepDirectories=false,
-            bool install=false, const QString& where_="", bool safe=false);
+                        QList<Dependency *> ranges,
+                        QList<InstallOperation*>& ops, bool keepDirectories=false,
+                        bool install=false, const QString& where_="",
+                        bool safe=false);
 
     /**
      * @brief searches for a package version by the associated MSI GUID
      * @param guid MSI package GUID
      * @param err error message will be stored here
-     * @return [ownership:caller] found package version or 0
+     * @return [ownership:new] found package version or 0
      */
     virtual PackageVersion* findPackageVersionByMSIGUID_(
             const QString& guid, QString* err) const = 0;
@@ -220,7 +218,7 @@ public:
      * @return [ownership:caller] found package version or 0
      */
     virtual PackageVersion* findPackageVersion_(const QString& package,
-            const Version& version, QString* err) const = 0;
+                                                const Version& version, QString* err) const = 0;
 
     /**
      * Searches for a license by name.
@@ -254,7 +252,7 @@ public:
      * @param programCloseType how to close running applications
      */
     void processWithCoInitializeAndFree(Job *job,
-            const QList<InstallOperation *> &install_, DWORD programCloseType);
+                                        const QList<InstallOperation *> &install_, DWORD programCloseType);
 
     /**
      * @param dep a dependency
@@ -268,7 +266,7 @@ public:
      *     first returned object has the highest version number.
      */
     QList<PackageVersion *> findAllMatchesToInstall(const Dependency& dep,
-            const QList<PackageVersion *> &avoid, QString *err);
+                                                    const QList<PackageVersion *> &avoid, QString *err);
 
     /**
      * @+^123param dep a dependency
@@ -280,8 +278,8 @@ public:
      *     being installed. Returned object should be destroyed later.
      */
     PackageVersion* findBestMatchToInstall(const Dependency& dep,
-            const QList<PackageVersion*>& avoid,
-            QString *err);
+                                           const QList<PackageVersion*>& avoid,
+                                           QString *err);
 
     /**
      * @param dep a dependency
@@ -305,6 +303,16 @@ public:
      * @return human readable representation of this dependency
      */
     QString toString(const Dependency& dep, bool includeFullPackageName=false);
+
+    /**
+     * @brief exports the specified package versions to a directory
+     * @param job job object
+     * @param pvs package versions. These objects will be freed.
+     * @param where output directory
+     */
+    void exportPackagesCoInitializeAndFree(Job *job,
+            const QList<PackageVersion *> &pvs, const QString &where);
 };
 
 #endif // ABSTRACTREPOSITORY_H
+

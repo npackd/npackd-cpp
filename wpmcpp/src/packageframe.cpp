@@ -36,6 +36,7 @@ PackageFrame::PackageFrame(QWidget *parent) :
     t->addAction(mw->findChild<QAction*>("actionTest_Download_Site"));
     t->addAction(mw->findChild<QAction*>("actionOpen_folder"));
     t->addAction(mw->findChild<QAction*>("actionRun"));
+    t->addAction(mw->findChild<QAction*>("actionExport"));
 
     connect(this->ui->listWidgetScreenshots,
             SIGNAL(itemActivated(QListWidgetItem*)), this,

@@ -130,6 +130,13 @@ public:
      */
     //QString writeTo(const QString& filename) const;
 
+    /**
+     * Stores this object as XML <repository>.
+     *
+     * @param w output
+     */
+    void toXML(QXmlStreamWriter& w) const;
+
     QList<PackageVersion*> getPackageVersions_(const QString& package,
             QString *err) const;
 

@@ -50,7 +50,8 @@ SOURCES += main.cpp \
     visiblejobs.cpp \
     progresstree2.cpp \
     downloadsizefinder.cpp \
-    clprocessor.cpp
+    clprocessor.cpp \
+    exportrepositoryframe.cpp
 HEADERS += mainwindow.h \
     packageversion.h \
     repository.h \
@@ -100,14 +101,16 @@ HEADERS += mainwindow.h \
     progresstree2.h \
     downloadsizefinder.h \
     concurrent.h \
-    stable.h
+    stable.h \
+    exportrepositoryframe.h
 FORMS += mainwindow.ui \
     packageversionform.ui \
     licenseform.ui \
     messageframe.ui \
     settingsframe.ui \
     packageframe.ui \
-    mainframe.ui
+    mainframe.ui \
+    exportrepositoryframe.ui
 TRANSLATIONS = wpmcpp_es.ts wpmcpp_ru.ts wpmcpp_fr.ts wpmcpp_de.ts
 
 # for the Windows restart manager add -lrstrmgr

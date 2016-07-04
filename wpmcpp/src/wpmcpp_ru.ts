@@ -2,6 +2,69 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>ExportRepositoryFrame</name>
+    <message>
+        <source>Frame</source>
+        <translation type="unfinished">Фрейм</translation>
+    </message>
+    <message>
+        <source>Package versions:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>a non-existing directory where a new repository will be created</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>copy the definitions of the selected packages, package versions and licenses and store them in the new repository</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>store definitions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>download the binaries for the selected package versions and store them in the new repository</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>store binaries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title of the super package:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output directory:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>list of package versions that will be exported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Repository address:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>add this address to the list of repositories in the settings dialog at the top to use the exported packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My package list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>title for the newly created super package. This package will depend on all the selected packages. Installing the super package will automatically install all the selected packages. Leave this field empty if you do not need a super package.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LicenseForm</name>
     <message>
         <source>Form</source>
@@ -334,6 +397,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+R</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>exports the selected packages as a repository</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2524,7 +2595,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open %1 for writing</source>
-        <translation type="vanished">Невозможно открыть %1 для записи</translation>
+        <translation>Невозможно открыть %1 для записи</translation>
     </message>
     <message>
         <source>Repository %1 of %2</source>
@@ -3225,6 +3296,30 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clearing the table with information about installed packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clearing the repository database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose export directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot export to an existing directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Downloading &amp; computing hash sum for %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

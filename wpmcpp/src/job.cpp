@@ -209,7 +209,7 @@ void Job::setProgress(double progress)
     }
     if (progress < this->progress) {
         qDebug() << "Job: stepping back from" << this->progress <<
-                "to" << progress << "in" << this->title;
+                "to" << progress << "in" << getFullTitle();
     }
     this->progress = progress;
     this->mutex.unlock();

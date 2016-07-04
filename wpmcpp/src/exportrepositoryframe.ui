@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ExportRepositoryFrame</class>
+ <widget class="QFrame" name="ExportRepositoryFrame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>526</width>
+    <height>508</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>524</width>
+        <height>506</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="2">
+        <widget class="QCheckBox" name="checkBoxDefinitions">
+         <property name="toolTip">
+          <string>copy the definitions of the selected packages, package versions and licenses and store them in the new repository</string>
+         </property>
+         <property name="text">
+          <string>store definitions</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLineEdit" name="lineEditDir">
+         <property name="toolTip">
+          <string>a non-existing directory where a new repository will be created</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QPushButton" name="pushButtonDir">
+         <property name="text">
+          <string>Choose...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QCheckBox" name="checkBoxBinaries">
+         <property name="toolTip">
+          <string>download the binaries for the selected package versions and store them in the new repository</string>
+         </property>
+         <property name="text">
+          <string>store binaries</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Title of the super package:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEditPackageTitle</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Output directory:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEditDir</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Repository address:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineEditRepositoryAddress</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="2" colspan="2">
+        <widget class="QLineEdit" name="lineEditRepositoryAddress">
+         <property name="toolTip">
+          <string>add this address to the list of repositories in the settings dialog at the top to use the exported packages</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2" colspan="2">
+        <widget class="QLineEdit" name="lineEditPackageTitle">
+         <property name="toolTip">
+          <string>title for the newly created super package. This package will depend on all the selected packages. Installing the super package will automatically install all the selected packages. Leave this field empty if you do not need a super package.</string>
+         </property>
+         <property name="text">
+          <string>My package list</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" colspan="3">
+        <widget class="QTextEdit" name="textEditVersions">
+         <property name="toolTip">
+          <string>list of package versions that will be exported</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Package versions:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="buddy">
+          <cstring>textEditVersions</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="6" column="0" colspan="4">
+        <widget class="QLabel" name="labelMessage">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 0, 0);</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>textEditVersions</tabstop>
+  <tabstop>lineEditDir</tabstop>
+  <tabstop>pushButtonDir</tabstop>
+  <tabstop>checkBoxDefinitions</tabstop>
+  <tabstop>checkBoxBinaries</tabstop>
+  <tabstop>lineEditPackageTitle</tabstop>
+  <tabstop>lineEditRepositoryAddress</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

@@ -217,6 +217,28 @@ Package *Repository::findPackage_(const QString &name)
     return p;
 }
 
+void Repository::toXML(QXmlStreamWriter &w) const
+{
+    w.writeStartElement("repository");
+
+    for (int i = 0; i < this->licenses.size(); i++) {
+        License* lic = this->licenses.at(i);
+        lic->toXML(w);
+    }
+
+    for (int i = 0; i < this->packages.size(); i++) {
+        Package* p = this->packages.at(i);
+        p->toXML(&w);
+    }
+
+    for (int i = 0; i < this->packageVersions.size(); i++) {
+        PackageVersion* pv = this->packageVersions.at(i);
+        pv->toXML(&w);
+    }
+
+    w.writeEndElement();
+}
+
 QString Repository::saveLicense(License *p, bool replace)
 {
     License* fp = findLicense(p->name);

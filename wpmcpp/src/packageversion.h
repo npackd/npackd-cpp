@@ -486,6 +486,15 @@ public:
      * @return the file name without the path
      */
     QString getCmdFileName(int index);
+
+    /**
+     * @brief downloads the binary to the specified location validating the
+     *    checksum
+     * @param job job object
+     * @param filename target file name
+     * @param interactive true = interactive
+     */
+    void downloadTo(Job &job, const QString &filename, bool interactive);
 };
 
 Q_DECLARE_METATYPE(PackageVersion);

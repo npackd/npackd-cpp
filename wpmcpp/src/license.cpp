@@ -14,36 +14,13 @@ License *License::clone() const
     return r;
 }
 
-/*
-License* Repository::createLicense(QDomElement* e, QString* error)
+void License::toXML(QXmlStreamWriter &w) const
 {
-    License* a = 0;
-    *error = "";
-
-    QString name = e->attribute("name");
-    *error = WPMUtils::validateFullPackageName(name);
-    if (!error->isEmpty()) {
-        error->prepend(QObject::tr("Error in attribute 'name' in <package>: "));
-    }
-
-    if (error->isEmpty()) {
-        a = new License(name, name);
-        QDomNodeList nl = e->elementsByTagName("title");
-        if (nl.count() != 0)
-            a->title = nl.at(0).firstChild().nodeValue();
-        nl = e->elementsByTagName("url");
-        if (nl.count() != 0)
-            a->url = nl.at(0).firstChild().nodeValue();
-        nl = e->elementsByTagName("description");
-        if (nl.count() != 0)
-            a->description = nl.at(0).firstChild().nodeValue();
-    }
-
-    if (!error->isEmpty()) {
-        delete a;
-        a = 0;
-    }
-
-    return a;
+    w.writeStartElement("license");
+    w.writeAttribute("name", this->name);
+    if (!title.isEmpty())
+        w.writeTextElement("title", this->title);
+    if (!this->url.isEmpty())
+        w.writeTextElement("url", this->url);
+    w.writeEndElement();
 }
- */

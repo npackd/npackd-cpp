@@ -1,7 +1,8 @@
 #ifndef LICENSE_H
 #define LICENSE_H
 
-#include "qstring.h"
+#include <QString>
+#include <QXmlStreamWriter>
 
 /**
  * License description.
@@ -34,6 +35,13 @@ public:
      * @return [ownership:caller] copy
      */
     License* clone() const;
+
+    /**
+     * Stores this object as XML <license>.
+     *
+     * @param w output
+     */
+    void toXML(QXmlStreamWriter& w) const;
 };
 
 #endif // LICENSE_H

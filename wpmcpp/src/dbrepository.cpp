@@ -1236,7 +1236,7 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
 
 QString DBRepository::clear()
 {
-    Job* job = new Job();
+    Job* job = new Job(QObject::tr("Clearing the repository database"));
 
     this->categories.clear();
 
@@ -1298,7 +1298,6 @@ QString DBRepository::clear()
             job->setErrorMessage(err);
         else {
             sub->completeWithProgress();
-            job->setProgress(1);
         }
     }
 
@@ -1310,7 +1309,6 @@ QString DBRepository::clear()
             job->setErrorMessage(err);
         else {
             sub->completeWithProgress();
-            job->setProgress(1);
         }
     }
 
@@ -1328,7 +1326,7 @@ void DBRepository::load(Job* job, bool useCache, bool interactive)
     if (urls.count() > 0) {
         QStringList reps;
         for (int i = 0; i < urls.size(); i++) {
-            reps.append(urls.at(i)->toString());
+            reps.append(urls.at(i)->toString(QUrl::FullyEncoded));
         }
 
         err = saveRepositories(reps);

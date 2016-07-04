@@ -94,6 +94,7 @@ private:
     void updateShowFolderAction();
     void updateShowChangelogAction();
     void updateRunAction();
+    void updateExportAction();
 
     /**
      * @param ps selected packages
@@ -113,7 +114,7 @@ private:
 
     void updateDownloadSize(const QString &url);
     _SearchResult search(Package::Status minStatus, Package::Status maxStatus,
-            const QString &query, int cat0, int cat1, QString *err);
+                         const QString &query, int cat0, int cat1, QString *err);
 public:
     /** URL -> full path to the file or "" in case of an error */
     QMap<QString, QString> downloadCache;
@@ -323,6 +324,7 @@ private slots:
     void on_mainToolBar_visibilityChanged(bool visible);
     void monitoredJobCompleted();
     void on_actionRun_triggered();
+    void on_actionExport_triggered();
 };
 
 #endif // MAINWINDOW_H

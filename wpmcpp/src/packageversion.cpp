@@ -849,6 +849,72 @@ QString PackageVersion::getFileExtension()
     }
 }
 
+void PackageVersion::downloadTo(Job& job, const QString& filename, bool interactive)
+{
+    QFile* f = new QFile(filename);
+
+    bool downloadOK = false;
+    QString dsha1;
+
+    if (!job.isCancelled() && job.getErrorMessage().isEmpty()) {
+        if (!f->open(QIODevice::ReadWrite)) {
+            job.setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
+                    arg(f->fileName()));
+        } else {
+            Job* djob = job.newSubJob(0.8,
+                    QObject::tr("Downloading & computing hash sum"));
+
+            Downloader::Request request(this->download);
+            request.file = f;
+            if (!this->sha1.isEmpty())
+                request.hashSum = true;
+            request.alg = this->hashSumType;
+            request.interactive = interactive;
+            Downloader::Response response = Downloader::download(djob, request);
+            dsha1 = response.hashSum;
+            downloadOK = !djob->isCancelled() &&
+                    djob->getErrorMessage().isEmpty();
+            f->close();
+        }
+    }
+
+    if (!job.isCancelled() && job.getErrorMessage().isEmpty()) {
+        if (!downloadOK) {
+            if (!f->open(QIODevice::ReadWrite)) {
+                job.setErrorMessage(QObject::tr("Cannot open the file: %0").
+                        arg(f->fileName()));
+            } else {
+                double rest = 0.9 - job.getProgress();
+                Job* djob = job.newSubJob(rest,
+                        QObject::tr("Downloading & computing hash sum (2nd try)"));
+                Downloader::Request request(this->download);
+                request.file = f;
+                if (!this->sha1.isEmpty())
+                    request.hashSum = true;
+                request.alg = this->hashSumType;
+                request.interactive = interactive;
+                Downloader::Response response =
+                        Downloader::download(djob, request);
+                dsha1 = response.hashSum;
+                if (!djob->getErrorMessage().isEmpty())
+                    job.setErrorMessage(QObject::tr("Error downloading %1: %2").
+                        arg(this->download.toString()).arg(
+                        djob->getErrorMessage()));
+                f->close();
+            }
+        } else {
+            job.setProgress(0.9);
+        }
+    }
+
+    delete f;
+
+    if (job.shouldProceed())
+        job.setProgress(1);
+
+    job.complete();
+}
+
 QString PackageVersion::downloadAndComputeSHA1(Job* job)
 {
     if (!this->download.isValid()) {
@@ -1402,9 +1468,6 @@ QString PackageVersion::download_(Job* job, const QString& where,
         }
     }
 
-    if (httpConnectionAcquired)
-        httpConnections.release();
-
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!downloadOK) {
             if (!f->open(QIODevice::ReadWrite)) {
@@ -1433,6 +1496,9 @@ QString PackageVersion::download_(Job* job, const QString& where,
             job->setProgress(0.9);
         }
     }
+
+    if (httpConnectionAcquired)
+        httpConnections.release();
 
     if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
         if (!this->sha1.isEmpty()) {
@@ -1954,7 +2020,8 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeEndElement();
     }
     if (this->download.isValid()) {
-        w->writeTextElement("url", this->download.toString());
+        w->writeTextElement("url", this->download.toString(
+                QUrl::FullyEncoded));
     }
     if (!this->sha1.isEmpty()) {
         if (this->hashSumType == QCryptographicHash::Sha1)
@@ -2024,7 +2091,7 @@ void PackageVersion::toJSON(QJsonObject& w) const
     }
 
     if (this->download.isValid()) {
-        w["url"] = this->download.toString();
+        w["url"] = this->download.toString(QUrl::FullyEncoded);
     }
     if (!this->sha1.isEmpty()) {
         if (this->hashSumType == QCryptographicHash::Sha1)
