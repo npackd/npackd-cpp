@@ -2349,22 +2349,12 @@ void MainWindow::on_actionExport_triggered()
     }
 
     if (err.isEmpty()) {
-        QString txt;
-        for (int i = 0; i < pvs.size(); i++) {
-            PackageVersion* pv = pvs.at(i);
-            txt.append(pv->getPackageTitle());
-            txt.append(' ');
-            txt.append(pv->version.getVersionString());
-            txt.append('\n');
-        }
-
         QDialog* d = new QDialog(this);
         d->setWindowTitle(QObject::tr("Export"));
         QVBoxLayout* layout = new QVBoxLayout();
         d->setLayout(layout);
 
         ExportRepositoryFrame* list = new ExportRepositoryFrame(d);
-        list->setPackageList(txt);
 
         d->layout()->addWidget(list);
 
@@ -2374,7 +2364,7 @@ void MainWindow::on_actionExport_triggered()
         connect(dbb, SIGNAL(accepted()), d, SLOT(accept()));
         connect(dbb, SIGNAL(rejected()), d, SLOT(reject()));
 
-        d->resize(600, 400);
+        d->resize(600, 300);
 
         if (d->exec()) {
             err = list->getError();
@@ -2386,7 +2376,8 @@ void MainWindow::on_actionExport_triggered()
                 DBRepository* rep = DBRepository::getDefault();
                 QtConcurrent::run((AbstractRepository*)rep,
                         &AbstractRepository::exportPackagesCoInitializeAndFree,
-                        job, pvs, list->getDirectory());
+                        job, pvs, list->getDirectory(),
+                        list->getExportDefinitions());
 
                 pvs.clear();
             } else {

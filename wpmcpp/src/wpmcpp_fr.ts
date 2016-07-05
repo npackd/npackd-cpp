@@ -8,10 +8,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Package versions:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Choose...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20,47 +16,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>copy the definitions of the selected packages, package versions and licenses and store them in the new repository</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>store definitions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>download the binaries for the selected package versions and store them in the new repository</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>store binaries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Title of the super package:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Output directory:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>list of package versions that will be exported</source>
+        <source>What should be exported:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Repository address:</source>
+        <source>only the super package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>add this address to the list of repositories in the settings dialog at the top to use the exported packages</source>
+        <source>only the selected packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>My package list</source>
+        <source>super package and selected packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>title for the newly created super package. This package will depend on all the selected packages. Installing the super package will automatically install all the selected packages. Leave this field empty if you do not need a super package.</source>
+        <source>super package, selected packages and binaries</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3230,6 +3206,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Downloading &amp; computing hash sum for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>List of packages</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

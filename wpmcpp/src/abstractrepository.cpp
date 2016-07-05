@@ -108,7 +108,8 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
 }
 
 void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
-        const QList<PackageVersion *> &pvs, const QString& where)
+        const QList<PackageVersion *> &pvs, const QString& where,
+        int def)
 {
     QDir d;
 
@@ -125,58 +126,79 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
         }
     }
 
-    for (int i = 0; i < pvs.size(); i++) {
-        if (!job->shouldProceed())
-            break;
-
-        PackageVersion* pv = pvs.at(i);
-
-        Job* djob = job->newSubJob(0.9 / pvs.size(),
-                QObject::tr("Downloading & computing hash sum for %1").
-                arg(pv->getPackageTitle()), true, true);
-
-        QString fn = pv->download.path();
-        QStringList parts = fn.split('/');
-        fn = where + "\\" + parts.at(parts.count() - 1);
-
-        fn = WPMUtils::findNonExistingFile(fn, "");
-
-        // TODO: lock the HTTP connection?
-        pv->downloadTo(*djob, fn, true);
-
-        // TODO: the file name should always end with the right extension
-        // (e.g. .exe)
-        pv->download = QUrl::fromLocalFile(fn);
-    }
-
-    if (job->shouldProceed()) {
-        Repository* rep = new Repository();
-
+    if (def == 3) {
         for (int i = 0; i < pvs.size(); i++) {
             if (!job->shouldProceed())
                 break;
 
             PackageVersion* pv = pvs.at(i);
-            QString err = rep->savePackageVersion(pv, true);
-            if (!err.isEmpty()) {
-                job->setErrorMessage(err);
-                break;
-            }
 
-            QScopedPointer<Package> p(findPackage_(pv->package));
-            if (p) {
-                err = rep->savePackage(p.data(), false);
+            Job* djob = job->newSubJob(0.9 / pvs.size(),
+                    QObject::tr("Downloading & computing hash sum for %1").
+                    arg(pv->getPackageTitle()), true, true);
+
+            QString fn = pv->download.path();
+            QStringList parts = fn.split('/');
+            fn = where + "\\" + parts.at(parts.count() - 1);
+
+            fn = WPMUtils::findNonExistingFile(fn, "");
+
+            // TODO: lock the HTTP connection?
+            pv->downloadTo(*djob, fn, true);
+
+            // TODO: the file name should always end with the right extension
+            // (e.g. .exe)
+            pv->download = QUrl::fromLocalFile(fn);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        Repository* rep = new Repository();
+
+        if (def == 0 || def == 2 || def == 3) {
+            QScopedPointer<Package> super(new Package("localhost.super",
+                    QObject::tr("List of packages")));
+            rep->savePackage(super.data(), true);
+
+            QScopedPointer<PackageVersion> superv(
+                    new PackageVersion("localhost.super"));
+            for (int i = 0; i < pvs.size(); i++) {
+                PackageVersion* pv = pvs.at(i);
+                Dependency* d = new Dependency();
+                d->package = pv->package;
+                d->setVersions("[0,2000000000)");
+                superv.data()->dependencies.append(d);
+            }
+            rep->savePackageVersion(superv.data(), true);
+        }
+
+        if (def == 1 || def == 2 || def == 3) {
+            for (int i = 0; i < pvs.size(); i++) {
+                if (!job->shouldProceed())
+                    break;
+
+                PackageVersion* pv = pvs.at(i);
+                QString err = rep->savePackageVersion(pv, true);
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);
                     break;
                 }
-                if (!p->license.isEmpty()) {
-                    QScopedPointer<License> lic(findLicense_(p->license, &err));
-                    if (lic) {
-                        err = rep->saveLicense(lic.data(), false);
-                        if (!err.isEmpty()) {
-                            job->setErrorMessage(err);
-                            break;
+
+                QScopedPointer<Package> p(findPackage_(pv->package));
+                if (p) {
+                    err = rep->savePackage(p.data(), false);
+                    if (!err.isEmpty()) {
+                        job->setErrorMessage(err);
+                        break;
+                    }
+                    if (!p->license.isEmpty()) {
+                        QScopedPointer<License> lic(findLicense_(p->license, &err));
+                        if (lic) {
+                            err = rep->saveLicense(lic.data(), false);
+                            if (!err.isEmpty()) {
+                                job->setErrorMessage(err);
+                                break;
+                            }
                         }
                     }
                 }

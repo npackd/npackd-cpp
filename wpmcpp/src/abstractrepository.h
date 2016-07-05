@@ -309,9 +309,10 @@ public:
      * @param job job object
      * @param pvs package versions. These objects will be freed.
      * @param where output directory
+     * @param def what should be exported: 0..3
      */
     void exportPackagesCoInitializeAndFree(Job *job,
-            const QList<PackageVersion *> &pvs, const QString &where);
+            const QList<PackageVersion *> &pvs, const QString &where, int def);
 };
 
 #endif // ABSTRACTREPOSITORY_H

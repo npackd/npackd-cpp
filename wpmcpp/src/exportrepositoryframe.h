@@ -16,11 +16,6 @@ public:
     ~ExportRepositoryFrame();
 
     /**
-     * @param txt new text for the list of packages
-     */
-    void setPackageList(const QString& txt);
-
-    /**
      * @return error message or ""
      */
     QString getError() const;
@@ -29,6 +24,11 @@ public:
      * @return chosen directory
      */
     QString getDirectory() const;
+
+    /**
+     * @return 0..3
+     */
+    int getExportDefinitions() const;
 private slots:
     void on_pushButtonDir_clicked();
     void on_lineEditDir_textChanged(const QString &arg1);

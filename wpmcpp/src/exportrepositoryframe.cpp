@@ -21,11 +21,6 @@ ExportRepositoryFrame::~ExportRepositoryFrame()
     delete ui;
 }
 
-void ExportRepositoryFrame::setPackageList(const QString &txt)
-{
-    ui->textEditVersions->setText(txt);
-}
-
 QString ExportRepositoryFrame::getError() const
 {
     return ui->labelMessage->text();
@@ -34,6 +29,18 @@ QString ExportRepositoryFrame::getError() const
 QString ExportRepositoryFrame::getDirectory() const
 {
     return ui->lineEditDir->text();
+}
+
+int ExportRepositoryFrame::getExportDefinitions() const
+{
+    if (ui->radioButtonSuper->isChecked())
+        return 0;
+    else if (ui->radioButtonDependencies->isChecked())
+        return 1;
+    else if (ui->radioButtonSuperAndDependencies->isChecked())
+        return 2;
+    else
+        return 3;
 }
 
 void ExportRepositoryFrame::on_pushButtonDir_clicked()
@@ -47,8 +54,6 @@ void ExportRepositoryFrame::on_pushButtonDir_clicked()
 
 void ExportRepositoryFrame::on_lineEditDir_textChanged(const QString &arg1)
 {
-    ui->lineEditRepositoryAddress->setText(
-                QUrl::fromLocalFile(arg1 + "\\Rep.xml").toString());
     validate();
 }
 
