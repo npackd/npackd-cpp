@@ -865,6 +865,17 @@ QString WPMUtils::getClassName(HWND w)
     return r;
 }
 
+QString WPMUtils::getHostName()
+{
+    char hostname[1024];
+    hostname[1023] = '\0';
+    if (gethostname(hostname, 1023) == 0) {
+        return QString::fromLatin1(hostname);
+    } else {
+        return "localhost";
+    }
+}
+
 void WPMUtils::closeProcessWindows(HANDLE process,
         const QList<HWND>& processWindows)
 {

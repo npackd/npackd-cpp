@@ -89,10 +89,10 @@ int RepositoryXMLHandler::findWhere()
     return r;
 }
 
-RepositoryXMLHandler::RepositoryXMLHandler(AbstractRepository *rep) :
-        lic(0), p(0), pv(0), pvf(0), dep(0), df(0)
+RepositoryXMLHandler::RepositoryXMLHandler(AbstractRepository *rep,
+        const QUrl &url) :
+        rep(rep), lic(0), p(0), pv(0), pvf(0), dep(0), df(0), url(url)
 {
-    this->rep = rep;
 }
 
 RepositoryXMLHandler::~RepositoryXMLHandler()
@@ -292,11 +292,25 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_VERSION_URL) {
         QString url = chars.trimmed();
         if (!url.isEmpty()) {
-            if (Package::isValidURL(url))
-                pv->download.setUrl(url);
-            else
+            QUrl u(url);
+            if (!u.isValid())
                 error = QObject::tr("Not a valid download URL for %1: %2").
                         arg(pv->package).arg(url);
+            else if (u.isRelative()) {
+                if (this->url.isEmpty())
+                    error = QObject::tr("Relative URLs are not allowed for %1: %2").
+                            arg(pv->package).arg(url);
+                else
+                    pv->download = this->url.resolved(u);
+            } else {
+                if (u.scheme() == "http" || u.scheme() == "https" ||
+                    u.scheme() == "file") {
+                    pv->download = u;
+                } else {
+                    error = QObject::tr("Not a valid download URL for %1: %2").
+                            arg(pv->package).arg(url);
+                }
+            }
         }
     } else if (where == TAG_VERSION_SHA1) {
         pv->sha1 = chars.trimmed().toLower();

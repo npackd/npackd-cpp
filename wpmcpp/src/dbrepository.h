@@ -100,7 +100,14 @@ private:
      */
     void load(Job *job, bool useCache, bool interactive);
 
-    void loadOne(Job *job, QFile *f);
+    /**
+     * @brief loadOne
+     * @param job
+     * @param f
+     * @param url URL of the repository. This value will be used for resolving
+     *     relative URLs.
+     */
+    void loadOne(Job *job, QFile *f, const QUrl &url);
 
     int count(const QString &sql, QString *err);
     QString getRepositorySHA1(const QString &url, QString *err);

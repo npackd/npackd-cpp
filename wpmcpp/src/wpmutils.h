@@ -674,6 +674,11 @@ public:
      * @return class name
      */
     static QString getClassName(HWND w);
+
+    /**
+     * @return computer name
+     */
+    static QString getHostName();
 };
 
 #endif // WPMUTILS_H

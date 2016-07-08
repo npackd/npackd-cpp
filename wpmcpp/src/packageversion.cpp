@@ -1967,7 +1967,7 @@ PackageVersion *PackageVersion::parse(const QByteArray &xml, QString *err, bool 
     PackageVersion* r = 0;
 
     Repository rep;
-    RepositoryXMLHandler handler(&rep);
+    RepositoryXMLHandler handler(&rep, QUrl());
     QXmlSimpleReader reader;
     reader.setContentHandler(&handler);
     reader.setErrorHandler(&handler);

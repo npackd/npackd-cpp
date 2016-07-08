@@ -3298,6 +3298,10 @@ p, li { white-space: pre-wrap; }
         <source>List of packages</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Relative URLs are not allowed for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

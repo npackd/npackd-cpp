@@ -1366,7 +1366,7 @@ void DBRepository::load(Job* job, bool useCache, bool interactive)
                     arg(urls.count()));
             this->currentRepository = i;
             // this is currently unnecessary clearRepository(i);
-            loadOne(s, tf);
+            loadOne(s, tf, *urls.at(i));
             if (!s->getErrorMessage().isEmpty()) {
                 job->setErrorMessage(QString(
                         QObject::tr("Error loading the repository %1: %2")).arg(
@@ -1396,7 +1396,7 @@ void DBRepository::load(Job* job, bool useCache, bool interactive)
     job->complete();
 }
 
-void DBRepository::loadOne(Job* job, QFile* f) {
+void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
     QTemporaryDir* dir = 0;
     if (job->shouldProceed()) {
         if (f->open(QFile::ReadOnly) &&
@@ -1429,7 +1429,7 @@ void DBRepository::loadOne(Job* job, QFile* f) {
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.9, QObject::tr("Parsing XML"));
-        RepositoryXMLHandler handler(this);
+        RepositoryXMLHandler handler(this, url);
         QXmlSimpleReader reader;
         reader.setContentHandler(&handler);
         reader.setErrorHandler(&handler);

@@ -59,14 +59,18 @@ class RepositoryXMLHandler: public QXmlDefaultHandler
     QString error;
     QStringList tags;
 
+    QUrl url;
+
     int findWhere();
 public:
     /**
      * -
      *
      * @param rep [owner:caller] data will be stored here
+     * @param url this value will be used for resolving relative URLs. This can
+     *     be an empty URL. In this case relative URLs are not allowed.
      */
-    RepositoryXMLHandler(AbstractRepository* rep);
+    RepositoryXMLHandler(AbstractRepository* rep, const QUrl& url);
 
     virtual ~RepositoryXMLHandler();
 
