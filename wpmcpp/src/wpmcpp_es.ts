@@ -3302,6 +3302,14 @@ p, li { white-space: pre-wrap; }
         <source>Relative URLs are not allowed for %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Python</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>programming language</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

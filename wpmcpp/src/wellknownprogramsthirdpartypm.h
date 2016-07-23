@@ -39,6 +39,9 @@ class WellKnownProgramsThirdPartyPM: public AbstractThirdPartyPM
     void detectJDK(QList<InstalledPackageVersion *> *installed,
             Repository *rep, bool w64bit) const;
 
+    void detectPython(QList<InstalledPackageVersion *> *installed,
+            Repository *rep, bool w64bit) const;
+
     /**
      * @brief detects MSI
      * @param installed information about installed packages will be stored here

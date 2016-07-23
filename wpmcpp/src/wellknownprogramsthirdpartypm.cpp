@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "wellknownprogramsthirdpartypm.h"
 #include "wpmutils.h"
 
@@ -264,6 +266,67 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
     }
 }
 
+void WellKnownProgramsThirdPartyPM::detectPython(
+        QList<InstalledPackageVersion *> *installed, Repository *rep,
+        bool w64bit) const
+{
+    if (w64bit && !WPMUtils::is64BitWindows())
+        return;
+
+    QString package = w64bit ? "org.python.Python64" :
+            "org.python.Python";
+
+    QScopedPointer<Package> p(new Package(package, w64bit ? "Python 64 bit" :
+            QObject::tr("Python")));
+    p->description = QObject::tr("programming language");
+    p->url = "http://www.python.org";
+    rep->savePackage(p.data(), true);
+
+    WindowsRegistry pythonWR;
+    QString err = pythonWR.open(HKEY_LOCAL_MACHINE,
+            "Software\\Python\\PythonCore", !w64bit, KEY_READ);
+    if (err.isEmpty()) {
+        QStringList entries = pythonWR.list(&err);
+        for (int i = 0; i < entries.count(); i++) {
+            QString v_ = entries.at(i);
+
+            if (v_.endsWith("-32")) {
+                if (w64bit)
+                    continue;
+
+                v_.chop(3);
+            }
+
+            Version v;
+            if (!v.setVersion(v_))
+                continue;
+
+            WindowsRegistry wr;
+            err = wr.open(pythonWR, entries.at(i) + "\\InstallPath", KEY_READ);
+            if (!err.isEmpty())
+                continue;
+
+            QString path = wr.get("", &err);
+            if (!err.isEmpty())
+                continue;
+
+            if (path.trimmed().isEmpty())
+                continue;
+
+            QDir d(path);
+            if (!d.exists())
+                continue;
+
+            QScopedPointer<PackageVersion> pv(new PackageVersion(package, v));
+            rep->savePackageVersion(pv.data(), true);
+
+            qDebug() << package << v_ << path;
+
+            installed->append(new InstalledPackageVersion(package, v, path));
+        }
+    }
+}
+
 void WellKnownProgramsThirdPartyPM::detectJDK(
         QList<InstalledPackageVersion *> *installed, Repository *rep,
         bool w64bit) const
@@ -375,6 +438,14 @@ void WellKnownProgramsThirdPartyPM::scan(Job* job,
     if (job->shouldProceed()) {
         if (WPMUtils::is64BitWindows())
             detectJRE(installed, rep, true);
+    }
+
+    if (job->shouldProceed())
+        detectPython(installed, rep, false);
+
+    if (job->shouldProceed()) {
+        if (WPMUtils::is64BitWindows())
+            detectPython(installed, rep, true);
     }
 
     if (job->shouldProceed())
