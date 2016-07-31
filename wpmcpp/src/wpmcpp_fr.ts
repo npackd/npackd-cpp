@@ -3224,6 +3224,10 @@ p, li { white-space: pre-wrap; }
         <source>programming language</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Detecting %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

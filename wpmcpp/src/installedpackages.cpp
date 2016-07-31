@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <QDebug>
+#include <QtConcurrent/QtConcurrent>
 
 #include "windowsregistry.h"
 #include "package.h"
@@ -593,22 +594,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
 
     // no direct usage of "data" here => no mutex
 
-    /* Example:
-0 :  0  ms
-1 :  0  ms
-2 :  143  ms
-3 :  31  ms
-4 :  5  ms
-5 :  199  ms
-6 :  3365  ms
-7 :  378  ms
-8 :  644  ms
-     */
-    HRTimer timer(9);
-    timer.time(0);
-
-    // qDebug() << "InstalledPackages::refresh.0";
-
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.2,
                 QObject::tr("Detecting directories deleted externally"));
@@ -632,8 +617,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
         sub->completeWithProgress();
     }
 
-    timer.time(1);
-
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.6,
                 QObject::tr("Reading registry package database"));
@@ -642,8 +625,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
             job->setErrorMessage(err);
         sub->completeWithProgress();
     }
-
-    timer.time(2);
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.02,
@@ -670,16 +651,76 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     // adding well-known packages should happen before adding packages
     // determined from the list of installed packages to get better
     // package descriptions for com.microsoft.Windows64 and similar packages
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.03,
-                QObject::tr("Adding well-known packages"), true, true);
-        AbstractThirdPartyPM* pm = new WellKnownProgramsThirdPartyPM(
-                InstalledPackages::packageName);
-        detect3rdParty(sub, rep, pm, false);
-        delete pm;
-    }
 
-    timer.time(3);
+    // detecting from the list of installed packages should happen first
+    // as all other packages consult the list of installed packages. Secondly,
+    // MSI or the programs from the control panel may be installed in strange
+    // locations like "C:\" which "uninstalls" all packages installed by Npackd
+
+    // MSI package detection should happen before the detection for
+    // control panel programs
+    if (job->shouldProceed()) {
+        QList<AbstractThirdPartyPM*> tpms;
+        tpms.append(new WellKnownProgramsThirdPartyPM(
+                InstalledPackages::packageName));
+        tpms.append(new InstalledPackagesThirdPartyPM());
+        tpms.append(new MSIThirdPartyPM()); // true, msi:
+        tpms.append(new ControlPanelThirdPartyPM()); // true, control-panel:
+
+        QStringList jobTitles;
+        jobTitles.append(QObject::tr("Adding well-known packages"));
+        jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
+        jobTitles.append(QObject::tr("Detecting MSI packages"));
+        jobTitles.append(QObject::tr("Detecting software control panel packages"));
+
+        QStringList prefixes;
+        prefixes.append("");
+        prefixes.append("");
+        prefixes.append("msi:");
+        prefixes.append("control-panel:");
+
+        QList<Repository*> repositories;
+        QList<QList<InstalledPackageVersion*>* > installeds;
+        for (int i = 0; i < tpms.count(); i++) {
+            repositories.append(new Repository());
+            installeds.append(new QList<InstalledPackageVersion*>());
+        }
+
+        QList<QFuture<void> > futures;
+        for (int i = 0; i < tpms.count(); i++) {
+            AbstractThirdPartyPM* tpm = tpms.at(i);
+            Job* s = job->newSubJob(0.1,
+                    jobTitles.at(i), false, true);
+
+            QFuture<void> future = QtConcurrent::run(
+                    tpm,
+                    &AbstractThirdPartyPM::scan, s,
+                    installeds.at(i), repositories.at(i));
+            futures.append(future);
+        }
+
+        for (int i = 0; i < futures.count(); i++) {
+            futures[i].waitForFinished();
+
+            job->setProgress(0.82 + (i + 1.0) / futures.count() * 0.05);
+        }
+
+
+        for (int i = 0; i < futures.count(); i++) {
+            Job* sub = job->newSubJob(0.1,
+                    QObject::tr("Detecting %1").arg(i), false, true);
+            detect3rdParty(sub, rep, repositories.at(i),
+                    *installeds.at(i),
+                    i == 2 || i == 3,
+                    prefixes.at(i));
+
+            job->setProgress(0.87 + (i + 1.0) / futures.count() * 0.05);
+        }
+
+        qDeleteAll(repositories);
+        qDeleteAll(installeds);
+        qDeleteAll(tpms);
+    }
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.02,
@@ -690,26 +731,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
         else
             sub->completeWithProgress();
     }
-
-    timer.time(4);
-
-    // qDebug() << "InstalledPackages::refresh.2";
-
-    // detecting from the list of installed packages should happen first
-    // as all other packages consult the list of installed packages. Secondly,
-    // MSI or the programs from the control panel may be installed in strange
-    // locations like "C:\" which "uninstalls" all packages installed by Npackd
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.01,
-                QObject::tr("Reading the list of packages installed by Npackd"),
-                true, true);
-
-        AbstractThirdPartyPM* pm = new InstalledPackagesThirdPartyPM();
-        detect3rdParty(sub, rep, pm, false);
-        delete pm;
-    }
-
-     // qDebug() << "InstalledPackages::refresh.2.1";
 
 /*
  * use DISM API instead
@@ -724,40 +745,10 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     }
  */
 
-    timer.time(5);
+    // TODO: if (detectMSI) {
 
     if (job->shouldProceed()) {
-        if (detectMSI) {
-            Job* sub = job->newSubJob(0.05,
-                    QObject::tr("Detecting MSI packages"), true, true);
-            // MSI package detection should happen before the detection for
-            // control panel programs
-            AbstractThirdPartyPM* pm = new MSIThirdPartyPM();
-            detect3rdParty(sub, rep, pm, true, "msi:");
-            delete pm;
-        } else {
-            job->setProgress(job->getProgress() + 0.05);
-        }
-    }
-
-    timer.time(6);
-
-    // qDebug() << "InstalledPackages::refresh.3";
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.02,
-                QObject::tr("Detecting software control panel packages"),
-                true, true);
-
-        AbstractThirdPartyPM* pm = new ControlPanelThirdPartyPM();
-        detect3rdParty(sub, rep, pm, true, "control-panel:");
-        delete pm;
-    }
-
-    timer.time(7);
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.05,
+        Job* sub = job->newSubJob(0.06,
                 QObject::tr("Clearing information about installed package versions in nested directories"));
         QString err = clearPackagesInNestedDirectories();
         if (!err.isEmpty())
@@ -767,12 +758,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
             job->setProgress(1);
         }
     }
-
-    timer.time(8);
-
-    // timer.dump();
-
-    // this->mutex.unlock();
 
     job->complete();
 }
