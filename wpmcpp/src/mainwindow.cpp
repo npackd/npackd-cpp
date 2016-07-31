@@ -773,7 +773,7 @@ void MainWindow::fillList()
     switch (statusFilter) {
         case 1:
             minStatus = Package::INSTALLED;
-            maxStatus = Package::UPDATEABLE;
+            maxStatus = Package::NOT_INSTALLED_NOT_AVAILABLE;
             break;
         case 2:
             minStatus = Package::UPDATEABLE;
