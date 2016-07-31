@@ -1736,7 +1736,7 @@ void PackageVersion::install(Job* job, const QString& where,
             job->setErrorMessage(err);
     }
 
-    if (job->shouldProceed()) {
+    if (!job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
                 QObject::tr("Deleting start menu, desktop and quick launch shortcuts"));
         deleteShortcuts(d.absolutePath(), sub, true, true, true);
