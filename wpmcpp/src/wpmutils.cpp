@@ -2543,7 +2543,7 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
         job->setProgress(0.01);
     }
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         QString odir = outputdir;
         if (!odir.endsWith("\\") && !odir.endsWith("/"))
             odir.append("\\");
@@ -2589,7 +2589,7 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
                 job->setTitle(initialTitle + " / " +
                         QString(QObject::tr("%L1 files")).arg(i));
 
-            if (job->isCancelled() || !job->getErrorMessage().isEmpty())
+            if (!job->shouldProceed())
                 break;
         }
         zip.close();

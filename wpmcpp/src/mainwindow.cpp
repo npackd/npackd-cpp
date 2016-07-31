@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle("Npackd");
 
-    this->genericAppIcon = QIcon(":/images/app.png");
-    this->waitAppIcon = QIcon(":/images/wait.png");
+    MainWindow::genericAppIcon = QIcon(":/images/app.png");
+    MainWindow::waitAppIcon = QIcon(":/images/wait.png");
     this->brokenIcon = QIcon(":/images/broken.png");
 
     this->mainFrame = new MainFrame(this);

@@ -209,8 +209,8 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
         packagePaths[i] = WPMUtils::normalizePath(packagePaths.at(i));
     }
 
-    // qDebug() << "InstalledPackages::detect3rdParty.0";
-
+    // filter the package versions out that are either already installed or
+    // point to directories under an already installed version
     if (job->shouldProceed()) {
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
@@ -609,7 +609,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
 
     // qDebug() << "InstalledPackages::refresh.0";
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.2,
                 QObject::tr("Detecting directories deleted externally"));
 
@@ -634,7 +634,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
 
     timer.time(1);
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.6,
                 QObject::tr("Reading registry package database"));
         QString err = readRegistryDatabase();

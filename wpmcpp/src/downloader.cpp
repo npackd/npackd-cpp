@@ -657,14 +657,14 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
                 arg(err));
     }
 
-    if (sha1 && !job->isCancelled() && job->getErrorMessage().isEmpty())
+    if (sha1 && job->shouldProceed())
         *sha1 = hash.result().toHex().toLower();
 
 // out:
     delete[] buffer;
     delete[] buffer2;
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty())
+    if (job->shouldProceed())
         job->setProgress(1);
 
     job->complete();
@@ -726,10 +726,10 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         }
     } while (bufferLength != 0 && !job->isCancelled());
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty())
+    if (job->shouldProceed())
         job->setProgress(1);
 
-    if (sha1 && !job->isCancelled() && job->getErrorMessage().isEmpty())
+    if (sha1 && job->shouldProceed())
         *sha1 = hash.result().toHex().toLower();
 
     delete[] buffer;
@@ -863,7 +863,7 @@ QTemporaryFile* Downloader::downloadToTemporary(Job* job,
         download(job, r2);
         file->close();
 
-        if (job->isCancelled() || !job->getErrorMessage().isEmpty()) {
+        if (!job->shouldProceed()) {
             delete file;
             file = 0;
         }

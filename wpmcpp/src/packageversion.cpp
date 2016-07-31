@@ -456,7 +456,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     }
 
     QString uninstallationScript;
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         uninstallationScript = ".Npackd\\Uninstall.bat";
         if (!QFile::exists(d.absolutePath() +
                 "\\" + uninstallationScript)) {
@@ -470,7 +470,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
     bool uninstallationScriptAcquired = false;
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (!uninstallationScript.isEmpty()) {
             job->setTitle(initialTitle + " / " +
                     QObject::tr("Waiting while other (un)installation scripts are running"));
@@ -495,7 +495,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     }
     job->setTitle(initialTitle);
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (!uninstallationScript.isEmpty()) {
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
@@ -856,7 +856,7 @@ void PackageVersion::downloadTo(Job& job, const QString& filename, bool interact
     bool downloadOK = false;
     QString dsha1;
 
-    if (!job.isCancelled() && job.getErrorMessage().isEmpty()) {
+    if (job.shouldProceed()) {
         if (!f->open(QIODevice::ReadWrite)) {
             job.setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
                     arg(f->fileName()));
@@ -872,13 +872,12 @@ void PackageVersion::downloadTo(Job& job, const QString& filename, bool interact
             request.interactive = interactive;
             Downloader::Response response = Downloader::download(djob, request);
             dsha1 = response.hashSum;
-            downloadOK = !djob->isCancelled() &&
-                    djob->getErrorMessage().isEmpty();
+            downloadOK = djob->shouldProceed();
             f->close();
         }
     }
 
-    if (!job.isCancelled() && job.getErrorMessage().isEmpty()) {
+    if (job.shouldProceed()) {
         if (!downloadOK) {
             if (!f->open(QIODevice::ReadWrite)) {
                 job.setErrorMessage(QObject::tr("Cannot open the file: %0").
@@ -932,7 +931,7 @@ QString PackageVersion::downloadAndComputeSHA1(Job* job)
         job->setErrorMessage(QString(QObject::tr("Download failed: %1")).
                 arg(djob->getErrorMessage()));
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05, QObject::tr("Computing SHA1"));
         r = WPMUtils::sha1(f->fileName());
         sub->completeWithProgress();
@@ -1392,7 +1391,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     QDir d(where);
     QString npackdDir = where + "\\.Npackd";
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         job->setTitle(initialTitle + " / " +
                 QObject::tr("Creating directory"));
         QString s = d.absolutePath();
@@ -1405,7 +1404,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     }
     job->setTitle(initialTitle);
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         job->setTitle(initialTitle + " / " +
                 QObject::tr("Creating .Npackd sub-directory"));
         QString s = npackdDir;
@@ -1420,7 +1419,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
 
     bool httpConnectionAcquired = false;
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         job->setTitle(initialTitle + " / " +
                 QObject::tr("Waiting for a free HTTP connection"));
 
@@ -1446,7 +1445,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     bool downloadOK = false;
     QString dsha1;
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (!f->open(QIODevice::ReadWrite)) {
             job->setErrorMessage(QString(QObject::tr("Cannot open the file: %0")).
                     arg(f->fileName()));
@@ -1468,7 +1467,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
         }
     }
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (!downloadOK) {
             if (!f->open(QIODevice::ReadWrite)) {
                 job->setErrorMessage(QObject::tr("Cannot open the file: %0").
@@ -1500,7 +1499,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     if (httpConnectionAcquired)
         httpConnections.release();
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (!this->sha1.isEmpty()) {
             if (dsha1.toLower() != this->sha1.toLower()) {
                 job->setErrorMessage(QString(
@@ -1540,7 +1539,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     */
 
     QString binary;
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (this->type == 0) {
             Job* djob = job->newSubJob(0.06, QObject::tr("Extracting files"));
             WPMUtils::unzip(djob, f->fileName(), d.absolutePath() + "\\");
@@ -1573,7 +1572,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     }
     job->setTitle(initialTitle);
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         QString errMsg = this->saveFiles(d);
         if (!errMsg.isEmpty()) {
             job->setErrorMessage(errMsg);
@@ -1612,7 +1611,7 @@ void PackageVersion::install(Job* job, const QString& where,
     QDir d(where);
 
     QString installationScript;
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         installationScript = ".Npackd\\Install.bat";
         if (!QFile::exists(d.absolutePath() +
                 "\\" + installationScript)) {
@@ -1626,7 +1625,7 @@ void PackageVersion::install(Job* job, const QString& where,
 
     bool installationScriptAcquired = false;
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (!installationScript.isEmpty()) {
             job->setTitle(initialTitle + " / " +
                     QObject::tr("Waiting while other (un)installation scripts are running"));
@@ -1651,7 +1650,7 @@ void PackageVersion::install(Job* job, const QString& where,
     }
     job->setTitle(initialTitle);
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         if (!installationScript.isEmpty()) {
             Job* exec = job->newSubJob(0.9,
                     QObject::tr("Running the installation script (this may take some time)"),
@@ -1701,7 +1700,7 @@ void PackageVersion::install(Job* job, const QString& where,
     if (installationScriptAcquired)
         installationScripts.release();
 
-    if (!job->isCancelled() && job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         QString err;
         this->createShortcuts(d.absolutePath(), &err);
         if (err.isEmpty())
@@ -1737,7 +1736,7 @@ void PackageVersion::install(Job* job, const QString& where,
             job->setErrorMessage(err);
     }
 
-    if (!job->getErrorMessage().isEmpty() || job->isCancelled()) {
+    if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
                 QObject::tr("Deleting start menu, desktop and quick launch shortcuts"));
         deleteShortcuts(d.absolutePath(), sub, true, true, true);
