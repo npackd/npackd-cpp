@@ -64,7 +64,7 @@ QString App::captureOutput(const QString& program, const QString& params,
 
     QString s(output);
 
-    qDebug() << s;
+    WPMUtils::writeln(s);
 
     return s;
 }
