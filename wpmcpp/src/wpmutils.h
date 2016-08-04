@@ -24,6 +24,8 @@ class WPMUtils
 private:
     static HANDLE hEventLog;
 
+    static QAtomicInt nextNamePipeId;
+
     WPMUtils();
 
     static bool isProcessRunning(HANDLE process);

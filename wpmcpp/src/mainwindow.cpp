@@ -99,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     updateActions();
 
+    // also update packageframe.cpp if adding a new action here
     QTableView* t = this->mainFrame->getTableWidget();
     t->addAction(this->ui->actionInstall);
     t->addAction(this->ui->actionUninstall);

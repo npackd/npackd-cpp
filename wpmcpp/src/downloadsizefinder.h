@@ -51,8 +51,8 @@ private:
     {
     public:
         _init() {
-            if (threadPool.maxThreadCount() > 2)
-                threadPool.setMaxThreadCount(2);
+            //if (threadPool.maxThreadCount() > 2)
+                threadPool.setMaxThreadCount(10);
         }
     } _initializer;
 public:

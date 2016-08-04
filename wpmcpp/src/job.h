@@ -46,6 +46,9 @@ class Job: public QObject
 private:
     mutable QMutex mutex;
 
+    /** timeout in seconds or 0 or "unlimited" */
+    int timeout = 0;
+
     QList<Job*> childJobs;
 
     /** progress 0...1 */
@@ -187,6 +190,12 @@ public:
     QString getFullTitle() const;
 
     /**
+     * @brief sets the timeout
+     * @param timeout timeout in seconds or 0 for "unlimited"
+     */
+    void setTimeout(int timeout);
+
+    /**
      * Sets the progress. The value is only informational. You have to
      * call complete() at the end anyway.
      *
@@ -264,6 +273,12 @@ public:
      * @brief waitFor waits till all children are completed
      */
     void waitForChildren();
+
+    /**
+     * @brief checks the timeout and cancells this job, if necessary. This call
+     *     also propagates to the parent job.
+     */
+    void checkTimeout();
 signals:
     /**
      * This signal will be fired each time something in this object

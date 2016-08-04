@@ -187,6 +187,15 @@ void Job::fireChange()
     if (this->started == 0)
         time(&this->started);
 
+    bool t = false;
+    if (this->timeout > 0) {
+        time_t now;
+        time(&now);
+        double d = difftime(now, this->started);
+        if (d > this->timeout) {
+            t = true;
+        }
+    }
     this->mutex.unlock();
 
     Job* top = this;
@@ -194,6 +203,9 @@ void Job::fireChange()
         top = top->parentJob;
 
     top->fireChange(this);
+
+    if (t)
+        this->cancel();
 }
 
 void Job::fireChange(Job* s)
@@ -299,6 +311,15 @@ QString Job::getFullTitle() const
     return title_;
 }
 
+void Job::setTimeout(int timeout)
+{
+    this->mutex.lock();
+    this->timeout = timeout;
+    this->mutex.unlock();
+
+    fireChange();
+}
+
 void Job::setTitle(const QString &title)
 {
     this->mutex.lock();
@@ -327,6 +348,27 @@ QString Job::getErrorMessage() const
     this->mutex.unlock();
 
     return errorMessage_;
+}
+
+void Job::checkTimeout()
+{
+    this->mutex.lock();
+    bool t = false;
+    if (this->timeout > 0) {
+        time_t now;
+        time(&now);
+        double d = difftime(now, this->started);
+        if (d > this->timeout) {
+            t = true;
+        }
+    }
+
+    if (parentJob)
+        parentJob->checkTimeout();
+    this->mutex.unlock();
+
+    if (t)
+        cancel();
 }
 
 bool Job::shouldProceed() const

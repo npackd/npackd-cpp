@@ -87,6 +87,8 @@ int App::process()
             "search terms", false, "search");
     cl.add("status", 's', "filters package versions by status",
             "status", false, "list,search");
+    cl.add("timeout", 't', "timeout in seconds",
+            "seconds", false, "remove,rm,update,add");
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
             "repository", false, "add-repo,remove-repo,set-repo");
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
@@ -138,10 +140,25 @@ int App::process()
         }
 
         Job* job;
-        if (cl.isPresent("bare-format") || cl.isPresent("json"))
+        if (cl.isPresent("bare-format") || cl.isPresent("json") ||
+                cmd == "help")
             job = new Job();
         else
             job = clp.createJob();
+
+        QString timeout = cl.get("timeout");
+        if (!timeout.isNull()) {
+            bool ok;
+            int timeout_ = timeout.toInt(&ok);
+            if (ok) {
+                if (timeout_ > 0)
+                    job->setTimeout(timeout_);
+                else
+                    err = "The value for --timeout should be positive";
+            } else {
+                err = "The value for --timeout is not a valid number";
+            }
+        }
 
         if (!err.isEmpty()) {
             job->setErrorMessage(err);

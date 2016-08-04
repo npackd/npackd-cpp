@@ -48,6 +48,8 @@
 #include "windowsregistry.h"
 #include "mstask.h"
 
+QAtomicInt WPMUtils::nextNamePipeId;
+
 HANDLE WPMUtils::hEventLog = 0;
 
 const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
@@ -2711,6 +2713,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     ba.append('\0');
     ba.append('\0');
 
+    QString err;
+
     // qDebug() << ba;
 
     PROCESS_INFORMATION pinfo;
@@ -2725,10 +2729,35 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     HANDLE g_hChildStd_OUT_Rd = NULL;
     HANDLE g_hChildStd_OUT_Wr = NULL;
 
+    QString name = QString("\\\\.\\Pipe\\NpackdExecute.%1.%2").arg(
+            GetCurrentProcessId()).arg(
+            nextNamePipeId.fetchAndAddOrdered(1));
+
     if (job->shouldProceed()) {
-        job->checkOSCall(
-                CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr,
-                &saAttr, 0));
+        g_hChildStd_OUT_Rd = CreateNamedPipe(
+                reinterpret_cast<LPCWSTR>(name.utf16()),
+                PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
+                PIPE_TYPE_BYTE | PIPE_WAIT, 1,
+                128, 128, 1000, &saAttr);
+        if (g_hChildStd_OUT_Rd == INVALID_HANDLE_VALUE) {
+            formatMessage(GetLastError(), &err);
+            job->setErrorMessage(err);
+        }
+    }
+
+    if (job->shouldProceed()) {
+        g_hChildStd_OUT_Wr = CreateFileW(
+                reinterpret_cast<LPCWSTR>(name.utf16()),
+                GENERIC_WRITE,
+                0,
+                &saAttr,
+                OPEN_EXISTING,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL);
+        if (g_hChildStd_OUT_Wr == INVALID_HANDLE_VALUE) {
+            formatMessage(GetLastError(), &err);
+            job->setErrorMessage(err);
+        }
     }
 
     if (job->shouldProceed()) {
@@ -2803,20 +2832,94 @@ void WPMUtils::executeFile(Job* job, const QString& where,
             consoleOutput = false;
         }
 
+        OVERLAPPED stOverlapped = {0};
+        HANDLE hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+        stOverlapped.hEvent = hEvent;
+
         int64_t outputLen = 0;
         DWORD ec = 0;
         const int BUFSIZE = 1024;
         char* chBuf = new char[BUFSIZE];
         while (true) {
+            job->checkTimeout();
+
             if (job->isCancelled()) {
                 break;
             }
 
             DWORD dwRead;
             bool bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE,
-                    &dwRead, NULL);
-            if (!bSuccess || dwRead == 0)
+                    &dwRead, &stOverlapped);
+
+            bool eof = false;
+
+            if (!bSuccess) {
+                DWORD e = GetLastError();
+
+                /*
+                WPMUtils::writeln(QString("!success %1 %2").arg(e).arg(dwRead));
+                WPMUtils::inputTextConsole();
+                */
+
+                switch (e) {
+                    case ERROR_HANDLE_EOF:
+                    case ERROR_BROKEN_PIPE:
+                        eof = true;
+                        break;
+                    case ERROR_IO_PENDING:
+                    {
+                        bool pending = true;
+                        while (pending && job->shouldProceed()) {
+                            job->checkTimeout();
+
+                            if (!GetOverlappedResult(g_hChildStd_OUT_Rd,
+                                &stOverlapped, &dwRead,
+                                FALSE)) {
+                                DWORD e2 = GetLastError();
+
+                                /*
+                                WPMUtils::writeln(QString("err2: %1 %2").
+                                        arg(e2).arg(dwRead));
+                                WPMUtils::inputTextConsole();
+                                */
+
+                                switch (e2) {
+                                    case ERROR_HANDLE_EOF:
+                                    case ERROR_BROKEN_PIPE:
+                                        eof = true;
+                                        pending = false;
+                                        break;
+                                    case ERROR_IO_INCOMPLETE:
+                                        pending = true;
+                                        continue;
+                                    default:
+                                        formatMessage(e, &err);
+                                        job->setErrorMessage(err);
+                                        pending = false;
+                                }
+                            } else {
+                                ResetEvent(stOverlapped.hEvent);
+                                pending = false;
+                            }
+                        }
+                        break;
+                    }
+                    default:
+                        formatMessage(e, &err);
+                        job->setErrorMessage(err);
+                }
+            } else {
+                eof = dwRead == 0;
+            }
+
+            if (eof)
                 break;
+
+            if (!job->shouldProceed())
+                break;
+
+            if (dwRead == 0)
+                continue;
 
             outputLen += dwRead;
 
@@ -2850,6 +2953,9 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                     arg(seconds / 60));
         }
         delete[] chBuf;
+
+        if (hEvent != 0)
+            CloseHandle(hEvent);
 
         // ignore possible errors here
         CloseHandle(g_hChildStd_OUT_Rd);

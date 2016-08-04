@@ -510,7 +510,13 @@ InstalledPackageVersion*
             QString err;
             QScopedPointer<PackageVersion> pv(dbr->findPackageVersion_(
                     ipv->package, ipv->version, &err));
-            if (err.isEmpty()) {
+
+            // TODO: remove
+            if (!pv.data()) {
+                qDebug() << "cannot find" << ipv->package << ipv->version.getVersionString();
+            }
+
+            if (err.isEmpty() && pv.data()) {
                 for (int j = 0; j < pv->dependencies.size(); j++) {
                     if (!isInstalled(*pv->dependencies.at(j))) {
                         r = ipv->clone();

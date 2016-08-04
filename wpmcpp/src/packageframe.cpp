@@ -27,15 +27,17 @@ PackageFrame::PackageFrame(QWidget *parent) :
 
     MainWindow* mw = MainWindow::getInstance();
 
+    // also update mainwindow.cpp if adding a new action here
     QTableWidget* t = this->ui->tableWidgetVersions;
     t->addAction(mw->findChild<QAction*>("actionInstall"));
     t->addAction(mw->findChild<QAction*>("actionUninstall"));
     t->addAction(mw->findChild<QAction*>("actionUpdate"));
     t->addAction(mw->findChild<QAction*>("actionShow_Details"));
     t->addAction(mw->findChild<QAction*>("actionShow_changelog"));
-    t->addAction(mw->findChild<QAction*>("actionTest_Download_Site"));
-    t->addAction(mw->findChild<QAction*>("actionOpen_folder"));
     t->addAction(mw->findChild<QAction*>("actionRun"));
+    t->addAction(mw->findChild<QAction*>("actionOpen_folder"));
+    t->addAction(mw->findChild<QAction*>("actionGotoPackageURL"));
+    t->addAction(mw->findChild<QAction*>("actionTest_Download_Site"));
     t->addAction(mw->findChild<QAction*>("actionExport"));
 
     connect(this->ui->listWidgetScreenshots,
