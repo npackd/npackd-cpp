@@ -2923,6 +2923,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                                         break;
                                     case ERROR_IO_INCOMPLETE:
                                         pending = true;
+                                        Sleep(50);
                                         continue;
                                     default:
                                         formatMessage(e, &err);
