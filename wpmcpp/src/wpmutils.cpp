@@ -2660,17 +2660,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     f.close();
 }
 
-void WPMUtils::executeFile(Job* job, const QString& where,
-        const QString& path, const QString& nativeArguments,
-        QIODevice& outputFile, const QStringList& env,
-        bool writeUTF16LEBOM, bool printScriptOutput)
-
+QMap<QString, QString> WPMUtils::parseEnv(LPWCH env2)
 {
-    QString initialTitle = job->getTitle();
-
-    time_t start = time(NULL);
-
-    LPWCH env2 = GetEnvironmentStrings();
     QMap<QString, QString> env_;
     LPWCH e = env2;
     while (true) {
@@ -2695,12 +2686,14 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
         // qDebug() << name << value;
     }
-    for (int i = 0; i + 1 < env.size(); i += 2) {
-        env_.insert(env.at(i), env.at(i + 1));
-    }
-    FreeEnvironmentStrings(env2);
+
+    return env_;
+}
+
+QByteArray WPMUtils::serializeEnv(const QMap<QString, QString>& env)
+{
     QByteArray ba;
-    QMapIterator<QString, QString> i(env_);
+    QMapIterator<QString, QString> i(env);
     while (i.hasNext()) {
         i.next();
         QString name = i.key();
@@ -2712,6 +2705,29 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     }
     ba.append('\0');
     ba.append('\0');
+
+    return ba;
+}
+
+void WPMUtils::executeFile(Job* job, const QString& where,
+        const QString& path, const QString& nativeArguments,
+        QIODevice& outputFile, const QStringList& env,
+        bool writeUTF16LEBOM, bool printScriptOutput)
+
+{
+    QString initialTitle = job->getTitle();
+
+    time_t start = time(NULL);
+
+    LPWCH env2 = GetEnvironmentStrings();
+    QMap<QString, QString> env_ = parseEnv(env2);
+    FreeEnvironmentStrings(env2);
+
+    for (int i = 0; i + 1 < env.size(); i += 2) {
+        env_.insert(env.at(i), env.at(i + 1));
+    }
+
+    QByteArray ba = serializeEnv(env_);
 
     QString err;
 
@@ -2726,7 +2742,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     HANDLE g_hChildStd_IN_Rd = NULL;
     HANDLE g_hChildStd_IN_Wr = NULL;
-    HANDLE g_hChildStd_OUT_Rd = NULL;
+    HANDLE g_hChildStd_OUT_Rd = INVALID_HANDLE_VALUE;
     HANDLE g_hChildStd_OUT_Wr = NULL;
 
     QString name = QString("\\\\.\\Pipe\\NpackdExecute.%1.%2").arg(
@@ -2739,10 +2755,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
                 PIPE_TYPE_BYTE | PIPE_WAIT, 1,
                 128, 128, 1000, &saAttr);
-        if (g_hChildStd_OUT_Rd == INVALID_HANDLE_VALUE) {
-            formatMessage(GetLastError(), &err);
-            job->setErrorMessage(err);
-        }
+        job->checkOSCall(g_hChildStd_OUT_Rd != INVALID_HANDLE_VALUE);
     }
 
     if (job->shouldProceed()) {
@@ -2754,10 +2767,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 OPEN_EXISTING,
                 FILE_ATTRIBUTE_NORMAL,
                 NULL);
-        if (g_hChildStd_OUT_Wr == INVALID_HANDLE_VALUE) {
-            formatMessage(GetLastError(), &err);
-            job->setErrorMessage(err);
-        }
+        job->checkOSCall(g_hChildStd_OUT_Wr != INVALID_HANDLE_VALUE);
     }
 
     if (job->shouldProceed()) {
@@ -2777,21 +2787,22 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 HANDLE_FLAG_INHERIT, 0));
     }
 
-    STARTUPINFOW startupInfo = {
-        sizeof(STARTUPINFO), 0, 0, 0,
-        (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-        (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
-    startupInfo.dwFlags |= STARTF_USESTDHANDLES;
-    startupInfo.hStdInput = g_hChildStd_IN_Rd;
-    startupInfo.hStdOutput = g_hChildStd_OUT_Wr;
-    startupInfo.hStdError = g_hChildStd_OUT_Wr;
-
     bool success = false;
 
+    // create the process
     if (job->shouldProceed()) {
+        STARTUPINFOW startupInfo = {
+            sizeof(STARTUPINFO), 0, 0, 0,
+            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+
+        startupInfo.dwFlags |= STARTF_USESTDHANDLES;
+        startupInfo.hStdInput = g_hChildStd_IN_Rd;
+        startupInfo.hStdOutput = g_hChildStd_OUT_Wr;
+        startupInfo.hStdError = g_hChildStd_OUT_Wr;
+
         QString args = "\"" + path + "\"";
         if (!nativeArguments.isEmpty())
             args = args + ' ' + nativeArguments;
@@ -2804,13 +2815,31 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 (wchar_t*) where.utf16(),
                 &startupInfo, &pinfo);
 
+        job->checkOSCall(success);
+
         // ignore the possible errors here
         CloseHandle(g_hChildStd_OUT_Wr);
     }
 
+    // try to assign the process to a job
+    HANDLE job_ = INVALID_HANDLE_VALUE;
     if (job->shouldProceed()) {
-        HANDLE hStdout;
-        bool consoleOutput;
+        BOOL r;
+        if (IsProcessInJob(pinfo.hProcess, 0, &r) && !r) {
+            job_ = CreateJobObject(NULL, NULL);
+            if (job_) {
+                if (!AssignProcessToJobObject(job_, pinfo.hProcess)) {
+                    CloseHandle(job_);
+                    job_ = INVALID_HANDLE_VALUE;
+                }
+            }
+        }
+    }
+
+    // determine the output channel
+    HANDLE hStdout;
+    bool consoleOutput;
+    if (job->shouldProceed()) {
         if (printScriptOutput) {
             hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -2831,7 +2860,10 @@ void WPMUtils::executeFile(Job* job, const QString& where,
             hStdout = INVALID_HANDLE_VALUE;
             consoleOutput = false;
         }
+    }
 
+    // read the output
+    if (job->shouldProceed()) {
         OVERLAPPED stOverlapped = {0};
         HANDLE hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
         stOverlapped.hEvent = hEvent;
@@ -2961,8 +2993,13 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         CloseHandle(g_hChildStd_OUT_Rd);
 
         if (GetExitCodeProcess(pinfo.hProcess, &ec) && ec == STILL_ACTIVE) {
-            if (job->isCancelled())
-                TerminateProcess(pinfo.hProcess, 0xFFFFFFFF);
+            if (job->isCancelled()) {
+                if (job_ != INVALID_HANDLE_VALUE) {
+                    TerminateJobObject(job_, 0xFFFFFFFF);
+                } else {
+                    TerminateProcess(pinfo.hProcess, 0xFFFFFFFF);
+                }
+            }
             WaitForSingleObject(pinfo.hProcess, INFINITE);
         }
 
@@ -2977,6 +3014,10 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         }
     }
     job->setTitle(initialTitle);
+
+    if (job_ != INVALID_HANDLE_VALUE) {
+        CloseHandle(job_);
+    }
 
     if (success) {
         // ignore possible errors here

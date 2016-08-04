@@ -681,6 +681,20 @@ public:
      * @return computer name
      */
     static QString getHostName();
+
+    /**
+     * @brief parses the environment strings
+     * @param env2 the environment as returned by GetEnvironmentStrings()
+     * @return name=value pairs
+     */
+    static QMap<QString, QString> parseEnv(LPWCH env2);
+
+    /**
+     * @brief serializes the specified environment
+     * @param env name=value pairs
+     * @return serialized environment, e.g. for CreateProcess
+     */
+    static QByteArray serializeEnv(const QMap<QString, QString> &env);
 };
 
 #endif // WPMUTILS_H
