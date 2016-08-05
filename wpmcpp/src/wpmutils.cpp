@@ -2837,8 +2837,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     }
 
     // determine the output channel
-    HANDLE hStdout;
-    bool consoleOutput;
+    HANDLE hStdout = INVALID_HANDLE_VALUE;
+    bool consoleOutput = false;
     if (job->shouldProceed()) {
         if (printScriptOutput) {
             hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
