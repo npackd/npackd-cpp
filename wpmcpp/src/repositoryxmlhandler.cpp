@@ -253,9 +253,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         }
 
         if (error.isEmpty()) {
-            if (!Package::isValidURL(href))
-                error = QObject::tr("Not a valid href URL in <link> for %1: %2").
-                        arg(p->name).arg(href);
+            error = WPMUtils::checkURL(this->url, &href, false);
         }
 
         if (error.isEmpty())
@@ -290,27 +288,11 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
         pvf->content = chars;
         pvf = 0;
     } else if (where == TAG_VERSION_URL) {
-        QString url = chars.trimmed();
-        if (!url.isEmpty()) {
-            QUrl u(url);
-            if (!u.isValid())
-                error = QObject::tr("Not a valid download URL for %1: %2").
-                        arg(pv->package).arg(url);
-            else if (u.isRelative()) {
-                if (this->url.isEmpty())
-                    error = QObject::tr("Relative URLs are not allowed for %1: %2").
-                            arg(pv->package).arg(url);
-                else
-                    pv->download = this->url.resolved(u);
-            } else {
-                if (u.scheme() == "http" || u.scheme() == "https" ||
-                    u.scheme() == "file") {
-                    pv->download = u;
-                } else {
-                    error = QObject::tr("Not a valid download URL for %1: %2").
-                            arg(pv->package).arg(url);
-                }
-            }
+        QString url = chars;
+        error = WPMUtils::checkURL(this->url, &url, true);
+
+        if (error.isEmpty()) {
+            pv->download.setUrl(url);
         }
     } else if (where == TAG_VERSION_SHA1) {
         pv->sha1 = chars.trimmed().toLower();
@@ -364,17 +346,20 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_PACKAGE_TITLE) {
         p->title = chars.trimmed();
     } else if (where == TAG_PACKAGE_URL) {
-        p->url = chars.trimmed();
+        QString url = chars;
+        error = WPMUtils::checkURL(this->url, &url, true);
+
+        if (error.isEmpty()) {
+            p->url = url;
+        }
     } else if (where == TAG_PACKAGE_DESCRIPTION) {
         p->description = chars.trimmed();
     } else if (where == TAG_PACKAGE_ICON) {
-        p->setIcon(chars.trimmed());
-        if (!p->getIcon().isEmpty()) {
-            if (!Package::isValidURL(p->getIcon())) {
-                error = QString(
-                        QObject::tr("Invalid icon URL for %1: %2")).
-                        arg(p->title).arg(p->getIcon());
-            }
+        QString url = chars;
+        error = WPMUtils::checkURL(this->url, &url, true);
+
+        if (error.isEmpty()) {
+            p->setIcon(url);
         }
     } else if (where == TAG_PACKAGE_LICENSE) {
         p->license = chars.trimmed();
@@ -401,7 +386,12 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
     } else if (where == TAG_LICENSE_TITLE) {
         lic->title = chars.trimmed();
     } else if (where == TAG_LICENSE_URL) {
-        lic->url = chars.trimmed();
+        QString url = chars;
+        error = WPMUtils::checkURL(this->url, &url, true);
+
+        if (error.isEmpty()) {
+            lic->url = url;
+        }
     } else if (where == TAG_LICENSE_DESCRIPTION) {
         lic->description = chars.trimmed();
     } else if (where == TAG_SPEC_VERSION) {

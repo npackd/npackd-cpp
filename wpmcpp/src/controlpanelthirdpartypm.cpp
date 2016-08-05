@@ -163,9 +163,9 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         url = "";
     p->url = url;
 
-    p->setChangeLog(k.get("URLUpdateInfo", &err));
-    if (!err.isEmpty() || !Package::isValidURL(p->getChangeLog()))
-        p->setChangeLog("");
+    QString changelog = k.get("URLUpdateInfo", &err);
+    if (err.isEmpty() && WPMUtils::checkURL(QUrl(), &changelog, false).isEmpty())
+        p->setChangeLog(changelog);
 
     p->categories.append(QObject::tr("Control panel software"));
 

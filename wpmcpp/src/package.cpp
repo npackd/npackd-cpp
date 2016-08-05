@@ -77,20 +77,6 @@ bool Package::isValidName(const QString& name)
     return r;
 }
 
-bool Package::isValidURL(const QString& url)
-{
-    bool r = true;
-    if (url.trimmed().isEmpty())
-        r = false;
-    else {
-        QUrl u(url);
-        r = u.isValid() && !u.isRelative() &&
-                (u.scheme() == "http" || u.scheme() == "https" ||
-                u.scheme() == "file");
-    }
-    return r;
-}
-
 void Package::toXML(QXmlStreamWriter *w) const
 {
     w->writeStartElement("package");

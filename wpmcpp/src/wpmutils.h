@@ -695,6 +695,20 @@ public:
      * @return serialized environment, e.g. for CreateProcess
      */
     static QByteArray serializeEnv(const QMap<QString, QString> &env);
+
+
+    /**
+     * Checks whether the specified value is a valid URL. The URL cannot be
+     * empty. Only http:, https: and file: schemes are supported.
+     *
+     * @param base URLs will be resolved relative to this one. If this URL is
+     *     empty, a relative URL would lead to an error.
+     * @param url a string that should be checked. The absolute value will be
+     *     stored here if the URL is relative. The value will be trimmed.
+     * @param allowEmpty should an empty value be allowed
+     * @return error message or an empty string
+     */
+    static QString checkURL(const QUrl& base, QString *url, bool allowEmpty);
 };
 
 #endif // WPMUTILS_H

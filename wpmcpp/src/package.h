@@ -93,15 +93,6 @@ public:
     static bool isValidName(const QString &name);
 
     /**
-     * Checks whether the specified value is a valid URL that can be used
-     * for example as the home page value.
-     *
-     * @param a string that should be checked
-     * @return true if name is a valid URL
-     */
-    static bool isValidURL(const QString &url);
-
-    /**
      * @return copy of this object
      */
     Package* clone() const;

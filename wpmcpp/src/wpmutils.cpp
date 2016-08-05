@@ -34,6 +34,7 @@
 #include <QVariant>
 #include <QBuffer>
 #include <QByteArray>
+#include <QUrl>
 
 #include <quazip.h>
 #include <quazipfile.h>
@@ -2707,6 +2708,34 @@ QByteArray WPMUtils::serializeEnv(const QMap<QString, QString>& env)
     ba.append('\0');
 
     return ba;
+}
+
+QString WPMUtils::checkURL(const QUrl &base, QString *url, bool allowEmpty)
+{
+    *url = url->trimmed();
+
+    QString r;
+
+    if (url->isEmpty()) {
+        if (!allowEmpty)
+            r = QObject::tr("The URL cannot be empty");
+    } else {
+        QUrl u(*url);
+        if (!u.isValid()) {
+            r = QObject::tr("The URL is invalid");
+        } else if (u.isRelative()) {
+            if (base.isEmpty())
+                r = QObject::tr("The URL cannot be relative");
+            else
+                *url = base.resolved(QUrl(*url)).toString(
+                            QUrl::FullyEncoded);
+        } else if (u.scheme() != "http" && u.scheme() != "https" &&
+                u.scheme() != "file") {
+            r = QObject::tr("Unsupported URL scheme");
+        }
+    }
+
+    return r;
 }
 
 void WPMUtils::executeFile(Job* job, const QString& where,

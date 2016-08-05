@@ -109,10 +109,11 @@ void MSIThirdPartyPM::scan(Job* job,
                     p->url = url;
             }
 
-            p->setChangeLog(WPMUtils::getMSIProductAttribute(guid,
-                    INSTALLPROPERTY_URLUPDATEINFO, &err));
-            if (!err.isEmpty() || !Package::isValidURL(p->getChangeLog()))
-                p->setChangeLog("");
+            QString changelog = WPMUtils::getMSIProductAttribute(guid,
+                    INSTALLPROPERTY_URLUPDATEINFO, &err);
+            if (err.isEmpty() && WPMUtils::checkURL(QUrl(),
+                    &changelog, false).isEmpty())
+                p->setChangeLog(changelog);
 
             // qDebug() << "MSIThirdPartyPM::scan loop 1.5";
 
