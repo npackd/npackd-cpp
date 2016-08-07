@@ -43,9 +43,15 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 if "%target%" neq "coverity" goto end
 "%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 dir "C:\Program Files (x86)"
-"C:\Program Files (x86)\Gow\bin\wget" https://scan.coverity.com/download/cxx/win_64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip --no-check-certificate -nv
+"C:\Program Files (x86)\Gow\bin\wget" https://scan.coverity.com/download/cxx/win64 --post-data "token=%covtoken%&project=Npackd" -O coverity_tool.zip --no-check-certificate -nv
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 7z x -y coverity_tool.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 for /f "delims=" %%x in ('dir /b cov-*') do set name=%%x
 ren "%name%" cov-analysis
 

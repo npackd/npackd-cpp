@@ -170,8 +170,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
         if (debug) {
             WPMUtils::writeln(QString("Downloader::downloadWin callNumber=%1, "
-                    "sendRequestError=%2, dwStatus=%3").arg(callNumber,
-                    sendRequestError, dwStatus));
+                    "sendRequestError=%2, dwStatus=%3").arg(callNumber).
+                    arg(sendRequestError).arg(dwStatus));
         }
 
         // 2XX
