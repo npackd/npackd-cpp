@@ -10,6 +10,9 @@ QT       -= gui
 TARGET = clu
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG += c++11
+CONFIG += static
+
 
 TEMPLATE = app
 
@@ -51,6 +54,18 @@ INCLUDEPATH+=../../wpmcpp/src/
 QMAKE_LIBDIR+=$$(QUAZIP_PATH)/quazip/release
 
 QMAKE_CXXFLAGS += -static-libstdc++ -static-libgcc -Werror \
-    -Wno-missing-field-initializers -Wno-unused-parameter -fno-exceptions
+    -Wno-missing-field-initializers -Wno-unused-parameter
+QMAKE_CXXFLAGS -= -fexceptions
+QMAKE_CXXFLAGS_RELEASE -= -O2
+QMAKE_CXXFLAGS_RELEASE += -Os -g
+contains(QT_ARCH, i386) {
+    QMAKE_CXXFLAGS_RELEASE += -flto
+}
 
+QMAKE_LFLAGS += -static
+QMAKE_LFLAGS_RELEASE -= -Wl,-s -Os
+QMAKE_LFLAGS_RELEASE += -Wl,-Map,npackdcl_release.map
+contains(QT_ARCH, i386) {
+    QMAKE_LFLAGS_RELEASE += -flto
+}
 
