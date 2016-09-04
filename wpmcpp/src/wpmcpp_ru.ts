@@ -2491,7 +2491,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Not a valid download URL for %1: %2</source>
-        <translation>Нет действительных ссылкок URL для %1: %2</translation>
+        <translation type="vanished">Нет действительных ссылкок URL для %1: %2</translation>
     </message>
     <message>
         <source>Not a valid version for %1: %2</source>
@@ -2555,7 +2555,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid icon URL for %1: %2</source>
-        <translation>Несуществующая URL иконки у %1: %2</translation>
+        <translation type="vanished">Несуществующая URL иконки у %1: %2</translation>
     </message>
     <message>
         <source>Empty category tag for %1</source>
@@ -3235,10 +3235,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Not a valid href URL in &lt;link&gt; for %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Invalid SHA-256 for %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3303,10 +3299,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Relative URLs are not allowed for %1: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Python</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3316,6 +3308,22 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The URL cannot be empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The URL is invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The URL cannot be relative</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unsupported URL scheme</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

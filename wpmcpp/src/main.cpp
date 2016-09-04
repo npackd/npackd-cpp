@@ -34,6 +34,8 @@
 
 int main(int argc, char *argv[])
 {
+    //qDebug() << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
+
     // test: scheduling a task
     //CoInitialize(NULL);
     //WPMUtils::createMSTask();

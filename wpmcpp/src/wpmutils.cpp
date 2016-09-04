@@ -2723,15 +2723,24 @@ QString WPMUtils::checkURL(const QUrl &base, QString *url, bool allowEmpty)
         QUrl u(*url);
         if (!u.isValid()) {
             r = QObject::tr("The URL is invalid");
-        } else if (u.isRelative()) {
-            if (base.isEmpty())
-                r = QObject::tr("The URL cannot be relative");
-            else
-                *url = base.resolved(QUrl(*url)).toString(
-                            QUrl::FullyEncoded);
-        } else if (u.scheme() != "http" && u.scheme() != "https" &&
-                u.scheme() != "file") {
-            r = QObject::tr("Unsupported URL scheme");
+        } else {
+            if (u.isRelative()) {
+                if (base.isEmpty())
+                    r = QObject::tr("The URL cannot be relative");
+                else {
+                    if (base.scheme() == "file")
+                        u = QUrl::fromLocalFile(*url);
+
+                    //qDebug() << base << u;
+
+                    *url = base.resolved(u).toString(QUrl::FullyEncoded);
+
+                    // qDebug() << *url;
+                }
+            } else if (u.scheme() != "http" && u.scheme() != "https" &&
+                    u.scheme() != "file") {
+                r = QObject::tr("Unsupported URL scheme");
+            }
         }
     }
 

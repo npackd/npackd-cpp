@@ -156,13 +156,13 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
         Repository* rep = new Repository();
 
         if (def == 0 || def == 2 || def == 3) {
-            QScopedPointer<Package> super(new Package("localhost.super",
+            QScopedPointer<Package> super(new Package(
+                    WPMUtils::getHostName() + ".super",
                     QObject::tr("List of packages")));
             rep->savePackage(super.data(), true);
 
             QScopedPointer<PackageVersion> superv(
-                    new PackageVersion(WPMUtils::getHostName() +
-                    ".super"));
+                    new PackageVersion(super.data()->name));
             superv->version.setVersion(QDateTime::currentDateTime().toString(
                     "yyyy.M.d.h.m.s"));
             superv->type = 1;
@@ -861,7 +861,10 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
 
     QList<QUrl*> r;
     for (int i = 0; i < urls.count(); i++) {
-        r.append(new QUrl(urls.at(i)));
+        QUrl* url = new QUrl(urls.at(i));
+        if (url->scheme() == "file")
+            *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
+        r.append(url);
     }
 
     if (save)
