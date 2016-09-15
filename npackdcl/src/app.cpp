@@ -266,7 +266,7 @@ QString App::addNpackdCL()
 void App::usage(Job* job)
 {
     WPMUtils::writeln(QString(
-            "ncl %1 - Npackd command line tool").
+            "ncl %1 - command line interface for the Npackd software package manager").
             arg(NPACKD_VERSION));
     const char* lines[] = {
         "Usage: ncl <command> [global options] [options]",

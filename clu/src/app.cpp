@@ -31,6 +31,9 @@ int App::process()
     cl.add("file", 'f',
             "path to an MSI package (e.g. C:\\Downloads\\MyProgram.msi)",
             "file", false);
+    cl.add("timeout", 't',
+            "timeout in milliseconds (e.g. 10000)",
+            "duration", false);
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -59,6 +62,8 @@ int App::process()
         r = listMSI();
     } else if (fr.at(0) == "get-product-code") {
         r = getProductCode();
+    } else if (fr.at(0) == "wait") {
+        r = wait();
     } else {
         WPMUtils::writeln("Wrong command: " + fr.at(0), false);
         r = 1;
@@ -105,6 +110,36 @@ int App::getProductCode()
     return ret;
 }
 
+int App::wait()
+{
+    int ret = 0;
+
+    QString timeout = cl.get("timeout");
+
+    if (ret == 0) {
+        if (timeout.isNull()) {
+            WPMUtils::writeln("Missing option: --timeout", false);
+            ret = 1;
+        }
+    }
+
+    int t = 0;
+    if (ret == 0) {
+        bool ok;
+        t = timeout.toInt(&ok);
+        if (!ok) {
+            WPMUtils::writeln(QString("Not a number: %1").arg(timeout), false);
+            ret = 1;
+        }
+    }
+
+    if (ret == 0) {
+        Sleep(t);
+    }
+
+    return ret;
+}
+
 int App::help()
 {
     const char* lines[] = {
@@ -120,6 +155,8 @@ int App::help()
         "        lists all installed MSI packages",
         "    clu get-product-code --file=<file>",
         "        prints the product code of an MSI file",
+        "    clu wait --timeout=<milliseconds>",
+        "        wait for the specified amount of time",
         "Options:",
     };
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {

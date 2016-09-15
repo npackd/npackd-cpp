@@ -13,6 +13,7 @@ private:
     int removePath();
     int listMSI();
     int getProductCode();
+    int wait();
 public:
     App();
 
