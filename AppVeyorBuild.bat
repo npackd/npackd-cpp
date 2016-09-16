@@ -17,6 +17,7 @@ goto start
 
 :start
 if %prg% equ npackdcl goto npackdcl
+if %prg% equ clu goto clu
 
 :npackd
 if "%target%" equ "coverity" goto coverity
@@ -63,6 +64,21 @@ appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.map
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-debug-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+goto :eof
+
+:clu
+"%make%" -C clu zip zip-debug PROFILE=release%bits%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact clu\build\%bits%\release\CLU-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact clu\build\%bits%\release\CLU-%version%.map
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact clu\build\%bits%\release\CLU%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof

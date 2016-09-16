@@ -4,19 +4,26 @@ branches:
   - master
 clone_folder: c:\projects\Npackd
 environment:
-  version: 1.22
   matrix:
+  - bits: 32
+    prg: clu
+    version: 1.1
   - bits: 64
     prg: npackdcl
+    version: 1.22
   - bits: 32
     prg: npackdcl
+    version: 1.22
   - bits: 64
     prg: npackd
+    version: 1.22
   - bits: 32
     prg: npackd
+    version: 1.22
   - bits: 64
     prg: npackd
     target: coverity
+    version: 1.22
   covtoken:
     secure: yPwsn7ojqxg5m7pxyjIf3LV1GwoHd4m3q5iQrKCDzZ4=
 init:

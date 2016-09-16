@@ -64,7 +64,7 @@ contains(QT_ARCH, i386) {
 
 QMAKE_LFLAGS += -static
 QMAKE_LFLAGS_RELEASE -= -Wl,-s -Os
-QMAKE_LFLAGS_RELEASE += -Wl,-Map,npackdcl_release.map
+QMAKE_LFLAGS_RELEASE += -Wl,-Map,clu_release.map
 contains(QT_ARCH, i386) {
     QMAKE_LFLAGS_RELEASE += -flto
 }

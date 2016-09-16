@@ -11,18 +11,7 @@ SHELL:=cmd.exe
 
 PROJECT=CLU
 
-ifeq (32,$(findstring 32,$(PROFILE)))
-QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
-MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.9.2, 4.9.2]")
-QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.7.1, 0.7.1]")
-BITS=32
-PACKAGE=com.googlecode.windows-package-manager.CLU
-else
-QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
-MINGW=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.9.2, 4.9.2]")
-QUAZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.7.1, 0.7.1]")
-BITS=64
-endif
+include ../Common.mak
 
 ifeq ($(PROFILE),release32)
 CONFIG=release
@@ -39,7 +28,7 @@ AI=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=com.advancedinstaller.A
 SEVENZIP=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9, 20$(RPAREN)")
 PUTTY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=uk.org.greenend.chiark.sgtatham.Putty" "--versions=[0.62, 2$(RPAREN)")
 EXEPROXY=$(shell "$(NPACKD_CL)\npackdcl.exe" "path" "--package=exeproxy" "--versions=[0.2, 1$(RPAREN)")
-VERSION=$(shell type ..\wpmcpp\version.txt)
+VERSION=1.1
 
 all:
 	$(MAKE) -C tests clean PROFILE=release32
@@ -71,6 +60,9 @@ printvars:
 clean: printvars
 	-rmdir /s /q $(WHERE)
 
+$(WHERE)/zip-debug: $(WHERE)
+	-mkdir $(WHERE)\zip-debug
+
 $(WHERE)/zip:
 	-mkdir $(WHERE)\zip
 
@@ -87,15 +79,21 @@ compile: printvars $(WHERE) $(WHERE)/../Makefile
 prep: compile $(WHERE)/zip
 	cd $(WHERE) && copy ..\$(PROJECT)_release.map $(PROJECT)-$(VERSION).map
 	copy LICENSE.txt $(WHERE)\zip
-	copy CrystalIcons_LICENSE.txt $(WHERE)\zip
 	copy $(WHERE)\$(PROJECT).exe $(WHERE)\zip\clu.exe
 	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\clu.exe
 
-zip: prep $(WHERE)\zip\ncl.exe
+zip: prep
 	cd $(WHERE)\zip && "$(SEVENZIP)\7z" a ..\$(PROJECT)-$(VERSION).zip *
 
-$(WHERE)\zip\ncl.exe:
-	$(EXEPROXY)\exeproxy exeproxy-copy $(WHERE)\zip\ncl.exe npackdcl.exe
+zip-debug: compile $(WHERE)/zip-debug
+	copy LICENSE.txt $(WHERE)\zip-debug
+	copy $(WHERE)\$(PROJECT).exe $(WHERE)\zip-debug\$(PROJECT).exe
+	copy "$(DRMINGW)\bin\exchndl.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\mgwhelp.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\dbghelp.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\symsrv.dll" $(WHERE)\zip-debug
+	copy "$(DRMINGW)\bin\symsrv.yes" $(WHERE)\zip-debug
+	cd $(WHERE)\zip-debug && "$(SEVENZIP)\7z" a ..\$(PROJECT)$(BITS)-debug-$(VERSION).zip *
 
 msi: zip
 	"$(AI)\bin\x86\AdvancedInstaller.com" /edit src\$(PROJECT)$(BITS).aip /SetVersion $(VERSION)
