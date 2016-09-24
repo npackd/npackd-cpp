@@ -45,8 +45,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>540</width>
-        <height>505</height>
+        <width>538</width>
+        <height>503</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -163,12 +163,13 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>scrollArea</tabstop>
   <tabstop>lineEditDir</tabstop>
   <tabstop>pushButtonDir</tabstop>
   <tabstop>radioButtonSuper</tabstop>
+  <tabstop>radioButtonDependencies</tabstop>
   <tabstop>radioButtonSuperAndDependencies</tabstop>
   <tabstop>radioButtonSuperDependenciesAndBinaries</tabstop>
+  <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
  <connections/>
