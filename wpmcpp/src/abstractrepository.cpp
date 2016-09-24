@@ -139,15 +139,18 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
 
             QString fn = pv->download.path();
             QStringList parts = fn.split('/');
-            fn = where + "\\" + parts.at(parts.count() - 1);
+            fn = where + "\\";
 
-            fn = WPMUtils::findNonExistingFile(fn, "");
+            QFileInfo fi(parts.at(parts.count() - 1));
+            fn = fn + fi.baseName();
+            QString suffix = fi.completeSuffix();
+            if (!suffix.isEmpty())
+                suffix.prepend('.');
 
-            // TODO: lock the HTTP connection?
+            fn = WPMUtils::findNonExistingFile(fn, suffix);
+
             pv->downloadTo(*djob, fn, true);
 
-            // TODO: the file name should always end with the right extension
-            // (e.g. .exe)
             pv->download.setUrl(QFileInfo(fn).fileName());
         }
     }

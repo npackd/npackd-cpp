@@ -750,8 +750,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     }
  */
 
-    // TODO: if (detectMSI) {
-
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.06,
                 QObject::tr("Clearing information about installed package versions in nested directories"));
