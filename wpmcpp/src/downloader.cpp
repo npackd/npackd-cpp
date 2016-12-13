@@ -80,7 +80,9 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 &rec_timeout, sizeof(rec_timeout));
 
         // enable automatic gzip decoding
+#ifndef INTERNET_OPTION_HTTP_DECODING
         const DWORD INTERNET_OPTION_HTTP_DECODING = 65;
+#endif
         BOOL b = TRUE;
         InternetSetOption(internet, INTERNET_OPTION_HTTP_DECODING,
                 &b, sizeof(b));

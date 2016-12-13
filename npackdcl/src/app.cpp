@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QTextStream>
 
 #include "app.h"
 #include "wpmutils.h"
@@ -952,6 +953,10 @@ void App::removeRepo(Job* job)
 
     job->complete();
 }
+
+#if defined(max) && defined(_MSC_VER)
+#undef max
+#endif
 
 void App::path(Job* job)
 {

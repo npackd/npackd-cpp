@@ -677,7 +677,7 @@ extern "C" {
 #if defined(__cplusplus) && !defined(CINTERFACE)
   struct IProvideTaskPage : public IUnknown {
   public:
-    virtual HRESULT WINAPI GetPage(TASKPAGE tpType,WINBOOL fPersistChanges,HPROPSHEETPAGE *phPage) = 0;
+    virtual HRESULT WINAPI GetPage(TASKPAGE tpType,BOOL fPersistChanges,HPROPSHEETPAGE *phPage) = 0;
   };
 #else
   typedef struct IProvideTaskPageVtbl {
@@ -685,7 +685,7 @@ extern "C" {
       HRESULT (WINAPI *QueryInterface)(IProvideTaskPage *This,REFIID riid,void **ppvObject);
       ULONG (WINAPI *AddRef)(IProvideTaskPage *This);
       ULONG (WINAPI *Release)(IProvideTaskPage *This);
-      HRESULT (WINAPI *GetPage)(IProvideTaskPage *This,TASKPAGE tpType,WINBOOL fPersistChanges,HPROPSHEETPAGE *phPage);
+      HRESULT (WINAPI *GetPage)(IProvideTaskPage *This,TASKPAGE tpType,BOOL fPersistChanges,HPROPSHEETPAGE *phPage);
     END_INTERFACE
   } IProvideTaskPageVtbl;
   struct IProvideTaskPage {
@@ -698,7 +698,7 @@ extern "C" {
 #define IProvideTaskPage_GetPage(This,tpType,fPersistChanges,phPage) (This)->lpVtbl->GetPage(This,tpType,fPersistChanges,phPage)
 #endif
 #endif
-  HRESULT WINAPI IProvideTaskPage_GetPage_Proxy(IProvideTaskPage *This,TASKPAGE tpType,WINBOOL fPersistChanges,HPROPSHEETPAGE *phPage);
+  HRESULT WINAPI IProvideTaskPage_GetPage_Proxy(IProvideTaskPage *This,TASKPAGE tpType,BOOL fPersistChanges,HPROPSHEETPAGE *phPage);
   void __RPC_STUB IProvideTaskPage_GetPage_Stub(IRpcStubBuffer *This,IRpcChannelBuffer *_pRpcChannelBuffer,PRPC_MESSAGE _pRpcMessage,DWORD *_pdwStubPhase);
 #endif
 

@@ -36,16 +36,14 @@ int main(int argc, char *argv[])
 {
     //qDebug() << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
 
-    // test: scheduling a task
-    //CoInitialize(NULL);
-    //WPMUtils::createMSTask();
-
+#ifdef __MINGW32__
     LoadLibrary(L"exchndl.dll");
+#endif
 
     QApplication a(argc, argv);
 
     QString packageName;
-#if !defined(__x86_64__)
+#if !defined(__x86_64__) && !defined(_WIN64)
     packageName = "com.googlecode.windows-package-manager.Npackd";
 #else
     packageName = "com.googlecode.windows-package-manager.Npackd64";
@@ -62,7 +60,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Version>("Version");
     qRegisterMetaType<int64_t>("int64_t");
 
-#if !defined(__x86_64__)
+#if !defined(__x86_64__) && !defined(_WIN64)
     if (WPMUtils::is64BitWindows()) {
         QMessageBox::critical(0, "Error",
                 QObject::tr("The 32 bit version of Npackd requires a 32 bit operating system.") + "\r\n" +
@@ -83,8 +81,6 @@ int main(int argc, char *argv[])
         w.show();
         errorCode = QApplication::exec();
     }
-
-    //WPMUtils::timer.dump();
 
     return errorCode;
 }

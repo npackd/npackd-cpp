@@ -304,7 +304,7 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
         if (!err.isEmpty())
             break;
 
-        for (int i = start; i < std::min(start + block, c); i++) {
+		for (int i = start; i < std::min<int>(start + block, c); i++) {
             q.bindValue(":NAME" + QString::number(i - start), names.at(i));
         }
 
@@ -332,7 +332,7 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
             list.append(r);
         }
 
-        for (int i = start; i < std::min(start + block, c); i++) {
+		for (int i = start; i < std::min<int>(start + block, c); i++) {
             QString find = names.at(i);
             for (int j = 0; j < list.count(); j++) {
                 Package* p = list.at(j);
