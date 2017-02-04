@@ -57,7 +57,7 @@ QString App::captureOutput(const QString& program, const QString& params,
     WPMUtils::executeFile(
             job, where,
             program,
-            params, buffer, env, false);
+            params, &buffer, env);
     qDebug() << job->getErrorMessage();
     delete job;
 

@@ -2655,7 +2655,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     }
 
     executeFile(job, where, path, nativeArguments,
-            f, env, writeUTF16LEBOM, printScriptOutput);
+            &f, env, printScriptOutput);
 
     // ignore possible errors here
     f.close();
@@ -2749,8 +2749,8 @@ QString WPMUtils::checkURL(const QUrl &base, QString *url, bool allowEmpty)
 
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
-        QIODevice& outputFile, const QStringList& env,
-        bool writeUTF16LEBOM, bool printScriptOutput)
+        QIODevice* outputFile, const QStringList& env,
+        bool printScriptOutput)
 
 {
     QString initialTitle = job->getTitle();
@@ -3009,9 +3009,11 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 }
             }
 
-            if (outputFile.write(chBuf, dwRead) == -1) {
-                job->setErrorMessage(outputFile.errorString());
-                break;
+            if (outputFile) {
+                if (outputFile->write(chBuf, dwRead) == -1) {
+                    job->setErrorMessage(outputFile->errorString());
+                    break;
+                }
             }
 
             time_t seconds = time(NULL) - start;

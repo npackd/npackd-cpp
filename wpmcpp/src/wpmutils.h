@@ -614,17 +614,15 @@ public:
      * @param where working directory
      * @param path executable
      * @param nativeArguments all native arguments
-     * @param outputFile the output will be saved here
+     * @param outputFile the output will be saved here. Can be 0.
      * @param env additional environemnt variables
-     * @param write writeUTF16LEBOM write UTF-16 LE BOM mark at the beginning of
-     *     the output file?
      * @param printScriptOutput true = redirect the output to the default output
      *     stream
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
-            QIODevice& outputFile,
-            const QStringList& env, bool writeUTF16LEBOM=true,
+            QIODevice *outputFile,
+            const QStringList& env,
             bool printScriptOutput=false);
 
     /**

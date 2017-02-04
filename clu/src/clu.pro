@@ -29,7 +29,9 @@ LIBS += -lquazip \
 
 SOURCES += main.cpp \
     app.cpp \
+    ../../wpmcpp/src/package.cpp \
     ../../wpmcpp/src/windowsregistry.cpp \
+    ../../wpmcpp/src/controlpanelthirdpartypm.cpp \
     ../../wpmcpp/src/commandline.cpp \
     ../../wpmcpp/src/wpmutils.cpp \
     ../../wpmcpp/src/job.cpp \
@@ -38,7 +40,9 @@ SOURCES += main.cpp \
 
 HEADERS += \
     app.h \
+    ../../wpmcpp/src/package.h \
     ../../wpmcpp/src/windowsregistry.h \
+    ../../wpmcpp/src/controlpanelthirdpartypm.h \
     ../../wpmcpp/src/commandline.h \
     ../../wpmcpp/src/wpmutils.h \
     ../../wpmcpp/src/job.h \

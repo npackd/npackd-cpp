@@ -110,6 +110,8 @@ private:
      * @return true = OK
      */
     bool createExecutableShims(const QString &dir, QString *errMsg);
+
+    void installWith(Job *job);
 public:
     /**
      * @brief string ID for the specified package version

@@ -1245,11 +1245,10 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
 
                     std::unique_ptr<Job> job(new Job());
 
-                    QBuffer buffer;
                     WPMUtils::executeFile(job.get(), dir, exeProxy,
                             "exeproxy-copy \"" + sourcePath + "\" \"" +
                             targetPath + "\"",
-                            buffer,
+                            0,
                             QStringList());
                 }
             }
@@ -1595,6 +1594,11 @@ QString PackageVersion::download_(Job* job, const QString& where,
     return binary;
 }
 
+void PackageVersion::installWith(Job* job)
+{
+
+}
+
 void PackageVersion::install(Job* job, const QString& where,
         const QString& binary,
         bool printScriptOutput, int programCloseType)
@@ -1623,6 +1627,15 @@ void PackageVersion::install(Job* job, const QString& where,
         }
     }
 
+    if (job->shouldProceed() && this->dependencies.size() > 0) {
+        Job* sjob = job->newSubJob(0.2,
+                QObject::tr("Running the installation hooks for dependencies"),
+                true, true);
+        installWith(sjob);
+    } else {
+        job->setProgress(0.2);
+    }
+
     bool installationScriptAcquired = false;
 
     if (job->shouldProceed()) {
@@ -1645,14 +1658,14 @@ void PackageVersion::install(Job* job, const QString& where,
                         arg(seconds / 60));
             }
         } else {
-            job->setProgress(0.01);
+            job->setProgress(0.21);
         }
     }
     job->setTitle(initialTitle);
 
     if (job->shouldProceed()) {
         if (!installationScript.isEmpty()) {
-            Job* exec = job->newSubJob(0.9,
+            Job* exec = job->newSubJob(0.7,
                     QObject::tr("Running the installation script (this may take some time)"),
                     true, true);
             if (!d.exists(".Npackd"))

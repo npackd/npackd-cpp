@@ -14,6 +14,7 @@ private:
     int listMSI();
     int getProductCode();
     int wait();
+    int remove();
 public:
     App();
 
