@@ -2614,9 +2614,13 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
     QString file = d.absolutePath() + "\\" + path;
     file.replace('/', '\\');
 
+    QString outputPath = outputFile;
+    if (!outputPath.isEmpty())
+        outputPath = d.absolutePath() + "\\" + outputPath;
+
     executeFile(job, d.absolutePath(), exe,
             "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
-            d.absolutePath() + "\\" + outputFile, env, true, printScriptOutput);
+            outputPath, env, true, printScriptOutput);
 }
 
 void WPMUtils::reportEvent(const QString &msg, WORD wType)
@@ -2641,24 +2645,29 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& outputFile, const QStringList& env,
         bool writeUTF16LEBOM, bool printScriptOutput)
 {
-    QFile f(outputFile);
-    if (job->shouldProceed()) {
-        if (!f.open(QIODevice::WriteOnly | QIODevice::Append))
-            job->setErrorMessage(f.errorString());
-    }
-
-    if (job->shouldProceed() && writeUTF16LEBOM) {
-        if (f.pos() == 0) {
-            if (f.write("\xff\xfe") == -1)
+    if (!outputFile.isEmpty()) {
+        QFile f(outputFile);
+        if (job->shouldProceed()) {
+            if (!f.open(QIODevice::WriteOnly | QIODevice::Append))
                 job->setErrorMessage(f.errorString());
         }
+
+        if (job->shouldProceed() && writeUTF16LEBOM) {
+            if (f.pos() == 0) {
+                if (f.write("\xff\xfe") == -1)
+                    job->setErrorMessage(f.errorString());
+            }
+        }
+
+        executeFile(job, where, path, nativeArguments,
+                &f, env, printScriptOutput);
+
+        // ignore possible errors here
+        f.close();
+    } else {
+        executeFile(job, where, path, nativeArguments,
+                0, env, printScriptOutput);
     }
-
-    executeFile(job, where, path, nativeArguments,
-            &f, env, printScriptOutput);
-
-    // ignore possible errors here
-    f.close();
 }
 
 QMap<QString, QString> WPMUtils::parseEnv(LPWCH env2)

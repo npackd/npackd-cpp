@@ -6,6 +6,8 @@
 
 QT += core xml sql
 QT       -= gui
+NPACKD_VERSION = $$system(type ..\\..\\wpmcpp\version.txt)
+DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
 
 TARGET = clu
 CONFIG   += console
@@ -29,8 +31,18 @@ LIBS += -lquazip \
 
 SOURCES += main.cpp \
     app.cpp \
+    ../../wpmcpp/src/clprogress.cpp \
     ../../wpmcpp/src/package.cpp \
+    ../../wpmcpp/src/license.cpp \
+    ../../wpmcpp/src/dependency.cpp \
+    ../../wpmcpp/src/detectfile.cpp \
+    ../../wpmcpp/src/abstractrepository.cpp \
+    ../../wpmcpp/src/repository.cpp \
+    ../../wpmcpp/src/packageversion.cpp \
+    ../../wpmcpp/src/packageversionfile.cpp \
+    ../../wpmcpp/src/installedpackageversion.cpp \
     ../../wpmcpp/src/windowsregistry.cpp \
+    ../../wpmcpp/src/abstractthirdpartypm.cpp \
     ../../wpmcpp/src/controlpanelthirdpartypm.cpp \
     ../../wpmcpp/src/commandline.cpp \
     ../../wpmcpp/src/wpmutils.cpp \
@@ -40,8 +52,18 @@ SOURCES += main.cpp \
 
 HEADERS += \
     app.h \
+    ../../wpmcpp/src/clprogress.h \
     ../../wpmcpp/src/package.h \
+    ../../wpmcpp/src/license.h \
+    ../../wpmcpp/src/dependency.h \
+    ../../wpmcpp/src/detectfile.h \
+    ../../wpmcpp/src/abstractrepository.h \
+    ../../wpmcpp/src/repository.h \
+    ../../wpmcpp/src/packageversion.h \
+    ../../wpmcpp/src/packageversionfile.h \
+    ../../wpmcpp/src/installedpackageversion.h \
     ../../wpmcpp/src/windowsregistry.h \
+    ../../wpmcpp/src/abstractthirdpartypm.h \
     ../../wpmcpp/src/controlpanelthirdpartypm.h \
     ../../wpmcpp/src/commandline.h \
     ../../wpmcpp/src/wpmutils.h \

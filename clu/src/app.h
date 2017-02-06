@@ -2,11 +2,13 @@
 #define APP_H
 
 #include "commandline.h"
+#include "clprogress.h"
 
 class App
 {
 private:
     CommandLine cl;
+    CLProgress clp;
 
     int help();
     int addPath();

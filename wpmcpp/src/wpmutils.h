@@ -632,7 +632,7 @@ public:
      * @param path executable
      * @param nativeArguments all native arguments
      * @param outputFile the output will be saved here. The content will be
-     *     appended
+     *     appended. If this value is "", the output will not be saved anywhere.
      * @param env additional environemnt variables
      * @param write writeUTF16LEBOM write UTF-16 LE BOM mark at the beginning of
      *     the output file?
@@ -650,7 +650,7 @@ public:
      *     to a non-empty string if the exit code of the process is not 0.
      * @param where working directory
      * @param path .bat file
-     * @param outputFile the output will be saved here
+     * @param outputFile the output will be saved here or "" if not available
      * @param env additional environemnt variables
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream

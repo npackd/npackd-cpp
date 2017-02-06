@@ -84,27 +84,27 @@ int App::process()
 
 int App::remove()
 {
-    Job job;
+    Job* job = clp.createJob();
+    clp.setUpdateRate(0);
 
     QString title = cl.get("title");
 
-    if (job.shouldProceed()) {
+    if (job->shouldProceed()) {
         if (title.isNull()) {
-            job.setErrorMessage("Missing option: --title");
+            job->setErrorMessage("Missing option: --title");
         }
     }
 
     Repository rep;
     QList<InstalledPackageVersion*> installed;
-    if (job.shouldProceed()) {
+    if (job->shouldProceed()) {
         ControlPanelThirdPartyPM cppm;
-        Job* scanJob = job.newSubJob(0.1, "Scanning for packages", true, true);
+        Job* scanJob = job->newSubJob(0.1, "Scanning for packages", true, true);
         cppm.scan(scanJob, &installed, &rep);
-        delete scanJob;
     }
 
     Package* found = 0;
-    if (job.shouldProceed()) {
+    if (job->shouldProceed()) {
         for (int i = 0; i < rep.packages.size(); i++) {
             Package* p = rep.packages.at(i);
             if (p->title.compare(title, Qt::CaseInsensitive) == 0) {
@@ -114,11 +114,11 @@ int App::remove()
         }
 
         if (!found)
-            job.setErrorMessage("Cannot find the package");
+            job->setErrorMessage("Cannot find the package");
     }
 
     PackageVersion* pv = 0;
-    if (job.shouldProceed()) {
+    if (job->shouldProceed()) {
         for (int i = 0; i < installed.size(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
             if (ipv->package == found->name && ipv->installed()) {
@@ -126,17 +126,17 @@ int App::remove()
                 pv = rep.findPackageVersion_(
                         ipv->package, ipv->version, &err);
                 if (!err.isEmpty()) {
-                    job.setErrorMessage(err);
+                    job->setErrorMessage(err);
                 }
                 break;
             }
         }
-        if (!pv)
-            job.setErrorMessage("Cannot find the package version");
+        if (job->shouldProceed() && !pv)
+            job->setErrorMessage("Cannot find the package version");
     }
 
     PackageVersionFile* pvf = 0;
-    if (job.shouldProceed()) {
+    if (job->shouldProceed()) {
         for (int j = 0; j < pv->files.size(); j++) {
             if (pv->files.at(j)->path.compare(
                     ".Npackd\\Uninstall.bat",
@@ -144,38 +144,42 @@ int App::remove()
                 pvf = pv->files.at(j);
             }
         }
-        if (!pvf)
-            job.setErrorMessage("Removal script was not found");
+        if (job->shouldProceed() && !pvf)
+            job->setErrorMessage("Removal script was not found");
     }
 
-    if (job.shouldProceed()) {
+    if (job->shouldProceed()) {
         QString cmd = pvf->content;
         QTemporaryFile of(QDir::tempPath() + "\\cluXXXXXX.bat");
         if (!of.open())
-            job.setErrorMessage(of.errorString());
+            job->setErrorMessage(of.errorString());
         else {
             of.setAutoRemove(false);
             QString path = of.fileName();
             QString where = QDir().absoluteFilePath(path);
             if (of.write("\xff\xfe") == -1)
-                job.setErrorMessage(of.errorString());
+                job->setErrorMessage(of.errorString());
 
             if (of.write((const char*) cmd.utf16(), cmd.length() * 2) == -1)
-                job.setErrorMessage(of.errorString());
+                job->setErrorMessage(of.errorString());
 
             of.close();
-            Job* execJob = job.newSubJob(0.8, "Running the script", true, true);
+            Job* execJob = job->newSubJob(0.8, "Running the script", true, true);
 
-            // TODO: Output.log
+            // TODO: exit code
             WPMUtils::executeBatchFile(execJob, where,
-                    path, "Output.log", QStringList(), true);
+                    path, "", QStringList(), true);
+
         }
     }
 
-    if (job.getErrorMessage().isEmpty())
+    QString err = job->getErrorMessage();
+    delete job;
+
+    if (err.isEmpty())
         return 0;
     else {
-        WPMUtils::writeln(job.getErrorMessage(), false);
+        WPMUtils::writeln(err, false);
         return 1;
     }
 }
