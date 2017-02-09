@@ -2618,7 +2618,7 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
     if (!outputPath.isEmpty())
         outputPath = d.absolutePath() + "\\" + outputPath;
 
-    executeFile(job, d.absolutePath(), exe,
+    executeFile(job, d.absolutePath().replace('/', '\\'), exe,
             "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
             outputPath, env, true, printScriptOutput);
 }
@@ -2762,6 +2762,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         bool printScriptOutput)
 
 {
+    // WPMUtils::writeln(where + " " + path + " " + nativeArguments);
+
     QString initialTitle = job->getTitle();
 
     time_t start = time(NULL);

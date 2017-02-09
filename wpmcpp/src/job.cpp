@@ -334,8 +334,9 @@ void Job::checkOSCall(bool v)
 {
     if (!v) {
         this->mutex.lock();
-        if (this->errorMessage.isEmpty())
-            WPMUtils::formatMessage(GetLastError(), &this->errorMessage);
+        QString msg;
+        WPMUtils::formatMessage(GetLastError(), &msg);
+        setErrorMessage(msg);
         this->mutex.unlock();
     }
 }
@@ -384,6 +385,7 @@ void Job::setErrorMessage(const QString &errorMessage)
         this->errorMessage = errorMessage;
         if (parentJob && updateParentErrorMessage) {
             QString msg = title + ": " + errorMessage;
+
             parentJob->setErrorMessage(msg);
         }
         changed = true;

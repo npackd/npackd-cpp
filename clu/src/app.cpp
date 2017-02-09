@@ -85,7 +85,7 @@ int App::process()
 int App::remove()
 {
     Job* job = clp.createJob();
-    clp.setUpdateRate(0);
+    //clp.setUpdateRate(0);
 
     QString title = cl.get("title");
 
@@ -105,9 +105,10 @@ int App::remove()
 
     Package* found = 0;
     if (job->shouldProceed()) {
+        QRegExp re(title, Qt::CaseInsensitive);
         for (int i = 0; i < rep.packages.size(); i++) {
             Package* p = rep.packages.at(i);
-            if (p->title.compare(title, Qt::CaseInsensitive) == 0) {
+            if (re.indexIn(p->title) >= 0) {
                 found = p;
                 break;
             }
@@ -140,7 +141,7 @@ int App::remove()
         for (int j = 0; j < pv->files.size(); j++) {
             if (pv->files.at(j)->path.compare(
                     ".Npackd\\Uninstall.bat",
-                    Qt::CaseInsensitive)) {
+                    Qt::CaseInsensitive) == 0) {
                 pvf = pv->files.at(j);
             }
         }
@@ -156,20 +157,24 @@ int App::remove()
         else {
             of.setAutoRemove(false);
             QString path = of.fileName();
-            QString where = QDir().absoluteFilePath(path);
-            if (of.write("\xff\xfe") == -1)
-                job->setErrorMessage(of.errorString());
+            QDir dir(path);
+            path = dir.dirName();
+            dir.cdUp();
+            QString where = dir.absolutePath();
 
-            if (of.write((const char*) cmd.utf16(), cmd.length() * 2) == -1)
+            QByteArray ba = cmd.toUtf8();
+            if (of.write(ba.data(), ba.length()) == -1)
                 job->setErrorMessage(of.errorString());
 
             of.close();
             Job* execJob = job->newSubJob(0.8, "Running the script", true, true);
 
-            // TODO: exit code
+            where.replace('/', '\\');
+
+            //WPMUtils::writeln(path + " " + where);
+
             WPMUtils::executeBatchFile(execJob, where,
                     path, "", QStringList(), true);
-
         }
     }
 
@@ -269,8 +274,8 @@ int App::help()
         "        prints the product code of an MSI file",
         "    clu wait --timeout=<milliseconds>",
         "        wait for the specified amount of time",
-        "    clu remove|rm --title=<title>",
-        "        removes the specified software from the Software control panel",
+        "    clu remove|rm --title=<regular expression>",
+        "        removes one installed program from the Software control panel",
         "Options:",
     };
     for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {

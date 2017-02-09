@@ -649,7 +649,7 @@ public:
      * @param job job to monitor the progress. The error message will be set
      *     to a non-empty string if the exit code of the process is not 0.
      * @param where working directory
-     * @param path .bat file
+     * @param path relative path to the .bat file
      * @param outputFile the output will be saved here or "" if not available
      * @param env additional environemnt variables
      * @param printScriptOutput true = redirect the script output to the default
