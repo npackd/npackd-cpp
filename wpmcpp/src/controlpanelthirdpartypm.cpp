@@ -151,8 +151,19 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     QString title = k.get("DisplayName", &err);
     if (!err.isEmpty() || title.isEmpty())
         title = keyName;
+
+    if (title.endsWith(version.getVersionString())) {
+        title.chop(version.getVersionString().length());
+        title = title.trimmed();
+    }
+
     p->title = title;
-    p->description = "[Control Panel] " + p->title;
+
+    p->description = p->title;
+
+    QString publisher = k.get("Publisher", &err);
+    if (err.isEmpty() && !publisher.isEmpty())
+        p->description += " (" + publisher + ")";
 
     QString url = k.get("URLInfoAbout", &err);
     if (!err.isEmpty() || url.isEmpty() || !QUrl(url).isValid())
