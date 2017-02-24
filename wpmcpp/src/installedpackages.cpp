@@ -718,6 +718,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
                     *installeds.at(i),
                     i == 2 || i == 3,
                     prefixes.at(i));
+            qDeleteAll(*installeds.at(i));
 
             job->setProgress(0.87 + (i + 1.0) / futures.count() * 0.05);
         }
