@@ -38,7 +38,7 @@ You can follow the news on [Twitter](http://twitter.com/Npackd) or via the [Foru
   * shortcuts in the start menu are automatically created/deleted
   * multiple program versions can be installed side-by-side
   * cryptographic checksum for packages (SHA1 and SHA-256)
-  * prevents uninstallation of running programs
+  * closes running applications if necessary
 
 ##Statistics
 [![Project Stats](https://www.openhub.net/p/windows-package-manager/widgets/project_thin_badge.gif)](https://www.openhub.net/p/windows-package-manager)
