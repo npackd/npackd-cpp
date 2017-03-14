@@ -112,6 +112,7 @@ int App::process()
             clp.setUpdateRate(0);
             MySQLQuery::debug = true;
             Downloader::debug = true;
+            WPMUtils::debug = true;
         }
     }
 

@@ -49,6 +49,8 @@
 #include "windowsregistry.h"
 #include "mstask.h"
 
+bool WPMUtils::debug = false;
+
 QAtomicInt WPMUtils::nextNamePipeId;
 
 HANDLE WPMUtils::hEventLog = 0;
@@ -1910,7 +1912,8 @@ QMultiMap<QString, QString> WPMUtils::mapMSIComponentsToProducts(
 QString WPMUtils::getWindowsDir()
 {
     WCHAR dir[MAX_PATH];
-    SHGetFolderPath(0, CSIDL_WINDOWS, NULL, 0, dir);
+    // this sometimes returns wrong value (Terminal Services?): SHGetFolderPath(0, CSIDL_WINDOWS, NULL, 0, dir);
+    GetSystemWindowsDirectory(dir, MAX_PATH);
     return QString::fromUtf16(reinterpret_cast<ushort*>(dir));
 }
 
@@ -2762,7 +2765,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         bool printScriptOutput)
 
 {
-    // WPMUtils::writeln(where + " " + path + " " + nativeArguments);
+    if (debug)
+        WPMUtils::writeln(where + " " + path + " " + nativeArguments);
 
     QString initialTitle = job->getTitle();
 

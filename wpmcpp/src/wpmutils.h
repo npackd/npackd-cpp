@@ -60,6 +60,9 @@ private:
 
     static QString disconnectFrom(LPWSTR netname);
 public:
+    /** true = print debug information */
+    static bool debug;
+
     /**
      * @brief how to search for processes that prevent a directory from being
      *      deleted
@@ -387,6 +390,8 @@ public:
     static QString getExeFile();
 
     /**
+     * This function returns the Windows system directory even on Terminal Services
+     * where ::GetWindowsDirectory() returns different value for each user.
      * @return C:\Windows
      * @threadsafe
      */
