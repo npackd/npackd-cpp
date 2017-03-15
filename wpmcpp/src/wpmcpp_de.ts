@@ -132,7 +132,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Category:</source>
-        <translation>&amp;Kategorie:</translation>
+        <translation>Kategorie:</translation>
     </message>
     <message>
         <source>package category filter</source>
@@ -140,7 +140,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Sub-category:</source>
-        <translation>&amp;Unterkategorie:</translation>
+        <translation>Unterkategorie:</translation>
     </message>
     <message>
         <source>package sub-category filter</source>
@@ -1152,7 +1152,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be uninstalled:</source>
-        <translation>%1 Paket(e) werden deinstalliert</translation>
+        <translation>%1 Paket(e) werden deinstalliert:</translation>
     </message>
     <message>
         <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>

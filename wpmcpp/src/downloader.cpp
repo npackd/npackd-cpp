@@ -150,9 +150,12 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
 
         DWORD sendRequestError = 0;
+
+        // the following call uses NULL for headers in case there are no headers
+        // because Windows 2003 generates the error 12150 otherwise
         if (!HttpSendRequestW(hResourceHandle,
-                reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
-                const_cast<char*>(request.postData.data()),
+                request.headers.length() == 0 ? NULL : reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
+                request.postData.length() == 0 ? NULL : const_cast<char*>(request.postData.data()),
                 request.postData.length())) {
             sendRequestError = GetLastError();
         }

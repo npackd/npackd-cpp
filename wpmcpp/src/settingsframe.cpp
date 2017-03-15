@@ -29,7 +29,24 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     if (WPMUtils::is64BitWindows())
         dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
 
-    dirs.removeDuplicates();
+    // remove duplicates
+    for (int i = 0; i < dirs.size(); ) {
+        bool f = false;
+        QString dirsi = WPMUtils::normalizePath(dirs.at(i));
+        for (int j = 0; j < i; j++) {
+            QString dirsj = WPMUtils::normalizePath(dirs.at(j));
+            if (dirsi == dirsj) {
+                f = true;
+                break;
+            }
+        }
+
+        if (f)
+            dirs.removeAt(i);
+        else
+            i++;
+    }
+
     this->ui->comboBoxDir->addItems(dirs);
 }
 
