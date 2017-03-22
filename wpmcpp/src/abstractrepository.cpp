@@ -362,6 +362,16 @@ void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
         bool printScriptOutput, bool interactive)
 {
+    if (WPMUtils::debug) {
+        WPMUtils::writeln(QString("AbstractRepository::process: %0 operations").arg(install_.size()));
+        for (int i = 0; i < install_.size(); i++) {
+            InstallOperation* op = install_.at(i);
+            WPMUtils::writeln(QString("%0: %1 %2 %3 in %4").arg(i).
+                    arg(op->package).arg(op->version.getVersionString()).
+                    arg(op->install).arg(op->where));
+        }
+    }
+
     QDir d;
 
     QList<InstallOperation *> install = install_;
