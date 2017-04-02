@@ -24,10 +24,6 @@ if "%target%" equ "drmemory" (
     "%npackd_cl%\ncl" add -p drmemory || exit /b %errorlevel%
 )
 
-rem fail fast if the Advanced Installer cannot be downloaded
-"%npackd_cl%\ncl" add -p com.advancedinstaller.AdvancedInstallerFreeware
-if %errorlevel% neq 0 exit /b %errorlevel%
-
 if %bits% equ 64 goto bits64
 "%npackd_cl%\ncl" add -p npackd-dev-i686-w64 -v %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -37,7 +33,6 @@ goto :eof
 :bits64
 "%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
-
 
 if "%target%" neq "coverity" goto end
 "%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8
