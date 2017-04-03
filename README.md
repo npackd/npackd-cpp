@@ -29,7 +29,7 @@ see [What is new in Npackd](https://github.com/tim-lebedkov/npackd/wiki/ChangeLo
 ## News
 You can follow the news on [Twitter](http://twitter.com/Npackd) or via the [Forum](https://groups.google.com/forum/#!forum/npackd)
 
-##Main features
+## Main features
   * synchronizes information about installed programs with the control panel "Add or remove software" and MSI package database. Allow uninstallation of those packages. 
   * support for proxies (use the internet settings control panel to configure it)
   * password protected pages. This can be used to restrict access to your repository.
@@ -39,8 +39,9 @@ You can follow the news on [Twitter](http://twitter.com/Npackd) or via the [Foru
   * multiple program versions can be installed side-by-side
   * cryptographic checksum for packages (SHA1 and SHA-256)
   * closes running applications if necessary
+  * runs on [ReactOS](https://www.youtube.com/watch?v=m7o5e-RhY64) and under [Linux/Wine](https://groups.google.com/forum/#!searchin/npackd/wine%7Csort:relevance/npackd/9LSMzh_0LnQ/-LFL_nKJDAAJ)
 
-##Statistics
+## Statistics
 [![Project Stats](https://www.openhub.net/p/windows-package-manager/widgets/project_thin_badge.gif)](https://www.openhub.net/p/windows-package-manager)
 
 Download statistics: http://www.somsubhra.com/github-release-stats/?username=tim-lebedkov&repository=npackd-cpp
