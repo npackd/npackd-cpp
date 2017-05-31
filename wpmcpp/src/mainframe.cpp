@@ -108,7 +108,7 @@ void MainFrame::loadColumns() const
 
         if (err.isEmpty()) {
             QTableView* t = this->ui->tableWidget;
-            for (int i = 0; i < std::min(t->model()->columnCount(),
+            for (int i = 0; i < std::min<int>(t->model()->columnCount(),
                     v.count()); i++) {
                 bool ok;
                 int w = v.at(i).toInt(&ok);
