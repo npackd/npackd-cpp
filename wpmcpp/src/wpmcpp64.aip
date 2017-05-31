@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="12.8" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="14.0.2" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
+  <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
+    <ROW Name="HiddenItems" Value="AppXAppDetailsComponent;AppXCapabilitiesComponent;AppXDependenciesComponent;AppXProductDetailsComponent;AppXVisualAssetsComponent;AppXAppDeclarationsComponent;AppXUriRulesComponent"/>
+  </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_UPGRADE" Value="No"/>
@@ -11,10 +14,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="https://npackd.appspot.com/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{9FCF5672-ACE7-4DBD-9465-E2A26D140E83} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{32F412EA-A16C-4FA9-AF95-ED85ADC0BBF9} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.20.5" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.22.2" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{EABC4270-7D7F-47BF-B388-AC63606E8DAC}"/>
@@ -35,10 +38,10 @@
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="LICENSE.txt" ComponentId="{4B613765-3D48-403C-969D-8F2C5CF682AF}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="SHORTCUTDIR" ComponentId="{846AD71D-3542-4DDE-A672-0D16AD2CC796}" Directory_="SHORTCUTDIR" Attributes="0"/>
-    <ROW Component="exeproxy.exe" ComponentId="{1FCD4141-DB22-4255-9B9B-D53629563B7E}" Directory_="APPDIR" Attributes="0" KeyPath="exeproxy.exe"/>
-    <ROW Component="wpmcpp.exe" ComponentId="{4B28E1AA-9BF7-4619-AFBA-47E0314D8415}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
+    <ROW Component="LICENSE.txt" ComponentId="{28A334B2-08BC-4C0C-BC81-0425F3092792}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{2BCB1C93-5315-420E-A13A-AD3FAD655DCD}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="exeproxy.exe" ComponentId="{83512282-1F85-4A13-BDAC-7AF2953A91A4}" Directory_="APPDIR" Attributes="0" KeyPath="exeproxy.exe"/>
+    <ROW Component="wpmcpp.exe" ComponentId="{32A151A4-8A0F-4540-83C3-B22F4FD76131}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt SHORTCUTDIR exeproxy.exe wpmcpp.exe"/>
@@ -52,7 +55,6 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="..\build\64\release" PackageFileName="Npackd64-[|ProductVersion]" Languages="en" InstallationType="4" MsiPackageType="x64"/>
-    <ATTRIBUTE name="CurrentBuild" value="DefaultBuild"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
     <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
@@ -108,6 +110,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
     <ROW Action="AI_DpiContentScale" Type="1" Source="aicustact.dll" Target="DpiContentScale"/>
+    <ROW Action="AI_EnableDebugLog" Type="321" Source="aicustact.dll" Target="EnableDebugLog"/>
     <ROW Action="AI_InstallModeCheck" Type="1" Source="aicustact.dll" Target="UpdateInstallMode" WithoutSeq="true"/>
     <ROW Action="AI_LaunchApp" Type="1" Source="aicustact.dll" Target="[#wpmcpp.exe]"/>
     <ROW Action="AI_PREPARE_UPGRADE" Type="65" Source="aicustact.dll" Target="PrepareUpgrade"/>
@@ -124,12 +127,14 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_STORE_LOCATION" Condition="Not Installed" Sequence="1501"/>
     <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1399"/>
-    <ROW Action="AI_ResolveKnownFolders" Sequence="51"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
-    <ROW Action="AI_ResolveKnownFolders" Sequence="52"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
     <ROW Action="FolderDlg" Condition="AI_INSTALL" Sequence="1230" SeqType="3" MsiKey="WelcomeDlg"/>
-    <ROW Action="AI_DpiContentScale" Sequence="51"/>
+    <ROW Action="AI_DpiContentScale" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
     <ROW Condition="( Version9X OR VersionNT64 )" Description="[ProductName] cannot be installed on [WindowsTypeNTDisplay]" DescriptionLocId="AI.LaunchCondition.NoNT" IsPredefined="true" Builds="DefaultBuild"/>

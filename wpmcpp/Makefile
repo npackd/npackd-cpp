@@ -6,7 +6,7 @@ PROFILE=release32
 
 # ------------------------------------------------------------------------------
 
-.PHONY: all printvars clean compile prep zip msi drmemory upload translations
+.PHONY: all printvars clean compile prep zip msi drmemory translations
 
 SHELL:=cmd.exe
 
@@ -44,9 +44,9 @@ VERSION=$(shell cmd /c type version.txt)
 
 all:
 	$(MAKE) clean PROFILE=release32
-	$(MAKE) upload PROFILE=release32
+	$(MAKE) zip msi PROFILE=release32
 	$(MAKE) clean PROFILE=release64
-	$(MAKE) upload PROFILE=release64
+	$(MAKE) zip msi PROFILE=release64
 	echo ======================= SUCCESS =======================================
 
 printvars:
@@ -150,14 +150,6 @@ ifeq (32,$(BITS))
 drmemory: compile
 	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -report_leak_max 100000 -no_callstack_use_top_fp -- wpmcpp.exe
 endif
-
-upload: zip msi
-	echo 
-	"$(PUTTY)\pscp.exe" -C \
-	    $(WHERE)/Npackd$(BITS)-$(VERSION).zip \
-	    $(WHERE)/Npackd$(BITS)-$(VERSION).msi \
-	    $(WHERE)/Npackd$(BITS)-$(VERSION).map \
-		hilt2,npackd@frs.sourceforge.net:/home/pfs/project/n/np/npackd/$(PACKAGE)/
 
 translations:
 	set path=$(MINGW)\bin&&"$(QT)\qtbase\bin\lupdate.exe" -locations none src\wpmcpp.pro
