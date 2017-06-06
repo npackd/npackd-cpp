@@ -36,9 +36,11 @@ int main(int argc, char *argv[])
 {
     //qDebug() << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
 
-#ifdef __MINGW32__
+    // test: scheduling a task
+    //CoInitialize(NULL);
+    //WPMUtils::createMSTask();
+
     LoadLibrary(L"exchndl.dll");
-#endif
 
     QApplication a(argc, argv);
 
@@ -81,6 +83,8 @@ int main(int argc, char *argv[])
         w.show();
         errorCode = QApplication::exec();
     }
+
+    //WPMUtils::timer.dump();
 
     return errorCode;
 }

@@ -1003,9 +1003,18 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 
     // >= Windows Vista
     if (osvi.dwMajorVersion >= 6) {
+        BOOL WINAPI (*lpfQueryFullProcessImageName)(
+                HANDLE, DWORD, LPTSTR, PDWORD);
+
+        HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
+        lpfQueryFullProcessImageName =
+                (BOOL (WINAPI*) (HANDLE, DWORD, LPTSTR, PDWORD))
+                GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
+
         DWORD aiPID[1000], iCb = 1000;
         DWORD iCbneeded;
         if (!EnumProcesses(aiPID, iCb, &iCbneeded)) {
+            FreeLibrary(hInstLib);
             return r;
         }
 
@@ -1027,7 +1036,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
                                 &iCbneeded)) {
                             DWORD len = MAX_PATH;
                             WCHAR szName[MAX_PATH];
-							if (QueryFullProcessImageNameW(hProc, 0, szName,
+                            if (lpfQueryFullProcessImageName(hProc, 0, szName,
                                     &len)) {
                                 QString s;
                                 s.setUtf16((ushort*) szName, len);
@@ -1045,6 +1054,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
                     CloseHandle(hProc);
             }
         }
+        FreeLibrary(hInstLib);
     }
     return r;
 }
@@ -1386,9 +1396,18 @@ QStringList WPMUtils::getProcessFiles()
 
     // >= Windows Vista
     if (osvi.dwMajorVersion >= 6) {
+        BOOL WINAPI (*lpfQueryFullProcessImageName)(
+                HANDLE, DWORD, LPTSTR, PDWORD);
+
+        HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
+        lpfQueryFullProcessImageName =
+                (BOOL (WINAPI*) (HANDLE, DWORD, LPTSTR, PDWORD))
+                GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
+
         DWORD aiPID[1000], iCb = 1000;
         DWORD iCbneeded;
         if (!EnumProcesses(aiPID, iCb, &iCbneeded)) {
+            FreeLibrary(hInstLib);
             return r;
         }
 
@@ -1412,7 +1431,7 @@ QStringList WPMUtils::getProcessFiles()
                                 &iCbneeded)) {
                             DWORD len = MAX_PATH;
                             WCHAR szName[MAX_PATH];
-							if (QueryFullProcessImageNameW(hProc, 0, szName,
+                            if (lpfQueryFullProcessImageName(hProc, 0, szName,
                                     &len)) {
                                 QString s;
                                 s.setUtf16((ushort*) szName, len);
@@ -1425,6 +1444,7 @@ QStringList WPMUtils::getProcessFiles()
                 CloseHandle(hProc);
             }
         }
+        FreeLibrary(hInstLib);
     }
     return r;
 }
@@ -2110,8 +2130,21 @@ bool WPMUtils::is64BitWindows()
 #else
     // 32-bit programs run on both 32-bit and 64-bit Windows
     // so must sniff
-    BOOL f64 = FALSE;
-	return IsWow64Process(GetCurrentProcess(), &f64) && f64;
+    BOOL WINAPI (* lpfIsWow64Process_) (HANDLE,PBOOL);
+
+    HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
+    lpfIsWow64Process_ =
+            (BOOL (WINAPI *) (HANDLE,PBOOL))
+            GetProcAddress(hInstLib, "IsWow64Process");
+    bool ret;
+    if (lpfIsWow64Process_) {
+        BOOL f64 = FALSE;
+        ret = (*lpfIsWow64Process_)(GetCurrentProcess(), &f64) && f64;
+    } else {
+        ret = false;
+    }
+    FreeLibrary(hInstLib);
+    return ret;
 #endif
 }
 

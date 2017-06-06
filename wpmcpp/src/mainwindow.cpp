@@ -156,7 +156,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Npackd runs elevated and the taskbar does not. We have to allow the
     // taskbar event here.
-	ChangeWindowMessageFilterEx((HWND)winId(), taskbarMessageId, 1, 0);
+    HINSTANCE hInstLib = LoadLibraryA("USER32.DLL");
+    BOOL WINAPI (*lpfChangeWindowMessageFilterEx)
+            (HWND, UINT, DWORD, void*) =
+            (BOOL (WINAPI*) (HWND, UINT, DWORD, void*))
+            GetProcAddress(hInstLib, "ChangeWindowMessageFilterEx");
+    if (lpfChangeWindowMessageFilterEx) {
+        lpfChangeWindowMessageFilterEx((HWND) winId(), taskbarMessageId, 1, 0);
+        // qDebug() << "allow taskbar event " << taskbarMessageId;
+    }
+    FreeLibrary(hInstLib);
 }
 
 void MainWindow::applicationFocusChanged(QWidget* old, QWidget* now)
