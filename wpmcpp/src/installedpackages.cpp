@@ -239,6 +239,14 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
                     continue;
             }
 
+            // we cannot handle nested directories
+            if (!path.isEmpty()) {
+                path = WPMUtils::normalizePath(path);
+                if (WPMUtils::isOverOrEquals(path, packagePaths)) {
+                    ipv->directory = "";
+                }
+            }
+
             // qDebug() << "    0.2";
 
             processOneInstalled3rdParty(r, ipv);

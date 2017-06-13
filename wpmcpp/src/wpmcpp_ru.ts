@@ -2195,7 +2195,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>MSI database</source>
-        <translation>MSI база данных</translation>
+        <translation type="vanished">MSI база данных</translation>
     </message>
     <message>
         <source>MSI packages</source>
@@ -3324,6 +3324,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unsupported URL scheme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Running the installation hooks for dependencies</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
