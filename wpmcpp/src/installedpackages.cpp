@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <msi.h>
 #include <memory>
+#include <shlobj.h>
 
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
@@ -213,6 +214,11 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
     // filter the package versions out that are either already installed or
     // point to directories under an already installed version
     if (job->shouldProceed()) {
+        QStringList programRoots;
+        programRoots.append(WPMUtils::getProgramFilesDir());
+        if (WPMUtils::is64BitWindows())
+            programRoots.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
+
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
 
@@ -235,19 +241,29 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
             QString path = ipv->directory;
             if (!path.isEmpty()) {
                 path = WPMUtils::normalizePath(path);
-                if (WPMUtils::isUnderOrEquals(path, packagePaths))
+
+                bool cont = false;
+                for (int i = 0; i < packagePaths.size(); i++) {
+                    QString ppi = packagePaths.at(i);
+
+                    // e.g. an MSI package and a package from the Control Panel
+                    // "Software" have the same path
+                    if (WPMUtils::pathEquals(path, ppi)) {
+                        cont = true;
+                        break;
+                    }
+
+                    if (WPMUtils::isUnder(path, ppi) ||
+                            WPMUtils::isUnder(ppi, path) ||
+                            WPMUtils::isOverOrEquals(path, programRoots)) {
+                        ipv->directory = "";
+                        break;
+                    }
+                }
+
+                if (cont)
                     continue;
             }
-
-            // we cannot handle nested directories
-            if (!path.isEmpty()) {
-                path = WPMUtils::normalizePath(path);
-                if (WPMUtils::isOverOrEquals(path, packagePaths)) {
-                    ipv->directory = "";
-                }
-            }
-
-            // qDebug() << "    0.2";
 
             processOneInstalled3rdParty(r, ipv);
         }
