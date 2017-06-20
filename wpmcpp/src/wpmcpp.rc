@@ -4,8 +4,8 @@
 IDI_ICON1 ICON DISCARDABLE "app.ico"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION    	1,22,2,0
-PRODUCTVERSION 	1,22,2,0
+FILEVERSION    	1,22,3,0
+PRODUCTVERSION 	1,22,3,0
 FILEFLAGSMASK  	VS_FFI_FILEFLAGSMASK
 FILEOS         	VOS__WINDOWS32
 FILETYPE       	VFT_DLL
@@ -17,13 +17,13 @@ BEGIN
         BEGIN
             VALUE "CompanyName",      "Npackd\0"
             VALUE "FileDescription",  "Npackd\0"
-            VALUE "FileVersion",      "1.22.2.0\0"
+            VALUE "FileVersion",      "1.22.3.0\0"
             VALUE "InternalName",     "Npackd\0"
             VALUE "LegalCopyright",   "Npackd\0"
             VALUE "LegalTrademarks1", "Npackd, GPLv3\0"
             VALUE "OriginalFilename", "npackdg.exe\0"
             VALUE "ProductName",      "Npackd\0"
-            VALUE "ProductVersion",   "1.22.2\0"
+            VALUE "ProductVersion",   "1.22.3\0"
         END
     END
 
