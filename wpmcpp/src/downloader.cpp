@@ -316,9 +316,7 @@ out:
             DWORD index = 0;
             if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
                     &mimeBuffer, &bufferLength, &index)) {
-                QString errMsg;
-                WPMUtils::formatMessage(GetLastError(), &errMsg);
-                job->setErrorMessage(errMsg);
+                *mime = "application/octet-stream";
             } else {
                 mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
             }

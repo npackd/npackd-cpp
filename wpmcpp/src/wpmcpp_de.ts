@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.1" language="de_DE">
 <context>
     <name>ExportRepositoryFrame</name>
     <message>
@@ -64,7 +64,7 @@
     </message>
     <message>
         <source>Download URL:</source>
-        <translation>Download-Adresse:</translation>
+        <translation type="vanished">Download-Adresse:</translation>
     </message>
     <message>
         <source>Internal name:</source>
@@ -587,7 +587,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>other packages that this one depends upon</source>
-        <translation>andere Pakete, von denen dieses abhängt</translation>
+        <translation type="vanished">andere Pakete, von denen dieses abhängt</translation>
     </message>
     <message>
         <source>Text files:</source>
@@ -607,7 +607,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>SHA1:</source>
-        <translation>SHA1:</translation>
+        <translation type="vanished">SHA1:</translation>
     </message>
     <message>
         <source>Important files:</source>
@@ -669,15 +669,15 @@ p, li { white-space: pre-wrap; }
     <name>ProgressFrame</name>
     <message>
         <source>Frame</source>
-        <translation>Rahmen</translation>
+        <translation type="vanished">Rahmen</translation>
     </message>
     <message>
         <source>Task / Step:</source>
-        <translation>Aufgabe / Schritt:</translation>
+        <translation type="vanished">Aufgabe / Schritt:</translation>
     </message>
     <message>
         <source>-</source>
-        <translation>-</translation>
+        <translation type="vanished">-</translation>
     </message>
     <message>
         <source>Elapsed time:</source>
@@ -691,7 +691,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -741,15 +741,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Closing running processes</source>
-        <translation>Schließe laufende Prozesse</translation>
+        <translation type="vanished">Schließe laufende Prozesse</translation>
     </message>
     <message>
         <source>Directory %0 is locked</source>
-        <translation>Verzeichnis %0 ist gesperrt</translation>
+        <translation type="vanished">Verzeichnis %0 ist gesperrt</translation>
     </message>
     <message>
         <source>Directory %0 is locked by %1</source>
-        <translation>Verzeichnis %0 ist gesperrt von %1</translation>
+        <translation type="vanished">Verzeichnis %0 ist gesperrt von %1</translation>
     </message>
     <message>
         <source>Stopping the package %1 of %2</source>
@@ -793,11 +793,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>XML parsing failed at line %1, column %2: %3</source>
-        <translation>XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
+        <translation type="vanished">XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
     </message>
     <message>
         <source>Read invalid package version from the database: %1</source>
-        <translation>Ungültige Paketversion wurde aus der Datenbank eingelesen: %1</translation>
+        <translation type="vanished">Ungültige Paketversion wurde aus der Datenbank eingelesen: %1</translation>
     </message>
     <message>
         <source>Starting an SQL transaction</source>
@@ -841,7 +841,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Creating a temporary file</source>
-        <translation>Erstelle eine temporäre Datei</translation>
+        <translation type="vanished">Erstelle eine temporäre Datei</translation>
     </message>
     <message>
         <source>Error creating a temporary file</source>
@@ -894,7 +894,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Downloading the remote repositories and filling the local database</source>
-        <translation>Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
+        <translation type="vanished">Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
     </message>
     <message>
         <source>Updating statuses</source>
@@ -910,11 +910,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Refreshing the installation status</source>
-        <translation>Aktualisiere den Installationsstatus</translation>
+        <translation type="vanished">Aktualisiere den Installationsstatus</translation>
     </message>
     <message>
         <source>Updating the status for installed packages in the database</source>
-        <translation>Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
+        <translation type="vanished">Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
     </message>
     <message>
         <source>Reading categories</source>
@@ -967,7 +967,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unknown error %1 from InternetErrorDlg</source>
-        <translation>Unbekannter Fehler %1 von InternetErrorDlg</translation>
+        <translation type="vanished">Unbekannter Fehler %1 von InternetErrorDlg</translation>
     </message>
     <message>
         <source>The HTTP proxy requires authentication.</source>
@@ -1132,11 +1132,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Installing</source>
-        <translation>Installiere</translation>
+        <translation type="vanished">Installiere</translation>
     </message>
     <message>
         <source>Uninstalling</source>
-        <translation>Deinstalliere</translation>
+        <translation type="vanished">Deinstalliere</translation>
     </message>
     <message>
         <source>The package %1 will be uninstalled.</source>
@@ -1172,11 +1172,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find the package version</source>
-        <translation>Kann die Paketversion nicht finden</translation>
+        <translation type="vanished">Kann die Paketversion nicht finden</translation>
     </message>
     <message>
         <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
-        <translation>Das Paket %1 wird deinstalliert. Das zugehörige Verzeichnis %2 wird vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
+        <translation type="vanished">Das Paket %1 wird deinstalliert. Das zugehörige Verzeichnis %2 wird vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
     </message>
     <message>
         <source>Uninstall</source>
@@ -1204,7 +1204,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ambiguous package name</source>
-        <translation>Mehrdeutiger Paketname</translation>
+        <translation type="vanished">Mehrdeutiger Paketname</translation>
     </message>
     <message>
         <source>Planning</source>
@@ -1212,7 +1212,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Updating</source>
-        <translation>Aktualisiere</translation>
+        <translation type="vanished">Aktualisiere</translation>
     </message>
     <message>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
@@ -1249,7 +1249,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>list</source>
-        <translation>Liste</translation>
+        <translation type="vanished">Liste</translation>
     </message>
     <message>
         <source>Error parsing the command line: %1</source>
@@ -1269,7 +1269,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be installed: %2</source>
-        <translation>%1 Paket(e) wird/werden installiert: %2</translation>
+        <translation type="vanished">%1 Paket(e) wird/werden installiert: %2</translation>
     </message>
     <message>
         <source>Install</source>
@@ -1281,15 +1281,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
-        <translation>%1 Paket(e) wird/werden deinstalliert: %2. Die zugehörigen Verzeichnisse werden vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
+        <translation type="vanished">%1 Paket(e) wird/werden deinstalliert: %2. Die zugehörigen Verzeichnisse werden vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
     </message>
     <message>
         <source>Installing %1 packages, uninstalling %2 packages</source>
-        <translation>Installiere %1 Pakete, deinstalliere %2 Pakete</translation>
+        <translation type="vanished">Installiere %1 Pakete, deinstalliere %2 Pakete</translation>
     </message>
     <message>
         <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
-        <translation>%1 Paket(e) wird/werden deinstalliert: %2 (die zugehörigen Verzeichnisse werden vollständig gelöscht; die gelöschten Dateien können nicht wiederhergestellt werden) und %3 Paket(e) wird/werden installiert: %4.</translation>
+        <translation type="vanished">%1 Paket(e) wird/werden deinstalliert: %2 (die zugehörigen Verzeichnisse werden vollständig gelöscht; die gelöschten Dateien können nicht wiederhergestellt werden) und %3 Paket(e) wird/werden installiert: %4.</translation>
     </message>
     <message>
         <source>Install/Uninstall</source>
@@ -1301,7 +1301,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Initializing</source>
-        <translation>Initialisiere</translation>
+        <translation type="vanished">Initialisiere</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -1313,7 +1313,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Softwarepaketmanager für Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - Softwarepaketmanager für Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
@@ -1361,11 +1361,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot start this action while a drive scan is in progress</source>
-        <translation>Kann diese Aktion nicht starten während der Festplatten-Scan läuft</translation>
+        <translation type="vanished">Kann diese Aktion nicht starten während der Festplatten-Scan läuft</translation>
     </message>
     <message>
         <source>Cannot start this action while repositories reload is in progress</source>
-        <translation>Kann diese Aktioon nicht starten während die Repositories aktualisiert werden</translation>
+        <translation type="vanished">Kann diese Aktioon nicht starten während die Repositories aktualisiert werden</translation>
     </message>
     <message>
         <source>Cannot open the URL %1</source>
@@ -1381,7 +1381,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>MSI database</source>
-        <translation>MSI-Datenbank</translation>
+        <translation type="vanished">MSI-Datenbank</translation>
     </message>
     <message>
         <source>MSI packages</source>
@@ -1497,7 +1497,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The last lines of the output from the installation script:</source>
-        <translation>Die letzten Zeilen der Ausgabe von dem Skript zum Installieren:</translation>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Installieren:</translation>
     </message>
     <message>
         <source>%1. Full output was saved in %2</source>
@@ -1509,7 +1509,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The last lines of the output from the package stop script:</source>
-        <translation>Die letzten Zeilen der Ausgabe von dem Skript zum Stoppen:</translation>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Stoppen:</translation>
     </message>
     <message>
         <source>Deleting files</source>
@@ -1517,15 +1517,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change directory to %1</source>
-        <translation>Kann Verzeichnis nicht auf %1 setzen</translation>
+        <translation type="vanished">Kann Verzeichnis nicht auf %1 setzen</translation>
     </message>
     <message>
         <source>Cannot create directory %0%1</source>
-        <translation>Kann Verzeichnis %0%1 nicht erstellen</translation>
+        <translation type="vanished">Kann Verzeichnis %0%1 nicht erstellen</translation>
     </message>
     <message>
         <source>Cannot rename %1 to %2 in %3</source>
-        <translation>Kann %1 nicht in %2 in %3 umbenennen</translation>
+        <translation type="vanished">Kann %1 nicht in %2 in %3 umbenennen</translation>
     </message>
     <message>
         <source>Error searching for the best dependency match: %1</source>
@@ -1553,7 +1553,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>
-        <translation>Falsche SHA1-Nummer: %1 erwartet, aber %2 gefunden</translation>
+        <translation type="vanished">Falsche SHA1-Nummer: %1 erwartet, aber %2 gefunden</translation>
     </message>
     <message>
         <source>Shortcut target %1 does not exist</source>
@@ -1565,7 +1565,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Preparing</source>
-        <translation>Vorbereiten</translation>
+        <translation type="vanished">Vorbereiten</translation>
     </message>
     <message>
         <source>Creating directory</source>
@@ -1605,7 +1605,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
-        <translation>Hash-Summe (SHA1) %1 gefunden, aber %2 erwartet. Die Datei hat sich verändert.</translation>
+        <translation type="vanished">Hash-Summe (SHA1) %1 gefunden, aber %2 erwartet. Die Datei hat sich verändert.</translation>
     </message>
     <message>
         <source>Extracting files</source>
@@ -1633,7 +1633,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Opening ZIP file</source>
-        <translation>Öffne ZIP-Datei</translation>
+        <translation type="vanished">Öffne ZIP-Datei</translation>
     </message>
     <message>
         <source>Cannot open the ZIP file %1: %2</source>
@@ -1701,11 +1701,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
-        <translation>Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
+        <translation type="vanished">Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
     </message>
     <message>
         <source>Not a valid download URL for %1: %2</source>
-        <translation>Keine gültige Download-Adresse für %1: %2</translation>
+        <translation type="vanished">Keine gültige Download-Adresse für %1: %2</translation>
     </message>
     <message>
         <source>Not a valid version for %1: %2</source>
@@ -1713,23 +1713,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid SHA1 for %1: </source>
-        <translation>Ungültige SHA1 für %1: </translation>
+        <translation type="vanished">Ungültige SHA1 für %1: </translation>
     </message>
     <message>
         <source>Invalid SHA-1 for %1: </source>
-        <translation>Ungültige SHA-1 für %1: </translation>
+        <translation type="vanished">Ungültige SHA-1 für %1: </translation>
     </message>
     <message>
         <source>SHA-1 and SHA-256 cannot be defined both for the same package version %1</source>
-        <translation>SHA-1 und SHA-256 können nicht gleichzeitig für dieselbe Paketversion definiert werden %1</translation>
+        <translation type="vanished">SHA-1 und SHA-256 können nicht gleichzeitig für dieselbe Paketversion definiert werden %1</translation>
     </message>
     <message>
         <source>Unknown hash sum type %1 for %2</source>
-        <translation>Unbekannter Typ der Hash-Summe %1 für %2</translation>
+        <translation type="vanished">Unbekannter Typ der Hash-Summe %1 für %2</translation>
     </message>
     <message>
         <source>Invalid SHA-256 for %1: </source>
-        <translation>Ungültige SHA-256 für %1: </translation>
+        <translation type="vanished">Ungültige SHA-256 für %1: </translation>
     </message>
     <message>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
@@ -1749,23 +1749,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
-        <translation>Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
+        <translation type="vanished">Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
         <source>Invalid &lt;detect-file&gt; for %1: </source>
-        <translation>Ungültige Datei &lt;detect-file&gt; für %1: </translation>
+        <translation type="vanished">Ungültige Datei &lt;detect-file&gt; für %1: </translation>
     </message>
     <message>
         <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
-        <translation>Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
+        <translation type="vanished">Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
         <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
-        <translation>Doppeltes &lt;dependency&gt; für %1 in %2</translation>
+        <translation type="vanished">Doppeltes &lt;dependency&gt; für %1 in %2</translation>
     </message>
     <message>
         <source>Wrong MSI GUID for %1: %2</source>
-        <translation>Falsche MSI-GUID für %1: %2</translation>
+        <translation type="vanished">Falsche MSI-GUID für %1: %2</translation>
     </message>
     <message>
         <source>n/a</source>
@@ -1781,7 +1781,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Invalid icon URL for %1: %2</source>
-        <translation>Falsche Symbol-Adresse für %1: %2</translation>
+        <translation type="vanished">Falsche Symbol-Adresse für %1: %2</translation>
     </message>
     <message>
         <source>Empty category tag for %1</source>
@@ -1789,7 +1789,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>More than one &lt;category&gt; %1 for %2</source>
-        <translation>Mehr als ein &lt;category&gt; %1 für %2</translation>
+        <translation type="vanished">Mehr als ein &lt;category&gt; %1 für %2</translation>
     </message>
     <message>
         <source>Empty sub-category for %1</source>
@@ -1813,7 +1813,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Download failed: %2</source>
-        <translation>Herunterladen fehlgeschlagen: %2</translation>
+        <translation type="vanished">Herunterladen fehlgeschlagen: %2</translation>
     </message>
     <message>
         <source>Parsing the content</source>
@@ -1825,11 +1825,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Opening file</source>
-        <translation>Öffne Datei</translation>
+        <translation type="vanished">Öffne Datei</translation>
     </message>
     <message>
         <source>Cannot open the file</source>
-        <translation>Kann die Datei nicht öffnen</translation>
+        <translation type="vanished">Kann die Datei nicht öffnen</translation>
     </message>
     <message>
         <source>Parsing XML</source>
@@ -1837,7 +1837,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Analyzing the content</source>
-        <translation>Analysiere den Inhalt</translation>
+        <translation type="vanished">Analysiere den Inhalt</translation>
     </message>
     <message>
         <source>Invalid repository specification version: %1</source>
@@ -1866,11 +1866,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
-        <translation>Kann das/die Paket(e) nicht installieren, da die folgenden Dateien aktuell benutzt werden (bitte schließen Sie die zugehörigen Programme): %1</translation>
+        <translation type="vanished">Kann das/die Paket(e) nicht installieren, da die folgenden Dateien aktuell benutzt werden (bitte schließen Sie die zugehörigen Programme): %1</translation>
     </message>
     <message>
         <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
-        <translation>Kann Paket %1 nicht deinstallieren, da einige Dateien oder Verzeichnisse unterhalb von %2 aktuell benutzt werden.</translation>
+        <translation type="vanished">Kann Paket %1 nicht deinstallieren, da einige Dateien oder Verzeichnisse unterhalb von %2 aktuell benutzt werden.</translation>
     </message>
     <message>
         <source>Scanning %1</source>
@@ -1886,7 +1886,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find locked package versions: %1</source>
-        <translation>Kann die Versionen des gesperrten Pakets nicht ermitteln: %1</translation>
+        <translation type="vanished">Kann die Versionen des gesperrten Pakets nicht ermitteln: %1</translation>
     </message>
     <message>
         <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
@@ -2202,11 +2202,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 is already installed in %2</source>
-        <translation>%1 ist bereits installiert in %2</translation>
+        <translation type="vanished">%1 ist bereits installiert in %2</translation>
     </message>
     <message>
         <source>%1 is not installed</source>
-        <translation>%1 ist nicht installiert</translation>
+        <translation type="vanished">%1 ist nicht installiert</translation>
     </message>
     <message>
         <source>More than one package was found: %1</source>
@@ -2238,7 +2238,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Not a valid href URL in &lt;link&gt; for %1: %2</source>
-        <translation>Kein gültiger href URL in &lt;link&gt; für %1: %2</translation>
+        <translation type="vanished">Kein gültiger href URL in &lt;link&gt; für %1: %2</translation>
     </message>
     <message>
         <source>Error saving the package version %1 %2: %3</source>
@@ -2282,23 +2282,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in the attribute &apos;name&apos; in &lt;package&gt;: </source>
-        <translation>Fehler im Attribut &apos;name&apos; in &lt;package&gt;: </translation>
+        <translation type="vanished">Fehler im Attribut &apos;name&apos; in &lt;package&gt;: </translation>
     </message>
     <message>
         <source>Empty category</source>
-        <translation>Leere Kategorie</translation>
+        <translation type="vanished">Leere Kategorie</translation>
     </message>
     <message>
         <source>Empty attribute &apos;rel&apos; in &lt;link&gt;</source>
-        <translation>Leeres Attribut &apos;rel&apos; in &lt;link&gt;</translation>
+        <translation type="vanished">Leeres Attribut &apos;rel&apos; in &lt;link&gt;</translation>
     </message>
     <message>
         <source>Empty attribute &apos;href&apos; in &lt;link&gt;</source>
-        <translation>Leeres Attribut &apos;href&apos; in &lt;link&gt;</translation>
+        <translation type="vanished">Leeres Attribut &apos;href&apos; in &lt;link&gt;</translation>
     </message>
     <message>
         <source>Empty icon URL</source>
-        <translation>Leerer Icon URL</translation>
+        <translation type="vanished">Leerer Icon URL</translation>
     </message>
     <message>
         <source>Task / Step</source>
@@ -2474,7 +2474,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Installation Directory:</source>
-        <translation>Installationsverzeichnis:</translation>
+        <translation type="vanished">Installationsverzeichnis:</translation>
     </message>
     <message>
         <source>Installation directory:</source>
