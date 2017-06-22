@@ -2188,14 +2188,6 @@ void PackageVersion::stop(Job* job, int programCloseType,
 
         this->executeFile2(exec, d.absolutePath(), ".Npackd\\Stop.bat",
                 ".Npackd\\Stop.log", env, printScriptOutput);
-        if (exec->getErrorMessage().isEmpty()) {
-            QString path = d.absolutePath();
-            path.replace('/', '\\');
-            QString err = setPath(path);
-            if (!err.isEmpty()) {
-                job->setErrorMessage(err);
-            }
-        }
     } else {
         WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType);
 
