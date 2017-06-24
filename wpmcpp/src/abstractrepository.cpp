@@ -459,6 +459,8 @@ void AbstractRepository::process(Job *job,
 
                     QString binary = pv->download_(sub, dir, interactive);
                     binaries.append(QFileInfo(binary).fileName());
+                    if (sub->isCancelled())
+                        job->cancel();
                 }
             } else {
                 dirs.append("");
