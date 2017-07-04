@@ -1918,7 +1918,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unknown error %1 from InternetErrorDlg</source>
-        <translation>Неизвестная ошибка %1 в InternetErrorDlg</translation>
+        <translation type="vanished">Неизвестная ошибка %1 в InternetErrorDlg</translation>
     </message>
     <message>
         <source>The HTTP proxy requires authentication.</source>
@@ -3328,6 +3328,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Running the installation hooks for dependencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown error %1 from InternetErrorDlg in attempt %2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

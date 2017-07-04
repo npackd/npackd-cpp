@@ -205,7 +205,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                     FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
                     FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
                     FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
-            if (r == ERROR_SUCCESS && interactive)
+            if ((r == ERROR_SUCCESS || r == ERROR_INTERNET_INTERNAL_ERROR) && interactive)
                 r = ERROR_INTERNET_FORCE_RETRY;
         } else {
             if (interactive) {
@@ -257,7 +257,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 job->setErrorMessage(QObject::tr("Invalid handle"));
             } else {
                 job->setErrorMessage(QString(
-                        QObject::tr("Unknown error %1 from InternetErrorDlg")).arg(r));
+                        QObject::tr("Unknown error %1 from InternetErrorDlg in attempt %2")).arg(r).arg(callNumber + 1));
             }
         }
 
@@ -318,9 +318,7 @@ out:
             DWORD index = 0;
             if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
                     &mimeBuffer, &bufferLength, &index)) {
-                QString errMsg;
-                WPMUtils::formatMessage(GetLastError(), &errMsg);
-                job->setErrorMessage(errMsg);
+                *mime = "application/octet-stream";
             } else {
                 mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
             }

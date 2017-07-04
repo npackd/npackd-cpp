@@ -967,7 +967,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unknown error %1 from InternetErrorDlg</source>
-        <translation>Unbekannter Fehler %1 von InternetErrorDlg</translation>
+        <translation type="vanished">Unbekannter Fehler %1 von InternetErrorDlg</translation>
     </message>
     <message>
         <source>The HTTP proxy requires authentication.</source>
@@ -1309,7 +1309,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>About</source>
-        <translation>Über…</translation>
+        <translation>Über</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -2375,7 +2375,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot find the EXE Proxy executable.</source>
-        <translation>Kann die ausführbare Datei von EXE Proxy nicht finden</translation>
+        <translation>Kann die ausführbare Datei von EXE Proxy nicht finden.</translation>
     </message>
     <message>
         <source>Cannot find the package %1</source>
@@ -2456,6 +2456,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Running the installation hooks for dependencies</source>
         <translation>Führe die Installations-Hooks für die Abhängigkeiten aus</translation>
+    </message>
+    <message>
+        <source>Unknown error %1 from InternetErrorDlg in attempt %2</source>
+        <translation>Unbekannter Fehler %1 von InternetErrorDlg beim Versuch %2</translation>
     </message>
 </context>
 <context>

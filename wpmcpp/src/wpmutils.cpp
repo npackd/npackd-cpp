@@ -292,13 +292,13 @@ QStringList WPMUtils::parseCommandLine(const QString& commandLine,
     return params;
 }
 
-bool WPMUtils::isUnderOrEquals(const QString& file, const QStringList& dirs)
+bool WPMUtils::isOverOrEquals(const QString& file, const QStringList& dirs)
 {
     bool r = false;
     for (int j = 0; j < dirs.count(); j++) {
         const QString& dir = dirs.at(j);
         if (WPMUtils::pathEquals(file, dir) ||
-                WPMUtils::isUnder(file, dir)) {
+                WPMUtils::isUnder(dir, file)) {
             r = true;
             break;
         }
