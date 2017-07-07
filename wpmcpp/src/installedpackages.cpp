@@ -224,16 +224,30 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 
             // qDebug() << ipv->package << ipv->version.getVersionString();
 
+            QString betterPackageName = findBetterPackageName(r, ipv);
+
             // if the package version is already installed, we skip it
             InstalledPackageVersion* existing = find(ipv->package,
                     ipv->version);
             if (existing && existing->installed()) {
+                // remove an existing detected and installed package version
+                // if a better package name was found
+                if (!existing->detectionInfo.isEmpty() &&
+                        !betterPackageName.isEmpty()) {
+                    // WPMUtils::moveToRecycleBin(existing->directory);
+                    setPackageVersionPath(ipv->package, ipv->version, "");
+                }
+
                 // qDebug() << "existing: " << existing->toString();
                 delete existing;
                 continue;
             }
 
             delete existing;
+
+            if (!betterPackageName.isEmpty()) {
+                ipv->package = betterPackageName;
+            }
 
             // qDebug() << "    0.1";
 
@@ -280,6 +294,75 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
     // timer.dump();
 
     job->complete();
+}
+
+QString InstalledPackages::findBetterPackageName(DBRepository *r,
+        InstalledPackageVersion* ipv)
+{
+    QString result;
+
+    if (ipv->package.startsWith("msi.") ||
+            ipv->package.startsWith("control-panel.")) {
+        // find another package with the same title
+        Package* p = r->findPackage_(ipv->package);
+        if (p) {
+            QString txt = p->title.toLower();
+            txt.replace('(', ' ');
+            txt.replace(')', ' ');
+            txt.replace('[', ' ');
+            txt.replace(']', ' ');
+            txt.replace('{', ' ');
+            txt.replace('}', ' ');
+            txt.replace('-', ' ');
+            txt.replace('/', ' ');
+            QStringList parts = txt.split(' ', QString::SkipEmptyParts);
+            QStringList stopWords = QString("version build edition x86 remove only").
+                    split(' ');
+            const QString versionString = ipv->version.getVersionString();
+            for (int i = 0; i < parts.size(); i++) {
+                const QString p = parts.at(i);
+                if (p == "x64") {
+                    parts[i] = "64";
+                } else if (p == versionString || stopWords.contains(p)) {
+                    parts[i] = "";
+                }
+            }
+
+            // qDebug() << "searching for" << parts.join(' ');
+
+            QString err;
+            QStringList found = r->findPackages(
+                    Package::NOT_INSTALLED,
+                    Package::NOT_INSTALLED_NOT_AVAILABLE,
+                    parts.join(' '), -1, -1, &err);
+            if (err.isEmpty() && found.size() > 0 && found.size() < 4) {
+                QList<Package*> replacements = r->findPackages(found);
+
+                Package* replacement = 0;
+                for (int i = 0; i < replacements.size(); i++) {
+                    Package* p2 = replacements.at(i);
+                    if (!p2->name.startsWith("msi.") &&
+                            !p2->name.startsWith("control-panel.")) {
+                        replacement = p2->clone();
+                        break;
+                    }
+                }
+                qDeleteAll(replacements);
+
+                if (replacement) {
+                    // qDebug() << "replacing" << ipv->package << replacement->name;
+
+                    result = replacement->name;
+
+                    delete replacement;
+                }
+            }
+
+            delete p;
+        }
+    }
+
+    return result;
 }
 
 void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
@@ -836,6 +919,7 @@ QString InstalledPackages::clearPackagesInNestedDirectories() {
         InstalledPackageVersion* pv = pvs.at(i);
         QString p = WPMUtils::normalizePath(pv->getDirectory()) + '\\';
         paths.append(p);
+        // qDebug() << p;
     }
 
     for (int j = 0; j < pvs.count(); j++) {
@@ -849,6 +933,7 @@ QString InstalledPackages::clearPackagesInNestedDirectories() {
                     if (pv2dir.startsWith(pvdir)) {
                         err = setPackageVersionPath(pv2->package,
                                 pv2->version, "");
+                        // qDebug() << "clearing" << pv2dir;
                         if (!err.isEmpty())
                             goto out;
                     }

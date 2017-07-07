@@ -82,7 +82,8 @@ private:
     void detect3rdParty(Job* job, DBRepository* r,
             Repository *rep,
             const QList<InstalledPackageVersion*>& installed,
-            bool replace, const QString& detectionInfoPrefix);
+                        bool replace, const QString& detectionInfoPrefix);
+    QString findBetterPackageName(DBRepository *r, InstalledPackageVersion *ipv);
 public:
     /** package name for the current application */
     static QString packageName;

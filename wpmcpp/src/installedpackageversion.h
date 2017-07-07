@@ -13,6 +13,10 @@ class InstalledPackageVersion
 public:
     QString directory;
 
+    /**
+     * additional info stored here if the package was detected instead of
+     * installed via Npackd
+     */
     QString detectionInfo;
 
     /** full package version. This value should not be chaged. */
