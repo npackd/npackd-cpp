@@ -1059,11 +1059,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting</source>
-        <translation>Entdecken</translation>
+        <translation type="vanished">Entdecken</translation>
     </message>
     <message>
         <source>Processing detected packages</source>
-        <translation>Verarbeite die gefundenen Pakete</translation>
+        <translation type="vanished">Verarbeite die gefundenen Pakete</translation>
     </message>
     <message>
         <source>Saving</source>

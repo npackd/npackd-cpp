@@ -103,29 +103,6 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
 }
 
 void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
-        AbstractThirdPartyPM *pm,
-        bool replace, const QString& detectionInfoPrefix)
-{
-    Repository rep;
-    QList<InstalledPackageVersion*> installed;
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.8, QObject::tr("Detecting"), true, true);
-        pm->scan(sub, &installed, &rep);
-    }
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.2,
-                QObject::tr("Processing detected packages"), true, true);
-        detect3rdParty(sub, r, &rep, installed, replace, detectionInfoPrefix);
-    }
-
-    qDeleteAll(installed);
-
-    job->complete();
-}
-
-void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
         Repository* rep,
         const QList<InstalledPackageVersion*>& installed,
         bool replace, const QString& detectionInfoPrefix)

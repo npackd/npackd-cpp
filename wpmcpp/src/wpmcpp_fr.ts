@@ -2933,14 +2933,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Detecting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Processing detected packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Saving</source>
         <translation type="unfinished"></translation>
     </message>
