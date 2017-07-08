@@ -1075,7 +1075,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clearing information about installed package versions in nested directories</source>
-        <translation>Leere Informationen über installierte Paketversionen in Verzeichnissen mit Unterverzeichnissen</translation>
+        <translation type="vanished">Leere Informationen über installierte Paketversionen in Verzeichnissen mit Unterverzeichnissen</translation>
     </message>
     <message>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>

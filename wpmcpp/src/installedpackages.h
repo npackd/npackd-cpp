@@ -34,11 +34,6 @@ private:
     QMap<QString, InstalledPackageVersion*> data;
 
     /**
-     * @return error message
-     */
-    QString clearPackagesInNestedDirectories();
-
-    /**
      * @brief processOneInstalled3rdParty
      * @param r
      * @param ipv

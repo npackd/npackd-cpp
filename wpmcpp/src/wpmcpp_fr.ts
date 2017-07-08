@@ -1828,7 +1828,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clearing information about installed package versions in nested directories</source>
-        <translation>Effacement des informations relatives aux versions de paquets installées dans des répertoires imbriqués</translation>
+        <translation type="vanished">Effacement des informations relatives aux versions de paquets installées dans des répertoires imbriqués</translation>
     </message>
     <message>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>

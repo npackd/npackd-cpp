@@ -26,17 +26,6 @@ InstalledPackages InstalledPackages::def;
 
 QString InstalledPackages::packageName;
 
-static bool installedPackageVersionLessThan(const InstalledPackageVersion* a,
-        const InstalledPackageVersion* b)
-{
-    int r = a->package.compare(b->package);
-    if (r == 0) {
-        r = a->version.compare(b->version);
-    }
-
-    return r > 0;
-}
-
 InstalledPackages* InstalledPackages::getDefault()
 {
     return &def;
@@ -813,7 +802,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.02,
+        Job* sub = job->newSubJob(0.08,
                 QObject::tr("Setting the NPACKD_CL environment variable"));
         QString err = rep->updateNpackdCLEnvVar();
         if (!err.isEmpty())
@@ -834,18 +823,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
         delete pm;
     }
  */
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.06,
-                QObject::tr("Clearing information about installed package versions in nested directories"));
-        QString err = clearPackagesInNestedDirectories();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else {
-            sub->completeWithProgress();
-            job->setProgress(1);
-        }
-    }
 
     job->complete();
 }
@@ -882,48 +859,6 @@ void InstalledPackages::fireStatusChanged(const QString &package,
         const Version &version)
 {
     emit statusChanged(package, version);
-}
-
-QString InstalledPackages::clearPackagesInNestedDirectories() {
-    QString err;
-
-    QList<InstalledPackageVersion*> pvs = this->getAll();
-    qSort(pvs.begin(), pvs.end(), installedPackageVersionLessThan);
-
-    // performance improvement: normalize the paths first
-    QStringList paths;
-    for (int i = 0; i < pvs.count(); i++) {
-        InstalledPackageVersion* pv = pvs.at(i);
-        QString p = WPMUtils::normalizePath(pv->getDirectory()) + '\\';
-        paths.append(p);
-        // qDebug() << p;
-    }
-
-    for (int j = 0; j < pvs.count(); j++) {
-        InstalledPackageVersion* pv = pvs.at(j);
-        QString pvdir = paths.at(j);
-        if (pv->installed()) {
-            for (int i = j + 1; i < pvs.count(); i++) {
-                InstalledPackageVersion* pv2 = pvs.at(i);
-                QString pv2dir = paths.at(i);
-                if (pv2->installed()) {
-                    if (pv2dir.startsWith(pvdir)) {
-                        err = setPackageVersionPath(pv2->package,
-                                pv2->version, "");
-                        // qDebug() << "clearing" << pv2dir;
-                        if (!err.isEmpty())
-                            goto out;
-                    }
-                }
-            }
-        }
-    }
-out:
-
-    qDeleteAll(pvs);
-    pvs.clear();
-
-    return err;
 }
 
 QString InstalledPackages::readRegistryDatabase()

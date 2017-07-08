@@ -1949,7 +1949,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clearing information about installed package versions in nested directories</source>
-        <translation>Limpiando información acerca de versiones de paquetes instalados en directorios anidados</translation>
+        <translation type="vanished">Limpiando información acerca de versiones de paquetes instalados en directorios anidados</translation>
     </message>
     <message>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
