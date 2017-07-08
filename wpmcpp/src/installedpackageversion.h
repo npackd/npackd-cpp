@@ -29,6 +29,8 @@ public:
             const Version& version,
             const QString& directory);
 
+    bool operator==(const InstalledPackageVersion& other);
+
     /**
      * The value is not empty for externally installed and detected packages.
      * For example, packages detected from the MSI database have here the MSI

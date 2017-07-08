@@ -143,35 +143,6 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 
     timer.time(2);
 
-    // remove all package versions that are not detected as installed anymore
-    if (job->shouldProceed() && !detectionInfoPrefix.isEmpty()) {
-        QSet<QString> installedPVs;
-        for (int i = 0; i < installed.count(); i++) {
-            InstalledPackageVersion* ipv = installed.at(i);
-            installedPVs.insert(ipv->package + "@" +
-                    ipv->version.getVersionString());
-        }
-
-        // remove uninstalled packages
-        QList<InstalledPackageVersion*> ipvs = getAll();
-        for (int i = 0; i < ipvs.count(); i++) {
-            InstalledPackageVersion* ipv = ipvs.at(i);
-            bool same3rdPartyPM = ipv->detectionInfo.indexOf(
-                    detectionInfoPrefix) == 0 ||
-                    (detectionInfoPrefix == "msi:" &&
-                    ipv->package.startsWith("msi.")) ||
-                    (detectionInfoPrefix == "control-panel:" &&
-                    ipv->package.startsWith("control-panel."));
-            if (same3rdPartyPM &&
-                    ipv->installed() && !installedPVs.contains(
-                    ipv->package + "@" +
-                    ipv->version.getVersionString())) {
-                this->setPackageVersionPath(ipv->package, ipv->version, "");
-            }
-        }
-        qDeleteAll(ipvs);
-    }
-
     QStringList packagePaths = this->getAllInstalledPackagePaths();
     for (int i = 0; i < packagePaths.size(); i++) {
         packagePaths[i] = WPMUtils::normalizePath(packagePaths.at(i));
@@ -191,29 +162,19 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
             // qDebug() << ipv->package << ipv->version.getVersionString();
 
             QString betterPackageName = findBetterPackageName(r, ipv);
+            if (!betterPackageName.isEmpty()) {
+                ipv->package = betterPackageName;
+            }
 
             // if the package version is already installed, we skip it
             InstalledPackageVersion* existing = find(ipv->package,
                     ipv->version);
             if (existing && existing->installed()) {
-                // remove an existing detected and installed package version
-                // if a better package name was found
-                if (!existing->detectionInfo.isEmpty() &&
-                        !betterPackageName.isEmpty()) {
-                    // WPMUtils::moveToRecycleBin(existing->directory);
-                    setPackageVersionPath(ipv->package, ipv->version, "");
-                }
-
-                // qDebug() << "existing: " << existing->toString();
                 delete existing;
                 continue;
             }
 
             delete existing;
-
-            if (!betterPackageName.isEmpty()) {
-                ipv->package = betterPackageName;
-            }
 
             // qDebug() << "    0.1";
 
@@ -404,7 +365,6 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         // qDebug() << "    5";
         ipv2->detectionInfo = ipv->detectionInfo;
         ipv2->setPath(path);
-        this->saveToRegistry(ipv2);
     }
 }
 
@@ -673,57 +633,8 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     // no direct usage of "data" here => no mutex
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.2,
-                QObject::tr("Detecting directories deleted externally"));
-
-        QList<InstalledPackageVersion*> ipvs = getAll();
-        for (int i = 0; i < ipvs.count(); i++) {
-            InstalledPackageVersion* ipv = ipvs.at(i);
-            if (ipv->installed()) {
-                QDir d(ipv->getDirectory());
-                d.refresh();
-                if (!d.exists()) {
-                    QString err = this->setPackageVersionPath(
-                            ipv->package, ipv->version, "");
-                    if (!err.isEmpty())
-                        job->setErrorMessage(err);
-                }
-            }
-        }
-        qDeleteAll(ipvs);
-
-        sub->completeWithProgress();
-    }
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.6,
-                QObject::tr("Reading registry package database"));
-        QString err = readRegistryDatabase();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        sub->completeWithProgress();
-    }
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.02,
-                QObject::tr(
-            "Correcting installation paths created by previous versions of Npackd"));
-        QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir());
-        QList<InstalledPackageVersion*> ipvs = this->getAll();
-        for (int i = 0; i < ipvs.count(); i++) {
-            InstalledPackageVersion* ipv = ipvs.at(i);
-            if (ipv->installed()) {
-                QString d = WPMUtils::normalizePath(ipv->directory);
-                // qDebug() << ipv->package <<ipv->directory;
-                if ((WPMUtils::isUnder(d, windowsDir) ||
-                        WPMUtils::pathEquals(d, windowsDir)) &&
-                        ipv->package != InstalledPackages::packageName) {
-                    this->setPackageVersionPath(ipv->package, ipv->version, "");
-                }
-            }
-        }
-        qDeleteAll(ipvs);
-        sub->completeWithProgress();
+        clear();
+        job->setProgress(0.82);
     }
 
     // adding well-known packages should happen before adding packages
@@ -802,7 +713,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.08,
+        Job* sub = job->newSubJob(0.02,
                 QObject::tr("Setting the NPACKD_CL environment variable"));
         QString err = rep->updateNpackdCLEnvVar();
         if (!err.isEmpty())
@@ -824,7 +735,63 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     }
  */
 
+    if (job->shouldProceed()) {
+        QString err = save();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            job->setProgress(1);
+    }
+
     job->complete();
+}
+
+QString InstalledPackages::save()
+{
+    InstalledPackages other;
+
+    QString err = other.readRegistryDatabase();
+
+    if (err.isEmpty()) {
+        QList<InstalledPackageVersion*> myInfos = getAll();
+        for (int i = 0; i < myInfos.size(); i++) {
+            InstalledPackageVersion* myIpv = myInfos.at(i);
+            InstalledPackageVersion* otherIpv = other.find(
+                    myIpv->package, myIpv->version);
+
+            if (!otherIpv || !(*myIpv == *otherIpv)) {
+                err = saveToRegistry(myIpv);
+            }
+
+            delete otherIpv;
+
+            if (!err.isEmpty())
+                break;
+        }
+        qDeleteAll(myInfos);
+        myInfos.clear();
+
+        QList<InstalledPackageVersion*> otherInfos = other.getAll();
+        for (int i = 0; i < otherInfos.size(); i++) {
+            InstalledPackageVersion* otherIpv = otherInfos.at(i);
+            InstalledPackageVersion* myIpv = find(
+                    otherIpv->package, otherIpv->version);
+
+            if (!myIpv) {
+                err = setPackageVersionPath(otherIpv->package,
+                        otherIpv->version, "", true);
+            }
+
+            delete myIpv;
+
+            if (!err.isEmpty())
+                break;
+        }
+        qDeleteAll(otherInfos);
+        otherInfos.clear();
+    }
+
+    return err;
 }
 
 QString InstalledPackages::getPath(const QString &package,
@@ -961,6 +928,14 @@ QString InstalledPackages::readRegistryDatabase()
     // qDebug() << "stop reading";
 
     return err;
+}
+
+void InstalledPackages::clear()
+{
+    this->mutex.lock();
+    qDeleteAll(this->data);
+    this->data.clear();
+    this->mutex.unlock();
 }
 
 QString InstalledPackages::findPath_npackdcl(const Dependency& dep)

@@ -17,6 +17,13 @@ InstalledPackageVersion::InstalledPackageVersion(const QString &package,
     //        package << " " << directory;
 }
 
+bool InstalledPackageVersion::operator==(const InstalledPackageVersion &other)
+{
+    return this->package == other.package && this->version == other.version &&
+            this->directory == other.directory &&
+            this->detectionInfo == other.detectionInfo;
+}
+
 QString InstalledPackageVersion::getDirectory() const
 {
     return this->directory;

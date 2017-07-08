@@ -1982,11 +1982,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting directories deleted externally</source>
-        <translation>Обнаружение директорий, удалённых внешне</translation>
+        <translation type="vanished">Обнаружение директорий, удалённых внешне</translation>
     </message>
     <message>
         <source>Reading registry package database</source>
-        <translation>Чтение реестра базы данных пакетов</translation>
+        <translation type="vanished">Чтение реестра базы данных пакетов</translation>
     </message>
     <message>
         <source>Adding well-known packages</source>
@@ -3160,10 +3160,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Saving</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Correcting installation paths created by previous versions of Npackd</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

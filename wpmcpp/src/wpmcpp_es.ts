@@ -1917,15 +1917,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting directories deleted externally</source>
-        <translation>Detectando directorios eliminados externamente</translation>
+        <translation type="vanished">Detectando directorios eliminados externamente</translation>
     </message>
     <message>
         <source>Reading registry package database</source>
-        <translation>Leyendo registro de la base de datos del paquete</translation>
+        <translation type="vanished">Leyendo registro de la base de datos del paquete</translation>
     </message>
     <message>
         <source>Correcting installation paths created by previous versions of Npackd</source>
-        <translation>Corrigiendo las rutas de instalación creadas por versiones previas de Npackd</translation>
+        <translation type="vanished">Corrigiendo las rutas de instalación creadas por versiones previas de Npackd</translation>
     </message>
     <message>
         <source>Adding well-known packages</source>

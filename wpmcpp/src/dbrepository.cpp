@@ -1483,7 +1483,8 @@ void DBRepository::updateF5(Job* job, bool interactive)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.4,
                 QObject::tr("Refreshing the installation status (tempdb)"));
-        InstalledPackages::getDefault()->refresh(this, sub);
+        InstalledPackages ip(*InstalledPackages::getDefault());
+        ip.refresh(this, sub);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }

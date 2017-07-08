@@ -1031,15 +1031,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting directories deleted externally</source>
-        <translation>Ermittle Verzeichnisse, die extern gelöscht wurden</translation>
+        <translation type="vanished">Ermittle Verzeichnisse, die extern gelöscht wurden</translation>
     </message>
     <message>
         <source>Reading registry package database</source>
-        <translation>Lese Registry-Paketdatenbank</translation>
+        <translation type="vanished">Lese Registry-Paketdatenbank</translation>
     </message>
     <message>
         <source>Correcting installation paths created by previous versions of Npackd</source>
-        <translation>Korrigiere die von der vorherigen Versionen von Npackd erzeugten Installationspfade</translation>
+        <translation type="vanished">Korrigiere die von der vorherigen Versionen von Npackd erzeugten Installationspfade</translation>
     </message>
     <message>
         <source>Adding well-known packages</source>

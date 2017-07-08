@@ -146,6 +146,12 @@ public:
     QString readRegistryDatabase();
 
     /**
+     * @brief deletes all information from this object without storing the
+     *     changes in the registry
+     */
+    void clear();
+
+    /**
      * @brief finds the specified installed package version
      * @param package full package name
      * @param version package version
@@ -212,6 +218,13 @@ public:
      * @param should the MSI packages be also detected (+4 seconds)
      */
     void refresh(DBRepository *rep, Job* job, bool detectMSI=true);
+
+    /**
+     * Saves the information to the Windows Registry.
+     *
+     * @return error message
+     */
+    QString save();
 
     /**
      * @brief returns the path of an installed package version

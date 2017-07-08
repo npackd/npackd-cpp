@@ -1804,11 +1804,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting directories deleted externally</source>
-        <translation>Détection des dossiers supprimés hors de l&apos;application</translation>
+        <translation type="vanished">Détection des dossiers supprimés hors de l&apos;application</translation>
     </message>
     <message>
         <source>Reading registry package database</source>
-        <translation>Lecture de la base de données de paquets dans le registre</translation>
+        <translation type="vanished">Lecture de la base de données de paquets dans le registre</translation>
     </message>
     <message>
         <source>Adding well-known packages</source>
@@ -2934,10 +2934,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Saving</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Correcting installation paths created by previous versions of Npackd</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
