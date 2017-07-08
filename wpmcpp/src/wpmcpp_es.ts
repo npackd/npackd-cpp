@@ -2191,19 +2191,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>No se puede iniciar el escaneo ahora. El paquete %1 está bloqueado por una instalación/desinstalación en ejecución.</translation>
-    </message>
-    <message>
-        <source>Scanning the hard drives</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">No se puede iniciar el escaneo ahora. El paquete %1 está bloqueado por una instalación/desinstalación en ejecución.</translation>
     </message>
     <message>
         <source>%1 package(s) detected</source>
-        <translation>%1 paquete(s) detectados</translation>
+        <translation type="vanished">%1 paquete(s) detectados</translation>
     </message>
     <message>
         <source>Package detection status</source>
-        <translation>Estado de la detección de paquetes</translation>
+        <translation type="vanished">Estado de la detección de paquetes</translation>
     </message>
     <message>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>

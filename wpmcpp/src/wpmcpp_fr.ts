@@ -1969,19 +1969,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Impossible de démarrer le scan. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
-    </message>
-    <message>
-        <source>Scanning the hard drives</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 package(s) detected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Package detection status</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Impossible de démarrer le scan. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>

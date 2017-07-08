@@ -1341,19 +1341,19 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Kann den Scan jetzt nicht starten. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
+        <translation type="vanished">Kann den Scan jetzt nicht starten. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
     <message>
         <source>Scanning the hard drives</source>
-        <translation>Durchsuche die Festplatten</translation>
+        <translation type="vanished">Durchsuche die Festplatten</translation>
     </message>
     <message>
         <source>%1 package(s) detected</source>
-        <translation>%1 Paket(e) erkannt</translation>
+        <translation type="vanished">%1 Paket(e) erkannt</translation>
     </message>
     <message>
         <source>Package detection status</source>
-        <translation>Status der Paketerkennung</translation>
+        <translation type="vanished">Status der Paketerkennung</translation>
     </message>
     <message>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>

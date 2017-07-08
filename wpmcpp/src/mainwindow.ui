@@ -71,12 +71,10 @@
     <addaction name="actionOpen_folder"/>
     <addaction name="actionGotoPackageURL"/>
     <addaction name="actionTest_Download_Site"/>
+    <addaction name="separator"/>
     <addaction name="actionReload_Repositories"/>
     <addaction name="actionAdd_package"/>
     <addaction name="actionExport"/>
-    <addaction name="separator"/>
-    <addaction name="actionScan_Hard_Drives"/>
-    <addaction name="separator"/>
     <addaction name="actionSettings"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -378,9 +376,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <tabstops>
-  <tabstop>tabWidget</tabstop>
- </tabstops>
  <resources>
   <include location="wpmcpp.qrc"/>
  </resources>

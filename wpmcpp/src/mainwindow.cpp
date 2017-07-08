@@ -58,7 +58,6 @@
 #include "installedpackages.h"
 #include "flowlayout.h"
 #include "scandiskthirdpartypm.h"
-#include "scanharddrivesthread.h"
 #include "visiblejobs.h"
 #include "progresstree2.h"
 #include "exportrepositoryframe.h"
@@ -68,6 +67,75 @@ extern HWND defaultPasswordWindow;
 QIcon MainWindow::genericAppIcon;
 QIcon MainWindow::waitAppIcon;
 MainWindow* MainWindow::instance = 0;
+
+/* creating a tag cloud
+QString err;
+QList<Package*> ps = DBRepository::getDefault()->findPackages(
+        Package::INSTALLED, false, "", &err);
+words.clear();
+QRegExp re("\\W+", Qt::CaseInsensitive);
+for (int i = 0; i < ps.count(); i++) {
+    Package* p = ps.at(i);
+    QString txt = p->title + " " + p->description;
+    QStringList sl = txt.toLower().split(re, QString::SkipEmptyParts);
+    sl.removeDuplicates();
+    for (int j = 0; j < sl.count(); j++) {
+        QString w = sl.at(j);
+        if (w.length() > 3) {
+            int n = words.value(w);
+            n++;
+            words.insert(w, n);
+        }
+    }
+}
+qDeleteAll(ps);
+
+QStringList stopWords = QString("a an and are as at be but by for if in "
+        "into is it no not of on or such that the their then there these "
+        "they this to was will with").split(" ");
+for (int i = 0; i < stopWords.count(); i++)
+    words.remove(stopWords.at(i));
+    */
+
+/* tag cloud
+QScrollArea* jobsScrollArea = new QScrollArea(this->ui->tabWidget);
+jobsScrollArea->setFrameStyle(0);
+
+ScanHardDrivesThread* it = (ScanHardDrivesThread*) this->sender();
+QList<QPair<QString, int> > entries;
+QList<QString> words = it->words.keys();
+for (int i = 0; i < words.count(); i++) {
+    QString w = words.at(i);
+    entries.append(QPair<QString, int>(w, it->words.value(w)));
+}
+qSort(entries.begin(), entries.end(), comparesi);
+
+QWidget *window = new QWidget(jobsScrollArea);
+FlowLayout *layout = new FlowLayout();
+window->setLayout(layout);
+
+QSizePolicy sp;
+sp.setVerticalPolicy(QSizePolicy::Preferred);
+sp.setHorizontalPolicy(QSizePolicy::Ignored);
+sp.setHorizontalStretch(100);
+window->setSizePolicy(sp);
+
+for (int i = 0; i < entries.count(); i++) {
+    QString w = entries.at(i).first;
+    int n = entries.at(i).second;
+
+    QLabel *b = new QLabel("<a href=\"http://www.test.de\">" +
+            w + " (" + QString::number(n) + ")</a>");
+    b->setMouseTracking(true);
+    b->setFocusPolicy(Qt::StrongFocus);
+    b->setTextInteractionFlags(Qt::TextSelectableByMouse |
+            Qt::TextSelectableByKeyboard | Qt::LinksAccessibleByMouse);
+    layout->addWidget(b);
+}
+jobsScrollArea->setWidget(window);
+jobsScrollArea->setWidgetResizable(true);
+addTab(jobsScrollArea, genericAppIcon, "Tags");
+*/
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -959,7 +1027,6 @@ void MainWindow::updateActions()
     updateActionShowDetailsAction();
     updateCloseTabAction();
     updateReloadRepositoriesAction();
-    updateScanHardDrivesAction();
     updateShowFolderAction();
     updateRunAction();
     updateExportAction();
@@ -1195,12 +1262,6 @@ void MainWindow::updateUpdateAction()
         }
     }
     this->ui->actionUpdate->setEnabled(enabled);
-}
-
-void MainWindow::updateScanHardDrivesAction()
-{
-    this->ui->actionScan_Hard_Drives->setEnabled(
-            !hardDriveScanRunning && !reloadRepositoriesThreadRunning);
 }
 
 void MainWindow::updateReloadRepositoriesAction()
@@ -1881,102 +1942,9 @@ void MainWindow::on_actionShow_Details_triggered()
     showDetails();
 }
 
-void MainWindow::on_actionScan_Hard_Drives_triggered()
-{
-    QString err;
-    PackageVersion* locked = PackageVersion::findLockedPackageVersion(&err);
-    if (!err.isEmpty()) {
-        this->addErrorMessage(err, err, true, QMessageBox::Critical);
-        delete locked;
-        return;
-    }
-    if (locked) {
-        QString msg(QObject::tr("Cannot start the scan now. The package %1 is locked by a currently running installation/removal."));
-        this->addErrorMessage(msg.arg(locked->toString()));
-        delete locked;
-        return;
-    }
-
-    Job* job = new Job(QObject::tr("Scanning the hard drives"));
-    ScanHardDrivesThread* it = new ScanHardDrivesThread(job);
-
-    connect(it, SIGNAL(finished()), this,
-            SLOT(hardDriveScanThreadFinished()),
-            Qt::QueuedConnection);
-
-    this->hardDriveScanRunning = true;
-    this->updateActions();
-
-    monitor(job);
-    it->start(QThread::LowestPriority);
-}
-
 bool comparesi(const QPair<QString, int>& a, const QPair<QString, int>& b)
 {
     return a.second > b.second;
-}
-
-void MainWindow::hardDriveScanThreadFinished()
-{
-    /* tag cloud
-    QScrollArea* jobsScrollArea = new QScrollArea(this->ui->tabWidget);
-    jobsScrollArea->setFrameStyle(0);
-
-    ScanHardDrivesThread* it = (ScanHardDrivesThread*) this->sender();
-    QList<QPair<QString, int> > entries;
-    QList<QString> words = it->words.keys();
-    for (int i = 0; i < words.count(); i++) {
-        QString w = words.at(i);
-        entries.append(QPair<QString, int>(w, it->words.value(w)));
-    }
-    qSort(entries.begin(), entries.end(), comparesi);
-
-    QWidget *window = new QWidget(jobsScrollArea);
-    FlowLayout *layout = new FlowLayout();
-    window->setLayout(layout);
-
-    QSizePolicy sp;
-    sp.setVerticalPolicy(QSizePolicy::Preferred);
-    sp.setHorizontalPolicy(QSizePolicy::Ignored);
-    sp.setHorizontalStretch(100);
-    window->setSizePolicy(sp);
-
-    for (int i = 0; i < entries.count(); i++) {
-        QString w = entries.at(i).first;
-        int n = entries.at(i).second;
-
-        QLabel *b = new QLabel("<a href=\"http://www.test.de\">" +
-                w + " (" + QString::number(n) + ")</a>");
-        b->setMouseTracking(true);
-        b->setFocusPolicy(Qt::StrongFocus);
-        b->setTextInteractionFlags(Qt::TextSelectableByMouse |
-                Qt::TextSelectableByKeyboard | Qt::LinksAccessibleByMouse);
-        layout->addWidget(b);
-    }
-    jobsScrollArea->setWidget(window);
-    jobsScrollArea->setWidgetResizable(true);
-    addTab(jobsScrollArea, genericAppIcon, "Tags");
-    */
-
-    QStringList detected;
-    ScanHardDrivesThread* it = static_cast<ScanHardDrivesThread*>(
-            this->sender());
-    for (int i = 0; i < it->detected.count(); i++) {
-        PackageVersion* pv = it->detected.at(i);
-        detected.append(pv->toString());
-    }
-
-    detected.append("____________________");
-    detected.append(QString(QObject::tr("%1 package(s) detected")).
-            arg(it->detected.count()));
-
-    fillList();
-
-    addTextTab(QObject::tr("Package detection status"),
-            detected.join("\r\n"));
-
-    this->hardDriveScanRunning = false;
-    this->updateActions();
 }
 
 void MainWindow::addErrorMessage(const QString& msg, const QString& details,

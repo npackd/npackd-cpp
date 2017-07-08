@@ -2163,19 +2163,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
-    </message>
-    <message>
-        <source>Scanning the hard drives</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Невозможно начать сканирование сейчас. Пакет %1 заблокирован текущей установкой/удалением.</translation>
     </message>
     <message>
         <source>%1 package(s) detected</source>
-        <translation>%1 пакет(ы) обнаружен(ы)</translation>
+        <translation type="vanished">%1 пакет(ы) обнаружен(ы)</translation>
     </message>
     <message>
         <source>Package detection status</source>
-        <translation>Статус обнаружения пакета</translation>
+        <translation type="vanished">Статус обнаружения пакета</translation>
     </message>
     <message>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>

@@ -46,7 +46,6 @@ SOURCES += main.cpp \
     mysqlquery.cpp \
     repositoryxmlhandler.cpp \
     cbsthirdpartypm.cpp \
-    scanharddrivesthread.cpp \
     visiblejobs.cpp \
     progresstree2.cpp \
     downloadsizefinder.cpp \
@@ -95,7 +94,6 @@ HEADERS += mainwindow.h \
     repositoryxmlhandler.h \
     cbsthirdpartypm.h \
     msoav2.h \
-    scanharddrivesthread.h \
     visiblejobs.h \
     clprocessor.h \
     progresstree2.h \

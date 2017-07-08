@@ -289,9 +289,7 @@ protected:
     void process(QList<InstallOperation*>& install, int programCloseType);
 private slots:
     void processThreadFinished();
-    void hardDriveScanThreadFinished();
     void recognizeAndLoadRepositoriesThreadFinished();
-    void on_actionScan_Hard_Drives_triggered();
     void on_actionShow_Details_triggered();
     void on_tabWidget_currentChanged(int index);
     void on_tabWidget_tabCloseRequested(int index);
