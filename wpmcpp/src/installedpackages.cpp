@@ -92,16 +92,30 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
 }
 
 void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
+        const QList<InstalledPackageVersion*>& installed,
+        const QString& detectionInfoPrefix)
+{
+    // this method does not manipulate "data" directly => no locking
+
+    if (job->shouldProceed()) {
+        for (int i = 0; i < installed.count(); i++) {
+            InstalledPackageVersion* ipv = installed.at(i);
+
+            processOneInstalled3rdParty(r, ipv, detectionInfoPrefix);
+
+            job->setProgress((i + 1.0) / installed.size());
+        }
+    }
+
+    job->complete();
+}
+
+void InstalledPackages::addPackages(Job* job, DBRepository* r,
         Repository* rep,
         const QList<InstalledPackageVersion*>& installed,
         bool replace, const QString& detectionInfoPrefix)
 {
     // this method does not manipulate "data" directly => no locking
-
-    HRTimer timer(5);
-    timer.time(0);
-
-    timer.time(1);
 
     // qDebug() << "detect3rdParty 3";
 
@@ -137,29 +151,8 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 
     // save all detected packages and versions
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.2, QObject::tr("Saving"), true, true);
-        r->saveAll(sub, rep, replace);
+        r->saveAll(job, rep, replace);
     }
-
-    timer.time(2);
-
-    if (job->shouldProceed()) {
-        for (int i = 0; i < installed.count(); i++) {
-            InstalledPackageVersion* ipv = installed.at(i);
-
-            processOneInstalled3rdParty(r, ipv, detectionInfoPrefix);
-        }
-    }
-
-    // qDebug() << "detect3rdParty 5";
-
-    timer.time(3);
-
-    timer.time(4);
-
-    // qDebug() << detectionInfoPrefix;
-
-    // timer.dump();
 
     job->complete();
 }
@@ -626,7 +619,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
 
     if (job->shouldProceed()) {
         clear();
-        job->setProgress(0.82);
+        job->setProgress(0.2);
     }
 
     // adding well-known packages should happen before adding packages
@@ -683,20 +676,30 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
         for (int i = 0; i < futures.count(); i++) {
             futures[i].waitForFinished();
 
-            job->setProgress(0.82 + (i + 1.0) / futures.count() * 0.05);
+            job->setProgress(0.2 + (i + 1.0) / futures.count() * 0.2);
         }
 
 
         for (int i = 0; i < futures.count(); i++) {
             Job* sub = job->newSubJob(0.1,
                     QObject::tr("Detecting %1").arg(i), false, true);
-            detect3rdParty(sub, rep, repositories.at(i),
+            addPackages(sub, rep, repositories.at(i),
                     *installeds.at(i),
                     i == 2 || i == 3,
                     prefixes.at(i));
+
+            job->setProgress(0.4 + (i + 1.0) / futures.count() * 0.2);
+        }
+
+        for (int i = 0; i < futures.count(); i++) {
+            Job* sub = job->newSubJob(0.1,
+                    QObject::tr("Detecting %1").arg(i), false, true);
+            detect3rdParty(sub, rep,
+                    *installeds.at(i),
+                    prefixes.at(i));
             qDeleteAll(*installeds.at(i));
 
-            job->setProgress(0.87 + (i + 1.0) / futures.count() * 0.05);
+            job->setProgress(0.6 + (i + 1.0) / futures.count() * 0.2);
         }
 
         qDeleteAll(repositories);
@@ -705,7 +708,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.02,
+        Job* sub = job->newSubJob(0.2,
                 QObject::tr("Setting the NPACKD_CL environment variable"));
         QString err = rep->updateNpackdCLEnvVar();
         if (!err.isEmpty())

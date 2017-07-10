@@ -2933,10 +2933,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Saving</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Setting the NPACKD_CL environment variable</source>
         <translation type="unfinished"></translation>
     </message>

@@ -541,7 +541,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     txt.replace('/', ' ');
     txt = txt.simplified();
     QStringList keywords = txt.split(' ', QString::SkipEmptyParts);
-    QStringList stopWords = QString("version build edition x86 remove only bit sp1 sp2 sp3 deu enu").
+    QStringList stopWords = QString("version build edition x86 remove only bit sp1 sp2 sp3 deu enu update").
             split(' ');
     for (int i = 0; i < keywords.size(); ) {
         const QString p = keywords.at(i);

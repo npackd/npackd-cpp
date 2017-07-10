@@ -1067,7 +1067,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Saving</source>
-        <translation>Speichere</translation>
+        <translation type="vanished">Speichere</translation>
     </message>
     <message>
         <source>Detecting software control panel packages</source>

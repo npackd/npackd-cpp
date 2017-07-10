@@ -3199,10 +3199,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Saving</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Found in %1 ms</source>
         <translation type="unfinished"></translation>
     </message>
