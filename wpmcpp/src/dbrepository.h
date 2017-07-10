@@ -318,6 +318,14 @@ public:
      *     correspond the order in names.
      */
     QList<Package*> findPackages(const QStringList &names);
+
+    /**
+     * @brief searches for better packages for detection
+     * @param title title of a package
+     * @param err error message will be stored here
+     * @return list of found packages.
+     */
+    QStringList findBetterPackages(const QString &title, QString *err);
 };
 
 #endif // DBREPOSITORY_H

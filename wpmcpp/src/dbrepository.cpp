@@ -527,6 +527,58 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     return r;
 }
 
+QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
+{
+    QString txt = title.toLower();
+    txt.replace('(', ' ');
+    txt.replace(')', ' ');
+    txt.replace('[', ' ');
+    txt.replace(']', ' ');
+    txt.replace('{', ' ');
+    txt.replace('}', ' ');
+    txt.replace('-', ' ');
+    txt.replace('_', ' ');
+    txt.replace('/', ' ');
+    txt = txt.simplified();
+    QStringList keywords = txt.split(' ', QString::SkipEmptyParts);
+    QStringList stopWords = QString("version build edition x86 remove only bit sp1 sp2 sp3 deu enu").
+            split(' ');
+    for (int i = 0; i < keywords.size(); ) {
+        const QString p = keywords.at(i);
+        if (p == "x64") {
+            keywords[i] = "64";
+            i++;
+        } else if (stopWords.contains(p)) {
+            keywords.removeAt(i);
+        } else if (p.length() > 0 && p.at(0).isDigit()) {
+            keywords.removeAt(i);
+        } else {
+            i++;
+        }
+    }
+
+    if (keywords.size() == 0)
+        return QStringList();
+
+    QString where = "where name not like 'msi.%' "
+            "and name not like 'control-panel.%'";
+    QList<QVariant> params;
+
+    for (int i = 0; i < keywords.count(); i++) {
+        QString kw = keywords.at(i);
+        if (kw.length() > 1) {
+            if (!where.isEmpty())
+                where += " AND ";
+            where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
+            params.append(QString("%" + kw.toLower() + "%"));
+        }
+    }
+
+    qDebug() << "searching for" << keywords.join(' ');
+
+    return findPackagesWhere(where, params, err);
+}
+
 QStringList DBRepository::findPackages(Package::Status minStatus,
         Package::Status maxStatus,
         const QString& query, int cat0, int cat1, QString *err) const

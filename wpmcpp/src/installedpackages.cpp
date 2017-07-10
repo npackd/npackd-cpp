@@ -174,56 +174,17 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
         // find another package with the same title
         Package* p = r->findPackage_(ipv->package);
         if (p) {
-            QString txt = p->title.toLower();
-            txt.replace('(', ' ');
-            txt.replace(')', ' ');
-            txt.replace('[', ' ');
-            txt.replace(']', ' ');
-            txt.replace('{', ' ');
-            txt.replace('}', ' ');
-            txt.replace('-', ' ');
-            txt.replace('/', ' ');
-            QStringList parts = txt.split(' ', QString::SkipEmptyParts);
-            QStringList stopWords = QString("version build edition x86 remove only").
-                    split(' ');
-            const QString versionString = ipv->version.getVersionString();
-            for (int i = 0; i < parts.size(); i++) {
-                const QString p = parts.at(i);
-                if (p == "x64") {
-                    parts[i] = "64";
-                } else if (p == versionString || stopWords.contains(p)) {
-                    parts[i] = "";
-                }
-            }
-
-            // qDebug() << "searching for" << parts.join(' ');
-
             QString err;
-            QStringList found = r->findPackages(
-                    Package::NOT_INSTALLED,
-                    Package::NOT_INSTALLED_NOT_AVAILABLE,
-                    parts.join(' '), -1, -1, &err);
-            if (err.isEmpty() && found.size() > 0 && found.size() < 4) {
-                QList<Package*> replacements = r->findPackages(found);
+            QStringList found = r->findBetterPackages(p->title, &err);
 
-                Package* replacement = 0;
-                for (int i = 0; i < replacements.size(); i++) {
-                    Package* p2 = replacements.at(i);
-                    if (!p2->name.startsWith("msi.") &&
-                            !p2->name.startsWith("control-panel.")) {
-                        replacement = p2->clone();
-                        break;
-                    }
-                }
+            qDebug()  << "found" << found.size();
+
+            if (err.isEmpty() && found.size() == 1) {
+                QList<Package*> replacements = r->findPackages(found);
+                result = replacements.at(0)->name;
                 qDeleteAll(replacements);
 
-                if (replacement) {
-                    // qDebug() << "replacing" << ipv->package << replacement->name;
-
-                    result = replacement->name;
-
-                    delete replacement;
-                }
+                qDebug() << "replacing" << ipv->package << result;
             }
 
             delete p;
@@ -240,8 +201,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     QString d = ipv->directory;
 
-    qDebug() << "0" << ipv->package << ipv->version.getVersionString() <<
-            ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
+    //qDebug() << "0" << ipv->package << ipv->version.getVersionString() <<
+    //        ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
 
     if (!d.isEmpty()) {
         if (!qd.exists(d))
@@ -394,8 +355,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         ipv2->detectionInfo = ipv->detectionInfo;
         ipv2->setPath(d);
 
-        qDebug() << ipv2->package << ipv2->version.getVersionString() <<
-                ipv2->directory << ipv2->detectionInfo;
+        //qDebug() << ipv2->package << ipv2->version.getVersionString() <<
+        //        ipv2->directory << ipv2->detectionInfo;
     }
 }
 
