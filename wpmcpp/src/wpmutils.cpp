@@ -255,19 +255,29 @@ QString WPMUtils::getProgramFilesDir()
 
 QString WPMUtils::normalizePath(const QString& path, bool lowerCase)
 {
-    QString r;
-    if (lowerCase)
-        r = path.toLower();
-    else
-        r = path;
-    r.replace('/', '\\');
-    while (r.contains("\\\\"))
-        r.replace("\\\\", "\\");
-    if (r.endsWith('\\'))
-        r.chop(1);
-    if (r.endsWith('.'))
-        r.chop(1);
+    QString r = path;
+    normalizePath2(&r, lowerCase);
     return r;
+}
+
+void WPMUtils::normalizePath2(QString* path, bool lowerCase)
+{
+    if (lowerCase)
+        *path = path->toLower();
+    path->replace('/', '\\');
+
+    int newlen = path->length();
+    int oldlen = newlen + 1;
+    while (oldlen != newlen) {
+        path->replace("\\\\", "\\");
+        oldlen = newlen;
+        newlen = path->length();
+    }
+
+    if (path->endsWith('\\'))
+        path->chop(1);
+    if (path->endsWith('.'))
+        path->chop(1);
 }
 
 QStringList WPMUtils::parseCommandLine(const QString& commandLine,
@@ -581,12 +591,14 @@ bool WPMUtils::isUnder(const QString &file, const QString &dir)
 {
     QString f = file;
     QString d = dir;
-    f = f.replace('/', '\\').toLower();
-    d = d.replace('/', '\\').toLower();
-    if (!d.endsWith('\\'))
-        d = d + "\\";
 
-    return f.startsWith(d);
+    normalizePath2(&f);
+    normalizePath2(&d);
+
+    if (!d.endsWith('\\'))
+        d.append('\\');
+
+    return f.startsWith(d, Qt::CaseInsensitive);
 }
 
 void WPMUtils::formatMessage(DWORD err, QString* errMsg)

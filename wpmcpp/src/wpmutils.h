@@ -165,6 +165,18 @@ public:
     static QString normalizePath(const QString& path, bool lowerCase=true);
 
     /**
+     * - lower case
+     * - replaces / by \
+     * - removes \ at the end
+     * - replace multiple occurences of \
+     *
+     * @param path a file/directory path
+     * @param lowerCase true = call .toLower()
+     * @threadsafe
+     */
+    static void normalizePath2(QString* path, bool lowerCase=true);
+
+    /**
      * @param commandLine command line
      * @param err error message will be stored here or ""
      * @return parts of the command line
@@ -176,8 +188,8 @@ public:
      * Checks if a file or a directory is an ancestoer of at least one of
      * the specified directories or equals to one of this directories.
      *
-     * @param file file or directory. The path should be normalized.
-     * @param dirs directories. The paths should be normalized
+     * @param file file or directory.
+     * @param dirs directories.
      */
     static bool isOverOrEquals(const QString& file, const QStringList& dirs);
 
@@ -185,8 +197,8 @@ public:
      * Checks if a file or a directory is under the specified directory or
      * equals to it.
      *
-     * @param file file or directory. The path should be normalized.
-     * @param dir directory. The path should be normalized
+     * @param file file or directory.
+     * @param dir directory.
      */
     static bool isUnderOrEquals(const QString &file, const QString &dir);
 

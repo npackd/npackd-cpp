@@ -40,7 +40,7 @@ private:
      * @threadsafe
      */
     void processOneInstalled3rdParty(DBRepository *r,
-            InstalledPackageVersion *ipv);
+            InstalledPackageVersion *ipv, const QString &detectionInfoPrefix);
 
     /**
      * THIS METHOD IS NOT THREAD-SAFE

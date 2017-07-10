@@ -96,7 +96,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
         const QList<InstalledPackageVersion*>& installed,
         bool replace, const QString& detectionInfoPrefix)
 {
-    // this method does not manipulate "date" directly => no locking
+    // this method does not manipulate "data" directly => no locking
 
     HRTimer timer(5);
     timer.time(0);
@@ -143,70 +143,11 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 
     timer.time(2);
 
-    QStringList packagePaths = this->getAllInstalledPackagePaths();
-    for (int i = 0; i < packagePaths.size(); i++) {
-        packagePaths[i] = WPMUtils::normalizePath(packagePaths.at(i));
-    }
-
-    // filter the package versions out that are either already installed or
-    // point to directories under an already installed version
     if (job->shouldProceed()) {
-        QStringList programRoots;
-        programRoots.append(WPMUtils::getProgramFilesDir());
-        if (WPMUtils::is64BitWindows())
-            programRoots.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
-
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
 
-            // qDebug() << ipv->package << ipv->version.getVersionString();
-
-            QString betterPackageName = findBetterPackageName(r, ipv);
-            if (!betterPackageName.isEmpty()) {
-                ipv->package = betterPackageName;
-            }
-
-            // if the package version is already installed, we skip it
-            InstalledPackageVersion* existing = find(ipv->package,
-                    ipv->version);
-            if (existing && existing->installed()) {
-                delete existing;
-                continue;
-            }
-
-            delete existing;
-
-            // qDebug() << "    0.1";
-
-            // we cannot handle nested directories
-            QString path = ipv->directory;
-            if (!path.isEmpty()) {
-                path = WPMUtils::normalizePath(path);
-
-                bool cont = false;
-                for (int i = 0; i < packagePaths.size(); i++) {
-                    QString ppi = packagePaths.at(i);
-
-                    // e.g. an MSI package and a package from the Control Panel
-                    // "Software" have the same path
-                    if (WPMUtils::pathEquals(path, ppi)) {
-                        cont = true;
-                        break;
-                    }
-
-                    if (WPMUtils::isUnder(path, ppi) ||
-                            WPMUtils::isUnder(ppi, path) ||
-                            WPMUtils::isOverOrEquals(path, programRoots)) {
-                        ipv->directory = "";
-                        break;
-                    }
-                }
-
-                if (cont)
-                    continue;
-            }
-
-            processOneInstalled3rdParty(r, ipv);
+            processOneInstalled3rdParty(r, ipv, detectionInfoPrefix);
         }
     }
 
@@ -293,17 +234,104 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
 }
 
 void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
-        InstalledPackageVersion* ipv)
+        InstalledPackageVersion* ipv, const QString& detectionInfoPrefix)
 {
-    if (!ipv->directory.isEmpty()) {
-        QDir d;
-        if (!d.exists(ipv->directory))
-            ipv->directory = "";
+    QDir qd;
+
+    QString d = ipv->directory;
+
+    qDebug() << "0" << ipv->package << ipv->version.getVersionString() <<
+            ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
+
+    if (!d.isEmpty()) {
+        if (!qd.exists(d))
+            d = "";
     }
 
-    QString err;
+    QString windowsDir = WPMUtils::getWindowsDir();
 
-    QDir d;
+    // ancestor of the Windows directory
+    if (!d.isEmpty() && WPMUtils::isUnder(windowsDir, d)) {
+        d = "";
+    }
+
+    // child of the Windows directory
+    if (!d.isEmpty() && WPMUtils::isUnder(d,
+            windowsDir)) {
+        d = "";
+    }
+
+    // Windows directory
+    if (!d.isEmpty() && WPMUtils::pathEquals(d,
+            windowsDir)) {
+        if (ipv->package != "com.microsoft.Windows" &&
+                ipv->package != "com.microsoft.Windows32" &&
+                ipv->package != "com.microsoft.Windows64") {
+            d = "";
+        }
+    }
+
+    QString programFilesDir = WPMUtils::getProgramFilesDir();
+
+    // ancestor of "C:\Program Files"
+    if (!d.isEmpty() && (WPMUtils::isUnder(programFilesDir, d) ||
+            WPMUtils::pathEquals(d, programFilesDir))) {
+        d = "";
+    }
+
+    QString programFilesX86Dir = WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86);
+
+    // ancestor of "C:\Program Files (x86)"
+    if (!d.isEmpty() && WPMUtils::is64BitWindows() &&
+            (WPMUtils::isUnder(programFilesX86Dir, d) ||
+            WPMUtils::pathEquals(d,
+            programFilesX86Dir))) {
+        d = "";
+    }
+
+    QString betterPackageName = findBetterPackageName(r, ipv);
+    if (!betterPackageName.isEmpty()) {
+        ipv->package = betterPackageName;
+    }
+
+    // qDebug() << "    0.1";
+
+    // we cannot handle nested directories
+    if (!d.isEmpty()) {
+        QStringList packagePaths = this->getAllInstalledPackagePaths();
+        for (int i = 0; i < packagePaths.size(); i++) {
+            packagePaths[i] = packagePaths.at(i);
+        }
+
+        bool ignore = false;
+        for (int i = 0; i < packagePaths.size(); i++) {
+            // e.g. an MSI package and a package from the Control Panel
+            // "Software" have the same path
+            if (WPMUtils::isUnderOrEquals(d, packagePaths.at(i))) {
+                ignore = true;
+                break;
+            }
+
+            if (WPMUtils::isUnderOrEquals(packagePaths.at(i), d)) {
+                d = "";
+                break;
+            }
+        }
+
+        if (ignore)
+            return;
+    }
+
+    // if the package version is already installed, we skip it
+    InstalledPackageVersion* existing = find(ipv->package,
+            ipv->version);
+    if (existing && existing->installed()) {
+        delete existing;
+        return;
+    }
+    delete existing;
+
+    QString err;
 
     QScopedPointer<PackageVersion> pv(
             r->findPackageVersion_(ipv->package, ipv->version, &err));
@@ -322,11 +350,9 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         u = pv->findFile(".Npackd\\Uninstall.bat");
     }
 
-    QString path = ipv->directory;
-
     // special case: we don't know where the package is installed and we
     // don't know how to remove it
-    if (err.isEmpty() && ipv->directory.isEmpty() && u == 0 && pv) {
+    if (err.isEmpty() && d.isEmpty() && u == 0 && pv) {
         u = new PackageVersionFile(".Npackd\\Uninstall.bat",
                 "echo no removal procedure for this package is available"
                 "\r\n"
@@ -334,25 +360,27 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         pv->files.append(u);
     }
 
-    if (err.isEmpty() && path.isEmpty()) {
+    if (err.isEmpty() && d.isEmpty()) {
         // qDebug() << "    2";
 
         Package* p = r->findPackage_(ipv->package);
 
-        path = WPMUtils::normalizePath(WPMUtils::getProgramFilesDir(),
+        d = WPMUtils::normalizePath(
+                WPMUtils::getProgramFilesDir(),
                 false) +
                 "\\NpackdDetected\\" +
                 WPMUtils::makeValidFilename(p ? p->title : ipv->package, '_');
-        if (d.exists(path)) {
-            path = WPMUtils::findNonExistingFile(path + "-" +
+        if (qd.exists(d)) {
+            d = WPMUtils::findNonExistingFile(
+                    d + "-" +
                     ipv->version.getVersionString(), "");
         }
-        d.mkpath(path);
+        qd.mkpath(d);
         delete p;
     }
 
-    if (err.isEmpty() && d.exists(path)) {
-        err = pv->saveFiles(QDir(path));
+    if (err.isEmpty() && qd.exists(d)) {
+        err = pv->saveFiles(QDir(d));
     }
 
     InstalledPackageVersion* ipv2 = 0;
@@ -364,7 +392,10 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     if (err.isEmpty()) {
         // qDebug() << "    5";
         ipv2->detectionInfo = ipv->detectionInfo;
-        ipv2->setPath(path);
+        ipv2->setPath(d);
+
+        qDebug() << ipv2->package << ipv2->version.getVersionString() <<
+                ipv2->directory << ipv2->detectionInfo;
     }
 }
 
@@ -650,15 +681,15 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
     // control panel programs
     if (job->shouldProceed()) {
         QList<AbstractThirdPartyPM*> tpms;
+        tpms.append(new InstalledPackagesThirdPartyPM());
         tpms.append(new WellKnownProgramsThirdPartyPM(
                 InstalledPackages::packageName));
-        tpms.append(new InstalledPackagesThirdPartyPM());
-        tpms.append(new MSIThirdPartyPM()); // true, msi:
-        tpms.append(new ControlPanelThirdPartyPM()); // true, control-panel:
+        tpms.append(new MSIThirdPartyPM());
+        tpms.append(new ControlPanelThirdPartyPM());
 
         QStringList jobTitles;
-        jobTitles.append(QObject::tr("Adding well-known packages"));
         jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
+        jobTitles.append(QObject::tr("Adding well-known packages"));
         jobTitles.append(QObject::tr("Detecting MSI packages"));
         jobTitles.append(QObject::tr("Detecting software control panel packages"));
 
