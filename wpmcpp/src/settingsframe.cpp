@@ -48,6 +48,20 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     }
 
     this->ui->comboBoxDir->addItems(dirs);
+
+    // used repositories
+    wr.close();
+    err = wr.open(HKEY_LOCAL_MACHINE,
+            "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
+    QStringList usedReps;
+    if (err.isEmpty()) {
+        usedReps = wr.loadStringList(&err);
+    }
+    this->ui->comboBoxRep->addItems(usedReps);
+    addUsedRepository("https://npackd.appspot.com/rep/xml?tag=stable");
+    addUsedRepository("https://npackd.appspot.com/rep/xml?tag=stable64");
+    addUsedRepository("https://npackd.appspot.com/rep/xml?tag=libs");
+    addUsedRepository("https://npackd.appspot.com/rep/xml?tag=unstable");
 }
 
 SettingsFrame::~SettingsFrame()
@@ -65,6 +79,12 @@ QStringList SettingsFrame::getRepositoryURLs()
     return sl;
 }
 
+void SettingsFrame::addUsedRepository(const QString& repository)
+{
+    if (this->ui->comboBoxRep->findText(repository) < 0)
+        this->ui->comboBoxRep->addItem(repository);
+}
+
 QString SettingsFrame::getInstallationDirectory()
 {
     return this->ui->comboBoxDir->currentText();
@@ -78,6 +98,10 @@ void SettingsFrame::setInstallationDirectory(const QString& dir)
 void SettingsFrame::setRepositoryURLs(const QStringList &urls)
 {
     this->ui->plainTextEditReps->setPlainText(urls.join("\r\n"));
+
+    for (int i = 0; i < urls.size(); i++) {
+        addUsedRepository(urls.at(i));
+    }
 }
 
 void SettingsFrame::on_buttonBox_accepted()
@@ -128,6 +152,12 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
 
     if (err.isEmpty() && list.count() == 0)
         err = QObject::tr("No repositories defined");
+
+    if (err.isEmpty()) {
+        for (int i = 0; i < list.size(); i++) {
+            addUsedRepository(list.at(i));
+        }
+    }
 
     if (err.isEmpty()) {
         err = AbstractRepository::checkInstallationDirectory(getInstallationDirectory());
@@ -202,6 +232,35 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         err = "";
     }
 
+    if (err.isEmpty()) {
+        WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+        WindowsRegistry wr = m.createSubKey(
+                "Software\\Npackd\\Npackd\\UsedReps", &err,
+                KEY_ALL_ACCESS);
+
+        QStringList usedReps;
+        for (int i = 0; i < this->ui->comboBoxRep->count(); i++)
+            usedReps.append(this->ui->comboBoxRep->itemText(i));
+        if (err.isEmpty()) {
+            wr.saveStringList(usedReps);
+        }
+
+        // it is not important, whether the list of used repositories
+        // is saved or not
+        err = "";
+    }
+
     if (!err.isEmpty())
         mw->addErrorMessage(err, err, true, QMessageBox::Critical);
+}
+
+void SettingsFrame::on_pushButtonAddRep_clicked()
+{
+    int index = this->ui->comboBoxRep->currentIndex();
+    if (index >= 0) {
+        QStringList urls = getRepositoryURLs();
+        QString url = this->ui->comboBoxRep->itemText(index);
+        if (urls.indexOf(url) < 0)
+            this->ui->plainTextEditReps->appendPlainText(url);
+    }
 }

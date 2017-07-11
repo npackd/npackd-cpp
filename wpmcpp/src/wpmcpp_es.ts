@@ -3422,5 +3422,17 @@ p, li { white-space: pre-wrap; }
         <source>Disconnect users from file shares</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>list of previously used repositories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>add the selected previously used repository to the active list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

@@ -52,8 +52,11 @@ private slots:
 
     void on_buttonBox_clicked(QAbstractButton *button);
 
+    void on_pushButtonAddRep_clicked();
+
 private:
     Ui::SettingsFrame *ui;
+    void addUsedRepository(const QString &repository);
 };
 
 #endif // SETTINGSFRAME_H
