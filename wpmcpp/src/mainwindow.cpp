@@ -561,17 +561,19 @@ void MainWindow::updateProgressTabTitle()
 
     QString title;
     if (n == 0)
-        title = QString(QObject::tr("0 Jobs"));
+        title = QObject::tr("0 Jobs");
     else if (n == 1)
-        title = QString(QObject::tr("1 Job (%1%, %2)")).arg(maxProgress_).
-                arg(rest.toString());
+        title = QObject::tr("1 Job (%1%, %2)").arg(
+                QString::number(maxProgress_),
+                rest.toString());
     else
-        title = QString(QObject::tr("%1 Jobs (%2%, %3)")).
-                arg(n).arg(maxProgress_).
-                arg(rest.toString());
+        title = QObject::tr("%1 Jobs (%2%, %3)").
+                arg(QString::number(n), QString::number(maxProgress_),
+                rest.toString());
 
     int index = this->ui->tabWidget->indexOf(this->jobsTab);
-    this->ui->tabWidget->setTabText(index, title);
+    if (this->ui->tabWidget->tabText(index) != title)
+        this->ui->tabWidget->setTabText(index, title);
 
     if (this->taskbarInterface) {
         if (n == 0)
