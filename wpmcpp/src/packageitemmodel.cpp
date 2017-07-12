@@ -97,6 +97,12 @@ PackageItemModel::Info* PackageItemModel::createInfo(
 QVariant PackageItemModel::data(const QModelIndex &index, int role) const
 {
     QString p = this->packages.at(index.row());
+
+    // performance optimization
+    if (role == Qt::UserRole && index.column() != 0) {
+        return p;
+    }
+
     QVariant r;
     DBRepository* rep = DBRepository::getDefault();
     Info* cached = this->cache.object(p);
