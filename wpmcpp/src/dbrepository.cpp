@@ -72,9 +72,9 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
     if (!insertInstalledQuery) {
         insertInstalledQuery = new MySQLQuery(db);
 
-        QString insertSQL = "INSERT INTO INSTALLED "
+        QString insertSQL = QStringLiteral("INSERT INTO INSTALLED "
                 "(PACKAGE, VERSION, CVERSION, WHEN_, WHERE_, DETECTION_INFO) "
-                "VALUES(:PACKAGE, :VERSION, :CVERSION, :WHEN_, :WHERE_, :DETECTION_INFO)";
+                "VALUES(:PACKAGE, :VERSION, :CVERSION, :WHEN_, :WHERE_, :DETECTION_INFO)");
 
         if (!insertInstalledQuery->prepare(insertSQL)) {
             err = getErrorString(*insertInstalledQuery);
@@ -92,14 +92,16 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         InstalledPackageVersion* ipv = installed.at(i);
         //qDebug() << "saveInstalled" << ipv->package << ipv->version.getVersionString();
         if (ipv->installed()) {
-            insertInstalledQuery->bindValue(":PACKAGE", ipv->package);
-            insertInstalledQuery->bindValue(":VERSION",
+            insertInstalledQuery->bindValue(QStringLiteral(":PACKAGE"),
+                    ipv->package);
+            insertInstalledQuery->bindValue(QStringLiteral(":VERSION"),
                     ipv->version.getVersionString());
-            insertInstalledQuery->bindValue(":CVERSION",
+            insertInstalledQuery->bindValue(QStringLiteral(":CVERSION"),
                     ipv->version.toComparableString());
-            insertInstalledQuery->bindValue(":WHEN_", 0);
-            insertInstalledQuery->bindValue(":WHERE_", ipv->directory);
-            insertInstalledQuery->bindValue(":DETECTION_INFO",
+            insertInstalledQuery->bindValue(QStringLiteral(":WHEN_"), 0);
+            insertInstalledQuery->bindValue(QStringLiteral(":WHERE_"),
+                    ipv->directory);
+            insertInstalledQuery->bindValue(QStringLiteral(":DETECTION_INFO"),
                     ipv->detectionInfo);
             if (!insertInstalledQuery->exec())
                 err = getErrorString(*insertInstalledQuery);
@@ -127,7 +129,7 @@ int DBRepository::count(const QString& sql, QString* err)
 {
     int n = 0;
 
-    *err = "";
+    *err = QStringLiteral("");
 
     MySQLQuery q(db);
     if (!q.exec(sql))
@@ -154,23 +156,23 @@ QString DBRepository::saveLicense(License* p, bool replace)
 
     MySQLQuery q(db);
 
-    QString sql = "INSERT OR ";
+    QString sql = QStringLiteral("INSERT OR ");
     if (replace)
-        sql += "REPLACE";
+        sql += QStringLiteral("REPLACE");
     else
-        sql += "IGNORE";
-    sql += " INTO LICENSE "
+        sql += QStringLiteral("IGNORE");
+    sql += QStringLiteral(" INTO LICENSE "
             "(NAME, TITLE, DESCRIPTION, URL)"
-            "VALUES(:NAME, :TITLE, :DESCRIPTION, :URL)";
+            "VALUES(:NAME, :TITLE, :DESCRIPTION, :URL)");
     if (!q.prepare(sql))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
-        q.bindValue(":REPOSITORY", this->currentRepository);
-        q.bindValue(":NAME", p->name);
-        q.bindValue(":TITLE", p->title);
-        q.bindValue(":DESCRIPTION", p->description);
-        q.bindValue(":URL", p->url);
+        q.bindValue(QStringLiteral(":REPOSITORY"), this->currentRepository);
+        q.bindValue(QStringLiteral(":NAME"), p->name);
+        q.bindValue(QStringLiteral(":TITLE"), p->title);
+        q.bindValue(QStringLiteral(":DESCRIPTION"), p->description);
+        q.bindValue(QStringLiteral(":URL"), p->url);
         if (!q.exec())
             err = getErrorString(q);
     }
@@ -181,15 +183,15 @@ QString DBRepository::saveLicense(License* p, bool replace)
 bool DBRepository::tableExists(QSqlDatabase* db,
         const QString& table, QString* err)
 {
-    *err = "";
+    *err = QStringLiteral("");
 
     MySQLQuery q(*db);
-    if (!q.prepare("SELECT name FROM sqlite_master WHERE "
-            "type='table' AND name=:NAME"))
+    if (!q.prepare(QStringLiteral("SELECT name FROM sqlite_master WHERE "
+            "type='table' AND name=:NAME")))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":NAME", table);
+        q.bindValue(QStringLiteral(":NAME"), table);
         if (!q.exec())
             *err = getErrorString(q);
     }
@@ -205,15 +207,16 @@ bool DBRepository::tableExists(QSqlDatabase* db,
 bool DBRepository::columnExists(QSqlDatabase* db,
         const QString& table, const QString& column, QString* err)
 {
-    *err = "";
+    *err = QStringLiteral("");
 
     MySQLQuery q(*db);
-    if (!q.exec("PRAGMA table_info(" + table + ")"))
+    if (!q.exec(QStringLiteral("PRAGMA table_info(") + table +
+            QStringLiteral(")")))
         *err = getErrorString(q);
 
     bool e = false;
     if (err->isEmpty()) {
-        int index = q.record().indexOf("name");
+        int index = q.record().indexOf(QStringLiteral("name"));
         while (q.next()) {
             QString n = q.value(index).toString();
             if (QString::compare(n, column, Qt::CaseInsensitive) == 0) {
@@ -233,13 +236,14 @@ Package *DBRepository::findPackage_(const QString &name)
     Package* r = 0;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE, "
+    if (!q.prepare(QStringLiteral(
+            "SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE, "
             "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
-            "FROM PACKAGE WHERE NAME = :NAME LIMIT 1"))
+            "FROM PACKAGE WHERE NAME = :NAME LIMIT 1")))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
-        q.bindValue(":NAME", name);
+        q.bindValue(QStringLiteral(":NAME"), name);
         if (!q.exec())
             err = getErrorString(q);
     }
@@ -289,12 +293,13 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
     int c = names.count();
     const int block = 10;
 
-    QString sql = "SELECT NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE "
-                "FROM PACKAGE WHERE NAME IN (:NAME0";
+    QString sql = QStringLiteral(
+            "SELECT NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE "
+            "FROM PACKAGE WHERE NAME IN (:NAME0");
     for (int i = 1; i < block; i++) {
-        sql = sql + ", :NAME" + QString::number(i);
+        sql = sql + QStringLiteral(", :NAME") + QString::number(i);
     }
-    sql += ")";
+    sql += QStringLiteral(")");
 
     while (start < c) {
         MySQLQuery q(db);
@@ -305,7 +310,8 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
             break;
 
 		for (int i = start; i < std::min<int>(start + block, c); i++) {
-            q.bindValue(":NAME" + QString::number(i - start), names.at(i));
+            q.bindValue(QStringLiteral(":NAME") +
+                    QString::number(i - start), names.at(i));
         }
 
         if (!q.exec())
@@ -332,7 +338,7 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
             list.append(r);
         }
 
-		for (int i = start; i < std::min<int>(start + block, c); i++) {
+        for (int i = start; i < std::min<int>(start + block, c); i++) {
             QString find = names.at(i);
             for (int j = 0; j < list.count(); j++) {
                 Package* p = list.at(j);
@@ -371,14 +377,14 @@ PackageVersion* DBRepository::findPackageVersion_(
     PackageVersion* r = 0;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT NAME, "
+    if (!q.prepare(QStringLiteral("SELECT NAME, "
             "PACKAGE, CONTENT, MSIGUID FROM PACKAGE_VERSION "
-            "WHERE NAME = :NAME AND PACKAGE = :PACKAGE"))
+            "WHERE NAME = :NAME AND PACKAGE = :PACKAGE")))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":NAME", version_);
-        q.bindValue(":PACKAGE", package);
+        q.bindValue(QStringLiteral(":NAME"), version_);
+        q.bindValue(QStringLiteral(":PACKAGE"), package);
         if (!q.exec())
             *err = getErrorString(q);
     }
@@ -398,12 +404,12 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     QList<PackageVersion*> r;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
-            "WHERE PACKAGE = :PACKAGE"))
+    if (!q.prepare(QStringLiteral("SELECT CONTENT FROM PACKAGE_VERSION "
+            "WHERE PACKAGE = :PACKAGE")))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":PACKAGE", package);
+        q.bindValue(QStringLiteral(":PACKAGE"), package);
         if (!q.exec()) {
             *err = getErrorString(q);
         }
@@ -426,13 +432,13 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
 QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
         QString *err) const
 {
-    *err = "";
+    *err = QStringLiteral("");
 
     QList<PackageVersion*> r;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION "
-            "WHERE DETECT_FILE_COUNT > 0"))
+    if (!q.prepare(QStringLiteral("SELECT CONTENT FROM PACKAGE_VERSION "
+            "WHERE DETECT_FILE_COUNT > 0")))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
@@ -463,15 +469,15 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
     QList<PackageVersion*> r;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT CONTENT FROM PACKAGE_VERSION PV "
+    if (!q.prepare(QStringLiteral("SELECT CONTENT FROM PACKAGE_VERSION PV "
             "WHERE EXISTS (SELECT 1 FROM CMD_FILE WHERE "
             "PACKAGE = PV.PACKAGE AND "
             "VERSION = PV.NAME AND "
-            "NAME = :NAME)"))
+            "NAME = :NAME)")))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":NAME", name.toLower());
+        q.bindValue(QStringLiteral(":NAME"), name.toLower());
         if (!q.exec()) {
             *err = getErrorString(q);
         }
@@ -493,20 +499,20 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
 
 License *DBRepository::findLicense_(const QString& name, QString *err)
 {
-    *err = "";
+    *err = QStringLiteral("");
 
     License* r = 0;
     License* cached = this->licenses.object(name);
     if (!cached) {
         MySQLQuery q(db);
 
-        if (!q.prepare("SELECT NAME, TITLE, DESCRIPTION, URL "
+        if (!q.prepare(QStringLiteral("SELECT NAME, TITLE, DESCRIPTION, URL "
                 "FROM LICENSE "
-                "WHERE NAME = :NAME"))
+                "WHERE NAME = :NAME")))
             *err = getErrorString(q);
 
         if (err->isEmpty()) {
-            q.bindValue(":NAME", name);
+            q.bindValue(QStringLiteral(":NAME"), name);
             if (!q.exec())
                 *err = getErrorString(q);
         }
@@ -541,7 +547,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     txt.replace('/', ' ');
     txt = txt.simplified();
     QStringList keywords = txt.split(' ', QString::SkipEmptyParts);
-    QStringList stopWords = QString("version build edition remove only "
+    QStringList stopWords = QStringLiteral("version build edition remove only "
             "bit sp1 sp2 sp3 deu enu update microsoft corporation").
             split(' ');
     for (int i = 0; i < keywords.size(); ) {
@@ -561,17 +567,19 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     if (keywords.size() == 0)
         return QStringList();
 
-    QString where = "where name not like 'msi.%' "
-            "and name not like 'control-panel.%'";
+    QString where = QStringLiteral("where name not like 'msi.%' "
+            "and name not like 'control-panel.%'");
     QList<QVariant> params;
 
     for (int i = 0; i < keywords.count(); i++) {
         QString kw = keywords.at(i);
         if (kw.length() > 1) {
             if (!where.isEmpty())
-                where += " AND ";
-            where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
-            params.append(QString("%" + kw.toLower() + "%"));
+                where += QStringLiteral(" AND ");
+            where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") +
+                    QString::number(i);
+            params.append(QStringLiteral("%") + kw.toLower() +
+                    QStringLiteral("%"));
         }
     }
 
@@ -589,23 +597,26 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
     QString where;
     QList<QVariant> params;
 
-    QStringList keywords = query.toLower().simplified().split(" ",
+    QStringList keywords = query.toLower().simplified().split(
+            QStringLiteral(" "),
             QString::SkipEmptyParts);
 
     for (int i = 0; i < keywords.count(); i++) {
         QString kw = keywords.at(i);
         if (kw.length() > 1) {
             if (!where.isEmpty())
-                where += " AND ";
-            where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
-            params.append(QString("%" + kw.toLower() + "%"));
+                where += QStringLiteral(" AND ");
+            where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") +
+                    QString::number(i);
+            params.append(QStringLiteral("%") + kw.toLower() +
+                    QStringLiteral("%"));
         }
     }
     if (minStatus < maxStatus) {
         if (!where.isEmpty())
-            where += " AND ";
+            where += QStringLiteral(" AND ");
 
-        where += "STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS";
+        where += QStringLiteral("STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS");
 
         params.append(QVariant((int) minStatus));
         params.append(QVariant((int) maxStatus));
@@ -613,28 +624,28 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
 
     if (cat0 == 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY0 IS NULL";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY0 IS NULL");
     } else if (cat0 > 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY0 = :CATEGORY0";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY0 = :CATEGORY0");
         params.append(QVariant((int) cat0));
     }
 
     if (cat1 == 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY1 IS NULL";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY1 IS NULL");
     } else if (cat1 > 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY1 = :CATEGORY1";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY1 = :CATEGORY1");
         params.append(QVariant((int) cat1));
     }
 
     if (!where.isEmpty())
-        where = "WHERE " + where;
+        where = QStringLiteral("WHERE ") + where;
 
     // qDebug() << "DBRepository::findPackages.1";
 
@@ -645,8 +656,8 @@ QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
 {
     *err = "";
 
-    QString sql = "SELECT NAME FROM CATEGORY WHERE ID IN (" +
-            ids.join(", ") + ")";
+    QString sql = QStringLiteral("SELECT NAME FROM CATEGORY WHERE ID IN (") +
+            ids.join(QStringLiteral(", ")) + QStringLiteral(")");
 
     MySQLQuery q(db);
 
@@ -676,19 +687,21 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
     QString where;
     QList<QVariant> params;
 
-    QStringList keywords = query.toLower().simplified().split(" ",
+    QStringList keywords = query.toLower().simplified().split(
+            QStringLiteral(" "),
             QString::SkipEmptyParts);
 
     for (int i = 0; i < keywords.count(); i++) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "FULLTEXT LIKE :FULLTEXT" + QString::number(i);
-        params.append(QString("%" + keywords.at(i).toLower() + "%"));
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") + QString::number(i);
+        params.append(QStringLiteral("%") + keywords.at(i).toLower() +
+                QStringLiteral("%"));
     }
     if (maxStatus > minStatus) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS");
 
         params.append(QVariant((int) minStatus));
         params.append(QVariant((int) maxStatus));
@@ -696,35 +709,36 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
 
     if (cat0 == 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY0 IS NULL";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY0 IS NULL");
     } else if (cat0 > 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY0 = :CATEGORY0";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY0 = :CATEGORY0");
         params.append(QVariant((int) cat0));
     }
 
     if (cat1 == 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY1 IS NULL";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY1 IS NULL");
     } else if (cat1 > 0) {
         if (!where.isEmpty())
-            where += " AND ";
-        where += "CATEGORY1 = :CATEGORY1";
+            where += QStringLiteral(" AND ");
+        where += QStringLiteral("CATEGORY1 = :CATEGORY1");
         params.append(QVariant((int) cat1));
     }
 
     if (!where.isEmpty())
-        where = "WHERE " + where;
+        where = QStringLiteral("WHERE ") + where;
 
-    QString sql = QString("SELECT CATEGORY.ID, COUNT(*), CATEGORY.NAME FROM "
+    QString sql = QStringLiteral(
+            "SELECT CATEGORY.ID, COUNT(*), CATEGORY.NAME FROM "
             "PACKAGE LEFT JOIN CATEGORY ON PACKAGE.CATEGORY") +
             QString::number(level) +
-            " = CATEGORY.ID " +
-            where + " GROUP BY CATEGORY.ID, CATEGORY.NAME "
-            "ORDER BY CATEGORY.NAME";
+            QStringLiteral(" = CATEGORY.ID ") +
+            where + QStringLiteral(" GROUP BY CATEGORY.ID, CATEGORY.NAME "
+            "ORDER BY CATEGORY.NAME");
 
     MySQLQuery q(db);
 
@@ -758,17 +772,17 @@ QStringList DBRepository::findPackagesWhere(const QString& where,
         const QList<QVariant>& params,
         QString *err) const
 {
-    *err = "";
+    *err = QStringLiteral("");
 
     QStringList r;
     MySQLQuery q(db);
 
-    QString sql = "SELECT NAME FROM PACKAGE";
+    QString sql = QStringLiteral("SELECT NAME FROM PACKAGE");
 
     if (!where.isEmpty())
-        sql += " " + where;
+        sql += QStringLiteral(" ") + where;
 
-    sql += " ORDER BY TITLE";
+    sql += QStringLiteral(" ORDER BY TITLE");
 
     if (!q.prepare(sql))
         *err = getErrorString(q);
@@ -794,13 +808,14 @@ QStringList DBRepository::findPackagesWhere(const QString& where,
 int DBRepository::insertCategory(int parent, int level,
         const QString& category, QString* err)
 {
-    *err = "";
+    *err = QStringLiteral("");
 
     if (!selectCategoryQuery) {
         selectCategoryQuery = new MySQLQuery(db);
 
-        QString sql = "SELECT ID FROM CATEGORY WHERE PARENT = :PARENT AND "
-                "LEVEL = :LEVEL AND NAME = :NAME";
+        QString sql = QStringLiteral(
+                "SELECT ID FROM CATEGORY WHERE PARENT = :PARENT AND "
+                "LEVEL = :LEVEL AND NAME = :NAME");
 
         if (!selectCategoryQuery->prepare(sql)) {
             *err = getErrorString(*selectCategoryQuery);
@@ -810,9 +825,9 @@ int DBRepository::insertCategory(int parent, int level,
     }
 
     if (err->isEmpty()) {
-        selectCategoryQuery->bindValue(":NAME", category);
-        selectCategoryQuery->bindValue(":PARENT", parent);
-        selectCategoryQuery->bindValue(":LEVEL", level);
+        selectCategoryQuery->bindValue(QStringLiteral(":NAME"), category);
+        selectCategoryQuery->bindValue(QStringLiteral(":PARENT"), parent);
+        selectCategoryQuery->bindValue(QStringLiteral(":LEVEL"), level);
         if (!selectCategoryQuery->exec())
             *err = getErrorString(*selectCategoryQuery);
     }
@@ -823,16 +838,16 @@ int DBRepository::insertCategory(int parent, int level,
             id = selectCategoryQuery->value(0).toInt();
         else {
             MySQLQuery q(db);
-            QString sql = "INSERT INTO CATEGORY "
+            QString sql = QStringLiteral("INSERT INTO CATEGORY "
                     "(ID, NAME, PARENT, LEVEL) "
-                    "VALUES (NULL, :NAME, :PARENT, :LEVEL)";
+                    "VALUES (NULL, :NAME, :PARENT, :LEVEL)");
             if (!q.prepare(sql))
                 *err = getErrorString(q);
 
             if (err->isEmpty()) {
-                q.bindValue(":NAME", category);
-                q.bindValue(":PARENT", parent);
-                q.bindValue(":LEVEL", level);
+                q.bindValue(QStringLiteral(":NAME"), category);
+                q.bindValue(QStringLiteral(":PARENT"), parent);
+                q.bindValue(QStringLiteral(":LEVEL"), level);
                 if (!q.exec())
                     *err = getErrorString(q);
                 else
@@ -853,7 +868,7 @@ QString DBRepository::deleteLinks(const QString& name)
     if (!deleteLinkQuery) {
         deleteLinkQuery = new MySQLQuery(db);
         if (!deleteLinkQuery->prepare(
-                "DELETE FROM LINK WHERE PACKAGE=:PACKAGE")) {
+                QStringLiteral("DELETE FROM LINK WHERE PACKAGE=:PACKAGE"))) {
             err = getErrorString(*deleteLinkQuery);
             delete deleteLinkQuery;
             return err;
@@ -861,7 +876,7 @@ QString DBRepository::deleteLinks(const QString& name)
     }
 
     if (err.isEmpty()) {
-        deleteLinkQuery->bindValue(":PACKAGE", name);
+        deleteLinkQuery->bindValue(QStringLiteral(":PACKAGE"), name);
         if (!deleteLinkQuery->exec())
             err = getErrorString(*deleteLinkQuery);
         deleteLinkQuery->finish();
@@ -876,8 +891,8 @@ QString DBRepository::deleteCmdFiles(const QString& name, const Version& version
 
     if (!deleteCmdFilesQuery) {
         deleteCmdFilesQuery.reset(new MySQLQuery(db));
-        if (!deleteCmdFilesQuery->prepare(
-                "DELETE FROM CMD_FILE WHERE PACKAGE=:PACKAGE AND VERSION=:VERSION")) {
+        if (!deleteCmdFilesQuery->prepare(QStringLiteral(
+                "DELETE FROM CMD_FILE WHERE PACKAGE=:PACKAGE AND VERSION=:VERSION"))) {
             err = getErrorString(*deleteCmdFilesQuery);
             deleteCmdFilesQuery.reset(0);
             return err;
@@ -885,10 +900,11 @@ QString DBRepository::deleteCmdFiles(const QString& name, const Version& version
     }
 
     if (err.isEmpty()) {
-        deleteCmdFilesQuery->bindValue(":PACKAGE", name);
+        deleteCmdFilesQuery->bindValue(QStringLiteral(":PACKAGE"), name);
         Version v(version);
         v.normalize();
-        deleteCmdFilesQuery->bindValue(":VERSION", v.getVersionString());
+        deleteCmdFilesQuery->bindValue(QStringLiteral(":VERSION"),
+                v.getVersionString());
         if (!deleteCmdFilesQuery->exec())
             err = getErrorString(*deleteCmdFilesQuery);
         deleteCmdFilesQuery->finish();
@@ -904,9 +920,9 @@ QString DBRepository::saveLinks(Package* p)
     if (!insertLinkQuery) {
         insertLinkQuery = new MySQLQuery(db);
 
-        QString insertSQL = "INSERT INTO LINK "
+        QString insertSQL = QStringLiteral("INSERT INTO LINK "
                 "(PACKAGE, INDEX_, REL, HREF) "
-                "VALUES(:PACKAGE, :INDEX_, :REL, :HREF)";
+                "VALUES(:PACKAGE, :INDEX_, :REL, :HREF)");
 
         if (!insertLinkQuery->prepare(insertSQL)) {
             err = getErrorString(*insertLinkQuery);
@@ -930,10 +946,10 @@ QString DBRepository::saveLinks(Package* p)
             QString href = hrefs.at(j);
 
             if (!rel.isEmpty() && !href.isEmpty()) {
-                insertLinkQuery->bindValue(":PACKAGE", p->name);
-                insertLinkQuery->bindValue(":INDEX_", index);
-                insertLinkQuery->bindValue(":REL", rel);
-                insertLinkQuery->bindValue(":HREF", href);
+                insertLinkQuery->bindValue(QStringLiteral(":PACKAGE"), p->name);
+                insertLinkQuery->bindValue(QStringLiteral(":INDEX_"), index);
+                insertLinkQuery->bindValue(QStringLiteral(":REL"), rel);
+                insertLinkQuery->bindValue(QStringLiteral(":HREF"), href);
                 if (!insertLinkQuery->exec())
                     err = getErrorString(*insertLinkQuery);
 
@@ -997,10 +1013,10 @@ QString DBRepository::savePackage(Package *p, bool replace)
         insertPackageQuery = new MySQLQuery(db);
         replacePackageQuery = new MySQLQuery(db);
 
-        QString insertSQL = "INSERT OR IGNORE";
-        QString replaceSQL = "INSERT OR REPLACE";
+        QString insertSQL = QStringLiteral("INSERT OR IGNORE");
+        QString replaceSQL = QStringLiteral("INSERT OR REPLACE");
 
-        QString add = " INTO PACKAGE "
+        QString add = QStringLiteral(" INTO PACKAGE "
                 "(REPOSITORY, NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
@@ -1008,7 +1024,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
                 "VALUES(:REPOSITORY, :NAME, :TITLE, :URL, "
                 ":ICON, :DESCRIPTION, :LICENSE, "
                 ":FULLTEXT, :STATUS, :SHORT_NAME, "
-                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)";
+                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)");
 
         insertSQL += add;
         replaceSQL += add;
@@ -1038,37 +1054,47 @@ QString DBRepository::savePackage(Package *p, bool replace)
 
     int affected = 0;
     if (err.isEmpty()) {
-        savePackageQuery->bindValue(":REPOSITORY", this->currentRepository);
-        savePackageQuery->bindValue(":NAME", p->name);
-        savePackageQuery->bindValue(":TITLE", p->title);
-        savePackageQuery->bindValue(":URL", p->url);
-        savePackageQuery->bindValue(":ICON", p->getIcon());
-        savePackageQuery->bindValue(":DESCRIPTION", p->description);
-        savePackageQuery->bindValue(":LICENSE", p->license);
-        savePackageQuery->bindValue(":FULLTEXT", (p->title + " " + p->description + " " +
+        savePackageQuery->bindValue(QStringLiteral(":REPOSITORY"),
+                this->currentRepository);
+        savePackageQuery->bindValue(QStringLiteral(":NAME"), p->name);
+        savePackageQuery->bindValue(QStringLiteral(":TITLE"), p->title);
+        savePackageQuery->bindValue(QStringLiteral(":URL"), p->url);
+        savePackageQuery->bindValue(QStringLiteral(":ICON"), p->getIcon());
+        savePackageQuery->bindValue(QStringLiteral(":DESCRIPTION"),
+                p->description);
+        savePackageQuery->bindValue(QStringLiteral(":LICENSE"), p->license);
+        savePackageQuery->bindValue(QStringLiteral(":FULLTEXT"),
+                (p->title + QStringLiteral(" ") + p->description +
+                QStringLiteral(" ") +
                 p->name).toLower());
-        savePackageQuery->bindValue(":STATUS", 0);
-        savePackageQuery->bindValue(":SHORT_NAME", p->getShortName());
+        savePackageQuery->bindValue(QStringLiteral(":STATUS"), 0);
+        savePackageQuery->bindValue(QStringLiteral(":SHORT_NAME"),
+                p->getShortName());
         if (cat0 == 0)
-            savePackageQuery->bindValue(":CATEGORY0", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY0"),
+                    QVariant(QVariant::Int));
         else
-            savePackageQuery->bindValue(":CATEGORY0", cat0);
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY0"), cat0);
         if (cat1 == 0)
-            savePackageQuery->bindValue(":CATEGORY1", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY1"),
+                    QVariant(QVariant::Int));
         else
-            savePackageQuery->bindValue(":CATEGORY1", cat1);
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY1"), cat1);
         if (cat2 == 0)
-            savePackageQuery->bindValue(":CATEGORY2", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY2"),
+                    QVariant(QVariant::Int));
         else
-            savePackageQuery->bindValue(":CATEGORY2", cat2);
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY2"), cat2);
         if (cat3 == 0)
-            savePackageQuery->bindValue(":CATEGORY3", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY3"),
+                    QVariant(QVariant::Int));
         else
-            savePackageQuery->bindValue(":CATEGORY3", cat3);
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY3"), cat3);
         if (cat4 == 0)
-            savePackageQuery->bindValue(":CATEGORY4", QVariant(QVariant::Int));
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY4"),
+                    QVariant(QVariant::Int));
         else
-            savePackageQuery->bindValue(":CATEGORY4", cat4);
+            savePackageQuery->bindValue(QStringLiteral(":CATEGORY4"), cat4);
         if (!savePackageQuery->exec())
             err = getErrorString(*savePackageQuery);
         else
@@ -1099,15 +1125,15 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     QList<Package*> r;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT NAME, TITLE, URL, ICON, "
+    if (!q.prepare(QStringLiteral("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
             "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
             "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME "
-            "LIMIT 1"))
+            "LIMIT 1")))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
-        q.bindValue(":SHORT_NAME", name);
+        q.bindValue(QStringLiteral(":SHORT_NAME"), name);
         if (!q.exec())
             err = getErrorString(q);
     }
@@ -1144,13 +1170,13 @@ QString DBRepository::readLinks(Package* p)
     QList<Package*> r;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT REL, HREF "
+    if (!q.prepare(QStringLiteral("SELECT REL, HREF "
             "FROM LINK WHERE PACKAGE = :PACKAGE "
-            "ORDER BY INDEX_"))
+            "ORDER BY INDEX_")))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
-        q.bindValue(":PACKAGE", p->name);
+        q.bindValue(QStringLiteral(":PACKAGE"), p->name);
         if (!q.exec())
             err = getErrorString(q);
     }
@@ -1171,26 +1197,29 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         insertPackageVersionQuery = new MySQLQuery(db);
         insertCmdFileQuery.reset(new MySQLQuery(db));
 
-        QString sql = " INTO PACKAGE_VERSION "
+        QString sql = QStringLiteral(" INTO PACKAGE_VERSION "
                 "(NAME, PACKAGE, URL, "
                 "CONTENT, MSIGUID, DETECT_FILE_COUNT)"
                 "VALUES(:NAME, :PACKAGE, "
                 ":URL, :CONTENT, :MSIGUID, "
-                ":DETECT_FILE_COUNT)";
+                ":DETECT_FILE_COUNT)");
 
-        if (!replacePackageVersionQuery->prepare("INSERT OR REPLACE " + sql)) {
+        if (!replacePackageVersionQuery->prepare(
+                QStringLiteral("INSERT OR REPLACE ") + sql)) {
             err = getErrorString(*replacePackageVersionQuery);
             delete replacePackageVersionQuery;
             return err;
         }
-        if (!insertPackageVersionQuery->prepare("INSERT OR IGNORE " + sql)) {
+        if (!insertPackageVersionQuery->prepare(
+                QStringLiteral("INSERT OR IGNORE ") + sql)) {
             err = getErrorString(*insertPackageVersionQuery);
             delete insertPackageVersionQuery;
             return err;
         }
-        if (!insertCmdFileQuery->prepare("INSERT INTO CMD_FILE("
+        if (!insertCmdFileQuery->prepare(QStringLiteral(
+                "INSERT INTO CMD_FILE("
                 "PACKAGE, VERSION, PATH, NAME) "
-                "VALUES (:PACKAGE, :VERSION, :PATH, :NAME)")) {
+                "VALUES (:PACKAGE, :VERSION, :PATH, :NAME)"))) {
             err = getErrorString(*insertCmdFileQuery);
             insertCmdFileQuery = 0;
             return err;
@@ -1207,21 +1236,21 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 
         Version v = p->version;
         v.normalize();
-        q->bindValue(":REPOSITORY",
+        q->bindValue(QStringLiteral(":REPOSITORY"),
                 this->currentRepository);
-        q->bindValue(":NAME",
+        q->bindValue(QStringLiteral(":NAME"),
                 v.getVersionString());
-        q->bindValue(":PACKAGE", p->package);
-        q->bindValue(":URL", p->download.toString());
-        q->bindValue(":MSIGUID", p->msiGUID);
-        q->bindValue(":DETECT_FILE_COUNT",
+        q->bindValue(QStringLiteral(":PACKAGE"), p->package);
+        q->bindValue(QStringLiteral(":URL"), p->download.toString());
+        q->bindValue(QStringLiteral(":MSIGUID"), p->msiGUID);
+        q->bindValue(QStringLiteral(":DETECT_FILE_COUNT"),
                 p->detectFiles.count());
 
         QByteArray file;
         file.reserve(1024);
         QXmlStreamWriter w(&file);
         p->toXML(&w);
-        q->bindValue(":CONTENT", QVariant(file));
+        q->bindValue(QStringLiteral(":CONTENT"), QVariant(file));
         if (!q->exec())
             err = getErrorString(*q);
         modified = q->numRowsAffected() > 0;
@@ -1237,15 +1266,17 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 
         for (int i = 0; i < p->cmdFiles.size(); i++) {
             // qDebug() << p->package << p->version.getVersionString() << p->cmdFiles.at(i);
-            q->bindValue(":PACKAGE", p->package);
+            q->bindValue(QStringLiteral(":PACKAGE"), p->package);
             Version v = p->version;
             v.normalize();
-            q->bindValue(":VERSION", v.getVersionString());
+            q->bindValue(QStringLiteral(":VERSION"), v.getVersionString());
 
             QString path = p->cmdFiles.at(i);
-            q->bindValue(":PATH", WPMUtils::normalizePath(path));
+            q->bindValue(QStringLiteral(":PATH"),
+                    WPMUtils::normalizePath(path));
 
-            q->bindValue(":NAME", p->getCmdFileName(i).toLower());
+            q->bindValue(QStringLiteral(":NAME"),
+                    p->getCmdFileName(i).toLower());
             if (!q->exec())
                 err = getErrorString(*q);
 
@@ -1267,13 +1298,13 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
     PackageVersion* r = 0;
 
     MySQLQuery q(db);
-    if (!q.prepare("SELECT NAME, "
+    if (!q.prepare(QStringLiteral("SELECT NAME, "
             "PACKAGE, CONTENT FROM PACKAGE_VERSION "
-            "WHERE MSIGUID = :MSIGUID"))
+            "WHERE MSIGUID = :MSIGUID")))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":MSIGUID", guid);
+        q.bindValue(QStringLiteral(":MSIGUID"), guid);
         if (!q.exec())
             *err = getErrorString(q);
     }
@@ -1296,7 +1327,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
                 QObject::tr("Clearing the packages table"));
-        QString err = exec("DELETE FROM PACKAGE");
+        QString err = exec(QStringLiteral("DELETE FROM PACKAGE"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1306,7 +1337,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.6,
                 QObject::tr("Clearing the package versions table"));
-        QString err = exec("DELETE FROM PACKAGE_VERSION");
+        QString err = exec(QStringLiteral("DELETE FROM PACKAGE_VERSION"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1316,7 +1347,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.13,
                 QObject::tr("Clearing the licenses table"));
-        QString err = exec("DELETE FROM LICENSE");
+        QString err = exec(QStringLiteral("DELETE FROM LICENSE"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1326,7 +1357,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.10,
                 QObject::tr("Clearing the links table"));
-        QString err = exec("DELETE FROM LINK");
+        QString err = exec(QStringLiteral("DELETE FROM LINK"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1336,7 +1367,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.03,
                 QObject::tr("Clearing the command line tool definitions"));
-        QString err = exec("DELETE FROM CMD_FILE");
+        QString err = exec(QStringLiteral("DELETE FROM CMD_FILE"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1346,7 +1377,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.02,
                 QObject::tr("Clearing the categories table"));
-        QString err = exec("DELETE FROM CATEGORY");
+        QString err = exec(QStringLiteral("DELETE FROM CATEGORY"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -1357,7 +1388,7 @@ QString DBRepository::clear()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.02,
                 QObject::tr("Clearing the table with information about installed packages"));
-        QString err = exec("DELETE FROM INSTALLED");
+        QString err = exec(QStringLiteral("DELETE FROM INSTALLED"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -1369,7 +1400,7 @@ QString DBRepository::clear()
 
     delete job;
 
-    return "";
+    return QStringLiteral("");
 }
 
 void DBRepository::load(Job* job, bool useCache, bool interactive)
@@ -1467,7 +1498,7 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
                             arg(f->fileName()).
                             arg(sub->getErrorMessage()));
                 } else {
-                    QString repfn = dir->path() + "\\Rep.xml";
+                    QString repfn = dir->path() + QStringLiteral("\\Rep.xml");
                     if (QFile::exists(repfn)) {
                         f = new QFile(repfn);
                     } else {
@@ -1506,7 +1537,7 @@ void DBRepository::updateF5(Job* job, bool interactive)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
                 QObject::tr("Starting an SQL transaction (tempdb)"));
-        QString err = exec("BEGIN TRANSACTION");
+        QString err = exec(QStringLiteral("BEGIN TRANSACTION"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -1553,9 +1584,10 @@ void DBRepository::updateF5(Job* job, bool interactive)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
                 QObject::tr("Removing packages without versions"));
-        QString err = exec("DELETE FROM PACKAGE WHERE STATUS=0 AND NOT EXISTS "
+        QString err = exec(QStringLiteral(
+                "DELETE FROM PACKAGE WHERE STATUS=0 AND NOT EXISTS "
                 "(SELECT 1 FROM PACKAGE_VERSION "
-                "WHERE PACKAGE = PACKAGE.NAME AND URL <>'')");
+                "WHERE PACKAGE = PACKAGE.NAME AND URL <>'')"));
         if (err.isEmpty())
             sub->completeWithProgress();
         else
@@ -1577,14 +1609,14 @@ void DBRepository::updateF5(Job* job, bool interactive)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.05,
                 QObject::tr("Commiting the SQL transaction (tempdb)"));
-        QString err = exec("COMMIT");
+        QString err = exec(QStringLiteral("COMMIT"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
             sub->completeWithProgress();
     } else {
         if (transactionStarted)
-            exec("ROLLBACK");
+            exec(QStringLiteral("ROLLBACK"));
     }
 
     /*QString error;
@@ -1642,7 +1674,8 @@ void DBRepository::updateF5Runnable(Job *job)
     }
 
     if (job->shouldProceed()) {
-        QString err = tempdb.open("tempdb", tempFile.fileName());
+        QString err = tempdb.open(QStringLiteral("tempdb"),
+                tempFile.fileName());
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -1665,7 +1698,7 @@ void DBRepository::updateF5Runnable(Job *job)
     DBRepository dbr;
 
     if (job->shouldProceed()) {
-        QString err = dbr.openDefault("recognize");
+        QString err = dbr.openDefault(QStringLiteral("recognize"));
         if (!err.isEmpty()) {
             job->setErrorMessage(QObject::tr("Error opening the database: %1").
                     arg(err));
@@ -1739,7 +1772,7 @@ void DBRepository::updateStatusForInstalled(Job* job)
     }
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Updating statuses"));
         QList<QString> packages_ = packages.values();
         for (int i = 0; i < packages_.count(); i++) {
@@ -1799,14 +1832,14 @@ QString DBRepository::savePackageVersions(Repository* r, bool replace)
 
 QString DBRepository::toString(const QSqlError& e)
 {
-    return e.type() == QSqlError::NoError ? "" : e.text();
+    return e.type() == QSqlError::NoError ? QStringLiteral("") : e.text();
 }
 
 QString DBRepository::getErrorString(const MySQLQuery &q)
 {
     QSqlError e = q.lastError();
-    return e.type() == QSqlError::NoError ? "" : e.text() +
-            " (" + q.lastQuery() + ")";
+    return e.type() == QSqlError::NoError ? QStringLiteral("") : e.text() +
+            QStringLiteral(" (") + q.lastQuery() + QStringLiteral(")");
 }
 
 QString DBRepository::readCategories()
@@ -1815,7 +1848,7 @@ QString DBRepository::readCategories()
 
     this->categories.clear();
 
-    QString sql = "SELECT ID, NAME FROM CATEGORY";
+    QString sql = QStringLiteral("SELECT ID, NAME FROM CATEGORY");
 
     MySQLQuery q(db);
 
@@ -1840,9 +1873,9 @@ QStringList DBRepository::readRepositories(QString* err)
 {
     QStringList r;
 
-    *err = "";
+    *err = QStringLiteral("");
 
-    QString sql = "SELECT ID, URL FROM REPOSITORY ORDER BY ID";
+    QString sql = QStringLiteral("SELECT ID, URL FROM REPOSITORY ORDER BY ID");
 
     MySQLQuery q(db);
 
@@ -1866,7 +1899,7 @@ QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
 {
     QString r;
 
-    QString sql = "SELECT SHA1 FROM REPOSITORY WHERE URL=:URL";
+    QString sql = QStringLiteral("SELECT SHA1 FROM REPOSITORY WHERE URL=:URL");
 
     MySQLQuery q(db);
 
@@ -1874,7 +1907,7 @@ QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":URL", url);
+        q.bindValue(QStringLiteral(":URL"), url);
 
         if (!q.exec())
             *err = getErrorString(q);
@@ -1893,13 +1926,14 @@ void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
 {
     MySQLQuery q(db);
 
-    QString sql = "UPDATE REPOSITORY SET SHA1=:SHA1 WHERE URL=:URL";
+    QString sql = QStringLiteral(
+            "UPDATE REPOSITORY SET SHA1=:SHA1 WHERE URL=:URL");
     if (!q.prepare(sql))
         *err = getErrorString(q);
 
     if (err->isEmpty()) {
-        q.bindValue(":SHA1", sha1);
-        q.bindValue(":URL", url);
+        q.bindValue(QStringLiteral(":SHA1"), sha1);
+        q.bindValue(QStringLiteral(":URL"), url);
         if (!q.exec())
             *err = getErrorString(q);
     }
@@ -1908,22 +1942,22 @@ void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
 
 QString DBRepository::saveRepositories(const QStringList &reps)
 {
-    QString err = exec("DELETE FROM REPOSITORY");
+    QString err = exec(QStringLiteral("DELETE FROM REPOSITORY"));
 
     MySQLQuery q(db);
 
     if (err.isEmpty()) {
-        QString sql = "INSERT INTO REPOSITORY "
+        QString sql = QStringLiteral("INSERT INTO REPOSITORY "
                 "(ID, URL)"
-                "VALUES(:ID, :URL)";
+                "VALUES(:ID, :URL)");
         if (!q.prepare(sql))
             err = getErrorString(q);
     }
 
     if (err.isEmpty()) {
         for (int i = 0; i < reps.size(); i++) {
-            q.bindValue(":ID", i + 1);
-            q.bindValue(":URL", reps.at(i));
+            q.bindValue(QStringLiteral(":ID"), i + 1);
+            q.bindValue(QStringLiteral(":URL"), reps.at(i));
             if (!q.exec())
                 err = getErrorString(q);
         }
@@ -2000,14 +2034,14 @@ QString DBRepository::updateStatus(const QString& package)
         }
 
         MySQLQuery q(db);
-        if (!q.prepare("UPDATE PACKAGE "
+        if (!q.prepare(QStringLiteral("UPDATE PACKAGE "
                 "SET STATUS=:STATUS "
-                "WHERE NAME=:NAME"))
+                "WHERE NAME=:NAME")))
             err = getErrorString(q);
 
         if (err.isEmpty()) {
-            q.bindValue(":STATUS", status);
-            q.bindValue(":NAME", package);
+            q.bindValue(QStringLiteral(":STATUS"), status);
+            q.bindValue(QStringLiteral(":NAME"), package);
             if (!q.exec())
                 err = getErrorString(q);
         }
@@ -2024,9 +2058,10 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     QString initialTitle = job->getTitle();
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
             QObject::tr("Attaching the temporary database"));
-        QString err = exec("ATTACH '" + databaseFilename + "' as tempdb");
+        QString err = exec(QStringLiteral("ATTACH '") + databaseFilename +
+                QStringLiteral("' as tempdb"));
         if (err.isEmpty())
             job->setProgress(0.10);
         else
@@ -2043,9 +2078,9 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     */
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Starting an SQL transaction"));
-        QString err = exec("BEGIN TRANSACTION");
+        QString err = exec(QStringLiteral("BEGIN TRANSACTION"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -2055,7 +2090,7 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     }
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Clearing the database"));
         QString err = clear();
         if (err.isEmpty())
@@ -2065,39 +2100,46 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     }
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Transferring the data from the temporary database"));
 
         // exec("DROP INDEX PACKAGE_VERSION_PACKAGE_NAME");
-        QString err = exec("INSERT INTO PACKAGE(NAME, TITLE, URL, ICON, "
+        QString err = exec(QStringLiteral(
+                "INSERT INTO PACKAGE(NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, STATUS, SHORT_NAME, "
                 "REPOSITORY, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, "
                 "CATEGORY4) SELECT NAME, TITLE, URL, ICON, DESCRIPTION, "
                 "LICENSE, FULLTEXT, STATUS, SHORT_NAME, REPOSITORY, "
                 "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
-                "FROM tempdb.PACKAGE");
+                "FROM tempdb.PACKAGE"));
         if (err.isEmpty())
-            err = exec("INSERT INTO PACKAGE_VERSION(NAME, PACKAGE, URL, "
+            err = exec(QStringLiteral(
+                    "INSERT INTO PACKAGE_VERSION(NAME, PACKAGE, URL, "
                     "CONTENT, MSIGUID, DETECT_FILE_COUNT) SELECT NAME, "
                     "PACKAGE, URL, CONTENT, MSIGUID, DETECT_FILE_COUNT "
-                    "FROM tempdb.PACKAGE_VERSION");
+                    "FROM tempdb.PACKAGE_VERSION"));
         if (err.isEmpty())
-            err = exec("INSERT INTO LICENSE(NAME, TITLE, DESCRIPTION, URL) "
-                    "SELECT NAME, TITLE, DESCRIPTION, URL FROM tempdb.LICENSE");
+            err = exec(QStringLiteral(
+                    "INSERT INTO LICENSE(NAME, TITLE, DESCRIPTION, URL) "
+                    "SELECT NAME, TITLE, DESCRIPTION, URL FROM tempdb.LICENSE"));
         if (err.isEmpty())
-            err = exec("INSERT INTO CATEGORY(ID, NAME, PARENT, LEVEL) "
-                    "SELECT ID, NAME, PARENT, LEVEL FROM tempdb.CATEGORY");
+            err = exec(QStringLiteral(
+                    "INSERT INTO CATEGORY(ID, NAME, PARENT, LEVEL) "
+                    "SELECT ID, NAME, PARENT, LEVEL FROM tempdb.CATEGORY"));
         if (err.isEmpty())
-            err = exec("INSERT INTO LINK(PACKAGE, INDEX_, REL, HREF) "
-                    "SELECT PACKAGE, INDEX_, REL, HREF FROM tempdb.LINK");
+            err = exec(QStringLiteral(
+                    "INSERT INTO LINK(PACKAGE, INDEX_, REL, HREF) "
+                    "SELECT PACKAGE, INDEX_, REL, HREF FROM tempdb.LINK"));
         if (err.isEmpty())
-            err = exec("INSERT INTO CMD_FILE(PACKAGE, VERSION, PATH, NAME) "
-                    "SELECT PACKAGE, VERSION, PATH, NAME FROM tempdb.CMD_FILE");
+            err = exec(QStringLiteral(
+                    "INSERT INTO CMD_FILE(PACKAGE, VERSION, PATH, NAME) "
+                    "SELECT PACKAGE, VERSION, PATH, NAME FROM tempdb.CMD_FILE"));
         if (err.isEmpty())
-            err = exec("INSERT INTO INSTALLED(PACKAGE, VERSION, CVERSION, "
+            err = exec(QStringLiteral(
+                    "INSERT INTO INSTALLED(PACKAGE, VERSION, CVERSION, "
                     "WHEN_, WHERE_, DETECTION_INFO) "
                     "SELECT PACKAGE, VERSION, CVERSION, WHEN_, WHERE_, "
-                    "DETECTION_INFO FROM tempdb.INSTALLED");
+                    "DETECTION_INFO FROM tempdb.INSTALLED"));
         if (err.isEmpty())
             job->setProgress(0.90);
         else
@@ -2105,16 +2147,16 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     }
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Commiting the SQL transaction"));
-        QString err = exec("COMMIT");
+        QString err = exec(QStringLiteral("COMMIT"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
             job->setProgress(0.95);
     } else {
         if (transactionStarted)
-            exec("ROLLBACK");
+            exec(QStringLiteral("ROLLBACK"));
     }
 
     /*
@@ -2126,11 +2168,11 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     */
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Detaching the temporary database"));
         QString err;
         for (int i = 0; i < 10; i++) {
-            err = exec("DETACH tempdb");
+            err = exec(QStringLiteral("DETACH tempdb"));
             if (err.isEmpty())
                 break;
             else
@@ -2144,9 +2186,9 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     }
 
     if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Reorganizing the database"));
-        QString err = exec("VACUUM");
+        QString err = exec(QStringLiteral("VACUUM"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -2160,12 +2202,13 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 
 QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 {
-    QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd";
+    QString dir = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) +
+            QStringLiteral("\\Npackd");
     QDir d;
     if (!d.exists(dir))
         d.mkpath(dir);
 
-    QString path = dir + "\\Data.db";
+    QString path = dir + QStringLiteral("\\Data.db");
 
     path = QDir::toNativeSeparators(path);
 
@@ -2181,13 +2224,13 @@ QString DBRepository::updateDatabase()
     bool e = false;
 
     if (err.isEmpty()) {
-        e = tableExists(&db, "PACKAGE", &err);
+        e = tableExists(&db, QStringLiteral("PACKAGE"), &err);
     }
     if (err.isEmpty()) {
         if (!e) {
             // NULL should be stored in CATEGORYx if a package is not
             // categorized
-            db.exec("CREATE TABLE PACKAGE(NAME TEXT, "
+            db.exec(QStringLiteral("CREATE TABLE PACKAGE(NAME TEXT, "
                     "TITLE TEXT, "
                     "URL TEXT, "
                     "ICON TEXT, "
@@ -2202,68 +2245,73 @@ QString DBRepository::updateDatabase()
                     "CATEGORY2 INTEGER, "
                     "CATEGORY3 INTEGER, "
                     "CATEGORY4 INTEGER"
-                    ")");
+                    ")"));
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE UNIQUE INDEX PACKAGE_NAME ON PACKAGE(NAME)");
+            db.exec(QStringLiteral(
+                    "CREATE UNIQUE INDEX PACKAGE_NAME ON PACKAGE(NAME)"));
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX PACKAGE_SHORT_NAME ON PACKAGE(SHORT_NAME)");
+            db.exec(QStringLiteral(
+                    "CREATE INDEX PACKAGE_SHORT_NAME ON PACKAGE(SHORT_NAME)"));
             err = toString(db.lastError());
         }
     }
 
     if (err.isEmpty()) {
-        e = tableExists(&db, "REPOSITORY", &err);
+        e = tableExists(&db, QStringLiteral("REPOSITORY"), &err);
     }
 
     // CATEGORY
     if (err.isEmpty()) {
-        e = tableExists(&db, "CATEGORY", &err);
+        e = tableExists(&db, QStringLiteral("CATEGORY"), &err);
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE TABLE CATEGORY(ID INTEGER PRIMARY KEY ASC, "
-                    "NAME TEXT, PARENT INTEGER, LEVEL INTEGER)");
+            db.exec(QStringLiteral(
+                    "CREATE TABLE CATEGORY(ID INTEGER PRIMARY KEY ASC, "
+                    "NAME TEXT, PARENT INTEGER, LEVEL INTEGER)"));
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE UNIQUE INDEX CATEGORY_ID ON CATEGORY(ID)");
+            db.exec(QStringLiteral(
+                    "CREATE UNIQUE INDEX CATEGORY_ID ON CATEGORY(ID)"));
             err = toString(db.lastError());
         }
     }
 
     // INSTALLED is new in 1.22
     if (err.isEmpty()) {
-        e = tableExists(&db, "INSTALLED", &err);
+        e = tableExists(&db, QStringLiteral("INSTALLED"), &err);
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE TABLE INSTALLED("
+            db.exec(QStringLiteral("CREATE TABLE INSTALLED("
                     "PACKAGE TEXT, VERSION TEXT, CVERSION TEXT, WHEN_ INTEGER, "
-                    "WHERE_ TEXT, DETECTION_INFO TEXT)");
+                    "WHERE_ TEXT, DETECTION_INFO TEXT)"));
             err = toString(db.lastError());
         }
     }
 
     // PACKAGE_VERSION
     if (err.isEmpty()) {
-        e = tableExists(&db, "PACKAGE_VERSION", &err);
+        e = tableExists(&db, QStringLiteral("PACKAGE_VERSION"), &err);
     }
 
     if (err.isEmpty()) {
         if (e) {
             // PACKAGE_VERSION.URL is new in 1.18.4
-            if (!columnExists(&db, "PACKAGE_VERSION", "URL", &err)) {
-                exec("DROP TABLE PACKAGE_VERSION");
+            if (!columnExists(&db, QStringLiteral("PACKAGE_VERSION"),
+                    QStringLiteral("URL"), &err)) {
+                exec(QStringLiteral("DROP TABLE PACKAGE_VERSION"));
                 e = false;
             }
         }
@@ -2271,134 +2319,144 @@ QString DBRepository::updateDatabase()
 
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE TABLE PACKAGE_VERSION(NAME TEXT, "
+            db.exec(QStringLiteral(
+                    "CREATE TABLE PACKAGE_VERSION(NAME TEXT, "
                     "PACKAGE TEXT, URL TEXT, "
-                    "CONTENT BLOB, MSIGUID TEXT, DETECT_FILE_COUNT INTEGER)");
+                    "CONTENT BLOB, MSIGUID TEXT, DETECT_FILE_COUNT INTEGER)"));
             err = toString(db.lastError());
         }
     }
 
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX PACKAGE_VERSION_PACKAGE ON PACKAGE_VERSION("
-                    "PACKAGE)");
+            db.exec(QStringLiteral(
+                    "CREATE INDEX PACKAGE_VERSION_PACKAGE ON PACKAGE_VERSION("
+                    "PACKAGE)"));
             err = toString(db.lastError());
         }
     }
 
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE UNIQUE INDEX PACKAGE_VERSION_PACKAGE_NAME ON "
+            db.exec(QStringLiteral(
+                    "CREATE UNIQUE INDEX PACKAGE_VERSION_PACKAGE_NAME ON "
                     "PACKAGE_VERSION("
-                    "PACKAGE, NAME)");
+                    "PACKAGE, NAME)"));
             err = toString(db.lastError());
         }
     }
 
     if (err.isEmpty()) {
-        db.exec("CREATE INDEX IF NOT EXISTS PACKAGE_VERSION_MSIGUID ON "
-                "PACKAGE_VERSION(MSIGUID)");
+        db.exec(QStringLiteral(
+                "CREATE INDEX IF NOT EXISTS PACKAGE_VERSION_MSIGUID ON "
+                "PACKAGE_VERSION(MSIGUID)"));
         err = toString(db.lastError());
     }
 
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX PACKAGE_VERSION_DETECT_FILE_COUNT ON PACKAGE_VERSION("
-                    "DETECT_FILE_COUNT)");
+            db.exec(QStringLiteral(
+                    "CREATE INDEX PACKAGE_VERSION_DETECT_FILE_COUNT ON PACKAGE_VERSION("
+                    "DETECT_FILE_COUNT)"));
             err = toString(db.lastError());
         }
     }
 
     if (err.isEmpty()) {
-        e = tableExists(&db, "LICENSE", &err);
+        e = tableExists(&db, QStringLiteral("LICENSE"), &err);
     }
 
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE TABLE LICENSE(NAME TEXT, "
+            db.exec(QStringLiteral("CREATE TABLE LICENSE(NAME TEXT, "
                     "TITLE TEXT, "
                     "DESCRIPTION TEXT, "
                     "URL TEXT"
-                    ")");
+                    ")"));
             err = toString(db.lastError());
         }
     }
 
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE UNIQUE INDEX LICENSE_NAME ON LICENSE(NAME)");
+            db.exec(QStringLiteral(
+                    "CREATE UNIQUE INDEX LICENSE_NAME ON LICENSE(NAME)"));
             err = toString(db.lastError());
         }
     }
 
     // REPOSITORY
     if (err.isEmpty()) {
-        e = tableExists(&db, "REPOSITORY", &err);
+        e = tableExists(&db, QStringLiteral("REPOSITORY"), &err);
     }
     bool ce = false;
     if (err.isEmpty()) {
-        ce = columnExists(&db, "REPOSITORY", "SHA1", &err);
+        ce = columnExists(&db, QStringLiteral("REPOSITORY"),
+                QStringLiteral("SHA1"), &err);
     }
     if (err.isEmpty()) {
         if (e && !ce) {
-            db.exec("DROP TABLE REPOSITORY");
+            db.exec(QStringLiteral("DROP TABLE REPOSITORY"));
             err = toString(db.lastError());
             e = false;
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE TABLE REPOSITORY(ID INTEGER PRIMARY KEY ASC, "
-                    "URL TEXT, SHA1 TEXT)");
+            db.exec(QStringLiteral(
+                    "CREATE TABLE REPOSITORY(ID INTEGER PRIMARY KEY ASC, "
+                    "URL TEXT, SHA1 TEXT)"));
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE UNIQUE INDEX REPOSITORY_ID ON REPOSITORY(ID)");
+            db.exec(QStringLiteral(
+                    "CREATE UNIQUE INDEX REPOSITORY_ID ON REPOSITORY(ID)"));
             err = toString(db.lastError());
         }
     }
 
     // LINK. This table is new in Npackd 1.20.
     if (err.isEmpty()) {
-        e = tableExists(&db, "LINK", &err);
+        e = tableExists(&db, QStringLiteral("LINK"), &err);
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE TABLE LINK("
+            db.exec(QStringLiteral("CREATE TABLE LINK("
                     "PACKAGE TEXT NOT NULL, INDEX_ INTEGER NOT NULL, "
                     "REL TEXT NOT NULL, "
-                    "HREF TEXT NOT NULL)");
+                    "HREF TEXT NOT NULL)"));
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX LINK_PACKAGE ON LINK("
-                    "PACKAGE)");
+            db.exec(QStringLiteral("CREATE INDEX LINK_PACKAGE ON LINK("
+                    "PACKAGE)"));
             err = toString(db.lastError());
         }
     }
 
     // CMD_FILE. This table is new in Npackd 1.22.
     if (err.isEmpty()) {
-        e = tableExists(&db, "CMD_FILE", &err);
+        e = tableExists(&db, QStringLiteral("CMD_FILE"), &err);
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE TABLE CMD_FILE("
+            db.exec(QStringLiteral("CREATE TABLE CMD_FILE("
                     "PACKAGE TEXT NOT NULL, "
                     "VERSION TEXT NOT NULL, "
                     "PATH TEXT NOT NULL, "
-                    "NAME TEXT NOT NULL)");
+                    "NAME TEXT NOT NULL)"));
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec("CREATE INDEX CMD_FILE_PACKAGE_VERSION ON CMD_FILE("
-                    "PACKAGE, VERSION)");
+            db.exec(QStringLiteral(
+                    "CREATE INDEX CMD_FILE_PACKAGE_VERSION ON CMD_FILE("
+                    "PACKAGE, VERSION)"));
             err = toString(db.lastError());
         }
     }
@@ -2421,19 +2479,19 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     }
 
     QSqlDatabase::removeDatabase(connectionName);
-    db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+    db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
     db.setDatabaseName(file);
     if (readOnly)
-        db.setConnectOptions("QSQLITE_OPEN_READONLY=1");
+        db.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY=1"));
     db.open();
     err = toString(db.lastError());
 
     if (err.isEmpty())
-        err = exec("PRAGMA busy_timeout = 30000");
+        err = exec(QStringLiteral("PRAGMA busy_timeout = 30000"));
 
     if (err.isEmpty()) {
         if (!readOnly)
-            err = exec("PRAGMA journal_mode = DELETE");
+            err = exec(QStringLiteral("PRAGMA journal_mode = DELETE"));
     }
 
     if (err.isEmpty()) {
