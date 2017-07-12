@@ -14,58 +14,58 @@ int RepositoryXMLHandler::findWhere()
     switch (tags.count()) {
         case 2:
             tag1 = tags.at(1);
-            if (tag1 == "version")
+            if (tag1 == QStringLiteral("version"))
                 r = TAG_VERSION;
-            else if (tag1 == "package")
+            else if (tag1 == QStringLiteral("package"))
                 r = TAG_PACKAGE;
-            else if (tag1 == "license")
+            else if (tag1 == QStringLiteral("license"))
                 r = TAG_LICENSE;
-            else if (tag1 == "spec-version")
+            else if (tag1 == QStringLiteral("spec-version"))
                 r = TAG_SPEC_VERSION;
             break;
         case 3:
             tag1 = tags.at(1);
             tag2 = tags.at(2);
-            if (tag1 == "version") {
-                if (tag2 == "important-file")
+            if (tag1 == QStringLiteral("version")) {
+                if (tag2 == QStringLiteral("important-file"))
                     r = TAG_VERSION_IMPORTANT_FILE;
-                else if (tag2 == "cmd-file")
+                else if (tag2 == QStringLiteral("cmd-file"))
                     r = TAG_VERSION_CMD_FILE;
-                else if (tag2 == "file")
+                else if (tag2 == QStringLiteral("file"))
                     r = TAG_VERSION_FILE;
-                else if (tag2 == "dependency")
+                else if (tag2 == QStringLiteral("dependency"))
                     r = TAG_VERSION_DEPENDENCY;
-                else if (tag2 == "detect-file")
+                else if (tag2 == QStringLiteral("detect-file"))
                     r = TAG_VERSION_DETECT_FILE;
-                else if (tag2 == "url")
+                else if (tag2 == QStringLiteral("url"))
                     r = TAG_VERSION_URL;
-                else if (tag2 == "sha1")
+                else if (tag2 == QStringLiteral("sha1"))
                     r = TAG_VERSION_SHA1;
-                else if (tag2 == "hash-sum")
+                else if (tag2 == QStringLiteral("hash-sum"))
                     r = TAG_VERSION_HASH_SUM;
-                else if (tag2 == "detect-msi")
+                else if (tag2 == QStringLiteral("detect-msi"))
                     r = TAG_VERSION_DETECT_MSI;
-            } else if (tag1 == "package") {
-                if (tag2 == "title")
+            } else if (tag1 == QStringLiteral("package")) {
+                if (tag2 == QStringLiteral("title"))
                     r = TAG_PACKAGE_TITLE;
-                else if (tag2 == "url")
+                else if (tag2 == QStringLiteral("url"))
                     r = TAG_PACKAGE_URL;
-                else if (tag2 == "description")
+                else if (tag2 == QStringLiteral("description"))
                     r = TAG_PACKAGE_DESCRIPTION;
-                else if (tag2 == "icon")
+                else if (tag2 == QStringLiteral("icon"))
                     r = TAG_PACKAGE_ICON;
-                else if (tag2 == "license")
+                else if (tag2 == QStringLiteral("license"))
                     r = TAG_PACKAGE_LICENSE;
-                else if (tag2 == "category")
+                else if (tag2 == QStringLiteral("category"))
                     r = TAG_PACKAGE_CATEGORY;
-                else if (tag2 == "link")
+                else if (tag2 == QStringLiteral("link"))
                     r = TAG_PACKAGE_LINK;
-            } else if (tag1 == "license") {
-                if (tag2 == "title")
+            } else if (tag1 == QStringLiteral("license")) {
+                if (tag2 == QStringLiteral("title"))
                     r = TAG_LICENSE_TITLE;
-                else if (tag2 == "url")
+                else if (tag2 == QStringLiteral("url"))
                     r = TAG_LICENSE_URL;
-                else if (tag2 == "description")
+                else if (tag2 == QStringLiteral("description"))
                     r = TAG_LICENSE_DESCRIPTION;
             }
             break;
@@ -73,14 +73,14 @@ int RepositoryXMLHandler::findWhere()
             tag1 = tags.at(1);
             tag2 = tags.at(2);
             tag3 = tags.at(3);
-            if (tag1 == "version") {
-                if (tag2 == "dependency") {
-                    if (tag3 == "variable")
+            if (tag1 == QStringLiteral("version")) {
+                if (tag2 == QStringLiteral("dependency")) {
+                    if (tag3 == QStringLiteral("variable"))
                         r = TAG_VERSION_DEPENDENCY_VARIABLE;
-                } else if (tag2 == "detect-file") {
-                    if (tag3 == "path")
+                } else if (tag2 == QStringLiteral("detect-file")) {
+                    if (tag3 == QStringLiteral("path"))
                         r = TAG_VERSION_DETECT_FILE_PATH;
-                    else if (tag3 == "sha1")
+                    else if (tag3 == QStringLiteral("sha1"))
                         r = TAG_VERSION_DETECT_FILE_SHA1;
                 }
             }
@@ -114,7 +114,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
 {
     chars.clear();
     if (tags.count() == 0)
-        tags.append("root");
+        tags.append(QStringLiteral("root"));
     else
         tags.append(localName);
 
@@ -122,7 +122,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
 
     if (where == TAG_VERSION) {
         pv = new PackageVersion();
-        QString packageName = atts.value("package");
+        QString packageName = atts.value(QStringLiteral("package"));
         error = WPMUtils::validateFullPackageName(packageName);
         if (!error.isEmpty()) {
             error = QObject::tr("Error in the attribute 'package' in <version>: %1").
@@ -132,9 +132,9 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         }
 
         if (error.isEmpty()) {
-            QString name = atts.value("name");
+            QString name = atts.value(QStringLiteral("name"));
             if (name.isEmpty())
-                name = "1.0";
+                name = QStringLiteral("1.0");
 
             if (pv->version.setVersion(name)) {
                 pv->version.normalize();
@@ -145,12 +145,12 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         }
 
         if (error.isEmpty()) {
-            QString type = atts.value("type");
+            QString type = atts.value(QStringLiteral("type"));
             if (type.isEmpty())
-                type = "zip";
-            if (type == "one-file")
+                type = QStringLiteral("zip");
+            if (type == QStringLiteral("one-file"))
                 pv->type = 1;
-            else if (type == "" || type == "zip")
+            else if (type.isEmpty() || type == QStringLiteral("zip"))
                 pv->type = 0;
             else {
                 error = QObject::tr("Wrong value for the attribute 'type' for %1: %3").
@@ -158,9 +158,9 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
             }
         }
     } else if (where == TAG_VERSION_IMPORTANT_FILE) {
-        QString p = atts.value("path");
+        QString p = atts.value(QStringLiteral("path"));
         if (p.isEmpty())
-            p = atts.value("name");
+            p = atts.value(QStringLiteral("name"));
 
         if (p.isEmpty()) {
             error = QObject::tr("Empty 'path' attribute value for <important-file> for %1").
@@ -178,7 +178,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
             pv->importantFiles.append(p);
         }
 
-        QString title = atts.value("title");
+        QString title = atts.value(QStringLiteral("title"));
         if (error.isEmpty()) {
             if (title.isEmpty()) {
                 error = QObject::tr("Empty 'title' attribute value for <important-file> for %1").
@@ -190,7 +190,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
             pv->importantFilesTitles.append(title);
         }
     } else if (where == TAG_VERSION_CMD_FILE) {
-        QString p = atts.value("path");
+        QString p = atts.value(QStringLiteral("path"));
 
         if (p.isEmpty()) {
             error = QObject::tr("Empty 'path' attribute value for <cmd-file> for %1").
@@ -210,21 +210,21 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
             //        p << "??";
         }
     } else if (where == TAG_VERSION_FILE) {
-        QString path = atts.value("path");
-        pvf = new PackageVersionFile(path, "");
+        QString path = atts.value(QStringLiteral("path"));
+        pvf = new PackageVersionFile(path, QStringLiteral(""));
         pv->files.append(pvf);
     } else if (where == TAG_VERSION_HASH_SUM) {
-        QString type = atts.value("type").trimmed();
-        if (type.isEmpty() || type == "SHA-256")
+        QString type = atts.value(QStringLiteral("type")).trimmed();
+        if (type.isEmpty() || type == QStringLiteral("SHA-256"))
             pv->hashSumType = QCryptographicHash::Sha256;
-        else if (type == "SHA-1")
+        else if (type == QStringLiteral("SHA-1"))
             pv->hashSumType = QCryptographicHash::Sha1;
         else
             error = QObject::tr("Error in attribute 'type' in <hash-sum> in %1").
                     arg(pv->toString());
     } else if (where == TAG_VERSION_DEPENDENCY) {
-        QString package = atts.value("package");
-        QString versions = atts.value("versions");
+        QString package = atts.value(QStringLiteral("package"));
+        QString versions = atts.value(QStringLiteral("versions"));
         dep = new Dependency();
         pv->dependencies.append(dep);
         dep->package = package;
@@ -236,7 +236,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         df = new DetectFile();
         pv->detectFiles.append(df);
     } else if (where == TAG_PACKAGE) {
-        QString name = atts.value("name");
+        QString name = atts.value(QStringLiteral("name"));
         p = new Package(name, name);
 
         error = WPMUtils::validateFullPackageName(name);
@@ -244,8 +244,8 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
             error.prepend(QObject::tr("Error in attribute 'name' in <package>: "));
         }
     } else if (where == TAG_PACKAGE_LINK) {
-        QString rel = atts.value("rel").trimmed();
-        QString href = atts.value("href").trimmed();
+        QString rel = atts.value(QStringLiteral("rel")).trimmed();
+        QString href = atts.value(QStringLiteral("href")).trimmed();
 
         if (rel.isEmpty()) {
             error = QObject::tr("Empty 'rel' attribute value for <link> for %1").
@@ -259,7 +259,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         if (error.isEmpty())
             p->links.insert(rel, href);
     } else if (where == TAG_LICENSE) {
-        QString name = atts.value("name");
+        QString name = atts.value(QStringLiteral("name"));
         lic = new License(name, name);
 
         error = WPMUtils::validateFullPackageName(name);

@@ -215,6 +215,8 @@ void Job::fireChange(Job* s)
 
 void Job::setProgress(double progress)
 {
+    bool changed = false;
+
     this->mutex.lock();
     if (progress > 1.0001) {
         qDebug() << "Job: progress =" << progress << "in" << this->title;
@@ -223,13 +225,18 @@ void Job::setProgress(double progress)
         qDebug() << "Job: stepping back from" << this->progress <<
                 "to" << progress << "in" << getFullTitle();
     }
-    this->progress = progress;
+    if (fabs(progress - this->progress) > 0.005) {
+        this->progress = progress;
+        changed = true;
+    }
     this->mutex.unlock();
 
-    fireChange();
+    if (changed) {
+        fireChange();
 
-    if (uparentProgress)
-        updateParentProgress();
+        if (uparentProgress)
+            updateParentProgress();
+    }
 }
 
 void Job::updateParentProgress()
