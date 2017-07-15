@@ -3148,7 +3148,6 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
     DWORD dwStartTime = GetTickCount();
     DWORD dwBytesNeeded;
     DWORD dwTimeout = 30000; // 30-second time-out
-    DWORD dwWaitTime;
 
     SC_HANDLE schService = NULL;
     if (err.isEmpty()) {
@@ -3177,43 +3176,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
     // If a stop is pending, wait for it.
     if (err.isEmpty()) {
-        while (ssp.dwCurrentState == SERVICE_STOP_PENDING) {
-            // Service stop pending...
-
-            // Do not wait longer than the wait hint. A good interval is
-            // one-tenth of the wait hint but not less than 1 second
-            // and not more than 10 seconds.
-
-            dwWaitTime = ssp.dwWaitHint / 10;
-
-            if( dwWaitTime < 1000 )
-                dwWaitTime = 1000;
-            else if ( dwWaitTime > 10000 )
-                dwWaitTime = 10000;
-
-            Sleep(dwWaitTime);
-
-            if (!QueryServiceStatusEx(
-                     schService,
-                     SC_STATUS_PROCESS_INFO,
-                     (LPBYTE)&ssp,
-                     sizeof(SERVICE_STATUS_PROCESS),
-                     &dwBytesNeeded)) {
-                err = QObject::tr("QueryServiceStatusEx failed: %0").
-                        arg(GetLastError());
-                break;
-            }
-
-            if (ssp.dwCurrentState == SERVICE_STOPPED) {
-                // service stopped successfully
-                break;
-            }
-
-            if (GetTickCount() - dwStartTime > dwTimeout) {
-                err = QObject::tr("Service stop timed out");
-                break;
-            }
-        }
+        err = waitForServiceStatusUnequalTo(schService, SERVICE_STOP_PENDING);
     }
 
     // If the service is running, dependencies must be stopped first.
@@ -3290,7 +3253,7 @@ QString WPMUtils::StopDependentServices(SC_HANDLE schSCManager,
                 GetProcessHeap(), HEAP_ZERO_MEMORY, dwBytesNeeded);
 
         // Enumerate the dependencies.
-        if (!EnumDependentServices( schService, SERVICE_ACTIVE,
+        if (!EnumDependentServices(schService, SERVICE_ACTIVE,
                 lpDependencies, dwBytesNeeded, &dwBytesNeeded,
                 &dwCount)) {
             formatMessage(GetLastError(), &err);
@@ -3310,6 +3273,160 @@ QString WPMUtils::StopDependentServices(SC_HANDLE schSCManager,
 
     // Always free the enumeration buffer.
     HeapFree(GetProcessHeap(), 0, lpDependencies);
+
+    return err;
+}
+
+QString WPMUtils::waitForServiceStatusUnequalTo(SC_HANDLE schService,
+        DWORD status)
+{
+    QString err;
+
+    SERVICE_STATUS_PROCESS ssStatus;
+    DWORD dwWaitTime;
+    DWORD dwBytesNeeded;
+
+    if (err.isEmpty()) {
+        if (!QueryServiceStatusEx(
+                schService,                     // handle to service
+                SC_STATUS_PROCESS_INFO,         // information level
+                (LPBYTE) &ssStatus,             // address of structure
+                sizeof(SERVICE_STATUS_PROCESS), // size of structure
+                &dwBytesNeeded)) {              // size needed if buffer is too small
+            formatMessage(GetLastError(), &err);
+            err = QObject::tr("QueryServiceStatusEx failed: %1").arg(err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        DWORD dwStartTickCount = GetTickCount();
+        DWORD dwOldCheckPoint = ssStatus.dwCheckPoint;
+
+        while (ssStatus.dwCurrentState == status) {
+            // Do not wait longer than the wait hint. A good interval is
+            // one-tenth of the wait hint but not less than 1 second
+            // and not more than 10 seconds.
+
+            dwWaitTime = ssStatus.dwWaitHint / 10;
+
+            if (dwWaitTime < 1000)
+                dwWaitTime = 1000;
+            else if (dwWaitTime > 10000)
+                dwWaitTime = 10000;
+
+            Sleep(dwWaitTime);
+
+            // Check the status until the service is no longer stop pending.
+            if (!QueryServiceStatusEx(
+                    schService,                     // handle to service
+                    SC_STATUS_PROCESS_INFO,         // information level
+                    (LPBYTE) &ssStatus,             // address of structure
+                    sizeof(SERVICE_STATUS_PROCESS), // size of structure
+                    &dwBytesNeeded)) {              // size needed if buffer is too small
+                formatMessage(GetLastError(), &err);
+                err = QObject::tr("QueryServiceStatusEx failed: %1").arg(err);
+                break;
+            }
+
+            if (ssStatus.dwCheckPoint > dwOldCheckPoint) {
+                // Continue to wait and check.
+                dwStartTickCount = GetTickCount();
+                dwOldCheckPoint = ssStatus.dwCheckPoint;
+            } else {
+                if (GetTickCount() - dwStartTickCount > ssStatus.dwWaitHint) {
+                    err = QObject::tr("Timeout waiting for service");
+                    break;
+                }
+            }
+        }
+    }
+
+    return err;
+}
+
+QString WPMUtils::startService(SC_HANDLE schSCManager,
+        const QString& serviceName)
+{
+    QString err;
+
+    SERVICE_STATUS_PROCESS ssStatus;
+    DWORD dwBytesNeeded;
+
+    // Get a handle to the service.
+
+    SC_HANDLE schService = OpenService(
+            schSCManager,         // SCM database
+            reinterpret_cast<LPCWSTR>(serviceName.utf16()), // name of service
+            SERVICE_ALL_ACCESS);  // full access
+    if (schService == NULL) {
+        formatMessage(GetLastError(), &err);
+        err = QObject::tr("OpenService failed: %1").arg(err);
+    }
+
+    // Check the status in case the service is not stopped.
+    if (err.isEmpty()) {
+        if (!QueryServiceStatusEx(
+                schService,                     // handle to service
+                SC_STATUS_PROCESS_INFO,         // information level
+                (LPBYTE) &ssStatus,             // address of structure
+                sizeof(SERVICE_STATUS_PROCESS), // size of structure
+                &dwBytesNeeded ) ) {              // size needed if buffer is too small
+            formatMessage(GetLastError(), &err);
+            err = QObject::tr("QueryServiceStatusEx failed: %1").arg(err);
+        }
+    }
+
+    // Check if the service is already running. It would be possible
+    // to stop the service here, but for simplicity this example just returns.
+    if (err.isEmpty()) {
+        if (ssStatus.dwCurrentState != SERVICE_STOPPED &&
+                ssStatus.dwCurrentState != SERVICE_STOP_PENDING) {
+            err = QObject::tr("Cannot start the service because it is already running");
+        }
+    }
+
+    // Wait for the service to stop before attempting to start it.
+    if (err.isEmpty()) {
+        err = waitForServiceStatusUnequalTo(schService, SERVICE_STOP_PENDING);
+    }
+
+    // Attempt to start the service.
+    if (err.isEmpty()) {
+        if (!StartService(
+                schService,  // handle to service
+                0,           // number of arguments
+                NULL)) {      // no arguments
+            formatMessage(GetLastError(), &err);
+            err = QObject::tr("StartService failed: %1").arg(err);
+        }
+    }
+
+    // Check the status until the service is no longer start pending.
+    if (err.isEmpty()) {
+        if (!QueryServiceStatusEx(
+                schService,                     // handle to service
+                SC_STATUS_PROCESS_INFO,         // info level
+                (LPBYTE) &ssStatus,             // address of structure
+                sizeof(SERVICE_STATUS_PROCESS), // size of structure
+                &dwBytesNeeded)) {              // if buffer too small
+            formatMessage(GetLastError(), &err);
+            err = QObject::tr("QueryServiceStatusEx failed %1").arg(err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        err = waitForServiceStatusUnequalTo(schService, SERVICE_START_PENDING);
+    }
+
+    // Determine whether the service is running.
+    if (err.isEmpty()) {
+        if (ssStatus.dwCurrentState != SERVICE_RUNNING) {
+            err = QObject::tr("Service not started");
+        }
+    }
+
+    if (schService)
+        CloseServiceHandle(schService);
 
     return err;
 }

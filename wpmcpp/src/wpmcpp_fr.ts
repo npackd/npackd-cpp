@@ -3229,10 +3229,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Service stop timed out</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>ControlService failed (%0)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3246,6 +3242,34 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>QueryServiceStatusEx failed: %0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>QueryServiceStatusEx failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Timeout waiting for service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenService failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot start the service because it is already running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>StartService failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>QueryServiceStatusEx failed %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service not started</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

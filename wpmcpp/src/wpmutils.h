@@ -62,7 +62,8 @@ private:
     static QString StopDependentServices(SC_HANDLE schSCManager, SC_HANDLE schService,
             QStringList *stoppedServices);
     static QString DoStopSvc(SC_HANDLE schSCManager, const QString &serviceName,
-            QStringList *stoppedServices);
+                             QStringList *stoppedServices);
+    static QString waitForServiceStatusUnequalTo(SC_HANDLE schService, DWORD status);
 public:
     /** true = print debug information */
     static bool debug;
@@ -715,7 +716,6 @@ public:
      */
     static QByteArray serializeEnv(const QMap<QString, QString> &env);
 
-
     /**
      * Checks whether the specified value is a valid URL. The URL cannot be
      * empty. Only http:, https: and file: schemes are supported.
@@ -731,12 +731,19 @@ public:
 
     /**
      * @brief stops a Windows service
-     * @param serviceName name of the service
+     * @param serviceName internal name of the service
      * @param stoppedServices all the stopped services will be stored here
      * @return error message
      */
     static QString stopService(const QString &serviceName,
-            QStringList *stoppedServices);
+                               QStringList *stoppedServices);
+    /**
+     * @brief starts a Windows service
+     * @param schSCManager Windows services manager
+     * @param serviceName internal name of the service
+     * @return error message
+     */
+    static QString startService(SC_HANDLE schSCManager, const QString &serviceName);
 };
 
 #endif // WPMUTILS_H
