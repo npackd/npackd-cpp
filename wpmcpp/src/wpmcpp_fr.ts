@@ -3189,10 +3189,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Detecting %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The URL cannot be empty</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3214,6 +3210,42 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unknown error %1 from InternetErrorDlg in attempt %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving detected packages %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adding detected versions %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenService failed (%0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>QueryServiceStatusEx failed (%0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service stop timed out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ControlService failed (%0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wait timed out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenSCManager failed: %0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>QueryServiceStatusEx failed: %0</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

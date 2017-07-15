@@ -234,11 +234,12 @@ QString WPMUtils::getProgramFilesDir()
     if (is64BitWindows()) {
         WindowsRegistry wr;
         QString err = wr.open(HKEY_LOCAL_MACHINE,
-                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion", false,
+                QStringLiteral(
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion"), false,
                 KEY_READ);
 
         if (err.isEmpty()) {
-            ret = wr.get("ProgramFilesDir", &err);
+            ret = wr.get(QStringLiteral("ProgramFilesDir"), &err);
             if (!err.isEmpty())
                 ret = "";
         }
@@ -268,8 +269,10 @@ void WPMUtils::normalizePath2(QString* path, bool lowerCase)
 
     int newlen = path->length();
     int oldlen = newlen + 1;
+    const QString dbs = QStringLiteral("\\\\");
+    const QString sbs = QStringLiteral("\\");
     while (oldlen != newlen) {
-        path->replace("\\\\", "\\");
+        path->replace(dbs, sbs);
         oldlen = newlen;
         newlen = path->length();
     }
@@ -472,7 +475,7 @@ QString WPMUtils::extractIconURL(const QString& iconFile)
                 QBuffer buffer(&bytes);
                 buffer.open(QIODevice::WriteOnly);
                 pm.save(&buffer, "PNG");
-                res = QString("data:image/png;base64,") +
+                res = QStringLiteral("data:image/png;base64,") +
                         bytes.toBase64();
 
                 // qDebug() << "extractIconURL 6";
@@ -633,17 +636,19 @@ QString WPMUtils::getInstallationDirectory()
 
     WindowsRegistry npackd;
     QString err = npackd.open(
-            HKEY_LOCAL_MACHINE, "Software\\Npackd\\Npackd", false, KEY_READ);
+            HKEY_LOCAL_MACHINE, QStringLiteral("Software\\Npackd\\Npackd"),
+            false, KEY_READ);
     if (err.isEmpty()) {
-        v = npackd.get("path", &err);
+        v = npackd.get(QStringLiteral("path"), &err);
     }
 
     if (v.isEmpty()) {
         err = npackd.open(HKEY_LOCAL_MACHINE,
-                "Software\\WPM\\Windows Package Manager", false,
+                QStringLiteral("Software\\WPM\\Windows Package Manager"),
+                false,
                 KEY_READ);
         if (err.isEmpty()) {
-            v = npackd.get("path", &err);
+            v = npackd.get(QStringLiteral("path"), &err);
         }
     }
 
@@ -657,7 +662,8 @@ QString WPMUtils::setInstallationDirectory(const QString& dir)
 {
     WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
     QString err;
-    WindowsRegistry npackd = m.createSubKey("Software\\Npackd\\Npackd", &err,
+    WindowsRegistry npackd = m.createSubKey(
+            QStringLiteral("Software\\Npackd\\Npackd"), &err,
             KEY_ALL_ACCESS);
     if (err.isEmpty()) {
         npackd.set("path", dir);
@@ -670,10 +676,11 @@ void WPMUtils::setCloseProcessType(DWORD cpt)
 {
     WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
     QString err;
-    WindowsRegistry npackd = m.createSubKey("Software\\Npackd\\Npackd", &err,
+    WindowsRegistry npackd = m.createSubKey(
+            QStringLiteral("Software\\Npackd\\Npackd"), &err,
             KEY_ALL_ACCESS);
     if (err.isEmpty()) {
-        npackd.setDWORD("closeProcessType", cpt);
+        npackd.setDWORD(QStringLiteral("closeProcessType"), cpt);
     }
 }
 
@@ -683,9 +690,10 @@ DWORD WPMUtils::getCloseProcessType()
 
     WindowsRegistry npackd;
     QString err = npackd.open(
-            HKEY_LOCAL_MACHINE, "Software\\Npackd\\Npackd", false, KEY_READ);
+            HKEY_LOCAL_MACHINE, QStringLiteral("Software\\Npackd\\Npackd"),
+            false, KEY_READ);
     if (err.isEmpty()) {
-        DWORD v = npackd.getDWORD("closeProcessType", &err);
+        DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
         if (err.isEmpty())
             cpt = v;
     }
@@ -891,7 +899,7 @@ QString WPMUtils::getHostName()
     if (gethostname(hostname, 1023) == 0) {
         return QString::fromLatin1(hostname);
     } else {
-        return "localhost";
+        return QStringLiteral("localhost");
     }
 }
 
@@ -908,7 +916,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
         if (w != 0 && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
                 IsWindowVisible(w) &&
-                getClassName(w) != "Shell_TrayWnd") {
+                getClassName(w) != QStringLiteral("Shell_TrayWnd")) {
             FLASHWINFO fwi = {};
             fwi.cbSize = sizeof(fwi);
             fwi.hwnd = w;
@@ -929,7 +937,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
                 if (!IsWindow(w) ||
                         GetAncestor(w, GA_PARENT) != GetDesktopWindow() ||
                         !IsWindowVisible(w) ||
-                        getClassName(w) == "Shell_TrayWnd") {
+                        getClassName(w) == QStringLiteral("Shell_TrayWnd")) {
                     ws[i] = 0;
                 } else {
                     c++;
@@ -958,7 +966,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
         if (w != 0 && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
                 IsWindowVisible(w) &&
-                getClassName(w) != "Shell_TrayWnd") {
+                getClassName(w) != QStringLiteral("Shell_TrayWnd")) {
             FLASHWINFO fwi = {};
             fwi.cbSize = sizeof(fwi);
             fwi.hwnd = w;
@@ -1158,8 +1166,8 @@ QMap<QString, QString> mapDevices2Drives() {
                             logicalDevice.setUtf16((ushort*) device,
                                     wcslen(device));
                             devices2drives.insert(
-                                    logicalDevice + "\\",
-                                    logicalDrive + "\\");
+                                    logicalDevice + '\\',
+                                    logicalDrive + '\\');
 
                             device += wcslen(device) + 1;
                         }
@@ -1508,12 +1516,12 @@ QString WPMUtils::validateFullPackageName(const QString& n)
     if (n.length() == 0) {
         return QObject::tr("Empty package name");
     } else {
-        int pos = n.indexOf("..");
+        int pos = n.indexOf(QStringLiteral(".."));
         if (pos >= 0)
             return QString(QObject::tr("Empty segment at position %1 in %2")).
                     arg(pos + 1).arg(n);
 
-        pos = n.indexOf("--");
+        pos = n.indexOf(QStringLiteral("--"));
         if (pos >= 0)
             return QString(QObject::tr("-- at position %1 in %2")).
                     arg(pos + 1).arg(n);
@@ -1522,7 +1530,7 @@ QString WPMUtils::validateFullPackageName(const QString& n)
         for (int j = 0; j < parts.count(); j++) {
             QString part = parts.at(j);
 
-            int pos = part.indexOf("--");
+            int pos = part.indexOf(QStringLiteral("--"));
             if (pos >= 0)
                 return QString(QObject::tr("-- at position %1 in %2")).
                         arg(pos + 1).arg(part);
@@ -1563,7 +1571,7 @@ QString WPMUtils::validateFullPackageName(const QString& n)
         }
     }
 
-    return "";
+    return QStringLiteral("");
 }
 
 QString WPMUtils::makeValidFullPackageName(const QString& name)
@@ -1652,7 +1660,7 @@ QString WPMUtils::validateSHA256(const QString &sha256)
         }
     }
 
-    return "";
+    return QStringLiteral("");
 }
 
 QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
@@ -1660,7 +1668,7 @@ QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
 {
     WindowsRegistry wr;
     QString err = wr.open(HKEY_LOCAL_MACHINE,
-            "System\\CurrentControlSet\\Control\\Session Manager\\Environment",
+            QStringLiteral("System\\CurrentControlSet\\Control\\Session Manager\\Environment"),
             false);
     if (!err.isEmpty())
         return err;
@@ -1673,16 +1681,16 @@ QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
     if (!err.isEmpty())
         return err;
 
-    return "";
+    return QStringLiteral("");
 }
 
 QString WPMUtils::getFirstLine(const QString& text)
 {
-    QStringList sl = text.trimmed().split("\n");
+    QStringList sl = text.trimmed().split('\n');
     if (sl.count() > 0)
         return sl.at(0).trimmed();
     else
-        return "";
+        return QStringLiteral("");
 }
 
 void WPMUtils::fireEnvChanged()
@@ -1698,11 +1706,11 @@ QString WPMUtils::getSystemEnvVar(const QString& name, QString* err)
 
     WindowsRegistry wr;
     QString e = wr.open(HKEY_LOCAL_MACHINE,
-            "System\\CurrentControlSet\\Control\\Session Manager\\Environment",
+            QStringLiteral("System\\CurrentControlSet\\Control\\Session Manager\\Environment"),
             false);
     if (!e.isEmpty()) {
         *err = e;
-        return "";
+        return QStringLiteral("");
     }
 
     return wr.get(name, err);
@@ -1834,8 +1842,8 @@ bool WPMUtils::pathEquals(const QString& patha, const QString& pathb)
 {
     QString a = patha;
     QString b = pathb;
-    a.replace('/', '\\');
-    b.replace('/', '\\');
+    normalizePath2(&a, true);
+    normalizePath2(&b, true);
     return QString::compare(a, b, Qt::CaseInsensitive) == 0;
 }
 
@@ -1850,11 +1858,11 @@ QString WPMUtils::format(const QString& txt, const QMap<QString, QString>& vars)
 
     int from = 0;
     while (true) {
-        int p = txt.indexOf("${{", from);
+        int p = txt.indexOf(QStringLiteral("${{"), from);
         if (p >= 0) {
             res.append(txt.mid(from, p - from));
 
-            int p2 = txt.indexOf("}}", p + 3);
+            int p2 = txt.indexOf(QStringLiteral("}}"), p + 3);
             if (p2 < 0) {
                 res.append(txt.mid(p));
                 break;
@@ -1937,9 +1945,9 @@ QString WPMUtils::getWindowsDir()
 
 QString WPMUtils::findCmdExe()
 {
-    QString r = getWindowsDir() + "\\Sysnative\\cmd.exe";
+    QString r = getWindowsDir() + QStringLiteral("\\Sysnative\\cmd.exe");
     if (!QFileInfo(r).exists()) {
-        r = getWindowsDir() + "\\system32\\cmd.exe";
+        r = getWindowsDir() + QStringLiteral("\\system32\\cmd.exe");
     }
     return r;
 }
@@ -2127,7 +2135,7 @@ QString WPMUtils::moveToRecycleBin(QString dir)
     delete[] from;
 
     if (r == 0)
-        return "";
+        return QStringLiteral("");
     else {
         return QString(QObject::tr("Error deleting %1: %2")).
                 arg(dir).arg(
@@ -2257,7 +2265,7 @@ void WPMUtils::removeDirectory(Job* job, QDir &aDir, bool firstLevel)
 QString WPMUtils::makeValidFilename(const QString &name, QChar rep)
 {
     // http://msdn.microsoft.com/en-us/library/aa365247(v=vs.85).aspx
-    QString invalid("<>:\"/\\|?* ");
+    QString invalid = QStringLiteral("<>:\"/\\|?* ");
 
     QString r(name);
     for (int i = 0; i < invalid.length(); i++)
@@ -2267,7 +2275,7 @@ QString WPMUtils::makeValidFilename(const QString &name, QChar rep)
 
 void WPMUtils::writeln(const QString& txt, bool stdout_)
 {
-    outputTextConsole(txt + "\r\n", stdout_);
+    outputTextConsole(txt + QStringLiteral("\r\n"), stdout_);
 }
 
 void WPMUtils::outputTextConsole(const QString& txt, bool stdout_)
@@ -2337,7 +2345,7 @@ QTime WPMUtils::durationToTime(time_t diff)
 bool WPMUtils::confirmConsole(const QString& msg)
 {
    outputTextConsole(msg);
-   return inputTextConsole().trimmed().toLower() == "y";
+   return inputTextConsole().trimmed().toLower() == QStringLiteral("y");
 }
 
 QString WPMUtils::inputTextConsole()
@@ -2346,7 +2354,7 @@ QString WPMUtils::inputTextConsole()
 
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
     if (hStdin == INVALID_HANDLE_VALUE)
-        return "";
+        return QStringLiteral("");
 
     WCHAR buffer[255];
     DWORD read;
@@ -2372,11 +2380,11 @@ QString WPMUtils::inputPasswordConsole()
     DWORD mode;
     HANDLE ih = GetStdHandle(STD_INPUT_HANDLE);
     if (ih == INVALID_HANDLE_VALUE)
-        return "";
+        return QStringLiteral("");
 
     HANDLE oh = GetStdHandle(STD_OUTPUT_HANDLE);
     if (oh == INVALID_HANDLE_VALUE)
-        return "";
+        return QStringLiteral("");
 
     if (!GetConsoleMode(ih, &mode))
         return result;
@@ -2416,7 +2424,7 @@ QString WPMUtils::findNonExistingFile(const QString& start,
         return result;
 
     for (int i = 2; i < 100; i++) {
-        result = start + "_" + QString::number(i) + ext;
+        result = start + QStringLiteral("_") + QString::number(i) + ext;
         if (!QFileInfo(result).exists())
             return result;
     }
@@ -2486,7 +2494,7 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
 int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
 {
     int r = WPMUtils::CLOSE_WINDOW;
-    QString v = cl.get("end-process");
+    QString v = cl.get(QStringLiteral("end-process"));
     if (!v.isNull()) {
         r = 0;
         if (v.length() == 0) {
@@ -2539,7 +2547,8 @@ QString WPMUtils::fileCheckSum(Job* job,
 
         alreadyRead += bufferLength;
         job->setProgress(0.5);
-        job->setTitle(initialTitle + " / " + QObject::tr("%L0 bytes").
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
+                QObject::tr("%L0 bytes").
                 arg(alreadyRead));
     } while (bufferLength != 0 && !job->isCancelled());
 
@@ -2569,10 +2578,11 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 
     if (job->shouldProceed()) {
         QString odir = outputdir;
-        if (!odir.endsWith("\\") && !odir.endsWith("/"))
-            odir.append("\\");
+        if (!odir.endsWith('\\') && !odir.endsWith('/'))
+            odir.append('\\');
 
-        job->setTitle(initialTitle + " / " + QObject::tr("Extracting"));
+        job->setTitle(initialTitle + QStringLiteral(" / ") +
+                QObject::tr("Extracting"));
         QuaZipFile file(&zip);
         int n = zip.getEntriesCount();
         int blockSize = 1024 * 1024;
@@ -2610,7 +2620,7 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
             i++;
             job->setProgress(0.01 + 0.99 * i / n);
             if (i % 100 == 0)
-                job->setTitle(initialTitle + " / " +
+                job->setTitle(initialTitle + QStringLiteral(" / ") +
                         QString(QObject::tr("%L1 files")).arg(i));
 
             if (!job->shouldProceed())
@@ -2632,15 +2642,16 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
     QDir d(where);
 
     QString exe = WPMUtils::findCmdExe();
-    QString file = d.absolutePath() + "\\" + path;
+    QString file = d.absolutePath() + '\\' + path;
     file.replace('/', '\\');
 
     QString outputPath = outputFile;
     if (!outputPath.isEmpty())
-        outputPath = d.absolutePath() + "\\" + outputPath;
+        outputPath = d.absolutePath() + '\\' + outputPath;
 
     executeFile(job, d.absolutePath().replace('/', '\\'), exe,
-            "/U /E:ON /V:OFF /C \"\"" + file + "\"\"",
+            QStringLiteral("/U /E:ON /V:OFF /C \"\"") + file +
+            QStringLiteral("\"\""),
             outputPath, env, true, printScriptOutput);
 }
 
@@ -2784,7 +2795,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
 {
     if (debug)
-        WPMUtils::writeln(where + " " + path + " " + nativeArguments);
+        WPMUtils::writeln(where + ' ' + path + ' ' + nativeArguments);
 
     QString initialTitle = job->getTitle();
 
@@ -2816,7 +2827,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     HANDLE g_hChildStd_OUT_Rd = INVALID_HANDLE_VALUE;
     HANDLE g_hChildStd_OUT_Wr = NULL;
 
-    QString name = QString("\\\\.\\Pipe\\NpackdExecute.%1.%2").arg(
+    QString name = QStringLiteral("\\\\.\\Pipe\\NpackdExecute.%1.%2").arg(
             GetCurrentProcessId()).arg(
             nextNamePipeId.fetchAndAddOrdered(1));
 
@@ -2874,7 +2885,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         startupInfo.hStdOutput = g_hChildStd_OUT_Wr;
         startupInfo.hStdError = g_hChildStd_OUT_Wr;
 
-        QString args = "\"" + path + "\"";
+        QString args = '\"' + path + '\"';
         if (!nativeArguments.isEmpty())
             args = args + ' ' + nativeArguments;
         success = CreateProcess(
@@ -3102,3 +3113,203 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     job->complete();
 }
 
+QString WPMUtils::stopService(const QString& serviceName,
+        QStringList* stoppedServices)
+{
+    QString err;
+
+    // Get a handle to the SCM database.
+    SC_HANDLE schSCManager = OpenSCManager(
+            NULL,                    // local computer
+            NULL,                    // ServicesActive database
+            SC_MANAGER_ALL_ACCESS);  // full access rights
+
+    if (NULL == schSCManager) {
+        formatMessage(GetLastError(), &err);
+        err = QObject::tr("OpenSCManager failed: %0").arg(err);
+    }
+
+    if (err.isEmpty()) {
+        err = DoStopSvc(schSCManager, serviceName, stoppedServices);
+    }
+
+    if (schSCManager)
+        CloseServiceHandle(schSCManager);
+
+    return err;
+}
+
+QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
+        QStringList* stoppedServices)
+{
+    QString err;
+
+    SERVICE_STATUS_PROCESS ssp;
+    DWORD dwStartTime = GetTickCount();
+    DWORD dwBytesNeeded;
+    DWORD dwTimeout = 30000; // 30-second time-out
+    DWORD dwWaitTime;
+
+    SC_HANDLE schService = NULL;
+    if (err.isEmpty()) {
+        // Get a handle to the service.
+
+        schService = OpenService(schSCManager,         // SCM database
+                // name of service
+                reinterpret_cast<LPCWSTR>(serviceName.utf16()),
+                SERVICE_STOP |
+                SERVICE_QUERY_STATUS |
+                SERVICE_ENUMERATE_DEPENDENTS);
+        if (schService == NULL) {
+            err = QObject::tr("OpenService failed (%0)").arg(GetLastError());
+        }
+    }
+
+    // Make sure the service is not already stopped.
+    if (err.isEmpty()) {
+        if (!QueryServiceStatusEx(schService,
+                SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
+                sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded)) {
+            err = QObject::tr("QueryServiceStatusEx failed: %0").arg(
+                    GetLastError());
+        }
+    }
+
+    // If a stop is pending, wait for it.
+    if (err.isEmpty()) {
+        while (ssp.dwCurrentState == SERVICE_STOP_PENDING) {
+            // Service stop pending...
+
+            // Do not wait longer than the wait hint. A good interval is
+            // one-tenth of the wait hint but not less than 1 second
+            // and not more than 10 seconds.
+
+            dwWaitTime = ssp.dwWaitHint / 10;
+
+            if( dwWaitTime < 1000 )
+                dwWaitTime = 1000;
+            else if ( dwWaitTime > 10000 )
+                dwWaitTime = 10000;
+
+            Sleep(dwWaitTime);
+
+            if (!QueryServiceStatusEx(
+                     schService,
+                     SC_STATUS_PROCESS_INFO,
+                     (LPBYTE)&ssp,
+                     sizeof(SERVICE_STATUS_PROCESS),
+                     &dwBytesNeeded)) {
+                err = QObject::tr("QueryServiceStatusEx failed: %0").
+                        arg(GetLastError());
+                break;
+            }
+
+            if (ssp.dwCurrentState == SERVICE_STOPPED) {
+                // service stopped successfully
+                break;
+            }
+
+            if (GetTickCount() - dwStartTime > dwTimeout) {
+                err = QObject::tr("Service stop timed out");
+                break;
+            }
+        }
+    }
+
+    // If the service is running, dependencies must be stopped first.
+    if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
+        StopDependentServices(schSCManager, schService, stoppedServices);
+    }
+
+    // Send a stop code to the service.
+    if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
+        if (!ControlService(schService, SERVICE_CONTROL_STOP,
+                (LPSERVICE_STATUS) &ssp)) {
+            err = QObject::tr("ControlService failed (%0)").arg(GetLastError());
+        } else {
+            stoppedServices->append(serviceName);
+        }
+    }
+
+    // Wait for the service to stop.
+    if (err.isEmpty()) {
+        while (ssp.dwCurrentState != SERVICE_STOPPED ) {
+            Sleep(ssp.dwWaitHint);
+            if (!QueryServiceStatusEx(
+                    schService,
+                    SC_STATUS_PROCESS_INFO,
+                    (LPBYTE)&ssp,
+                    sizeof(SERVICE_STATUS_PROCESS),
+                    &dwBytesNeeded)) {
+                err = QObject::tr("QueryServiceStatusEx failed (%0)").
+                        arg(GetLastError() );
+                break;
+            }
+
+            if (ssp.dwCurrentState == SERVICE_STOPPED)
+                break;
+
+            if (GetTickCount() - dwStartTime > dwTimeout) {
+                err = QObject::tr("Wait timed out");
+                break;
+            }
+        }
+    }
+
+    if (schService)
+        CloseServiceHandle(schService);
+
+    return err;
+}
+
+QString WPMUtils::StopDependentServices(SC_HANDLE schSCManager,
+        SC_HANDLE schService,
+        QStringList* stoppedServices)
+{
+    QString err;
+
+    DWORD dwBytesNeeded;
+    DWORD dwCount;
+
+    LPENUM_SERVICE_STATUS   lpDependencies = NULL;
+
+    // Pass a zero-length buffer to get the required buffer size.
+    if (EnumDependentServices(schService, SERVICE_ACTIVE,
+         lpDependencies, 0, &dwBytesNeeded, &dwCount)) {
+         // If the Enum call succeeds, then there are no dependent
+         // services, so do nothing.
+    } else {
+        DWORD e = GetLastError();
+
+        if (GetLastError() != ERROR_MORE_DATA) {
+            formatMessage(e, &err);
+        }
+
+        // Allocate a buffer for the dependencies.
+        lpDependencies = (LPENUM_SERVICE_STATUS) HeapAlloc(
+                GetProcessHeap(), HEAP_ZERO_MEMORY, dwBytesNeeded);
+
+        // Enumerate the dependencies.
+        if (!EnumDependentServices( schService, SERVICE_ACTIVE,
+                lpDependencies, dwBytesNeeded, &dwBytesNeeded,
+                &dwCount)) {
+            formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty() && lpDependencies) {
+        for (DWORD i = 0; i < dwCount; i++ ) {
+            ENUM_SERVICE_STATUS ess = *(lpDependencies + i);
+
+            QString name = QString::fromUtf16((ushort*) ess.lpServiceName);
+
+            // ignore the error
+            DoStopSvc(schSCManager, name, stoppedServices);
+        }
+    }
+
+    // Always free the enumeration buffer.
+    HeapFree(GetProcessHeap(), 0, lpDependencies);
+
+    return err;
+}

@@ -59,6 +59,10 @@ private:
     static QList<HWND> findProcessTopWindows(DWORD processID);
 
     static QString disconnectFrom(LPWSTR netname);
+    static QString StopDependentServices(SC_HANDLE schSCManager, SC_HANDLE schService,
+            QStringList *stoppedServices);
+    static QString DoStopSvc(SC_HANDLE schSCManager, const QString &serviceName,
+            QStringList *stoppedServices);
 public:
     /** true = print debug information */
     static bool debug;
@@ -724,6 +728,15 @@ public:
      * @return error message or an empty string
      */
     static QString checkURL(const QUrl& base, QString *url, bool allowEmpty);
+
+    /**
+     * @brief stops a Windows service
+     * @param serviceName name of the service
+     * @param stoppedServices all the stopped services will be stored here
+     * @return error message
+     */
+    static QString stopService(const QString &serviceName,
+            QStringList *stoppedServices);
 };
 
 #endif // WPMUTILS_H
