@@ -578,7 +578,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
                 where += QStringLiteral(" AND ");
             where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") +
                     QString::number(i);
-            params.append(QStringLiteral("%") + kw.toLower() +
+            params.append(QStringLiteral("%") + kw +
                     QStringLiteral("%"));
         }
     }
