@@ -3160,7 +3160,8 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
                 SERVICE_QUERY_STATUS |
                 SERVICE_ENUMERATE_DEPENDENTS);
         if (schService == NULL) {
-            err = QObject::tr("OpenService failed (%0)").arg(GetLastError());
+            formatMessage(GetLastError(), &err);
+            err = QObject::tr("OpenService failed: %1").arg(err);
         }
     }
 
@@ -3169,8 +3170,8 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
         if (!QueryServiceStatusEx(schService,
                 SC_STATUS_PROCESS_INFO, (LPBYTE)&ssp,
                 sizeof(SERVICE_STATUS_PROCESS), &dwBytesNeeded)) {
-            err = QObject::tr("QueryServiceStatusEx failed: %0").arg(
-                    GetLastError());
+            formatMessage(GetLastError(), &err);
+            err = QObject::tr("QueryServiceStatusEx failed: %1").arg(err);
         }
     }
 
@@ -3188,7 +3189,8 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
     if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
         if (!ControlService(schService, SERVICE_CONTROL_STOP,
                 (LPSERVICE_STATUS) &ssp)) {
-            err = QObject::tr("ControlService failed (%0)").arg(GetLastError());
+            formatMessage(GetLastError(), &err);
+            err = QObject::tr("ControlService failed: %1").arg(err);
         } else {
             stoppedServices->append(serviceName);
         }
@@ -3204,8 +3206,8 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
                     (LPBYTE)&ssp,
                     sizeof(SERVICE_STATUS_PROCESS),
                     &dwBytesNeeded)) {
-                err = QObject::tr("QueryServiceStatusEx failed (%0)").
-                        arg(GetLastError() );
+                formatMessage(GetLastError(), &err);
+                err = QObject::tr("QueryServiceStatusEx failed: %0").arg(err);
                 break;
             }
 
@@ -3333,13 +3335,38 @@ QString WPMUtils::waitForServiceStatusUnequalTo(SC_HANDLE schService,
                 dwStartTickCount = GetTickCount();
                 dwOldCheckPoint = ssStatus.dwCheckPoint;
             } else {
-                if (GetTickCount() - dwStartTickCount > ssStatus.dwWaitHint) {
+                if (GetTickCount() - dwStartTickCount > 30000) {
                     err = QObject::tr("Timeout waiting for service");
                     break;
                 }
             }
         }
     }
+
+    return err;
+}
+
+QString WPMUtils::startService(const QString& serviceName)
+{
+    QString err;
+
+    // Get a handle to the SCM database.
+    SC_HANDLE schSCManager = OpenSCManager(
+            NULL,                    // local computer
+            NULL,                    // ServicesActive database
+            SC_MANAGER_ALL_ACCESS);  // full access rights
+
+    if (NULL == schSCManager) {
+        formatMessage(GetLastError(), &err);
+        err = QObject::tr("OpenSCManager failed: %0").arg(err);
+    }
+
+    if (err.isEmpty()) {
+        err = startService(schSCManager, serviceName);
+    }
+
+    if (schSCManager)
+        CloseServiceHandle(schSCManager);
 
     return err;
 }
@@ -3401,7 +3428,10 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
         }
     }
 
-    // Check the status until the service is no longer start pending.
+    if (err.isEmpty()) {
+        err = waitForServiceStatusUnequalTo(schService, SERVICE_START_PENDING);
+    }
+
     if (err.isEmpty()) {
         if (!QueryServiceStatusEx(
                 schService,                     // handle to service
@@ -3414,14 +3444,11 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
         }
     }
 
-    if (err.isEmpty()) {
-        err = waitForServiceStatusUnequalTo(schService, SERVICE_START_PENDING);
-    }
-
     // Determine whether the service is running.
     if (err.isEmpty()) {
         if (ssStatus.dwCurrentState != SERVICE_RUNNING) {
-            err = QObject::tr("Service not started");
+            err = QObject::tr("Service not started. Current status is %1").
+                    arg(ssStatus.dwCurrentState);
         }
     }
 

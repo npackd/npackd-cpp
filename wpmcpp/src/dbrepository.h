@@ -58,7 +58,14 @@ private:
             const QString &category, QString *err);
     QString findCategory(int cat) const;
 
-    QStringList findPackagesWhere(const QString &where,
+    /**
+     * @brief findPackagesWhere
+     * @param sql "SELECT NAME FROM PACKAGE ORDER BY TITLE"
+     * @param params
+     * @param err
+     * @return
+     */
+    QStringList findPackagesWhere(const QString &sql,
             const QList<QVariant> &params, QString *err) const;
 
     /**

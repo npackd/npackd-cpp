@@ -567,7 +567,8 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     if (keywords.size() == 0)
         return QStringList();
 
-    QString where = QStringLiteral("where name not like 'msi.%' "
+    QString where = QStringLiteral("select name from package "
+            "where name not like 'msi.%' "
             "and name not like 'control-panel.%'");
     QList<QVariant> params;
 
@@ -582,6 +583,8 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
                     QStringLiteral("%"));
         }
     }
+
+    where.append(QStringLiteral(" LIMIT 2"));
 
     qDebug() << "searching for" << keywords.join(' ');
 
@@ -649,7 +652,8 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
 
     // qDebug() << "DBRepository::findPackages.1";
 
-    return findPackagesWhere(where, params, err);
+    return findPackagesWhere(QStringLiteral("SELECT NAME FROM PACKAGE ") +
+            where + QStringLiteral(" ORDER BY TITLE"), params, err);
 }
 
 QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
@@ -768,7 +772,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
     return r;
 }
 
-QStringList DBRepository::findPackagesWhere(const QString& where,
+QStringList DBRepository::findPackagesWhere(const QString& sql,
         const QList<QVariant>& params,
         QString *err) const
 {
@@ -776,13 +780,6 @@ QStringList DBRepository::findPackagesWhere(const QString& where,
 
     QStringList r;
     MySQLQuery q(db);
-
-    QString sql = QStringLiteral("SELECT NAME FROM PACKAGE");
-
-    if (!where.isEmpty())
-        sql += QStringLiteral(" ") + where;
-
-    sql += QStringLiteral(" ORDER BY TITLE");
 
     if (!q.prepare(sql))
         *err = getErrorString(q);
@@ -2492,6 +2489,10 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     if (err.isEmpty()) {
         if (!readOnly)
             err = exec(QStringLiteral("PRAGMA journal_mode = DELETE"));
+    }
+
+    if (err.isEmpty()) {
+        err = exec(QStringLiteral("PRAGMA case_sensitive_like = on"));
     }
 
     if (err.isEmpty()) {

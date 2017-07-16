@@ -3319,18 +3319,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>OpenService failed (%0)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>QueryServiceStatusEx failed (%0)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ControlService failed (%0)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Wait timed out</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3367,7 +3355,11 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Service not started</source>
+        <source>ControlService failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service not started. Current status is %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

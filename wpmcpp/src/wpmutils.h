@@ -64,6 +64,14 @@ private:
     static QString DoStopSvc(SC_HANDLE schSCManager, const QString &serviceName,
                              QStringList *stoppedServices);
     static QString waitForServiceStatusUnequalTo(SC_HANDLE schService, DWORD status);
+
+    /**
+     * @brief starts a Windows service
+     * @param schSCManager Windows services manager
+     * @param serviceName internal name of the service
+     * @return error message
+     */
+    static QString startService(SC_HANDLE schSCManager, const QString &serviceName);
 public:
     /** true = print debug information */
     static bool debug;
@@ -737,13 +745,13 @@ public:
      */
     static QString stopService(const QString &serviceName,
                                QStringList *stoppedServices);
+
     /**
      * @brief starts a Windows service
-     * @param schSCManager Windows services manager
      * @param serviceName internal name of the service
      * @return error message
      */
-    static QString startService(SC_HANDLE schSCManager, const QString &serviceName);
+    static QString startService(const QString &serviceName);
 };
 
 #endif // WPMUTILS_H
