@@ -194,6 +194,16 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     QString d = ipv->directory;
 
+    if (ipv->package.startsWith("msi.") ||
+            ipv->package.startsWith("control-panel.")) {
+        InstalledPackageVersion* orig = InstalledPackages::getDefault()->
+                find(ipv->package, ipv->version);
+        if (orig) {
+            d = orig->getDirectory();
+            delete orig;
+        }
+    }
+
     //qDebug() << "0" << ipv->package << ipv->version.getVersionString() <<
     //        ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
 
@@ -243,11 +253,6 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         d = "";
     }
 
-    QString betterPackageName = findBetterPackageName(r, ipv);
-    if (!betterPackageName.isEmpty()) {
-        ipv->package = betterPackageName;
-    }
-
     // qDebug() << "    0.1";
 
     // we cannot handle nested directories
@@ -276,6 +281,11 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
             return;
 
         qDebug() << "not ignoring" << d;
+    }
+
+    QString betterPackageName = findBetterPackageName(r, ipv);
+    if (!betterPackageName.isEmpty()) {
+        ipv->package = betterPackageName;
     }
 
     // if the package version is already installed, we skip it
