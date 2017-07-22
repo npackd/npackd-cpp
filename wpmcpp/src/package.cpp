@@ -3,6 +3,7 @@
 
 #include "package.h"
 #include "wpmutils.h"
+#include "installedpackages.h"
 
 int Package::indexOf(const QList<Package*> pvs, Package* f)
 {
@@ -145,6 +146,19 @@ void Package::toJSON(QJsonObject& w) const
     }
     if (!link.isEmpty())
         w["links"] = link;
+
+    QJsonArray installed;
+    QList<InstalledPackageVersion*> ipvs = InstalledPackages::getDefault()->
+            getByPackage(this->name);
+    for (int i = 0; i < ipvs.size(); i++) {
+        InstalledPackageVersion* ipv = ipvs.at(i);
+        QJsonObject obj;
+        obj["version"] = ipv->version.getVersionString();
+        obj["where"] = ipv->directory;
+        installed.append(obj);
+    }
+    if (!installed.isEmpty())
+        w["installed"] = installed;
 }
 
 Package *Package::clone() const
