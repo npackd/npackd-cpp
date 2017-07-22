@@ -545,12 +545,12 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     d.refresh();
 
     if (job->shouldProceed()) {
+
+        // ignore the error
         QString err;
         this->createExecutableShims("", &err);
-        if (err.isEmpty())
-            job->setProgress(0.46);
-        else
-            job->setErrorMessage(err);
+
+        job->setProgress(0.46);
     }
 
     bool success = false;
@@ -1723,12 +1723,11 @@ void PackageVersion::install(Job* job, const QString& where,
     }
 
     if (job->shouldProceed()) {
+        // ignore the error
         QString err;
         this->createExecutableShims(d.absolutePath(), &err);
-        if (err.isEmpty())
-            job->setProgress(0.98);
-        else
-            job->setErrorMessage(err);
+
+        job->setProgress(0.98);
     }
 
     bool success = false;
