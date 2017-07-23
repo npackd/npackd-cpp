@@ -16,7 +16,7 @@
 
 int main(int argc, char *argv[])
 {
-    LoadLibrary(L"exchndl.dll");
+    HMODULE m = LoadLibrary(L"exchndl.dll");
 
     QCoreApplication ca(argc, argv);
 
@@ -31,6 +31,10 @@ int main(int argc, char *argv[])
 
     QTimer::singleShot(0, &app, SLOT(process()));
 
-    return ca.exec();
+    int r = ca.exec();
+
+    FreeLibrary(m);
+
+    return r;
 }
 

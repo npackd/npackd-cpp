@@ -116,6 +116,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0);
         if (keepConnection)
             flags |= INTERNET_FLAG_KEEP_CONNECTION;
+        if (!request.useInternet)
+            flags |= INTERNET_FLAG_FROM_CACHE;
         flags |= INTERNET_FLAG_RESYNCHRONIZE;
         if (!useCache)
             flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
@@ -149,7 +151,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         // qDebug() << "download.5.1";
 
         // NOTE: dwStatus is only valid if sendRequestError == 0
-        DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
+        DWORD dwStatus = 0, dwStatusSize = sizeof(dwStatus);
 
         DWORD sendRequestError = 0;
 

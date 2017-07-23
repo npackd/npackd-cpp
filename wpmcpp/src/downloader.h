@@ -115,6 +115,13 @@ public:
         bool useCache;
 
         /**
+         * @brief should the file be downloaded from the Internet? The default
+         * value is "true". This can be set to "false" to only get a file from
+         * the WinINet cache.
+         */
+        bool useInternet;
+
+        /**
          * true = keep the connection open. This is only applicable to http:
          * and https.
          */
@@ -148,6 +155,7 @@ public:
         Request(const QUrl& url): file(0), interactive(true),
                 parentWindow(0), url(url), hashSum(false),
                 alg(QCryptographicHash::Sha256), useCache(true),
+                useInternet(true),
                 keepConnection(true), httpMethod("GET"),
                 timeout(600) {
         }

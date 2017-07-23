@@ -166,8 +166,10 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
 
             QScopedPointer<PackageVersion> superv(
                     new PackageVersion(super.data()->name));
-            superv->version.setVersion(QDateTime::currentDateTime().toString(
-                    "yyyy.M.d.h.m.s"));
+            if (!superv->version.setVersion(QDateTime::currentDateTime().toString(
+                    "yyyy.M.d.h.m.s"))) {
+                job->setErrorMessage("Internal error: unexpected version syntax");
+            }
             superv->type = 1;
             superv->download.setUrl("Rep.xml");
             for (int i = 0; i < pvs.size(); i++) {

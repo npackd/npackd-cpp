@@ -37,7 +37,6 @@ void MSIThirdPartyPM::scan(Job* job,
 
         // qDebug() << "MSIThirdPartyPM::scan loop 1";
 
-        Package* p = 0;
         // qDebug() << "MSIThirdPartyPM::scan loop 1.1";
 
         package = "msi." + guid.mid(1, 36);
@@ -90,7 +89,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
         // qDebug() << "MSIThirdPartyPM::scan loop 1.4";
 
-        p = new Package(pv->package, title);
+        Package* p = new Package(pv->package, title);
         p->description = p->title;
 
         QString publisher = WPMUtils::getMSIProductAttribute(guid,
@@ -174,24 +173,22 @@ void MSIThirdPartyPM::scan(Job* job,
             }
         }
 
-        if (p) {
-            // use the directory name for the title if there is no title
-            if (p->title.trimmed().isEmpty()) {
-                if (!dir.isEmpty()) {
-                    p->title = WPMUtils::normalizePath(dir);
-                    int pos = p->title.lastIndexOf('\\');
-                    if (pos > 0)
-                        p->title = p->title.right(p->title.length() - pos - 1);
-                } else {
-                    p->title = QObject::tr("MSI package with the GUID %1").
-                            arg(guid);
-                }
+        // use the directory name for the title if there is no title
+        if (p->title.trimmed().isEmpty()) {
+            if (!dir.isEmpty()) {
+                p->title = WPMUtils::normalizePath(dir);
+                int pos = p->title.lastIndexOf('\\');
+                if (pos > 0)
+                    p->title = p->title.right(p->title.length() - pos - 1);
+            } else {
+                p->title = QObject::tr("MSI package with the GUID %1").
+                        arg(guid);
             }
-
-            rep->savePackage(p, true);
-            delete p;
-            p = 0;
         }
+
+        rep->savePackage(p, true);
+        delete p;
+        p = 0;
 
         // qDebug() << "MSIThirdPartyPM::scan loop 3";
 

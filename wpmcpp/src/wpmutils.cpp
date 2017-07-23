@@ -1240,8 +1240,6 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
 
     QList<HANDLE> result;
 
-    return result;
-
     HMODULE module = GetModuleHandleA("ntdll.dll");
     if (module == 0) {
         return result;
@@ -1324,12 +1322,13 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
 
         if (ok) {
             /* Query the object type. */
-            objectTypeInfo = (POBJECT_TYPE_INFORMATION)malloc(0x1000);
+            const size_t SZ = sizeof(_OBJECT_TYPE_INFORMATION) * 200;
+            objectTypeInfo = (POBJECT_TYPE_INFORMATION) malloc(SZ);
             if (!NT_SUCCESS(NtQueryObject(
                 dupHandle,
                 ObjectTypeInformation,
                 objectTypeInfo,
-                0x1000,
+                SZ,
                 NULL))) {
                 ok = false;
             } else {
