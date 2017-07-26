@@ -90,8 +90,10 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         job->setProgress(0.01);
     }
 
+    // here "internet" cannot be 0, but we add the comparison to silence
+    // Coverity
     HINTERNET hConnectHandle = 0;
-    if (job->shouldProceed()) {
+    if (job->shouldProceed() && internet != 0) {
         INTERNET_PORT port = url.port(url.scheme() == "https" ?
                 INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT);
         hConnectHandle = InternetConnectW(internet,
@@ -108,8 +110,10 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     // flags: http://msdn.microsoft.com/en-us/library/aa383661(v=vs.85).aspx
     // We support accepting any mime file type since this is a simple download
     // of a file
+    //
+    // hConnectHandle is only checked here to silence Coverity
     HINTERNET hResourceHandle = 0;
-    if (job->shouldProceed()) {
+    if (job->shouldProceed() && hConnectHandle != 0) {
         LPCTSTR ppszAcceptTypes[2];
         ppszAcceptTypes[0] = L"*/*";
         ppszAcceptTypes[1] = NULL;
@@ -138,257 +142,259 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         WPMUtils::writeln("HttpOpenRequestW succeeded");
     }
 
-    if (job->shouldProceed()) {
-        // do not check for errors here
-        HttpAddRequestHeadersW(hResourceHandle,
-                L"Accept-Encoding: gzip, deflate", -1,
-                HTTP_ADDREQ_FLAG_ADD);
-    }
+    int64_t contentLength = -1;
 
-    // qDebug() << "download.5";
-    int callNumber = 0;
-    while (job->shouldProceed()) {
-        // qDebug() << "download.5.1";
-
-        // NOTE: dwStatus is only valid if sendRequestError == 0
-        DWORD dwStatus = 0, dwStatusSize = sizeof(dwStatus);
-
-        DWORD sendRequestError = 0;
-
-        // the following call uses NULL for headers in case there are no headers
-        // because Windows 2003 generates the error 12150 otherwise
-        if (!HttpSendRequestW(hResourceHandle,
-                request.headers.length() == 0 ? NULL : reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
-                request.postData.length() == 0 ? NULL : const_cast<char*>(request.postData.data()),
-                request.postData.length())) {
-            sendRequestError = GetLastError();
+    if (hResourceHandle != 0 && hConnectHandle != 0) {
+        if (job->shouldProceed()) {
+            // do not check for errors here
+            HttpAddRequestHeadersW(hResourceHandle,
+                    L"Accept-Encoding: gzip, deflate", -1,
+                    HTTP_ADDREQ_FLAG_ADD);
         }
 
-        // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
-        if (sendRequestError == 0) {
+        // qDebug() << "download.5";
+        int callNumber = 0;
+        while (job->shouldProceed()) {
+            // qDebug() << "download.5.1";
+
+            // NOTE: dwStatus is only valid if sendRequestError == 0
+            DWORD dwStatus = 0, dwStatusSize = sizeof(dwStatus);
+
+            DWORD sendRequestError = 0;
+
+            // the following call uses NULL for headers in case there are no headers
+            // because Windows 2003 generates the error 12150 otherwise
+            if (!HttpSendRequestW(hResourceHandle,
+                    request.headers.length() == 0 ? NULL : reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
+                    request.postData.length() == 0 ? NULL : const_cast<char*>(request.postData.data()),
+                    request.postData.length())) {
+                sendRequestError = GetLastError();
+            }
+
+            // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
+            if (sendRequestError == 0) {
+                if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
+                        HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
+                    QString errMsg;
+                    WPMUtils::formatMessage(GetLastError(), &errMsg);
+                    job->setErrorMessage(errMsg);
+                    break;
+                }
+            }
+
+            if (debug) {
+                WPMUtils::writeln(QString("Downloader::downloadWin callNumber=%1, "
+                        "sendRequestError=%2, dwStatus=%3").arg(callNumber).
+                        arg(sendRequestError).arg(dwStatus));
+            }
+
+            // 2XX
+            if (sendRequestError == 0) {
+                DWORD hundreds = dwStatus / 100;
+                if (hundreds == 2 || hundreds == 5)
+                    break;
+            }
+
+            // the InternetErrorDlg calls below can either handle
+            // sendRequestError <> 0 or HTTP error code <> 2xx
+
+            void* p = 0;
+
+            // both calls to InternetErrorDlg should be enclosed by one
+            // mutex, so that only one dialog will be shown
+            loginDialogMutex.lock();
+
+            DWORD r;
+
+            // first call is processed differently
+            if (callNumber == 0) {
+                r = InternetErrorDlg(0,
+                       hResourceHandle, sendRequestError,
+                        FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                        FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                        FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
+                        FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
+                if ((r == ERROR_SUCCESS || r == ERROR_INTERNET_INTERNAL_ERROR) && interactive)
+                    r = ERROR_INTERNET_FORCE_RETRY;
+            } else {
+                if (interactive) {
+                    if (parentWindow) {
+                        r = InternetErrorDlg(parentWindow,
+                                hResourceHandle, sendRequestError,
+                                FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                                FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                                FLAGS_ERROR_UI_FLAGS_GENERATE_DATA, &p);
+                    } else {
+                        if (sendRequestError == 0) {
+                            QString e = inputPassword(hConnectHandle, dwStatus);
+
+                            //qDebug() << "inputPassword: " << e;
+                            if (!e.isEmpty()) {
+                                job->setErrorMessage(e);
+                                r = ERROR_CANCELLED;
+                            } else {
+                                r = ERROR_INTERNET_FORCE_RETRY;
+                            }
+                        } else {
+                            // cannot help
+                            r = ERROR_SUCCESS;
+                        }
+                    }
+                } else {
+                    // cannot help
+                    r = ERROR_SUCCESS;
+                }
+            }
+
+            //qDebug() << callNumber << r << dwStatus << url.toString();
+
+            if (job->shouldProceed()) {
+                if (r == ERROR_SUCCESS) {
+                    if (sendRequestError) {
+                        QString errMsg;
+                        WPMUtils::formatMessage(sendRequestError, &errMsg);
+                        job->setErrorMessage(errMsg);
+                    } else {
+                        job->setErrorMessage(QString(
+                                QObject::tr("HTTP status code %1")).arg(dwStatus));
+                    }
+                } else if (r == ERROR_INTERNET_FORCE_RETRY) {
+                    // nothing
+                } else if (r == ERROR_CANCELLED) {
+                    job->setErrorMessage(QObject::tr("Cancelled by the user"));
+                } else if (r == ERROR_INVALID_HANDLE) {
+                    job->setErrorMessage(QObject::tr("Invalid handle"));
+                } else {
+                    job->setErrorMessage(QString(
+                            QObject::tr("Unknown error %1 from InternetErrorDlg in attempt %2")).arg(r).arg(callNumber + 1));
+                }
+            }
+
+            loginDialogMutex.unlock();
+
+            if (!job->shouldProceed())
+                break;
+
+            // read all the data before re-sending the request
+            char smallBuffer[4 * 1024];
+            while (true) {
+                DWORD read;
+                if (!InternetReadFile(hResourceHandle, &smallBuffer,
+                        sizeof(smallBuffer), &read)) {
+                    QString errMsg;
+                    WPMUtils::formatMessage(GetLastError(), &errMsg);
+                    job->setErrorMessage(errMsg);
+                    goto out;
+                }
+
+                // qDebug() << "read some bytes " << read;
+                if (read == 0)
+                    break;
+            }
+
+            callNumber++;
+        }; // while (job->shouldProceed())
+
+    out:
+        if (job->shouldProceed()) {
+            DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
+
+            // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
             if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
                     HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
                 QString errMsg;
                 WPMUtils::formatMessage(GetLastError(), &errMsg);
                 job->setErrorMessage(errMsg);
-                break;
-            }
-        }
-
-        if (debug) {
-            WPMUtils::writeln(QString("Downloader::downloadWin callNumber=%1, "
-                    "sendRequestError=%2, dwStatus=%3").arg(callNumber).
-                    arg(sendRequestError).arg(dwStatus));
-        }
-
-        // 2XX
-        if (sendRequestError == 0) {
-            DWORD hundreds = dwStatus / 100;
-            if (hundreds == 2 || hundreds == 5)
-                break;
-        }
-
-        // the InternetErrorDlg calls below can either handle
-        // sendRequestError <> 0 or HTTP error code <> 2xx
-
-        void* p = 0;
-
-        // both calls to InternetErrorDlg should be enclosed by one
-        // mutex, so that only one dialog will be shown
-        loginDialogMutex.lock();
-
-        DWORD r;
-
-        // first call is processed differently
-        if (callNumber == 0) {
-            r = InternetErrorDlg(0,
-                   hResourceHandle, sendRequestError,
-                    FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                    FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                    FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
-                    FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
-            if ((r == ERROR_SUCCESS || r == ERROR_INTERNET_INTERNAL_ERROR) && interactive)
-                r = ERROR_INTERNET_FORCE_RETRY;
-        } else {
-            if (interactive) {
-                if (parentWindow) {
-                    r = InternetErrorDlg(parentWindow,
-                            hResourceHandle, sendRequestError,
-                            FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                            FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                            FLAGS_ERROR_UI_FLAGS_GENERATE_DATA, &p);
-                } else {
-                    if (sendRequestError == 0) {
-                        QString e = inputPassword(hConnectHandle, dwStatus);
-
-                        //qDebug() << "inputPassword: " << e;
-                        if (!e.isEmpty()) {
-                            job->setErrorMessage(e);
-                            r = ERROR_CANCELLED;
-                        } else {
-                            r = ERROR_INTERNET_FORCE_RETRY;
-                        }
-                    } else {
-                        // cannot help
-                        r = ERROR_SUCCESS;
-                    }
-                }
             } else {
-                // cannot help
-                r = ERROR_SUCCESS;
-            }
-        }
-
-        //qDebug() << callNumber << r << dwStatus << url.toString();
-
-        if (job->shouldProceed()) {
-            if (r == ERROR_SUCCESS) {
-                if (sendRequestError) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(sendRequestError, &errMsg);
-                    job->setErrorMessage(errMsg);
-                } else {
+                // 2XX
+                if (dwStatus / 100 != 2) {
                     job->setErrorMessage(QString(
                             QObject::tr("HTTP status code %1")).arg(dwStatus));
                 }
-            } else if (r == ERROR_INTERNET_FORCE_RETRY) {
-                // nothing
-            } else if (r == ERROR_CANCELLED) {
-                job->setErrorMessage(QObject::tr("Cancelled by the user"));
-            } else if (r == ERROR_INVALID_HANDLE) {
-                job->setErrorMessage(QObject::tr("Invalid handle"));
-            } else {
-                job->setErrorMessage(QString(
-                        QObject::tr("Unknown error %1 from InternetErrorDlg in attempt %2")).arg(r).arg(callNumber + 1));
             }
         }
 
-        loginDialogMutex.unlock();
-
-        if (!job->shouldProceed())
-            break;
-
-        // read all the data before re-sending the request
-        char smallBuffer[4 * 1024];
-        while (true) {
-            DWORD read;
-            if (!InternetReadFile(hResourceHandle, &smallBuffer,
-                    sizeof(smallBuffer), &read)) {
-                QString errMsg;
-                WPMUtils::formatMessage(GetLastError(), &errMsg);
-                job->setErrorMessage(errMsg);
-                goto out;
-            }
-
-            // qDebug() << "read some bytes " << read;
-            if (read == 0)
-                break;
+        if (job->shouldProceed()) {
+            job->setProgress(0.03);
+            job->setTitle(initialTitle + " / " + QObject::tr("Downloading"));
         }
 
-        callNumber++;
-    }; // while (job->shouldProceed())
-
-out:
-    if (job->shouldProceed()) {
-        DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
-
-        // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
-        if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
-                HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
-            QString errMsg;
-            WPMUtils::formatMessage(GetLastError(), &errMsg);
-            job->setErrorMessage(errMsg);
-        } else {
-            // 2XX
-            if (dwStatus / 100 != 2) {
-                job->setErrorMessage(QString(
-                        QObject::tr("HTTP status code %1")).arg(dwStatus));
+        // MIME type
+        if (job->shouldProceed()) {
+            if (mime) {
+                WCHAR mimeBuffer[1024];
+                DWORD bufferLength = sizeof(mimeBuffer);
+                DWORD index = 0;
+                if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
+                        &mimeBuffer, &bufferLength, &index)) {
+                    *mime = "application/octet-stream";
+                } else {
+                    mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
+                }
             }
         }
-    }
 
-    if (job->shouldProceed()) {
-        job->setProgress(0.03);
-        job->setTitle(initialTitle + " / " + QObject::tr("Downloading"));
-    }
+        bool gzip = false;
 
-    // MIME type
-    if (job->shouldProceed()) {
-        if (mime) {
-            WCHAR mimeBuffer[1024];
-            DWORD bufferLength = sizeof(mimeBuffer);
+        // Content-Encoding
+        if (job->shouldProceed()) {
+            WCHAR contentEncodingBuffer[1024];
+            DWORD bufferLength = sizeof(contentEncodingBuffer);
             DWORD index = 0;
-            if (!HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_TYPE,
-                    &mimeBuffer, &bufferLength, &index)) {
-                *mime = "application/octet-stream";
-            } else {
-                mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
-            }
-        }
-    }
-
-    bool gzip = false;
-
-    // Content-Encoding
-    if (job->shouldProceed()) {
-        WCHAR contentEncodingBuffer[1024];
-        DWORD bufferLength = sizeof(contentEncodingBuffer);
-        DWORD index = 0;
-        if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_ENCODING,
-                &contentEncodingBuffer, &bufferLength, &index)) {
-            QString contentEncoding;
-            contentEncoding.setUtf16((ushort*) contentEncodingBuffer,
-                    bufferLength / 2);
-            gzip = contentEncoding == "gzip" || contentEncoding == "deflate";
-        }
-
-        job->setProgress(0.04);
-    }
-
-    // Content-Disposition
-    if (job->shouldProceed()) {
-        if (contentDisposition) {
-            WCHAR cdBuffer[1024];
-            wcscpy(cdBuffer, L"Content-Disposition");
-            DWORD bufferLength = sizeof(cdBuffer);
-            DWORD index = 0;
-            if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CUSTOM,
-                    &cdBuffer, &bufferLength, &index)) {
-                contentDisposition->setUtf16((ushort*) cdBuffer,
+            if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_ENCODING,
+                    &contentEncodingBuffer, &bufferLength, &index)) {
+                QString contentEncoding;
+                contentEncoding.setUtf16((ushort*) contentEncodingBuffer,
                         bufferLength / 2);
+                gzip = contentEncoding == "gzip" || contentEncoding == "deflate";
+            }
+
+            job->setProgress(0.04);
+        }
+
+        // Content-Disposition
+        if (job->shouldProceed()) {
+            if (contentDisposition) {
+                WCHAR cdBuffer[1024];
+                wcscpy(cdBuffer, L"Content-Disposition");
+                DWORD bufferLength = sizeof(cdBuffer);
+                DWORD index = 0;
+                if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CUSTOM,
+                        &cdBuffer, &bufferLength, &index)) {
+                    contentDisposition->setUtf16((ushort*) cdBuffer,
+                            bufferLength / 2);
+                }
             }
         }
-    }
 
-    int64_t contentLength = -1;
+        // content length
+        if (job->shouldProceed()) {
+            WCHAR contentLengthBuffer[100];
+            DWORD bufferLength = sizeof(contentLengthBuffer);
+            DWORD index = 0;
+            if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_LENGTH,
+                    contentLengthBuffer, &bufferLength, &index)) {
+                QString s;
+                s.setUtf16((ushort*) contentLengthBuffer, bufferLength / 2);
+                bool ok;
+                contentLength = s.toLongLong(&ok, 10);
+                if (!ok)
+                    contentLength = 0;
+            }
 
-    // content length
-    if (job->shouldProceed()) {
-        WCHAR contentLengthBuffer[100];
-        DWORD bufferLength = sizeof(contentLengthBuffer);
-        DWORD index = 0;
-        if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_LENGTH,
-                contentLengthBuffer, &bufferLength, &index)) {
-            QString s;
-            s.setUtf16((ushort*) contentLengthBuffer, bufferLength / 2);
-            bool ok;
-            contentLength = s.toLongLong(&ok, 10);
-            if (!ok)
-                contentLength = 0;
+            job->setProgress(0.05);
         }
 
-        job->setProgress(0.05);
-    }
+        if (job->shouldProceed()) {
+            Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
+            readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
+            if (!sub->getErrorMessage().isEmpty())
+                job->setErrorMessage(sub->getErrorMessage());
+        }
 
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
-        readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
-        if (!sub->getErrorMessage().isEmpty())
-            job->setErrorMessage(sub->getErrorMessage());
-    }
-
-    if (hResourceHandle)
         InternetCloseHandle(hResourceHandle);
+    }
+
     if (hConnectHandle)
         InternetCloseHandle(hConnectHandle);
     if (internet)

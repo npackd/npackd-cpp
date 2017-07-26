@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     //CoInitialize(NULL);
     //WPMUtils::createMSTask();
 
-    LoadLibrary(L"exchndl.dll");
+    HMODULE m = LoadLibrary(L"exchndl.dll");
 
     QApplication a(argc, argv);
 
@@ -85,6 +85,8 @@ int main(int argc, char *argv[])
     }
 
     //WPMUtils::timer.dump();
+
+    FreeLibrary(m);
 
     return errorCode;
 }
