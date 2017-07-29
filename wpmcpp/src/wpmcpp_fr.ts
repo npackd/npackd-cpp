@@ -3264,6 +3264,14 @@ p, li { white-space: pre-wrap; }
         <source>Service not started. Current status is %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>EnumServicesStatusEx: no services found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EnumServicesStatusEx failed: %0</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
@@ -3382,6 +3390,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>terminates Windows services, if necessary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop services</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

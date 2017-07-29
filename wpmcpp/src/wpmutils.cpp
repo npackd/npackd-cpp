@@ -224,6 +224,10 @@ QString WPMUtils::programCloseType2String(DWORD programCloseType)
         r += "k";
     }
 
+    if (programCloseType & WPMUtils::STOP_SERVICES) {
+        r += "d";
+    }
+
     return r;
 }
 
@@ -802,6 +806,76 @@ void WPMUtils::disconnectShareUsersFrom(const QString &dir)
     NetApiBufferFree(buf);
 }
 
+QString WPMUtils::findService(DWORD processId, QString* err)
+{
+    *err = "";
+
+    QString r;
+
+    DWORD pcbBytesNeeded;
+    DWORD lpServicesReturned;
+    DWORD lpResumeHandle = 0;
+    ENUM_SERVICE_STATUS_PROCESS* lpServices = 0;
+    DWORD bufSize;
+
+    // Get a handle to the SCM database.
+    SC_HANDLE schSCManager = OpenSCManager(
+            NULL,                    // local computer
+            NULL,                    // ServicesActive database
+            SC_MANAGER_ALL_ACCESS);  // full access rights
+
+    if (NULL == schSCManager) {
+        formatMessage(GetLastError(), err);
+        *err = QObject::tr("OpenSCManager failed: %0").arg(*err);
+    }
+
+    if (err->isEmpty()) {
+        if (EnumServicesStatusEx(schSCManager, SC_ENUM_PROCESS_INFO,
+                SERVICE_WIN32, SERVICE_ACTIVE, NULL, 0, &pcbBytesNeeded,
+                &lpServicesReturned, &lpResumeHandle, NULL)) {
+            *err = QObject::tr("EnumServicesStatusEx: no services found");
+        } else {
+            DWORD e = GetLastError();
+            if (e != ERROR_MORE_DATA) {
+                formatMessage(e, err);
+                *err = QObject::tr("EnumServicesStatusEx failed: %0").arg(*err);
+            }
+        }
+    }
+
+    if (err->isEmpty()) {
+        bufSize = pcbBytesNeeded;
+        lpServices = reinterpret_cast<ENUM_SERVICE_STATUS_PROCESS*>(
+                malloc(bufSize));
+
+        if (!EnumServicesStatusEx(schSCManager, SC_ENUM_PROCESS_INFO,
+                SERVICE_WIN32, SERVICE_ACTIVE,
+                reinterpret_cast<LPBYTE>(lpServices), bufSize,
+                &pcbBytesNeeded,
+                &lpServicesReturned, &lpResumeHandle, NULL)) {
+            formatMessage(GetLastError(), err);
+            *err = QObject::tr("EnumServicesStatusEx failed: %0").arg(*err);
+        }
+    }
+
+    if (err->isEmpty()) {
+        for (DWORD i = 0; i < lpServicesReturned; i++) {
+            if ((lpServices + i)->ServiceStatusProcess.dwProcessId == processId) {
+                r = QString::fromUtf16(reinterpret_cast<ushort*>(
+                        (lpServices + i)->lpServiceName));
+                break;
+            }
+        }
+    }
+
+    free(lpServices);
+
+    if (schSCManager)
+        CloseServiceHandle(schSCManager);
+
+    return r;
+}
+
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         DWORD cpt, int f)
 {
@@ -853,6 +927,29 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
                 // TerminateProcess is asynchronous
                 if (TerminateProcess(hProc, 1000))
                     WaitForSingleObject(hProc, 30000);
+            }
+        }
+    }
+
+    if (cpt & STOP_SERVICES) {
+        QStringList stoppedServices;
+        for (int i = 0; i < ps.size(); i++) {
+            HANDLE hProc = ps.at(i);
+            DWORD processId = GetProcessId(hProc);
+
+            if (processId != 0 && processId != me &&
+                    WPMUtils::isProcessRunning(hProc)) {
+                QString err;
+                QString service = findService(processId, &err);
+
+                if (!err.isEmpty())
+                    qDebug() << err;
+
+                if (!service.isEmpty()) {
+                    err = WPMUtils::stopService(service, &stoppedServices);
+                    if (!err.isEmpty())
+                        qDebug() << err;
+                }
             }
         }
     }
@@ -2507,6 +2604,8 @@ int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
                     r |= WPMUtils::DISABLE_SHARES;
                 else if (t == 'k')
                     r |= WPMUtils::KILL_PROCESS;
+                else if (t == 'd')
+                    r |= WPMUtils::STOP_SERVICES;
                 else
                     *err = QObject::tr(
                             "Invalid program close type: %1").arg(t);

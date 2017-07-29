@@ -90,6 +90,7 @@ public:
     static const int CLOSE_WINDOW = 1;
     static const int KILL_PROCESS = 2;
     static const int DISABLE_SHARES = 4;
+    static const int STOP_SERVICES = 8;
 
     static const char* UCS2LE_BOM;
 
@@ -752,6 +753,14 @@ public:
      * @return error message
      */
     static QString startService(const QString &serviceName);
+
+    /**
+     * @brief searches for a service with the specified process ID
+     * @param processId ID of a process
+     * @param err error message will be stored here
+     * @return name of the service or ""
+     */
+    static QString findService(DWORD processId, QString *err);
 };
 
 #endif // WPMUTILS_H

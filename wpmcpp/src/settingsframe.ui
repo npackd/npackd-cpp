@@ -185,6 +185,16 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxStopServices">
+           <property name="toolTip">
+            <string>terminates Windows services, if necessary</string>
+           </property>
+           <property name="text">
+            <string>Stop services</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
