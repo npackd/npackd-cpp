@@ -548,14 +548,36 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     txt = txt.simplified();
     QStringList keywords = txt.split(' ', QString::SkipEmptyParts);
     QStringList stopWords = QStringLiteral("version build edition remove only "
-            "bit sp1 sp2 sp3 deu enu update microsoft corporation").
+            "bit sp1 sp2 sp3 deu enu update microsoft corporation setup package").
             split(' ');
+
+    // synonyms
+    for (int i = 0; i < keywords.size(); i++) {
+        const QString& p = keywords.at(i);
+        if (p == QStringLiteral("x64")) {
+            keywords[i] = QStringLiteral("x86_64");
+        } else if (p == QStringLiteral("x86")) {
+            keywords[i] = QStringLiteral("i686");
+        }
+    }
+
+    // "32 bit" and "64 bit"
+    for (int i = 0; i < keywords.size() - 1; i++) {
+        const QString& p = keywords.at(i);
+        const QString& p2 = keywords.at(i + 1);
+        if (p == QStringLiteral("32") && p2 == QStringLiteral("bit")) {
+            keywords[i] = QStringLiteral("i686");
+            keywords.removeAt(i + 1);
+        } else if (p == QStringLiteral("64") && p2 == QStringLiteral("bit")) {
+            keywords[i] = QStringLiteral("x86_64");
+            keywords.removeAt(i + 1);
+        }
+    }
+
+    // remove stop words and numbers
     for (int i = 0; i < keywords.size(); ) {
-        const QString p = keywords.at(i);
-        if (p == "x64") {
-            keywords[i] = "64";
-            i++;
-        } else if (stopWords.contains(p)) {
+        const QString& p = keywords.at(i);
+        if (stopWords.contains(p)) {
             keywords.removeAt(i);
         } else if (p.length() > 0 && p.at(0).isDigit()) {
             keywords.removeAt(i);
@@ -586,9 +608,17 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
 
     where.append(QStringLiteral(" LIMIT 2"));
 
-    qDebug() << "searching for" << keywords.join(' ');
+    QStringList packages = findPackagesWhere(where, params, err);
 
-    return findPackagesWhere(where, params, err);
+    QString what;
+    if (packages.size() == 1)
+        what = packages.at(0);
+    else
+        what = QString("%1 packages").arg(packages.size());
+    qDebug() << "searching for" << keywords.join(' ') << "found" <<
+            what;
+
+    return packages;
 }
 
 QStringList DBRepository::findPackages(Package::Status minStatus,

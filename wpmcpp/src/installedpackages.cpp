@@ -168,16 +168,15 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
         Package* p = r->findPackage_(ipv->package);
         if (p) {
             QString err;
-            QStringList found = r->findBetterPackages(p->title, &err);
 
-            qDebug()  << "found" << found.size();
+            qDebug() << "trying to replace" << p->name << p->title;
+
+            QStringList found = r->findBetterPackages(p->title, &err);
 
             if (err.isEmpty() && found.size() == 1) {
                 QList<Package*> replacements = r->findPackages(found);
                 result = replacements.at(0)->name;
                 qDeleteAll(replacements);
-
-                qDebug() << "replacing" << ipv->package << result;
             }
 
             delete p;
@@ -280,7 +279,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         if (ignore)
             return;
 
-        qDebug() << "not ignoring" << d;
+        //qDebug() << "not ignoring" << d;
     }
 
     QString betterPackageName = findBetterPackageName(r, ipv);
