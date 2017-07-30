@@ -72,17 +72,11 @@ private:
      * @return error message
      */
     static QString startService(SC_HANDLE schSCManager, const QString &serviceName);
+
+    static QList<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
 public:
     /** true = print debug information */
     static bool debug;
-
-    /**
-     * @brief how to search for processes that prevent a directory from being
-     *      deleted
-     */
-    static const int RUNNING_EXE_IN_DIR = 1;
-    static const int LOADED_DLL_IN_DIR = 2;
-    static const int USED_FILE_IN_DIR = 4;
 
     /**
      * @brief how to close a process
@@ -562,12 +556,9 @@ public:
      * @brief closes all processes that lock the specified directory. This
      *     function ignores the current process.
      * @param dir a directory
-     * @param f how to find the processes that lock the directory. A combination
-     *     of LOADED_DLL_IN_DIR, RUNNING_EXE_IN_DIR, and USED_FILE_IN_DIR
      */
     static void closeProcessesThatUseDirectory(const QString& dir,
-            DWORD cpt=CLOSE_WINDOW, int f=
-            LOADED_DLL_IN_DIR | RUNNING_EXE_IN_DIR | USED_FILE_IN_DIR);
+            DWORD cpt=CLOSE_WINDOW);
 
     /**
      * @brief disconnects all users from all shares that include the specified

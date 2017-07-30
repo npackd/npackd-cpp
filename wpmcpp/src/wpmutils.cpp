@@ -876,48 +876,54 @@ QString WPMUtils::findService(DWORD processId, QString* err)
     return r;
 }
 
-void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
-        DWORD cpt, int f)
+QList<HANDLE> WPMUtils::getAllProcessHandlesLockingDirectory(const QString& dir)
 {
-    if (cpt == 0)
-        return;
+    QList<HANDLE> ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
+
+    //qDebug() << "getProcessHandlesLockingDirectory";
+
+    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
+
+    ps.append(ps0);
+
+    return ps;
+}
+
+void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
+        DWORD cpt)
+{
+    QStringList stoppedServices;
 
     //QString f = dir + "\\abc.txt";
     //test((PCWSTR) f.utf16());
 
-    QList<HANDLE> ps0;
-    if (f & RUNNING_EXE_IN_DIR) {
-        ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
-    }
-
-    //qDebug() << "getProcessHandlesLockingDirectory";
-
-    QList<HANDLE> ps;
-    if (f & USED_FILE_IN_DIR) {
-        ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
-    }
-
-    ps.append(ps0);
+    QList<HANDLE> ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
 
     //qDebug() << "getProcessHandlesLockingDirectory2";
 
     DWORD me = GetCurrentProcessId();
 
     if (cpt & CLOSE_WINDOW) {
+        bool changed = false;
         for (int i = 0; i < ps.size(); i++) {
             HANDLE p = ps.at(i);
             if (GetProcessId(p) != me) {
                 QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
                 if (ws.size() > 0) {
                     closeProcessWindows(p, ws);
+                    changed = true;
                 }
             }
         }
+
+        if (changed)
+            ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
     }
 
     //qDebug() << "Windows closed";
 
     if (cpt & KILL_PROCESS) {
+        bool changed = false;
         for (int i = 0; i < ps.size(); i++) {
             HANDLE hProc = ps.at(i);
             DWORD processId = GetProcessId(hProc);
@@ -927,12 +933,33 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
                 // TerminateProcess is asynchronous
                 if (TerminateProcess(hProc, 1000))
                     WaitForSingleObject(hProc, 30000);
+
+                changed = true;
             }
+        }
+
+        if (changed)
+            ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
+    }
+
+    if (cpt & DISABLE_SHARES) {
+        if (ps.size() > 0) {
+            WPMUtils::disconnectShareUsersFrom(dir);
+            ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
+        }
+    }
+
+    if (cpt & DISABLE_SHARES) {
+        if (ps.size() > 0) {
+            QString err = WPMUtils::stopService("lanmanserver", &stoppedServices);
+            if (!err.isEmpty())
+                qDebug() << err;
+
+            ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
         }
     }
 
     if (cpt & STOP_SERVICES) {
-        QStringList stoppedServices;
         for (int i = 0; i < ps.size(); i++) {
             HANDLE hProc = ps.at(i);
             DWORD processId = GetProcessId(hProc);
@@ -3240,6 +3267,8 @@ QString WPMUtils::stopService(const QString& serviceName,
 QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
         QStringList* stoppedServices)
 {
+    qDebug() << "stopping service" << serviceName;
+
     QString err;
 
     SERVICE_STATUS_PROCESS ssp;

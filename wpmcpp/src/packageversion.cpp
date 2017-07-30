@@ -2190,8 +2190,6 @@ void PackageVersion::stop(Job* job, int programCloseType,
     } else {
         WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType);
 
-        if (programCloseType & WPMUtils::DISABLE_SHARES)
-            WPMUtils::disconnectShareUsersFrom(getPath());
         job->setProgress(0.5);
     }
 
