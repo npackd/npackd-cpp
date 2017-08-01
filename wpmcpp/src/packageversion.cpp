@@ -1648,7 +1648,7 @@ void PackageVersion::install(Job* job, const QString& where,
                 installationScriptAcquired = installationScripts.
                         tryAcquire(1, 10000);
                 if (installationScriptAcquired) {
-                    job->setProgress(0.01);
+                    job->setProgress(0.21);
                     break;
                 }
 

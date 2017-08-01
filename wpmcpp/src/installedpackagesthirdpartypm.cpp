@@ -16,8 +16,15 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
     InstalledPackages* ip = InstalledPackages::getDefault();
     QList<InstalledPackageVersion*> ipvs = ip->getAll();
     QSet<QString> used;
+    QDir d;
     for (int i = 0; i < ipvs.count(); ++i) {
         InstalledPackageVersion* ipv = ipvs.at(i);
+
+        // this is different from all the other third party package managers.
+        // We *know* that this was uninstalled.
+        if (!d.exists(ipv->getDirectory()))
+            continue;
+
         if (!used.contains(ipv->package)) {
             QString title = ipv->package;
             int pos = title.lastIndexOf('.');
