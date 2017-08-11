@@ -63,7 +63,8 @@ private:
             QStringList *stoppedServices);
     static QString DoStopSvc(SC_HANDLE schSCManager, const QString &serviceName,
                              QStringList *stoppedServices);
-    static QString waitForServiceStatusUnequalTo(SC_HANDLE schService, DWORD status);
+    static QString waitForServiceStatus(SC_HANDLE schService,
+            const QString &operation, DWORD status);
 
     /**
      * @brief starts a Windows service

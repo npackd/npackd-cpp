@@ -2126,13 +2126,6 @@ void MainWindow::on_actionAdd_package_triggered()
 {
     openURL(QUrl(
             "https://npackd.appspot.com/package/new"));
-
-    QStringList stoppedServices;
-    QString err = WPMUtils::stopService("lanmanserver", &stoppedServices);
-    addTextTab("stop service", err + "\n" + stoppedServices.join("\n"));
-
-    err = WPMUtils::startService("lanmanserver");
-    addTextTab("start service", err);
 }
 
 void MainWindow::openURL(const QUrl& url) {

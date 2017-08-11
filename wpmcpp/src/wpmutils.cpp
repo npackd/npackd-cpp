@@ -951,9 +951,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     if (cpt & DISABLE_SHARES) {
         if (ps.size() > 0) {
-            QString err = WPMUtils::stopService("lanmanserver", &stoppedServices);
-            if (!err.isEmpty())
-                qDebug() << err;
+            WPMUtils::stopService("lanmanserver", &stoppedServices);
 
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
         }
@@ -969,13 +967,8 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
                 QString err;
                 QString service = findService(processId, &err);
 
-                if (!err.isEmpty())
-                    qDebug() << err;
-
                 if (!service.isEmpty()) {
-                    err = WPMUtils::stopService(service, &stoppedServices);
-                    if (!err.isEmpty())
-                        qDebug() << err;
+                    WPMUtils::stopService(service, &stoppedServices);
                 }
             }
         }
@@ -3267,14 +3260,10 @@ QString WPMUtils::stopService(const QString& serviceName,
 QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
         QStringList* stoppedServices)
 {
-    qDebug() << "stopping service" << serviceName;
-
     QString err;
 
     SERVICE_STATUS_PROCESS ssp;
-    DWORD dwStartTime = GetTickCount();
     DWORD dwBytesNeeded;
-    DWORD dwTimeout = 30000; // 30-second time-out
 
     SC_HANDLE schService = NULL;
     if (err.isEmpty()) {
@@ -3283,13 +3272,19 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
         schService = OpenService(schSCManager,         // SCM database
                 // name of service
                 reinterpret_cast<LPCWSTR>(serviceName.utf16()),
-                SERVICE_STOP |
-                SERVICE_QUERY_STATUS |
-                SERVICE_ENUMERATE_DEPENDENTS);
+                SERVICE_ALL_ACCESS);
         if (schService == NULL) {
             formatMessage(GetLastError(), &err);
             err = QObject::tr("OpenService failed: %1").arg(err);
         }
+    }
+
+    // If a stop is pending, wait for it.
+    if (err.isEmpty()) {
+        err = waitForServiceStatus(schService, "!=", SERVICE_STOP_PENDING);
+        err = waitForServiceStatus(schService, "!=", SERVICE_START_PENDING);
+        err = waitForServiceStatus(schService, "!=", SERVICE_CONTINUE_PENDING);
+        err = waitForServiceStatus(schService, "!=", SERVICE_PAUSE_PENDING);
     }
 
     // Make sure the service is not already stopped.
@@ -3302,11 +3297,6 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
         }
     }
 
-    // If a stop is pending, wait for it.
-    if (err.isEmpty()) {
-        err = waitForServiceStatusUnequalTo(schService, SERVICE_STOP_PENDING);
-    }
-
     // If the service is running, dependencies must be stopped first.
     if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
         StopDependentServices(schSCManager, schService, stoppedServices);
@@ -3314,8 +3304,8 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
     // Send a stop code to the service.
     if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
-        if (!ControlService(schService, SERVICE_CONTROL_STOP,
-                (LPSERVICE_STATUS) &ssp)) {
+        if (ControlService(schService, SERVICE_CONTROL_STOP,
+                (LPSERVICE_STATUS) &ssp) == 0) {
             formatMessage(GetLastError(), &err);
             err = QObject::tr("ControlService failed: %1").arg(err);
         } else {
@@ -3325,27 +3315,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
     // Wait for the service to stop.
     if (err.isEmpty()) {
-        while (ssp.dwCurrentState != SERVICE_STOPPED ) {
-            Sleep(ssp.dwWaitHint);
-            if (!QueryServiceStatusEx(
-                    schService,
-                    SC_STATUS_PROCESS_INFO,
-                    (LPBYTE)&ssp,
-                    sizeof(SERVICE_STATUS_PROCESS),
-                    &dwBytesNeeded)) {
-                formatMessage(GetLastError(), &err);
-                err = QObject::tr("QueryServiceStatusEx failed: %0").arg(err);
-                break;
-            }
-
-            if (ssp.dwCurrentState == SERVICE_STOPPED)
-                break;
-
-            if (GetTickCount() - dwStartTime > dwTimeout) {
-                err = QObject::tr("Wait timed out");
-                break;
-            }
-        }
+        err = waitForServiceStatus(schService, "==", SERVICE_STOPPED);
     }
 
     if (schService)
@@ -3406,7 +3376,8 @@ QString WPMUtils::StopDependentServices(SC_HANDLE schSCManager,
     return err;
 }
 
-QString WPMUtils::waitForServiceStatusUnequalTo(SC_HANDLE schService,
+QString WPMUtils::waitForServiceStatus(SC_HANDLE schService,
+        const QString& operation,
         DWORD status)
 {
     QString err;
@@ -3431,7 +3402,15 @@ QString WPMUtils::waitForServiceStatusUnequalTo(SC_HANDLE schService,
         DWORD dwStartTickCount = GetTickCount();
         DWORD dwOldCheckPoint = ssStatus.dwCheckPoint;
 
-        while (ssStatus.dwCurrentState == status) {
+        while (true) {
+            if (operation == "==") {
+                if (ssStatus.dwCurrentState == status)
+                    break;
+            } else {
+                if (ssStatus.dwCurrentState != status)
+                    break;
+            }
+
             // Do not wait longer than the wait hint. A good interval is
             // one-tenth of the wait hint but not less than 1 second
             // and not more than 10 seconds.
@@ -3541,7 +3520,7 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
 
     // Wait for the service to stop before attempting to start it.
     if (err.isEmpty()) {
-        err = waitForServiceStatusUnequalTo(schService, SERVICE_STOP_PENDING);
+        err = waitForServiceStatus(schService, "!=", SERVICE_STOP_PENDING);
     }
 
     // Attempt to start the service.
@@ -3556,7 +3535,7 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
     }
 
     if (err.isEmpty()) {
-        err = waitForServiceStatusUnequalTo(schService, SERVICE_START_PENDING);
+        err = waitForServiceStatus(schService, "!=", SERVICE_START_PENDING);
     }
 
     if (err.isEmpty()) {
