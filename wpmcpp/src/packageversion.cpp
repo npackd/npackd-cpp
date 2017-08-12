@@ -663,9 +663,6 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
         d.refresh();
         if (d.exists()) {
             WPMUtils::closeProcessesThatUseDirectory(dir, programCloseType);
-
-            if (programCloseType & WPMUtils::DISABLE_SHARES)
-                WPMUtils::disconnectShareUsersFrom(dir);
         } else {
             break;
         }
