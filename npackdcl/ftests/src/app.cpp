@@ -132,7 +132,7 @@ void App::addRemoveShare()
 
     QProcess::execute("explorer.exe \\\\localhost\\AD_addRemoveShare");
 
-    QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer -e sd").
+    QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer -d -e sd").
             contains("removed successfully"));
 
     QDir d;
