@@ -2788,6 +2788,9 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
                 1, 0, strings,
                 NULL);
     }
+
+    if (debug)
+        writeln(msg);
 }
 
 void WPMUtils::executeFile(Job* job, const QString& where,
@@ -3304,6 +3307,8 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
     // Send a stop code to the service.
     if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
+        WPMUtils::reportEvent(QObject::tr(
+                "Sending stop signal to the service %1").arg(serviceName));
         if (ControlService(schService, SERVICE_CONTROL_STOP,
                 (LPSERVICE_STATUS) &ssp) == 0) {
             formatMessage(GetLastError(), &err);
