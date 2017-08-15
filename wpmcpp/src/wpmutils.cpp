@@ -892,16 +892,16 @@ QList<HANDLE> WPMUtils::getAllProcessHandlesLockingDirectory(const QString& dir)
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         DWORD cpt)
 {
-    if (debug)
-        writeln(QString("Closing processes locking %1 with %2").
-                arg(dir).arg(cpt));
-
     QStringList stoppedServices;
 
     //QString f = dir + "\\abc.txt";
     //test((PCWSTR) f.utf16());
 
     QList<HANDLE> ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
+
+    if (debug)
+        writeln(QString("Closing processes locking %1 with %2: %3 processes").
+                arg(dir).arg(cpt).arg(ps.size()));
 
     //qDebug() << "getProcessHandlesLockingDirectory2";
 
