@@ -753,6 +753,14 @@ public:
      * @return name of the service or ""
      */
     static QString findService(DWORD processId, QString *err);
+
+    /**
+     * @brief checks if the specified directory is shared directly or as a
+     *     sub-directory of a shared directory
+     * @param dir this directory will be checked
+     * @return true = shared
+     */
+    static bool isDirShared(const QString &dir);
 };
 
 #endif // WPMUTILS_H

@@ -806,6 +806,40 @@ void WPMUtils::disconnectShareUsersFrom(const QString &dir)
     NetApiBufferFree(buf);
 }
 
+bool WPMUtils::isDirShared(const QString &dir)
+{
+    bool result = false;
+
+    SHARE_INFO_502* buf;
+    DWORD entriesRead, totalEntries, resumeHandle;
+    resumeHandle = 0;
+    if (NetShareEnum(0, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
+            &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
+        QString dirNormalized = normalizePath(dir);
+#ifndef STYPE_MASK
+        const DWORD STYPE_MASK = 0xF0000000;
+#endif
+        // qDebug() << entriesRead;
+        for (int i = 0; i < (int) entriesRead; i++) {
+            // qDebug() << "share " << buf[i].shi502_type;
+            if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
+                QString path;
+                path.setUtf16((const ushort*) buf[i].shi502_path,
+                        wcslen(buf[i].shi502_path));
+                path = normalizePath(path);
+                //qDebug() << "share found" << path;
+                if (isUnderOrEquals(path, dirNormalized)) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+    }
+    NetApiBufferFree(buf);
+
+    return result;
+}
+
 QString WPMUtils::findService(DWORD processId, QString* err)
 {
     *err = "";
@@ -946,15 +980,17 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
     }
 
+    bool shared = isDirShared(dir);
+
     if (cpt & DISABLE_SHARES) {
-        if (ps.size() > 0) {
+        if (shared) {
             WPMUtils::disconnectShareUsersFrom(dir);
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
         }
     }
 
     if (cpt & DISABLE_SHARES) {
-        if (ps.size() > 0) {
+        if (shared) {
             WPMUtils::stopService("lanmanserver", &stoppedServices);
 
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
