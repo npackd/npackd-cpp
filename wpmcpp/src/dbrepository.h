@@ -104,8 +104,11 @@ private:
      * @param job job for this method
      * @param useCache true = cache will be used
      * @param interactive true = allow the interaction with the user
+     * @param user user name for the HTTP authentication or ""
+     * @param password password for the HTTP authentication or ""
      */
-    void load(Job *job, bool useCache, bool interactive);
+    void load(Job *job, bool useCache, bool interactive, const QString user,
+            const QString password);
 
     /**
      * @brief loadOne
@@ -255,8 +258,11 @@ public:
      *    "Software" control panel data will be scanned.
      * @param job job
      * @param interactive true = allow the interaction with the user
+     * @param user user name for the HTTP authentication or ""
+     * @param password password for the HTTP authentication or ""
      */
-    void updateF5(Job *job, bool interactive=true);
+    void updateF5(Job *job, bool interactive, const QString user,
+            const QString password);
 
     /**
      * @brief updateF5() that can be used with QtConcurrent::Run

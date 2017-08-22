@@ -150,6 +150,16 @@ public:
         QString headers;
 
         /**
+         * @brief user user name for the HTTP authentication or ""
+         */
+        QString user;
+
+        /**
+         * @brief password password for the HTTP authentication or ""
+         */
+        QString password;
+
+        /**
          * @param url http:/https:/file: URL
          */
         Request(const QUrl& url): file(0), interactive(true),

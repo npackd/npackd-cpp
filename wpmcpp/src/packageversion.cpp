@@ -1373,7 +1373,7 @@ QString PackageVersion::getPreferredInstallationDirectory()
 }
 
 QString PackageVersion::download_(Job* job, const QString& where,
-        bool interactive)
+        bool interactive, const QString user, const QString password)
 {
     if (!this->download.isValid()) {
         job->setErrorMessage(QObject::tr("No download URL"));
@@ -1453,6 +1453,8 @@ QString PackageVersion::download_(Job* job, const QString& where,
             request.file = f;
             if (!this->sha1.isEmpty())
                 request.hashSum = true;
+            request.user = user;
+            request.password = password;
             request.alg = this->hashSumType;
             request.interactive = interactive;
             Downloader::Response response = Downloader::download(djob, request);
@@ -1476,6 +1478,8 @@ QString PackageVersion::download_(Job* job, const QString& where,
                 request.file = f;
                 if (!this->sha1.isEmpty())
                     request.hashSum = true;
+                request.user = user;
+                request.password = password;
                 request.alg = this->hashSumType;
                 request.interactive = interactive;
                 Downloader::Response response =

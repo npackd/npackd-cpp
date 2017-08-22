@@ -96,7 +96,7 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
     */
 
     CoInitialize(NULL);
-    process(job, install_, programCloseType, false);
+    process(job, install_, programCloseType, false, true, "", "");
     CoUninitialize();
 
     qDeleteAll(install_);
@@ -362,7 +362,8 @@ QString AbstractRepository::toString(const Dependency &dep,
 
 void AbstractRepository::process(Job *job,
         const QList<InstallOperation *> &install_, DWORD programCloseType,
-        bool printScriptOutput, bool interactive)
+        bool printScriptOutput, bool interactive,
+        const QString user, const QString password)
 {
     if (WPMUtils::debug) {
         WPMUtils::writeln(QString("AbstractRepository::process: %0 operations").arg(install_.size()));
@@ -459,7 +460,8 @@ void AbstractRepository::process(Job *job,
                 } else {
                     dirs.append(dir);
 
-                    QString binary = pv->download_(sub, dir, interactive);
+                    QString binary = pv->download_(sub, dir, interactive,
+                            user, password);
                     binaries.append(QFileInfo(binary).fileName());
                     if (sub->isCancelled())
                         job->cancel();

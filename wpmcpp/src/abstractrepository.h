@@ -164,7 +164,8 @@ public:
      */
     void process(Job* job, const QList<InstallOperation*> &install,
                  DWORD programCloseType, bool printScriptOutput,
-                 bool interactive=true);
+                 bool interactive,
+                 const QString user, const QString password);
 
     /**
      * Finds all installed package versions.

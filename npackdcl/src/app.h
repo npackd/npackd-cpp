@@ -59,7 +59,7 @@ private:
             const QString parentPrefix, int level, PackageVersion *pv);
     void processInstallOperations(Job *job,
             const QList<InstallOperation *> &ops, DWORD programCloseType,
-            bool interactive=true);
+            bool interactive, const QString user, const QString password);
     QStringList sortPackageVersionsByPackageTitle(
             QList<PackageVersion *> *list);
 public slots:

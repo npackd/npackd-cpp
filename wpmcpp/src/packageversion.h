@@ -402,7 +402,7 @@ public:
      *     may be combined here using OR.
      */
     void install(Job* job, const QString& where, const QString &binary,
-            bool printScriptOutput, int programCloseType=0);
+            bool printScriptOutput, int programCloseType);
 
     /**
      * Downloads the package binary, checks its hash sum, checks the binary for
@@ -411,10 +411,13 @@ public:
      * @param job job for this method
      * @param where a non-existing directory for the package
      * @param interactive true = allow the interaction with the user
+     * @param user user name for the HTTP authentication or ""
+     * @param password password for the HTTP authentication or ""
      * @return the full name of the downloaded file or "" for packages of
      *     type "zip"
      */
-    QString download_(Job* job, const QString& where, bool interactive=true);
+    QString download_(Job* job, const QString& where,
+            bool interactive, const QString user, const QString password);
 
     /**
      * Uninstalls this package version.

@@ -1430,7 +1430,8 @@ QString DBRepository::clear()
     return QStringLiteral("");
 }
 
-void DBRepository::load(Job* job, bool useCache, bool interactive)
+void DBRepository::load(Job* job, bool useCache, bool interactive,
+        const QString user, const QString password)
 {
     QString err;
     QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
@@ -1454,6 +1455,8 @@ void DBRepository::load(Job* job, bool useCache, bool interactive)
                     arg(url->toDisplayString()), false, true);
 
             Downloader::Request request = *url;
+            request.user = user;
+            request.password = password;
             request.useCache = useCache;
             request.interactive = interactive;
             QFuture<QTemporaryFile*> future = QtConcurrent::run(
@@ -1558,7 +1561,8 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
     job->complete();
 }
 
-void DBRepository::updateF5(Job* job, bool interactive)
+void DBRepository::updateF5(Job* job, bool interactive, const QString user,
+        const QString password)
 {
     bool transactionStarted = false;
     if (job->shouldProceed()) {
@@ -1586,7 +1590,7 @@ void DBRepository::updateF5(Job* job, bool interactive)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.27,
                 QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"));
-        load(sub, true, interactive);
+        load(sub, true, interactive, user, password);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -1715,7 +1719,7 @@ void DBRepository::updateF5Runnable(Job *job)
         Job* sub = job->newSubJob(0.77,
                 QObject::tr("Updating the temporary database"), true, true);
         CoInitialize(0);
-        tempdb.updateF5(sub);
+        tempdb.updateF5(sub, true, "", "");
         CoUninitialize();
     }
 

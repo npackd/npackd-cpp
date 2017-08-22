@@ -68,7 +68,7 @@ int App::process()
             "", false, "list,list-repos,search,install-dir,which,where,info");
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("end-process", 'e',
-            "list of ways to close running applications (c=close, k=kill, s=disconnect from file shares). The default value is 'c'.",
+            "list of ways to close running applications \r\n(c=close, k=kill, s=disconnect from file shares, d=stop services). The default value is 'c'.",
             "[c][k][s]", false, "remove,rm,update");
     cl.add("file", 'f', "file or directory", "file", false,
             "add,place,set-install-dir,update,where,which");
@@ -96,6 +96,11 @@ int App::process()
             "version", false, "add,info,path,place,rm,remove");
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
             "range", true, "add,path,update");
+
+    cl.add("user", 0, "user name for the HTTP authentication",
+            "user name", false, "add,update,detect");
+    cl.add("password", 0, "password for the HTTP authentication",
+            "password", false, "add,update,detect");
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -275,13 +280,16 @@ void App::usage(Job* job)
         "    ncl add (--package=<package>",
         "            [--version=<version> | --versions=<versions>])+ ",
         "            [--file=<installation directory>]",
+        "            [--user=<user name>]",
+        "            [--password=<password>]",
         "        installs packages. The newest available version will be ",
         "        installed, if none is specified.",
         "    ncl add-repo --url=<repository>",
         "        appends a repository to the list",
         "    ncl check",
         "        checks the installed packages for missing dependencies",
-        "    ncl detect",
+        "    ncl detect [--user=<user name>]",
+        "            [--password=<password>]",
         "        download repositories and detect packages from the MSI ",
         "        database and software control panel",
         "    ncl info --package=<package> [--version=<version>]",
@@ -324,6 +332,8 @@ void App::usage(Job* job)
         "            [--end-process=<types>]",
         "            [--install] [--keep-directories]",
         "            [--file=<installation directory>]",
+        "            [--user=<user name>]",
+        "            [--password=<password>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "    ncl where --file=<relative path> [--bare-format | --json]",
@@ -1194,6 +1204,9 @@ void App::update(Job* job)
         }
     }
 
+    QString user = cl.get("user");
+    QString password = cl.get("password");
+
     int programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
@@ -1331,7 +1344,8 @@ void App::update(Job* job)
 
     if (job->shouldProceed() && !up2date) {
         Job* ijob = job->newSubJob(0.85, "Updating");
-        processInstallOperations(ijob, ops, programCloseType, interactive);
+        processInstallOperations(ijob, ops, programCloseType, interactive,
+                user, password);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
                     arg(ijob->getErrorMessage()));
@@ -1354,7 +1368,7 @@ void App::update(Job* job)
 
 void App::processInstallOperations(Job *job,
         const QList<InstallOperation *> &ops, DWORD programCloseType,
-        bool interactive)
+        bool interactive, const QString user, const QString password)
 {
     DBRepository* rep = DBRepository::getDefault();
 
@@ -1485,7 +1499,8 @@ void App::processInstallOperations(Job *job,
 
         job->complete();
     } else {
-        rep->process(job, ops, programCloseType, debug, interactive);
+        rep->process(job, ops, programCloseType, debug, interactive, user,
+                password);
     }
 }
 
@@ -1520,6 +1535,9 @@ void App::add(Job* job)
             PackageVersion::getAddPackageVersionOptions(cl, &err);
     if (!err.isEmpty())
         job->setErrorMessage(err);
+
+    QString user = cl.get("user");
+    QString password = cl.get("password");
 
     QString file = cl.get("file");
     if (job->shouldProceed()) {
@@ -1565,7 +1583,7 @@ void App::add(Job* job)
     if (job->shouldProceed() && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.9, "Installing");
         processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW,
-                interactive);
+                interactive, user, password);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
                     arg(ijob->getErrorMessage()));
@@ -1775,7 +1793,8 @@ void App::remove(Job *job)
     if (job->shouldProceed()) {
         Job* removeJob = job->newSubJob(0.9,
                 "Removing");
-        processInstallOperations(removeJob, ops, programCloseType);
+        processInstallOperations(removeJob, ops, programCloseType,
+                interactive, "", "");
         if (!removeJob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error removing: %1\r\n").
                     arg(removeJob->getErrorMessage()));
@@ -2078,6 +2097,9 @@ void App::detect(Job* job)
             job->setErrorMessage(err);
     }
 
+    QString user = cl.get("user");
+    QString password = cl.get("password");
+
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
                 "Reading list of installed packages from the registry");
@@ -2090,7 +2112,7 @@ void App::detect(Job* job)
     }
 
     DBRepository* rep = DBRepository::getDefault();
-    rep->updateF5(job, interactive);
+    rep->updateF5(job, interactive, user, password);
     if (job->getErrorMessage().isEmpty()) {
         WPMUtils::writeln("Package detection completed successfully");
     }
