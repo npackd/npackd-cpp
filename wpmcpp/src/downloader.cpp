@@ -87,17 +87,6 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         InternetSetOption(internet, INTERNET_OPTION_HTTP_DECODING,
                 &b, sizeof(b));
 
-        if (!request.user.isEmpty()) {
-            InternetSetOption(internet, INTERNET_OPTION_USERNAME,
-                    (LPVOID) request.user.utf16(),
-                    request.user.length() + 1);
-
-            if (!request.password.isEmpty())
-                InternetSetOption(internet, INTERNET_OPTION_PASSWORD,
-                        (LPVOID) request.password.utf16(),
-                        request.password.length() + 1);
-        }
-
         job->setProgress(0.01);
     }
 
@@ -117,6 +106,22 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         }
     }
 
+
+    if (job->shouldProceed()) {
+        if (!request.user.isEmpty()) {
+            InternetSetOption(hConnectHandle, INTERNET_OPTION_USERNAME,
+                    (LPVOID) request.user.utf16(),
+                    request.user.length() + 1);
+
+            if (!request.password.isEmpty()) {
+                InternetSetOption(hConnectHandle, INTERNET_OPTION_PASSWORD,
+                        (LPVOID) request.password.utf16(),
+                        request.password.length() + 1);
+                //WPMUtils::writeln("setting password" + request.password + " for " +
+                //        request.url.toString());
+            }
+        }
+    }
 
     // flags: http://msdn.microsoft.com/en-us/library/aa383661(v=vs.85).aspx
     // We support accepting any mime file type since this is a simple download

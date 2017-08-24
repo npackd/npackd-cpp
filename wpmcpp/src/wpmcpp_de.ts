@@ -2513,6 +2513,10 @@ p, li { white-space: pre-wrap; }
         <source>EnumServicesStatusEx failed: %0</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Sending stop signal to the service %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
