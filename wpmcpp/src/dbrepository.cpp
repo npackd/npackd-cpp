@@ -554,7 +554,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     // synonyms
     for (int i = 0; i < keywords.size(); i++) {
         const QString& p = keywords.at(i);
-        if (p == QStringLiteral("x64")) {
+        if (p == QStringLiteral("x64") || p == QStringLiteral("amd64") ) {
             keywords[i] = QStringLiteral("x86_64");
         } else if (p == QStringLiteral("x86")) {
             keywords[i] = QStringLiteral("i686");
@@ -574,12 +574,17 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         }
     }
 
-    // remove stop words and numbers
+    // remove stop words and numbers and KBXXXXXX
     for (int i = 0; i < keywords.size(); ) {
         const QString& p = keywords.at(i);
         if (stopWords.contains(p)) {
             keywords.removeAt(i);
         } else if (p.length() > 0 && p.at(0).isDigit()) {
+            keywords.removeAt(i);
+        } else if (p.length() == 8 && (p.at(0).toUpper() == 'K') &&
+                (p.at(1).toUpper() == 'B') && p.at(2).isDigit() &&
+                p.at(3).isDigit() && p.at(4).isDigit() &&
+                p.at(5).isDigit() && p.at(6).isDigit() && p.at(7).isDigit()) {
             keywords.removeAt(i);
         } else {
             i++;
