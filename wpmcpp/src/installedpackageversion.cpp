@@ -24,6 +24,11 @@ bool InstalledPackageVersion::operator==(const InstalledPackageVersion &other)
             this->detectionInfo == other.detectionInfo;
 }
 
+bool InstalledPackageVersion::operator!=(const InstalledPackageVersion &other)
+{
+    return !(*this == other);
+}
+
 QString InstalledPackageVersion::getDirectory() const
 {
     return this->directory;

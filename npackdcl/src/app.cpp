@@ -586,9 +586,13 @@ void App::check(Job* job)
 
         // ignoring the error message here as "check" should be available
         // for non-admins too
-        InstalledPackages ip(*InstalledPackages::getDefault());
-        ip.refresh(DBRepository::getDefault(),
-                sub);
+        InstalledPackages* def = InstalledPackages::getDefault();
+        InstalledPackages ip;
+        ip.refresh(DBRepository::getDefault(), sub);
+        if (sub->shouldProceed()) {
+            *def = ip;
+            def->save();
+        }
     }
 
     DBRepository* rep = DBRepository::getDefault();

@@ -114,6 +114,10 @@ private:
     QString findBetterPackageName(DBRepository *r, InstalledPackageVersion *ipv);
 
     void addPackages(Job *job, DBRepository *r, Repository *rep, const QList<InstalledPackageVersion *> &installed, bool replace, const QString &detectionInfoPrefix);
+
+    void dump() const;
+
+    QString setOne(const InstalledPackageVersion &other);
 public:
     /** package name for the current application */
     static QString packageName;
@@ -209,16 +213,12 @@ public:
     QStringList getAllInstalledPackagePaths() const;
 
     /**
-     * Reloads the database about installed packages from the
-     * registry and performs a quick detection of packages from the MSI database
-     * and "Software" control panel. Checks also that the package versions
-     * directories are still present.
+     * Software detection.
      *
      * @param rep repository that should be used
      * @param job job for this method
-     * @param should the MSI packages be also detected (+4 seconds)
      */
-    void refresh(DBRepository *rep, Job* job, bool detectMSI=true);
+    void refresh(DBRepository *rep, Job* job);
 
     /**
      * Saves the information to the Windows Registry.
@@ -285,6 +285,13 @@ public:
      *     dependency or 0
      */
     InstalledPackageVersion *findFirstWithMissingDependency() const;
+
+    /**
+     * Applies all the information about installed packages from another object.
+     *
+     * @return error message
+     */
+    QString set(const InstalledPackages &other);
 signals:
     /**
      * @brief fired if a package version was installed or uninstalled

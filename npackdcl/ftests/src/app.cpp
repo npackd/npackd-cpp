@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <QCoreApplication>
 #include <QDir>
+#include <QLoggingCategory>
 
 #include "app.h"
 #include "job.h"

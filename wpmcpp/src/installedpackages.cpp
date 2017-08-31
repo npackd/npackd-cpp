@@ -43,17 +43,44 @@ InstalledPackages::InstalledPackages(const InstalledPackages &other) :
 
 InstalledPackages &InstalledPackages::operator=(const InstalledPackages &other)
 {
-    this->mutex.lock();
-    qDeleteAll(this->data);
-    this->data.clear();
-    QList<InstalledPackageVersion*> ipvs = other.getAll();
-    for (int i = 0; i < ipvs.size(); i++) {
-        InstalledPackageVersion* ipv = ipvs.at(i);
-        this->data.insert(ipv->package + "/" +
-                ipv->version.getVersionString(), ipv);
+    qDebug() << "Setting installed packages";
+    this->dump();
+
+    other.dump();
+
+    QList<InstalledPackageVersion*> myInfos = getAll();
+    for (int i = 0; i < myInfos.size(); i++) {
+        InstalledPackageVersion* myIpv = myInfos.at(i);
+        InstalledPackageVersion* otherIpv = other.find(
+                myIpv->package, myIpv->version);
+
+        if (!otherIpv) {
+            setPackageVersionPath(myIpv->package,
+                    myIpv->version, "", false);
+        } else if (*myIpv != *otherIpv) {
+            setOne(*otherIpv);
+        }
+
+        delete otherIpv;
     }
-    this->mutex.unlock();
-    
+    qDeleteAll(myInfos);
+    myInfos.clear();
+
+    QList<InstalledPackageVersion*> otherInfos = other.getAll();
+    for (int i = 0; i < otherInfos.size(); i++) {
+        InstalledPackageVersion* otherIpv = otherInfos.at(i);
+        InstalledPackageVersion* myIpv = find(
+                otherIpv->package, otherIpv->version);
+
+        if (!myIpv) {
+            setOne(*otherIpv);
+        }
+
+        delete myIpv;
+    }
+    qDeleteAll(otherInfos);
+    otherInfos.clear();
+
     return *this;
 }
 
@@ -385,6 +412,8 @@ QString InstalledPackages::setPackageVersionPath(const QString& package,
         const Version& version,
         const QString& directory, bool updateRegistry)
 {
+    bool changed = false;
+
     this->mutex.lock();
 
     QString err;
@@ -393,17 +422,20 @@ QString InstalledPackages::setPackageVersionPath(const QString& package,
     if (!ipv) {
         ipv = new InstalledPackageVersion(package, version, directory);
         this->data.insert(package + "/" + version.getVersionString(), ipv);
-        if (updateRegistry)
-            err = saveToRegistry(ipv);
+        changed = true;
     } else {
-        ipv->setPath(directory);
-        if (updateRegistry)
-            err = saveToRegistry(ipv);
+        if (ipv->getDirectory() != directory) {
+            ipv->setPath(directory);
+            changed = true;
+        }
     }
+    if (updateRegistry)
+        err = saveToRegistry(ipv);
 
     this->mutex.unlock();
 
-    fireStatusChanged(package, version);
+    if (changed)
+        fireStatusChanged(package, version);
 
     return err;
 }
@@ -622,7 +654,7 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
     return r;
 }
 
-void InstalledPackages::refresh(DBRepository *rep, Job *job, bool detectMSI)
+void InstalledPackages::refresh(DBRepository *rep, Job *job)
 {
     rep->currentRepository = 10000;
 
@@ -805,24 +837,33 @@ int _tmain(int argc, _TCHAR* argv[])
     wcin.get();
     return 0;
 } */
-    if (job->shouldProceed()) {
-        QString err = save();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-        else
-            job->setProgress(1);
-    }
-
     job->complete();
+}
+
+void InstalledPackages::dump() const
+{
+    qDebug() << "Installed packages:";
+    QList<InstalledPackageVersion*> myInfos = getAll();
+    for (int i = 0; i < myInfos.size(); i++) {
+        InstalledPackageVersion* myIpv = myInfos.at(i);
+        qDebug() << myIpv->package << myIpv->version.getVersionString() <<
+                myIpv->directory;
+    }
+    qDeleteAll(myInfos);
 }
 
 QString InstalledPackages::save()
 {
+    qDebug() << "Saving installed packages";
+    this->dump();
+
     InstalledPackages other;
 
     QString err = other.readRegistryDatabase();
 
     if (err.isEmpty()) {
+        other.dump();
+
         QList<InstalledPackageVersion*> myInfos = getAll();
         for (int i = 0; i < myInfos.size(); i++) {
             InstalledPackageVersion* myIpv = myInfos.at(i);
@@ -860,6 +901,26 @@ QString InstalledPackages::save()
         qDeleteAll(otherInfos);
         otherInfos.clear();
     }
+
+    return err;
+}
+
+QString InstalledPackages::setOne(const InstalledPackageVersion& other)
+{
+    QString err;
+    bool changed = false;
+
+    this->mutex.lock();
+    InstalledPackageVersion* ipv =
+            this->findOrCreate(other.package, other.version, &err);
+    if (*ipv != other) {
+        *ipv = other;
+        changed = true;
+    }
+    this->mutex.unlock();
+
+    if (changed)
+        fireStatusChanged(other.package, other.version);
 
     return err;
 }

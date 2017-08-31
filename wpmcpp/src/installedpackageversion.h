@@ -31,6 +31,8 @@ public:
 
     bool operator==(const InstalledPackageVersion& other);
 
+    bool operator!=(const InstalledPackageVersion& other);
+
     /**
      * The value is not empty for externally installed and detected packages.
      * For example, packages detected from the MSI database have here the MSI
