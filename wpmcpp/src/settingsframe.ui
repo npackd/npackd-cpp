@@ -215,9 +215,13 @@ p, li { white-space: pre-wrap; }
  </widget>
  <tabstops>
   <tabstop>plainTextEditReps</tabstop>
+  <tabstop>comboBoxRep</tabstop>
+  <tabstop>pushButtonAddRep</tabstop>
+  <tabstop>comboBoxDir</tabstop>
   <tabstop>checkBoxCloseWindows</tabstop>
   <tabstop>checkBoxDeleteFileShares</tabstop>
   <tabstop>checkBoxKillProcesses</tabstop>
+  <tabstop>checkBoxStopServices</tabstop>
  </tabstops>
  <resources/>
  <connections/>
