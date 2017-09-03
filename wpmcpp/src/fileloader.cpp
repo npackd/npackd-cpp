@@ -1,6 +1,5 @@
 #include <windows.h>
 
-#include "qdebug.h"
 #include <QFile>
 #include <QtConcurrent/QtConcurrent>
 #include <QFuture>
@@ -125,7 +124,7 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
                 else
                     ext = ".png";
 
-                // qDebug() << ext;
+                // qCDebug(npackd) << ext;
                 f.close();
                 f.rename(fn + ext);
                 r.file = filename + ext;

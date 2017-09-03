@@ -2,7 +2,6 @@
 
 #include <QWidget>
 #include <QApplication>
-#include <QDebug>
 
 Selection::Selection()
 {

@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 #include <QSharedPointer>
-#include <QDebug>
 #include <QApplication>
 
 #include "dbrepository.h"
@@ -259,7 +258,7 @@ void PackageItemModel::downloadSizeUpdated(const QString &url)
 void PackageItemModel::installedStatusChanged(const QString& package,
         const Version& version)
 {
-    //qDebug() << "PackageItemModel::installedStatusChanged" << package <<
+    //qCDebug(npackd) << "PackageItemModel::installedStatusChanged" << package <<
     //        version.getVersionString();
     this->cache.remove(package);
     for (int i = 0; i < this->packages.count(); i++) {

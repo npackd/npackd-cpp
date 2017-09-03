@@ -9,7 +9,6 @@
 // add C++ includes here
 #include <QList>
 #include <QString>
-#include <QDebug>
 #include <QStringList>
 
 #endif // __cplusplus

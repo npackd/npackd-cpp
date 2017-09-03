@@ -7,10 +7,10 @@
 #include <zlib.h>
 
 #include <QObject>
-#include <QDebug>
 #include <QWaitCondition>
 #include <QMutex>
 #include <QCryptographicHash>
+#include <QLoggingCategory>
 
 #include "downloader.h"
 #include "job.h"
@@ -23,7 +23,7 @@ QMutex loginDialogMutex;
 
 DWORD __stdcall myInternetAuthNotifyCallback(DWORD_PTR dwContext,
         DWORD dwReturn, LPVOID lpReserved) {
-    qDebug() << "myInternetAuthNotifyCallback" << dwReturn;
+    qCDebug(npackd) << "myInternetAuthNotifyCallback" << dwReturn;
     return 0;
 }
 
@@ -168,10 +168,10 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                     HTTP_ADDREQ_FLAG_ADD);
         }
 
-        // qDebug() << "download.5";
+        // qCDebug(npackd) << "download.5";
         int callNumber = 0;
         while (job->shouldProceed()) {
-            // qDebug() << "download.5.1";
+            // qCDebug(npackd) << "download.5.1";
 
             // NOTE: dwStatus is only valid if sendRequestError == 0
             DWORD dwStatus = 0, dwStatusSize = sizeof(dwStatus);
@@ -244,7 +244,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                         if (sendRequestError == 0) {
                             QString e = inputPassword(hConnectHandle, dwStatus);
 
-                            //qDebug() << "inputPassword: " << e;
+                            //qCDebug(npackd) << "inputPassword: " << e;
                             if (!e.isEmpty()) {
                                 job->setErrorMessage(e);
                                 r = ERROR_CANCELLED;
@@ -262,7 +262,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 }
             }
 
-            //qDebug() << callNumber << r << dwStatus << url.toString();
+            //qCDebug(npackd) << callNumber << r << dwStatus << url.toString();
 
             if (job->shouldProceed()) {
                 if (r == ERROR_SUCCESS) {
@@ -303,7 +303,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                     goto out;
                 }
 
-                // qDebug() << "read some bytes " << read;
+                // qCDebug(npackd) << "read some bytes " << read;
                 if (read == 0)
                     break;
             }

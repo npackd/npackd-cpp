@@ -1,7 +1,6 @@
 #include "repositoryxmlhandler.h"
 
 #include <QObject>
-#include <QDebug>
 
 #include "repository.h"
 #include "wpmutils.h"
@@ -206,7 +205,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
 
         if (error.isEmpty()) {
             pv->cmdFiles.append(WPMUtils::normalizePath(p));
-            //qDebug() << pv->package << pv->version.getVersionString() <<
+            //qCDebug(npackd) << pv->package << pv->version.getVersionString() <<
             //        p << "??";
         }
     } else if (where == TAG_VERSION_FILE) {
@@ -232,7 +231,7 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
             error = QObject::tr("Error in attribute 'versions' in <dependency> in %1").
                     arg(pv->toString());
     } else if (where == TAG_VERSION_DETECT_FILE) {
-        // qDebug() << pv->toString();
+        // qCDebug(npackd) << pv->toString();
         df = new DetectFile();
         pv->detectFiles.append(df);
     } else if (where == TAG_PACKAGE) {

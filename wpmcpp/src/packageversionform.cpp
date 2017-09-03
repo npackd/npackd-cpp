@@ -4,7 +4,6 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QSharedPointer>
-#include <QDebug>
 
 #include "package.h"
 #include "repository.h"
@@ -69,7 +68,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     delete this->pv;
     this->pv = pv;
 
-    // qDebug() << pv.data()->toString();
+    // qCDebug(npackd) << pv.data()->toString();
 
     DBRepository* r = DBRepository::getDefault();
 

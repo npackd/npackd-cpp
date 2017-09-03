@@ -13,7 +13,6 @@
 #include <comcat.h>
 
 #include <QUrl>
-#include <QDebug>
 #include <QIODevice>
 #include <QMutex>
 #include <QThreadPool>
@@ -61,7 +60,7 @@ HRESULT CreateAttachmentServices(IAttachmentExecute **ppae)
 
     if (SUCCEEDED(hr))
     {
-        // qDebug() << "CoCreateInstance succeeded";
+        // qCDebug(npackd) << "CoCreateInstance succeeded";
         // Set the client's GUID.
 
         // UUID_ClientID should be created using uuidgen.exe and
@@ -115,7 +114,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     if (pExecute)
         pExecute->Release();
 
-    // qDebug() << err;
+    // qCDebug(npackd) << err;
 
     return res;
 }
@@ -151,7 +150,7 @@ bool isFileSafeOfficeAntiVirus(const QString& filename, QString* err)
         CLSID clsid;
 
         while (pEnumCLSID->Next(1, &clsid, NULL) == S_OK) {
-            qDebug() << "av2";
+            qCDebug(npackd) << "av2";
             IOfficeAntiVirus* m_pOfficeAntiVirus;
             HRESULT hr = CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER,
                     IID_IOfficeAntiVirus, (void**)&m_pOfficeAntiVirus);
@@ -322,7 +321,7 @@ QString PackageVersion::getPath() const
 
 QString PackageVersion::setPath(const QString& path)
 {
-    //qDebug() << "PackageVersion::setPath " << path;
+    //qCDebug(npackd) << "PackageVersion::setPath " << path;
     InstalledPackages* ip = InstalledPackages::getDefault();
     QString err = ip->setPackageVersionPath(this->package, this->version, path);
     if (!err.isEmpty()) {
@@ -523,7 +522,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
             /* debugging
             if (ush != INVALID_HANDLE_VALUE) {
-                qDebug() << "file handle is OK";
+                qCDebug(npackd) << "file handle is OK";
             }
             */
 
@@ -617,7 +616,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
     while (job->shouldProceed() && n < 10) {
         d.refresh();
         if (d.exists()) {
-            // qDebug() << "moving to recycly bin" << d.absolutePath();
+            // qCDebug(npackd) << "moving to recycly bin" << d.absolutePath();
             WPMUtils::moveToRecycleBin(d.absolutePath());
         } else {
             break;
@@ -625,7 +624,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
 
         d.refresh();
         if (d.exists() && tempDir.isValid()) {
-            // qDebug() << "renaming" << d.absolutePath() << " to " <<
+            // qCDebug(npackd) << "renaming" << d.absolutePath() << " to " <<
             //        tempDir.path() + "\\" + d.dirName();
             d.rename(d.absolutePath(), tempDir.path() + "\\" + d.dirName());
         } else {
@@ -640,7 +639,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
             QTemporaryDir tempDir2(d.rootPath() + "\\.NpackdTrash\\" +
                     d.dirName());
             if (tempDir2.isValid()) {
-                // qDebug() << "renaming" << d.absolutePath() << " to " <<
+                // qCDebug(npackd) << "renaming" << d.absolutePath() << " to " <<
                 //         tempDir2.path() + "\\" + d.dirName();
                 d.rename(d.absolutePath(), tempDir2.path() + "\\" + d.dirName());
             }
@@ -654,7 +653,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
                     QObject::tr("Deleting the directory %1").arg(
                     d.absolutePath().replace('/', '\\')));
 
-            // qDebug() << "deleting" << d.absolutePath();
+            // qCDebug(npackd) << "deleting" << d.absolutePath();
             WPMUtils::removeDirectory(sub, d);
         } else {
             break;
@@ -788,7 +787,7 @@ QString PackageVersion::planInstallation(InstalledPackages &installed,
 QString PackageVersion::planUninstallation(InstalledPackages &installed,
         QList<InstallOperation*>& ops)
 {
-    // qDebug() << "PackageVersion::planUninstallation()" << this->toString();
+    // qCDebug(npackd) << "PackageVersion::planUninstallation()" << this->toString();
     QString res;
 
     if (!installed.isInstalled(this->package, this->version))
@@ -1312,7 +1311,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
         else
             from = simple;
 
-        // qDebug() << "createShortcuts " << ifile << " " << p << " " <<
+        // qCDebug(npackd) << "createShortcuts " << ifile << " " << p << " " <<
         //         from;
 
         QString desc;
@@ -1383,7 +1382,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
 
     QString initialTitle = job->getTitle();
 
-    // qDebug() << "install.2";
+    // qCDebug(npackd) << "install.2";
     QDir d(where);
     QString npackdDir = where + "\\.Npackd";
 
@@ -1435,7 +1434,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     }
     job->setTitle(initialTitle);
 
-    // qDebug() << "install.3";
+    // qCDebug(npackd) << "install.3";
     QFile* f = new QFile(npackdDir + "\\__NpackdPackageDownload");
 
     bool downloadOK = false;
@@ -1612,7 +1611,7 @@ void PackageVersion::install(Job* job, const QString& where,
 
     QString initialTitle = job->getTitle();
 
-    // qDebug() << "install.2";
+    // qCDebug(npackd) << "install.2";
     QDir d(where);
 
     QString installationScript;
@@ -1916,7 +1915,7 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
             if (of.open()) {
                 filename = WPMUtils::normalizePath(of.fileName(), false);
 
-                // qDebug() << "haha" << filename;
+                // qCDebug(npackd) << "haha" << filename;
 
                 of.close();
                 if (of.remove()) {
@@ -2020,7 +2019,7 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
     }
     for (int i = 0; i < this->cmdFiles.count(); i++) {
         w->writeStartElement("cmd-file");
-        //qDebug() << this->package << this->version.getVersionString() <<
+        //qCDebug(npackd) << this->package << this->version.getVersionString() <<
         //    this->cmdFiles.at(i) << "!";
         w->writeAttribute("path", this->cmdFiles.at(i));
         w->writeEndElement();

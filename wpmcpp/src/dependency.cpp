@@ -82,7 +82,7 @@ bool Dependency::setVersions(const QString versions)
 
     bool minIncluded_, maxIncluded_;
 
-    // qDebug() << "Repository::createDependency.1" << versions;
+    // qCDebug(npackd) << "Repository::createDependency.1" << versions;
 
     if (versions_.startsWith('['))
         minIncluded_ = true;
@@ -92,7 +92,7 @@ bool Dependency::setVersions(const QString versions)
         return false;
     versions_.remove(0, 1);
 
-    // qDebug() << "Repository::createDependency.1.1" << versions;
+    // qCDebug(npackd) << "Repository::createDependency.1.1" << versions;
 
     if (versions_.endsWith(']'))
         maxIncluded_ = true;
@@ -102,7 +102,7 @@ bool Dependency::setVersions(const QString versions)
         return false;
     versions_.chop(1);
 
-    // qDebug() << "Repository::createDependency.2";
+    // qCDebug(npackd) << "Repository::createDependency.2";
 
     QStringList parts = versions_.split(',');
     if (parts.count() != 2)

@@ -1,4 +1,3 @@
-#include <QDebug>
 
 #include "abstractrepository.h"
 #include "wpmutils.h"
@@ -953,7 +952,7 @@ QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
 
     delete ipv;
 
-    // qDebug() << "computed NPACKD_CL" << v;
+    // qCDebug(npackd) << "computed NPACKD_CL" << v;
 
     return v;
 }

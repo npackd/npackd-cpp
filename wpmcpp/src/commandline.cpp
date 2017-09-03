@@ -1,6 +1,5 @@
 #include <windows.h>
 
-#include <QDebug>
 #include <QCoreApplication>
 
 #include "commandline.h"

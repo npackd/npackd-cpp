@@ -3,7 +3,6 @@
 #include "mainframe.h"
 #include "ui_mainframe.h"
 
-#include <QDebug>
 #include <QList>
 #include <QListWidgetItem>
 #include <QListWidget>

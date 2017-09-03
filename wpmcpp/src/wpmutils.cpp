@@ -25,7 +25,6 @@
 //#include <restartmanager.h>
 
 #include <QCoreApplication>
-#include <QDebug>
 #include <QDir>
 #include <QString>
 #include <QFile>
@@ -35,6 +34,7 @@
 #include <QBuffer>
 #include <QByteArray>
 #include <QUrl>
+#include <QLoggingCategory>
 
 #include <quazip.h>
 #include <quazipfile.h>
@@ -61,6 +61,7 @@ const char* WPMUtils::CRLF = "\r\n";
 
 HRTimer WPMUtils::timer(2);
 
+Q_LOGGING_CATEGORY(npackd, "npackd")
 
 // definitions for .getProcessHandlesLockingDirectory2
 #define NT_SUCCESS(x) ((x) >= 0)
@@ -333,7 +334,7 @@ bool WPMUtils::isOverOrEquals(const QString& file, const QStringList& dirs)
 // => this function only uses QImage
 QImage my_qt_pixmapFromWinHICON(HICON icon)
 {
-    // qDebug() << "my_qt_pixmapFromWinHICON 0";
+    // qCDebug(npackd) << "my_qt_pixmapFromWinHICON 0";
 
     HDC screenDevice = GetDC(0);
     HDC hdc = CreateCompatibleDC(screenDevice);
@@ -344,7 +345,7 @@ QImage my_qt_pixmapFromWinHICON(HICON icon)
     if (!result)
         qWarning("QPixmap::fromWinHICON(), failed to GetIconInfo()");
 
-    // qDebug() << "my_qt_pixmapFromWinHICON 1";
+    // qCDebug(npackd) << "my_qt_pixmapFromWinHICON 1";
 
     int w = 0;
     int h = 0;
@@ -367,7 +368,7 @@ QImage my_qt_pixmapFromWinHICON(HICON icon)
     }
     const DWORD dwImageSize = w * h * 4;
 
-    // qDebug() << "my_qt_pixmapFromWinHICON 2" << w << h;
+    // qCDebug(npackd) << "my_qt_pixmapFromWinHICON 2" << w << h;
 
     BITMAPINFO bmi;
     memset(&bmi, 0, sizeof(bmi));
@@ -381,7 +382,7 @@ QImage my_qt_pixmapFromWinHICON(HICON icon)
 
     uchar* bits;
 
-    // qDebug() << "my_qt_pixmapFromWinHICON 3";
+    // qCDebug(npackd) << "my_qt_pixmapFromWinHICON 3";
 
     HBITMAP winBitmap = CreateDIBSection(hdc, &bmi,
             DIB_RGB_COLORS, (void**) &bits, 0, 0);
@@ -411,7 +412,7 @@ QImage my_qt_pixmapFromWinHICON(HICON icon)
         }
     }
 
-    // qDebug() << "my_qt_pixmapFromWinHICON 4";
+    // qCDebug(npackd) << "my_qt_pixmapFromWinHICON 4";
 
     if (!DrawIconEx( hdc, 0, 0, icon, w, h, 0, 0, DI_MASK))
         qWarning("QPixmap::fromWinHICON(), failed to DrawIcon()");
@@ -431,19 +432,19 @@ QImage my_qt_pixmapFromWinHICON(HICON icon)
     DeleteObject(winBitmap);
     DeleteDC(hdc);
 
-    // qDebug() << "my_qt_pixmapFromWinHICON 5";
+    // qCDebug(npackd) << "my_qt_pixmapFromWinHICON 5";
 
     return image;
 }
 
 QString WPMUtils::extractIconURL(const QString& iconFile)
 {
-    // qDebug() << "extractIconURL 0";
+    // qCDebug(npackd) << "extractIconURL 0";
 
     QString res;
     QString icon = iconFile.trimmed();
     if (!icon.isEmpty()) {
-        // qDebug() << "extractIconURL 1";
+        // qCDebug(npackd) << "extractIconURL 1";
 
         UINT iconIndex = 0;
         int index = icon.lastIndexOf(',');
@@ -457,23 +458,23 @@ QString WPMUtils::extractIconURL(const QString& iconFile)
             }
         }
 
-        // qDebug() << "extractIconURL 2" << icon << iconIndex;
+        // qCDebug(npackd) << "extractIconURL 2" << icon << iconIndex;
 
         HICON ic = ExtractIcon(GetModuleHandle(NULL),
                 (LPCWSTR) icon.utf16(), iconIndex);
 
-        // qDebug() << "extractIconURL 2.1" << ((UINT_PTR) ic);
+        // qCDebug(npackd) << "extractIconURL 2.1" << ((UINT_PTR) ic);
 
         if (((UINT_PTR) ic) > 1) {
-            // qDebug() << "extractIconURL 3" << ii << info.fIcon << info.xHotspot;
+            // qCDebug(npackd) << "extractIconURL 3" << ii << info.fIcon << info.xHotspot;
 
             QImage pm = my_qt_pixmapFromWinHICON(ic); // QtWin::fromHICON(ic);
 
-            // qDebug() << "extractIconURL 4";
+            // qCDebug(npackd) << "extractIconURL 4";
 
             if (!pm.isNull() && pm.width() > 0 &&
                     pm.height() > 0) {
-                // qDebug() << "extractIconURL 5";
+                // qCDebug(npackd) << "extractIconURL 5";
 
                 QByteArray bytes;
                 QBuffer buffer(&bytes);
@@ -482,11 +483,11 @@ QString WPMUtils::extractIconURL(const QString& iconFile)
                 res = QStringLiteral("data:image/png;base64,") +
                         bytes.toBase64();
 
-                // qDebug() << "extractIconURL 6";
+                // qCDebug(npackd) << "extractIconURL 6";
             }
             DestroyIcon(ic);
 
-            // qDebug() << "extractIconURL 7";
+            // qCDebug(npackd) << "extractIconURL 7";
         }
     }
 
@@ -740,7 +741,7 @@ bool WPMUtils::isProcessRunning(HANDLE process)
     bool r = false;
     DWORD ec;
     if (GetExitCodeProcess(process, &ec)) {
-        // qDebug() << "exit code" << ec << STILL_ACTIVE;
+        // qCDebug(npackd) << "exit code" << ec << STILL_ACTIVE;
         if (ec == STILL_ACTIVE) {
             r = true;
         }
@@ -780,17 +781,17 @@ void WPMUtils::disconnectShareUsersFrom(const QString &dir)
 #ifndef STYPE_MASK
         const DWORD STYPE_MASK = 0xF0000000;
 #endif
-        // qDebug() << entriesRead;
+        // qCDebug(npackd) << entriesRead;
         for (int i = 0; i < (int) entriesRead; i++) {
-            // qDebug() << "share " << buf[i].shi502_type;
+            // qCDebug(npackd) << "share " << buf[i].shi502_type;
             if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
                 QString path;
                 path.setUtf16((const ushort*) buf[i].shi502_path,
                         wcslen(buf[i].shi502_path));
                 path = normalizePath(path);
-                //qDebug() << "share found" << path;
+                //qCDebug(npackd) << "share found" << path;
                 if (isUnderOrEquals(path, dirNormalized)) {
-                    //qDebug() << "share found" << path;
+                    //qCDebug(npackd) << "share found" << path;
                     QString netName;
                     netName.setUtf16((const ushort*) buf[i].shi502_netname,
                             wcslen(buf[i].shi502_netname));
@@ -819,15 +820,15 @@ bool WPMUtils::isDirShared(const QString &dir)
 #ifndef STYPE_MASK
         const DWORD STYPE_MASK = 0xF0000000;
 #endif
-        // qDebug() << entriesRead;
+        // qCDebug(npackd) << entriesRead;
         for (int i = 0; i < (int) entriesRead; i++) {
-            // qDebug() << "share " << buf[i].shi502_type;
+            // qCDebug(npackd) << "share " << buf[i].shi502_type;
             if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
                 QString path;
                 path.setUtf16((const ushort*) buf[i].shi502_path,
                         wcslen(buf[i].shi502_path));
                 path = normalizePath(path);
-                //qDebug() << "share found" << path;
+                //qCDebug(npackd) << "share found" << path;
                 if (isUnderOrEquals(path, dirNormalized)) {
                     result = true;
                     break;
@@ -914,7 +915,7 @@ QList<HANDLE> WPMUtils::getAllProcessHandlesLockingDirectory(const QString& dir)
 {
     QList<HANDLE> ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
 
-    //qDebug() << "getProcessHandlesLockingDirectory";
+    //qCDebug(npackd) << "getProcessHandlesLockingDirectory";
 
     QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
 
@@ -937,7 +938,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         writeln(QString("Closing processes locking %1 with %2: %3 processes").
                 arg(dir).arg(cpt).arg(ps.size()));
 
-    //qDebug() << "getProcessHandlesLockingDirectory2";
+    //qCDebug(npackd) << "getProcessHandlesLockingDirectory2";
 
     DWORD me = GetCurrentProcessId();
 
@@ -958,7 +959,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
     }
 
-    //qDebug() << "Windows closed";
+    //qCDebug(npackd) << "Windows closed";
 
     if (cpt & KILL_PROCESS) {
         bool changed = false;
@@ -1014,7 +1015,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         }
     }
 
-    // qDebug() << "Processes killed";
+    // qCDebug(npackd) << "Processes killed";
 
     for (int i = 0; i < ps.size(); i++) {
         CloseHandle(ps[i]);
@@ -1079,7 +1080,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
             fwi.hwnd = w;
             fwi.dwFlags = FLASHW_ALL | FLASHW_TIMER;
             fwi.uCount = std::numeric_limits<UINT>::max();
-            // qDebug() << "flash!";
+            // qCDebug(npackd) << "flash!";
             FlashWindowEx(&fwi);
         }
     }
@@ -1099,7 +1100,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
                 } else {
                     c++;
                     if ((GetWindowLong(w, GWL_STYLE) & WS_DISABLED) == 0) {
-                        //qDebug() << "WM_CLOSE to " <<
+                        //qCDebug(npackd) << "WM_CLOSE to " <<
                         //        GetProcessId(process) << getClassName(w);
                         PostMessage(w, WM_CLOSE, 0, 0);
                     }
@@ -1129,7 +1130,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
             fwi.hwnd = w;
             fwi.dwFlags = FLASHW_STOP;
             fwi.uCount = std::numeric_limits<UINT>::max();
-            // qDebug() << "flash!";
+            // qCDebug(npackd) << "flash!";
             FlashWindowEx(&fwi);
         }
     }
@@ -1454,7 +1455,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 ok = false;
                 processHandle = INVALID_HANDLE_VALUE;
 
-                // qDebug() << "OpenProcess ok";
+                // qCDebug(npackd) << "OpenProcess ok";
             }
         }
 
@@ -1471,7 +1472,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 ok = false;
                 dupHandle = INVALID_HANDLE_VALUE;
 
-                // qDebug() << "NtDuplicateObject ok";
+                // qCDebug(npackd) << "NtDuplicateObject ok";
             }
         }
 
@@ -1489,7 +1490,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 NULL))) {
                 ok = false;
             } else {
-                // qDebug() << "NtQueryObject ok";
+                // qCDebug(npackd) << "NtQueryObject ok";
                 type.setUtf16((const ushort*) objectTypeInfo->Name.Buffer,
                         objectTypeInfo->Name.Length / 2);
                 if (type != "File")
@@ -1509,7 +1510,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
 
         if (ok) {
             /*
-            qDebug() << "NtQueryObject start" << handle.Flags
+            qCDebug(npackd) << "NtQueryObject start" << handle.Flags
                     << handle.GrantedAccess << handle.ProcessId
                     << handle.ObjectTypeNumber << handle.Handle;
                     */
@@ -1527,7 +1528,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 ok = false;
             }
 
-            // qDebug() << "NtQueryObject end";
+            // qCDebug(npackd) << "NtQueryObject end";
         }
 
         if (ok) {
@@ -2387,13 +2388,13 @@ void WPMUtils::removeDirectory(Job* job, QDir &aDir, bool firstLevel)
                 if (!sub->getErrorMessage().isEmpty())
                     job->setErrorMessage(sub->getErrorMessage());
                 // if (!ok)
-                //    qDebug() << "WPMUtils::removeDirectory.3" << *errMsg;
+                //    qCDebug(npackd) << "WPMUtils::removeDirectory.3" << *errMsg;
             } else {
                 QFile file(path);
                 if (!file.remove() && file.exists()) {
                     job->setErrorMessage(QString(QObject::tr("Cannot delete the file: %1")).
                             arg(path));
-                    // qDebug() << "WPMUtils::removeDirectory.1" << *errMsg;
+                    // qCDebug(npackd) << "WPMUtils::removeDirectory.1" << *errMsg;
                 } else {
                     job->setProgress(idx / ((double) count + 1));
                 }
@@ -2404,7 +2405,7 @@ void WPMUtils::removeDirectory(Job* job, QDir &aDir, bool firstLevel)
 
         if (job->getErrorMessage().isEmpty()) {
             if (!aDir.rmdir(aDir.absolutePath()))
-                // qDebug() << "WPMUtils::removeDirectory.2";
+                // qCDebug(npackd) << "WPMUtils::removeDirectory.2";
                 job->setErrorMessage(QString(
                         QObject::tr("Cannot delete the directory: %1")).
                         arg(aDir.absolutePath()));
@@ -2604,19 +2605,19 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
         for (int idx = 0; idx < count; idx++) {
             QFileInfo entryInfo = entries[idx];
             QString path = entryInfo.absoluteFilePath();
-            // qDebug() << "PackageVersion::deleteShortcuts " << path;
+            // qCDebug(npackd) << "PackageVersion::deleteShortcuts " << path;
             if (entryInfo.isDir()) {
                 QDir dd(path);
                 deleteShortcuts(dir, dd);
             } else {
                 if (path.toLower().endsWith(".lnk")) {
-                    // qDebug() << "deleteShortcuts " << path;
+                    // qCDebug(npackd) << "deleteShortcuts " << path;
                     IPersistFile* ppf;
 
                     hres = psl->QueryInterface(IID_IPersistFile, (LPVOID*)&ppf);
 
                     if (SUCCEEDED(hres)) {
-                        //qDebug() << "Loading " << path;
+                        //qCDebug(npackd) << "Loading " << path;
 
                         hres = ppf->Load((WCHAR*) path.utf16(), STGM_READ);
 
@@ -2627,12 +2628,12 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
                             if (SUCCEEDED(hres)) {
                                 QString targetPath;
                                 targetPath.setUtf16((ushort*) info, wcslen(info));
-                                // qDebug() << "deleteShortcuts " << targetPath << " " <<
+                                // qCDebug(npackd) << "deleteShortcuts " << targetPath << " " <<
                                 //        instPath;
                                 if (WPMUtils::isUnder(targetPath,
                                                       instPath)) {
                                     QFile::remove(path);
-                                    // qDebug() << "deleteShortcuts removed";
+                                    // qCDebug(npackd) << "deleteShortcuts removed";
                                 }
                             }
                         }
@@ -2643,7 +2644,7 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
         }
         psl->Release();
     } else {
-        qDebug() << "failed";
+        qCDebug(npackd) << "failed";
     }
 }
 
@@ -2820,7 +2821,7 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
     }
 
     if (hEventLog) {
-        // qDebug() << "ReportEvent";
+        // qCDebug(npackd) << "ReportEvent";
         LPCWSTR strings[1];
         strings[0] = (LPCWSTR) msg.utf16();
 
@@ -2887,7 +2888,7 @@ QMap<QString, QString> WPMUtils::parseEnv(LPWCH env2)
 
         e += len + 1;
 
-        // qDebug() << name << value;
+        // qCDebug(npackd) << name << value;
     }
 
     return env_;
@@ -2933,11 +2934,11 @@ QString WPMUtils::checkURL(const QUrl &base, QString *url, bool allowEmpty)
                     if (base.scheme() == "file")
                         u = QUrl::fromLocalFile(*url);
 
-                    //qDebug() << base << u;
+                    //qCDebug(npackd) << base << u;
 
                     *url = base.resolved(u).toString(QUrl::FullyEncoded);
 
-                    // qDebug() << *url;
+                    // qCDebug(npackd) << *url;
                 }
             } else if (u.scheme() != "http" && u.scheme() != "https" &&
                     u.scheme() != "file") {
@@ -2974,7 +2975,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     QString err;
 
-    // qDebug() << ba;
+    // qCDebug(npackd) << ba;
 
     PROCESS_INFORMATION pinfo;
 

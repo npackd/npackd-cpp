@@ -1,7 +1,6 @@
 #include "installedpackageversion.h"
 
 #include <QDir>
-#include <QDebug>
 
 #include "windowsregistry.h"
 #include "repository.h"
@@ -13,7 +12,7 @@ InstalledPackageVersion::InstalledPackageVersion(const QString &package,
     this->package = package;
     this->directory = directory;
 
-    //qDebug() << "InstalledPackageVersion::InstalledPackageVersion " <<
+    //qCDebug(npackd) << "InstalledPackageVersion::InstalledPackageVersion " <<
     //        package << " " << directory;
 }
 

@@ -1,6 +1,5 @@
 NPACKD_VERSION = $$system(type ..\\..\\wpmcpp\\version.txt)
 DEFINES += NPACKD_VERSION=\\\"$$NPACKD_VERSION\\\"
-DEFINES += QT_NO_DEBUG_OUTPUT
 
 PRECOMPILED_HEADER = stable.h
 

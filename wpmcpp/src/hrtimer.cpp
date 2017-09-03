@@ -1,8 +1,9 @@
+#include <QLoggingCategory>
+
 #include "hrtimer.h"
+#include "wpmutils.h"
 
 #include <windows.h>
-
-#include <QDebug>
 
 HRTimer::HRTimer(int size)
 {
@@ -21,7 +22,7 @@ HRTimer::HRTimer(int size)
 void HRTimer::time(int point)
 {
     if (point != cur)
-        qDebug() << "HRTimer: " << point << " != " << cur;
+        qCDebug(npackd) << "HRTimer: " << point << " != " << cur;
 
     LARGE_INTEGER v;
     QueryPerformanceCounter(&v);
@@ -39,11 +40,11 @@ void HRTimer::dump() const
 {
     LONGLONG sum = 0;
     for (int i = 0; i < this->size; i++) {
-        qDebug() << i << ": " <<
+        qCDebug(npackd) << i << ": " <<
                 (this->durations[i] * 1000 / this->frequency) << " ms";
         sum += this->durations[i];
     }
-    qDebug() << "Sum from 0 to " << this->size - 1 << ": " <<
+    qCDebug(npackd) << "Sum from 0 to " << this->size - 1 << ": " <<
             (sum * 1000 / this->frequency) << " ms";
 }
 

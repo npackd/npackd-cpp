@@ -1,7 +1,8 @@
 #include <math.h>
 #include <time.h>
 
-#include "qdebug.h"
+#include <QLoggingCategory>
+
 #include "qmutex.h"
 
 #include "wpmutils.h"
@@ -156,7 +157,7 @@ Job* Job::newSubJob(double part, const QString &title,
 
     this->childJobs.append(r);
 
-    //qDebug() << "subJobCreated" << r->title;
+    //qCDebug(npackd) << "subJobCreated" << r->title;
 
     Job* top = this;
     while (top->parentJob)
@@ -219,10 +220,10 @@ void Job::setProgress(double progress)
 
     this->mutex.lock();
     if (progress > 1.0001) {
-        qDebug() << "Job: progress =" << progress << "in" << this->title;
+        qCDebug(npackd) << "Job: progress =" << progress << "in" << this->title;
     }
     if (progress < this->progress) {
-        qDebug() << "Job: stepping back from" << this->progress <<
+        qCDebug(npackd) << "Job: stepping back from" << this->progress <<
                 "to" << progress << "in" << getFullTitle();
     }
     if (fabs(progress - this->progress) > 0.005) {
@@ -331,7 +332,7 @@ void Job::setTitle(const QString &title)
 {
     this->mutex.lock();
     this->title = title;
-    // qDebug() << hint;
+    // qCDebug(npackd) << hint;
     this->mutex.unlock();
 
     fireChange();

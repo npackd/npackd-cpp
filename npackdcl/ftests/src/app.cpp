@@ -49,7 +49,7 @@ QString App::captureNpackdCLOutput(const QString& params)
 QString App::captureOutput(const QString& program, const QString& params,
         const QString& where)
 {
-    qDebug() << program << params;
+    qCDebug(npackd) << program << params;
 
     QStringList env;
     Job* job = new Job();
@@ -59,7 +59,7 @@ QString App::captureOutput(const QString& program, const QString& params,
             job, where,
             program,
             params, &buffer, env);
-    qDebug() << job->getErrorMessage();
+    qCDebug(npackd) << job->getErrorMessage();
     delete job;
 
     QByteArray output = buffer.data();

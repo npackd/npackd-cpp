@@ -1,7 +1,6 @@
 #include <windows.h>
 
 #include <QObject>
-#include <QDebug>
 #include <QMessageBox>
 #include <QBuffer>
 #include <qwinfunctions.h>
@@ -307,14 +306,14 @@ void UIUtils::processWithSelfUpdate(Job* job,
             } else {
                 of.close();
 
-                // qDebug() << "self-update 1";
+                // qCDebug(npackd) << "self-update 1";
 
                 if (!QFile::copy(thisExe, newExe))
                     job->setErrorMessage("Error copying the binary");
                 else
                     sub->completeWithProgress();
 
-                // qDebug() << "self-update 2";
+                // qCDebug(npackd) << "self-update 2";
             }
         }
     }
@@ -345,7 +344,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
         batch.append("\"" + newExe + "\" start-newest");
 
-        // qDebug() << "self-update 3";
+        // qCDebug(npackd) << "self-update 3";
 
         QTemporaryFile file(QDir::tempPath() +
                           "\\npackdgXXXXXX.bat");
@@ -355,7 +354,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
         else {
             batchFileName = file.fileName();
 
-            // qDebug() << "batch" << file.fileName();
+            // qCDebug(npackd) << "batch" << file.fileName();
 
             QTextStream stream(&file);
             stream.setCodec("UTF-8");
@@ -364,7 +363,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
                 job->setErrorMessage("Error writing the .bat file");
             file.close();
 
-            // qDebug() << "self-update 4";
+            // qCDebug(npackd) << "self-update 4";
 
             sub->completeWithProgress();
         }
@@ -398,10 +397,10 @@ void UIUtils::processWithSelfUpdate(Job* job,
         if (success) {
             CloseHandle(pinfo.hThread);
             CloseHandle(pinfo.hProcess);
-            // qDebug() << "success!222";
+            // qCDebug(npackd) << "success!222";
         }
 
-        // qDebug() << "self-update 5";
+        // qCDebug(npackd) << "self-update 5";
 
         sub->completeWithProgress();
         job->setProgress(1);

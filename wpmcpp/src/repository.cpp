@@ -3,7 +3,6 @@
 #include <msi.h>
 
 #include <QTemporaryFile>
-#include <QDebug>
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
 

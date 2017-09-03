@@ -14,7 +14,7 @@ bool MySQLQuery::exec(const QString &query)
 
     //DWORD start = GetTickCount();
     bool r = QSqlQuery::exec(query);
-    // qDebug() << query << (GetTickCount() - start);
+    // qCDebug(npackd) << query << (GetTickCount() - start);
     return r;
 }
 
@@ -25,7 +25,7 @@ bool MySQLQuery::exec()
 
     //DWORD start = GetTickCount();
     bool r = QSqlQuery::exec();
-    // qDebug() << this->lastQuery() << (GetTickCount() - start);
+    // qCDebug(npackd) << this->lastQuery() << (GetTickCount() - start);
     return r;
 }
 

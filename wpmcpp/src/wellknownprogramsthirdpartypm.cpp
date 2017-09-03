@@ -1,4 +1,3 @@
-#include <QDebug>
 
 #include "wellknownprogramsthirdpartypm.h"
 #include "wpmutils.h"
@@ -320,7 +319,7 @@ void WellKnownProgramsThirdPartyPM::detectPython(
             QScopedPointer<PackageVersion> pv(new PackageVersion(package, v));
             rep->savePackageVersion(pv.data(), true);
 
-            // qDebug() << package << v_ << path;
+            // qCDebug(npackd) << package << v_ << path;
 
             installed->append(new InstalledPackageVersion(package, v, path));
         }

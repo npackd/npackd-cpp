@@ -7,7 +7,6 @@
 
 #include <QApplication>
 #include <QMetaType>
-#include <QDebug>
 #include <QTranslator>
 #include <QList>
 #include <QVBoxLayout>
@@ -34,7 +33,7 @@
 
 int main(int argc, char *argv[])
 {
-    //qDebug() << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
+    //qCDebug(npackd) << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
 
     // test: scheduling a task
     //CoInitialize(NULL);
@@ -73,7 +72,7 @@ int main(int argc, char *argv[])
 
     CLProcessor clp;
 
-    // qDebug() << QImageReader::supportedImageFormats();
+    // qCDebug(npackd) << QImageReader::supportedImageFormats();
 
     int errorCode;
     if (!clp.process(&errorCode)){

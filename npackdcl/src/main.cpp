@@ -1,8 +1,8 @@
 #include <windows.h>
-#include <qdebug.h>
 #include <qstringlist.h>
 #include <qstring.h>
 #include <QTimer>
+#include <QLoggingCategory>
 
 #include "repository.h"
 #include "commandline.h"
@@ -17,6 +17,8 @@
 int main(int argc, char *argv[])
 {
     HMODULE m = LoadLibrary(L"exchndl.dll");
+
+    QLoggingCategory::setFilterRules(QStringLiteral("npackd=false"));
 
     QCoreApplication ca(argc, argv);
 

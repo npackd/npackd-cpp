@@ -1,6 +1,5 @@
 #include <windows.h>
 
-#include "qdebug.h"
 #include <QFile>
 #include <QtConcurrent/QtConcurrent>
 #include <QFuture>

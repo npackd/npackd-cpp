@@ -8,7 +8,6 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QHeaderView>
-#include <QDebug>
 
 #include "progresstree2.h"
 #include "job.h"

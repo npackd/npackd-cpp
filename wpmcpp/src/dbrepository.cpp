@@ -9,7 +9,7 @@
 #include <QVariant>
 #include <QTextStream>
 #include <QByteArray>
-#include <QDebug>
+#include <QLoggingCategory>
 #include <QXmlStreamWriter>
 #include <QSqlRecord>
 #include <QTemporaryDir>
@@ -83,14 +83,14 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         }
     }
 
-    //qDebug() << "saveInstalled";
+    //qCDebug(npackd) << "saveInstalled";
 
     for (int i = 0; i < installed.size(); i++) {
         if (!err.isEmpty())
             break;
 
         InstalledPackageVersion* ipv = installed.at(i);
-        //qDebug() << "saveInstalled" << ipv->package << ipv->version.getVersionString();
+        //qCDebug(npackd) << "saveInstalled" << ipv->package << ipv->version.getVersionString();
         if (ipv->installed()) {
             insertInstalledQuery->bindValue(QStringLiteral(":PACKAGE"),
                     ipv->package);
@@ -422,7 +422,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
             r.append(pv);
     }
 
-    // qDebug() << vs.count();
+    // qCDebug(npackd) << vs.count();
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
 
@@ -454,7 +454,7 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
             r.append(pv);
     }
 
-    // qDebug() << vs.count();
+    // qCDebug(npackd) << vs.count();
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
 
@@ -490,7 +490,7 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
             r.append(pv);
     }
 
-    // qDebug() << vs.count();
+    // qCDebug(npackd) << vs.count();
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
 
@@ -620,8 +620,9 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         what = packages.at(0);
     else
         what = QString("%1 packages").arg(packages.size());
-    qDebug() << "searching for" << keywords.join(' ') << "found" <<
-            what;
+
+    qCDebug(npackd) << "searching for" <<  keywords.join(' ') <<
+            "found" << what;
 
     return packages;
 }
@@ -630,7 +631,7 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
         Package::Status maxStatus,
         const QString& query, int cat0, int cat1, QString *err) const
 {
-    // qDebug() << "DBRepository::findPackages.0";
+    // qCDebug(npackd) << "DBRepository::findPackages.0";
 
     QString where;
     QList<QVariant> params;
@@ -685,7 +686,7 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
     if (!where.isEmpty())
         where = QStringLiteral("WHERE ") + where;
 
-    // qDebug() << "DBRepository::findPackages.1";
+    // qCDebug(npackd) << "DBRepository::findPackages.1";
 
     return findPackagesWhere(QStringLiteral("SELECT NAME FROM PACKAGE ") +
             where + QStringLiteral(" ORDER BY TITLE"), params, err);
@@ -721,7 +722,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
         Package::Status maxStatus,
         const QString& query, int level, int cat0, int cat1, QString *err) const
 {
-    // qDebug() << "DBRepository::findPackages.0";
+    // qCDebug(npackd) << "DBRepository::findPackages.0";
 
     QString where;
     QList<QVariant> params;
@@ -1002,7 +1003,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
 
     /*
     if (p->name == "com.microsoft.Windows64")
-        qDebug() << p->name << "->" << p->description;
+        qCDebug(npackd) << p->name << "->" << p->description;
         */
 
     int cat0 = 0;
@@ -1297,7 +1298,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         MySQLQuery* q = insertCmdFileQuery.get();
 
         for (int i = 0; i < p->cmdFiles.size(); i++) {
-            // qDebug() << p->package << p->version.getVersionString() << p->cmdFiles.at(i);
+            // qCDebug(npackd) << p->package << p->version.getVersionString() << p->cmdFiles.at(i);
             q->bindValue(QStringLiteral(":PACKAGE"), p->package);
             Version v = p->version;
             v.normalize();
@@ -1507,7 +1508,7 @@ void DBRepository::load(Job* job, bool useCache, bool interactive,
         job->setProgress(1);
     }
 
-    // qDebug() << "Repository::load.3";
+    // qCDebug(npackd) << "Repository::load.3";
 
     qDeleteAll(urls);
     urls.clear();
@@ -1663,19 +1664,19 @@ void DBRepository::updateF5(Job* job, bool interactive, const QString user,
 
     /*QString error;
     //tempFile.setAutoRemove(false);
-    qDebug() << "packages in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE", &error);
-    qDebug() << error;
-    qDebug() << "package versions in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE_VERSION", &error);
-    qDebug() << error;
-    qDebug() << tempFile.fileName();
+    qCDebug(npackd) << "packages in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << "package versions in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE_VERSION", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << tempFile.fileName();
     */
 
     /*
-    qDebug() << "packages in db" << count("SELECT COUNT(*) FROM PACKAGE", &error);
-    qDebug() << error;
-    qDebug() << "package versions in db" << count("SELECT COUNT(*) FROM PACKAGE_VERSION", &error);
-    qDebug() << error;
-    qDebug() << tempFile.fileName();
+    qCDebug(npackd) << "packages in db" << count("SELECT COUNT(*) FROM PACKAGE", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << "package versions in db" << count("SELECT COUNT(*) FROM PACKAGE_VERSION", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << tempFile.fileName();
     */
 
     if (job->shouldProceed()) {
@@ -2048,7 +2049,7 @@ QString DBRepository::updateStatus(const QString& package)
                     newestInstalled = pv;
             }
 
-            // qDebug() << pv->download.toString();
+            // qCDebug(npackd) << pv->download.toString();
 
             if (pv->download.isValid()) {
                 if (!newestInstallable ||
@@ -2112,11 +2113,11 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 
     /*QString error;
     //tempFile.setAutoRemove(false);
-    qDebug() << "packages in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE", &error);
-    qDebug() << error;
-    qDebug() << "package versions in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE_VERSION", &error);
-    qDebug() << error;
-    qDebug() << tempFile.fileName();
+    qCDebug(npackd) << "packages in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << "package versions in tempdb" << count("SELECT COUNT(*) FROM tempdb.PACKAGE_VERSION", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << tempFile.fileName();
     */
 
     if (job->shouldProceed()) {
@@ -2202,11 +2203,11 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     }
 
     /*
-    qDebug() << "packages in db" << count("SELECT COUNT(*) FROM PACKAGE", &error);
-    qDebug() << error;
-    qDebug() << "package versions in db" << count("SELECT COUNT(*) FROM PACKAGE_VERSION", &error);
-    qDebug() << error;
-    qDebug() << tempFile.fileName();
+    qCDebug(npackd) << "packages in db" << count("SELECT COUNT(*) FROM PACKAGE", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << "package versions in db" << count("SELECT COUNT(*) FROM PACKAGE_VERSION", &error);
+    qCDebug(npackd) << error;
+    qCDebug(npackd) << tempFile.fileName();
     */
 
     if (job->shouldProceed()) {

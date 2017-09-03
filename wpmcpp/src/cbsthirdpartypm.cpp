@@ -1,5 +1,5 @@
 #include <QUrl>
-#include <QDebug>
+#include <QLoggingCategory>
 
 #include "cbsthirdpartypm.h"
 #include "windowsregistry.h"
@@ -132,7 +132,7 @@ void CBSThirdPartyPM::detectOneCBSPackage(
     }
 
     if (!err.isEmpty()) {
-        qDebug() << keyName << err;
+        qCDebug(npackd) << keyName << err;
     }
 
     if (err.isEmpty()) {

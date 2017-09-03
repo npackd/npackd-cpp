@@ -7,7 +7,6 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QSharedPointer>
-#include <QDebug>
 #include <QVariant>
 
 #include "package.h"
@@ -164,7 +163,7 @@ void PackageFrame::fillForm(Package* p)
     QList<QString> screenshots = p->links.values("screenshot");
     int n = screenshots.count();
 
-    // qDebug() << n << "screen shots";
+    // qCDebug(npackd) << n << "screen shots";
 
     c->setVisible(n > 0);
 
@@ -198,7 +197,7 @@ void PackageFrame::fillForm(Package* p)
                 arg(err), true, QMessageBox::Critical);
     }
 
-    //qDebug() << "PackageFrame::fillForm " << pvs.count() << " " <<
+    //qCDebug(npackd) << "PackageFrame::fillForm " << pvs.count() << " " <<
     //        pvs.at(0)->version.getVersionString();
 
     t->setRowCount(pvs.size());

@@ -1,7 +1,6 @@
 #include <QList>
 #include <QSet>
 #include <QString>
-#include <QDebug>
 
 #include "installedpackagesthirdpartypm.h"
 #include "installedpackages.h"

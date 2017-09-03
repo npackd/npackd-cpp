@@ -5,8 +5,8 @@
 #include <memory>
 #include <shlobj.h>
 
-#include <QDebug>
 #include <QtConcurrent/QtConcurrent>
+#include <QLoggingCategory>
 
 #include "windowsregistry.h"
 #include "package.h"
@@ -43,7 +43,7 @@ InstalledPackages::InstalledPackages(const InstalledPackages &other) :
 
 InstalledPackages &InstalledPackages::operator=(const InstalledPackages &other)
 {
-    qDebug() << "Setting installed packages";
+    qCDebug(npackd) << "Setting installed packages";
     this->dump();
 
     other.dump();
@@ -144,7 +144,7 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
 {
     // this method does not manipulate "data" directly => no locking
 
-    // qDebug() << "detect3rdParty 3";
+    // qCDebug(npackd) << "detect3rdParty 3";
 
     // remove packages and versions that are not installed
     // we assume that one 3rd party package manager does not create package
@@ -196,7 +196,7 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
         if (p) {
             QString err;
 
-            qDebug() << "trying to replace" << p->name << p->title;
+            qCDebug(npackd) << "trying to replace" << p->name << p->title;
 
             QStringList found = r->findBetterPackages(p->title, &err);
 
@@ -230,7 +230,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         }
     }
 
-    //qDebug() << "0" << ipv->package << ipv->version.getVersionString() <<
+    //qCDebug(npackd) << "0" << ipv->package << ipv->version.getVersionString() <<
     //        ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
 
     if (!d.isEmpty()) {
@@ -279,7 +279,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         d = "";
     }
 
-    // qDebug() << "    0.1";
+    // qCDebug(npackd) << "    0.1";
 
     // we cannot handle nested directories
     if (!d.isEmpty()) {
@@ -306,7 +306,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         if (ignore)
             return;
 
-        //qDebug() << "not ignoring" << d;
+        //qCDebug(npackd) << "not ignoring" << d;
     }
 
     QString betterPackageName = findBetterPackageName(r, ipv);
@@ -337,7 +337,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     PackageVersionFile* u = 0;
     if (err.isEmpty()) {
-        // qDebug() << "    1";
+        // qCDebug(npackd) << "    1";
 
         u = pv->findFile(".Npackd\\Uninstall.bat");
     }
@@ -353,7 +353,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     }
 
     if (err.isEmpty() && d.isEmpty()) {
-        // qDebug() << "    2";
+        // qCDebug(npackd) << "    2";
 
         Package* p = r->findPackage_(ipv->package);
 
@@ -377,16 +377,16 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     InstalledPackageVersion* ipv2 = 0;
     if (err.isEmpty()) {
-        // qDebug() << "    4";
+        // qCDebug(npackd) << "    4";
         ipv2 = this->findOrCreate(ipv->package, ipv->version, &err);
     }
 
     if (err.isEmpty()) {
-        // qDebug() << "    5";
+        // qCDebug(npackd) << "    5";
         ipv2->detectionInfo = ipv->detectionInfo;
         ipv2->setPath(d);
 
-        //qDebug() << ipv2->package << ipv2->version.getVersionString() <<
+        //qCDebug(npackd) << ipv2->package << ipv2->version.getVersionString() <<
         //        ipv2->directory << ipv2->detectionInfo;
     }
 }
@@ -573,7 +573,7 @@ InstalledPackageVersion*
                     ipv->package, ipv->version, &err));
 
             //if (!pv.data()) {
-            //    qDebug() << "cannot find" << ipv->package << ipv->version.getVersionString();
+            //    qCDebug(npackd) << "cannot find" << ipv->package << ipv->version.getVersionString();
             //}
 
             if (err.isEmpty() && pv.data()) {
@@ -622,7 +622,7 @@ QString InstalledPackages::notifyInstalled(const QString &package,
         QString file = path + "\\.Npackd\\InstallHook.bat";
         QFileInfo fi(file);
         if (fi.exists()) {
-            // qDebug() << file;
+            // qCDebug(npackd) << file;
             Job* job = new Job("Notification");
             WPMUtils::executeBatchFile(
                     job, path, ".Npackd\\InstallHook.bat",
@@ -842,11 +842,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 void InstalledPackages::dump() const
 {
-    qDebug() << "Installed packages:";
+    qCDebug(npackd) << "Installed packages:";
     QList<InstalledPackageVersion*> myInfos = getAll();
     for (int i = 0; i < myInfos.size(); i++) {
         InstalledPackageVersion* myIpv = myInfos.at(i);
-        qDebug() << myIpv->package << myIpv->version.getVersionString() <<
+        qCDebug(npackd) << myIpv->package << myIpv->version.getVersionString() <<
                 myIpv->directory;
     }
     qDeleteAll(myInfos);
@@ -854,7 +854,7 @@ void InstalledPackages::dump() const
 
 QString InstalledPackages::save()
 {
-    qDebug() << "Saving installed packages";
+    qCDebug(npackd) << "Saving installed packages";
     this->dump();
 
     InstalledPackages other;
@@ -961,7 +961,7 @@ void InstalledPackages::fireStatusChanged(const QString &package,
 
 QString InstalledPackages::readRegistryDatabase()
 {
-    // qDebug() << "start reading registry database";
+    // qCDebug(npackd) << "start reading registry database";
 
     // "data" is only used at the bottom of this method
 
@@ -1029,7 +1029,7 @@ QString InstalledPackages::readRegistryDatabase()
 
                 if (!ipv->directory.isEmpty()) {
                     /*
-                    qDebug() << "adding " << ipv->package <<
+                    qCDebug(npackd) << "adding " << ipv->package <<
                             ipv->version.getVersionString() << "in" <<
                             ipv->directory;*/
                     ipvs.append(ipv);
@@ -1056,7 +1056,7 @@ QString InstalledPackages::readRegistryDatabase()
     }
     qDeleteAll(ipvs);
 
-    // qDebug() << "stop reading";
+    // qCDebug(npackd) << "stop reading";
 
     return err;
 }
@@ -1165,20 +1165,20 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
 
             r = wr.set("Path", ipv->directory);
         }
-        // qDebug() << "saveToRegistry 1 " << r;
+        // qCDebug(npackd) << "saveToRegistry 1 " << r;
     } else {
-        // qDebug() << "deleting " << pn;
+        // qCDebug(npackd) << "deleting " << pn;
         WindowsRegistry packages;
         r = packages.open(machineWR, keyName, KEY_ALL_ACCESS);
         if (r.isEmpty()) {
             r = packages.remove(pn);
         }
-        // qDebug() << "saveToRegistry 2 " << r;
+        // qCDebug(npackd) << "saveToRegistry 2 " << r;
     }
-    //qDebug() << "InstalledPackageVersion::save " << pn << " " <<
+    //qCDebug(npackd) << "InstalledPackageVersion::save " << pn << " " <<
     //        this->directory;
 
-    // qDebug() << "saveToRegistry returns " << r;
+    // qCDebug(npackd) << "saveToRegistry returns " << r;
 
     return r;
 }

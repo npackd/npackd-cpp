@@ -9,12 +9,15 @@
 #include <QTime>
 #include <QCryptographicHash>
 #include <QThreadPool>
+#include <QLoggingCategory>
 
 #include "job.h"
 #include "version.h"
 #include "commandline.h"
 #include "package.h"
 #include "hrtimer.h"
+
+Q_DECLARE_LOGGING_CATEGORY(npackd)
 
 /**
  * Some utility methods.

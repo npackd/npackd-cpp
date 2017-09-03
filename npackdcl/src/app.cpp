@@ -119,6 +119,7 @@ int App::process()
             MySQLQuery::debug = true;
             Downloader::debug = true;
             WPMUtils::debug = true;
+            QLoggingCategory::setFilterRules(QStringLiteral("npackd=true"));
         }
     }
 
@@ -137,7 +138,7 @@ int App::process()
         for (int i = 0; i < parsed.count(); i++) {
             CommandLine::Option* opt = parsed.at(i)->opt;
             if (opt->allowedCommands.count() > 0) {
-                // qDebug() << "1" << opt->allowedCommands.count();
+                // qCDebug(npackd) << "1" << opt->allowedCommands.count();
                 if (!opt->allowedCommands.contains(cmd)) {
                     err = "The option --" + opt->name +
                             " is not allowed for the command \"" + cmd + "\"";
@@ -1395,14 +1396,14 @@ void App::processInstallOperations(Job *job,
                 } else {
                     of.close();
 
-                    // qDebug() << "self-update 1";
+                    // qCDebug(npackd) << "self-update 1";
 
                     if (!QFile::copy(thisExe, newExe))
                         job->setErrorMessage("Error copying the binary");
                     else
                         sub->completeWithProgress();
 
-                    // qDebug() << "self-update 2";
+                    // qCDebug(npackd) << "self-update 2";
                 }
             }
         }
@@ -1429,7 +1430,7 @@ void App::processInstallOperations(Job *job,
                 batch.append(oneCmd);
             }
 
-            // qDebug() << "self-update 3";
+            // qCDebug(npackd) << "self-update 3";
 
             QTemporaryFile file(QDir::tempPath() +
                               "\\npackdclXXXXXX.bat");
@@ -1439,7 +1440,7 @@ void App::processInstallOperations(Job *job,
             else {
                 batchFileName = file.fileName();
 
-                // qDebug() << "batch" << file.fileName();
+                // qCDebug(npackd) << "batch" << file.fileName();
 
                 QTextStream stream(&file);
                 stream.setCodec("UTF-8");
@@ -1448,7 +1449,7 @@ void App::processInstallOperations(Job *job,
                     job->setErrorMessage("Error writing the .bat file");
                 file.close();
 
-                // qDebug() << "self-update 4";
+                // qCDebug(npackd) << "self-update 4";
 
                 job->setProgress(0.9);
             }
@@ -1492,10 +1493,10 @@ void App::processInstallOperations(Job *job,
             if (success) {
                 CloseHandle(pinfo.hThread);
                 CloseHandle(pinfo.hProcess);
-                // qDebug() << "success!222";
+                // qCDebug(npackd) << "success!222";
             }
 
-            // qDebug() << "self-update 5";
+            // qCDebug(npackd) << "self-update 5";
 
             sub->completeWithProgress();
             job->setProgress(1);

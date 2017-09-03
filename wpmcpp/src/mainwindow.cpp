@@ -14,7 +14,6 @@
 
 #include <QApplication>
 #include <QTimer>
-#include <QDebug>
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -31,7 +30,6 @@
 #include <QCloseEvent>
 #include <QTextBrowser>
 #include <QTableWidget>
-#include <QDebug>
 #include <QLabel>
 #include <QDockWidget>
 #include <QTreeWidget>
@@ -220,7 +218,7 @@ MainWindow::MainWindow(QWidget *parent) :
     defaultPasswordWindow = (HWND) this->winId();
 
     this->taskbarMessageId = RegisterWindowMessage(L"TaskbarButtonCreated");
-    // qDebug() << "id " << taskbarMessageId;
+    // qCDebug(npackd) << "id " << taskbarMessageId;
 
     // Npackd runs elevated and the taskbar does not. We have to allow the
     // taskbar event here.
@@ -231,7 +229,7 @@ MainWindow::MainWindow(QWidget *parent) :
             GetProcAddress(hInstLib, "ChangeWindowMessageFilterEx");
     if (lpfChangeWindowMessageFilterEx) {
         lpfChangeWindowMessageFilterEx((HWND) winId(), taskbarMessageId, 1, 0);
-        // qDebug() << "allow taskbar event " << taskbarMessageId;
+        // qCDebug(npackd) << "allow taskbar event " << taskbarMessageId;
     }
     FreeLibrary(hInstLib);
 }
@@ -246,7 +244,7 @@ bool MainWindow::nativeEvent(const QByteArray & eventType, void * message,
 {
     MSG* msg = static_cast<MSG*>(message);
     if (msg->message == taskbarMessageId) {
-        // qDebug() << "taskbarmessageid";
+        // qCDebug(npackd) << "taskbarmessageid";
         HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL,
                 CLSCTX_INPROC_SERVER, IID_ITaskbarList3,
                 reinterpret_cast<void**> (&(taskbarInterface)));
@@ -358,7 +356,7 @@ int MainWindow::findPackageVersionTab(const QString& package,
         QWidget* w = this->ui->tabWidget->widget(i);
         PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
         if (pvf) {
-            //qDebug() << pvf->pv.data()->toString() << "---" <<
+            //qCDebug(npackd) << pvf->pv.data()->toString() << "---" <<
             //        package << version.getVersionString();
             if (pvf->pv->package == package && pvf->pv->version == version) {
                 r = i;
@@ -376,7 +374,7 @@ int MainWindow::findLicenseTab(const QString& name) const
         QWidget* w = this->ui->tabWidget->widget(i);
         LicenseForm* pvf = dynamic_cast<LicenseForm*>(w);
         if (pvf) {
-            //qDebug() << pvf->pv.data()->toString() << "---" <<
+            //qCDebug(npackd) << pvf->pv.data()->toString() << "---" <<
             //        package << version.getVersionString();
             if (pvf->license->name == name) {
                 r = i;
@@ -444,19 +442,19 @@ void MainWindow::loadUISettings()
     QString err;
     WindowsRegistry n = r.createSubKey("SOFTWARE\\Npackd\\Npackd", &err,
             KEY_ALL_ACCESS);
-    // qDebug() << "MainWindow::loadUISettings" << err;
+    // qCDebug(npackd) << "MainWindow::loadUISettings" << err;
     if (err.isEmpty()) {
         QByteArray ba = n.getBytes("MainWindowState", &err);
-        // qDebug() << "MainWindow::loadUISettings error: " << err;
+        // qCDebug(npackd) << "MainWindow::loadUISettings error: " << err;
         if (err.isEmpty()) {
-            // qDebug() << "MainWindow::loadUISettings" << ba.length();
+            // qCDebug(npackd) << "MainWindow::loadUISettings" << ba.length();
             this->restoreState(ba);
         }
 
         ba = n.getBytes("MainWindowGeometry", &err);
-        // qDebug() << "MainWindow::loadUISettings error: " << err;
+        // qCDebug(npackd) << "MainWindow::loadUISettings error: " << err;
         if (err.isEmpty()) {
-            // qDebug() << "MainWindow::loadUISettings" << ba.length();
+            // qCDebug(npackd) << "MainWindow::loadUISettings" << ba.length();
             this->restoreGeometry(ba);
         } else {
             this->setWindowState(Qt::WindowMaximized);
@@ -482,7 +480,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::repositoryStatusChanged(const QString& package,
         const Version& version)
 {
-    // qDebug() << "MainWindow::repositoryStatusChanged" << pv->toString();
+    // qCDebug(npackd) << "MainWindow::repositoryStatusChanged" << pv->toString();
 
     QTableView* t = this->mainFrame->getTableWidget();
     PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
@@ -803,7 +801,7 @@ _SearchResult MainWindow::search(Package::Status minStatus,
             cat0, cat1, err);
 
     //DWORD search = GetTickCount();
-    //qDebug() << "Only search" << (search - start) << query;
+    //qCDebug(npackd) << "Only search" << (search - start) << query;
 
     if (err->isEmpty()) {
         r.cats = dbr->findCategories(minStatus, maxStatus, query, 0, -1, -1,
@@ -817,7 +815,7 @@ _SearchResult MainWindow::search(Package::Status minStatus,
         }
     }
 
-    //qDebug() << "Only categories" << (GetTickCount() - search);
+    //qCDebug(npackd) << "Only categories" << (GetTickCount() - search);
 
     return r;
 }
@@ -831,7 +829,7 @@ void MainWindow::fillList()
 {
     DWORD start = GetTickCount();
 
-    // qDebug() << "MainWindow::fillList";
+    // qCDebug(npackd) << "MainWindow::fillList";
     QTableView* t = this->mainFrame->getTableWidget();
 
     t->setUpdatesEnabled(false);
@@ -971,7 +969,7 @@ void MainWindow::changeEvent(QEvent *e)
         ui->retranslateUi(this);
         break;
     case QEvent::ActivationChange:
-        // qDebug() << "QEvent::ActivationChange";
+        // qCDebug(npackd) << "QEvent::ActivationChange";
         QTimer::singleShot(0, this, SLOT(updateActionsSlot()));
         break;
     default:
@@ -1000,14 +998,14 @@ bool MainWindow::isUpdateEnabled(const QString& package)
     PackageVersion* newesti = r->findNewestInstalledPackageVersion_(
             package, &err);
     if (newest != 0 && newesti != 0) {
-        // qDebug() << newest->version.getVersionString() << " " <<
+        // qCDebug(npackd) << newest->version.getVersionString() << " " <<
                 newesti->version.getVersionString();
         bool canInstall = !newest->isLocked() && !newest->installed() &&
                 newest->download.isValid();
         bool canUninstall = !newesti->isLocked() &&
                 !newesti->isInWindowsDir();
 
-        // qDebug() << canInstall << " " << canUninstall;
+        // qCDebug(npackd) << canInstall << " " << canUninstall;
 
         res = canInstall && canUninstall &&
                 newest->version.compare(newesti->version) > 0;
@@ -1126,7 +1124,7 @@ void MainWindow::updateExportAction()
 
 void MainWindow::updateShowFolderAction()
 {
-    // qDebug() << "MainWindow::updateUninstallAction start";
+    // qCDebug(npackd) << "MainWindow::updateUninstallAction start";
 
     Selection* selection = Selection::findCurrent();
 
@@ -1146,7 +1144,7 @@ void MainWindow::updateShowFolderAction()
                         pv && !pv->isLocked() &&
                         pv->installed() && !pv->isInWindowsDir();
             }
-            // qDebug() << "MainWindow::updateUninstallAction 2:" << selected.count();
+            // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
             DBRepository* r = DBRepository::getDefault();
             QList<void*> selected = selection->getSelected("Package");
@@ -1175,12 +1173,12 @@ void MainWindow::updateShowFolderAction()
         }
     }
     this->ui->actionOpen_folder->setEnabled(enabled);
-    // qDebug() << "MainWindow::updateUninstallAction end " << enabled;
+    // qCDebug(npackd) << "MainWindow::updateUninstallAction end " << enabled;
 }
 
 void MainWindow::updateUninstallAction()
 {
-    // qDebug() << "MainWindow::updateUninstallAction start";
+    // qCDebug(npackd) << "MainWindow::updateUninstallAction start";
 
     Selection* selection = Selection::findCurrent();
 
@@ -1200,7 +1198,7 @@ void MainWindow::updateUninstallAction()
                         pv && !pv->isLocked() &&
                         pv->installed() && !pv->isInWindowsDir();
             }
-            // qDebug() << "MainWindow::updateUninstallAction 2:" << selected.count();
+            // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
             DBRepository* r = DBRepository::getDefault();
             QList<void*> selected = selection->getSelected("Package");
@@ -1229,7 +1227,7 @@ void MainWindow::updateUninstallAction()
         }
     }
     this->ui->actionUninstall->setEnabled(enabled);
-    // qDebug() << "MainWindow::updateUninstallAction end " << enabled;
+    // qCDebug(npackd) << "MainWindow::updateUninstallAction end " << enabled;
 }
 
 void MainWindow::updateUpdateAction()
@@ -1394,7 +1392,7 @@ void MainWindow::updateRunAction()
                         pv->installed() &&
                         pv->importantFiles.size() == 1;
             }
-            // qDebug() << "MainWindow::updateUninstallAction 2:" << selected.count();
+            // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
             DBRepository* r = DBRepository::getDefault();
             QList<void*> selected = selection->getSelected("Package");
