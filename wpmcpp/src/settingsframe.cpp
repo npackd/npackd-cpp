@@ -62,6 +62,9 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     addUsedRepository("https://npackd.appspot.com/rep/xml?tag=stable64");
     addUsedRepository("https://npackd.appspot.com/rep/xml?tag=libs");
     addUsedRepository("https://npackd.appspot.com/rep/xml?tag=unstable");
+
+	// translation bugfix
+	ui->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Apply"));
 }
 
 SettingsFrame::~SettingsFrame()
