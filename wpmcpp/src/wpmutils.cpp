@@ -1181,12 +1181,12 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 
     // >= Windows Vista
     if (osvi.dwMajorVersion >= 6) {
-        BOOL WINAPI (*lpfQueryFullProcessImageName)(
+        typedef BOOL (WINAPI *LPFQUERYFULLPROCESSIMAGENAME)(
                 HANDLE, DWORD, LPTSTR, PDWORD);
 
         HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
-        lpfQueryFullProcessImageName =
-                (BOOL (WINAPI*) (HANDLE, DWORD, LPTSTR, PDWORD))
+		LPFQUERYFULLPROCESSIMAGENAME lpfQueryFullProcessImageName =
+                (LPFQUERYFULLPROCESSIMAGENAME)
                 GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
 
         DWORD aiPID[1000], iCb = 1000;
@@ -1573,12 +1573,12 @@ QStringList WPMUtils::getProcessFiles()
 
     // >= Windows Vista
     if (osvi.dwMajorVersion >= 6) {
-        BOOL WINAPI (*lpfQueryFullProcessImageName)(
+        typedef BOOL (WINAPI *LPFQUERYFULLPROCESSIMAGENAME)(
                 HANDLE, DWORD, LPTSTR, PDWORD);
 
         HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
-        lpfQueryFullProcessImageName =
-                (BOOL (WINAPI*) (HANDLE, DWORD, LPTSTR, PDWORD))
+		LPFQUERYFULLPROCESSIMAGENAME lpfQueryFullProcessImageName =
+                (LPFQUERYFULLPROCESSIMAGENAME)
                 GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
 
         DWORD aiPID[1000], iCb = 1000;
@@ -2307,11 +2307,11 @@ bool WPMUtils::is64BitWindows()
 #else
     // 32-bit programs run on both 32-bit and 64-bit Windows
     // so must sniff
-    BOOL WINAPI (* lpfIsWow64Process_) (HANDLE,PBOOL);
+	typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 
     HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
-    lpfIsWow64Process_ =
-            (BOOL (WINAPI *) (HANDLE,PBOOL))
+    LPFN_ISWOW64PROCESS lpfIsWow64Process_ =
+            (LPFN_ISWOW64PROCESS)
             GetProcAddress(hInstLib, "IsWow64Process");
     bool ret;
     if (lpfIsWow64Process_) {

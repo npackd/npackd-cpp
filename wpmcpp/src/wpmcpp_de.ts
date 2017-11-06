@@ -575,7 +575,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>one-file or zip</source>
-        <translation>one-file oder zip</translation>
+        <translation>eine Datei oder zip</translation>
     </message>
     <message>
         <source>Hash sum:</source>
@@ -599,11 +599,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Tab 1</source>
-        <translation></translation>
+        <translation>Reiter 1</translation>
     </message>
     <message>
         <source>Tab 2</source>
-        <translation></translation>
+        <translation>Reiter 2</translation>
     </message>
     <message>
         <source>SHA1:</source>
@@ -850,7 +850,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Opening the package database</source>
         <oldsource>Creating a temporary database</oldsource>
-        <translation type="obsolete">Erstelle eine temporäre Datenbank</translation>
+        <translation type="obsolete">Öffne temporäre Datenbank</translation>
     </message>
     <message>
         <source>Starting an SQL transaction (tempdb)</source>
@@ -858,7 +858,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
-        <translation>Lade die entfernte Repositories herunter und fülle die lokale Datenbank (tempdb)</translation>
+        <translation>Lade die entfernten Repositories herunter und fülle die lokale Datenbank (tempdb)</translation>
     </message>
     <message>
         <source>Commiting the SQL transaction (tempdb)</source>
@@ -1369,7 +1369,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open the URL %1</source>
-        <translation>Kann den URL %1 nicht öffnen</translation>
+        <translation>Kann die URL %1 nicht öffnen</translation>
     </message>
     <message>
         <source>Dismiss</source>
@@ -2463,59 +2463,59 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Saving detected packages %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichere erkannte Pakete %1</translation>
     </message>
     <message>
         <source>Adding detected versions %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Füge erkannte Versionen %1 hinzu</translation>
     </message>
     <message>
         <source>OpenSCManager failed: %0</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenSCManager fehlgeschlagen: %0</translation>
     </message>
     <message>
         <source>QueryServiceStatusEx failed: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>QueryServiceStatusEx fehlgeschlagen: %1</translation>
     </message>
     <message>
         <source>Timeout waiting for service</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitüberschreitung beim warten auf den Dienst</translation>
     </message>
     <message>
         <source>OpenService failed: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenService fehlgeschlagen: %1</translation>
     </message>
     <message>
         <source>Cannot start the service because it is already running</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann den Dienst nicht starten, da dieser bereits läuft</translation>
     </message>
     <message>
         <source>StartService failed: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>StartService fehlgeschlagen: %1</translation>
     </message>
     <message>
         <source>QueryServiceStatusEx failed %1</source>
-        <translation type="unfinished"></translation>
+        <translation>QueryServiceStatusEx fehlgeschlagen %1</translation>
     </message>
     <message>
         <source>ControlService failed: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ControlService fehlgeschlagen: %1</translation>
     </message>
     <message>
         <source>Service not started. Current status is %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienst nicht gestartet. Aktueller Status ist %1</translation>
     </message>
     <message>
         <source>EnumServicesStatusEx: no services found</source>
-        <translation type="unfinished"></translation>
+        <translation>EnumServiceStatusEx: Kein Dienst gefunden</translation>
     </message>
     <message>
         <source>EnumServicesStatusEx failed: %0</source>
-        <translation type="unfinished"></translation>
+        <translation>EnumServiceStatusEx fehlgeschlagen: %0</translation>
     </message>
     <message>
         <source>Sending stop signal to the service %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Sende Stop-Signal an den Dienst %1</translation>
     </message>
 </context>
 <context>
@@ -2630,23 +2630,27 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>list of previously used repositories</source>
-        <translation type="unfinished"></translation>
+        <translation>Liste der zuvor verwendeten Repositories</translation>
     </message>
     <message>
         <source>add the selected previously used repository to the active list</source>
-        <translation type="unfinished"></translation>
+        <translation>Fügt das ausgewählte Repository zur aktiven Liste hinzu</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Hinzufügen</translation>
     </message>
     <message>
         <source>terminates Windows services, if necessary</source>
-        <translation type="unfinished"></translation>
+        <translation>Beendet falls erforderlich einen Windows-Service</translation>
     </message>
     <message>
         <source>Stop services</source>
-        <translation type="unfinished"></translation>
+        <translation>Service anhalten</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Übernehmen</translation>
     </message>
 </context>
 </TS>
