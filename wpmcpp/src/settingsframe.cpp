@@ -65,6 +65,18 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
 	// translation bugfix
 	ui->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Apply"));
+
+	wr.close();
+	err = wr.open(HKEY_LOCAL_MACHINE,
+		"Software\\Npackd\\Npackd", false, KEY_READ);
+	if (err.isEmpty()) {
+		DWORD dwSingleInstance = wr.getDWORD("SingleInstance", &err);
+		if (err.isEmpty()) {
+			this->ui->checkBoxSingleInstance->setChecked(dwSingleInstance == 1);
+		}
+	}
+	connect(this->ui->checkBoxSingleInstance, SIGNAL(toggled(bool)),
+		this, SLOT(on_checkBoxSingleInstance_toggled(bool)));
 }
 
 SettingsFrame::~SettingsFrame()
@@ -270,4 +282,16 @@ void SettingsFrame::on_pushButtonAddRep_clicked()
         if (urls.indexOf(url) < 0)
             this->ui->plainTextEditReps->appendPlainText(url);
     }
+}
+
+void SettingsFrame::on_checkBoxSingleInstance_toggled(bool checked)
+{
+	WindowsRegistry wr;
+	QString err = wr.open(HKEY_LOCAL_MACHINE,
+		"Software\\Npackd\\Npackd", false, KEY_ALL_ACCESS);
+	if (err.isEmpty())
+	{
+		DWORD dwSingleInstance = this->ui->checkBoxSingleInstance->isChecked() ? 1 : 0;
+		wr.setDWORD("SingleInstance", dwSingleInstance);
+	}
 }

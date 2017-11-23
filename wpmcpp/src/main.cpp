@@ -70,12 +70,32 @@ int main(int argc, char *argv[])
     }
 #endif
 
+	HANDLE hMutex = NULL;
+	bool is_running = false;
+	WindowsRegistry wr;
+	QString err = wr.open(HKEY_LOCAL_MACHINE,
+		"Software\\Npackd\\Npackd", false, KEY_READ);
+	if (err.isEmpty()) {
+		DWORD dwSingleInstance = wr.getDWORD("SingleInstance", &err);
+		if (err.isEmpty() && dwSingleInstance == 1) {
+			hMutex = CreateMutexA(NULL, FALSE, packageName.toStdString().c_str());
+			is_running = (GetLastError() == ERROR_ALREADY_EXISTS);
+
+			if (is_running) {
+				QMessageBox msgBox;
+				msgBox.setIcon(QMessageBox::Warning);
+				msgBox.setText(a.tr("npacked is already running!"));
+				msgBox.exec();
+			}
+		}
+	}
+
     CLProcessor clp;
 
     // qCDebug(npackd) << QImageReader::supportedImageFormats();
 
     int errorCode;
-    if (!clp.process(&errorCode)){
+    if (!clp.process(&errorCode) && !is_running){
         MainWindow w;
 
         w.prepare();
@@ -86,6 +106,8 @@ int main(int argc, char *argv[])
     //WPMUtils::timer.dump();
 
     FreeLibrary(m);
+
+	if (hMutex) CloseHandle(hMutex);
 
     return errorCode;
 }

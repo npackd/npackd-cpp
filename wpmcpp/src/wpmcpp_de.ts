@@ -2649,6 +2649,14 @@ p, li { white-space: pre-wrap; }
         <translation>Service anhalten</translation>
     </message>
     <message>
+        <source>Allow only one instance of npacked</source>
+        <translation>Beschränke npacked auf eine Programminstanz</translation>
+    </message>
+    <message>
+        <source>npacked is already running!</source>
+        <translation>npacked wird bereits ausgeführt!</translation>
+    </message>
+    <message>
         <source>Apply</source>
         <translation>Übernehmen</translation>
     </message>
