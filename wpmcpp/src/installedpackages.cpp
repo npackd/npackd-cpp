@@ -678,23 +678,25 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     // control panel programs
     if (job->shouldProceed()) {
         QList<AbstractThirdPartyPM*> tpms;
-        tpms.append(new InstalledPackagesThirdPartyPM());
-        tpms.append(new WellKnownProgramsThirdPartyPM(
-                InstalledPackages::packageName));
-        tpms.append(new MSIThirdPartyPM());
-        tpms.append(new ControlPanelThirdPartyPM());
-
         QStringList jobTitles;
-        jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
-        jobTitles.append(QObject::tr("Adding well-known packages"));
-        jobTitles.append(QObject::tr("Detecting MSI packages"));
-        jobTitles.append(QObject::tr("Detecting software control panel packages"));
-
         QStringList prefixes;
+
+        jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
+        tpms.append(new InstalledPackagesThirdPartyPM());
         prefixes.append("");
-        prefixes.append("");
-        prefixes.append("msi:");
-        prefixes.append("control-panel:");
+		if (WPMUtils::hasAdminPrivileges())
+		{
+			jobTitles.append(QObject::tr("Adding well-known packages"));
+			tpms.append(new WellKnownProgramsThirdPartyPM(
+				InstalledPackages::packageName));
+			prefixes.append("");
+			jobTitles.append(QObject::tr("Detecting MSI packages"));
+			tpms.append(new MSIThirdPartyPM());
+			prefixes.append("msi:");
+			jobTitles.append(QObject::tr("Detecting software control panel packages"));
+			tpms.append(new ControlPanelThirdPartyPM());
+			prefixes.append("control-panel:");
+		}
 
         QList<Repository*> repositories;
         QList<QList<InstalledPackageVersion*>* > installeds;
@@ -969,7 +971,8 @@ QString InstalledPackages::readRegistryDatabase()
 
     WindowsRegistry packagesWR;
     LONG e;
-    err = packagesWR.open(HKEY_LOCAL_MACHINE,
+    err = packagesWR.open(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     QList<InstalledPackageVersion*> ipvs;
@@ -1076,7 +1079,8 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
     QString err;
     WindowsRegistry packagesWR;
     LONG e;
-    err = packagesWR.open(HKEY_LOCAL_MACHINE,
+    err = packagesWR.open(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
@@ -1142,7 +1146,9 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
 
 QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
 {
-    WindowsRegistry machineWR(HKEY_LOCAL_MACHINE, false);
+    WindowsRegistry machineWR(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			false);
     QString r;
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";
     Version v = ipv->version;

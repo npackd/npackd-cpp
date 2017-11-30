@@ -49,7 +49,13 @@
 #include "windowsregistry.h"
 #include "mstask.h"
 
+#ifndef NDEBUG
+bool WPMUtils::debug = true;
+#else
 bool WPMUtils::debug = false;
+#endif
+
+int WPMUtils::privileges = 0;
 
 QAtomicInt WPMUtils::nextNamePipeId;
 
@@ -641,8 +647,8 @@ QString WPMUtils::getInstallationDirectory()
 
     WindowsRegistry npackd;
     QString err = npackd.open(
-            HKEY_LOCAL_MACHINE, QStringLiteral("Software\\Npackd\\Npackd"),
-            false, KEY_READ);
+		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
     if (err.isEmpty()) {
         v = npackd.get(QStringLiteral("path"), &err);
     }
@@ -665,7 +671,9 @@ QString WPMUtils::getInstallationDirectory()
 
 QString WPMUtils::setInstallationDirectory(const QString& dir)
 {
-    WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+    WindowsRegistry m(
+		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			false, KEY_ALL_ACCESS);
     QString err;
     WindowsRegistry npackd = m.createSubKey(
             QStringLiteral("Software\\Npackd\\Npackd"), &err,
@@ -679,7 +687,9 @@ QString WPMUtils::setInstallationDirectory(const QString& dir)
 
 void WPMUtils::setCloseProcessType(DWORD cpt)
 {
-    WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+    WindowsRegistry m(
+		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			false, KEY_ALL_ACCESS);
     QString err;
     WindowsRegistry npackd = m.createSubKey(
             QStringLiteral("Software\\Npackd\\Npackd"), &err,
@@ -695,8 +705,8 @@ DWORD WPMUtils::getCloseProcessType()
 
     WindowsRegistry npackd;
     QString err = npackd.open(
-            HKEY_LOCAL_MACHINE, QStringLiteral("Software\\Npackd\\Npackd"),
-            false, KEY_READ);
+		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
     if (err.isEmpty()) {
         DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
         if (err.isEmpty())
@@ -1823,10 +1833,17 @@ QString WPMUtils::validateSHA256(const QString &sha256)
 QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
         bool expandVars)
 {
+	QString err;
     WindowsRegistry wr;
-    QString err = wr.open(HKEY_LOCAL_MACHINE,
-            QStringLiteral("System\\CurrentControlSet\\Control\\Session Manager\\Environment"),
-            false);
+	if (hasAdminPrivileges())
+		err = wr.open(HKEY_LOCAL_MACHINE,
+			QStringLiteral("System\\CurrentControlSet\\Control\\Session Manager\\Environment"),
+			false);
+	else
+		err = wr.open(HKEY_CURRENT_USER,
+			QStringLiteral("Environment"),
+			false);
+
     if (!err.isEmpty())
         return err;
 
@@ -1859,9 +1876,9 @@ void WPMUtils::fireEnvChanged()
 
 QString WPMUtils::getSystemEnvVar(const QString& name, QString* err)
 {
-    err->clear();
-
     WindowsRegistry wr;
+	// Global environment
+    err->clear();
     QString e = wr.open(HKEY_LOCAL_MACHINE,
             QStringLiteral("System\\CurrentControlSet\\Control\\Session Manager\\Environment"),
             false);
@@ -1869,8 +1886,18 @@ QString WPMUtils::getSystemEnvVar(const QString& name, QString* err)
         *err = e;
         return QStringLiteral("");
     }
-
-    return wr.get(name, err);
+	e = wr.get(name, err);
+	if (err->isEmpty()) return e;
+	// Local user environment
+	err->clear();
+	e = wr.open(HKEY_CURRENT_USER,
+		QStringLiteral("Environment"),
+		false);
+	if (!e.isEmpty()) {
+		*err = e;
+		return QStringLiteral("");
+	}
+	return wr.get(name, err);
 }
 
 Version WPMUtils::getDLLVersion(const QString &path)
@@ -3608,4 +3635,69 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
         CloseServiceHandle(schService);
 
     return err;
+}
+
+bool WPMUtils::hasAdminPrivileges()
+{
+	if (privileges == 1) return false;
+	if (privileges == 2) return true;
+	BOOL fReturn = FALSE;
+	const DWORD ACCESS_READ_CONST = 1;
+	const DWORD ACCESS_WRITE_CONST = 2;
+	HANDLE hToken = NULL;
+	HANDLE hImpersonationToken = NULL;
+	PSID psidAdmin = NULL;
+	SID_IDENTIFIER_AUTHORITY SystemSidAuthority = SECURITY_NT_AUTHORITY;
+	GENERIC_MAPPING GenericMapping;
+	PRIVILEGE_SET ps;
+	DWORD dwStatus;
+	PACL pACL = NULL;
+	PSECURITY_DESCRIPTOR psdAdmin = NULL;
+	__try
+	{
+		if (!OpenThreadToken(GetCurrentThread(), TOKEN_DUPLICATE | TOKEN_QUERY, TRUE, &hToken))
+		{
+			if (GetLastError() != ERROR_NO_TOKEN) __leave;
+			if (!OpenProcessToken(GetCurrentProcess(), TOKEN_DUPLICATE | TOKEN_QUERY, &hToken)) __leave;
+		}
+		if (!DuplicateToken(hToken, SecurityImpersonation, &hImpersonationToken)) __leave;
+		if (!AllocateAndInitializeSid(&SystemSidAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &psidAdmin)) __leave;
+		psdAdmin = LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
+		if (psdAdmin == NULL) __leave;
+		if (!InitializeSecurityDescriptor(psdAdmin, SECURITY_DESCRIPTOR_REVISION)) __leave;
+		DWORD  dwACLSize = sizeof(ACL) + sizeof(ACCESS_ALLOWED_ACE) + GetLengthSid(psidAdmin) - sizeof(DWORD);
+		pACL = (PACL)LocalAlloc(LPTR, dwACLSize);
+		if (pACL == NULL) __leave;
+		if (!InitializeAcl(pACL, dwACLSize, ACL_REVISION2)) __leave;
+		DWORD dwAccessMask = ACCESS_READ_CONST | ACCESS_WRITE_CONST;
+		if (!AddAccessAllowedAce(pACL, ACL_REVISION2, dwAccessMask, psidAdmin)) __leave;
+		if (!SetSecurityDescriptorDacl(psdAdmin, TRUE, pACL, FALSE)) __leave;
+		SetSecurityDescriptorGroup(psdAdmin, psidAdmin, FALSE);
+		SetSecurityDescriptorOwner(psdAdmin, psidAdmin, FALSE);
+		if (!IsValidSecurityDescriptor(psdAdmin)) __leave;
+		DWORD dwAccessDesired = ACCESS_READ_CONST;
+		GenericMapping.GenericRead = ACCESS_READ_CONST;
+		GenericMapping.GenericWrite = ACCESS_WRITE_CONST;
+		GenericMapping.GenericExecute = 0;
+		GenericMapping.GenericAll = ACCESS_READ_CONST | ACCESS_WRITE_CONST;
+		DWORD dwStructureSize = sizeof(PRIVILEGE_SET);
+		if (!AccessCheck(psdAdmin, hImpersonationToken, dwAccessDesired, &GenericMapping, &ps, &dwStructureSize, &dwStatus, &fReturn))
+		{
+			fReturn = FALSE;
+			__leave;
+		}
+	}
+	__finally
+	{
+		if (pACL) LocalFree(pACL);
+		if (psdAdmin) LocalFree(psdAdmin);
+		if (psidAdmin) FreeSid(psidAdmin);
+		if (hImpersonationToken) CloseHandle(hImpersonationToken);
+		if (hToken) CloseHandle(hToken);
+	}
+	if (fReturn == TRUE)
+		privileges = 2;
+	else
+		privileges = 1;
+	return (fReturn == TRUE);
 }

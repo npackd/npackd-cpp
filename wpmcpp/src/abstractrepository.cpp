@@ -853,7 +853,8 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
     QString e;
 
     bool keyExists;
-    QStringList urls = getRepositoryURLs(HKEY_LOCAL_MACHINE,
+    QStringList urls = getRepositoryURLs(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\Reps", &e, &keyExists);
 
     bool save = false;
@@ -894,8 +895,9 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
 void AbstractRepository::setRepositoryURLs(QList<QUrl*>& urls, QString* err)
 {
     WindowsRegistry wr;
-    *err = wr.open(HKEY_LOCAL_MACHINE, "",
-            false, KEY_CREATE_SUB_KEY);
+    *err = wr.open(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			"", false, KEY_CREATE_SUB_KEY);
     if (err->isEmpty()) {
         WindowsRegistry wrr = wr.createSubKey(
                 "Software\\Npackd\\Npackd\\Reps", err,

@@ -17,7 +17,8 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     ui->setupUi(this);
 
     WindowsRegistry wr;
-    QString err = wr.open(HKEY_LOCAL_MACHINE,
+    QString err = wr.open(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\InstallationDirs", false, KEY_READ);
     QStringList dirs;
     if (err.isEmpty()) {
@@ -51,7 +52,8 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
     // used repositories
     wr.close();
-    err = wr.open(HKEY_LOCAL_MACHINE,
+    err = wr.open(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
     QStringList usedReps;
     if (err.isEmpty()) {
@@ -223,7 +225,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     urls.clear();
 
     if (err.isEmpty()) {
-        WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+        WindowsRegistry m(
+			WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\InstallationDirs", &err,
                 KEY_ALL_ACCESS);
@@ -240,7 +244,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     }
 
     if (err.isEmpty()) {
-        WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+        WindowsRegistry m(
+			WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\UsedReps", &err,
                 KEY_ALL_ACCESS);
