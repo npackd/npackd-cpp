@@ -54,6 +54,8 @@ private slots:
 
     void on_pushButtonAddRep_clicked();
 
+	void on_checkBoxSingleInstance_toggled(bool checked);
+
 private:
     Ui::SettingsFrame *ui;
     void addUsedRepository(const QString &repository);
