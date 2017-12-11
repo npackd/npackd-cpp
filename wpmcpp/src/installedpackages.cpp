@@ -5,6 +5,16 @@
 #include <memory>
 #include <shlobj.h>
 
+#include <QtGlobal>
+#if defined(_MSC_VER) && (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+#endif
+
 #include <QtConcurrent/QtConcurrent>
 #include <QLoggingCategory>
 
