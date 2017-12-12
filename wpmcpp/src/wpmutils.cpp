@@ -663,8 +663,18 @@ QString WPMUtils::getInstallationDirectory()
         }
     }
 
-    if (v.isEmpty())
-        v = WPMUtils::getProgramFilesDir();
+	if (v.isEmpty())
+	{
+		if (hasAdminPrivileges())
+			v = WPMUtils::getProgramFilesDir();
+		else
+		{
+			v = WPMUtils::getShellDir(CSIDL_APPDATA) +
+				QStringLiteral("\\Npackd\\Installation");
+			QDir dir(v);
+			if (!dir.exists()) dir.mkpath(v);
+		}
+	}
 
     return v;
 }
