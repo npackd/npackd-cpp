@@ -646,14 +646,22 @@ QString WPMUtils::getInstallationDirectory()
     QString v;
 
     WindowsRegistry npackd;
-    QString err = npackd.open(
-		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-			QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
-    if (err.isEmpty()) {
-        v = npackd.get(QStringLiteral("path"), &err);
-    }
+	QString err = npackd.open(HKEY_LOCAL_MACHINE,
+		QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
+	if (err.isEmpty()) {
+		v = npackd.get(QStringLiteral("path"), &err);
+	}
 
-    if (v.isEmpty()) {
+	if (v.isEmpty()) {
+		err = npackd.open(
+			hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
+		if (err.isEmpty()) {
+			v = npackd.get(QStringLiteral("path"), &err);
+		}
+	}
+
+	if (v.isEmpty()) {
         err = npackd.open(HKEY_LOCAL_MACHINE,
                 QStringLiteral("Software\\WPM\\Windows Package Manager"),
                 false,
@@ -711,19 +719,25 @@ void WPMUtils::setCloseProcessType(DWORD cpt)
 
 DWORD WPMUtils::getCloseProcessType()
 {
-    DWORD cpt = CLOSE_WINDOW;
-
     WindowsRegistry npackd;
-    QString err = npackd.open(
+	QString err = npackd.open(
+		HKEY_LOCAL_MACHINE,
+		QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
+	if (err.isEmpty()) {
+		DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
+		if (err.isEmpty())
+			return v;
+	}
+	err = npackd.open(
 		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-			QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
-    if (err.isEmpty()) {
-        DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
-        if (err.isEmpty())
-            cpt = v;
-    }
+		QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
+	if (err.isEmpty()) {
+		DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
+		if (err.isEmpty())
+			return v;
+	}
 
-    return cpt;
+    return CLOSE_WINDOW;
 }
 
 BOOL CALLBACK myEnumWindowsProc(HWND hwnd, LPARAM lParam)

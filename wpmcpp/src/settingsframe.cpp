@@ -71,6 +71,27 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
 	// translation bugfix
 	ui->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Apply"));
+
+	// detect group policy
+	err = wr.open(HKEY_LOCAL_MACHINE,
+		QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
+	if (err.isEmpty()) {
+		wr.get(QStringLiteral("path"), &err);
+		if (err.isEmpty()) this->ui->comboBoxDir->setEnabled(false);
+		err.clear();
+		wr.getDWORD("closeProcessType", &err);
+		if (err.isEmpty()) this->ui->groupBox->setEnabled(false);
+	}
+	err = wr.open(HKEY_LOCAL_MACHINE,
+		QStringLiteral("SOFTWARE\\Policies\\Npackd\\Reps"), false, KEY_READ);
+	if (err.isEmpty()) {
+		DWORD repCount = wr.getDWORD("size", &err);
+		if (err.isEmpty() && repCount > 0) {
+			this->ui->plainTextEditReps->setEnabled(false);
+			this->ui->comboBoxRep->setEnabled(false);
+			this->ui->pushButtonAddRep->setEnabled(false);
+		}
+	}
 }
 
 SettingsFrame::~SettingsFrame()

@@ -853,9 +853,15 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
     QString e;
 
     bool keyExists;
-    QStringList urls = getRepositoryURLs(
-		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-            "Software\\Npackd\\Npackd\\Reps", &e, &keyExists);
+	QStringList urls = getRepositoryURLs(
+		HKEY_LOCAL_MACHINE,
+		"SOFTWARE\\Policies\\Npackd\\Reps", &e, &keyExists);
+
+	if (!keyExists) {
+		urls = getRepositoryURLs(
+			WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+			"Software\\Npackd\\Npackd\\Reps", &e, &keyExists);
+	}
 
     bool save = false;
 
