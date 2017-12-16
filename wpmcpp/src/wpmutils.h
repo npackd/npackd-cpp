@@ -81,6 +81,7 @@ private:
 public:
     /** true = print debug information */
     static bool debug;
+	static int privileges;
 
     /**
      * @brief how to close a process
@@ -764,6 +765,12 @@ public:
      * @return true = shared
      */
     static bool isDirShared(const QString &dir);
+
+	/**
+	* @brief check user for admin privileges
+	* @return true = admin privileges
+	*/
+	static bool hasAdminPrivileges();
 };
 
 #endif // WPMUTILS_H

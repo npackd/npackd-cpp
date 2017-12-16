@@ -1,7 +1,11 @@
 #include "mysqlquery.h"
 #include "wpmutils.h"
 
+#if defined(NDEBUG) // this is a standard C++ macro
 bool MySQLQuery::debug = false;
+#else
+bool MySQLQuery::debug = true;
+#endif
 
 MySQLQuery::MySQLQuery(QSqlDatabase db) : QSqlQuery(db)
 {

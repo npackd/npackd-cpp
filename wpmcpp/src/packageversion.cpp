@@ -400,9 +400,12 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d(WPMUtils::getShellDir(CSIDL_STARTMENU));
         WPMUtils::deleteShortcuts(dir, d);
 
-        QDir d2(WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU));
-        WPMUtils::deleteShortcuts(dir, d2);
-        sub->completeWithProgress();
+		if (WPMUtils::hasAdminPrivileges())
+		{
+			QDir d2(WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU));
+			WPMUtils::deleteShortcuts(dir, d2);
+			sub->completeWithProgress();
+		}
     }
 
     if (desktop) {
@@ -410,9 +413,12 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d3(WPMUtils::getShellDir(CSIDL_DESKTOP));
         WPMUtils::deleteShortcuts(dir, d3);
 
-        QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_DESKTOPDIRECTORY));
-        WPMUtils::deleteShortcuts(dir, d4);
-        sub->completeWithProgress();
+		if (WPMUtils::hasAdminPrivileges())
+		{
+			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_DESKTOPDIRECTORY));
+			WPMUtils::deleteShortcuts(dir, d4);
+			sub->completeWithProgress();
+		}
     }
 
     if (quickLaunch) {
@@ -421,9 +427,12 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d3(WPMUtils::getShellDir(CSIDL_APPDATA) + A);
         WPMUtils::deleteShortcuts(dir, d3);
 
-        QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + A);
-        WPMUtils::deleteShortcuts(dir, d4);
-        sub->completeWithProgress();
+		if (WPMUtils::hasAdminPrivileges())
+		{
+			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + A);
+			WPMUtils::deleteShortcuts(dir, d4);
+			sub->completeWithProgress();
+		}
     }
 
     job->setProgress(1);
@@ -1176,8 +1185,9 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
     if (this->cmdFiles.size() == 0)
         return true;
 
-    QString sourceBasePath = WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) +
-            "\\Npackd\\Commands\\";
+	QString sourceBasePath = WPMUtils::hasAdminPrivileges()
+		? WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd\\Commands\\"
+		: WPMUtils::getShellDir(CSIDL_APPDATA) + "\\Npackd\\Commands\\";
 
     DBRepository* dbr = DBRepository::getDefault();
 
@@ -1301,7 +1311,9 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 
         simple = WPMUtils::makeValidFilename(simple, ' ') + ".lnk";
         withVersion = WPMUtils::makeValidFilename(withVersion, ' ');
-        QString commonStartMenu = WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU);
+        QString commonStartMenu = WPMUtils::hasAdminPrivileges()
+			? WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU)
+			: WPMUtils::getShellDir(CSIDL_STARTMENU);
         simple = commonStartMenu + "\\" + simple;
         withVersion = commonStartMenu + "\\" + withVersion;
 

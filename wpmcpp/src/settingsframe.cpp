@@ -17,17 +17,22 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     ui->setupUi(this);
 
     WindowsRegistry wr;
-    QString err = wr.open(HKEY_LOCAL_MACHINE,
+    QString err = wr.open(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\InstallationDirs", false, KEY_READ);
     QStringList dirs;
     if (err.isEmpty()) {
         dirs = wr.loadStringList(&err);
     }
+	dirs.append(WPMUtils::getShellDir(CSIDL_APPDATA) +
+		QStringLiteral("\\Npackd\\Installation"));
 
     dirs.append(WPMUtils::getInstallationDirectory());
-    dirs.append(WPMUtils::getProgramFilesDir());
-    if (WPMUtils::is64BitWindows())
-        dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
+	if (WPMUtils::hasAdminPrivileges()) {
+		dirs.append(WPMUtils::getProgramFilesDir());
+		if (WPMUtils::is64BitWindows())
+			dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
+	}
 
     // remove duplicates
     for (int i = 0; i < dirs.size(); ) {
@@ -51,7 +56,8 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
     // used repositories
     wr.close();
-    err = wr.open(HKEY_LOCAL_MACHINE,
+    err = wr.open(
+		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
     QStringList usedReps;
     if (err.isEmpty()) {
@@ -65,6 +71,27 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
 	// translation bugfix
 	ui->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Apply"));
+
+	// detect group policy
+	err = wr.open(HKEY_LOCAL_MACHINE,
+		QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
+	if (err.isEmpty()) {
+		wr.get(QStringLiteral("path"), &err);
+		if (err.isEmpty()) this->ui->comboBoxDir->setEnabled(false);
+		err.clear();
+		wr.getDWORD("closeProcessType", &err);
+		if (err.isEmpty()) this->ui->groupBox->setEnabled(false);
+	}
+	err = wr.open(HKEY_LOCAL_MACHINE,
+		QStringLiteral("SOFTWARE\\Policies\\Npackd\\Reps"), false, KEY_READ);
+	if (err.isEmpty()) {
+		DWORD repCount = wr.getDWORD("size", &err);
+		if (err.isEmpty() && repCount > 0) {
+			this->ui->plainTextEditReps->setEnabled(false);
+			this->ui->comboBoxRep->setEnabled(false);
+			this->ui->pushButtonAddRep->setEnabled(false);
+		}
+	}
 }
 
 SettingsFrame::~SettingsFrame()
@@ -223,7 +250,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     urls.clear();
 
     if (err.isEmpty()) {
-        WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+        WindowsRegistry m(
+			WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\InstallationDirs", &err,
                 KEY_ALL_ACCESS);
@@ -240,7 +269,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     }
 
     if (err.isEmpty()) {
-        WindowsRegistry m(HKEY_LOCAL_MACHINE, false, KEY_ALL_ACCESS);
+        WindowsRegistry m(
+			WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\UsedReps", &err,
                 KEY_ALL_ACCESS);
