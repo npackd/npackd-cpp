@@ -3663,9 +3663,13 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
 
 bool WPMUtils::hasAdminPrivileges()
 {
-	if (privileges == 1) return false;
-	if (privileges == 2) return true;
-	BOOL fReturn = FALSE;
+    if (privileges == 1)
+        return false;
+
+    if (privileges == 2)
+        return true;
+
+    bool fReturn = false;
 	const DWORD ACCESS_READ_CONST = 1;
 	const DWORD ACCESS_WRITE_CONST = 2;
 	HANDLE hToken = NULL;
@@ -3677,51 +3681,109 @@ bool WPMUtils::hasAdminPrivileges()
 	DWORD dwStatus;
 	PACL pACL = NULL;
 	PSECURITY_DESCRIPTOR psdAdmin = NULL;
-	__try
-	{
-		if (!OpenThreadToken(GetCurrentThread(), TOKEN_DUPLICATE | TOKEN_QUERY, TRUE, &hToken))
-		{
-			if (GetLastError() != ERROR_NO_TOKEN) __leave;
-			if (!OpenProcessToken(GetCurrentProcess(), TOKEN_DUPLICATE | TOKEN_QUERY, &hToken)) __leave;
-		}
-		if (!DuplicateToken(hToken, SecurityImpersonation, &hImpersonationToken)) __leave;
-		if (!AllocateAndInitializeSid(&SystemSidAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &psidAdmin)) __leave;
-		psdAdmin = LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
-		if (psdAdmin == NULL) __leave;
-		if (!InitializeSecurityDescriptor(psdAdmin, SECURITY_DESCRIPTOR_REVISION)) __leave;
-		DWORD  dwACLSize = sizeof(ACL) + sizeof(ACCESS_ALLOWED_ACE) + GetLengthSid(psidAdmin) - sizeof(DWORD);
-		pACL = (PACL)LocalAlloc(LPTR, dwACLSize);
-		if (pACL == NULL) __leave;
-		if (!InitializeAcl(pACL, dwACLSize, ACL_REVISION2)) __leave;
-		DWORD dwAccessMask = ACCESS_READ_CONST | ACCESS_WRITE_CONST;
-		if (!AddAccessAllowedAce(pACL, ACL_REVISION2, dwAccessMask, psidAdmin)) __leave;
-		if (!SetSecurityDescriptorDacl(psdAdmin, TRUE, pACL, FALSE)) __leave;
-		SetSecurityDescriptorGroup(psdAdmin, psidAdmin, FALSE);
-		SetSecurityDescriptorOwner(psdAdmin, psidAdmin, FALSE);
-		if (!IsValidSecurityDescriptor(psdAdmin)) __leave;
-		DWORD dwAccessDesired = ACCESS_READ_CONST;
-		GenericMapping.GenericRead = ACCESS_READ_CONST;
-		GenericMapping.GenericWrite = ACCESS_WRITE_CONST;
-		GenericMapping.GenericExecute = 0;
-		GenericMapping.GenericAll = ACCESS_READ_CONST | ACCESS_WRITE_CONST;
-		DWORD dwStructureSize = sizeof(PRIVILEGE_SET);
-		if (!AccessCheck(psdAdmin, hImpersonationToken, dwAccessDesired, &GenericMapping, &ps, &dwStructureSize, &dwStatus, &fReturn))
-		{
-			fReturn = FALSE;
-			__leave;
-		}
-	}
-	__finally
-	{
-		if (pACL) LocalFree(pACL);
-		if (psdAdmin) LocalFree(psdAdmin);
-		if (psidAdmin) FreeSid(psidAdmin);
-		if (hImpersonationToken) CloseHandle(hImpersonationToken);
-		if (hToken) CloseHandle(hToken);
-	}
-	if (fReturn == TRUE)
+
+    QString err;
+
+    if (!OpenThreadToken(GetCurrentThread(),
+            TOKEN_DUPLICATE | TOKEN_QUERY, TRUE, &hToken)) {
+        DWORD e = GetLastError();
+        WPMUtils::formatMessage(e, &err);
+        if (e == ERROR_NO_TOKEN) {
+            if (!OpenProcessToken(GetCurrentProcess(),
+                    TOKEN_DUPLICATE | TOKEN_QUERY, &hToken)) {
+                WPMUtils::formatMessage(GetLastError(), &err);
+            }
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!DuplicateToken(hToken, SecurityImpersonation,
+                &hImpersonationToken)) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!AllocateAndInitializeSid(&SystemSidAuthority, 2,
+                SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS,
+                0, 0, 0, 0, 0, 0, &psidAdmin)) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        psdAdmin = LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
+
+        if (!InitializeSecurityDescriptor(psdAdmin,
+                SECURITY_DESCRIPTOR_REVISION)) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        DWORD dwACLSize = sizeof(ACL) + sizeof(ACCESS_ALLOWED_ACE) +
+                GetLengthSid(psidAdmin) - sizeof(DWORD);
+
+        pACL = (PACL)LocalAlloc(LPTR, dwACLSize);
+
+        if (!InitializeAcl(pACL, dwACLSize, ACL_REVISION2)) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        DWORD dwAccessMask = ACCESS_READ_CONST | ACCESS_WRITE_CONST;
+
+        if (!AddAccessAllowedAce(pACL, ACL_REVISION2, dwAccessMask,
+                psidAdmin)) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        if (!SetSecurityDescriptorDacl(psdAdmin, TRUE, pACL, FALSE)) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        SetSecurityDescriptorGroup(psdAdmin, psidAdmin, FALSE);
+        SetSecurityDescriptorOwner(psdAdmin, psidAdmin, FALSE);
+
+        if (!IsValidSecurityDescriptor(psdAdmin)) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        DWORD dwAccessDesired = ACCESS_READ_CONST;
+        GenericMapping.GenericRead = ACCESS_READ_CONST;
+        GenericMapping.GenericWrite = ACCESS_WRITE_CONST;
+        GenericMapping.GenericExecute = 0;
+        GenericMapping.GenericAll = ACCESS_READ_CONST | ACCESS_WRITE_CONST;
+        DWORD dwStructureSize = sizeof(PRIVILEGE_SET);
+        BOOL val;
+        if (AccessCheck(psdAdmin, hImpersonationToken, dwAccessDesired,
+                &GenericMapping, &ps, &dwStructureSize, &dwStatus, &val)) {
+            fReturn = val == TRUE;
+        }
+    }
+
+    if (pACL)
+        LocalFree(pACL);
+    if (psdAdmin)
+        LocalFree(psdAdmin);
+    if (psidAdmin)
+        FreeSid(psidAdmin);
+    if (hImpersonationToken)
+        CloseHandle(hImpersonationToken);
+    if (hToken)
+        CloseHandle(hToken);
+
+    if (fReturn)
 		privileges = 2;
 	else
 		privileges = 1;
-	return (fReturn == TRUE);
+
+    return fReturn;
 }
