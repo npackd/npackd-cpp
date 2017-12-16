@@ -3689,11 +3689,13 @@ bool WPMUtils::hasAdminPrivileges()
         DWORD e = GetLastError();
         WPMUtils::formatMessage(e, &err);
         if (e == ERROR_NO_TOKEN) {
+            err.clear();
             if (!OpenProcessToken(GetCurrentProcess(),
                     TOKEN_DUPLICATE | TOKEN_QUERY, &hToken)) {
                 WPMUtils::formatMessage(GetLastError(), &err);
             }
         }
+        qCDebug(npackd) << "hasAdminPrivileges.1";
     }
 
     if (err.isEmpty()) {
@@ -3701,6 +3703,7 @@ bool WPMUtils::hasAdminPrivileges()
                 &hImpersonationToken)) {
             WPMUtils::formatMessage(GetLastError(), &err);
         }
+        qCDebug(npackd) << "hasAdminPrivileges.2";
     }
 
     if (err.isEmpty()) {
@@ -3709,6 +3712,7 @@ bool WPMUtils::hasAdminPrivileges()
                 0, 0, 0, 0, 0, 0, &psidAdmin)) {
             WPMUtils::formatMessage(GetLastError(), &err);
         }
+        qCDebug(npackd) << "hasAdminPrivileges.3";
     }
 
     if (err.isEmpty()) {
@@ -3718,6 +3722,7 @@ bool WPMUtils::hasAdminPrivileges()
                 SECURITY_DESCRIPTOR_REVISION)) {
             WPMUtils::formatMessage(GetLastError(), &err);
         }
+        qCDebug(npackd) << "hasAdminPrivileges.4";
     }
 
     if (err.isEmpty()) {
@@ -3729,6 +3734,7 @@ bool WPMUtils::hasAdminPrivileges()
         if (!InitializeAcl(pACL, dwACLSize, ACL_REVISION2)) {
             WPMUtils::formatMessage(GetLastError(), &err);
         }
+        qCDebug(npackd) << "hasAdminPrivileges.5";
     }
 
     if (err.isEmpty()) {
@@ -3738,12 +3744,14 @@ bool WPMUtils::hasAdminPrivileges()
                 psidAdmin)) {
             WPMUtils::formatMessage(GetLastError(), &err);
         }
+        qCDebug(npackd) << "hasAdminPrivileges.6";
     }
 
     if (err.isEmpty()) {
         if (!SetSecurityDescriptorDacl(psdAdmin, TRUE, pACL, FALSE)) {
             WPMUtils::formatMessage(GetLastError(), &err);
         }
+        qCDebug(npackd) << "hasAdminPrivileges.7";
     }
 
     if (err.isEmpty()) {
@@ -3753,6 +3761,7 @@ bool WPMUtils::hasAdminPrivileges()
         if (!IsValidSecurityDescriptor(psdAdmin)) {
             WPMUtils::formatMessage(GetLastError(), &err);
         }
+        qCDebug(npackd) << "hasAdminPrivileges.8";
     }
 
     if (err.isEmpty()) {
@@ -3767,6 +3776,7 @@ bool WPMUtils::hasAdminPrivileges()
                 &GenericMapping, &ps, &dwStructureSize, &dwStatus, &val)) {
             fReturn = val == TRUE;
         }
+        qCDebug(npackd) << "hasAdminPrivileges.9";
     }
 
     if (pACL)
@@ -3784,6 +3794,9 @@ bool WPMUtils::hasAdminPrivileges()
 		privileges = 2;
 	else
 		privileges = 1;
+
+    qCDebug(npackd) << "hasAdminPrivileges" << fReturn;
+
 
     return fReturn;
 }
