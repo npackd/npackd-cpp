@@ -10,6 +10,7 @@ FIND_PATH(QUAZIP_INCLUDE_DIRS
     NAMES quazip.h
     HINTS ${PC_QUAZIP_INCLUDEDIR}
           ${PC_QUAZIP_INCLUDE_DIRS}
+          $ENV{QUAZIP_HOME}/quazip
           $ENV{QUAZIP_HOME}/include
           $ENV{QUAZIP_ROOT}/include
           /usr/local/include
@@ -25,6 +26,7 @@ FIND_LIBRARY(QUAZIP_LIBRARIES
     NAMES libquazip libquazip5
     HINTS ${PC_QUAZIP_LIBDIR}
           ${PC_QUAZIP_LIBRARY_DIRS}
+          $ENV{QUAZIP_HOME}/quazip/release
           $ENV{QUAZIP_HOME}/lib
           $ENV{QUAZIP_ROOT}/lib
           /usr/local/lib

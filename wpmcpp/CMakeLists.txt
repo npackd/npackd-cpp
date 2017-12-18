@@ -46,7 +46,6 @@ set(WPMCPP_SOURCES
 	src/mysqlquery.cpp
 	src/repositoryxmlhandler.cpp
 	src/cbsthirdpartypm.cpp
-	src/scanharddrivesthread.cpp
 	src/visiblejobs.cpp
 	src/progresstree2.cpp
 	src/downloadsizefinder.cpp
@@ -98,7 +97,6 @@ set(WPMCPP_HEADERS
 	src/repositoryxmlhandler.h
 	src/cbsthirdpartypm.h
 	src/msoav2.h
-	src/scanharddrivesthread.h
 	src/visiblejobs.h
 	src/clprocessor.h
 	src/progresstree2.h
@@ -143,10 +141,13 @@ add_executable(npackd
 	${WPMCPP_FORMS}
 )
 qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
-qt5_use_modules(npackd Xml Sql Widgets WinExtras)
+qt5_use_modules(npackd Gui Core Xml Sql Widgets WinExtras)
 target_link_libraries(npackd
 	${QUAZIP_LIBRARIES}
 	${ZLIB_LIBRARIES}
+	qtharfbuzzng
+	qtpcre
+	opengl32
     ole32
     uuid
     wininet

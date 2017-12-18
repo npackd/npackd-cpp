@@ -82,11 +82,12 @@ add_executable(ncl
 	${NPACKDCL_SOURCES}
 	${NPACKDCL_HEADERS}
 )
-qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
+#qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
 qt5_use_modules(ncl Core Xml Sql)
 target_link_libraries(ncl
 	${QUAZIP_LIBRARIES}
 	${ZLIB_LIBRARIES}
+	qtpcre
     ole32
     uuid
     wininet

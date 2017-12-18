@@ -4,6 +4,8 @@ project(npackd)
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake") 
+
+LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
 if(WIN32)
   set(CMAKE_USE_RELATIVE_PATHS true)
@@ -14,6 +16,8 @@ endif()
 if(NOT MSVC)
   if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  else()
+	set(CMAKE_CXX_STANDARD 11)
   endif ()
 endif()
 
@@ -24,6 +28,11 @@ if(OSMSCOUT_PTR_SIZE EQUAL 8)
 else()
   set(NPACKD_PLATFORM_X64 FALSE)
 endif()
+
+# todo
+set(NPACKD_PLATFORM_X64 TRUE)
+add_definitions(-DUNICODE -D_UNICODE)
+link_directories("$ENV{QTDIR}\\qtbase\\lib") 
 
 include(CheckCXXCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC)
