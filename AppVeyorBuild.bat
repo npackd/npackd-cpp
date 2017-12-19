@@ -85,9 +85,11 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 pushd npackdcl\build
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin
 set qtdir=%qt:\=/%
-set quazip_home=%quazip:\=/%
+set CMAKE_INCLUDE_PATH=%quazip%\quazip
+set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DZLIB_LIBRARY:FILEPATH="%mingw%\%mingw_libs%\lib\libz.a" -DZLIB_INCLUDE_DIR:PATH="%mingw%\x86_64-w64-mingw32\include" -DCMAKE_INSTALL_PREFIX=%cd%\npackdcl\install"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\npackdcl\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
