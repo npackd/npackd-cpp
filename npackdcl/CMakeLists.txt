@@ -27,8 +27,10 @@ include(CheckTypeSize)
 CHECK_TYPE_SIZE("void*" OSMSCOUT_PTR_SIZE BUILTIN_TYPES_ONLY)
 if(OSMSCOUT_PTR_SIZE EQUAL 8)
   set(NPACKD_PLATFORM_X64 TRUE)
+  set(BITS 64)
 else()
   set(NPACKD_PLATFORM_X64 FALSE)
+  set(BITS 32)
 endif()
 
 # todo
@@ -262,3 +264,12 @@ if(MSVC)
 	install(FILES ${QT5_BIN_DEBUG} CONFIGURATIONS Debug DESTINATION ${CMAKE_INSTALL_PREFIX})
 	install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
+
+add_custom_target(zip COMMAND
+    ${CMAKE_COMMAND} -E tar "cfv" "NpackdCL${BITS}-${NPACKD_VERSION}.zip" --format=zip
+       "${CMAKE_INSTALL_PREFIX}")
+	   
+add_custom_target(zip COMMAND
+    AdvancedInstaller.com /edit src\\NpackdCL${BITS}.aip /SetVersion ${NPACKD_VERSION}
+	COMMAND 
+	AdvancedInstaller.com /build src\\NpackdCL${BITS}.aip)

@@ -9,6 +9,9 @@ where cmake
 
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
 
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10,20)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x
+
 if %bits% equ 64 goto bits64
 
 set QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
@@ -50,10 +53,29 @@ if %prg% equ clu goto clu
 :npackd
 if "%target%" equ "coverity" goto coverity
 
-"%make%" -C wpmcpp zip msi zip-debug PROFILE=release%bits%
+mkdir wpmcpp\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-tree . /f
+pushd wpmcpp\build
+set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86
+set qtdir=%qt:\=/%
+set CMAKE_INCLUDE_PATH=%quazip%\quazip
+set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
+
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\wpmcpp\install"
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
+mingw32-make.exe install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+popd
+
+set path=%initial_path%
+
+rem todo "%make%" -C wpmcpp zip msi zip-debug PROFILE=release%bits%
+
 appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -83,7 +105,7 @@ mkdir npackdcl\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdcl\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin
+set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
