@@ -99,7 +99,7 @@ target_link_libraries(ncl
 	Ws2_32
 )
 target_include_directories(ncl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/wpmcpp/src)
-target_compile_definitions(ncl PRIVATE -D NPACKD_VERSION="${BUILD_NUMBER}" -D QUAZIP_STATIC=1)
+target_compile_definitions(ncl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS ncl DESTINATION ${CMAKE_INSTALL_PREFIX})
 if(MSVC)

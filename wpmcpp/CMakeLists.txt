@@ -51,6 +51,7 @@ set(WPMCPP_SOURCES
 	src/downloadsizefinder.cpp
 	src/clprocessor.cpp
 	src/exportrepositoryframe.cpp
+	src/wpmcpp_plugin_import.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.qrc
 )
 set(WPMCPP_HEADERS
@@ -135,7 +136,7 @@ if(MSVC)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql widgets winextras LinguistTools REQUIRED)
-add_executable(npackd
+add_executable(npackd WIN32
 	${WPMCPP_SOURCES}
 	${WPMCPP_HEADERS}
 	${WPMCPP_FORMS}
@@ -145,6 +146,26 @@ qt5_use_modules(npackd Gui Core Xml Sql Widgets WinExtras)
 target_link_libraries(npackd
 	${QUAZIP_LIBRARIES}
 	${ZLIB_LIBRARIES}
+	
+	qwindows
+	Qt5PlatformSupport 
+	qtfreetype
+	
+	qdds 
+	qicns 
+	qico 
+	qjp2 
+	qmng 
+	qtga 
+	qtiff 
+	qwbmp 
+	qwebp 
+	
+	imm32
+	winmm 
+	glu32 
+	mpr
+	
 	qtharfbuzzng
 	qtpcre
 	opengl32
@@ -159,7 +180,7 @@ target_link_libraries(npackd
 	Ws2_32
 )
 target_include_directories(npackd PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
-target_compile_definitions(npackd PRIVATE -D NPACKD_VERSION="${BUILD_NUMBER}" -D QUAZIP_STATIC=1)
+target_compile_definitions(npackd PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS npackd DESTINATION ${CMAKE_INSTALL_PREFIX})
 if(MSVC)

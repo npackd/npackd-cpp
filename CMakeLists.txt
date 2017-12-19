@@ -33,13 +33,10 @@ endif()
 set(NPACKD_PLATFORM_X64 TRUE)
 add_definitions(-DUNICODE -D_UNICODE)
 link_directories("$ENV{QTDIR}\\qtbase\\lib") 
+link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
+link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc" )
-#SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
-
-#set(CMAKE_EXE_LINKER_FLAGS "")
-
-
 
 include(CheckCXXCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC)
@@ -145,7 +142,11 @@ if (${_len} GREATER 3)
 else()
 	set(NPACKD_VERSION_TWEAK 0)
 endif()
-message(STATUS "Build npackd v${NPACKD_VERSION_MAJOR}.${NPACKD_VERSION_MINOR}.${NPACKD_VERSION_PATCH}.${NPACKD_VERSION_TWEAK}")
+
+set(NPACKD_VERSION "${NPACKD_VERSION_MAJOR}.${NPACKD_VERSION_MINOR}.${NPACKD_VERSION_PATCH}.${NPACKD_VERSION_TWEAK}")
+
+message(STATUS "Build npackd v${NPACKD_VERSION}")
+
 
 add_subdirectory(wpmcpp)
 add_subdirectory(npackdcl)
