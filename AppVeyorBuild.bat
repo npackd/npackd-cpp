@@ -51,19 +51,26 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 goto :eof
 
 :npackdcl
-"%make%" -C npackdcl zip msi zip-debug PROFILE=release%bits%
+mkdir npackdcl\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.zip
+cd npackdcl\build&&cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\npackdcl\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.msi
+rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
+"%make%" -C npackdcl\build install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL-%version%.map
+appveyor PushArtifact npackdcl\build\release\NpackdCL-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\%bits%\release\NpackdCL%bits%-debug-%version%.zip
+appveyor PushArtifact npackdcl\build\release\NpackdCL-%version%.msi
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact npackdcl\build\release\NpackdCL-%version%.map
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact npackdcl\build\release\NpackdCL%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof

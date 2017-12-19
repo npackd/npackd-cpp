@@ -3,16 +3,16 @@ clone_folder: c:\projects\Npackd
 environment:
   version: 1.23.2
   matrix:
+  - bits: 64
+    prg: npackdcl
+  - bits: 32
+    prg: npackdcl
+  - bits: 64
+    prg: npackd
+  - bits: 32
+    prg: npackd
   - bits: 32
     prg: clu
-  - bits: 64
-    prg: npackdcl
-  - bits: 32
-    prg: npackdcl
-  - bits: 64
-    prg: npackd
-  - bits: 32
-    prg: npackd
   - bits: 64
     prg: npackd
     target: coverity
