@@ -122,12 +122,13 @@ set(WPMCPP_TRANSLATIONS
 	src/wpmcpp_fr.ts
 	src/wpmcpp_de.ts
 )
-if(MSVC)
-	set(OUTPUT_FILE_NAME "npackd.exe")
-	configure_file(${CMAKE_SOURCE_DIR}/cmake/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc @ONLY)
-	file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-	list(APPEND WPMCPP_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc)
 
+set(OUTPUT_FILE_NAME "npackd.exe")
+configure_file(${CMAKE_SOURCE_DIR}/cmake/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc @ONLY)
+file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+list(APPEND WPMCPP_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc)
+
+if(MSVC)
 	# Configure the template file that allows debugging
 	set(QT_USE_IMPORTED_TARGETS TRUE)
 	find_package(Qt5Core REQUIRED)
