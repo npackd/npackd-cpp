@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
-project(ncl)
+project(npackdcl)
 
 ########
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
@@ -216,7 +216,7 @@ set(NPACKDCL_HEADERS
     src/stable.h
 )
 
-set(OUTPUT_FILE_NAME "ncl.exe")
+set(OUTPUT_FILE_NAME "npackdcl.exe")
 configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
 file(COPY ../wpmcpp/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 list(APPEND NPACKDCL_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc)
@@ -230,13 +230,13 @@ if(MSVC)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql REQUIRED)
-add_executable(ncl
+add_executable(npackdcl
 	${NPACKDCL_SOURCES}
 	${NPACKDCL_HEADERS}
 )
 #qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
-qt5_use_modules(ncl Core Xml Sql)
-target_link_libraries(ncl
+qt5_use_modules(npackdcl Core Xml Sql)
+target_link_libraries(npackdcl
 	${QUAZIP_LIBRARIES}
 	${ZLIB_LIBRARIES}
 	qtpcre
@@ -250,10 +250,12 @@ target_link_libraries(ncl
     netapi32
 	Ws2_32
 )
-target_include_directories(ncl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../wpmcpp/src)
-target_compile_definitions(ncl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../wpmcpp/src)
+target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
-install(TARGETS ncl DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
+
 if(MSVC)
 	set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb)
 	set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll)
