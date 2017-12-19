@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
-project(npackd)
+project(npackdg)
 
 ########
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
@@ -274,7 +274,7 @@ set(WPMCPP_TRANSLATIONS
 	src/wpmcpp_de.ts
 )
 
-set(OUTPUT_FILE_NAME "npackd.exe")
+set(OUTPUT_FILE_NAME "npackdg.exe")
 configure_file(${CMAKE_SOURCE_DIR}/../cmake/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc @ONLY)
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY src/wpmcpp.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -289,14 +289,14 @@ if(MSVC)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql widgets winextras LinguistTools REQUIRED)
-add_executable(npackd WIN32
+add_executable(npackdg WIN32
 	${WPMCPP_SOURCES}
 	${WPMCPP_HEADERS}
 	${WPMCPP_FORMS}
 )
 qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
-qt5_use_modules(npackd Gui Core Xml Sql Widgets WinExtras)
-target_link_libraries(npackd
+qt5_use_modules(npackdg Gui Core Xml Sql Widgets WinExtras)
+target_link_libraries(npackdg
 	${QUAZIP_LIBRARIES}
 	${ZLIB_LIBRARIES}
 	
@@ -332,10 +332,10 @@ target_link_libraries(npackd
     netapi32
 	Ws2_32
 )
-target_include_directories(npackd PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
-target_compile_definitions(npackd PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
+target_compile_definitions(npackdg PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
-install(TARGETS npackd DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS npackdg DESTINATION ${CMAKE_INSTALL_PREFIX})
 if(MSVC)
 	set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb ${_qt5Core_install_prefix}/bin/Qt5Widgetsd.dll ${_qt5Core_install_prefix}/bin/Qt5Widgetsd.pdb ${_qt5Core_install_prefix}/bin/Qt5Guid.dll ${_qt5Core_install_prefix}/bin/Qt5Guid.pdb)
 	set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll ${_qt5Core_install_prefix}/bin/Qt5Widgets.dll ${_qt5Core_install_prefix}/bin/Qt5Gui.dll)
