@@ -12,6 +12,12 @@ SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10,20)"
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x
 
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9,20)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set SEVENZIP=%%x
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=exeproxy" "--versions=[0.2,1)"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set EXEPROXY=%%x
+
 if %bits% equ 64 goto bits64
 
 set QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
@@ -57,7 +63,7 @@ mkdir wpmcpp\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd wpmcpp\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86
+set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
@@ -105,7 +111,7 @@ mkdir npackdcl\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdcl\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86
+set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release

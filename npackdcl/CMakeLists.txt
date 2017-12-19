@@ -266,10 +266,15 @@ if(MSVC)
 endif()
 
 add_custom_target(zip COMMAND
-    ${CMAKE_COMMAND} -E tar "cfv" "NpackdCL${BITS}-${NPACKD_VERSION}.zip" --format=zip
-       "${CMAKE_INSTALL_PREFIX}")
+	7z a "${CMAKE_CURRENT_BINARY_DIR}\\NpackdCL${BITS}-${NPACKD_VERSION}.zip" * -mx9
+	WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}")
+	   	   
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)
+file(COPY src/NpackdCL64.aip src/app.ico src/NpackdCL32.aip CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}\\msi)
 	   
-add_custom_target(msi COMMAND
-    AdvancedInstaller.com /edit src\\NpackdCL${BITS}.aip /SetVersion ${NPACKD_VERSION}
-	COMMAND 
-	AdvancedInstaller.com /build src\\NpackdCL${BITS}.aip)
+add_custom_target(msi 
+	COMMAND copy \"${CMAKE_CURRENT_BINARY_DIR}\\npackdcl.exe\" .
+	COMMAND "$ENV{EXEPROXY}\\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
+	COMMAND AdvancedInstaller.com "/edit" NpackdCL${BITS}.aip "/SetVersion" ${NPACKD_VERSION}
+	COMMAND	AdvancedInstaller.com "/build" NpackdCL${BITS}.aip
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)

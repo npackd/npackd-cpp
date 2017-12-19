@@ -347,10 +347,14 @@ endif()
 install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 add_custom_target(zip COMMAND
-    ${CMAKE_COMMAND} -E tar "cfv" "Npackd${BITS}-${NPACKD_VERSION}.zip" --format=zip
-       "${CMAKE_INSTALL_PREFIX}")
+	7z a "${CMAKE_CURRENT_BINARY_DIR}\\Npackd${BITS}-${NPACKD_VERSION}.zip" * -mx9
+	WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}")
 	   
-add_custom_target(msi COMMAND
-    AdvancedInstaller.com /edit src\\Npackd${BITS}.aip /SetVersion ${NPACKD_VERSION}
-	COMMAND 
-	AdvancedInstaller.com /build src\\Npackd${BITS}.aip)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)
+file(COPY $ENV{EXEPROXY}\\exeproxy.exe src/wpmcpp64.aip src/app.ico src/wpmcpp32.aip CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}\\msi)
+	   
+add_custom_target(msi 
+	COMMAND copy \"${CMAKE_CURRENT_BINARY_DIR}\\npackdg.exe\" .
+	COMMAND AdvancedInstaller.com "/edit" wpmcpp${BITS}.aip "/SetVersion" ${NPACKD_VERSION}
+	COMMAND	AdvancedInstaller.com "/build" wpmcpp${BITS}.aip
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)

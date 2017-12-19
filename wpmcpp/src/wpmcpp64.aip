@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="14.0.2" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="7.6.1" version="14.5.2" Modules="simple" RootPath="." Language="en" Id="{4473548D-A4A9-4004-B8ED-637E70772866}">
   <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
     <ROW Name="HiddenItems" Value="AppXAppDetailsComponent;AppXCapabilitiesComponent;AppXDependenciesComponent;AppXProductDetailsComponent;AppXVisualAssetsComponent;AppXAppDeclarationsComponent;AppXUriRulesComponent"/>
   </COMPONENT>
@@ -14,10 +14,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="https://npackd.appspot.com/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{32F412EA-A16C-4FA9-AF95-ED85ADC0BBF9} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{A8397623-F4EF-4B7D-8BA0-FD424D9683CC} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Npackd" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.22.2" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.23.2.0" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{EABC4270-7D7F-47BF-B388-AC63606E8DAC}"/>
@@ -30,7 +30,7 @@
     <ROW Property="WindowsTypeNT50Display" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
     <ROW Property="WindowsTypeNT5X" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
     <ROW Property="WindowsTypeNT5XDisplay" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
-    <ROW Property="WindowsTypeNTDisplay" MultiBuildValue="DefaultBuild:32 bit Operating Systems" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNTDisplay" MultiBuildValue="DefaultBuild:32-bit Windows versions" ValueLocId="-"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
@@ -38,23 +38,23 @@
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="LICENSE.txt" ComponentId="{28A334B2-08BC-4C0C-BC81-0425F3092792}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
-    <ROW Component="SHORTCUTDIR" ComponentId="{2BCB1C93-5315-420E-A13A-AD3FAD655DCD}" Directory_="SHORTCUTDIR" Attributes="0"/>
-    <ROW Component="exeproxy.exe" ComponentId="{83512282-1F85-4A13-BDAC-7AF2953A91A4}" Directory_="APPDIR" Attributes="0" KeyPath="exeproxy.exe"/>
-    <ROW Component="wpmcpp.exe" ComponentId="{32A151A4-8A0F-4540-83C3-B22F4FD76131}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
+    <ROW Component="LICENSE.txt" ComponentId="{F20ECDF8-534E-4850-9255-E45DEC8319C6}" Directory_="APPDIR" Attributes="0" KeyPath="LICENSE.txt" Type="0"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{E58C3DC7-D86F-40E2-B28F-18CBB2396988}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="exeproxy.exe" ComponentId="{AAB72B81-1299-45CB-AD52-6CD708D5475B}" Directory_="APPDIR" Attributes="0" KeyPath="exeproxy.exe"/>
+    <ROW Component="wpmcpp.exe" ComponentId="{AAD5D34C-DAB2-47B3-AD15-EBE2A1817674}" Directory_="APPDIR" Attributes="0" KeyPath="wpmcpp.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="LICENSE.txt SHORTCUTDIR exeproxy.exe wpmcpp.exe"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="..\CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="exeproxy.exe"/>
-    <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="..\LICENSE.txt" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
-    <ROW File="exeproxy.exe" Component_="exeproxy.exe" FileName="exeproxy.exe" Attributes="0" SourcePath="..\build\64\release\zip\exeproxy.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="wpmcpp.exe" Component_="wpmcpp.exe" FileName="npackdg.exe" Attributes="0" SourcePath="..\build\64\release\zip\npackdg.exe" SelfReg="false" NextFile="LICENSE.txt"/>
+    <ROW File="CrystalIcons_LICENSE.txt" Component_="LICENSE.txt" FileName="Crysta~1.txt|CrystalIcons_LICENSE.txt" Attributes="0" SourcePath="CrystalIcons_LICENSE.txt" SelfReg="false" NextFile="exeproxy.exe"/>
+    <ROW File="LICENSE.txt" Component_="LICENSE.txt" FileName="LICENSE.txt" Attributes="0" SourcePath="LICENSE.txt" SelfReg="false" NextFile="CrystalIcons_LICENSE.txt"/>
+    <ROW File="exeproxy.exe" Component_="exeproxy.exe" FileName="exeproxy.exe" Attributes="0" SourcePath="exeproxy.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="wpmcpp.exe" Component_="wpmcpp.exe" FileName="npackdg.exe" Attributes="0" SourcePath="npackdg.exe" SelfReg="false" NextFile="LICENSE.txt"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
-    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="..\build\64\release" PackageFileName="Npackd64-[|ProductVersion]" Languages="en" InstallationType="4" MsiPackageType="x64"/>
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="." PackageFileName="Npackd64-[|ProductVersion]" Languages="en" InstallationType="4" MsiPackageType="x64"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
     <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
