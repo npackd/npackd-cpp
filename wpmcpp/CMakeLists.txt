@@ -350,7 +350,7 @@ add_custom_target(zip COMMAND
     ${CMAKE_COMMAND} -E tar "cfv" "Npackd${BITS}-${NPACKD_VERSION}.zip" --format=zip
        "${CMAKE_INSTALL_PREFIX}")
 	   
-add_custom_target(zip COMMAND
+add_custom_target(msi COMMAND
     AdvancedInstaller.com /edit src\\Npackd${BITS}.aip /SetVersion ${NPACKD_VERSION}
 	COMMAND 
 	AdvancedInstaller.com /build src\\Npackd${BITS}.aip)
