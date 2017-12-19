@@ -126,6 +126,7 @@ set(WPMCPP_TRANSLATIONS
 set(OUTPUT_FILE_NAME "npackd.exe")
 configure_file(${CMAKE_SOURCE_DIR}/cmake/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc @ONLY)
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY src/wpmcpp.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 list(APPEND WPMCPP_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc)
 
 if(MSVC)
