@@ -64,12 +64,13 @@ set(NPACKDCL_HEADERS
     src/app.h
     src/stable.h
 )
-if(MSVC)
-	set(OUTPUT_FILE_NAME "ncl.exe")
-	configure_file(${CMAKE_SOURCE_DIR}/cmake/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
-	file(COPY ../wpmcpp/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-	list(APPEND NPACKDCL_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc)
 
+set(OUTPUT_FILE_NAME "ncl.exe")
+configure_file(${CMAKE_SOURCE_DIR}/cmake/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
+file(COPY ../wpmcpp/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+list(APPEND NPACKDCL_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc)
+
+if(MSVC)
 	# Configure the template file that allows debugging
 	set(QT_USE_IMPORTED_TARGETS TRUE)
 	find_package(Qt5Core REQUIRED)
