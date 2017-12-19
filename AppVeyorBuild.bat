@@ -3,16 +3,40 @@ echo on
 rem This script is used by AppVeyor to build the project.
 
 where appveyor
+where cmake
 
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
 
 if %bits% equ 64 goto bits64
 
-set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads\bin\mingw32-make.exe
+set QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
+set PACKAGE=com.googlecode.windows-package-manager.Npackd
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.9.2,4.9.2]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.7.1,0.7.1]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=drmingw" "--versions=[0.7.7,0.7.7]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
+
 goto start
 
 :bits64
-set make=C:\Program Files (x86)\MinGW-w64_x86_64_SEH_POSIX_threads\bin\mingw32-make.exe
+
+set QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
+set PACKAGE=com.googlecode.windows-package-manager.Npackd64
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.9.2,4.9.2]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.7.1,0.7.1]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=drmingw64" "--versions=[0.7.7,0.7.7]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
+
 goto start
 
 :start
@@ -54,11 +78,11 @@ goto :eof
 mkdir npackdcl\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-cd npackdcl\build&&cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\npackdcl\install"
+cd npackdcl\build&&set path=%mingw%\bin&&cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\npackdcl\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
-"%make%" -C npackdcl\build install
+cd npackdcl\build&&set path=&&mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 appveyor PushArtifact npackdcl\build\release\NpackdCL-%version%.zip
