@@ -363,3 +363,19 @@ endif()
 install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES $ENV{EXEPROXY}\\exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
+# todo
+# 	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -report_leak_max 100000 -no_callstack_use_top_fp -- wpmcpp.exe
+
+# todo memcheck
+# memcheck: compile
+# 	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
+
+# todo debug version
+#	copy "$(DRMINGW)\bin\exchndl.dll" $(WHERE)\zip-debug
+#	copy "$(DRMINGW)\bin\mgwhelp.dll" $(WHERE)\zip-debug
+#	copy "$(DRMINGW)\bin\dbghelp.dll" $(WHERE)\zip-debug
+#	copy "$(DRMINGW)\bin\symsrv.dll" $(WHERE)\zip-debug
+#	copy "$(DRMINGW)\bin\symsrv.yes" $(WHERE)\zip-debug
+
+#todo
+# 	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
