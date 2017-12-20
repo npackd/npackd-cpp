@@ -76,7 +76,7 @@ mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install
-7z a ..\Npackd%bits%-%version%.zip * -mx9	
+7z a ..\build\Npackd%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy ..\src\wpmcpp%bits%.aip .
@@ -99,7 +99,7 @@ set path=%initial_path%
 appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.msi
+appveyor PushArtifact wpmcpp\install\Npackd%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.map
@@ -140,10 +140,10 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install
 
-"%EXEPROXY%\\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
+"%EXEPROXY%\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-7z a ..\NpackdCL%bits%-%version%.zip * -mx9	
+7z a ..\build\NpackdCL%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
 copy ..\src\NpackdCL%bits%.aip .
@@ -166,7 +166,7 @@ set path=%initial_path%
 appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.msi
+appveyor PushArtifact npackdcl\install\NpackdCL%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.map
