@@ -154,69 +154,69 @@ message(STATUS "Build npackd v${NPACKD_VERSION}")
 ########
 
 set(NPACKDCL_SOURCES
-    ../wpmcpp/src/visiblejobs.cpp
-    ../wpmcpp/src/repository.cpp
-    ../wpmcpp/src/version.cpp
-    ../wpmcpp/src/packageversionfile.cpp
-    ../wpmcpp/src/package.cpp
-    ../wpmcpp/src/packageversion.cpp
-    ../wpmcpp/src/job.cpp
-    ../wpmcpp/src/installoperation.cpp
-    ../wpmcpp/src/dependency.cpp
-    ../wpmcpp/src/wpmutils.cpp
-    ../wpmcpp/src/downloader.cpp
-    ../wpmcpp/src/license.cpp
-    ../wpmcpp/src/windowsregistry.cpp
-    ../wpmcpp/src/detectfile.cpp
-    ../wpmcpp/src/commandline.cpp
-    ../wpmcpp/src/installedpackages.cpp
-    ../wpmcpp/src/installedpackageversion.cpp
-    ../wpmcpp/src/clprogress.cpp
-    ../wpmcpp/src/dbrepository.cpp
-    ../wpmcpp/src/abstractrepository.cpp
-    ../wpmcpp/src/abstractthirdpartypm.cpp
-    ../wpmcpp/src/msithirdpartypm.cpp
-    ../wpmcpp/src/controlpanelthirdpartypm.cpp
-    ../wpmcpp/src/wellknownprogramsthirdpartypm.cpp
-    ../wpmcpp/src/hrtimer.cpp
-    ../wpmcpp/src/repositoryxmlhandler.cpp
-    ../wpmcpp/src/mysqlquery.cpp
-    ../wpmcpp/src/installedpackagesthirdpartypm.cpp
-	src/main.cpp
-    src/app.cpp
-)
+main.cpp \
+    ../../../wpmcpp/src/visiblejobs.cpp \
+    ../../../wpmcpp/src/repository.cpp \
+    ../../../wpmcpp/src/version.cpp \
+    ../../../wpmcpp/src/packageversionfile.cpp \
+    ../../../wpmcpp/src/package.cpp \
+    ../../../wpmcpp/src/packageversion.cpp \
+    ../../../wpmcpp/src/job.cpp \
+    ../../../wpmcpp/src/installoperation.cpp \
+    ../../../wpmcpp/src/dependency.cpp \
+    ../../../wpmcpp/src/wpmutils.cpp \
+    ../../../wpmcpp/src/downloader.cpp \
+    ../../../wpmcpp/src/license.cpp \
+    ../../../wpmcpp/src/windowsregistry.cpp \
+    ../../../wpmcpp/src/detectfile.cpp \
+    app.cpp \
+    ../../../wpmcpp/src/commandline.cpp \
+    ../../../wpmcpp/src/installedpackages.cpp \
+    ../../../wpmcpp/src/installedpackageversion.cpp \
+    ../../../wpmcpp/src/clprogress.cpp \
+    ../../../wpmcpp/src/dbrepository.cpp \
+    ../../../wpmcpp/src/abstractrepository.cpp \
+    ../../../wpmcpp/src/abstractthirdpartypm.cpp \
+    ../../../wpmcpp/src/msithirdpartypm.cpp \
+    ../../../wpmcpp/src/controlpanelthirdpartypm.cpp \
+    ../../../wpmcpp/src/wellknownprogramsthirdpartypm.cpp \
+    ../../../wpmcpp/src/hrtimer.cpp \
+    ../../../wpmcpp/src/repositoryxmlhandler.cpp \
+    ../../../wpmcpp/src/mysqlquery.cpp \
+    ../../../wpmcpp/src/installedpackagesthirdpartypm.cpp \
+    ../../../wpmcpp/src/cbsthirdpartypm.cpp
+	)
 set(NPACKDCL_HEADERS
-	../wpmcpp/src/visiblejobs.h
-    ../wpmcpp/src/repository.h
-    ../wpmcpp/src/version.h
-    ../wpmcpp/src/packageversionfile.h
-    ../wpmcpp/src/package.h
-    ../wpmcpp/src/packageversion.h
-    ../wpmcpp/src/job.h
-    ../wpmcpp/src/installoperation.h
-    ../wpmcpp/src/dependency.h
-    ../wpmcpp/src/wpmutils.h
-    ../wpmcpp/src/downloader.h
-    ../wpmcpp/src/license.h
-    ../wpmcpp/src/windowsregistry.h
-    ../wpmcpp/src/detectfile.h
-    ../wpmcpp/src/installedpackages.h
-    ../wpmcpp/src/installedpackageversion.h
-    ../wpmcpp/src/commandline.h
-    ../wpmcpp/src/clprogress.h
-    ../wpmcpp/src/dbrepository.h
-    ../wpmcpp/src/abstractrepository.h
-    ../wpmcpp/src/abstractthirdpartypm.h
-    ../wpmcpp/src/msithirdpartypm.h
-    ../wpmcpp/src/controlpanelthirdpartypm.h
-    ../wpmcpp/src/wellknownprogramsthirdpartypm.h
-    ../wpmcpp/src/hrtimer.h
-    ../wpmcpp/src/repositoryxmlhandler.h
-    ../wpmcpp/src/mysqlquery.h
-    ../wpmcpp/src/installedpackagesthirdpartypm.h
-    src/app.h
-    src/stable.h
-)
+../../../wpmcpp/src/visiblejobs.h \
+    ../../../wpmcpp/src/repository.h \
+    ../../../wpmcpp/src/version.h \
+    ../../../wpmcpp/src/packageversionfile.h \
+    ../../../wpmcpp/src/package.h \
+    ../../../wpmcpp/src/packageversion.h \
+    ../../../wpmcpp/src/job.h \
+    ../../../wpmcpp/src/installoperation.h \
+    ../../../wpmcpp/src/dependency.h \
+    ../../../wpmcpp/src/wpmutils.h \
+    ../../../wpmcpp/src/downloader.h \
+    ../../../wpmcpp/src/license.h \
+    ../../../wpmcpp/src/windowsregistry.h \
+    ../../../wpmcpp/src/detectfile.h \
+    app.h \
+    ../../../wpmcpp/src/installedpackages.h \
+    ../../../wpmcpp/src/installedpackageversion.h \
+    ../../../wpmcpp/src/commandline.h \
+    ../../../wpmcpp/src/clprogress.h \
+    ../../../wpmcpp/src/dbrepository.h \
+    ../../../wpmcpp/src/abstractrepository.h \
+    ../../../wpmcpp/src/abstractthirdpartypm.h \
+    ../../../wpmcpp/src/msithirdpartypm.h \
+    ../../../wpmcpp/src/controlpanelthirdpartypm.h \
+    ../../../wpmcpp/src/wellknownprogramsthirdpartypm.h \
+    ../../../wpmcpp/src/hrtimer.h \
+    ../../../wpmcpp/src/repositoryxmlhandler.h \
+    ../../../wpmcpp/src/mysqlquery.h \
+    ../../../wpmcpp/src/installedpackagesthirdpartypm.h \
+    ../../../wpmcpp/src/cbsthirdpartypm.h)
 
 set(OUTPUT_FILE_NAME "npackdcl.exe")
 configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
@@ -231,13 +231,13 @@ if(MSVC)
 	configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/ncl.vcxproj.user @ONLY)
 endif() 
 
-find_package(Qt5 COMPONENTS xml sql REQUIRED)
+find_package(Qt5 COMPONENTS xml sql testlib REQUIRED)
 add_executable(npackdcl
 	${NPACKDCL_SOURCES}
 	${NPACKDCL_HEADERS}
 )
 #qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
-qt5_use_modules(npackdcl Core Xml Sql)
+qt5_use_modules(npackdcl Core Xml Sql testlib)
 target_link_libraries(npackdcl
 	${QUAZIP_LIBRARIES}
 	${ZLIB_LIBRARIES}

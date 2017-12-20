@@ -379,3 +379,17 @@ install(FILES $ENV{EXEPROXY}\\exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 #todo
 # 	"$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
+
+# todo
+# -Wl,-Map,wpmcpp_release.map
+
+# todo
+# -Os
+
+# todo
+# -static-libstdc++ -static-libgcc -Werror -Wno-missing-field-initializers -Wno-unused-parameter
+
+# these 2 options can be used to add the debugging information to the "release"
+# build
+# QMAKE_CXXFLAGS_RELEASE += -g
+# QMAKE_LFLAGS_RELEASE -= -Wl,-s
