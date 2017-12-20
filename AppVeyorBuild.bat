@@ -79,15 +79,12 @@ pushd ..\install
 7z a ..\Npackd%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy ..\src\wpmcpp64.aip .
+copy ..\src\wpmcpp%bits%.aip .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy ..\src\app.ico .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy ..\src\wpmcpp32.aip .
-if %errorlevel% neq 0 exit /b %errorlevel%
-	   
 AdvancedInstaller.com /edit wpmcpp%bits%.aip /SetVersion %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -108,8 +105,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.map
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
-if %errorlevel% neq 0 exit /b %errorlevel%
+rem todo
+rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
+rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
@@ -137,7 +135,6 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -149,15 +146,12 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 7z a ..\NpackdCL%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
-copy ..\src\NpackdCL64.aip .
+copy ..\src\NpackdCL%bits%.aip .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy ..\src\app.ico .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy ..\src\NpackdCL32.aip .
-if %errorlevel% neq 0 exit /b %errorlevel%
-	   
 AdvancedInstaller.com /edit NpackdCL%bits%.aip /SetVersion %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -169,17 +163,18 @@ popd
 
 set path=%initial_path%
 
-appveyor PushArtifact npackdcl\build\NpackdCL-%version%.zip
+appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\NpackdCL-%version%.msi
+appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\NpackdCL-%version%.map
+appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.map
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
-if %errorlevel% neq 0 exit /b %errorlevel%
+rem todo
+rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
+rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
@@ -193,8 +188,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact clu\build\CLU-%version%.map
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact clu\build\CLU%bits%-debug-%version%.zip
-if %errorlevel% neq 0 exit /b %errorlevel%
+rem todo
+rem appveyor PushArtifact clu\build\CLU%bits%-debug-%version%.zip
+rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
