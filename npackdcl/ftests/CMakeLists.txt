@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
-project(npackdcl)
+project(ftests CXX C)
 
 ########
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
