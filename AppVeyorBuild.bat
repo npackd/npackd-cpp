@@ -69,7 +69,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\wpmcpp\install"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
@@ -134,7 +134,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\npackdcl\install"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
