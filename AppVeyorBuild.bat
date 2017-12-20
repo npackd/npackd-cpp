@@ -102,8 +102,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact wpmcpp\install\Npackd%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.map
-if %errorlevel% neq 0 exit /b %errorlevel%
+rem todo
+rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.map
+rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo
 rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
@@ -169,8 +170,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact npackdcl\install\NpackdCL%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.map
-if %errorlevel% neq 0 exit /b %errorlevel%
+rem todo
+rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.map
+rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo
 rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
@@ -185,8 +187,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact clu\build\CLU-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact clu\build\CLU-%version%.map
-if %errorlevel% neq 0 exit /b %errorlevel%
+rem todo
+rem appveyor PushArtifact clu\build\CLU-%version%.map
+rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo
 rem appveyor PushArtifact clu\build\CLU%bits%-debug-%version%.zip
