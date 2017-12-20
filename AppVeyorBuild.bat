@@ -89,7 +89,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy ..\src\wpmcpp32.aip install
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
-AdvancedInstaller.com /edit install\wpmcpp%bits%.aip "/SetVersion" %version%
+AdvancedInstaller.com /edit install\wpmcpp%bits%.aip /SetVersion %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 AdvancedInstaller.com /build install\wpmcpp%bits%.aip
@@ -139,6 +139,30 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
 mingw32-make.exe install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+pushd install
+
+"%EXEPROXY%\\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+7z a ..\NpackdCL%bits%-%version%.zip * -mx9	
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd
+	   
+copy ..\src\NpackdCL64.aip install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy ..\src\app.ico install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy ..\src\NpackdCL32.aip install
+if %errorlevel% neq 0 exit /b %errorlevel%
+	   
+AdvancedInstaller.com /edit install\NpackdCL%bits%.aip /SetVersion %version%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+AdvancedInstaller.com /build install\NpackdCL%bits%.aip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 popd

@@ -257,7 +257,6 @@ target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}
 
 install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES $ENV{EXEPROXY}\\exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 if(MSVC)
 	set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb)
@@ -266,16 +265,3 @@ if(MSVC)
 	install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
 
-add_custom_target(zip COMMAND
-	7z a "${CMAKE_CURRENT_BINARY_DIR}\\NpackdCL${BITS}-${NPACKD_VERSION}.zip" * -mx9
-	WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}")
-	   	   
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)
-file(COPY src/NpackdCL64.aip src/app.ico src/NpackdCL32.aip CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}\\msi)
-	   
-add_custom_target(msi 
-	COMMAND copy \"${CMAKE_CURRENT_BINARY_DIR}\\npackdcl.exe\" .
-	COMMAND "$ENV{EXEPROXY}\\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
-	COMMAND AdvancedInstaller.com "/edit" NpackdCL${BITS}.aip "/SetVersion" ${NPACKD_VERSION}
-	COMMAND	AdvancedInstaller.com "/build" NpackdCL${BITS}.aip
-	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)
