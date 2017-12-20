@@ -59,15 +59,8 @@ link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc" )
 
 include(CheckCXXCompilerFlag)
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC)
-  set(NPACKD_WARNING_FLAGS "-Wall -Winit-self -Wno-overloaded-virtual -Wcast-qual -Wwrite-strings -Wextra -Wno-long-long")
-  if(EMSCRIPTEN)
-    set(NPACKD_WARNING_FLAGS "${NPACKD_WARNING_FLAGS} -Wno-warn-absolute-paths")
-  elseif(NOT APPLE)
-    set(NPACKD_WARNING_FLAGS "${NPACKD_WARNING_FLAGS} -Wno-unused-but-set-parameter")
-  endif()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${NPACKD_WARNING_FLAGS}")
-endif()
+
+include(../cmake/Common.cmake)
 
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:fast /wd4251")
@@ -387,7 +380,7 @@ install(FILES $ENV{EXEPROXY}\\exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 # -Os
 
 # todo
-# -static-libstdc++ -static-libgcc -Werror -Wno-missing-field-initializers -Wno-unused-parameter
+# -Werror
 
 # these 2 options can be used to add the debugging information to the "release"
 # build
