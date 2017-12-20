@@ -1,3 +1,19 @@
+# How to build:
+# -------------
+# cd wpmcpp
+# mkdir build
+# cd build
+# set path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\bin;C:\Program Files\CMake\bin
+# set cmake_prefix_path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\x86_64-w64-mingw32
+# set CMAKE_INCLUDE_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\quazip
+# set CMAKE_LIBRARY_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\quazip\release
+# set qtdir=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
+# set exeproxy=C:\Program Files\EXE_Proxy
+# cmake -G "MinGW Makefiles" ..\ -DCMAKE_INSTALL_PREFIX=C:\Users\tim_lebedkov\Documents\npackd-cpp\wpmcpp\install
+# mingw32-make.exe
+#
+
+
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
 project(npackdg)
@@ -346,15 +362,3 @@ if(MSVC)
 endif()
 install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-add_custom_target(zip COMMAND
-	7z a "${CMAKE_CURRENT_BINARY_DIR}\\Npackd${BITS}-${NPACKD_VERSION}.zip" * -mx9
-	WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}")
-	   
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)
-file(COPY $ENV{EXEPROXY}\\exeproxy.exe src/wpmcpp64.aip src/app.ico src/wpmcpp32.aip CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}\\msi)
-	   
-add_custom_target(msi 
-	COMMAND copy \"${CMAKE_CURRENT_BINARY_DIR}\\npackdg.exe\" .
-	COMMAND AdvancedInstaller.com "/edit" wpmcpp${BITS}.aip "/SetVersion" ${NPACKD_VERSION}
-	COMMAND	AdvancedInstaller.com "/build" wpmcpp${BITS}.aip
-	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}\\msi)

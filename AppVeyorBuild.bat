@@ -72,15 +72,32 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=%cd%\wpmcpp\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
 mingw32-make.exe install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+pushd install
+7z a ..\Npackd${BITS}-%version%.zip * -mx9	
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd
+	   
+copy ..\src\wpmcpp64.aip install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy ..\src\app.ico install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy ..\src\wpmcpp32.aip install
+if %errorlevel% neq 0 exit /b %errorlevel%
+	   
+AdvancedInstaller.com /edit install\wpmcpp%bits%.aip "/SetVersion" %version%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+AdvancedInstaller.com /build install\wpmcpp%bits%.aip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 popd
 
 set path=%initial_path%
-
-rem todo "%make%" -C wpmcpp zip msi zip-debug PROFILE=release%bits%
 
 appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
