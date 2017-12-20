@@ -75,8 +75,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-pushd install
-7z a ..\Npackd${BITS}-%version%.zip * -mx9	
+pushd ..\install
+7z a ..\Npackd%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd
 	   
@@ -141,7 +141,7 @@ rem todo -C npackdcl zip msi zip-debug PROFILE=release%bits%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-pushd install
+pushd ..\install
 
 "%EXEPROXY%\\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
