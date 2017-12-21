@@ -202,9 +202,6 @@ pushd ..\install
 7z a ..\build\CLU%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
-copy ..\src\CLU%bits%.aip .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
 copy ..\src\app.ico .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -214,9 +211,6 @@ popd
 set path=%initial_path%
 
 appveyor PushArtifact clu\build\CLU%bits%-%version%.zip
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-appveyor PushArtifact clu\install\CLU%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
