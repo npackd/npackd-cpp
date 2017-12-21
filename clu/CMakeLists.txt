@@ -146,54 +146,72 @@ message(STATUS "Build npackd v${NPACKD_VERSION}")
 
 ########
 
-set(NPACKDCL_SOURCES
-main.cpp \
-    app.cpp \
-    ../../wpmcpp/src/clprogress.cpp \
-    ../../wpmcpp/src/package.cpp \
-    ../../wpmcpp/src/license.cpp \
-    ../../wpmcpp/src/dependency.cpp \
-    ../../wpmcpp/src/detectfile.cpp \
-    ../../wpmcpp/src/abstractrepository.cpp \
-    ../../wpmcpp/src/repository.cpp \
-    ../../wpmcpp/src/packageversion.cpp \
-    ../../wpmcpp/src/packageversionfile.cpp \
-    ../../wpmcpp/src/installedpackageversion.cpp \
-    ../../wpmcpp/src/windowsregistry.cpp \
-    ../../wpmcpp/src/abstractthirdpartypm.cpp \
-    ../../wpmcpp/src/controlpanelthirdpartypm.cpp \
-    ../../wpmcpp/src/commandline.cpp \
-    ../../wpmcpp/src/wpmutils.cpp \
-    ../../wpmcpp/src/job.cpp \
-    ../../wpmcpp/src/hrtimer.cpp \
-    ../../wpmcpp/src/version.cpp
-	)
-set(NPACKDCL_HEADERS
-    app.h \
-    ../../wpmcpp/src/clprogress.h \
-    ../../wpmcpp/src/package.h \
-    ../../wpmcpp/src/license.h \
-    ../../wpmcpp/src/dependency.h \
-    ../../wpmcpp/src/detectfile.h \
-    ../../wpmcpp/src/abstractrepository.h \
-    ../../wpmcpp/src/repository.h \
-    ../../wpmcpp/src/packageversion.h \
-    ../../wpmcpp/src/packageversionfile.h \
-    ../../wpmcpp/src/installedpackageversion.h \
-    ../../wpmcpp/src/windowsregistry.h \
-    ../../wpmcpp/src/abstractthirdpartypm.h \
-    ../../wpmcpp/src/controlpanelthirdpartypm.h \
-    ../../wpmcpp/src/commandline.h \
-    ../../wpmcpp/src/wpmutils.h \
-    ../../wpmcpp/src/job.h \
-    ../../wpmcpp/src/hrtimer.h \
-    ../../wpmcpp/src/version.h
+set(CLU_SOURCES
+    src/main.cpp
+    src/app.cpp
+    ../wpmcpp/src/clprogress.cpp
+    ../wpmcpp/src/package.cpp
+    ../wpmcpp/src/license.cpp
+    ../wpmcpp/src/dependency.cpp
+    ../wpmcpp/src/detectfile.cpp
+    ../wpmcpp/src/abstractrepository.cpp
+    ../wpmcpp/src/repository.cpp
+    ../wpmcpp/src/packageversion.cpp
+    ../wpmcpp/src/packageversionfile.cpp
+    ../wpmcpp/src/installedpackageversion.cpp
+    ../wpmcpp/src/windowsregistry.cpp
+    ../wpmcpp/src/abstractthirdpartypm.cpp
+    ../wpmcpp/src/controlpanelthirdpartypm.cpp
+    ../wpmcpp/src/commandline.cpp
+    ../wpmcpp/src/wpmutils.cpp
+    ../wpmcpp/src/job.cpp
+    ../wpmcpp/src/hrtimer.cpp
+    ../wpmcpp/src/version.cpp
+    ../wpmcpp/src/installedpackages.cpp
+    ../wpmcpp/src/installoperation.cpp
+    ../wpmcpp/src/dbrepository.cpp
+    ../wpmcpp/src/downloader.cpp
+    ../wpmcpp/src/repositoryxmlhandler.cpp
+    ../wpmcpp/src/installedpackagesthirdpartypm.cpp
+    ../wpmcpp/src/wellknownprogramsthirdpartypm.cpp
+    ../wpmcpp/src/msithirdpartypm.cpp
+    ../wpmcpp/src/mysqlquery.cpp
+        )
+set(CLU_HEADERS
+    src/app.h
+    ../wpmcpp/src/clprogress.h
+    ../wpmcpp/src/package.h
+    ../wpmcpp/src/license.h
+    ../wpmcpp/src/dependency.h
+    ../wpmcpp/src/detectfile.h
+    ../wpmcpp/src/abstractrepository.h
+    ../wpmcpp/src/repository.h
+    ../wpmcpp/src/packageversion.h
+    ../wpmcpp/src/packageversionfile.h
+    ../wpmcpp/src/installedpackageversion.h
+    ../wpmcpp/src/windowsregistry.h
+    ../wpmcpp/src/abstractthirdpartypm.h
+    ../wpmcpp/src/controlpanelthirdpartypm.h
+    ../wpmcpp/src/commandline.h
+    ../wpmcpp/src/wpmutils.h
+    ../wpmcpp/src/job.h
+    ../wpmcpp/src/hrtimer.h
+    ../wpmcpp/src/version.h
+    ../wpmcpp/src/installedpackages.h
+    ../wpmcpp/src/installoperation.h
+    ../wpmcpp/src/dbrepository.h
+    ../wpmcpp/src/downloader.h
+    ../wpmcpp/src/repositoryxmlhandler.h
+    ../wpmcpp/src/installedpackagesthirdpartypm.h
+    ../wpmcpp/src/wellknownprogramsthirdpartypm.h
+    ../wpmcpp/src/msithirdpartypm.h
+    ../wpmcpp/src/mysqlquery.h
 )
 
-set(OUTPUT_FILE_NAME "npackdcl.exe")
-configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
+set(OUTPUT_FILE_NAME "clu.exe")
+configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/clu.rc @ONLY)
 file(COPY ../wpmcpp/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND NPACKDCL_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc)
+list(APPEND CLU_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/clu.rc)
 
 if(MSVC)
 	# Configure the template file that allows debugging
@@ -204,13 +222,13 @@ if(MSVC)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql REQUIRED)
-add_executable(npackdcl
-	${NPACKDCL_SOURCES}
-	${NPACKDCL_HEADERS}
+add_executable(clu
+	${CLU_SOURCES}
+	${CLU_HEADERS}
 )
 #qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
-qt5_use_modules(npackdcl Core Xml Sql)
-target_link_libraries(npackdcl
+qt5_use_modules(clu Core Xml Sql)
+target_link_libraries(clu
 	${QUAZIP_LIBRARIES}
 	${ZLIB_LIBRARIES}
 	qtpcre
@@ -224,11 +242,11 @@ target_link_libraries(npackdcl
     netapi32
 	Ws2_32
 )
-target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../wpmcpp/src)
-target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+target_include_directories(clu PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../wpmcpp/src)
+target_compile_definitions(clu PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
-install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS clu DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 if(MSVC)
 	set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb)

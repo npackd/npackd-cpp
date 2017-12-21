@@ -181,19 +181,43 @@ rem if %errorlevel% neq 0 exit /b %errorlevel%
 goto :eof
 
 :clu
-"%make%" -C clu zip zip-debug PROFILE=release%bits%
+mkdir clu\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact clu\build\CLU-%version%.zip
+pushd clu\build
+set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set qtdir=%qt:\=/%
+set CMAKE_INCLUDE_PATH=%quazip%\quazip
+set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
+
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem todo
-rem appveyor PushArtifact clu\build\CLU-%version%.map
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+mingw32-make.exe install
+if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem todo
-rem appveyor PushArtifact clu\build\CLU%bits%-debug-%version%.zip
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+pushd ..\install
+
+7z a ..\build\CLU%bits%-%version%.zip * -mx9	
+if %errorlevel% neq 0 exit /b %errorlevel%
+	   
+copy ..\src\CLU%bits%.aip .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy ..\src\app.ico .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+popd
+popd
+
+set path=%initial_path%
+
+appveyor PushArtifact clu\build\CLU%bits%-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+appveyor PushArtifact clu\install\CLU%bits%-%version%.msi
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
