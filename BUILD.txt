@@ -1,0 +1,5 @@
+﻿How to build
+------------
+CMake is used to configure and build all projects. Please search for 
+CMakeLists.txt to find the projects. Each project contains a BUILD.txt alongside
+the CMakeLists.txt.

@@ -1,8 +1,20 @@
-How to Build Npackd
-===================
+How to build
+============
 
-1. install https://npackd.appspot.com/p/npackd-dev-i686-w64 for 32 bit builds or
+- install https://npackd.appspot.com/p/npackd-dev-i686-w64 for 32 bit builds or
     https://npackd.appspot.com/p/npackd-dev-x86_64-w64 for 64 bit builds from
     the libraries repository (see http://code.google.com/p/windows-package-manager/wiki/LibrariesRepository)
-2. start npackdcl\Build32.bat for a 32 bit build or npackdcl\Build64.bat for a 64 bit build
+	
+- cd wpmcpp
+- mkdir build
+- cd build
+- set path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\bin;C:\Program Files\CMake\bin
+- set cmake_prefix_path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\x86_64-w64-mingw32
+- set CMAKE_INCLUDE_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\quazip
+- set CMAKE_LIBRARY_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\quazip\release
+- set qtdir=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
+- set exeproxy=C:\Program Files\EXE_Proxy
+- cmake -G "MinGW Makefiles" ..\ -DCMAKE_INSTALL_PREFIX=C:\Users\username\Documents\npackd-cpp\wpmcpp\install
+- mingw32-make.exe
+
 
