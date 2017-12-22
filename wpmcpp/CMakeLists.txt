@@ -40,7 +40,7 @@ link_directories("$ENV{QTDIR}\\qtbase\\lib")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc" )
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc" )
 
 include(CheckCXXCompilerFlag)
 
@@ -362,9 +362,6 @@ install(FILES $ENV{EXEPROXY}\\exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 # todo
 # -Os
-
-# todo
-# -Werror
 
 # these 2 options can be used to add the debugging information to the "release"
 # build
