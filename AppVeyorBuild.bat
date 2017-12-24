@@ -30,6 +30,9 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.7.1,0.7.1]"
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=z-dev-i686-w64_sjlj_posix_4.9.2-static" "--versions=[1.2.11,1.2.11]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
+
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=drmingw" "--versions=[0.7.7,0.7.7]"
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 
@@ -46,6 +49,9 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
 
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.7.1,0.7.1]"
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
+
+set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=z-dev-x86_64-w64_seh_posix_4.9.2-static" "--versions=[1.2.11,1.2.11]"
+for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
 set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=drmingw64" "--versions=[0.7.7,0.7.7]"
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
@@ -69,7 +75,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install" "-DZLIB_ROOT:PATH=%zlib%"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
@@ -133,7 +139,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install" "-DZLIB_ROOT:PATH=%zlib%"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
@@ -191,7 +197,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\quazip
 set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install" "-DZLIB_ROOT:PATH=%zlib%"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
