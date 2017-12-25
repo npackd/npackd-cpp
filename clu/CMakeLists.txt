@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
 project(clu CXX C)
 
-########
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake") 
@@ -33,14 +32,12 @@ else()
   set(BITS 32)
 endif()
 
-# todo
-set(NPACKD_PLATFORM_X64 TRUE)
 add_definitions(-DUNICODE -D_UNICODE)
 link_directories("$ENV{QTDIR}\\qtbase\\lib") 
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc" )
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static" )
 
 include(CheckCXXCompilerFlag)
 
@@ -143,8 +140,6 @@ endif()
 set(NPACKD_VERSION "${NPACKD_VERSION_MAJOR}.${NPACKD_VERSION_MINOR}.${NPACKD_VERSION_PATCH}.${NPACKD_VERSION_TWEAK}")
 
 message(STATUS "Build npackd v${NPACKD_VERSION}")
-
-########
 
 set(CLU_SOURCES
     src/main.cpp

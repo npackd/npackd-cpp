@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
 project(exeproxy C)
 
-########
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/")
 SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mconsole -static -municode" )
@@ -22,8 +21,6 @@ else()
   set(BITS 32)
 endif()
 
-# todo
-set(NPACKD_PLATFORM_X64 TRUE)
 add_definitions(-DUNICODE -D_UNICODE)
 
 SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -static-libgcc" )
@@ -100,9 +97,6 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-
-########
-
 set(EXEPROXY_SOURCES
     src/main.c
 )
@@ -140,7 +134,5 @@ install(FILES LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
 # todo
 # QMAKE_CXXFLAGS += -static-libgcc -Werror \
 #     -Wno-missing-field-initializers -Wno-unused-parameter -municode
-# 
-# QMAKE_LFLAGS += -static -mconsole -municode
 # 
 # QMAKE_LFLAGS_RELEASE += -Wl,-Map,exeproxy_release.map
