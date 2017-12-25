@@ -333,7 +333,9 @@ if(MSVC)
 	install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
 install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES "$ENV{EXEPROXY}\\exeproxy.exe" DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+file(TO_CMAKE_PATH "$ENV{EXEPROXY}" EXEPROXY)
+install(FILES ${EXEPROXY}\\exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 # todo
 # 	cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -report_leak_max 100000 -no_callstack_use_top_fp -- wpmcpp.exe
