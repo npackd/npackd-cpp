@@ -113,7 +113,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-readVersion("Version.txt")
+readVersion("../appveyor.yml")
 
 file(GLOB RESOURCE_IMAGES "src/*.png")
 file(COPY ${RESOURCE_IMAGES} src/wpmcpp.qrc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

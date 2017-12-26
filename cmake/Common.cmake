@@ -13,7 +13,10 @@ endif()
 #
 # txt: path to the Version.txt
 macro(readVersion txt)
-	file(STRINGS ${txt} READ_BUILD_NUMBER)
+	file(STRINGS ${txt} READ_BUILD_NUMBER REGEX "version:.+" LIMIT_COUNT 1)
+
+	message(STATUS "Read build number ${READ_BUILD_NUMBER}")
+
 	string(REGEX MATCHALL "[0-9]+" _versionComponents "${READ_BUILD_NUMBER}")
 	list(LENGTH _versionComponents _len)
 	if (${_len} GREATER 0)

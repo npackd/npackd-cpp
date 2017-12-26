@@ -1,4 +1,4 @@
-version: 1.23.2.{build}
+version: 1.24.{build}
 clone_folder: c:\projects\Npackd
 environment:
   version: 1.23.2

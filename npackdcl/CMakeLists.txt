@@ -113,7 +113,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-readVersion("../wpmcpp/Version.txt")
+readVersion("../appveyor.yml")
 
 set(NPACKDCL_SOURCES
     ../wpmcpp/src/visiblejobs.cpp
