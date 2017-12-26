@@ -3,11 +3,11 @@ clone_folder: c:\projects\Npackd
 environment:
   matrix:
   - bits: 64
+    prg: npackd
+  - bits: 64
     prg: npackdcl
   - bits: 32
     prg: npackdcl
-  - bits: 64
-    prg: npackd
   - bits: 32
     prg: npackd
   - bits: 32
