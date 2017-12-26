@@ -19,7 +19,7 @@ if(NOT MSVC)
   if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   else()
-	set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 11)
   endif ()
 endif()
 
@@ -48,8 +48,8 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:fast /wd4251")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Oi")
   if(CMAKE_CL_64)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
   endif()
   if(MSVC_VERSION GREATER 1500 OR MSVC_VERSION EQUAL 1500)
     option(NPACKD_BUILD_MSVC_MP "Enable build with multiple processes in Visual Studio" TRUE)
@@ -114,33 +114,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-file(STRINGS "../../wpmcpp/Version.txt" READ_BUILD_NUMBER)
-string(REGEX MATCHALL "[0-9]+" _versionComponents "${READ_BUILD_NUMBER}")
-list(LENGTH _versionComponents _len)
-if (${_len} GREATER 0)
-	list(GET _versionComponents 0 NPACKD_VERSION_MAJOR)
-else()
-	set(NPACKD_VERSION_MAJOR 0)
-endif()
-if (${_len} GREATER 1)
-	list(GET _versionComponents 1 NPACKD_VERSION_MINOR)
-else()
-	set(NPACKD_VERSION_MINOR 0)
-endif()
-if (${_len} GREATER 2)
-	list(GET _versionComponents 2 NPACKD_VERSION_PATCH)
-else()
-	set(NPACKD_VERSION_PATCH 0)
-endif()
-if (${_len} GREATER 3)
-	list(GET _versionComponents 3 NPACKD_VERSION_TWEAK)
-else()
-	set(NPACKD_VERSION_TWEAK 0)
-endif()
-
-set(NPACKD_VERSION "${NPACKD_VERSION_MAJOR}.${NPACKD_VERSION_MINOR}.${NPACKD_VERSION_PATCH}.${NPACKD_VERSION_TWEAK}")
-
-message(STATUS "Build npackd v${NPACKD_VERSION}")
+readVersion("../../wpmcpp/Version.txt")
 
 set(FTESTS_SOURCES
     src/app.cpp
@@ -207,11 +181,11 @@ set(FTESTS_HEADERS
 set(OUTPUT_FILE_NAME "ftests.exe")
 
 if(MSVC)
-	# Configure the template file that allows debugging
-	set(QT_USE_IMPORTED_TARGETS TRUE)
-	find_package(Qt5Core REQUIRED)
-	set(QT_BIN_DIR ${_qt5Core_install_prefix}/bin)
-	configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/ncl.vcxproj.user @ONLY)
+    # Configure the template file that allows debugging
+    set(QT_USE_IMPORTED_TARGETS TRUE)
+    find_package(Qt5Core REQUIRED)
+    set(QT_BIN_DIR ${_qt5Core_install_prefix}/bin)
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/ncl.vcxproj.user @ONLY)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql test REQUIRED)
@@ -221,9 +195,9 @@ add_executable(ftests
 )
 qt5_use_modules(ftests Core Xml Sql Test)
 target_link_libraries(ftests
-	${QUAZIP_LIBRARIES}
-	${ZLIB_LIBRARIES}
-	qtpcre
+    ${QUAZIP_LIBRARIES}
+    ${ZLIB_LIBRARIES}
+    qtpcre
     ole32
     uuid
     wininet
@@ -232,7 +206,7 @@ target_link_libraries(ftests
     shlwapi
     msi
     netapi32
-	Ws2_32
+    Ws2_32
 )
 target_include_directories(ftests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../../wpmcpp/src)
 target_compile_definitions(ftests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
@@ -241,10 +215,10 @@ install(TARGETS ftests DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 if(MSVC)
-	set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb)
-	set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll)
-	install(FILES ${QT5_BIN_DEBUG} CONFIGURATIONS Debug DESTINATION ${CMAKE_INSTALL_PREFIX})
-	install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
+    set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb)
+    set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll)
+    install(FILES ${QT5_BIN_DEBUG} CONFIGURATIONS Debug DESTINATION ${CMAKE_INSTALL_PREFIX})
+    install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
 
 # todo

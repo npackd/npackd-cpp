@@ -33,8 +33,8 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:fast /wd4251")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Oi")
   if(CMAKE_CL_64)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
   endif()
   if(MSVC_VERSION GREATER 1500 OR MSVC_VERSION EQUAL 1500)
     option(NPACKD_BUILD_MSVC_MP "Enable build with multiple processes in Visual Studio" TRUE)
@@ -118,7 +118,7 @@ target_link_libraries(exeproxy
 #    shlwapi
 #    msi
 #    netapi32
-#	Ws2_32
+#   Ws2_32
 )
 target_include_directories(exeproxy PRIVATE ${CMAKE_SOURCE_DIR}/../wpmcpp/src)
 target_compile_definitions(exeproxy PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}")
