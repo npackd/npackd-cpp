@@ -19,7 +19,7 @@ if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   else()
     set(CMAKE_CXX_STANDARD 11)
-  endif ()
+  endif()
 endif()
 
 include(CheckTypeSize)
@@ -104,7 +104,7 @@ endif()
 # postfix for debug builds
 if(NOT APPLE)
   set(CMAKE_DEBUG_POSTFIX "d")
-endif ()
+endif()
 
 find_package(QuaZip REQUIRED)
 

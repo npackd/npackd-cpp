@@ -4,7 +4,7 @@ project(exeproxy C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/")
-SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mconsole -static -municode" )
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mconsole -static -municode")
 
 if(WIN32)
   set(CMAKE_USE_RELATIVE_PATHS true)
@@ -105,21 +105,9 @@ set(EXEPROXY_HEADERS
 
 set(OUTPUT_FILE_NAME "exeproxy.exe")
 
-add_executable(exeproxy
-        ${EXEPROXY_SOURCES}
-)
+add_executable(exeproxy ${EXEPROXY_SOURCES})
 
-target_link_libraries(exeproxy
-#    ole32
-#    uuid
-#    wininet
-#    psapi
-#    version
-#    shlwapi
-#    msi
-#    netapi32
-#   Ws2_32
-)
+target_link_libraries(exeproxy)
 target_include_directories(exeproxy PRIVATE ${CMAKE_SOURCE_DIR}/../wpmcpp/src)
 target_compile_definitions(exeproxy PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}")
 
