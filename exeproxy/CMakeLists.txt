@@ -5,6 +5,7 @@ project(exeproxy C)
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mconsole -static -municode")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
 if(WIN32)
   set(CMAKE_USE_RELATIVE_PATHS true)
@@ -95,14 +96,3 @@ target_compile_definitions(exeproxy PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}
 
 install(TARGETS exeproxy DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-# todo
-# contains(QT_ARCH, i386) {
-#     QMAKE_CXXFLAGS_RELEASE += -flto
-# }
-
-# todo
-# QMAKE_CXXFLAGS += -static-libgcc -Werror \
-#     -Wno-missing-field-initializers -Wno-unused-parameter -municode
-# 
-# QMAKE_LFLAGS_RELEASE += -Wl,-Map,exeproxy_release.map

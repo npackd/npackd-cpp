@@ -5,6 +5,7 @@ project(npackdg CXX C)
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake") 
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
@@ -311,12 +312,8 @@ install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 #   "$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
 
 # todo
-# -Wl,-Map,wpmcpp_release.map
-
-# todo
 # -Os
 
 # these 2 options can be used to add the debugging information to the "release"
 # build
 # QMAKE_CXXFLAGS_RELEASE += -g
-# QMAKE_LFLAGS_RELEASE -= -Wl,-s
