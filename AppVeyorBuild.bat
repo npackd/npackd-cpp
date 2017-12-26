@@ -83,31 +83,32 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-C:\Windows\System32\xcopy.exe install install-debug /E /I /H /Y
+C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip install\npackdg.exe
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy build\npackdg.map install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\exchndl.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\mgwhelp.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\dbghelp.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\symsrv.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\symsrv.yes" install-debug
+strip ..\install\npackdg.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install-debug
+
+copy ..\build\npackdg.map .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\exchndl.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\mgwhelp.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\dbghelp.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.yes" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 7z a ..\build\Npackd%bits%-debug-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd
@@ -171,31 +172,31 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-C:\Windows\System32\xcopy.exe install install-debug /E /I /H /Y
+C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip install\npackdcl.exe
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy build\npackdcl.map install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\exchndl.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\mgwhelp.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\dbghelp.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\symsrv.dll" install-debug
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\symsrv.yes" install-debug
+strip ..\install\npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install-debug
+copy ..\build\npackdcl.map .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\exchndl.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\mgwhelp.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\dbghelp.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.dll" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.yes" .
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 7z a ..\build\NpackdCL%bits%-debug-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd
