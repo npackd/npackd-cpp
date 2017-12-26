@@ -24,7 +24,7 @@ endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
 
-SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -static-libgcc" )
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -g -Os" )
 
 include(CheckCXXCompilerFlag)
 

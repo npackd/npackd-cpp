@@ -38,7 +38,7 @@ link_directories("$ENV{QTDIR}\\qtbase\\lib")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc" )
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os")
 
 include(CheckCXXCompilerFlag)
 
@@ -310,10 +310,3 @@ install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 #todo
 #   "$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe
-
-# todo
-# -Os
-
-# these 2 options can be used to add the debugging information to the "release"
-# build
-# QMAKE_CXXFLAGS_RELEASE += -g
