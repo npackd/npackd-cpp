@@ -301,12 +301,3 @@ install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 # memcheck: compile
 #   cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
 
-# todo debug version
-#   copy "$(DRMINGW)\bin\exchndl.dll" $(WHERE)\zip-debug
-#   copy "$(DRMINGW)\bin\mgwhelp.dll" $(WHERE)\zip-debug
-#   copy "$(DRMINGW)\bin\dbghelp.dll" $(WHERE)\zip-debug
-#   copy "$(DRMINGW)\bin\symsrv.dll" $(WHERE)\zip-debug
-#   copy "$(DRMINGW)\bin\symsrv.yes" $(WHERE)\zip-debug
-
-#todo
-#   "$(MINGW)\bin\strip.exe" $(WHERE)\zip\npackdg.exe

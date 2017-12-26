@@ -83,6 +83,35 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+C:\Windows\System32\xcopy.exe install install-debug /E /I /H /Y
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+strip install\npackdg.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy build\npackdg.map install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\exchndl.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\mgwhelp.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\dbghelp.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.yes" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+pushd ..\install-debug
+7z a ..\build\Npackd%bits%-debug-%version%.zip * -mx9	
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd
+
 pushd ..\install
 7z a ..\build\Npackd%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -98,8 +127,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 AdvancedInstaller.com /build wpmcpp%bits%.aip
 if %errorlevel% neq 0 exit /b %errorlevel%
-
 popd
+
 popd
 
 set path=%initial_path%
@@ -110,13 +139,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact wpmcpp\install\Npackd%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem todo
-rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.map
-rem if %errorlevel% neq 0 exit /b %errorlevel%
-
-rem todo
-rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
@@ -146,6 +170,35 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+C:\Windows\System32\xcopy.exe install install-debug /E /I /H /Y
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+strip install\npackdcl.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy build\npackdcl.map install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\exchndl.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\mgwhelp.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\dbghelp.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.dll" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%DRMINGW%\bin\symsrv.yes" install-debug
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+pushd ..\install-debug
+7z a ..\build\NpackdCL%bits%-debug-%version%.zip * -mx9	
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd
 
 pushd ..\install
 
@@ -178,13 +231,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact npackdcl\install\NpackdCL%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem todo
-rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.map
-rem if %errorlevel% neq 0 exit /b %errorlevel%
-
-rem todo
-rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
