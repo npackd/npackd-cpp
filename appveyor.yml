@@ -1,7 +1,8 @@
-version: 1.24.{build}
+version: 1.24
 clone_folder: c:\projects\Npackd
 environment:
-  version: 1.23.2
+  version: '{version}'
+  build: '{build}'
   matrix:
   - bits: 64
     prg: npackdcl
