@@ -62,7 +62,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 "%npackd_cl%\ncl" add -p drmingw64 -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if "%target%" neq "coverity" goto end
+if "%prg%" neq "npackd" goto end
+if "%bits%" neq "64" goto end
 "%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8
 if %errorlevel% neq 0 exit /b %errorlevel%
 

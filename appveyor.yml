@@ -12,9 +12,6 @@ environment:
     prg: npackd
   - bits: 32
     prg: clu
-  - bits: 64
-    prg: npackd
-    target: coverity
   covtoken:
     secure: yPwsn7ojqxg5m7pxyjIf3LV1GwoHd4m3q5iQrKCDzZ4=
 init:

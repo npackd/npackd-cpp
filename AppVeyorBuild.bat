@@ -65,7 +65,6 @@ if %prg% equ npackdcl goto npackdcl
 if %prg% equ clu goto clu
 
 :npackd
-if "%target%" equ "coverity" goto coverity
 
 mkdir wpmcpp\build
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -143,15 +142,26 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-goto :eof
 
-:coverity
-"cov-analysis\bin\cov-build.exe" --dir cov-int "%make%" -C wpmcpp compile PROFILE=release%bits% || exit /b %errorlevel%
+if "%bits%" neq "64" goto :eof
+
+pushd wpmcpp\build
+
+set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set qtdir=%qt:\=/%
+set CMAKE_INCLUDE_PATH=%quazip%\quazip
+set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
+mingw32-make.exe clean
+
+"cov-analysis\bin\cov-build.exe" --dir cov-int mingw32-make.exe install
 7z a cov-int.zip cov-int
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "C:\Program Files (x86)\Gow\bin\curl" --form token=%covtoken% --form email=tim.lebedkov@gmail.com --form file=@cov-int.zip --form version="Version" --form description="Description" https://scan.coverity.com/builds?project=Npackd
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+popd
 
 goto :eof
 
