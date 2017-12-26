@@ -82,7 +82,7 @@ mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install
-7z a ..\build\Npackd%bits%-%version%.zip * -mx9	
+7z a ..\build\Npackd%bits%-%APPVEYOR_BUILD_VERSION%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy ..\src\wpmcpp%bits%.aip .
@@ -91,7 +91,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy ..\src\app.ico .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /edit wpmcpp%bits%.aip /SetVersion %version%
+AdvancedInstaller.com /edit wpmcpp%bits%.aip /SetVersion %APPVEYOR_BUILD_VERSION%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 AdvancedInstaller.com /build wpmcpp%bits%.aip
@@ -102,18 +102,18 @@ popd
 
 set path=%initial_path%
 
-appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.zip
+appveyor PushArtifact wpmcpp\build\Npackd%bits%-%APPVEYOR_BUILD_VERSION%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact wpmcpp\install\Npackd%bits%-%version%.msi
+appveyor PushArtifact wpmcpp\install\Npackd%bits%-%APPVEYOR_BUILD_VERSION%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo
-rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.map
+rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-%APPVEYOR_BUILD_VERSION%.map
 rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo
-rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
+rem appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%APPVEYOR_BUILD_VERSION%.zip
 rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
@@ -150,7 +150,7 @@ pushd ..\install
 "%EXEPROXY%\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-7z a ..\build\NpackdCL%bits%-%version%.zip * -mx9	
+7z a ..\build\NpackdCL%bits%-%APPVEYOR_BUILD_VERSION%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
 copy ..\src\NpackdCL%bits%.aip .
@@ -159,7 +159,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy ..\src\app.ico .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /edit NpackdCL%bits%.aip /SetVersion %version%
+AdvancedInstaller.com /edit NpackdCL%bits%.aip /SetVersion %APPVEYOR_BUILD_VERSION%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 AdvancedInstaller.com /build NpackdCL%bits%.aip
@@ -170,18 +170,18 @@ popd
 
 set path=%initial_path%
 
-appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.zip
+appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%APPVEYOR_BUILD_VERSION%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact npackdcl\install\NpackdCL%bits%-%version%.msi
+appveyor PushArtifact npackdcl\install\NpackdCL%bits%-%APPVEYOR_BUILD_VERSION%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo
-rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%version%.map
+rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-%APPVEYOR_BUILD_VERSION%.map
 rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem todo
-rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
+rem appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%APPVEYOR_BUILD_VERSION%.zip
 rem if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
@@ -205,7 +205,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install
 
-7z a ..\build\CLU%bits%-%version%.zip * -mx9	
+7z a ..\build\CLU%bits%-%APPVEYOR_BUILD_VERSION%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
 copy ..\src\app.ico .
@@ -216,7 +216,7 @@ popd
 
 set path=%initial_path%
 
-appveyor PushArtifact clu\build\CLU%bits%-%version%.zip
+appveyor PushArtifact clu\build\CLU%bits%-%APPVEYOR_BUILD_VERSION%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof

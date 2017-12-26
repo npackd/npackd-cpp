@@ -25,13 +25,13 @@ if "%target%" equ "drmemory" (
 )
 
 if %bits% equ 64 goto bits64
-"%npackd_cl%\ncl" add -p npackd-dev-i686-w64 -v %version%
+"%npackd_cl%\ncl" add -p npackd-dev-i686-w64 -v %APPVEYOR_BUILD_VERSION%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
 :bits64
-"%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v %version%
+"%npackd_cl%\ncl" add -p npackd-dev-x86_64-w64 -v %APPVEYOR_BUILD_VERSION%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if "%target%" neq "coverity" goto end
