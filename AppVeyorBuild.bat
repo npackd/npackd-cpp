@@ -157,7 +157,7 @@ mingw32-make.exe clean
 "..\..\cov-analysis\bin\cov-configure.exe"  --comptype gcc --compiler C:\PROGRA~2\MINGW-~1\bin\G__~1.EXE -- -std=gnu++11
 "..\..\cov-analysis\bin\cov-build.exe" --dir ..\..\cov-int mingw32-make.exe install
 
-type C:\projects\Npackd\cov-int\build-log.txt
+rem type C:\projects\Npackd\cov-int\build-log.txt
 
 popd
 
