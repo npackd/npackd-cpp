@@ -156,7 +156,7 @@ mingw32-make.exe clean
 
 "..\..\cov-analysis\bin\cov-build.exe" --dir ..\..\cov-int mingw32-make.exe install
 
-type C:/projects/Npackd/cov-int/build-log.txt
+type C:\projects\Npackd\cov-int\build-log.txt
 
 popd
 
