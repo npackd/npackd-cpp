@@ -164,7 +164,7 @@ popd
 7z a cov-int.zip cov-int
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-"C:\Program Files (x86)\Gow\bin\curl" --form token=%covtoken% --form email=tim.lebedkov@gmail.com --form file=@cov-int.zip --form version="Version" --form description="Description" https://scan.coverity.com/builds?project=Npackd
+"C:\Program Files (x86)\Gow\bin\curl" --form token=%covtoken% --form email=tim.lebedkov@gmail.com -k --form file=@cov-int.zip --form version="Version" --form description="Description" https://scan.coverity.com/builds?project=Npackd
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
