@@ -154,7 +154,7 @@ set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 mingw32-make.exe clean
 
-"..\..\cov-analysis\bin\cov-configure.exe"  --comptype gcc --compiler libexec/gcc/x86_64-w64-mingw32/4.9.2/cc1plus.exe
+"..\..\cov-analysis\bin\cov-configure.exe"  --comptype gcc --compiler C:\PROGRA~2\MINGW-~1\bin\G__~1.EXE
 "..\..\cov-analysis\bin\cov-build.exe" --dir ..\..\cov-int mingw32-make.exe install
 
 type C:\projects\Npackd\cov-int\build-log.txt
