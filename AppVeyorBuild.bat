@@ -11,13 +11,13 @@ set version=%APPVEYOR_BUILD_VERSION:~0,-4%
 
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=com.advancedinstaller.AdvancedInstallerFreeware" "--versions=[10,20)"
+set onecmd="%npackd_cl%\ncl.exe" path -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,20)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=org.7-zip.SevenZIP" "--versions=[9,20)"
+set onecmd="%npackd_cl%\ncl.exe" path -p org.7-zip.SevenZIP -r [9,20)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set SEVENZIP=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=exeproxy" "--versions=[0.2,1)"
+set onecmd="%npackd_cl%\ncl.exe" path -p exeproxy -r [0.2,1)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set EXEPROXY=%%x
 
 if %bits% equ 64 goto bits64
@@ -26,16 +26,16 @@ set QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
 set PACKAGE=com.googlecode.windows-package-manager.Npackd
 set mingw_libs=i686-w64-mingw32
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=mingw-w64-i686-sjlj-posix" "--versions=[4.9.2,4.9.2]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=mingw-w64-i686-sjlj-posix -v 4.9.2
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-i686-w64-static" "--versions=[0.7.1,0.7.1]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=quazip-dev-i686-w64-static -v 0.7.1
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=z-dev-i686-w64_sjlj_posix_4.9.2-static" "--versions=[1.2.11,1.2.11]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=z-dev-i686-w64_sjlj_posix_4.9.2-static -v 1.2.11
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=drmingw" "--versions=[0.7.7,0.7.7]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=drmingw -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 
 goto start
@@ -46,16 +46,16 @@ set QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
 set PACKAGE=com.googlecode.windows-package-manager.Npackd64
 set mingw_libs=x86_64-w64-mingw32
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=mingw-w64-x86_64-seh-posix" "--versions=[4.9.2,4.9.2]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=mingw-w64-x86_64-seh-posix -v 4.9.2
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=quazip-dev-x86_64-w64-static" "--versions=[0.7.1,0.7.1]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=quazip-dev-x86_64-w64-static -v 0.7.1
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=z-dev-x86_64-w64_seh_posix_4.9.2-static" "--versions=[1.2.11,1.2.11]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=z-dev-x86_64-w64_seh_posix_4.9.2-static -v 1.2.11
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
-set onecmd="%npackd_cl%\npackdcl.exe" "path" "--package=drmingw64" "--versions=[0.7.7,0.7.7]"
+set onecmd="%npackd_cl%\ncl.exe" path --package=drmingw64 -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 
 goto start
@@ -189,7 +189,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip ..\install\npackdcl.exe
+strip ..\install\ncl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install-debug
@@ -217,7 +217,7 @@ popd
 
 pushd ..\install
 
-"%EXEPROXY%\exeproxy.exe" exeproxy-copy ncl.exe npackdcl.exe
+"%EXEPROXY%\exeproxy.exe" exeproxy-copy ncl.exe ncl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 7z a ..\build\NpackdCL%bits%-%version%.zip * -mx9	

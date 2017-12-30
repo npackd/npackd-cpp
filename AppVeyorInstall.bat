@@ -7,11 +7,8 @@ rem software dependencies.
 msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.23.2/NpackdCL-1.23.2.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-SET NPACKD_CL=C:\Program Files (x86)\NpackdCL|| exit /b %errorlevel%
-"%npackd_cl%\ncl" add-repo --url=https://www.npackd.org/rep/recent-xml
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add-repo --url=https://www.npackd.org/rep/xml?tag=libs
+SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
+"%npackd_cl%\ncl" set-repo -u https://www.npackd.org/rep/xml?tag=stable -u https://www.npackd.org/rep/xml?tag=stable64 -u  https://www.npackd.org/rep/recent-xml -u https://www.npackd.org/rep/xml?tag=libs
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" detect
@@ -20,50 +17,22 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 "%npackd_cl%\ncl" set-install-dir -f "C:\Program Files (x86)"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-"%npackd_cl%\ncl" add -p com.advancedinstaller.AdvancedInstallerFreeware -r "[10,20)"
+"%npackd_cl%\ncl" add -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,20) -p org.7-zip.SevenZIP -r [9,20) -p exeproxy -r [0.2,1)
 if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p org.7-zip.SevenZIP -r "[9,20)"
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p exeproxy -r "[0.2,1)"
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-if "%target%" equ "drmemory" (
-    "%npackd_cl%\ncl" add -p drmemory || exit /b %errorlevel%
-)
 
 if %bits% equ 64 goto bits64
 
-"%npackd_cl%\ncl" add -p mingw-w64-i686-sjlj-posix -v 4.9.2
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p com.nokia.QtDev-i686-w64-Npackd-Release -v 5.5
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p quazip-dev-i686-w64-static -v 0.7.1
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p drmingw -v 0.7.7
+"%npackd_cl%\ncl" add -p mingw-w64-i686-sjlj-posix -v 4.9.2 -p com.nokia.QtDev-i686-w64-Npackd-Release -v 5.5 -p quazip-dev-i686-w64-static -v 0.7.1 -p drmingw -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
 :bits64
-"%npackd_cl%\ncl" add -p mingw-w64-x86_64-seh-posix -v 4.9.2
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p com.nokia.QtDev-x86_64-w64-Npackd-Release -v 5.5
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p quazip-dev-x86_64-w64-static -v 0.7.1
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-"%npackd_cl%\ncl" add -p drmingw64 -v 0.7.7
+"%npackd_cl%\ncl" add -p mingw-w64-x86_64-seh-posix -v 4.9.2 -p com.nokia.QtDev-x86_64-w64-Npackd-Release -v 5.5 -p quazip-dev-x86_64-w64-static -v 0.7.1 -p drmingw64 -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if "%prg%" neq "npackd" goto end
-if "%bits%" neq "64" goto end
+
 "%npackd_cl%\ncl" add -p com.github.bmatzelle.Gow -v 0.8
 if %errorlevel% neq 0 exit /b %errorlevel%
 
