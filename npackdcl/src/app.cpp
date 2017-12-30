@@ -128,9 +128,11 @@ int App::process()
     if (!err.isEmpty()) {
         // nothing. The error will be processed later.
     } else if (fr.count() == 0) {
-        err = "Missing command. Try \"ncl help\"";
+        Job* job = new Job();
+        usage(job);
+        delete job;
     } else if (fr.count() > 1) {
-        err = "Unexpected argument: " + fr.at(1);
+        err = QStringLiteral("Unexpected argument: ") + fr.at(1);
     } else {
         const QString cmd = fr.at(0);
 
@@ -209,8 +211,8 @@ int App::process()
         } else if (cmd == "install-dir") {
             getInstallPath(job);
         } else {
-            job->setErrorMessage("Wrong command: " + cmd +
-                    ". Try npackdcl help");
+            job->setErrorMessage(QStringLiteral("Wrong command: ") + cmd +
+                    QStringLiteral(". Try \"ncl help\""));
         }
 
         err = job->getErrorMessage();
