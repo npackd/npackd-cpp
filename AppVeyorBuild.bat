@@ -26,16 +26,16 @@ set QT=C:\NpackdSymlinks\com.nokia.QtDev-i686-w64-Npackd-Release-5.5
 set PACKAGE=com.googlecode.windows-package-manager.Npackd
 set mingw_libs=i686-w64-mingw32
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=mingw-w64-i686-sjlj-posix -v 4.9.2
+set onecmd="%npackd_cl%\ncl.exe" path -p mingw-w64-i686-sjlj-posix -v 4.9.2
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=quazip-dev-i686-w64-static -v 0.7.1
+set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-i686-w64-static -v 0.7.1
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=z-dev-i686-w64_sjlj_posix_4.9.2-static -v 1.2.11
+set onecmd="%npackd_cl%\ncl.exe" path -p z-dev-i686-w64_sjlj_posix_4.9.2-static -v 1.2.11
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=drmingw -v 0.7.7
+set onecmd="%npackd_cl%\ncl.exe" path -p drmingw -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 
 goto start
@@ -46,16 +46,16 @@ set QT=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
 set PACKAGE=com.googlecode.windows-package-manager.Npackd64
 set mingw_libs=x86_64-w64-mingw32
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=mingw-w64-x86_64-seh-posix -v 4.9.2
+set onecmd="%npackd_cl%\ncl.exe" path -p mingw-w64-x86_64-seh-posix -v 4.9.2
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=quazip-dev-x86_64-w64-static -v 0.7.1
+set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-x86_64-w64-static -v 0.7.1
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=z-dev-x86_64-w64_seh_posix_4.9.2-static -v 1.2.11
+set onecmd="%npackd_cl%\ncl.exe" path -p z-dev-x86_64-w64_seh_posix_4.9.2-static -v 1.2.11
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path --package=drmingw64 -v 0.7.7
+set onecmd="%npackd_cl%\ncl.exe" path -p drmingw64 -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 
 goto start
