@@ -1,10 +1,8 @@
 How to build
 ============
 
-- install https://npackd.appspot.com/p/npackd-dev-i686-w64 for 32 bit builds or
-    https://npackd.appspot.com/p/npackd-dev-x86_64-w64 for 64 bit builds from
-    the libraries repository (see http://code.google.com/p/windows-package-manager/wiki/LibrariesRepository)
-	
+- install CMake, MinGW-w64, QuaZIP and zlib. See AppVeyorInstall.bat for more
+    information.
 - cd wpmcpp
 - mkdir build
 - cd build

@@ -876,10 +876,10 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
 
         if (urls.isEmpty()) {
             urls.append(
-                    "https://npackd.appspot.com/rep/xml?tag=stable");
+                    "https://www.npackd.org/rep/xml?tag=stable");
             if (WPMUtils::is64BitWindows())
                 urls.append(
-                        "https://npackd.appspot.com/rep/xml?tag=stable64");
+                        "https://www.npackd.org/rep/xml?tag=stable64");
         }
         save = true;
     }

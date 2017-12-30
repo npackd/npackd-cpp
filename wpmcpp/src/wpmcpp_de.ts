@@ -1332,8 +1332,8 @@ p, li { white-space: pre-wrap; }
         <translation>Lade die Repositories neu und ermittle die installierten Sofware</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 -Software Paket Manager für Windows (R)&lt;br&gt;&lt;a href=&apos;https://npackd.appspot.com/&apos;&gt;https://npackd.appspot.com/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;https://www.npackd.org/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 -Software Paket Manager für Windows (R)&lt;br&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;https://www.npackd.org/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Jobs</source>

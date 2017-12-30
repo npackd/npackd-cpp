@@ -13,10 +13,10 @@
     <ROW Property="AI_UPGRADE" Value="No"/>
     <ROW Property="ALLUSERS" Value="2" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
-    <ROW Property="ARPHELPLINK" Value="https://npackd.appspot.com/"/>
+    <ROW Property="ARPHELPLINK" Value="https://www.npackd.org/"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPPRODUCTICON" Value="app_1.exe" Type="8"/>
-    <ROW Property="ARPURLINFOABOUT" Value="https://npackd.appspot.com/"/>
+    <ROW Property="ARPURLINFOABOUT" Value="https://www.npackd.org/"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="Npackd" ValueLocId="*"/>
     <ROW Property="ProductCode" Value="1033:{5A5FCAE8-EC8E-4170-8AA7-5DBE95FBD54F} " Type="16"/>

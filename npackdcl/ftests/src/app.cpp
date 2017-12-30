@@ -24,10 +24,10 @@ void App::init()
             "\\npackdcl\\ftests\\Rep.xml").toString();
     captureNpackdCLOutput("set-repo "
             "-u " + rep + " "
-            "-u https://npackd.appspot.com/rep/recent-xml "
-            "-u https://npackd.appspot.com/rep/xml?tag=stable "
-            "-u https://npackd.appspot.com/rep/xml?tag=stable64 "
-            "-u https://npackd.appspot.com/rep/xml?tag=libs ");
+            "-u https://www.npackd.org/rep/recent-xml "
+            "-u https://www.npackd.org/rep/xml?tag=stable "
+            "-u https://www.npackd.org/rep/xml?tag=stable64 "
+            "-u https://www.npackd.org/rep/xml?tag=libs ");
     captureNpackdCLOutput("detect");
 }
 
@@ -464,7 +464,7 @@ void App::info()
 void App::listRepos()
 {
     QVERIFY(captureNpackdCLOutput("list-repos").
-            contains("npackd.appspot.com"));
+            contains("www.npackd.org"));
 }
 
 void App::check()

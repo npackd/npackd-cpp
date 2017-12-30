@@ -6,9 +6,9 @@
 
 _(pronounced "unpacked") is an application store/package manager/marketplace for Windows_
 
-* Home page and repositories: https://npackd.appspot.com
+* Home page and repositories: https://www.npackd.org
 
-![Npackd](http://npackd.appspot.com/Npackd.png)
+![Npackd](http://www.npackd.org/Npackd.png)
 
 It helps you to find and install software, keep your system up-to-date and uninstall it if no longer necessary. You can watch [this short video](https://www.youtube.com/watch?v=ZLJ8sv6siKQ) to better understand how it works. The process of installing and uninstalling applications is completely automated (silent or unattended installation and un-installation). There is also a [command line](https://github.com/tim-lebedkov/npackd/wiki/CommandLine) based version of Npackd which you can [install](https://github.com/tim-lebedkov/npackd/wiki/CommandLineInstallation) from the command line: 
 

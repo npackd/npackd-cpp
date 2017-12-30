@@ -8,10 +8,10 @@ msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL|| exit /b %errorlevel%
-"%npackd_cl%\ncl" add-repo --url=https://npackd.appspot.com/rep/recent-xml
+"%npackd_cl%\ncl" add-repo --url=https://www.npackd.org/rep/recent-xml
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-"%npackd_cl%\ncl" add-repo --url=https://npackd.appspot.com/rep/xml?tag=libs
+"%npackd_cl%\ncl" add-repo --url=https://www.npackd.org/rep/xml?tag=libs
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" detect

@@ -1,11 +1,11 @@
 Repositories:
 -------------
-http://npackd.appspot.com/rep/recent-xml
-http://npackd.appspot.com/rep/xml?tag=libs
-http://npackd.appspot.com/rep/xml?tag=stable64
-http://npackd.appspot.com/rep/xml?tag=stable
-http://npackd.appspot.com/rep/xml?tag=unstable
-http://npackd.appspot.com/rep/xml?tag=vim
+https://www.npackd.org/rep/recent-xml
+https://www.npackd.org/rep/xml?tag=libs
+https://www.npackd.org/rep/xml?tag=stable64
+https://www.npackd.org/rep/xml?tag=stable
+https://www.npackd.org/rep/xml?tag=unstable
+https://www.npackd.org/rep/xml?tag=vim
 
 1. Start/close
     - close the application

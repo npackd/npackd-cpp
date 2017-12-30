@@ -1884,7 +1884,7 @@ void MainWindow::on_actionTest_Download_Site_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     addTextTab(QObject::tr("About"), QString(
-            QObject::tr("<html><body>Npackd %1 - software package manager for Windows (R)<br><a href='https://npackd.appspot.com/'>https://npackd.appspot.com/</a></body></html>")).
+            QObject::tr("<html><body>Npackd %1 - software package manager for Windows (R)<br><a href='https://www.npackd.org/'>https://www.npackd.org/</a></body></html>")).
             arg(NPACKD_VERSION), true);
 }
 
@@ -2124,7 +2124,7 @@ void MainWindow::on_actionUninstall_triggered()
 void MainWindow::on_actionAdd_package_triggered()
 {
     openURL(QUrl(
-            "https://npackd.appspot.com/package/new"));
+            "https://www.npackd.org/package/new"));
 }
 
 void MainWindow::openURL(const QUrl& url) {
