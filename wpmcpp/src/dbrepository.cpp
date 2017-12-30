@@ -2245,7 +2245,7 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 
 QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 {
-    QString dir = WPMUtils::getShellDir(WPMUtils::hasAdminPrivileges() ?
+    QString dir = WPMUtils::getShellDir(WPMUtils::adminMode ?
             CSIDL_COMMON_APPDATA : CSIDL_APPDATA) +
             QStringLiteral("\\Npackd");
     QDir d;

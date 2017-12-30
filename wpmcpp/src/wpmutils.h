@@ -29,6 +29,8 @@ private:
 
     static QAtomicInt nextNamePipeId;
 
+    static int privileges;
+
     WPMUtils();
 
     static bool isProcessRunning(HANDLE process);
@@ -81,7 +83,9 @@ private:
 public:
     /** true = print debug information */
     static bool debug;
-	static int privileges;
+
+    /** true = install programs globally, false = locally */
+    static bool adminMode;
 
     /**
      * @brief how to close a process

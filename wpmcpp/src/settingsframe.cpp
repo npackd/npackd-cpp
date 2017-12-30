@@ -18,7 +18,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
     WindowsRegistry wr;
     QString err = wr.open(
-		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\InstallationDirs", false, KEY_READ);
     QStringList dirs;
     if (err.isEmpty()) {
@@ -28,7 +28,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 		QStringLiteral("\\Npackd\\Installation"));
 
     dirs.append(WPMUtils::getInstallationDirectory());
-	if (WPMUtils::hasAdminPrivileges()) {
+    if (WPMUtils::adminMode) {
 		dirs.append(WPMUtils::getProgramFilesDir());
 		if (WPMUtils::is64BitWindows())
 			dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
@@ -57,7 +57,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     // used repositories
     wr.close();
     err = wr.open(
-		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
     QStringList usedReps;
     if (err.isEmpty()) {
@@ -251,7 +251,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
 
     if (err.isEmpty()) {
         WindowsRegistry m(
-			WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+                WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\InstallationDirs", &err,
@@ -270,7 +270,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
 
     if (err.isEmpty()) {
         WindowsRegistry m(
-			WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+                WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\UsedReps", &err,

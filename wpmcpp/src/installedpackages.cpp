@@ -694,7 +694,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
         tpms.append(new InstalledPackagesThirdPartyPM());
         prefixes.append("");
-		if (WPMUtils::hasAdminPrivileges())
+        if (WPMUtils::adminMode)
 		{
 			jobTitles.append(QObject::tr("Adding well-known packages"));
 			tpms.append(new WellKnownProgramsThirdPartyPM(
@@ -982,7 +982,7 @@ QString InstalledPackages::readRegistryDatabase()
     WindowsRegistry packagesWR;
     LONG e;
     err = packagesWR.open(
-		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     QList<InstalledPackageVersion*> ipvs;
@@ -1090,7 +1090,7 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
     WindowsRegistry packagesWR;
     LONG e;
     err = packagesWR.open(
-		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
@@ -1157,7 +1157,7 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
 QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
 {
     WindowsRegistry machineWR(
-		WPMUtils::hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 			false);
     QString r;
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";

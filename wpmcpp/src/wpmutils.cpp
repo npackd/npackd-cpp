@@ -49,11 +49,9 @@
 #include "windowsregistry.h"
 #include "mstask.h"
 
-#ifndef NDEBUG
-bool WPMUtils::debug = true;
-#else
 bool WPMUtils::debug = false;
-#endif
+
+bool WPMUtils::adminMode = true;
 
 int WPMUtils::privileges = 0;
 
@@ -654,7 +652,7 @@ QString WPMUtils::getInstallationDirectory()
 
 	if (v.isEmpty()) {
 		err = npackd.open(
-			hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 			QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
 		if (err.isEmpty()) {
 			v = npackd.get(QStringLiteral("path"), &err);
@@ -673,7 +671,7 @@ QString WPMUtils::getInstallationDirectory()
 
 	if (v.isEmpty())
 	{
-		if (hasAdminPrivileges())
+        if (adminMode)
 			v = WPMUtils::getProgramFilesDir();
 		else
 		{
@@ -690,7 +688,7 @@ QString WPMUtils::getInstallationDirectory()
 QString WPMUtils::setInstallationDirectory(const QString& dir)
 {
     WindowsRegistry m(
-		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 			false, KEY_ALL_ACCESS);
     QString err;
     WindowsRegistry npackd = m.createSubKey(
@@ -706,7 +704,7 @@ QString WPMUtils::setInstallationDirectory(const QString& dir)
 void WPMUtils::setCloseProcessType(DWORD cpt)
 {
     WindowsRegistry m(
-		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 			false, KEY_ALL_ACCESS);
     QString err;
     WindowsRegistry npackd = m.createSubKey(
@@ -721,16 +719,16 @@ DWORD WPMUtils::getCloseProcessType()
 {
     WindowsRegistry npackd;
 	QString err = npackd.open(
-		HKEY_LOCAL_MACHINE,
-		QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
+            HKEY_LOCAL_MACHINE,
+            QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
 	if (err.isEmpty()) {
 		DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
 		if (err.isEmpty())
 			return v;
 	}
 	err = npackd.open(
-		hasAdminPrivileges() ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-		QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
+            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
 	if (err.isEmpty()) {
 		DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
 		if (err.isEmpty())
@@ -1859,7 +1857,7 @@ QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
 {
 	QString err;
     WindowsRegistry wr;
-	if (hasAdminPrivileges())
+    if (adminMode)
 		err = wr.open(HKEY_LOCAL_MACHINE,
 			QStringLiteral("System\\CurrentControlSet\\Control\\Session Manager\\Environment"),
 			false);

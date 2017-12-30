@@ -189,7 +189,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip ..\install\ncl.exe
+strip ..\install\npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install-debug
