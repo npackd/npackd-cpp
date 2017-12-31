@@ -123,7 +123,7 @@
     <ROW Environment="NPACKD_CL" Name="=-*NPACKD_CL" Value="[APPDIR]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
-    <ROW Name="app_1.exe" SourcePath="..\..\wpmcpp\src\app.ico" Index="0"/>
+    <ROW Name="app_1.exe" SourcePath="..\..\npackdg\src\app.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
