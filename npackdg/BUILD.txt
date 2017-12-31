@@ -1,0 +1,19 @@
+How to build
+============
+
+- install CMake, MinGW-w64, QuaZIP and zlib. See AppVeyorInstall.bat for more
+    information.
+- cd wpmcpp
+- mkdir build
+- cd build
+- set path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\bin;C:\Program Files\CMake\bin
+- set cmake_prefix_path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\x86_64-w64-mingw32
+- set CMAKE_INCLUDE_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\quazip
+- set CMAKE_LIBRARY_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\quazip\release
+- set qtdir=C:\NpackdSymlinks\com.nokia.QtDev-x86_64-w64-Npackd-Release-5.5
+- set exeproxy=C:\Program Files\EXE_Proxy
+- cmake -G "MinGW Makefiles" ..\ -DCMAKE_INSTALL_PREFIX=C:\Users\username\Documents\npackd-cpp\wpmcpp\install 
+     "-DZLIB_ROOT:PATH=C:\Program Files\Zlib_x86_64_MinGW-w64_SEH_Posix_threads_4.9.2_static"
+- mingw32-make.exe
+
+

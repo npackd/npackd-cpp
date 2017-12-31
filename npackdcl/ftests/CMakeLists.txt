@@ -101,64 +101,64 @@ readVersion("../../appveyor.yml")
 
 set(FTESTS_SOURCES
     src/app.cpp
-    ../../wpmcpp/src/detectfile.cpp
-    ../../wpmcpp/src/downloader.cpp
-    ../../wpmcpp/src/commandline.cpp
-    ../../wpmcpp/src/repositoryxmlhandler.cpp
-    ../../wpmcpp/src/mysqlquery.cpp
-    ../../wpmcpp/src/wellknownprogramsthirdpartypm.cpp
-    ../../wpmcpp/src/abstractthirdpartypm.cpp
-    ../../wpmcpp/src/msithirdpartypm.cpp
-    ../../wpmcpp/src/installedpackagesthirdpartypm.cpp
-    ../../wpmcpp/src/controlpanelthirdpartypm.cpp
-    ../../wpmcpp/src/installoperation.cpp
-    ../../wpmcpp/src/dependency.cpp
-    ../../wpmcpp/src/packageversionfile.cpp
-    ../../wpmcpp/src/dbrepository.cpp
-    ../../wpmcpp/src/license.cpp
-    ../../wpmcpp/src/repository.cpp
-    ../../wpmcpp/src/job.cpp
-    ../../wpmcpp/src/hrtimer.cpp
-    ../../wpmcpp/src/package.cpp
-    ../../wpmcpp/src/installedpackageversion.cpp
-    ../../wpmcpp/src/abstractrepository.cpp
-    ../../wpmcpp/src/version.cpp
-    ../../wpmcpp/src/installedpackages.cpp
-    ../../wpmcpp/src/windowsregistry.cpp
-    ../../wpmcpp/src/packageversion.cpp
-    ../../wpmcpp/src/wpmutils.cpp
-    ../../wpmcpp/src/clprogress.cpp
+    ../../npackdg/src/detectfile.cpp
+    ../../npackdg/src/downloader.cpp
+    ../../npackdg/src/commandline.cpp
+    ../../npackdg/src/repositoryxmlhandler.cpp
+    ../../npackdg/src/mysqlquery.cpp
+    ../../npackdg/src/wellknownprogramsthirdpartypm.cpp
+    ../../npackdg/src/abstractthirdpartypm.cpp
+    ../../npackdg/src/msithirdpartypm.cpp
+    ../../npackdg/src/installedpackagesthirdpartypm.cpp
+    ../../npackdg/src/controlpanelthirdpartypm.cpp
+    ../../npackdg/src/installoperation.cpp
+    ../../npackdg/src/dependency.cpp
+    ../../npackdg/src/packageversionfile.cpp
+    ../../npackdg/src/dbrepository.cpp
+    ../../npackdg/src/license.cpp
+    ../../npackdg/src/repository.cpp
+    ../../npackdg/src/job.cpp
+    ../../npackdg/src/hrtimer.cpp
+    ../../npackdg/src/package.cpp
+    ../../npackdg/src/installedpackageversion.cpp
+    ../../npackdg/src/abstractrepository.cpp
+    ../../npackdg/src/version.cpp
+    ../../npackdg/src/installedpackages.cpp
+    ../../npackdg/src/windowsregistry.cpp
+    ../../npackdg/src/packageversion.cpp
+    ../../npackdg/src/wpmutils.cpp
+    ../../npackdg/src/clprogress.cpp
     src/main.cpp
 )
 set(FTESTS_HEADERS
     src/app.h
-    ../../wpmcpp/src/detectfile.h
-    ../../wpmcpp/src/downloader.h
-    ../../wpmcpp/src/commandline.h
-    ../../wpmcpp/src/repositoryxmlhandler.h
-    ../../wpmcpp/src/mysqlquery.h
-    ../../wpmcpp/src/wellknownprogramsthirdpartypm.h
-    ../../wpmcpp/src/abstractthirdpartypm.h
-    ../../wpmcpp/src/msithirdpartypm.h
-    ../../wpmcpp/src/installedpackagesthirdpartypm.h
-    ../../wpmcpp/src/controlpanelthirdpartypm.h
-    ../../wpmcpp/src/installoperation.h
-    ../../wpmcpp/src/dependency.h
-    ../../wpmcpp/src/packageversionfile.h
-    ../../wpmcpp/src/dbrepository.h
-    ../../wpmcpp/src/license.h
-    ../../wpmcpp/src/repository.h
-    ../../wpmcpp/src/job.h
-    ../../wpmcpp/src/hrtimer.h
-    ../../wpmcpp/src/package.h
-    ../../wpmcpp/src/installedpackageversion.h
-    ../../wpmcpp/src/abstractrepository.h
-    ../../wpmcpp/src/version.h
-    ../../wpmcpp/src/installedpackages.h
-    ../../wpmcpp/src/windowsregistry.h
-    ../../wpmcpp/src/packageversion.h
-    ../../wpmcpp/src/wpmutils.h
-    ../../wpmcpp/src/clprogress.h
+    ../../npackdg/src/detectfile.h
+    ../../npackdg/src/downloader.h
+    ../../npackdg/src/commandline.h
+    ../../npackdg/src/repositoryxmlhandler.h
+    ../../npackdg/src/mysqlquery.h
+    ../../npackdg/src/wellknownprogramsthirdpartypm.h
+    ../../npackdg/src/abstractthirdpartypm.h
+    ../../npackdg/src/msithirdpartypm.h
+    ../../npackdg/src/installedpackagesthirdpartypm.h
+    ../../npackdg/src/controlpanelthirdpartypm.h
+    ../../npackdg/src/installoperation.h
+    ../../npackdg/src/dependency.h
+    ../../npackdg/src/packageversionfile.h
+    ../../npackdg/src/dbrepository.h
+    ../../npackdg/src/license.h
+    ../../npackdg/src/repository.h
+    ../../npackdg/src/job.h
+    ../../npackdg/src/hrtimer.h
+    ../../npackdg/src/package.h
+    ../../npackdg/src/installedpackageversion.h
+    ../../npackdg/src/abstractrepository.h
+    ../../npackdg/src/version.h
+    ../../npackdg/src/installedpackages.h
+    ../../npackdg/src/windowsregistry.h
+    ../../npackdg/src/packageversion.h
+    ../../npackdg/src/wpmutils.h
+    ../../npackdg/src/clprogress.h
 )
 
 set(OUTPUT_FILE_NAME "ftests.exe")
@@ -191,7 +191,7 @@ target_link_libraries(ftests
     netapi32
     Ws2_32
 )
-target_include_directories(ftests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../../wpmcpp/src)
+target_include_directories(ftests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../../npackdg/src)
 target_compile_definitions(ftests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS ftests DESTINATION ${CMAKE_INSTALL_PREFIX})

@@ -66,10 +66,10 @@ if %prg% equ clu goto clu
 
 :npackd
 
-mkdir wpmcpp\build
+mkdir npackdg\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-pushd wpmcpp\build
+pushd npackdg\build
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\quazip
@@ -133,19 +133,19 @@ popd
 
 set path=%initial_path%
 
-appveyor PushArtifact wpmcpp\build\Npackd%bits%-%version%.zip
+appveyor PushArtifact npackdg\build\Npackd%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact wpmcpp\install\Npackd%bits%-%version%.msi
+appveyor PushArtifact npackdg\install\Npackd%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact wpmcpp\build\Npackd%bits%-debug-%version%.zip
+appveyor PushArtifact npackdg\build\Npackd%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 
 if "%bits%" neq "64" goto :eof
 
-pushd wpmcpp\build
+pushd npackdg\build
 
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
 set qtdir=%qt:\=/%

@@ -101,68 +101,68 @@ readVersion("../appveyor.yml")
 set(CLU_SOURCES
     src/main.cpp
     src/app.cpp
-    ../wpmcpp/src/clprogress.cpp
-    ../wpmcpp/src/package.cpp
-    ../wpmcpp/src/license.cpp
-    ../wpmcpp/src/dependency.cpp
-    ../wpmcpp/src/detectfile.cpp
-    ../wpmcpp/src/abstractrepository.cpp
-    ../wpmcpp/src/repository.cpp
-    ../wpmcpp/src/packageversion.cpp
-    ../wpmcpp/src/packageversionfile.cpp
-    ../wpmcpp/src/installedpackageversion.cpp
-    ../wpmcpp/src/windowsregistry.cpp
-    ../wpmcpp/src/abstractthirdpartypm.cpp
-    ../wpmcpp/src/controlpanelthirdpartypm.cpp
-    ../wpmcpp/src/commandline.cpp
-    ../wpmcpp/src/wpmutils.cpp
-    ../wpmcpp/src/job.cpp
-    ../wpmcpp/src/hrtimer.cpp
-    ../wpmcpp/src/version.cpp
-    ../wpmcpp/src/installedpackages.cpp
-    ../wpmcpp/src/installoperation.cpp
-    ../wpmcpp/src/dbrepository.cpp
-    ../wpmcpp/src/downloader.cpp
-    ../wpmcpp/src/repositoryxmlhandler.cpp
-    ../wpmcpp/src/installedpackagesthirdpartypm.cpp
-    ../wpmcpp/src/wellknownprogramsthirdpartypm.cpp
-    ../wpmcpp/src/msithirdpartypm.cpp
-    ../wpmcpp/src/mysqlquery.cpp
+    ../npackdg/src/clprogress.cpp
+    ../npackdg/src/package.cpp
+    ../npackdg/src/license.cpp
+    ../npackdg/src/dependency.cpp
+    ../npackdg/src/detectfile.cpp
+    ../npackdg/src/abstractrepository.cpp
+    ../npackdg/src/repository.cpp
+    ../npackdg/src/packageversion.cpp
+    ../npackdg/src/packageversionfile.cpp
+    ../npackdg/src/installedpackageversion.cpp
+    ../npackdg/src/windowsregistry.cpp
+    ../npackdg/src/abstractthirdpartypm.cpp
+    ../npackdg/src/controlpanelthirdpartypm.cpp
+    ../npackdg/src/commandline.cpp
+    ../npackdg/src/wpmutils.cpp
+    ../npackdg/src/job.cpp
+    ../npackdg/src/hrtimer.cpp
+    ../npackdg/src/version.cpp
+    ../npackdg/src/installedpackages.cpp
+    ../npackdg/src/installoperation.cpp
+    ../npackdg/src/dbrepository.cpp
+    ../npackdg/src/downloader.cpp
+    ../npackdg/src/repositoryxmlhandler.cpp
+    ../npackdg/src/installedpackagesthirdpartypm.cpp
+    ../npackdg/src/wellknownprogramsthirdpartypm.cpp
+    ../npackdg/src/msithirdpartypm.cpp
+    ../npackdg/src/mysqlquery.cpp
         )
 set(CLU_HEADERS
     src/app.h
-    ../wpmcpp/src/clprogress.h
-    ../wpmcpp/src/package.h
-    ../wpmcpp/src/license.h
-    ../wpmcpp/src/dependency.h
-    ../wpmcpp/src/detectfile.h
-    ../wpmcpp/src/abstractrepository.h
-    ../wpmcpp/src/repository.h
-    ../wpmcpp/src/packageversion.h
-    ../wpmcpp/src/packageversionfile.h
-    ../wpmcpp/src/installedpackageversion.h
-    ../wpmcpp/src/windowsregistry.h
-    ../wpmcpp/src/abstractthirdpartypm.h
-    ../wpmcpp/src/controlpanelthirdpartypm.h
-    ../wpmcpp/src/commandline.h
-    ../wpmcpp/src/wpmutils.h
-    ../wpmcpp/src/job.h
-    ../wpmcpp/src/hrtimer.h
-    ../wpmcpp/src/version.h
-    ../wpmcpp/src/installedpackages.h
-    ../wpmcpp/src/installoperation.h
-    ../wpmcpp/src/dbrepository.h
-    ../wpmcpp/src/downloader.h
-    ../wpmcpp/src/repositoryxmlhandler.h
-    ../wpmcpp/src/installedpackagesthirdpartypm.h
-    ../wpmcpp/src/wellknownprogramsthirdpartypm.h
-    ../wpmcpp/src/msithirdpartypm.h
-    ../wpmcpp/src/mysqlquery.h
+    ../npackdg/src/clprogress.h
+    ../npackdg/src/package.h
+    ../npackdg/src/license.h
+    ../npackdg/src/dependency.h
+    ../npackdg/src/detectfile.h
+    ../npackdg/src/abstractrepository.h
+    ../npackdg/src/repository.h
+    ../npackdg/src/packageversion.h
+    ../npackdg/src/packageversionfile.h
+    ../npackdg/src/installedpackageversion.h
+    ../npackdg/src/windowsregistry.h
+    ../npackdg/src/abstractthirdpartypm.h
+    ../npackdg/src/controlpanelthirdpartypm.h
+    ../npackdg/src/commandline.h
+    ../npackdg/src/wpmutils.h
+    ../npackdg/src/job.h
+    ../npackdg/src/hrtimer.h
+    ../npackdg/src/version.h
+    ../npackdg/src/installedpackages.h
+    ../npackdg/src/installoperation.h
+    ../npackdg/src/dbrepository.h
+    ../npackdg/src/downloader.h
+    ../npackdg/src/repositoryxmlhandler.h
+    ../npackdg/src/installedpackagesthirdpartypm.h
+    ../npackdg/src/wellknownprogramsthirdpartypm.h
+    ../npackdg/src/msithirdpartypm.h
+    ../npackdg/src/mysqlquery.h
 )
 
 set(OUTPUT_FILE_NAME "clu.exe")
 configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/clu.rc @ONLY)
-file(COPY ../wpmcpp/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ../npackdg/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 list(APPEND CLU_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/clu.rc)
 
 if(MSVC)
@@ -178,7 +178,6 @@ add_executable(clu
     ${CLU_SOURCES}
     ${CLU_HEADERS}
 )
-#qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
 qt5_use_modules(clu Core Xml Sql)
 target_link_libraries(clu
     ${QUAZIP_LIBRARIES}
@@ -194,7 +193,7 @@ target_link_libraries(clu
     netapi32
     Ws2_32
 )
-target_include_directories(clu PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../wpmcpp/src)
+target_include_directories(clu PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../npackdg/src)
 target_compile_definitions(clu PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS clu DESTINATION ${CMAKE_INSTALL_PREFIX})
