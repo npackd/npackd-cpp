@@ -4,7 +4,7 @@ project(npackdcl CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake") 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
@@ -34,6 +34,7 @@ else()
 endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
+
 link_directories("$ENV{QTDIR}\\qtbase\\lib") 
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
@@ -196,7 +197,7 @@ target_link_libraries(npackdcl
     netapi32
     Ws2_32
 )
-target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../npackdg/src)
+target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
 target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
