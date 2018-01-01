@@ -49,7 +49,7 @@ find_package(QuaZip REQUIRED)
 
 readVersion("../../appveyor.yml")
 
-set(NPACKDCL_SOURCES
+set(TESTS_SOURCES
     src/main.cpp
     ../../npackdg/src/visiblejobs.cpp
     ../../npackdg/src/repository.cpp
@@ -82,7 +82,7 @@ set(NPACKDCL_SOURCES
     ../../npackdg/src/installedpackagesthirdpartypm.cpp
     ../../npackdg/src/cbsthirdpartypm.cpp
     )
-set(NPACKDCL_HEADERS
+set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
     ../../npackdg/src/repository.h
     ../../npackdg/src/version.h
@@ -126,12 +126,12 @@ if(MSVC)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql test REQUIRED)
-add_executable(npackdcl
-    ${NPACKDCL_SOURCES}
-    ${NPACKDCL_HEADERS}
+add_executable(tests
+    ${TESTS_SOURCES}
+    ${TESTS_HEADERS}
 )
-qt5_use_modules(npackdcl Core Xml Sql Test)
-target_link_libraries(npackdcl
+qt5_use_modules(tests Core Xml Sql Test)
+target_link_libraries(tests
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
     qtpcre
@@ -145,10 +145,10 @@ target_link_libraries(npackdcl
     netapi32
     Ws2_32
 )
-target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../../npackdg/src)
-target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+target_include_directories(tests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../../npackdg/src)
+target_compile_definitions(tests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
-install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS tests DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES CrystalIcons_LICENSE.txt LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 if(MSVC)
