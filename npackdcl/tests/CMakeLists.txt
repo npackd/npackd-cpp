@@ -45,57 +45,7 @@ include(CheckCXXCompilerFlag)
 
 include(../../cmake/Common.cmake)
 
-if(MINGW)
-  add_definitions(-D_WIN32_WINNT=0x0600)
-  if(NOT NPACKD_PLATFORM_X64)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=i686")
-  endif ()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -fno-tree-slp-vectorize -Wno-error=cast-qual -Wno-unused-local-typedefs")
-endif()
-
-if((CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC) AND NOT MINGW)
-  add_definitions( -Wall -pedantic -fPIC )
-  check_cxx_compiler_flag(-fvisibility=hidden NPACKD_GCC_VISIBILITY)
-  if(NPACKD_GCC_VISIBILITY)
-    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE NPACKD_GCC_VERSION)
-    message(STATUS "Detected g++ ${NPACKD_GCC_VERSION}")
-    message(STATUS "Enabling GCC visibility flags")
-    set(NPACKD_GCC_VISIBILITY_FLAGS "-fvisibility=hidden")
-    set(XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-    string(TOLOWER "${CMAKE_BUILD_TYPE}" NPACKD_BUILD_TYPE)
-    if(NPACKD_BUILD_TYPE STREQUAL "debug" AND NPACKD_GCC_VERSION VERSION_LESS "4.2")
-      message(STATUS "Skipping -fvisibility-inlines-hidden due to possible bug in g++ < 4.2")
-    else()
-      if(APPLE)
-        message(STATUS "Skipping -fvisibility-inlines-hidden due to linker issues")
-        set(XCODE_ATTRIBUTE_GCC_INLINES_ARE_PRIVATE_EXTERN[arch=x86_64] "YES")
-      else()
-        set(NPACKD_VISIBILITY_FLAGS "${NPACKD_GCC_VISIBILITY_FLAGS} -fvisibility-inlines-hidden")
-        set(XCODE_ATTRIBUTE_GCC_INLINES_ARE_PRIVATE_EXTERN "YES")
-      endif()
-    endif()
-  endif()
-  if(NPACKD_PLATFORM_X64 AND NOT APPLE)
-    add_definitions(-fPIC)
-  endif()
-endif()
-
-# prefer static libraries if making import tool
-if(BUILD_IMPORT_TOOL_FOR_DISTRIBUTION AND (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC))
-  SET(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
-endif()
-
-# postfix for debug builds
-if(NOT APPLE)
-  set(CMAKE_DEBUG_POSTFIX "d")
-endif ()
-
 find_package(QuaZip REQUIRED)
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 readVersion("../../appveyor.yml")
 
