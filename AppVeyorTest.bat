@@ -2,34 +2,49 @@ echo on
 
 rem This script is used by AppVeyor to build the project.
 
+if %bits% equ 64 goto :eof
+if %prg% neq npackdcl goto :eof
+
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
 
-if %bits% equ 64 goto bits64
+cd npackdcl
+cd tests
 
-set make=C:\Program Files (x86)\MinGW-w64_i686_SJLJ_POSIX_threads\bin\mingw32-make.exe
-goto start
+mkdir build
+if %errorlevel% neq 0 exit /b %errorlevel%
 
-:bits64
-set make=C:\Program Files (x86)\MinGW-w64_x86_64_SEH_POSIX_threads\bin\mingw32-make.exe
-goto start
+cd build
 
-:start
-if %prg% equ npackdcl goto npackdcl
-goto :eof
+set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set qtdir=%qt:\=/%
+set CMAKE_INCLUDE_PATH=%quazip%\quazip
+set CMAKE_LIBRARY_PATH=%quazip%\quazip\release
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-:npackdcl
-rem todo
-rem "%make%" -C npackdcl\tests compile PROFILE=release%bits%
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem npackdcl\tests\build\%bits%\release\tests -v2
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+mingw32-make.exe install
+if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem "%make%" -C npackdcl\ftests compile PROFILE=release%bits%
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+..\install\tests -v2
+if %errorlevel% neq 0 exit /b %errorlevel%
 
-rem npackdcl\ftests\build\%bits%\release\ftests -v2
-rem if %errorlevel% neq 0 exit /b %errorlevel%
+cd ..\..\ftests
+
+mkdir build
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+cd build
+
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+mingw32-make.exe install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+..\install\ftests -v2
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
