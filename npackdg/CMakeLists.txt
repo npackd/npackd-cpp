@@ -222,7 +222,7 @@ set(WPMCPP_TRANSLATIONS
 )
 
 set(OUTPUT_FILE_NAME "npackdg.exe")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc @ONLY)
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY src/wpmcpp.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 list(APPEND WPMCPP_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc)
