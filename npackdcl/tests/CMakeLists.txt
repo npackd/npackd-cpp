@@ -130,11 +130,12 @@ add_executable(tests
     ${TESTS_SOURCES}
     ${TESTS_HEADERS}
 )
-qt5_use_modules(tests Core Xml Sql Test)
 target_link_libraries(tests
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
-    qtpcre
+    Qt5::Sql Qt5::Test Qt5::Xml Qt5::Core
+    qtpcre2
+    winmm
     ole32
     uuid
     wininet

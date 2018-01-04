@@ -128,11 +128,12 @@ add_executable(clu
     ${CLU_SOURCES}
     ${CLU_HEADERS}
 )
-qt5_use_modules(clu Core Xml Sql)
 target_link_libraries(clu
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
-    qtpcre
+    Qt5::Sql Qt5::Xml Qt5::Core
+    qtpcre2
+    winmm
     ole32
     uuid
     wininet

@@ -72,7 +72,8 @@ int main(int argc, char *argv[])
 
     CLProcessor clp;
 
-    // qCDebug(npackd) << QImageReader::supportedImageFormats();
+    // Qt 4.9.2 "bmp", "cur", "ico", "pbm", "pgm", "png", "ppm", "xbm", "xpm"
+    qCDebug(npackd) << QImageReader::supportedImageFormats();
 
     int errorCode;
     if (!clp.process(&errorCode)){

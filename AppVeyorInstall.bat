@@ -22,13 +22,13 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 if %bits% equ 64 goto bits64
 
-"%npackd_cl%\ncl" add -p mingw-w64-i686-sjlj-posix -v 4.9.2 -p com.nokia.QtDev-i686-w64-Npackd-Release -v 5.5 -p quazip-dev-i686-w64-static -v 0.7.1 -p drmingw -v 0.7.7
+"%npackd_cl%\ncl" add -p mingw-w64-i686-sjlj-posix -v 7.2 -p com.nokia.QtDev-i686-w64-Npackd-Release -v 5.9.2 -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
 :bits64
-"%npackd_cl%\ncl" add -p mingw-w64-x86_64-seh-posix -v 4.9.2 -p com.nokia.QtDev-x86_64-w64-Npackd-Release -v 5.5 -p quazip-dev-x86_64-w64-static -v 0.7.1 -p drmingw64 -v 0.7.7
+"%npackd_cl%\ncl" add -p mingw-w64-x86_64-seh-posix -v 7.2 -p com.nokia.QtDev-x86_64-w64-Npackd-Release -v 5.9.2 -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw64 -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if "%prg%" neq "npackd" goto end

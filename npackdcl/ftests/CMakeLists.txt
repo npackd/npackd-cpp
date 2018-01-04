@@ -126,11 +126,12 @@ add_executable(ftests
         ${FTESTS_SOURCES}
         ${FTESTS_HEADERS}
 )
-qt5_use_modules(ftests Core Xml Sql Test)
 target_link_libraries(ftests
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
-    qtpcre
+    Qt5::Sql Qt5::Test Qt5::Xml Qt5::Core
+    qtpcre2
+    winmm
     ole32
     uuid
     wininet

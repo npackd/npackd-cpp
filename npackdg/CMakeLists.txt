@@ -4,7 +4,7 @@ project(npackdg CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake" "${QTDIR}/qtwinextras/lib/cmake/Qt5WinExtras")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
@@ -37,6 +37,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 link_directories("$ENV{QTDIR}\\qtbase\\lib") 
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
+link_directories("$ENV{QTDIR}\\qtbase\\plugins\\sqldrivers")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os")
 
@@ -185,39 +186,45 @@ if(MSVC)
     configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackd.vcxproj.user @ONLY)
 endif() 
 
-find_package(Qt5 COMPONENTS xml sql widgets winextras LinguistTools REQUIRED)
+find_package(Qt5 COMPONENTS Gui xml sql widgets WinExtras LinguistTools REQUIRED)
 add_executable(npackdg WIN32
     ${WPMCPP_SOURCES}
     ${WPMCPP_HEADERS}
     ${WPMCPP_FORMS}
 )
 qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
-qt5_use_modules(npackdg Gui Core Xml Sql Widgets WinExtras)
 target_link_libraries(npackdg
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
     
-    qwindows
-    Qt5PlatformSupport 
-    qtfreetype
+    qsqlite
+    Qt5::WinExtras Qt5::Widgets qwindows Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
+
+    Qt5ThemeSupport
+    Qt5EventDispatcherSupport
+    Qt5FontDatabaseSupport
+    Qt5PlatformCompositorSupport
+    qdirect2d
+#    qtfreetype
     
-    qdds 
-    qicns 
+#    qdds
+#    qicns
     qico 
-    qjp2 
-    qmng 
-    qtga 
-    qtiff 
-    qwbmp 
-    qwebp 
+#    qjp2
+#    qmng
+     qtlibpng
+#    qtga
+#    qtiff
+#    qwbmp
+#    qwebp
     
     imm32
     winmm 
     glu32 
     mpr
     
-    qtharfbuzzng
-    qtpcre
+    qtharfbuzz
+    qtpcre2
     opengl32
     ole32
     uuid
@@ -228,6 +235,8 @@ target_link_libraries(npackdg
     msi
     netapi32
     Ws2_32
+    UxTheme
+    Dwmapi
 )
 target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
 target_compile_definitions(npackdg PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)

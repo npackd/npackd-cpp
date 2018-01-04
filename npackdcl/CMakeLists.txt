@@ -132,11 +132,12 @@ add_executable(npackdcl
     ${NPACKDCL_SOURCES}
     ${NPACKDCL_HEADERS}
 )
-qt5_use_modules(npackdcl Core Xml Sql)
 target_link_libraries(npackdcl
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
-    qtpcre
+    Qt5::Sql Qt5::Xml Qt5::Core
+    qtpcre2
+    winmm
     ole32
     uuid
     wininet
