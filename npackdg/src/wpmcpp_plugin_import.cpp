@@ -4,7 +4,6 @@
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 //Q_IMPORT_PLUGIN(QICNSPlugin)
 Q_IMPORT_PLUGIN(QICOPlugin)
-Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
 //Q_IMPORT_PLUGIN(QJp2Plugin)
 //Q_IMPORT_PLUGIN(QMngPlugin)
 //Q_IMPORT_PLUGIN(QTgaPlugin)
