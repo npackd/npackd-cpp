@@ -20,6 +20,10 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 "%npackd_cl%\ncl" add -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,20) -p org.7-zip.SevenZIP -r [9,20) -p exeproxy -r [0.2,1)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+rem Python will be detected, but needs NpackdCL
+"%npackd_cl%\ncl" add -p com.googlecode.windows-package-manager.NpackdCL
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 if %bits% equ 64 goto bits64
 
 "%npackd_cl%\ncl" add -p mingw-w64-i686-sjlj-posix -v 7.2 -p com.nokia.QtDev-i686-w64-Npackd-Release -v 5.9.2 -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw -v 0.7.7
