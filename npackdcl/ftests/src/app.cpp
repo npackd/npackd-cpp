@@ -21,7 +21,7 @@ App::App()
 void App::init()
 {
     QString rep = QUrl::fromLocalFile(QDir::currentPath() +
-            "\\npackdcl\\ftests\\Rep.xml").toString();
+            "\\..\\Rep.xml").toString();
     captureNpackdCLOutput("set-repo "
             "-u " + rep + " "
             "-u https://www.npackd.org/rep/recent-xml "
@@ -366,7 +366,7 @@ void App::help()
 {
     QVERIFY(captureNpackdCLOutput("help").contains("ncl update"));
 
-    QVERIFY(captureNpackdCLOutput("").contains("Missing command"));
+    QVERIFY(captureNpackdCLOutput("").contains("command line interface"));
 }
 
 void App::which()
