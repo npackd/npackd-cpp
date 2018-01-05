@@ -50,9 +50,9 @@ find_package(QuaZip REQUIRED)
 readVersion("../appveyor.yml")
 
 file(GLOB RESOURCE_IMAGES "src/*.png")
-file(COPY ${RESOURCE_IMAGES} src/wpmcpp.qrc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${RESOURCE_IMAGES} src/npackdg.qrc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-set(WPMCPP_SOURCES
+set(NPACKDG_SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/packageversion.cpp
@@ -100,10 +100,10 @@ set(WPMCPP_SOURCES
     src/downloadsizefinder.cpp
     src/clprocessor.cpp
     src/exportrepositoryframe.cpp
-    src/wpmcpp_plugin_import.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.qrc
+    src/npackdg_plugin_import.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
-set(WPMCPP_HEADERS
+set(NPACKDG_HEADERS
     src/mainwindow.h
     src/packageversion.h
     src/repository.h
@@ -155,7 +155,7 @@ set(WPMCPP_HEADERS
     src/stable.h
     src/exportrepositoryframe.h
 )
-set(WPMCPP_FORMS
+set(NPACKDG_FORMS
     src/mainwindow.ui
     src/packageversionform.ui
     src/licenseform.ui
@@ -165,18 +165,18 @@ set(WPMCPP_FORMS
     src/mainframe.ui
     src/exportrepositoryframe.ui
 )
-set(WPMCPP_TRANSLATIONS
-    src/wpmcpp_es.ts
-    src/wpmcpp_ru.ts
-    src/wpmcpp_fr.ts
-    src/wpmcpp_de.ts
+set(NPACKDG_TRANSLATIONS
+    src/npackdg_es.ts
+    src/npackdg_ru.ts
+    src/npackdg_fr.ts
+    src/npackdg_de.ts
 )
 
 set(OUTPUT_FILE_NAME "npackdg.exe")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY src/wpmcpp.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND WPMCPP_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/wpmcpp.rc)
+file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+list(APPEND NPACKDG_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc)
 
 if(MSVC)
     # Configure the template file that allows debugging
@@ -188,11 +188,11 @@ endif()
 
 find_package(Qt5 COMPONENTS Gui xml sql widgets WinExtras LinguistTools REQUIRED)
 add_executable(npackdg WIN32
-    ${WPMCPP_SOURCES}
-    ${WPMCPP_HEADERS}
-    ${WPMCPP_FORMS}
+    ${NPACKDG_SOURCES}
+    ${NPACKDG_HEADERS}
+    ${NPACKDG_FORMS}
 )
-qt5_add_translation(WPMCPP_TRANSLATIONS_QM ${WPMCPP_TRANSLATIONS})
+qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 target_link_libraries(npackdg
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
@@ -254,9 +254,9 @@ file(TO_CMAKE_PATH "$ENV{EXEPROXY}" EXEPROXY)
 install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 # todo
-#   cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -report_leak_max 100000 -no_callstack_use_top_fp -- wpmcpp.exe
+#   cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -no_follow_children -report_leak_max 100000 -no_callstack_use_top_fp -- npackdg.exe
 
 # todo memcheck
 # memcheck: compile
-#   cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -- wpmcpp.exe
+#   cd $(WHERE) && "$(DRMEMORY)\bin\drmemory.exe" -light -count_leaks -no_follow_children -no_callstack_use_top_fp -- npackdg.exe
 

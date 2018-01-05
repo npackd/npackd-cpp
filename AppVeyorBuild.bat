@@ -116,16 +116,16 @@ pushd ..\install
 7z a ..\build\Npackd%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy ..\src\wpmcpp%bits%.aip .
+copy ..\src\npackdg%bits%.aip .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy ..\src\app.ico .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /edit wpmcpp%bits%.aip /SetVersion %version%
+AdvancedInstaller.com /edit npackdg%bits%.aip /SetVersion %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /build wpmcpp%bits%.aip
+AdvancedInstaller.com /build npackdg%bits%.aip
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd
 
