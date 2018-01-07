@@ -60,12 +60,17 @@ void Package::setIcon(const QString &icon)
 
 QString Package::getShortName() const
 {
+    return getShortName(this->name);
+}
+
+QString Package::getShortName(const QString& fullname)
+{
     QString r;
-    int index = this->name.lastIndexOf('.');
+    int index = fullname.lastIndexOf('.');
     if (index < 0)
-        r = this->name;
+        r = fullname;
     else
-        r = this->name.mid(index + 1);
+        r = fullname.mid(index + 1);
     return r;
 }
 

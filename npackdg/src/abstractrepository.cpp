@@ -1016,7 +1016,7 @@ Package* AbstractRepository::findOnePackage(
     DBRepository* rep = DBRepository::getDefault();
     Package* p = rep->findPackage_(package);
 
-    if (!p) {
+    if (!p && !package.contains('.')) {
         QList<Package*> packages = rep->findPackagesByShortName(package);
 
         if (packages.count() == 0) {

@@ -93,6 +93,13 @@ public:
     static bool isValidName(const QString &name);
 
     /**
+     * @param fullname full package name with "."
+     * @return short name for this package. The short name contains only the
+     *     part after the last dot.
+     */
+    static QString getShortName(const QString& fullname);
+
+    /**
      * @return copy of this object
      */
     Package* clone() const;

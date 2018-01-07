@@ -64,8 +64,11 @@ QStringList App::sortPackageVersionsByPackageTitle(
 
 int App::process()
 {
+    // alphabetically sorted options by the short name
     cl.add("bare-format", 'b', "bare format (no heading or summary)",
             "", false, "list,list-repos,search,install-dir,which,where,info,path");
+    cl.add("cmd", 'c', "output a .cmd script",
+            "", false, "path");
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("end-process", 'e',
             "list of ways to close running applications \r\n(c=close, k=kill, s=disconnect from file shares, d=stop services). The default value is 'c'.",
@@ -86,6 +89,8 @@ int App::process()
             "package", true, "add,info,path,place,remove,update,rm");
     cl.add("query", 'q', "search terms (e.g. editor)",
             "search terms", false, "search");
+    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
+            "range", true, "add,path,update");
     cl.add("status", 's', "filters package versions by status",
             "status", false, "list,search");
     cl.add("timeout", 't', "timeout in seconds",
@@ -94,8 +99,6 @@ int App::process()
             "repository", false, "add-repo,remove-repo,set-repo");
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
             "version", false, "add,info,path,place,rm,remove");
-    cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
-            "range", true, "add,path,update");
 
     cl.add("user", 0, "user name for the HTTP authentication",
             "user name", false, "add,update,detect");
@@ -1041,11 +1044,17 @@ void App::path(Job* job)
             path.append(ipvs.at(i)->getDirectory().replace('/', '\\'));
         }
 
-        bool json = cl.isPresent("json");
-        if (json) {
+        if (cl.isPresent("json")) {
             QJsonObject top;
             top["path"] = path;
             printJSON(top);
+        } else if (cl.isPresent("cmd")) {
+            for (int i = 0; i < ipvs.size(); i++) {
+                InstalledPackageVersion* ipv = ipvs.at(i);
+                WPMUtils::writeln(QStringLiteral("set ") +
+                        Package::getShortName(ipv->package) + '=' +
+                        ipv->getDirectory().replace('/', '\\'));
+            }
         } else {
             WPMUtils::writeln(path);
         }
