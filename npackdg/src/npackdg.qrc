@@ -11,9 +11,9 @@
         <file>broken.png</file>
     </qresource>
     <qresource prefix="/translations">
-        <file>wpmcpp_de.qm</file>
-        <file>wpmcpp_es.qm</file>
-        <file>wpmcpp_fr.qm</file>
-        <file>wpmcpp_ru.qm</file>
+        <file>npackdg_de.qm</file>
+        <file>npackdg_es.qm</file>
+        <file>npackdg_fr.qm</file>
+        <file>npackdg_ru.qm</file>
     </qresource>
 </RCC>
