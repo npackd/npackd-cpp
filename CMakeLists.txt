@@ -3,4 +3,3 @@ project(npackd-cpp)
 
 add_subdirectory(npackdg)
 add_subdirectory(npackdcl)
-add_subdirectory(clu)

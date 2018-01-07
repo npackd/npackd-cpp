@@ -62,7 +62,6 @@ goto start
 
 :start
 if %prg% equ npackdcl goto npackdcl
-if %prg% equ clu goto clu
 
 :npackd
 
@@ -247,41 +246,6 @@ appveyor PushArtifact npackdcl\install\NpackdCL%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-goto :eof
-
-:clu
-mkdir clu\build
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-pushd clu\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
-set qtdir=%qt:\=/%
-set CMAKE_INCLUDE_PATH=%quazip%\include
-set CMAKE_LIBRARY_PATH=%quazip%\lib
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
-
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-mingw32-make.exe install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-pushd ..\install
-
-7z a ..\build\CLU%bits%-%version%.zip * -mx9	
-if %errorlevel% neq 0 exit /b %errorlevel%
-	   
-copy ..\src\app.ico .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-popd
-popd
-
-set path=%initial_path%
-
-appveyor PushArtifact clu\build\CLU%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
