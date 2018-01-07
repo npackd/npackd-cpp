@@ -642,22 +642,6 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
 
         d.refresh();
         if (d.exists()) {
-            if (!d.exists(d.rootPath() + ".NpackdTrash"))
-                d.mkpath(d.rootPath() + ".NpackdTrash");
-
-            QTemporaryDir tempDir2(d.rootPath() + "\\.NpackdTrash\\" +
-                    d.dirName());
-            if (tempDir2.isValid()) {
-                // qCDebug(npackd) << "renaming" << d.absolutePath() << " to " <<
-                //         tempDir2.path() + "\\" + d.dirName();
-                d.rename(d.absolutePath(), tempDir2.path() + "\\" + d.dirName());
-            }
-        } else {
-            break;
-        }
-
-        d.refresh();
-        if (d.exists()) {
             Job* sub = job->newSubJob(0.01,
                     QObject::tr("Deleting the directory %1").arg(
                     d.absolutePath().replace('/', '\\')));
