@@ -1049,12 +1049,7 @@ void App::path(Job* job)
             top["path"] = path;
             printJSON(top);
         } else if (cl.isPresent("cmd")) {
-            for (int i = 0; i < ipvs.size(); i++) {
-                InstalledPackageVersion* ipv = ipvs.at(i);
-                WPMUtils::writeln(QStringLiteral("set ") +
-                        Package::getShortName(ipv->package) + '=' +
-                        ipv->getDirectory().replace('/', '\\'));
-            }
+            WPMUtils::writeln(QStringLiteral("set path=") + path);
         } else {
             WPMUtils::writeln(path);
         }
