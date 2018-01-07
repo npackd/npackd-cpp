@@ -1178,6 +1178,84 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
     return ret;
 }
 
+QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(const CommandLine& cl,
+        QString* err)
+{
+    QList<InstalledPackageVersion*> ret;
+    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+
+    DBRepository* rep = DBRepository::getDefault();
+
+    for (int i = 0; i < pos.size(); i++) {
+        if (!err->isEmpty())
+            break;
+
+        CommandLine::ParsedOption* po = pos.at(i);
+        if (po->opt->nameMathes("package")) {
+            CommandLine::ParsedOption* ponext = 0;
+            if (i + 1 < pos.size())
+                ponext = pos.at(i + 1);
+
+            QString package = po->value;
+            if (!Package::isValidName(package)) {
+                *err = QObject::tr("Invalid package name: %1").arg(package);
+            }
+
+            Package* p = 0;
+            if (err->isEmpty()) {
+                p = AbstractRepository::findOnePackage(package, err);
+                if (err->isEmpty()) {
+                    if (!p)
+                        *err = QObject::tr("Unknown package: %1").arg(package);
+                }
+            }
+
+            InstalledPackageVersion* ipv = 0;
+            if (err->isEmpty()) {
+                QString version;
+                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                    version = ponext->value;
+
+                QString versions;
+                if (ponext != 0 && ponext->opt->nameMathes("versions"))
+                    versions = ponext->value;
+
+                if (!versions.isNull()) {
+                    i++;
+                    Dependency v;
+                    v.package = p->name;
+                    if (!v.setVersions(versions)) {
+                        *err = QObject::tr("Cannot parse a version range: %1").
+                                arg(versions);
+                    } else {
+                        ipv = rep->findHighestInstalledMatch(v);
+                    }
+                } else if (version.isNull()) {
+                    ipv = ip->getNewestInstalled(p->name);
+                } else {
+                    i++;
+                    Version v;
+                    if (!v.setVersion(version)) {
+                        *err = QObject::tr("Cannot parse version: %1").
+                                arg(version);
+                    } else {
+                        ipv = ip->find(p->name, v);
+                    }
+                }
+            }
+
+            if (ipv)
+                ret.append(ipv);
+
+            delete p;
+        }
+    }
+
+    return ret;
+}
+
 bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
 {
     *errMsg = "";

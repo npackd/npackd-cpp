@@ -151,7 +151,7 @@ int App::process()
 
         Job* job;
         if (cl.isPresent("bare-format") || cl.isPresent("json") ||
-                cmd == "help")
+                cmd == "help" || cmd == "path")
             job = new Job();
         else
             job = clp.createJob();
@@ -309,9 +309,9 @@ void App::usage(Job* job)
         "        list currently defined repositories",
         "    ncl help",
         "        prints this help",
-        "    ncl path --package=<package>",
-        "            [--version=<version> | --versions=<versions>]",
-        "        searches for an installed package and prints its location",
+        "    ncl path (--package=<package>",
+        "            [--version=<version> | --versions=<versions>])+ ",
+        "        searches for installed packages and prints their locations",
         "    ncl place --package=<package>",
         "            --version=<version> --file=<directory>",
         "        registers a package version installed without Npackd",
@@ -979,47 +979,30 @@ void App::removeRepo(Job* job)
 
 void App::path(Job* job)
 {
-    QString package = cl.get("package");
-    QString versions = cl.get("versions");
-    QString version = cl.get("version");
-
     if (job->shouldProceed()) {
-        if (package.isNull()) {
-            job->setErrorMessage("Missing option: --package");
-        }
+        QString err = DBRepository::getDefault()->openDefault();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
     }
 
     if (job->shouldProceed()) {
-        if (!Package::isValidName(package)) {
-            job->setErrorMessage("Invalid package name: " + package);
-        }
+        Job* sub = job->newSubJob(0.1,
+                "Reading list of installed packages from the registry");
+        InstalledPackages* ip = InstalledPackages::getDefault();
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
     }
 
-    Dependency d;
-    if (job->shouldProceed()) {
-        // debug: WPMUtils::outputTextConsole <<  package) << " " << versions);
-        d.package = package;
-        if (version.isNull()) {
-            if (versions.isNull()) {
-                d.min.setVersion(0, 0);
-                d.max.setVersion(std::numeric_limits<int>::max(), 0);
-            } else {
-                if (!d.setVersions(versions)) {
-                    job->setErrorMessage("Cannot parse versions: " +
-                            versions);
-                }
-            }
-        } else {
-            if (d.min.setVersion(version)) {
-                d.max = d.min;
-                d.minIncluded = true;
-                d.maxIncluded = true;
-            } else
-                job->setErrorMessage("Cannot parse version: " +
-                        version);
-        }
-    }
+    QString err;
+    QList<InstalledPackageVersion*> ipvs =
+            PackageVersion::getPathPackageVersionOptions(cl, &err);
+    if (!err.isEmpty())
+        job->setErrorMessage(err);
 
+/*
     QString path;
     if (job->shouldProceed()) {
         // no long-running operation can be done here.
@@ -1046,9 +1029,16 @@ void App::path(Job* job)
             job->setErrorMessage(err);
         }
     }
+    */
 
-    if (!path.isEmpty()) {
-        path.replace('/', '\\');
+    if (err.isEmpty()) {
+        QString path;
+        for (int i = 0; i < ipvs.size(); i++) {
+            if (!path.isEmpty())
+                path.append(';');
+
+            path.append(ipvs.at(i)->getDirectory().replace('/', '\\'));
+        }
 
         bool json = cl.isPresent("json");
         if (json) {

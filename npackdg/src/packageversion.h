@@ -174,6 +174,16 @@ public:
     static QList<PackageVersion *> getRemovePackageVersionOptions(
             const CommandLine &cl, QString *err);
 
+    /**
+     * @brief parses the command line and returns the list of chosen package
+     *     versions
+     * @param cl command line
+     * @param err errors will be stored here
+     * @return [owner:caller] list of installed package versions
+     */
+    static QList<InstalledPackageVersion *> getPathPackageVersionOptions(
+            const CommandLine &cl, QString *err);
+
     /** package version */
     Version version;
 
