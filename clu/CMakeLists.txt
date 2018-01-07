@@ -37,6 +37,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 link_directories("$ENV{QTDIR}\\qtbase\\lib") 
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
+link_directories("$ENV{QTDIR}\\qtbase\\plugins\\sqldrivers")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
 
@@ -131,6 +132,7 @@ add_executable(clu
 target_link_libraries(clu
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
+    qsqlite
     Qt5::Sql Qt5::Xml Qt5::Core
     qtpcre2
     winmm
