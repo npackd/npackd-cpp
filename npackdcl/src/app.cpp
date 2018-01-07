@@ -65,7 +65,7 @@ QStringList App::sortPackageVersionsByPackageTitle(
 int App::process()
 {
     cl.add("bare-format", 'b', "bare format (no heading or summary)",
-            "", false, "list,list-repos,search,install-dir,which,where,info");
+            "", false, "list,list-repos,search,install-dir,which,where,info,path");
     cl.add("debug", 'd', "turn on the debug output", "", false);
     cl.add("end-process", 'e',
             "list of ways to close running applications \r\n(c=close, k=kill, s=disconnect from file shares, d=stop services). The default value is 'c'.",
@@ -75,7 +75,7 @@ int App::process()
     cl.add("install", 'i',
             "install a package if it was not installed", "", false, "update");
     cl.add("json", 'j', "json format for the output",
-            "", false, "list,list-repos,search,install-dir,which,where,info");
+            "", false, "list,list-repos,search,install-dir,which,where,info,path");
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false,
             "update");
@@ -314,6 +314,7 @@ void App::usage(Job* job)
         "        searches for installed packages and prints their locations",
         "    ncl place --package=<package>",
         "            --version=<version> --file=<directory>",
+        "            [--bare-format | --json]",
         "        registers a package version installed without Npackd",
         "    ncl remove|rm (--package=<package> [--version=<version>])+",
         "           [--end-process=<types>]",

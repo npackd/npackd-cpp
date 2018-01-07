@@ -2530,7 +2530,13 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     db.setDatabaseName(file);
     if (readOnly)
         db.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY=1"));
+
+    // it takes Sqlite about 2 seconds to open the database for non-admins
+    // It seems to depend on Sqlite not being able to write to the file.
+    qCDebug(npackd) << "before opening the database";
     db.open();
+    qCDebug(npackd) << "after opening the database";
+
     err = toString(db.lastError());
 
     if (err.isEmpty())
