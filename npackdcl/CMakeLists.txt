@@ -112,7 +112,6 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/mysqlquery.h
     ../npackdg/src/installedpackagesthirdpartypm.h
     src/app.h
-    src/stable.h
 )
 
 set(OUTPUT_FILE_NAME "npackdcl.exe")
