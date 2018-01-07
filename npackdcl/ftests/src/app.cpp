@@ -83,7 +83,7 @@ void App::pathIsFast()
     QVERIFY(captureNpackdCLOutput("path -p io.mpv.mpv-64").
             contains("mpv_64-bit"));
     t.time(1);
-    QVERIFY2(t.getTime(1) < 0.1, qPrintable(QString("%1").arg(t.getTime(1))));
+    QVERIFY2(t.getTime(1) < 0.2, qPrintable(QString("%1").arg(t.getTime(1))));
 }
 
 void App::pathVersion()
