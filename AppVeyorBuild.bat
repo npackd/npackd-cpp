@@ -186,6 +186,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+"%EXEPROXY%\exeproxy.exe" exeproxy-copy install\ncl.exe npackdcl.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -216,9 +219,6 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 popd
 
 pushd ..\install
-
-"%EXEPROXY%\exeproxy.exe" exeproxy-copy ncl.exe ncl.exe
-if %errorlevel% neq 0 exit /b %errorlevel%
 
 7z a ..\build\NpackdCL%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
