@@ -4,6 +4,7 @@
 #include "ui_settingsframe.h"
 
 #include <QApplication>
+#include <QPushButton>
 
 #include "repository.h"
 #include "mainwindow.h"
@@ -54,20 +55,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
     this->ui->comboBoxDir->addItems(dirs);
 
-    // used repositories
     wr.close();
-    err = wr.open(
-        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-            "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
-    QStringList usedReps;
-    if (err.isEmpty()) {
-        usedReps = wr.loadStringList(&err);
-    }
-    this->ui->comboBoxRep->addItems(usedReps);
-    addUsedRepository("https://www.npackd.org/rep/xml?tag=stable");
-    addUsedRepository("https://www.npackd.org/rep/xml?tag=stable64");
-    addUsedRepository("https://www.npackd.org/rep/xml?tag=libs");
-    addUsedRepository("https://www.npackd.org/rep/xml?tag=unstable");
 
 	// translation bugfix
 	ui->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Apply"));
@@ -88,8 +76,6 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 		DWORD repCount = wr.getDWORD("size", &err);
 		if (err.isEmpty() && repCount > 0) {
 			this->ui->plainTextEditReps->setEnabled(false);
-			this->ui->comboBoxRep->setEnabled(false);
-			this->ui->pushButtonAddRep->setEnabled(false);
 		}
 	}
 }
@@ -106,13 +92,15 @@ QStringList SettingsFrame::getRepositoryURLs()
     for (int i = 0; i < sl.count(); i++) {
         sl[i] = sl.at(i).trimmed();
     }
-    return sl;
-}
 
-void SettingsFrame::addUsedRepository(const QString& repository)
-{
-    if (this->ui->comboBoxRep->findText(repository) < 0)
-        this->ui->comboBoxRep->addItem(repository);
+    for (int i = 0; i < sl.size(); ) {
+        if (sl.at(i).trimmed().startsWith("#"))
+            sl.removeAt(i);
+        else
+            i++;
+    }
+
+    return sl;
 }
 
 QString SettingsFrame::getInstallationDirectory()
@@ -127,11 +115,23 @@ void SettingsFrame::setInstallationDirectory(const QString& dir)
 
 void SettingsFrame::setRepositoryURLs(const QStringList &urls)
 {
-    this->ui->plainTextEditReps->setPlainText(urls.join("\r\n"));
+    QStringList texts;
 
-    for (int i = 0; i < urls.size(); i++) {
-        addUsedRepository(urls.at(i));
+    texts = urls;
+
+    QStringList comments;
+    QString err;
+    WindowsRegistry wr;
+    err = wr.open(WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
+    if (err.isEmpty())
+        comments = wr.loadStringList(&err);
+
+    for (int i = 0; i < comments.size(); i++) {
+        texts.append("# " + comments.at(i));
     }
+
+    this->ui->plainTextEditReps->setPlainText(texts.join("\r\n"));
 }
 
 void SettingsFrame::on_buttonBox_accepted()
@@ -188,12 +188,6 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         err = QObject::tr("No repositories defined");
 
     if (err.isEmpty()) {
-        for (int i = 0; i < list.size(); i++) {
-            addUsedRepository(list.at(i));
-        }
-    }
-
-    if (err.isEmpty()) {
         err = AbstractRepository::checkInstallationDirectory(getInstallationDirectory());
     }
 
@@ -246,9 +240,6 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
         }
     }
 
-    qDeleteAll(urls);
-    urls.clear();
-
     if (err.isEmpty()) {
         WindowsRegistry m(
                 WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
@@ -276,12 +267,18 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
                 "Software\\Npackd\\Npackd\\UsedReps", &err,
                 KEY_ALL_ACCESS);
 
-        QStringList usedReps;
-        for (int i = 0; i < this->ui->comboBoxRep->count(); i++)
-            usedReps.append(this->ui->comboBoxRep->itemText(i));
-        if (err.isEmpty()) {
-            wr.saveStringList(usedReps);
+        QStringList comments = this->ui->plainTextEditReps->toPlainText().
+                trimmed().split("\n", QString::SkipEmptyParts);
+        for (int i = 0; i < comments.size(); ) {
+            QString c = comments.at(i).trimmed();
+            if (!c.startsWith("#"))
+                comments.removeAt(i);
+            else {
+                comments[i] = c.mid(1);
+                i++;
+            }
         }
+        wr.saveStringList(comments);
 
         // it is not important, whether the list of used repositories
         // is saved or not
@@ -290,15 +287,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
 
     if (!err.isEmpty())
         mw->addErrorMessage(err, err, true, QMessageBox::Critical);
-}
 
-void SettingsFrame::on_pushButtonAddRep_clicked()
-{
-    int index = this->ui->comboBoxRep->currentIndex();
-    if (index >= 0) {
-        QStringList urls = getRepositoryURLs();
-        QString url = this->ui->comboBoxRep->itemText(index);
-        if (urls.indexOf(url) < 0)
-            this->ui->plainTextEditReps->appendPlainText(url);
-    }
+    qDeleteAll(urls);
+    urls.clear();
 }
