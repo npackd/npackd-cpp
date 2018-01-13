@@ -26,7 +26,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 if %bits% equ 64 goto bits64
 
-C:\msys64\usr\bin\pacman -S base-devel mingw-w64-i686-toolchain mingw-w64-i686-libtool mingw64/mingw-w64-i686-jasper mingw64/mingw-w64-i686-qt5-static
+C:\msys64\usr\bin\pacman -S --noconfirm base-devel mingw-w64-i686-toolchain mingw-w64-i686-libtool mingw64/mingw-w64-i686-jasper mingw64/mingw-w64-i686-qt5-static
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" add -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw -v 0.7.7
@@ -35,7 +35,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 goto :eof
 
 :bits64
-C:\msys64\usr\bin\pacman -S base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-libtool  mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static
+C:\msys64\usr\bin\pacman -S --noconfirm base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-libtool  mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" add -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw64 -v 0.7.7
