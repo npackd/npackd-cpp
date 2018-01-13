@@ -18,12 +18,9 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set EXEPROXY=%%x
 
 if %bits% equ 64 goto bits64
 
-set QT=C:\NpackdSymlinks\qt-npackd-5.9.2
-set PACKAGE=com.googlecode.windows-package-manager.Npackd
+set QT=C:/msys64/mingw32/qt5-static
 set mingw_libs=i686-w64-mingw32
-
-set onecmd="%npackd_cl%\ncl.exe" path -p mingw-w64-i686-sjlj-posix -v 7.2
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
+set mingw=C:\msys64\mingw32
 
 set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
@@ -38,12 +35,9 @@ goto start
 
 :bits64
 
-set QT=C:\NpackdSymlinks\qt-npackd64-5.9.2
-set PACKAGE=com.googlecode.windows-package-manager.Npackd64
+set QT=C:/msys64/mingw64/qt5-static
 set mingw_libs=x86_64-w64-mingw32
-
-set onecmd="%npackd_cl%\ncl.exe" path -p mingw-w64-x86_64-seh-posix -v 7.2
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
+set mingw=C:\msys64\mingw64
 
 set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
