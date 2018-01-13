@@ -27,3 +27,5 @@ npackdstatic/
 /exeproxy/build/
 /npackdg/build/
 /npackdg/install/
+/npackdcl/build-min-size/
+/npackdg/build-msys/
