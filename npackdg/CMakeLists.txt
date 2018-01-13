@@ -34,7 +34,6 @@ else()
 endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
-link_directories("$ENV{QTDIR}\\qtbase\\lib") 
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
