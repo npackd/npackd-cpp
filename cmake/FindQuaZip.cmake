@@ -2,7 +2,13 @@
 # QUAZIP_INCLUDE_DIRS        - Path to QuaZip include dir
 # QUAZIP_LIBRARIES           - List of QuaZip libraries
 
+set(_OLD_FIND_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a" ".so" ".sl" ".dylib" ".dll.a")
 FIND_PACKAGE(ZLIB REQUIRED)
+#find_package(${ARGN})
+set(CMAKE_FIND_LIBRARY_SUFFIXES ${_OLD_FIND_SUFFIXES})
+unset(_OLD_FIND_SUFFIXES)
+
 FIND_PACKAGE(PkgConfig) 
 PKG_CHECK_MODULES(PC_QUAZIP QUIET QUAZIP) 
 

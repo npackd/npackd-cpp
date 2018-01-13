@@ -30,9 +30,6 @@ set mingw=C:\msys64\mingw32
 set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path -p z-dev-i686-w64_sjlj_posix_7.2-static -v 1.2.11
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
-
 set onecmd="%npackd_cl%\ncl.exe" path -p drmingw -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 
@@ -47,9 +44,6 @@ set mingw=C:\msys64\mingw64
 
 set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
-
-set onecmd="%npackd_cl%\ncl.exe" path -p z-dev-x86_64-w64_seh_posix_7.2-static -v 1.2.11
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
 set onecmd="%npackd_cl%\ncl.exe" path -p drmingw64 -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
@@ -71,7 +65,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
@@ -175,7 +169,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
