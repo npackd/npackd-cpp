@@ -27,7 +27,7 @@ set PACKAGE=com.googlecode.windows-package-manager.Npackd
 set mingw_libs=i686-w64-mingw32
 set mingw=C:\msys64\mingw32
 
-set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3
+set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-i686-w64_dw2_posix_7.2-qt_5.9.2-static -v 0.7.3
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
 
 set onecmd="%npackd_cl%\ncl.exe" path -p drmingw -v 0.7.7

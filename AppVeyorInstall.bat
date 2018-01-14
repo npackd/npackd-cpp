@@ -8,7 +8,7 @@ msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
-"%npackd_cl%\ncl" set-repo -u https://www.npackd.org/rep/xml?tag=stable -u https://www.npackd.org/rep/xml?tag=stable64 -u  https://www.npackd.org/rep/recent-xml -u https://www.npackd.org/rep/xml?tag=libs
+"%npackd_cl%\ncl" set-repo -u  https://www.npackd.org/rep/recent-xml -u https://www.npackd.org/rep/xml?tag=stable -u https://www.npackd.org/rep/xml?tag=stable64 -u https://www.npackd.org/rep/xml?tag=libs
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" detect
@@ -29,7 +29,7 @@ if %bits% equ 64 goto bits64
 C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-i686-libtool mingw32/mingw-w64-i686-jasper mingw32/mingw-w64-i686-qt5-static
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-"%npackd_cl%\ncl" add -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw -v 0.7.7
+"%npackd_cl%\ncl" add -p quazip-dev-i686-w64_dw2_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
