@@ -22,18 +22,13 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set EXEPROXY=%%x
 
 if %bits% equ 64 goto bits64
 
-set QT=C:\NpackdSymlinks\qt-npackd-5.9.2
+set QT=C:/msys64/mingw32/qt5-static
 set PACKAGE=com.googlecode.windows-package-manager.Npackd
 set mingw_libs=i686-w64-mingw32
+set mingw=C:\msys64\mingw32
 
-set onecmd="%npackd_cl%\ncl.exe" path -p mingw-w64-i686-sjlj-posix -v 7.2
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
-
-set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-i686-w64_sjlj_posix_7.2-qt_5.9.2-static -v 0.7.3
+set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-i686-w64_dw2_posix_7.2-qt_5.9.2-static -v 0.7.3
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
-
-set onecmd="%npackd_cl%\ncl.exe" path -p z-dev-i686-w64_sjlj_posix_7.2-static -v 1.2.11
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
 set onecmd="%npackd_cl%\ncl.exe" path -p drmingw -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
@@ -42,18 +37,13 @@ goto start
 
 :bits64
 
-set QT=C:\NpackdSymlinks\qt-npackd64-5.9.2
+set QT=C:/msys64/mingw64/qt5-static
 set PACKAGE=com.googlecode.windows-package-manager.Npackd64
 set mingw_libs=x86_64-w64-mingw32
-
-set onecmd="%npackd_cl%\ncl.exe" path -p mingw-w64-x86_64-seh-posix -v 7.2
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set mingw=%%x
+set mingw=C:\msys64\mingw64
 
 set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
-
-set onecmd="%npackd_cl%\ncl.exe" path -p z-dev-x86_64-w64_seh_posix_7.2-static -v 1.2.11
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set zlib=%%x
 
 set onecmd="%npackd_cl%\ncl.exe" path -p drmingw64 -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
@@ -75,7 +65,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
@@ -179,11 +169,12 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-mingw32-make.exe install
+mingw32-make.exe install VERBOSE=1
 if %errorlevel% neq 0 exit /b %errorlevel%
+
 
 "%EXEPROXY%\exeproxy.exe" exeproxy-copy ..\install\ncl.exe npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%

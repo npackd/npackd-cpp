@@ -35,10 +35,9 @@ else()
 endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
-link_directories("$ENV{QTDIR}\\qtbase\\lib") 
-link_directories("$ENV{QTDIR}\\qtbase\\plugins\\platforms")
-link_directories("$ENV{QTDIR}\\qtbase\\plugins\\imageformats")
-link_directories("$ENV{QTDIR}\\qtbase\\plugins\\sqldrivers")
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
 
