@@ -1,21 +1,18 @@
 ﻿How to build
 ============
 
-- install CMake 3, Qt 4.9.2, MinGW-w64 7.2, QuaZIP 0.7.3 and zlib 1.2.11. You 
-	can use the followng command if you have NpackdCL installed for this (the
-	dependencies will be installed automatically):
-	ncl.exe add -p mingw-w64-x86_64-seh-posix -v 7.2 -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3
+This file describes the steps necessary to build 64 bit version of Npackd 
+(GUI, command line or both depending which CMakeLists.txt you use) using MSYS2. 
+You can build the 32 bit version replacing the packages mentioned below with 
+their 32 bit versions.
+
+- download and unpack QuaZIP from https://github.com/tim-lebedkov/npackd-scripts/releases/download/release_2018.01.01_2/quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static-0.7.3.zip
+- install and start MSYS2
+- pacman -S --noconfirm mingw64/mingw-w64-x86_64-cmake mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static
+- export PATH=/mingw64/bin:$PATH
 - mkdir build
 - cd build
-- set path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\bin;C:\Program Files\CMake\bin
-- set cmake_prefix_path=C:\Program Files\MinGW-w64_x86_64_SEH_POSIX_threads\x86_64-w64-mingw32
-- set CMAKE_INCLUDE_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\include
-- set CMAKE_LIBRARY_PATH=C:\Program Files\QuaZIP_dev_x86_64_w64_static\lib
-- Use the forward slashes here!
-    set qtdir=C:/NpackdSymlinks/qt-npackd64-4.9.2
-- set exeproxy=C:\Program Files\EXE_Proxy
-- cmake -G "MinGW Makefiles" ..\ -DCMAKE_INSTALL_PREFIX=C:\Users\username\Documents\npackd-cpp\wpmcpp\install
-     "-DZLIB_ROOT:PATH=C:\Program Files\Zlib_x86_64_MinGW-w64_SEH_Posix_threads_static"
-- mingw32-make.exe
+- cmake -G "MinGW Makefiles" ..\ "-DQUAZIP_ROOT:PATH=C:\Program Files\QuaZIP"
+- make.exe
 
 
