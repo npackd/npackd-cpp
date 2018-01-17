@@ -3,9 +3,16 @@ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 project(npackdg CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
-set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake" "${QTDIR}/qtwinextras/lib/cmake/Qt5WinExtras")
-SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
+
+# build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/"
+    "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake"
+    "${QTDIR}/lib/cmake"
+    "${QTDIR}/qtwinextras/lib/cmake/Qt5WinExtras")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
