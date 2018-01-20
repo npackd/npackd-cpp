@@ -212,19 +212,9 @@ target_link_libraries(npackdg
     Qt5FontDatabaseSupport
     Qt5PlatformCompositorSupport
     qdirect2d
-#    qtfreetype
-    
-#    qdds
-#    qicns
     qico 
-#    qjp2
-#    qmng
-     qtlibpng
-#    qtga
-#    qtiff
-#    qwbmp
-#    qwebp
-    
+    qtlibpng
+
     imm32
     winmm 
     glu32 

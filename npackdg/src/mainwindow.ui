@@ -149,7 +149,7 @@
   </action>
   <action name="actionInstall">
    <property name="icon">
-    <iconset resource="wpmcpp.qrc">
+    <iconset resource="npackdg.qrc">
      <normaloff>:/images/install.png</normaloff>:/images/install.png</iconset>
    </property>
    <property name="text">
@@ -164,7 +164,7 @@
   </action>
   <action name="actionUninstall">
    <property name="icon">
-    <iconset resource="wpmcpp.qrc">
+    <iconset resource="npackdg.qrc">
      <normaloff>:/images/uninstall.png</normaloff>:/images/uninstall.png</iconset>
    </property>
    <property name="text">
@@ -179,7 +179,7 @@
   </action>
   <action name="actionGotoPackageURL">
    <property name="icon">
-    <iconset resource="wpmcpp.qrc">
+    <iconset resource="npackdg.qrc">
      <normaloff>:/images/gotosite.png</normaloff>:/images/gotosite.png</iconset>
    </property>
    <property name="text">
@@ -205,7 +205,7 @@
   </action>
   <action name="actionUpdate">
    <property name="icon">
-    <iconset resource="wpmcpp.qrc">
+    <iconset resource="npackdg.qrc">
      <normaloff>:/images/update.png</normaloff>:/images/update.png</iconset>
    </property>
    <property name="text">
@@ -283,7 +283,7 @@
   </action>
   <action name="actionFile_an_Issue">
    <property name="icon">
-    <iconset resource="wpmcpp.qrc">
+    <iconset resource="npackdg.qrc">
      <normaloff>:/images/fileissue.png</normaloff>:/images/fileissue.png</iconset>
    </property>
    <property name="text">
@@ -298,7 +298,7 @@
   </action>
   <action name="actionAdd_package">
    <property name="icon">
-    <iconset resource="wpmcpp.qrc">
+    <iconset resource="npackdg.qrc">
      <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
    </property>
    <property name="text">
@@ -377,7 +377,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="wpmcpp.qrc"/>
+  <include location="npackdg.qrc"/>
  </resources>
  <connections>
   <connection>

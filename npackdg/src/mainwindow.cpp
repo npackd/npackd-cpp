@@ -1884,7 +1884,15 @@ void MainWindow::on_actionTest_Download_Site_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     addTextTab(QObject::tr("About"), QString(
-            QObject::tr("<html><body>Npackd %1 - software package manager for Windows (R)<br><a href='https://www.npackd.org/'>https://www.npackd.org/</a></body></html>")).
+            QObject::tr("<html><body>Npackd %1 - "
+            "software package manager for Windows (R)<br>"
+            "<a href='https://www.npackd.org/'>https://www.npackd.org/</a><br>"
+            "<a href='https://github.com/tim-lebedkov/npackd/wiki/ChangeLog'>Changelog</a><br>"
+            "<a href='https://github.com/tim-lebedkov/npackd/wiki'>Documentation</a><br>"
+            "Author: Tim Lebedkov<br><br>"
+            "Contributors:<br>"
+            "https://github.com/OgreTransporter (Visual C++ support, group policy configuration, non-admin installations)<br>"
+            "</body></html>")).
             arg(NPACKD_VERSION), true);
 }
 
