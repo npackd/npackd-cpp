@@ -402,10 +402,14 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         }
 
         if (job->shouldProceed()) {
-            Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
-            readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
-            if (!sub->getErrorMessage().isEmpty())
-                job->setErrorMessage(sub->getErrorMessage());
+            if (!request.ignoreContent) {
+                Job* sub = job->newSubJob(0.95, QObject::tr("Reading the data"));
+                readData(sub, hResourceHandle, file, sha1, gzip, contentLength, alg);
+                if (!sub->getErrorMessage().isEmpty())
+                    job->setErrorMessage(sub->getErrorMessage());
+            } else {
+                job->setProgress(job->getProgress() + 0.95);
+            }
         }
 
         InternetCloseHandle(hResourceHandle);
@@ -422,6 +426,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     job->setTitle(initialTitle);
 
     job->complete();
+
+    qCDebug(npackd) << request.url << job->getErrorMessage() << contentLength;
 
     return contentLength;
 }
@@ -867,13 +873,29 @@ int64_t Downloader::getContentLength(Job* job, const QUrl &url,
         Request req(url);
         req.httpMethod = "HEAD";
         req.parentWindow = parentWindow;
-        req.useCache = false;
-        req.alg = QCryptographicHash::Sha1;
+        req.useCache = true;
         req.keepConnection = false;
         req.timeout = 15;
 
+        Job* sub = job->newSubJob(1, QObject::tr("Using the HEAD HTTP method"));
         Response resp;
-        result = downloadWin(job, req, &resp);
+        result = downloadWin(sub, req, &resp);
+
+        if (!sub->getErrorMessage().isEmpty()) {
+            Request req2(url);
+            req2.parentWindow = parentWindow;
+            req2.useCache = true;
+            req2.keepConnection = false;
+            req2.timeout = 15;
+            req2.ignoreContent = true;
+
+            Response resp2;
+            Job* sub2 = job->newSubJob(1 - job->getProgress(),
+                    QObject::tr("Using the GET HTTP method"));
+            result = downloadWin(sub2, req2, &resp2);
+            if (!sub2->getErrorMessage().isEmpty())
+                job->setErrorMessage(sub2->getErrorMessage());
+        }
     }
 
     return result;

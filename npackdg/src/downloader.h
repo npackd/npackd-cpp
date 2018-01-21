@@ -160,6 +160,11 @@ public:
         QString password;
 
         /**
+         * @brief true = do not read the data
+         */
+        bool ignoreContent;
+
+        /**
          * @param url http:/https:/file: URL
          */
         Request(const QUrl& url): file(0), interactive(true),
@@ -167,7 +172,7 @@ public:
                 alg(QCryptographicHash::Sha256), useCache(true),
                 useInternet(true),
                 keepConnection(true), httpMethod("GET"),
-                timeout(600) {
+                timeout(600), ignoreContent(false) {
         }
     };
 
