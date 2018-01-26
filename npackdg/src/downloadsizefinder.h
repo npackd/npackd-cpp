@@ -15,12 +15,8 @@
 #include <QMap>
 #include <QThreadPool>
 
-class DownloadFile
-{
-public:
-    QString url, error;
-    int64_t size;
-};
+#include "dbrepository.h"
+#include "urlinfo.h"
 
 /**
  * Loads files from the Internet.
@@ -30,20 +26,21 @@ class DownloadSizeFinder: public QObject
     Q_OBJECT
 
     /**
-     * @brief URL -> size as int64_t or
-     *     an error message if it starts with an asterisk (*). The data
-     *     in this field should be accessed under the mutex.
+     * @brief URL -> size as int64_t or -1 if unknown or -2 if an error occured
+     *     The data in this field should be accessed under the mutex.
      */
-    QMap<QString, QString> files;
+    QMap<QString, URLInfo*> sizes;
 
     QMutex mutex;
+
+    DBRepository* dbr;
 
     /**
      * @brief downloads a file
      * @param url this file should be downloaded
      * @return result
      */
-    DownloadFile downloadRunnable(const QString &url);
+    URLInfo downloadRunnable(const QString &url);
 public:
     static QThreadPool threadPool;
 private:
@@ -61,25 +58,21 @@ public:
      */
     DownloadSizeFinder();
 
-    virtual ~DownloadSizeFinder() {}
+    virtual ~DownloadSizeFinder();
 
     /**
      * @brief download a file. This function does not block.
      * @param url this file will be downloaded
-     * @param err error message or ""
-     * @return size or -2 if the file is being downloaded or -1 if the size
-     *     is unknown
+     * @return size or -2 if an error occured or -1 if the size is unknown
      */
-    int64_t downloadOrQueue(const QString& url, QString* err);
+    int64_t downloadOrQueue(const QString& url);
 signals:
     /**
      * @brief a download was completed (with or without an error)
      * @param url the file from this URL was downloaded
-     * @param size size of the download
-     * @param err the error message or ""
+     * @param size size of the download or -1 if unknown or -2 for an error
      */
-    void downloadCompleted(const QString& url, int64_t size,
-            const QString& err);
+    void downloadCompleted(const QString& url, int64_t size);
 private slots:
     void watcherFinished();
 };

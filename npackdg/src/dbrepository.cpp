@@ -1,6 +1,7 @@
 #include "dbrepository.h"
 
 #include <shlobj.h>
+#include <ctime>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -54,10 +55,12 @@ DBRepository::DBRepository()
     replacePackageQuery = 0;
     selectCategoryQuery = 0;
     insertInstalledQuery = 0;
+    insertURLSizeQuery = 0;
 }
 
 DBRepository::~DBRepository()
 {
+    delete insertURLSizeQuery;
     delete insertInstalledQuery;
     delete selectCategoryQuery;
     delete deleteLinkQuery;
@@ -112,6 +115,35 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
     }
 
     insertInstalledQuery->finish();
+
+    return err;
+}
+
+QString DBRepository::saveURLSize(const QString& url, int64_t size)
+{
+    QString err;
+
+    if (!insertURLSizeQuery) {
+        insertURLSizeQuery = new MySQLQuery(db);
+
+        QString insertSQL("INSERT OR REPLACE INTO URL"
+                "(ADDRESS, SIZE, SIZE_MODIFIED) "
+                "VALUES(:ADDRESS, :SIZE, :SIZE_MODIFIED)");
+
+        if (!insertURLSizeQuery->prepare(insertSQL)) {
+            err = getErrorString(*insertURLSizeQuery);
+            delete insertURLSizeQuery;
+            return err;
+        }
+    }
+
+    insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
+    insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
+    insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"), time(0));
+    if (!insertURLSizeQuery->exec())
+        err = getErrorString(*insertURLSizeQuery);
+
+    insertURLSizeQuery->finish();
 
     return err;
 }
@@ -359,6 +391,37 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
             break;
 
         start += block;
+    }
+
+    return ret;
+}
+
+QMap<QString, URLInfo*> DBRepository::findURLInfos(QString* err)
+{
+    *err = "";
+
+    QMap<QString, URLInfo*> ret;
+
+    QString sql("SELECT ADDRESS, SIZE, SIZE_MODIFIED FROM URL");
+    MySQLQuery q(db);
+    if (!q.prepare(sql))
+        *err = getErrorString(q);
+
+    if (!err->isEmpty())
+        return ret;
+
+    if (!q.exec())
+        *err = getErrorString(q);
+
+    if (!err->isEmpty())
+        return ret;
+
+    while (q.next()) {
+        QString address = q.value(0).toString();
+        URLInfo* info = new URLInfo(address);
+        info->size = q.value(1).toLongLong();
+        info->sizeModified = q.value(2).toLongLong();
+        ret.insert(address, info);
     }
 
     return ret;
@@ -2470,40 +2533,54 @@ QString DBRepository::updateDatabase()
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec(QStringLiteral("CREATE TABLE LINK("
+            db.exec("CREATE TABLE LINK("
                     "PACKAGE TEXT NOT NULL, INDEX_ INTEGER NOT NULL, "
                     "REL TEXT NOT NULL, "
-                    "HREF TEXT NOT NULL)"));
+                    "HREF TEXT NOT NULL)");
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec(QStringLiteral("CREATE INDEX LINK_PACKAGE ON LINK("
-                    "PACKAGE)"));
+            db.exec("CREATE INDEX LINK_PACKAGE ON LINK("
+                    "PACKAGE)");
             err = toString(db.lastError());
         }
     }
 
     // CMD_FILE. This table is new in Npackd 1.22.
     if (err.isEmpty()) {
-        e = tableExists(&db, QStringLiteral("CMD_FILE"), &err);
+        e = tableExists(&db, "CMD_FILE", &err);
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec(QStringLiteral("CREATE TABLE CMD_FILE("
+            db.exec("CREATE TABLE CMD_FILE("
                     "PACKAGE TEXT NOT NULL, "
                     "VERSION TEXT NOT NULL, "
                     "PATH TEXT NOT NULL, "
-                    "NAME TEXT NOT NULL)"));
+                    "NAME TEXT NOT NULL)");
             err = toString(db.lastError());
         }
     }
     if (err.isEmpty()) {
         if (!e) {
-            db.exec(QStringLiteral(
-                    "CREATE INDEX CMD_FILE_PACKAGE_VERSION ON CMD_FILE("
-                    "PACKAGE, VERSION)"));
+            db.exec("CREATE INDEX CMD_FILE_PACKAGE_VERSION ON CMD_FILE("
+                    "PACKAGE, VERSION)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // URL. This table is new in Npackd 1.24.
+    if (err.isEmpty()) {
+        e = tableExists(&db, "URL", &err);
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE URL("
+                    "ADDRESS TEXT NOT NULL PRIMARY KEY, "
+                    "SIZE INTEGER, "
+                    "SIZE_MODIFIED INTEGER, "
+                    "CONTENT BLOB)");
             err = toString(db.lastError());
         }
     }

@@ -108,6 +108,7 @@ set(NPACKDG_SOURCES
     src/clprocessor.cpp
     src/exportrepositoryframe.cpp
     src/npackdg_plugin_import.cpp
+    src/urlinfo.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -161,6 +162,7 @@ set(NPACKDG_HEADERS
     src/concurrent.h
     src/stable.h
     src/exportrepositoryframe.h
+    src/urlinfo.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui

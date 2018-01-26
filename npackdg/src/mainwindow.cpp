@@ -184,8 +184,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&this->fileLoader, SIGNAL(downloadCompleted(QString,QString,QString)), this,
             SLOT(downloadCompleted(QString,QString,QString)),
             Qt::QueuedConnection);
-    connect(&this->downloadSizeFinder, SIGNAL(downloadCompleted(QString,int64_t,QString)), this,
-            SLOT(downloadSizeCompleted(QString,qlonglong,QString)),
+
+    connect(&this->downloadSizeFinder,
+            SIGNAL(downloadCompleted(QString,int64_t)), this,
+            SLOT(downloadSizeCompleted(QString,qlonglong)),
             Qt::QueuedConnection);
 
     // copy toolTip to statusTip for all actions
@@ -520,8 +522,7 @@ void MainWindow::downloadCompleted(const QString& url,
     updateIcon(url);
 }
 
-void MainWindow::downloadSizeCompleted(const QString& url,
-        int64_t size, const QString& error)
+void MainWindow::downloadSizeCompleted(const QString& url, int64_t size)
 {
     QTableView* t = this->mainFrame->getTableWidget();
     PackageItemModel* m = static_cast<PackageItemModel*>(t->model());

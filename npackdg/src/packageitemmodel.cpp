@@ -141,17 +141,15 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                     v = "";
                 } else {
                     int64_t sz = mw->downloadSizeFinder.downloadOrQueue(
-                            cached->newestDownloadURL, &err);
-                    if (!err.isEmpty())
-                        v = "";
-                    else if (sz == -2)
-                        v = QObject::tr("computing");
-                    else if (sz == -1)
-                        v = "";
-                    else
+                            cached->newestDownloadURL);
+                    if (sz >= 0)
                         v = QString::number(
                             ((double) sz) / (1024.0 * 1024.0), 'f', 1) +
                             " MiB";
+                    else if (sz == -1)
+                        v = QObject::tr("computing");
+                    else
+                        v = "";
                 }
 
                 r = qVariantFromValue(v);

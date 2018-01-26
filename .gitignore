@@ -30,3 +30,5 @@ npackdstatic/
 /npackdcl/build-min-size/
 /npackdg/build-msys/
 /npackdg/build-msys-32/
+/build-minsizerel/
+/npackdg/build-minsizerel/

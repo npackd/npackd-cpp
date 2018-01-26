@@ -316,7 +316,7 @@ private slots:
     void downloadCompleted(const QString &url,
             const QString &filename, const QString &error);
     void downloadSizeCompleted(const QString &url,
-            int64_t size, const QString &error);
+            int64_t size);
     void on_actionShow_changelog_triggered();
     void on_actionToggle_toolbar_triggered(bool checked);
     void on_mainToolBar_visibilityChanged(bool visible);
