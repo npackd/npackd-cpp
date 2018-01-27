@@ -139,7 +139,8 @@ QString DBRepository::saveURLSize(const QString& url, int64_t size)
 
     insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
     insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
-    insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"), time(0));
+    insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
+            static_cast<qlonglong>(time(0)));
     if (!insertURLSizeQuery->exec())
         err = getErrorString(*insertURLSizeQuery);
 

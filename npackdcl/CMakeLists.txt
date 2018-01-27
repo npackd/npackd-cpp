@@ -78,6 +78,7 @@ set(NPACKDCL_SOURCES
     ../npackdg/src/repositoryxmlhandler.cpp
     ../npackdg/src/mysqlquery.cpp
     ../npackdg/src/installedpackagesthirdpartypm.cpp
+    ../npackdg/src/urlinfo.cpp
     src/main.cpp
     src/app.cpp
 )
@@ -110,6 +111,7 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/repositoryxmlhandler.h
     ../npackdg/src/mysqlquery.h
     ../npackdg/src/installedpackagesthirdpartypm.h
+    ../npackdg/src/urlinfo.h
     src/app.h
 )
 
