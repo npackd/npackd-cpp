@@ -30,7 +30,7 @@ class FileLoader: public QObject
      *     an error message if it starts with an asterisk (*). The data
      *     in this field should be accessed under the mutex.
      */
-    QMap<QString, QString> files;
+    QMap<QString, DownloadFile> files;
 
     QAtomicInt id;
 

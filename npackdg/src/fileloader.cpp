@@ -32,11 +32,11 @@ QString FileLoader::downloadOrQueue(const QString &url, QString *err)
 
     this->mutex.lock();
     if (this->files.contains(url)) {
-        QString file = this->files.value(url);
-        if (file.startsWith('*'))
-            *err = file.mid(1);
-        else
-            r = dir.path() + "\\" + file;
+        DownloadFile file = this->files.value(url);
+        if (!file.error.isEmpty())
+            *err = file.error;
+        else if (!file.file.isEmpty())
+            r = dir.path() + "\\" + file.file;
         this->mutex.unlock();
     } else {
         this->mutex.unlock();
@@ -60,44 +60,37 @@ void FileLoader::watcherFinished()
             QFutureWatcher<DownloadFile>*>(sender());
     DownloadFile r = w->result();
 
-    this->mutex.lock();
-    if (!r.file.isEmpty())
-        this->files.insert(r.url, r.file);
-    else
-        this->files.insert(r.url, "*" + r.error);
-    this->mutex.unlock();
+    if (!r.file.isEmpty() || !r.error.isEmpty()) {
+        QString file = r.file;
+        if (!file.isEmpty())
+            file = dir.path() + "\\" + file;
 
-    QString file = r.file;
-    if (!file.isEmpty())
-        file = dir.path() + "\\" + file;
-
-    emit this->downloadCompleted(r.url, file, r.error);
+        emit this->downloadCompleted(r.url, file, r.error);
+    }
 
     w->deleteLater();
 }
 
 FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
 {
-    QThread::currentThread()->setPriority(QThread::LowestPriority);
-
-    bool b = SetThreadPriority(GetCurrentThread(),
-            THREAD_MODE_BACKGROUND_BEGIN);
-
-    CoInitialize(NULL);
-
     FileLoader::DownloadFile r;
     r.url = url;
 
     this->mutex.lock();
     if (this->files.contains(url)) {
-        QString v = this->files.value(url);
-        if (v.startsWith('*'))
-            r.error = v.mid(1);
-        else
-            r.file = v;
+        r = this->files.value(url);
         this->mutex.unlock();
     } else {
+        this->files.insert(url, r);
         this->mutex.unlock();
+
+        QThread::currentThread()->setPriority(QThread::LowestPriority);
+
+        bool b = SetThreadPriority(GetCurrentThread(),
+                THREAD_MODE_BACKGROUND_BEGIN);
+
+        CoInitialize(NULL);
+
         QString filename = QString::number(id.fetchAndAddAcquire(1));
         QString fn = dir.path() + "\\" + filename;
         QFile f(fn);
@@ -143,12 +136,16 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
         } else {
             r.error = QObject::tr("Cannot open the file %1").arg(fn);
         }
+
+        this->mutex.lock();
+        this->files.insert(r.url, r);
+        this->mutex.unlock();
+
+        CoUninitialize();
+
+        if (b)
+            SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
     }
-
-    CoUninitialize();
-
-    if (b)
-        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 
     return r;
 }
