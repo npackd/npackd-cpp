@@ -78,6 +78,7 @@ set(FTESTS_SOURCES
     ../../npackdg/src/packageversion.cpp
     ../../npackdg/src/wpmutils.cpp
     ../../npackdg/src/clprogress.cpp
+    ../../npackdg/src/urlinfo.cpp
     src/main.cpp
 )
 set(FTESTS_HEADERS
@@ -109,6 +110,7 @@ set(FTESTS_HEADERS
     ../../npackdg/src/packageversion.h
     ../../npackdg/src/wpmutils.h
     ../../npackdg/src/clprogress.h
+    ../../npackdg/src/urlinfo.h
 )
 
 set(OUTPUT_FILE_NAME "ftests.exe")
@@ -143,7 +145,7 @@ target_link_libraries(ftests
     netapi32
     Ws2_32
 )
-target_include_directories(ftests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../../npackdg/src)
+target_include_directories(ftests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../../npackdg/src)
 target_compile_definitions(ftests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS ftests DESTINATION ${CMAKE_INSTALL_PREFIX})

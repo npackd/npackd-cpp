@@ -163,3 +163,5 @@ if(MSVC)
     install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
 
+add_subdirectory(tests)
+add_subdirectory(ftests)

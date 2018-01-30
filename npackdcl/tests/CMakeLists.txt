@@ -81,6 +81,7 @@ set(TESTS_SOURCES
     ../../npackdg/src/mysqlquery.cpp
     ../../npackdg/src/installedpackagesthirdpartypm.cpp
     ../../npackdg/src/cbsthirdpartypm.cpp
+    ../../npackdg/src/urlinfo.cpp
     )
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
@@ -112,7 +113,9 @@ set(TESTS_HEADERS
     ../../npackdg/src/repositoryxmlhandler.h
     ../../npackdg/src/mysqlquery.h
     ../../npackdg/src/installedpackagesthirdpartypm.h
-    ../../npackdg/src/cbsthirdpartypm.h)
+    ../../npackdg/src/cbsthirdpartypm.h
+    ../../npackdg/src/urlinfo.h
+)
 
 set(OUTPUT_FILE_NAME "tests.exe")
 file(COPY DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -147,7 +150,7 @@ target_link_libraries(tests
     netapi32
     Ws2_32
 )
-target_include_directories(tests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/../../npackdg/src)
+target_include_directories(tests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../../npackdg/src)
 target_compile_definitions(tests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS tests DESTINATION ${CMAKE_INSTALL_PREFIX})
