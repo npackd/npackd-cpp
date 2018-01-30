@@ -16,9 +16,7 @@ PackageVersion *InstallOperation::findPackageVersion(QString* err) const
 InstallOperation *InstallOperation::clone() const
 {
     InstallOperation* r = new InstallOperation();
-    r->install = this->install;
-    r->package = this->package;
-    r->version = this->version;
+    *r = *this;
     return r;
 }
 
