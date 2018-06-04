@@ -123,6 +123,22 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         }
     }
 
+    if (job->shouldProceed()) {
+        if (!request.proxyUser.isEmpty()) {
+            InternetSetOption(hConnectHandle, INTERNET_OPTION_PROXY_USERNAME,
+                    (LPVOID) request.proxyUser.utf16(),
+                    request.proxyUser.length() + 1);
+
+            if (!request.proxyPassword.isEmpty()) {
+                InternetSetOption(hConnectHandle, INTERNET_OPTION_PROXY_PASSWORD,
+                        (LPVOID) request.proxyPassword.utf16(),
+                        request.proxyPassword.length() + 1);
+                //WPMUtils::writeln("setting password" + request.password + " for " +
+                //        request.url.toString());
+            }
+        }
+    }
+
     // flags: http://msdn.microsoft.com/en-us/library/aa383661(v=vs.85).aspx
     // We support accepting any mime file type since this is a simple download
     // of a file

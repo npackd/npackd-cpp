@@ -423,11 +423,15 @@ public:
      * @param interactive true = allow the interaction with the user
      * @param user user name for the HTTP authentication or ""
      * @param password password for the HTTP authentication or ""
+     * @param proxyUser user name for the HTTP proxy authentication or ""
+     * @param proxyPassword password for the HTTP proxy authentication or ""
      * @return the full name of the downloaded file or "" for packages of
      *     type "zip"
      */
     QString download_(Job* job, const QString& where,
-            bool interactive, const QString user, const QString password);
+            bool interactive, const QString user,
+            const QString password,
+            const QString proxyUser, const QString proxyPassword);
 
     /**
      * Uninstalls this package version.

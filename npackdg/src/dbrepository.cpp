@@ -1504,7 +1504,8 @@ QString DBRepository::clear()
 }
 
 void DBRepository::load(Job* job, bool useCache, bool interactive,
-        const QString user, const QString password)
+        const QString user, const QString password,
+        const QString proxyUser, const QString proxyPassword)
 {
     QString err;
     QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
@@ -1530,6 +1531,8 @@ void DBRepository::load(Job* job, bool useCache, bool interactive,
             Downloader::Request request = *url;
             request.user = user;
             request.password = password;
+            request.proxyUser = proxyUser;
+            request.proxyPassword = proxyPassword;
             request.useCache = useCache;
             request.interactive = interactive;
             QFuture<QTemporaryFile*> future = QtConcurrent::run(
@@ -1635,7 +1638,8 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
 }
 
 void DBRepository::updateF5(Job* job, bool interactive, const QString user,
-        const QString password)
+        const QString password, const QString proxyUser,
+        const QString proxyPassword)
 {
     bool transactionStarted = false;
     if (job->shouldProceed()) {
@@ -1663,7 +1667,7 @@ void DBRepository::updateF5(Job* job, bool interactive, const QString user,
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.27,
                 QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"));
-        load(sub, true, interactive, user, password);
+        load(sub, true, interactive, user, password, proxyUser, proxyPassword);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -1798,7 +1802,7 @@ void DBRepository::updateF5Runnable(Job *job)
         Job* sub = job->newSubJob(0.77,
                 QObject::tr("Updating the temporary database"), true, true);
         CoInitialize(0);
-        tempdb.updateF5(sub, true, "", "");
+        tempdb.updateF5(sub, true, "", "", "", "");
         CoUninitialize();
     }
 

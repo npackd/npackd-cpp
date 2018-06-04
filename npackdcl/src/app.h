@@ -59,7 +59,8 @@ private:
             const QString parentPrefix, int level, PackageVersion *pv);
     void processInstallOperations(Job *job,
             const QList<InstallOperation *> &ops, DWORD programCloseType,
-            bool interactive, const QString user, const QString password);
+            bool interactive, const QString user, const QString password,
+            const QString proxyUser, const QString proxyPassword);
     QStringList sortPackageVersionsByPackageTitle(
             QList<PackageVersion *> *list);
 public slots:

@@ -81,7 +81,7 @@ int App::process()
             "", false, "list,list-repos,search,install-dir,which,where,info,path");
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false,
-            "update");
+           "update");
     cl.add("non-interactive", 'n',
             "assume that there is no user and do not ask for input", "", false);
     cl.add("package", 'p',
@@ -103,6 +103,11 @@ int App::process()
     cl.add("user", 0, "user name for the HTTP authentication",
             "user name", false, "add,update,detect");
     cl.add("password", 0, "password for the HTTP authentication",
+            "password", false, "add,update,detect");
+
+    cl.add("proxy-user", 0, "user name for the HTTP proxy authentication",
+            "user name", false, "add,update,detect");
+    cl.add("proxy-password", 0, "password for the HTTP proxy authentication",
             "password", false, "add,update,detect");
 
     QString err = cl.parse();
@@ -146,7 +151,8 @@ int App::process()
                 // qCDebug(npackd) << "1" << opt->allowedCommands.count();
                 if (!opt->allowedCommands.contains(cmd)) {
                     err = "The option --" + opt->name +
-                            " is not allowed for the command \"" + cmd + "\"";
+                            " is not allowed for the command \"" + cmd + "\"" +
+                            opt->allowedCommands.join(':');
                     break;
                 }
             }
@@ -278,16 +284,24 @@ QString App::addNpackdCL()
 
 void App::usage(Job* job)
 {
+    Version my;
+    my.setVersion(NPACKD_VERSION);
+    my.normalize();
+
     WPMUtils::writeln(QString(
             "ncl %1 - command line interface for the Npackd software package manager").
-            arg(NPACKD_VERSION));
+            arg(my.getVersionString()));
     const char* lines[] = {
         "Usage: ncl <command> [global options] [options]",
+        "",
+        "Available commands in alphabetical order:",
         "    ncl add (--package=<package>",
         "            [--version=<version> | --versions=<versions>])+ ",
         "            [--file=<installation directory>]",
         "            [--user=<user name>]",
         "            [--password=<password>]",
+        "            [--proxy-user=<proxy user name>]",
+        "            [--proxy-password=<proxy password>]",
         "        installs packages. The newest available version will be ",
         "        installed, if none is specified.",
         "    ncl add-repo --url=<repository>",
@@ -296,6 +310,8 @@ void App::usage(Job* job)
         "        checks the installed packages for missing dependencies",
         "    ncl detect [--user=<user name>]",
         "            [--password=<password>]",
+        "            [--proxy-user=<proxy user name>]",
+        "            [--proxy-password=<proxy password>]",
         "        download repositories and detect packages from the MSI ",
         "        database and software control panel",
         "    ncl info --package=<package> [--version=<version>]",
@@ -314,6 +330,7 @@ void App::usage(Job* job)
         "        prints this help",
         "    ncl path (--package=<package>",
         "            [--version=<version> | --versions=<versions>])+ ",
+        "            [--cmd | --json]",
         "        searches for installed packages and prints their locations",
         "    ncl place --package=<package>",
         "            --version=<version> --file=<directory>",
@@ -341,6 +358,8 @@ void App::usage(Job* job)
         "            [--file=<installation directory>]",
         "            [--user=<user name>]",
         "            [--password=<password>]",
+        "            [--proxy-user=<proxy user name>]",
+        "            [--proxy-password=<proxy password>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "    ncl where --file=<relative path> [--bare-format | --json]",
@@ -1209,6 +1228,9 @@ void App::update(Job* job)
     QString user = cl.get("user");
     QString password = cl.get("password");
 
+    QString proxyUser = cl.get("proxy-user");
+    QString proxyPassword = cl.get("proxy-password");
+
     int programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
@@ -1347,7 +1369,7 @@ void App::update(Job* job)
     if (job->shouldProceed() && !up2date) {
         Job* ijob = job->newSubJob(0.85, "Updating");
         processInstallOperations(ijob, ops, programCloseType, interactive,
-                user, password);
+                user, password, proxyUser, proxyPassword);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
                     arg(ijob->getErrorMessage()));
@@ -1370,7 +1392,8 @@ void App::update(Job* job)
 
 void App::processInstallOperations(Job *job,
         const QList<InstallOperation *> &ops, DWORD programCloseType,
-        bool interactive, const QString user, const QString password)
+        bool interactive, const QString user, const QString password,
+        const QString proxyUser, const QString proxyPassword)
 {
     DBRepository* rep = DBRepository::getDefault();
 
@@ -1502,7 +1525,7 @@ void App::processInstallOperations(Job *job,
         job->complete();
     } else {
         rep->process(job, ops, programCloseType, debug, interactive, user,
-                password);
+                password, proxyUser, proxyPassword);
     }
 }
 
@@ -1540,6 +1563,9 @@ void App::add(Job* job)
 
     QString user = cl.get("user");
     QString password = cl.get("password");
+
+    QString proxyUser = cl.get("proxy-user");
+    QString proxyPassword = cl.get("proxy-password");
 
     QString file = cl.get("file");
     if (job->shouldProceed()) {
@@ -1585,7 +1611,7 @@ void App::add(Job* job)
     if (job->shouldProceed() && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.9, "Installing");
         processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW,
-                interactive, user, password);
+                interactive, user, password, proxyUser, proxyPassword);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
                     arg(ijob->getErrorMessage()));
@@ -1796,7 +1822,7 @@ void App::remove(Job *job)
         Job* removeJob = job->newSubJob(0.9,
                 "Removing");
         processInstallOperations(removeJob, ops, programCloseType,
-                interactive, "", "");
+                interactive, "", "", "", "");
         if (!removeJob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error removing: %1\r\n").
                     arg(removeJob->getErrorMessage()));
@@ -2101,6 +2127,8 @@ void App::detect(Job* job)
 
     QString user = cl.get("user");
     QString password = cl.get("password");
+    QString proxyUser = cl.get("proxy-user");
+    QString proxyPassword = cl.get("proxy-password");
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01,
@@ -2114,7 +2142,7 @@ void App::detect(Job* job)
     }
 
     DBRepository* rep = DBRepository::getDefault();
-    rep->updateF5(job, interactive, user, password);
+    rep->updateF5(job, interactive, user, password, proxyUser, proxyPassword);
     if (job->getErrorMessage().isEmpty()) {
         WPMUtils::writeln("Package detection completed successfully");
     }

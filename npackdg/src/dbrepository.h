@@ -108,9 +108,12 @@ private:
      * @param interactive true = allow the interaction with the user
      * @param user user name for the HTTP authentication or ""
      * @param password password for the HTTP authentication or ""
+     * @param user user name for the HTTP proxy authentication or ""
+     * @param password password for the HTTP proxy authentication or ""
      */
     void load(Job *job, bool useCache, bool interactive, const QString user,
-            const QString password);
+            const QString password,
+            const QString proxyUser, const QString proxyPassword);
 
     /**
      * @brief loadOne
@@ -277,9 +280,12 @@ public:
      * @param interactive true = allow the interaction with the user
      * @param user user name for the HTTP authentication or ""
      * @param password password for the HTTP authentication or ""
+     * @param proxyUser user name for the HTTP proxy authentication or ""
+     * @param proxyPassword password for the HTTP proxy authentication or ""
      */
     void updateF5(Job *job, bool interactive, const QString user,
-            const QString password);
+            const QString password,
+            const QString proxyUser, const QString proxyPassword);
 
     /**
      * @brief updateF5() that can be used with QtConcurrent::Run

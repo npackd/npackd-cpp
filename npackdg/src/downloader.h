@@ -160,6 +160,16 @@ public:
         QString password;
 
         /**
+         * @brief user user name for the HTTP proxy authentication or ""
+         */
+        QString proxyUser;
+
+        /**
+         * @brief password password for the HTTP proxy authentication or ""
+         */
+        QString proxyPassword;
+
+        /**
          * @brief true = do not read the data
          */
         bool ignoreContent;

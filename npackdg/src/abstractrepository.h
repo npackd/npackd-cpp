@@ -161,11 +161,16 @@ public:
      * @param printScriptOutput true = redirect the script output to the
      *     standard output
      * @param interactive true = allow the interaction with the user
+     * @param user user name for the HTTP authentication
+     * @param password password for the HTTP authentication
+     * @param proxyUser user name for the HTTP proxy authentication
+     * @param proxyPassword password for the HTTP proxy authentication
      */
     void process(Job* job, const QList<InstallOperation*> &install,
                  DWORD programCloseType, bool printScriptOutput,
                  bool interactive,
-                 const QString user, const QString password);
+                 const QString user, const QString password,
+                 const QString proxyUser, const QString proxyPassword);
 
     /**
      * Finds all installed package versions.
