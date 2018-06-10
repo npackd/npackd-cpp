@@ -77,9 +77,6 @@ class Downloader: QObject
 
     static QString inputPassword(HINTERNET hConnectHandle, DWORD dwStatus);
 public:
-    /** true = print debug information during a download */
-    static bool debug;
-
     /**
      * @brief a download request
      */

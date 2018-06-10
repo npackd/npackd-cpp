@@ -125,7 +125,6 @@ int App::process()
         if (debug) {
             clp.setUpdateRate(0);
             MySQLQuery::debug = true;
-            Downloader::debug = true;
             WPMUtils::debug = true;
             QLoggingCategory::setFilterRules(QStringLiteral("npackd=true"));
         }

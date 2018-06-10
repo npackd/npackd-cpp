@@ -16,8 +16,6 @@
 #include "job.h"
 #include "wpmutils.h"
 
-bool Downloader::debug = false;
-
 HWND defaultPasswordWindow = 0;
 QMutex loginDialogMutex;
 
@@ -170,9 +168,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         }
     }
 
-    if (debug) {
-        WPMUtils::writeln("HttpOpenRequestW succeeded");
-    }
+    qCDebug(npackd) << "HttpOpenRequestW succeeded";
 
     int64_t contentLength = -1;
 
@@ -214,11 +210,9 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 }
             }
 
-            if (debug) {
-                WPMUtils::writeln(QString("Downloader::downloadWin callNumber=%1, "
-                        "sendRequestError=%2, dwStatus=%3").arg(callNumber).
-                        arg(sendRequestError).arg(dwStatus));
-            }
+            qCDebug(npackd) << "Downloader::downloadWin callNumber="
+                    << callNumber << ", sendRequestError="
+                    << sendRequestError << ", dwStatus=" << dwStatus;
 
             // 2XX
             if (sendRequestError == 0) {
@@ -722,9 +716,7 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
 void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
         QString* sha1, int64_t contentLength, QCryptographicHash::Algorithm alg)
 {
-    if (debug) {
-        WPMUtils::writeln("Downloader::readDataFlat");
-    }
+    qCDebug(npackd) << "Downloader::readDataFlat";
 
     QString initialTitle = job->getTitle();
 
@@ -744,11 +736,9 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
             break;
         }
 
-        if (debug) {
-            WPMUtils::writeln(QString(
-                    "Downloader::readDataFlat InternetReadFile bufferLength=%1").
-                    arg(bufferLength));
-        }
+        qCDebug(npackd) <<
+                "Downloader::readDataFlat InternetReadFile bufferLength=" <<
+                bufferLength;
 
         if (bufferLength == 0)
             break;
