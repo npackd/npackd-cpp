@@ -49,8 +49,6 @@
 #include "windowsregistry.h"
 #include "mstask.h"
 
-bool WPMUtils::debug = false;
-
 bool WPMUtils::adminMode = true;
 
 int WPMUtils::privileges = 0;
@@ -966,9 +964,8 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     QList<HANDLE> ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
 
-    if (debug)
-        writeln(QString("Closing processes locking %1 with %2: %3 processes").
-                arg(dir).arg(cpt).arg(ps.size()));
+    qCDebug(npackd) << "Closing processes locking " <<
+            dir << " with " << cpt << ": " << ps.size() << " processes";
 
     //qCDebug(npackd) << "getProcessHandlesLockingDirectory2";
 
@@ -2879,8 +2876,7 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
                 NULL);
     }
 
-    if (debug)
-        writeln(msg);
+    qCDebug(npackd) << msg;
 }
 
 void WPMUtils::executeFile(Job* job, const QString& where,
@@ -3005,8 +3001,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         bool printScriptOutput)
 
 {
-    if (debug)
-        WPMUtils::writeln(where + ' ' + path + ' ' + nativeArguments);
+    qCDebug(npackd) << where << path << nativeArguments;
 
     QString initialTitle = job->getTitle();
 

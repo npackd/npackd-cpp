@@ -81,9 +81,6 @@ private:
 
     static QList<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
 public:
-    /** true = print debug information */
-    static bool debug;
-
     /** true = install programs globally, false = locally */
     static bool adminMode;
 

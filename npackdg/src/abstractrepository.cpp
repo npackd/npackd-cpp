@@ -1,3 +1,4 @@
+#include "QLoggingCategory"
 
 #include "abstractrepository.h"
 #include "wpmutils.h"
@@ -365,13 +366,15 @@ void AbstractRepository::process(Job *job,
         const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
 {
-    if (WPMUtils::debug) {
-        WPMUtils::writeln(QString("AbstractRepository::process: %0 operations").arg(install_.size()));
+
+    if (npackd().isDebugEnabled()) {
+        qCDebug(npackd) << "AbstractRepository::process: " <<
+                install_.size() << " operations";
         for (int i = 0; i < install_.size(); i++) {
             InstallOperation* op = install_.at(i);
-            WPMUtils::writeln(QString("%0: %1 %2 %3 in %4").arg(i).
-                    arg(op->package).arg(op->version.getVersionString()).
-                    arg(op->install).arg(op->where));
+            qCDebug(npackd) << op->package << ": " <<
+                    op->version.getVersionString() <<
+                    op->install << " in " << op->where;
         }
     }
 
