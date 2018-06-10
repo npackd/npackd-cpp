@@ -179,6 +179,12 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 "%EXEPROXY%\exeproxy.exe" exeproxy-copy ..\install\ncl.exe npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+del ..\install\tests.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+del ..\install\ftests.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
