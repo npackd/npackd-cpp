@@ -267,8 +267,20 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                         }
                     }
                 } else {
-                    // cannot help
-                    r = ERROR_SUCCESS;
+                    if (sendRequestError == 0) {
+                        QString e = setPassword(hConnectHandle, dwStatus,
+                                request);
+
+                        if (!e.isEmpty()) {
+                            job->setErrorMessage(e);
+                            r = ERROR_CANCELLED;
+                        } else {
+                            r = ERROR_INTERNET_FORCE_RETRY;
+                        }
+                    } else {
+                        // cannot help
+                        r = ERROR_SUCCESS;
+                    }
                 }
             }
 
@@ -442,6 +454,60 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     return contentLength;
 }
 
+QString Downloader::setStringOption(HINTERNET hInternet, DWORD dwOption,
+        const QString& value)
+{
+    QString result;
+    if (!InternetSetOptionW(hInternet,
+            dwOption, (void*) value.utf16(), value.length() + 1)) {
+        WPMUtils::formatMessage(GetLastError(), &result);
+    }
+    return result;
+}
+
+QString Downloader::setPassword(HINTERNET hConnectHandle,
+        DWORD dwStatus, const Request& request)
+{
+    QString result;
+
+    if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
+        if (request.proxyUser.isEmpty()) {
+            result = QString(QObject::tr("Cannot handle HTTP status code %1")).
+                    arg(dwStatus);
+        }
+
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                    INTERNET_OPTION_PROXY_USERNAME, request.proxyUser);
+        }
+
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                INTERNET_OPTION_PROXY_PASSWORD, request.proxyPassword);
+        }
+    } else if (dwStatus == HTTP_STATUS_DENIED) {
+        if (request.user.isEmpty()) {
+            result = QString(QObject::tr("Cannot handle HTTP status code %1")).
+                    arg(dwStatus);
+        }
+
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                INTERNET_OPTION_USERNAME, request.user);
+        }
+
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                INTERNET_OPTION_PASSWORD, request.password);
+        }
+    } else {
+        result = QString(QObject::tr("Cannot handle HTTP status code %1")).
+                arg(dwStatus);
+    }
+
+    return result;
+}
+
 QString Downloader::inputPassword(HINTERNET hConnectHandle,
         DWORD dwStatus)
 {
@@ -456,18 +522,14 @@ QString Downloader::inputPassword(HINTERNET hConnectHandle,
         WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
         password = WPMUtils::inputPasswordConsole();
 
-        if (!InternetSetOptionW(hConnectHandle,
-                INTERNET_OPTION_PROXY_USERNAME,
-                (void*) username.utf16(),
-                username.length() + 1)) {
-            WPMUtils::formatMessage(GetLastError(), &result);
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                INTERNET_OPTION_PROXY_USERNAME, username);
         }
 
-        if (result.isEmpty() && !InternetSetOptionW(hConnectHandle,
-                INTERNET_OPTION_PROXY_PASSWORD,
-                (void*) password.utf16(),
-                password.length() + 1)) {
-            WPMUtils::formatMessage(GetLastError(), &result);
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                INTERNET_OPTION_PROXY_PASSWORD, password);
         }
     } else if (dwStatus == HTTP_STATUS_DENIED) {
         WPMUtils::writeln("\r\n" +
@@ -478,18 +540,14 @@ QString Downloader::inputPassword(HINTERNET hConnectHandle,
         WPMUtils::outputTextConsole(QObject::tr("Password") + ": ");
         password = WPMUtils::inputPasswordConsole();
 
-        if (!InternetSetOptionW(hConnectHandle,
-                INTERNET_OPTION_USERNAME,
-                (void*) username.utf16(),
-                username.length() + 1)) {
-            WPMUtils::formatMessage(GetLastError(), &result);
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                INTERNET_OPTION_USERNAME, username);
         }
 
-        if (result.isEmpty() && !InternetSetOptionW(hConnectHandle,
-                INTERNET_OPTION_PASSWORD,
-                (void*) password.utf16(),
-                password.length() + 1)) {
-            WPMUtils::formatMessage(GetLastError(), &result);
+        if (result.isEmpty()) {
+            result = setStringOption(hConnectHandle,
+                INTERNET_OPTION_PASSWORD, password);
         }
     } else {
         result = QString(QObject::tr("Cannot handle HTTP status code %1")).

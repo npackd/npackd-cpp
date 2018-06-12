@@ -239,7 +239,13 @@ private:
      * @return "content-length" or -1 if unknown
      */
     static int64_t downloadWin(Job* job, const Downloader::Request& request,
-            Response *response);
+                               Response *response);
+
+    static QString setPassword(HINTERNET hConnectHandle, DWORD dwStatus,
+                               const Request &request);
+
+    static QString setStringOption(HINTERNET hInternet, DWORD dwOption,
+        const QString &value);
 };
 
 #endif // DOWNLOADER_H
