@@ -107,32 +107,24 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
     if (job->shouldProceed()) {
         if (!request.user.isEmpty()) {
-            InternetSetOption(hConnectHandle, INTERNET_OPTION_USERNAME,
-                    (LPVOID) request.user.utf16(),
-                    request.user.length() + 1);
+            setStringOption(hConnectHandle, INTERNET_OPTION_USERNAME,
+                    request.user);
 
             if (!request.password.isEmpty()) {
-                InternetSetOption(hConnectHandle, INTERNET_OPTION_PASSWORD,
-                        (LPVOID) request.password.utf16(),
-                        request.password.length() + 1);
-                //WPMUtils::writeln("setting password" + request.password + " for " +
-                //        request.url.toString());
+                setStringOption(hConnectHandle, INTERNET_OPTION_PASSWORD,
+                        request.password);
             }
         }
     }
 
     if (job->shouldProceed()) {
         if (!request.proxyUser.isEmpty()) {
-            InternetSetOption(hConnectHandle, INTERNET_OPTION_PROXY_USERNAME,
-                    (LPVOID) request.proxyUser.utf16(),
-                    request.proxyUser.length() + 1);
+            setStringOption(hConnectHandle, INTERNET_OPTION_PROXY_USERNAME,
+                    request.proxyUser);
 
             if (!request.proxyPassword.isEmpty()) {
-                InternetSetOption(hConnectHandle, INTERNET_OPTION_PROXY_PASSWORD,
-                        (LPVOID) request.proxyPassword.utf16(),
-                        request.proxyPassword.length() + 1);
-                //WPMUtils::writeln("setting password" + request.password + " for " +
-                //        request.url.toString());
+                setStringOption(hConnectHandle, INTERNET_OPTION_PROXY_PASSWORD,
+                        request.proxyPassword);
             }
         }
     }
