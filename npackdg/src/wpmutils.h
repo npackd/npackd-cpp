@@ -81,7 +81,7 @@ private:
 
     static QList<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
 
-    void closeHandles(const QList<HANDLE> handles);
+    static void closeHandles(const QList<HANDLE> handles);
 public:
     /** true = install programs globally, false = locally */
     static bool adminMode;
