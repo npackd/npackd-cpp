@@ -14,11 +14,31 @@
 
 #include "app.h"
 
+App app;
+
+BOOL WINAPI ctrlHandler(DWORD fdwCtrlType)
+{
+    switch (fdwCtrlType) {
+        case CTRL_C_EVENT:
+        case CTRL_CLOSE_EVENT:
+        case CTRL_BREAK_EVENT:
+        case CTRL_LOGOFF_EVENT:
+        case CTRL_SHUTDOWN_EVENT:
+            if (app.currentJob) {
+                app.currentJob->cancel();
+                WPMUtils::outputTextConsole("Cancelled\n");
+            }
+            break;
+    }
+
+    return TRUE;
+}
+
 int main(int argc, char *argv[])
 {
     HMODULE m = LoadLibrary(L"exchndl.dll");
 
-    QLoggingCategory::setFilterRules(QStringLiteral("npackd=false"));
+    QLoggingCategory::setFilterRules("npackd=false");
 
     QCoreApplication ca(argc, argv);
 
@@ -29,7 +49,7 @@ int main(int argc, char *argv[])
     InstalledPackages::packageName =
             "com.googlecode.windows-package-manager.NpackdCL";
 
-    App app;
+    SetConsoleCtrlHandler(ctrlHandler, TRUE);
 
     QTimer::singleShot(0, &app, SLOT(process()));
 

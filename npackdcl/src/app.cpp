@@ -37,6 +37,11 @@ bool packageLessThan(const Package* p1, const Package* p2)
     return p1->title.toLower() < p2->title.toLower();
 }
 
+App::App() : currentJob(0)
+{
+
+}
+
 QStringList App::sortPackageVersionsByPackageTitle(
         QList<PackageVersion*> *list) {
     QList<QPair<PackageVersion*, QString> > items;
@@ -162,6 +167,8 @@ int App::process()
         else
             job = clp.createJob();
 
+        this->currentJob = job;
+
         QString timeout = cl.get("timeout");
         if (!timeout.isNull()) {
             bool ok;
@@ -222,6 +229,8 @@ int App::process()
         }
 
         err = job->getErrorMessage();
+
+        this->currentJob = 0;
 
         delete job;
     }
@@ -1374,11 +1383,12 @@ void App::update(Job* job)
     }
     qDeleteAll(ops);
 
-    QString r = job->getErrorMessage();
-    if (up2date) {
-        WPMUtils::writeln("The packages are already up-to-date");
-    } else if (r.isEmpty()) {
-        WPMUtils::writeln("The packages were updated successfully");
+    if (job->shouldProceed()) {
+        if (up2date) {
+            WPMUtils::writeln("The packages are already up-to-date");
+        } else if (job->getErrorMessage().isEmpty()) {
+            WPMUtils::writeln("The packages were updated successfully");
+        }
     }
 
     qDeleteAll(toUpdate);
@@ -2140,7 +2150,7 @@ void App::detect(Job* job)
 
     DBRepository* rep = DBRepository::getDefault();
     rep->updateF5(job, interactive, user, password, proxyUser, proxyPassword);
-    if (job->getErrorMessage().isEmpty()) {
+    if (job->shouldProceed()) {
         WPMUtils::writeln("Package detection completed successfully");
     }
 

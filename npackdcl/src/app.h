@@ -63,6 +63,9 @@ private:
             const QString proxyUser, const QString proxyPassword);
     QStringList sortPackageVersionsByPackageTitle(
             QList<PackageVersion *> *list);
+public:
+    App();
+    Job* currentJob;
 public slots:
     /**
      * Process the command line.
