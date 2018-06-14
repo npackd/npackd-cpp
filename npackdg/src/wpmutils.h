@@ -80,6 +80,8 @@ private:
     static QString startService(SC_HANDLE schSCManager, const QString &serviceName);
 
     static QList<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
+
+    void closeHandles(const QList<HANDLE> handles);
 public:
     /** true = install programs globally, false = locally */
     static bool adminMode;

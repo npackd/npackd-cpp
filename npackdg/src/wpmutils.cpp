@@ -954,6 +954,13 @@ QList<HANDLE> WPMUtils::getAllProcessHandlesLockingDirectory(const QString& dir)
     return ps;
 }
 
+void WPMUtils::closeHandles(const QList<HANDLE> handles)
+{
+    for (int i = 0; i < handles.size(); i++) {
+        CloseHandle(handles[i]);
+    }
+}
+
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         DWORD cpt)
 {
@@ -984,8 +991,10 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
             }
         }
 
-        if (changed)
+        if (changed) {
+            closeHandles(ps);
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
+        }
     }
 
     //qCDebug(npackd) << "Windows closed";
@@ -1006,8 +1015,10 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
             }
         }
 
-        if (changed)
+        if (changed) {
+            closeHandles(ps);
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
+        }
     }
 
     bool shared = isDirShared(dir);
@@ -1015,6 +1026,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     if (cpt & DISABLE_SHARES) {
         if (shared) {
             WPMUtils::disconnectShareUsersFrom(dir);
+            closeHandles(ps);
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
         }
     }
@@ -1023,6 +1035,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         if (shared) {
             WPMUtils::stopService("lanmanserver", &stoppedServices);
 
+            closeHandles(ps);
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
         }
     }
@@ -1046,9 +1059,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     // qCDebug(npackd) << "Processes killed";
 
-    for (int i = 0; i < ps.size(); i++) {
-        CloseHandle(ps[i]);
-    }
+    closeHandles(ps);
 }
 
 QString WPMUtils::findFirstExeLockingDirectory(const QString &dir)
