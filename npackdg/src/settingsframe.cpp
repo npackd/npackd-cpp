@@ -148,6 +148,8 @@ void SettingsFrame::setCloseProcessType(DWORD v)
             WPMUtils::KILL_PROCESS);
     this->ui->checkBoxStopServices->setChecked(v &
             WPMUtils::STOP_SERVICES);
+    this->ui->checkBoxCtrlC->setChecked(v &
+            WPMUtils::CTRL_C);
 }
 
 DWORD SettingsFrame::getCloseProcessType()
@@ -161,6 +163,8 @@ DWORD SettingsFrame::getCloseProcessType()
         cpt |= WPMUtils::KILL_PROCESS;
     if (this->ui->checkBoxStopServices->isChecked())
         cpt |= WPMUtils::STOP_SERVICES;
+    if (this->ui->checkBoxCtrlC->isChecked())
+        cpt |= WPMUtils::CTRL_C;
     return cpt;
 }
 

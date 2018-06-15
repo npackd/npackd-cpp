@@ -231,6 +231,10 @@ QString WPMUtils::programCloseType2String(DWORD programCloseType)
         r += "d";
     }
 
+    if (programCloseType & WPMUtils::CTRL_C) {
+        r += "t";
+    }
+
     return r;
 }
 
@@ -998,6 +1002,32 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     }
 
     //qCDebug(npackd) << "Windows closed";
+
+    if (cpt & CTRL_C) {
+        bool changed = false;
+        for (int i = 0; i < ps.size(); i++) {
+            HANDLE hProc = ps.at(i);
+            DWORD processId = GetProcessId(hProc);
+
+            if (processId != 0 && processId != me &&
+                    WPMUtils::isProcessRunning(hProc)) {
+                // 0 = GR_GDIOBJECTS, 1 = GR_USEROBJECTS
+                if (GetGuiResources(hProc, 0) == 0 &&
+                        GetGuiResources(hProc, 1) == 0) {
+                    qCDebug(npackd) << "Sending Ctrl+C to the process" <<
+                            processId;
+                    if (GenerateConsoleCtrlEvent(CTRL_C_EVENT, processId)) {
+                        changed = true;
+                    }
+                }
+            }
+        }
+
+        if (changed) {
+            closeHandles(ps);
+            ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
+        }
+    }
 
     if (cpt & KILL_PROCESS) {
         bool changed = false;
@@ -2724,6 +2754,8 @@ int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
                     r |= WPMUtils::KILL_PROCESS;
                 else if (t == 'd')
                     r |= WPMUtils::STOP_SERVICES;
+                else if (t == 't')
+                    r |= WPMUtils::CTRL_C;
                 else
                     *err = QObject::tr(
                             "Invalid program close type: %1").arg(t);

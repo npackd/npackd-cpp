@@ -93,6 +93,7 @@ public:
     static const int KILL_PROCESS = 2;
     static const int DISABLE_SHARES = 4;
     static const int STOP_SERVICES = 8;
+    static const int CTRL_C = 16;
 
     static const char* UCS2LE_BOM;
 
