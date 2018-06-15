@@ -5,6 +5,7 @@
 
 #include <QApplication>
 #include <QPushButton>
+#include <QFileDialog>
 
 #include "repository.h"
 #include "mainwindow.h"
@@ -294,4 +295,13 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
 
     qDeleteAll(urls);
     urls.clear();
+}
+
+void SettingsFrame::on_pushButton_clicked()
+{
+     QString dir = QFileDialog::getExistingDirectory(
+            this, QObject::tr("Choose installation directory"),
+            getInstallationDirectory(),
+            QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    setInstallationDirectory(WPMUtils::normalizePath(dir));
 }
