@@ -1886,13 +1886,17 @@ void MainWindow::on_actionAbout_triggered()
 {
     addTextTab(QObject::tr("About"), QString(
             QObject::tr("<html><body>Npackd %1 - "
-            "software package manager for Windows (R)<br>"
-            "<a href='https://www.npackd.org/'>https://www.npackd.org/</a><br>"
-            "<a href='https://github.com/tim-lebedkov/npackd/wiki/ChangeLog'>Changelog</a><br>"
-            "<a href='https://github.com/tim-lebedkov/npackd/wiki'>Documentation</a><br>"
-            "Author: Tim Lebedkov<br><br>"
-            "Contributors:<br>"
-            "https://github.com/OgreTransporter (Visual C++ support, group policy configuration, non-admin installations)<br>"
+            "software package manager for Windows (R)"
+            "<ul>"
+            "<li><a href='https://www.npackd.org/'>Home page (https://www.npackd.org)</a></li>"
+            "<li><a href='https://github.com/tim-lebedkov/npackd/wiki/ChangeLog'>Changelog</a></li>"
+            "<li><a href='https://github.com/tim-lebedkov/npackd/wiki'>Documentation</a></li>"
+            "<li>Author: <a href='https://github.com/tim-lebedkov'>Tim Lebedkov</a></li>"
+            "</ul>"
+            "Contributors:"
+            "<ul>"
+            "<li><a href='https://github.com/OgreTransporter'>OgreTransporter</a>: Visual C++ support, CMake integration, group policy configuration, non-admin installations</li>"
+            "</ul>"
             "</body></html>")).
             arg(NPACKD_VERSION), true);
 }
