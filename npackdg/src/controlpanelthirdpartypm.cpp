@@ -4,7 +4,7 @@
 #include "windowsregistry.h"
 #include "wpmutils.h"
 
-ControlPanelThirdPartyPM::ControlPanelThirdPartyPM()
+ControlPanelThirdPartyPM::ControlPanelThirdPartyPM() : ignoreMSIEntries(true)
 {
 }
 
@@ -143,8 +143,6 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         }
     }
 
-    //qCDebug(npackd) << "InstalledPackages::detectOneControlPanelProgram.0";
-
     QScopedPointer<Package> p(new Package(package, package));
 
     QString title = k.get("DisplayName", &err);
@@ -159,6 +157,9 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     p->title = title;
 
     p->description = p->title;
+
+    qCDebug(npackd) << "ControlPanelThirdPartyPM::detectOneControlPanelProgram" <<
+            package << title;
 
     QString publisher = k.get("Publisher", &err);
     if (err.isEmpty() && !publisher.isEmpty())
@@ -214,15 +215,17 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         if (uninstall.trimmed().isEmpty())
             useThisEntry = false;
 
-        // qCDebug(npackd) << uninstall;
+        qCDebug(npackd) << uninstall;
     }
 
     // already detected as an MSI package
-    if (uninstall.length() == 14 + 38 &&
-            (uninstall.indexOf("MsiExec.exe /X", 0, Qt::CaseInsensitive) == 0 ||
-            uninstall.indexOf("MsiExec.exe /I", 0, Qt::CaseInsensitive) == 0) &&
-            WPMUtils::validateGUID(uninstall.right(38)) == "") {
-        useThisEntry = false;
+    if (ignoreMSIEntries) {
+        if (uninstall.length() == 14 + 38 &&
+                (uninstall.indexOf("MsiExec.exe /X", 0, Qt::CaseInsensitive) == 0 ||
+                uninstall.indexOf("MsiExec.exe /I", 0, Qt::CaseInsensitive) == 0) &&
+                WPMUtils::validateGUID(uninstall.right(38)) == "") {
+            useThisEntry = false;
+        }
     }
 
     QString dir;
@@ -237,8 +240,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
             if (err.isEmpty() && params.count() > 0) {
                 if (!params[0].trimmed().isEmpty() && d.exists(params[0])) {
                     dir = WPMUtils::parentDirectory(params[0]);
-                } else
-                    useThisEntry = false;
+                }
             } /* DEBUG else {
                 qCDebug(npackd) << "cannot parse " << uninstall << " " << err <<
                         " " << params.count();

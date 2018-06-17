@@ -28,6 +28,12 @@ class ControlPanelThirdPartyPM: public AbstractThirdPartyPM
             bool useWoWNode) const;
 public:
     /**
+     * should the entries from the MSI package manager be ignored? The default
+     * value is true.
+     */
+    bool ignoreMSIEntries;
+
+    /**
      * @brief -
      */
     ControlPanelThirdPartyPM();

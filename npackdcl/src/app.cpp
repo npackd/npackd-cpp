@@ -17,6 +17,7 @@
 #include "abstractrepository.h"
 #include "dbrepository.h"
 #include "hrtimer.h"
+#include "controlpanelthirdpartypm.h"
 
 static bool compareByPackageTitle(const QPair<PackageVersion*, QString>& e1,
         const QPair<PackageVersion*, QString>& e2) {
@@ -115,6 +116,9 @@ int App::process()
     cl.add("proxy-password", 0, "password for the HTTP proxy authentication",
             "password", false, "add,update,detect");
 
+    cl.add("title", 0, "package title or a regular expression in JavaScript syntax. Example: /PDF/i",
+            "title", false, "remove-scp");
+
     QString err = cl.parse();
     if (!err.isEmpty()) {
         err = "Error: " + err;
@@ -201,6 +205,8 @@ int App::process()
             setRepo(job);
         } else if (cmd == "remove-repo") {
             removeRepo(job);
+        } else if (cmd == "remove-scp") {
+            removeSCP(job);
         } else if (cmd == "list-repos") {
             listRepos(job);
         } else if (cmd == "search") {
@@ -342,6 +348,8 @@ void App::usage(Job* job)
         "           [--end-process=<types>]",
         "        removes packages. The version number may be omitted, ",
         "        if only one is installed.",
+        "    ncl remove-scp --title=<title>",
+        "        remove a program for the Software Control Panel by title",
         "    ncl remove-repo --url=<repository>",
         "        removes a repository from the list",
         "    ncl set-repo (--url=<repository>)+",
@@ -2151,6 +2159,141 @@ void App::detect(Job* job)
     job->complete();
 }
 
+void App::removeSCP(Job *job)
+{
+    job->setTitle("Removing software from the Software Control Panel");
+
+    QString title = cl.get("title");
+
+    if (job->shouldProceed()) {
+        if (title.isNull()) {
+            job->setErrorMessage("Missing option: --title");
+        }
+    }
+
+    Repository rep;
+    QList<InstalledPackageVersion*> installed;
+    if (job->shouldProceed()) {
+        ControlPanelThirdPartyPM cppm;
+        cppm.ignoreMSIEntries = false;
+        Job* scanJob = job->newSubJob(0.1, "Scanning for packages", true, true);
+        cppm.scan(scanJob, &installed, &rep);
+    }
+
+    Package* found = 0;
+    if (job->shouldProceed()) {
+        if (title.startsWith('/')) {
+            title = title.mid(1);
+
+            Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+            if (title.endsWith('/')) {
+                title = title.left(title.length() - 1);
+                cs = Qt::CaseSensitive;
+            } else if (title.endsWith("/i")) {
+                title = title.left(title.length() - 2);
+                cs = Qt::CaseInsensitive;
+            } else {
+                job->setErrorMessage("Invalid regular expression: " +
+                        cl.get("title"));
+            }
+
+            if (job->shouldProceed()) {
+                qCDebug(npackd) << "regular expression" << title;
+
+                QRegExp re(title, cs);
+                for (int i = 0; i < rep.packages.size(); i++) {
+                    Package* p = rep.packages.at(i);
+                    qCDebug(npackd) << p->title;
+                    if (re.indexIn(p->title) >= 0) {
+                        found = p;
+                        break;
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < rep.packages.size(); i++) {
+                Package* p = rep.packages.at(i);
+                if (p->title == title) {
+                    found = p;
+                    break;
+                }
+            }
+        }
+
+        if (!found)
+            job->setErrorMessage("Cannot find the package");
+    }
+
+    PackageVersion* pv = 0;
+    if (job->shouldProceed()) {
+        qCDebug(npackd) << "found package" << found->name;
+
+        for (int i = 0; i < installed.size(); i++) {
+            InstalledPackageVersion* ipv = installed.at(i);
+            qCDebug(npackd) << "installed" << ipv->package <<
+                    ipv->version.getVersionString();
+
+            // ipv->installed() ins not checked here as the installation
+            // directory may be empty (unknown)
+            if (ipv->package == found->name/* && ipv->installed()*/) {
+                QString err;
+                pv = rep.findPackageVersion_(
+                        ipv->package, ipv->version, &err);
+                if (!err.isEmpty()) {
+                    job->setErrorMessage(err);
+                }
+                break;
+            }
+        }
+        if (job->shouldProceed() && !pv)
+            job->setErrorMessage("Cannot find the package version");
+    }
+
+    PackageVersionFile* pvf = 0;
+    if (job->shouldProceed()) {
+        for (int j = 0; j < pv->files.size(); j++) {
+            if (pv->files.at(j)->path.compare(
+                    ".Npackd\\Uninstall.bat",
+                    Qt::CaseInsensitive) == 0) {
+                pvf = pv->files.at(j);
+            }
+        }
+        if (job->shouldProceed() && !pvf)
+            job->setErrorMessage("Removal script was not found");
+    }
+
+    if (job->shouldProceed()) {
+        QString cmd = pvf->content;
+        QTemporaryFile of(QDir::tempPath() + "\\nclXXXXXX.bat");
+        if (!of.open())
+            job->setErrorMessage(of.errorString());
+        else {
+            of.setAutoRemove(false);
+            QString path = of.fileName();
+            QDir dir(path);
+            path = dir.dirName();
+            dir.cdUp();
+            QString where = dir.absolutePath();
+
+            QByteArray ba = cmd.toUtf8();
+            if (of.write(ba.data(), ba.length()) == -1)
+                job->setErrorMessage(of.errorString());
+
+            of.close();
+            Job* execJob = job->newSubJob(0.8, "Running the script", true, true);
+
+            where.replace('/', '\\');
+
+            //WPMUtils::writeln(path + " " + where);
+
+            WPMUtils::executeBatchFile(execJob, where,
+                    path, "", QStringList(), true);
+        }
+    }
+
+    job->complete();
+}
+
 /*
 #include <QStringList>
 #include <QList>
@@ -2234,113 +2377,6 @@ int App::process()
     }
 
     return r;
-}
-
-int App::remove()
-{
-    Job* job = clp.createJob();
-    //clp.setUpdateRate(0);
-
-    QString title = cl.get("title");
-
-    if (job->shouldProceed()) {
-        if (title.isNull()) {
-            job->setErrorMessage("Missing option: --title");
-        }
-    }
-
-    Repository rep;
-    QList<InstalledPackageVersion*> installed;
-    if (job->shouldProceed()) {
-        ControlPanelThirdPartyPM cppm;
-        Job* scanJob = job->newSubJob(0.1, "Scanning for packages", true, true);
-        cppm.scan(scanJob, &installed, &rep);
-    }
-
-    Package* found = 0;
-    if (job->shouldProceed()) {
-        QRegExp re(title, Qt::CaseInsensitive);
-        for (int i = 0; i < rep.packages.size(); i++) {
-            Package* p = rep.packages.at(i);
-            if (re.indexIn(p->title) >= 0) {
-                found = p;
-                break;
-            }
-        }
-
-        if (!found)
-            job->setErrorMessage("Cannot find the package");
-    }
-
-    PackageVersion* pv = 0;
-    if (job->shouldProceed()) {
-        for (int i = 0; i < installed.size(); i++) {
-            InstalledPackageVersion* ipv = installed.at(i);
-            if (ipv->package == found->name && ipv->installed()) {
-                QString err;
-                pv = rep.findPackageVersion_(
-                        ipv->package, ipv->version, &err);
-                if (!err.isEmpty()) {
-                    job->setErrorMessage(err);
-                }
-                break;
-            }
-        }
-        if (job->shouldProceed() && !pv)
-            job->setErrorMessage("Cannot find the package version");
-    }
-
-    PackageVersionFile* pvf = 0;
-    if (job->shouldProceed()) {
-        for (int j = 0; j < pv->files.size(); j++) {
-            if (pv->files.at(j)->path.compare(
-                    ".Npackd\\Uninstall.bat",
-                    Qt::CaseInsensitive) == 0) {
-                pvf = pv->files.at(j);
-            }
-        }
-        if (job->shouldProceed() && !pvf)
-            job->setErrorMessage("Removal script was not found");
-    }
-
-    if (job->shouldProceed()) {
-        QString cmd = pvf->content;
-        QTemporaryFile of(QDir::tempPath() + "\\cluXXXXXX.bat");
-        if (!of.open())
-            job->setErrorMessage(of.errorString());
-        else {
-            of.setAutoRemove(false);
-            QString path = of.fileName();
-            QDir dir(path);
-            path = dir.dirName();
-            dir.cdUp();
-            QString where = dir.absolutePath();
-
-            QByteArray ba = cmd.toUtf8();
-            if (of.write(ba.data(), ba.length()) == -1)
-                job->setErrorMessage(of.errorString());
-
-            of.close();
-            Job* execJob = job->newSubJob(0.8, "Running the script", true, true);
-
-            where.replace('/', '\\');
-
-            //WPMUtils::writeln(path + " " + where);
-
-            WPMUtils::executeBatchFile(execJob, where,
-                    path, "", QStringList(), true);
-        }
-    }
-
-    QString err = job->getErrorMessage();
-    delete job;
-
-    if (err.isEmpty())
-        return 0;
-    else {
-        WPMUtils::writeln(err, false);
-        return 1;
-    }
 }
 
 int App::getProductCode()
