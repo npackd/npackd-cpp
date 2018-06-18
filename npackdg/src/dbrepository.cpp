@@ -1166,7 +1166,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
         savePackageQuery->bindValue(QStringLiteral(":FULLTEXT"),
                 (p->title + QStringLiteral(" ") + p->description +
                 QStringLiteral(" ") +
-                p->name).toLower());
+                p->name + QStringLiteral(" ") +
+                p->categories.join(' ')).toLower());
         savePackageQuery->bindValue(QStringLiteral(":STATUS"), 0);
         savePackageQuery->bindValue(QStringLiteral(":SHORT_NAME"),
                 p->getShortName());
