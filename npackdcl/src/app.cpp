@@ -315,7 +315,7 @@ void App::usage(Job* job)
         "        installs packages. The newest available version will be ",
         "        installed, if none is specified.",
         "    ncl add-repo --url=<repository>",
-        "        appends a repository to the list",
+        "        appends a repository to the system-wide list of package sources",
         "    ncl check",
         "        checks the installed packages for missing dependencies",
         "    ncl detect [--user=<user name>] [--password=<password>]",
@@ -333,7 +333,7 @@ void App::usage(Job* job)
         "        Please note that since 1.18 only installed package versions",
         "        are listed regardless of the --status switch.",
         "    ncl list-repos [--bare-format | --json]",
-        "        list currently defined repositories",
+        "        prints the system-wide list of package sources (repositories)",
         "    ncl help",
         "        prints this help",
         "    ncl path (--package=<package>",
@@ -351,9 +351,9 @@ void App::usage(Job* job)
         "    ncl remove-scp --title=<title>",
         "        remove a program for the Software Control Panel by title",
         "    ncl remove-repo --url=<repository>",
-        "        removes a repository from the list",
+        "        removes a repository from the system-wide list of package sources",
         "    ncl set-repo (--url=<repository>)+",
-        "        changes the currently defined repositories",
+        "        changes the system-wide list of package sources (repositories)",
         "    ncl search [--query=<search terms>] [--status=installed | all]",
         "            [--bare-format | --json]",
         "        full text search. Lists found packages sorted by package name.",
@@ -1063,22 +1063,28 @@ void App::path(Job* job)
     */
 
     if (err.isEmpty()) {
-        QString path;
+        QStringList paths;
         for (int i = 0; i < ipvs.size(); i++) {
-            if (!path.isEmpty())
-                path.append(';');
-
-            path.append(ipvs.at(i)->getDirectory().replace('/', '\\'));
+            paths.append(ipvs.at(i)->getDirectory().replace('/', '\\'));
         }
 
         if (cl.isPresent("json")) {
             QJsonObject top;
+            QJsonArray path;
+            for (int i = 0; i < paths.size(); i++) {
+                path.append(paths.at(i));
+            }
             top["path"] = path;
             printJSON(top);
         } else if (cl.isPresent("cmd")) {
-            WPMUtils::writeln(QStringLiteral("set path=") + path);
+            for (int i = 0; i < paths.size(); i++) {
+                WPMUtils::writeln(QString("set npackd_path") +
+                        QString::number(i) + "=" + paths.at(i));
+            }
         } else {
-            WPMUtils::writeln(path);
+            for (int i = 0; i < paths.size(); i++) {
+                WPMUtils::writeln(paths.at(i));
+            }
         }
     }
 
