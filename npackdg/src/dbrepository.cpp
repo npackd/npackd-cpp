@@ -2599,11 +2599,16 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
 {
     QString err;
 
-    // if we cannot write the file, we still try to open in read-only mode
+    // if we cannot write the file, we still try to open in read-only mode.
+    // Opening a not writable file in r/w mode is slow.
     if (!readOnly) {
         QFile f(file);
-        if (f.open(QFile::ReadWrite)) {
-            readOnly = false;
+
+        //qCDebug(npackd) << "database file writable" << f.isWritable();
+
+        // QFile.isWritable will always return false if a file is closed
+        if (!f.open(QFile::ReadWrite)) {
+            readOnly = true;
             f.close();
         }
     }
@@ -2612,11 +2617,11 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
     db.setDatabaseName(file);
     if (readOnly)
-        db.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY=1"));
+        db.setConnectOptions("QSQLITE_OPEN_READONLY");
 
     // it takes Sqlite about 2 seconds to open the database for non-admins
     // It seems to depend on Sqlite not being able to write to the file.
-    qCDebug(npackd) << "before opening the database";
+    qCDebug(npackd) << "before opening the database" << readOnly;
     db.open();
     qCDebug(npackd) << "after opening the database";
 
