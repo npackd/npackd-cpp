@@ -97,8 +97,11 @@ int App::process()
             "search terms", false, "search");
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
             "range", true, "add,path,update");
-    cl.add("status", 's', "filters package versions by status",
+
+    // --status for the command "list" is supported for compatibility reasons
+    cl.add("status", 's', "filters packages by status",
             "status", false, "list,search");
+
     cl.add("timeout", 't', "timeout in seconds",
             "seconds", false, "remove,rm,update,add");
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
@@ -327,10 +330,8 @@ void App::usage(Job* job)
         "        shows information about the specified package or package version",
         "    ncl install-dir [--bare-format | --json]",
         "        prints the directory where packages will be installed",
-        "    ncl list [--status=installed | all] [--bare-format | --json]",
+        "    ncl list [--bare-format | --json]",
         "        lists package versions sorted by package name and version.",
-        "        Please note that since 1.18 only installed package versions",
-        "        are listed regardless of the --status switch.",
         "    ncl list-repos [--bare-format | --json]",
         "        prints the system-wide list of package sources (repositories)",
         "    ncl help",
@@ -353,7 +354,8 @@ void App::usage(Job* job)
         "        removes a repository from the system-wide list of package sources",
         "    ncl set-repo (--url=<repository>)+",
         "        changes the system-wide list of package sources (repositories)",
-        "    ncl search [--query=<search terms>] [--status=installed | all]",
+        "    ncl search [--query=<search terms>] ",
+        "            [--status=installed | updateable | all]",
         "            [--bare-format | --json]",
         "        full text search. Lists found packages sorted by package name.",
         "        All packages are shown by default.",
@@ -858,15 +860,21 @@ void App::search(Job* job)
             job->setErrorMessage(err);
     }
 
-    bool onlyInstalled = false;
+    Package::Status minStatus = Package::INSTALLED;
+    Package::Status maxStatus = Package::NOT_INSTALLED_NOT_AVAILABLE;
     if (job->shouldProceed()) {
         QString status = cl.get("status");
         if (!status.isNull()) {
-            if (status == "all")
-                onlyInstalled = false;
-            else if (status == "installed")
-                onlyInstalled = true;
-            else {
+            if (status == "all") {
+                minStatus = Package::INSTALLED;
+                maxStatus = Package::INSTALLED;
+            } else if (status == "installed") {
+                minStatus = Package::INSTALLED;
+                maxStatus = Package::UPDATEABLE;
+            } else if (status == "updateable") {
+                minStatus = Package::UPDATEABLE;
+                maxStatus = Package::NOT_INSTALLED_NOT_AVAILABLE;
+            } else {
                 job->setErrorMessage("Wrong status: " + status);
             }
         }
@@ -890,8 +898,7 @@ void App::search(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01, "Searching for packages");
         QString err;
-        packageNames = rep->findPackages(Package::INSTALLED,
-                onlyInstalled ? Package::UPDATEABLE : Package::INSTALLED,
+        packageNames = rep->findPackages(minStatus, maxStatus,
                 query, -1, -1, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
