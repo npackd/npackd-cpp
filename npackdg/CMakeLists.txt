@@ -201,6 +201,7 @@ add_executable(npackdg WIN32
     ${NPACKDG_HEADERS}
     ${NPACKDG_FORMS}
 )
+QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 target_link_libraries(npackdg
     ${QUAZIP_LIBRARIES}
