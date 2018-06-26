@@ -152,7 +152,11 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Enter here your search text. You can enter multiple words if a package should contain all of them. The search is case insensitive. No special characters are filtered out. It is possible to search for categories too.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Geben Sie hier Ihren zu suchenden Text ein. Sie können mehrere Wörter eingeben, falls ein Paket alle davon enthalten soll. Die Suche unterscheidet nicht zwischen Groß- und Kleinschreibung. Sonderzeichen werden nicht ausgefiltert. Es ist auch möglich nach den Kategorien zu suchen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -2527,19 +2531,19 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Using the HEAD HTTP method</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutze die HTTP Methode HEAD</translation>
     </message>
     <message>
         <source>Using the GET HTTP method</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutze die HTTP Methode GET</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Home page (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Changelog&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Documentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Author: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Contributors:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ support, CMake integration, group policy configuration, non-admin installations&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Manager für Softwarepakete für Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Homepage (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Änderungen&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Dokumentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Autor: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Mitwirkende:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ Unterstützung, CMake Integration, Konfiguration für Gruppenrichtlinien, Installationen für nicht Administratoren&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Choose installation directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Installationsverzeichnis auswählen</translation>
     </message>
 </context>
 <context>
@@ -2692,19 +2696,33 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;die folgende Liste definiert Repositories, die genutzt werden, um Software herunterzuladen und zu installieren. Geben Sie mehrere Internetadressen in je einer eigenen Zeile an. Die Protokolle http://, https:// und file:// werden unterstützt. Zeilen, die mit # anfangen, sind Kommentare. Die Repositories werden von oben nach unten abgefragt. Weiter oben in der Liste festgelegte Einträge können darunter liegende überlagern.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&gt;Sie finden die Liste der verfügbaren Repositories und die Erklärungen wie Sie Ihre eigenen Repositories erstellen können auf&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;emulates the user pressing Ctrl+C for command line programs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;einen Benutzer, der Ctrl+C drückt, für die Befehlszeilenprogramme emulieren&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Send Ctrl+C</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+C senden</translation>
     </message>
 </context>
 </TS>
