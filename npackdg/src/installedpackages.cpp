@@ -688,24 +688,32 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     // control panel programs
     if (job->shouldProceed()) {
         QList<AbstractThirdPartyPM*> tpms;
+        QList<bool> replace;
         QStringList jobTitles;
         QStringList prefixes;
 
         jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
         tpms.append(new InstalledPackagesThirdPartyPM());
+        replace.append(false);
         prefixes.append("");
+
         if (WPMUtils::adminMode)
 		{
 			jobTitles.append(QObject::tr("Adding well-known packages"));
 			tpms.append(new WellKnownProgramsThirdPartyPM(
 				InstalledPackages::packageName));
-			prefixes.append("");
-			jobTitles.append(QObject::tr("Detecting MSI packages"));
+            replace.append(false);
+            prefixes.append("");
+
+            jobTitles.append(QObject::tr("Detecting MSI packages"));
 			tpms.append(new MSIThirdPartyPM());
-			prefixes.append("msi:");
+            replace.append(true);
+            prefixes.append("msi:");
+
 			jobTitles.append(QObject::tr("Detecting software control panel packages"));
 			tpms.append(new ControlPanelThirdPartyPM());
-			prefixes.append("control-panel:");
+            replace.append(true);
+            prefixes.append("control-panel:");
 		}
 
         QList<Repository*> repositories;
@@ -736,7 +744,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
                     false, true);
             addPackages(sub, rep, repositories.at(i),
                     *installeds.at(i),
-                    i == 2 || i == 3,
+                    replace.at(i),
                     prefixes.at(i));
 
             job->setProgress(0.2 + (i + 1.0) / futures.count() * 0.4);

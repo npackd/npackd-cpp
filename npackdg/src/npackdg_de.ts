@@ -2423,7 +2423,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot export to an existing directory</source>
-        <translation>Kann nicht in ein existierendes Verzeichnis exportieren</translation>
+        <translation type="vanished">Kann nicht in ein existierendes Verzeichnis exportieren</translation>
     </message>
     <message>
         <source>Export packages</source>
@@ -2544,6 +2544,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Choose installation directory</source>
         <translation>Installationsverzeichnis auswählen</translation>
+    </message>
+    <message>
+        <source>Cannot export to an existing non-empty directory</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

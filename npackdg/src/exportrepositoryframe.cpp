@@ -60,11 +60,11 @@ void ExportRepositoryFrame::on_lineEditDir_textChanged(const QString &arg1)
 void ExportRepositoryFrame::validate()
 {
     QString err;
-    QDir d;
 
     if (err.isEmpty()) {
-        if (d.exists(ui->lineEditDir->text())) {
-            err = QObject::tr("Cannot export to an existing directory");
+        QDir d(ui->lineEditDir->text());
+        if (d.exists() && !d.isEmpty()) {
+            err = QObject::tr("Cannot export to an existing non-empty directory");
         }
     }
 
