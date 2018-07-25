@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 #include <QImageReader>
 #include <QtPlugin>
+#include <QStyleFactory>
 
 #include "version.h"
 #include "mainwindow.h"
@@ -72,8 +73,12 @@ int main(int argc, char *argv[])
 
     CLProcessor clp;
 
-    // Qt 4.9.2 "bmp", "cur", "ico", "pbm", "pgm", "png", "ppm", "xbm", "xpm"
+    // July, 25 2018:
+    // "bmp", "cur", "gif", "ico", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "xbm", "xpm"
     qCDebug(npackd) << QImageReader::supportedImageFormats();
+
+    // July, 25 2018: "windowsvista", "Windows", "Fusion"
+    qCDebug(npackd) << QStyleFactory::keys();
 
     int errorCode;
     if (!clp.process(&errorCode)){

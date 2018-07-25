@@ -44,7 +44,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
-
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\styles")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os")
 
@@ -208,7 +208,7 @@ target_link_libraries(npackdg
     ${ZLIB_LIBRARIES}
     
     qsqlite
-    Qt5::WinExtras Qt5::Widgets qwindows Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
+    Qt5::WinExtras Qt5::Widgets qwindows qwindowsvistastyle Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
 
     Qt5ThemeSupport
     Qt5EventDispatcherSupport
