@@ -126,10 +126,11 @@ public:
      * Deletes a directory
      *
      * @param job progress for this task
-     * @param aDir this directory will be deleted
+     * @param aDir_ this directory will be deleted
      * @param firstLevel true = first level will be deleted
      */
-    static void removeDirectory(Job* job, QDir &aDir, bool firstLevel=true);
+    static void removeDirectory(Job* job, const QString &aDir_,
+            bool firstLevel=true);
 
     /**
      * Uses the Shell's IShellLink and IPersistFile interfaces

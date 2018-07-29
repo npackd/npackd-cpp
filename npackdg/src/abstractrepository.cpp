@@ -549,8 +549,7 @@ void AbstractRepository::process(Job *job,
                             Job* djob = sub->newSubJob(1,
                                     QObject::tr("Deleting temporary directory %1").
                                     arg(dir));
-                            QDir ddir(dir);
-                            WPMUtils::removeDirectory(djob, ddir);
+                            WPMUtils::removeDirectory(djob, dir);
                             job->setErrorMessage(QObject::tr(
                                     "Cannot install %1 into %2. The directory already exists.").
                                     arg(pv->toString(true)).arg(op->where));
@@ -565,8 +564,7 @@ void AbstractRepository::process(Job *job,
                             Job* djob = sub->newSubJob(1,
                                     QObject::tr("Deleting temporary directory %1").
                                     arg(dir));
-                            QDir ddir(dir);
-                            WPMUtils::removeDirectory(djob, ddir);
+                            WPMUtils::removeDirectory(djob, dir);
                             job->setErrorMessage(QObject::tr(
                                     "Cannot install %1 into %2. Cannot rename %3.").
                                     arg(pv->toString(true), op->where, dir));
@@ -595,8 +593,7 @@ void AbstractRepository::process(Job *job,
                 QString txt = QObject::tr("Deleting %1").arg(dir);
 
                 Job* sub = job->newSubJob(0.01 / dirs.count(), txt, true, false);
-                QDir ddir(dir);
-                WPMUtils::removeDirectory(sub, ddir);
+                WPMUtils::removeDirectory(sub, dir);
             } else {
                 job->setProgress(job->getProgress() + 0.01 / dirs.count());
             }

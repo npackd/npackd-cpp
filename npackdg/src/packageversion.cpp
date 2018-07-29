@@ -647,7 +647,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
                     d.absolutePath().replace('/', '\\')));
 
             // qCDebug(npackd) << "deleting" << d.absolutePath();
-            WPMUtils::removeDirectory(sub, d);
+            WPMUtils::removeDirectory(sub, d.absolutePath());
         } else {
             break;
         }

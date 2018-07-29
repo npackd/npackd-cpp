@@ -2452,8 +2452,9 @@ QString WPMUtils::createLink(LPCWSTR lpszPathObj, LPCWSTR lpszPathLink,
     return r;
 }
 
-void WPMUtils::removeDirectory(Job* job, QDir &aDir, bool firstLevel)
+void WPMUtils::removeDirectory(Job* job, const QString &aDir_, bool firstLevel)
 {
+    QDir aDir(aDir_);
     if (firstLevel) {
         WPMUtils::reportEvent(QObject::tr(
                 "Deleting %1").
@@ -2469,9 +2470,8 @@ void WPMUtils::removeDirectory(Job* job, QDir &aDir, bool firstLevel)
             QFileInfo entryInfo = entries[idx];
             QString path = entryInfo.absoluteFilePath();
             if (entryInfo.isDir()) {
-                QDir dd(path);
                 Job* sub = job->newSubJob(1 / ((double) count + 1));
-                removeDirectory(sub, dd, false);
+                removeDirectory(sub, path, false);
                 if (!sub->getErrorMessage().isEmpty())
                     job->setErrorMessage(sub->getErrorMessage());
                 // if (!ok)
