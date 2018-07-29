@@ -44,7 +44,7 @@ static bool packageVersionLessThan3(const PackageVersion* a,
 
 DBRepository DBRepository::def;
 
-DBRepository::DBRepository()
+DBRepository::DBRepository(): mutex(QMutex::Recursive)
 {
     currentRepository = -1;
     replacePackageVersionQuery = 0;
@@ -85,36 +85,36 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         if (!insertInstalledQuery->prepare(insertSQL)) {
             err = getErrorString(*insertInstalledQuery);
             delete insertInstalledQuery;
-            return err;
         }
     }
 
     //qCDebug(npackd) << "saveInstalled";
+    if (err.isEmpty()) {
+        for (int i = 0; i < installed.size(); i++) {
+            if (!err.isEmpty())
+                break;
 
-    for (int i = 0; i < installed.size(); i++) {
-        if (!err.isEmpty())
-            break;
-
-        InstalledPackageVersion* ipv = installed.at(i);
-        //qCDebug(npackd) << "saveInstalled" << ipv->package << ipv->version.getVersionString();
-        if (ipv->installed()) {
-            insertInstalledQuery->bindValue(QStringLiteral(":PACKAGE"),
-                    ipv->package);
-            insertInstalledQuery->bindValue(QStringLiteral(":VERSION"),
-                    ipv->version.getVersionString());
-            insertInstalledQuery->bindValue(QStringLiteral(":CVERSION"),
-                    ipv->version.toComparableString());
-            insertInstalledQuery->bindValue(QStringLiteral(":WHEN_"), 0);
-            insertInstalledQuery->bindValue(QStringLiteral(":WHERE_"),
-                    ipv->directory);
-            insertInstalledQuery->bindValue(QStringLiteral(":DETECTION_INFO"),
-                    ipv->detectionInfo);
-            if (!insertInstalledQuery->exec())
-                err = getErrorString(*insertInstalledQuery);
+            InstalledPackageVersion* ipv = installed.at(i);
+            //qCDebug(npackd) << "saveInstalled" << ipv->package << ipv->version.getVersionString();
+            if (ipv->installed()) {
+                insertInstalledQuery->bindValue(QStringLiteral(":PACKAGE"),
+                        ipv->package);
+                insertInstalledQuery->bindValue(QStringLiteral(":VERSION"),
+                        ipv->version.getVersionString());
+                insertInstalledQuery->bindValue(QStringLiteral(":CVERSION"),
+                        ipv->version.toComparableString());
+                insertInstalledQuery->bindValue(QStringLiteral(":WHEN_"), 0);
+                insertInstalledQuery->bindValue(QStringLiteral(":WHERE_"),
+                        ipv->directory);
+                insertInstalledQuery->bindValue(QStringLiteral(":DETECTION_INFO"),
+                        ipv->detectionInfo);
+                if (!insertInstalledQuery->exec())
+                    err = getErrorString(*insertInstalledQuery);
+            }
         }
-    }
 
-    insertInstalledQuery->finish();
+        insertInstalledQuery->finish();
+    }
 
     return err;
 }
@@ -133,18 +133,19 @@ QString DBRepository::saveURLSize(const QString& url, int64_t size)
         if (!insertURLSizeQuery->prepare(insertSQL)) {
             err = getErrorString(*insertURLSizeQuery);
             delete insertURLSizeQuery;
-            return err;
         }
     }
 
-    insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
-    insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
-    insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
-            static_cast<qlonglong>(time(0)));
-    if (!insertURLSizeQuery->exec())
-        err = getErrorString(*insertURLSizeQuery);
+    if (err.isEmpty()) {
+        insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
+        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
+        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
+                static_cast<qlonglong>(time(0)));
+        if (!insertURLSizeQuery->exec())
+            err = getErrorString(*insertURLSizeQuery);
 
-    insertURLSizeQuery->finish();
+        insertURLSizeQuery->finish();
+    }
 
     return err;
 }
@@ -466,6 +467,8 @@ PackageVersion* DBRepository::findPackageVersion_(
 QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         QString *err) const
 {
+    this->mutex.lock();
+
     *err = "";
 
     QList<PackageVersion*> r;
@@ -492,6 +495,8 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     // qCDebug(npackd) << vs.count();
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -2107,6 +2112,8 @@ QString DBRepository::getCategoryPath(int c0, int c1, int c2, int c3,
 
 QString DBRepository::updateStatus(const QString& package)
 {
+    this->mutex.lock();
+
     QString err;
 
     QList<PackageVersion*> pvs = getPackageVersions_(package, &err);
@@ -2162,6 +2169,8 @@ QString DBRepository::updateStatus(const QString& package)
         }
     }
     qDeleteAll(pvs);
+
+    this->mutex.unlock();
 
     return err;
 }

@@ -12,6 +12,7 @@
 #include <QMultiMap>
 #include <QCache>
 #include <QList>
+#include <QMutex>
 
 #include "package.h"
 #include "repository.h"
@@ -35,6 +36,8 @@ private:
             const QString &column, QString *err);
     static QString toString(const QSqlError& e);
     static QString getErrorString(const MySQLQuery& q);
+
+    mutable QMutex mutex;
 
     QCache<QString, License> licenses;
 
