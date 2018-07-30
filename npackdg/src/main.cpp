@@ -71,15 +71,6 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    DWORD dwVersion = GetVersion();
-    DWORD dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
-    DWORD dwMinorVersion = (DWORD)(HIBYTE(LOWORD(dwVersion)));
-    if (dwMajorVersion < 6 || (dwMajorVersion == 6 && dwMinorVersion < 1)) {
-        QMessageBox::critical(0, "Error",
-                QObject::tr("The newest versions of Npackd require at least Windows 7.") + "\r\n" +
-                QObject::tr("Please download the older version from https://github.com/tim-lebedkov/npackd-cpp/releases/tag/version_1.23.2"));
-        return 1;
-    }
 
     CLProcessor clp;
 

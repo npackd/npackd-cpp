@@ -2549,14 +2549,6 @@ p, li { white-space: pre-wrap; }
         <source>Cannot export to an existing non-empty directory</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>The newest versions of Npackd require at least Windows 7.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please download the older version from https://github.com/tim-lebedkov/npackd-cpp/releases/tag/version_1.23.2</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
