@@ -1976,6 +1976,8 @@ QString DBRepository::getErrorString(const MySQLQuery &q)
 
 QString DBRepository::readCategories()
 {
+    this->mutex.lock();
+
     QString err;
 
     this->categories.clear();
@@ -1998,11 +2000,15 @@ QString DBRepository::readCategories()
         }
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 QStringList DBRepository::readRepositories(QString* err)
 {
+    this->mutex.lock();
+
     QStringList r;
 
     *err = QStringLiteral("");
@@ -2024,11 +2030,15 @@ QStringList DBRepository::readRepositories(QString* err)
         }
     }
 
+    this->mutex.unlock();
+
     return r;
 }
 
 QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
 {
+    this->mutex.lock();
+
     QString r;
 
     QString sql = QStringLiteral("SELECT SHA1 FROM REPOSITORY WHERE URL=:URL");
@@ -2050,12 +2060,16 @@ QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
         }
     }
 
+    this->mutex.unlock();
+
     return r;
 }
 
 void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
         QString* err)
 {
+    this->mutex.lock();
+
     MySQLQuery q(db);
 
     QString sql = QStringLiteral(
@@ -2069,6 +2083,8 @@ void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
         if (!q.exec())
             *err = getErrorString(q);
     }
+
+    this->mutex.unlock();
 }
 
 
@@ -2193,6 +2209,8 @@ QString DBRepository::updateStatus(const QString& package)
 
 void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 {
+    this->mutex.lock();
+
     bool transactionStarted = false;
 
     QString initialTitle = job->getTitle();
@@ -2336,6 +2354,8 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
     }
 
     job->setTitle(initialTitle);
+
+    this->mutex.lock();
 
     job->complete();
 }
