@@ -366,7 +366,6 @@ void AbstractRepository::process(Job *job,
         const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
 {
-
     if (npackd().isDebugEnabled()) {
         qCDebug(npackd) << "AbstractRepository::process: " <<
                 install_.size() << " operations";

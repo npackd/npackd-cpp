@@ -268,6 +268,8 @@ bool DBRepository::columnExists(QSqlDatabase* db,
 
 Package *DBRepository::findPackage_(const QString &name)
 {
+    this->mutex.lock();
+
     QString err;
 
     Package* r = 0;
@@ -317,6 +319,8 @@ Package *DBRepository::findPackage_(const QString &name)
         if (err.isEmpty())
             err = readLinks(r);
     }
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -437,6 +441,8 @@ QString DBRepository::findCategory(int cat) const
 PackageVersion* DBRepository::findPackageVersion_(
         const QString& package, const Version& version, QString* err) const
 {
+    this->mutex.lock();
+
     *err = "";
 
     Version v = version;
@@ -460,6 +466,8 @@ PackageVersion* DBRepository::findPackageVersion_(
     if (err->isEmpty() && q.next()) {
         r = PackageVersion::parse(q.value(2).toByteArray(), err);
     }
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -571,6 +579,8 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
 
 License *DBRepository::findLicense_(const QString& name, QString *err)
 {
+    this->mutex.lock();
+
     *err = QStringLiteral("");
 
     License* r = 0;
@@ -601,6 +611,8 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     } else {
         r = cached->clone();
     }
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -2062,6 +2074,8 @@ void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
 
 QString DBRepository::saveRepositories(const QStringList &reps)
 {
+    this->mutex.lock();
+
     QString err = exec(QStringLiteral("DELETE FROM REPOSITORY"));
 
     MySQLQuery q(db);
@@ -2082,6 +2096,8 @@ QString DBRepository::saveRepositories(const QStringList &reps)
                 err = getErrorString(q);
         }
     }
+
+    this->mutex.unlock();
 
     return err;
 }
@@ -2606,6 +2622,8 @@ QString DBRepository::updateDatabase()
 QString DBRepository::open(const QString& connectionName, const QString& file,
         bool readOnly)
 {
+    this->mutex.lock();
+
     QString err;
 
     // if we cannot write the file, we still try to open in read-only mode.
@@ -2656,6 +2674,8 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     if (err.isEmpty()) {
         err = readCategories();
     }
+
+    this->mutex.unlock();
 
     return err;
 }
