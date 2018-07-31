@@ -46,7 +46,8 @@ link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\styles")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os -Wl,--subsystem,windows:6.1 -Wl,--major-os-version,6 -Wl,--minor-os-version,1")
+#  -Wl,--major-os-version,6 -Wl,--minor-os-version,1
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os -Wl,--subsystem,windows:6.1")
 
 include(CheckCXXCompilerFlag)
 

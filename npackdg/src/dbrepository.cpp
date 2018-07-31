@@ -75,6 +75,8 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
 {
     QString err;
 
+    this->mutex.lock();
+
     if (!insertInstalledQuery) {
         insertInstalledQuery = new MySQLQuery(db);
 
@@ -116,11 +118,15 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         insertInstalledQuery->finish();
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 QString DBRepository::saveURLSize(const QString& url, int64_t size)
 {
+    this->mutex.lock();
+
     QString err;
 
     if (!insertURLSizeQuery) {
@@ -147,6 +153,8 @@ QString DBRepository::saveURLSize(const QString& url, int64_t size)
         insertURLSizeQuery->finish();
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
@@ -157,13 +165,21 @@ DBRepository* DBRepository::getDefault()
 
 QString DBRepository::exec(const QString& sql)
 {
+    this->mutex.lock();
+
     MySQLQuery q(db);
     q.exec(sql);
-    return getErrorString(q);
+    QString err = getErrorString(q);
+
+    this->mutex.unlock();
+
+    return err;
 }
 
 int DBRepository::count(const QString& sql, QString* err)
 {
+    this->mutex.lock();
+
     int n = 0;
 
     *err = QStringLiteral("");
@@ -184,11 +200,15 @@ int DBRepository::count(const QString& sql, QString* err)
             *err = QObject::tr("Not a number");
     }
 
+    this->mutex.unlock();
+
     return n;
 }
 
 QString DBRepository::saveLicense(License* p, bool replace)
 {
+    this->mutex.lock();
+
     QString err;
 
     MySQLQuery q(db);
@@ -214,12 +234,16 @@ QString DBRepository::saveLicense(License* p, bool replace)
             err = getErrorString(q);
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 bool DBRepository::tableExists(QSqlDatabase* db,
         const QString& table, QString* err)
 {
+    this->mutex.lock();
+
     *err = QStringLiteral("");
 
     MySQLQuery q(*db);
@@ -238,12 +262,16 @@ bool DBRepository::tableExists(QSqlDatabase* db,
         e = q.next();
     }
 
+    this->mutex.unlock();
+
     return e;
 }
 
 bool DBRepository::columnExists(QSqlDatabase* db,
         const QString& table, const QString& column, QString* err)
 {
+    this->mutex.lock();
+
     *err = QStringLiteral("");
 
     MySQLQuery q(*db);
@@ -262,6 +290,8 @@ bool DBRepository::columnExists(QSqlDatabase* db,
             }
         }
     }
+
+    this->mutex.unlock();
 
     return e;
 }
@@ -327,6 +357,8 @@ Package *DBRepository::findPackage_(const QString &name)
 
 QList<Package*> DBRepository::findPackages(const QStringList& names)
 {
+    this->mutex.lock();
+
     QList<Package*> ret;
     QString err;
 
@@ -398,6 +430,8 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
 
         start += block;
     }
+
+    this->mutex.unlock();
 
     return ret;
 }
@@ -2380,6 +2414,8 @@ QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 
 QString DBRepository::updateDatabase()
 {
+    this->mutex.lock();
+
     QString err;
 
     bool e = false;
@@ -2635,6 +2671,8 @@ QString DBRepository::updateDatabase()
             err = toString(db.lastError());
         }
     }
+
+    this->mutex.unlock();
 
     return err;
 }

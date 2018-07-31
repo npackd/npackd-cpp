@@ -30,9 +30,9 @@ class DBRepository: public AbstractRepository
 {
 private:
     static DBRepository def;
-    static bool tableExists(QSqlDatabase* db,
+    bool tableExists(QSqlDatabase* db,
             const QString& table, QString* err);
-    static bool columnExists(QSqlDatabase *db, const QString &table,
+    bool columnExists(QSqlDatabase *db, const QString &table,
             const QString &column, QString *err);
     static QString toString(const QSqlError& e);
     static QString getErrorString(const MySQLQuery& q);
