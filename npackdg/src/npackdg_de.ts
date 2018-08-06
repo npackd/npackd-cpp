@@ -1890,7 +1890,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change settings now. The hard drive scan is running.</source>
-        <translation>Kann die Einstellungen jetzt nicht verändern. Der Scan des Laufwerks läuft gerade.</translation>
+        <translation type="vanished">Kann die Einstellungen jetzt nicht verändern. Der Scan des Laufwerks läuft gerade.</translation>
     </message>
     <message>
         <source>Cannot change settings now. The repositories download is running.</source>

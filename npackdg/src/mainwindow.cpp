@@ -152,7 +152,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->jobsTab = 0;
     this->taskbarInterface = 0;
 
-    this->hardDriveScanRunning = false;
     this->reloadRepositoriesThreadRunning = false;
 
     setWindowTitle("Npackd");
@@ -1269,7 +1268,7 @@ void MainWindow::updateUpdateAction()
 void MainWindow::updateReloadRepositoriesAction()
 {
     this->ui->actionReload_Repositories->setEnabled(
-            !hardDriveScanRunning && !reloadRepositoriesThreadRunning);
+            !reloadRepositoriesThreadRunning);
 }
 
 void MainWindow::updateCloseTabAction()

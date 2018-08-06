@@ -173,11 +173,6 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
 {
     MainWindow* mw = MainWindow::getInstance();
 
-    if (mw->hardDriveScanRunning) {
-        mw->addErrorMessage(QObject::tr("Cannot change settings now. The hard drive scan is running."));
-        return;
-    }
-
     QString err;
     PackageVersion* locked = PackageVersion::findLockedPackageVersion(&err);
     if (locked) {

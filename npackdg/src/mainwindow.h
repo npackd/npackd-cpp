@@ -151,9 +151,6 @@ public:
      */
     static QIcon waitAppIcon;
 
-    /** true if the hard drive scan is runnig */
-    bool hardDriveScanRunning;
-
     /** true if the repositories are being reloaded */
     bool reloadRepositoriesThreadRunning;
 

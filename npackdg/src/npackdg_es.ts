@@ -2692,7 +2692,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change settings now. The hard drive scan is running.</source>
-        <translation>Imposible cambiar configuración ahora. El disco duro está en ejecución.</translation>
+        <translation type="vanished">Imposible cambiar configuración ahora. El disco duro está en ejecución.</translation>
     </message>
     <message>
         <source>Cannot change settings now. The repositories download is running.</source>

@@ -2422,7 +2422,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change settings now. The hard drive scan is running.</source>
-        <translation>Il est impossible de modifier les paramètres lors du scan des disques locaux.</translation>
+        <translation type="vanished">Il est impossible de modifier les paramètres lors du scan des disques locaux.</translation>
     </message>
     <message>
         <source>Cannot change settings now. The repositories download is running.</source>

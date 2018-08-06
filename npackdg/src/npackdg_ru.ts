@@ -2652,7 +2652,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot change settings now. The hard drive scan is running.</source>
-        <translation>Невозможно изменить настройки сейчас. Запущено сканирование жёсткого диска.</translation>
+        <translation type="vanished">Невозможно изменить настройки сейчас. Запущено сканирование жёсткого диска.</translation>
     </message>
     <message>
         <source>Cannot change settings now. The repositories download is running.</source>
