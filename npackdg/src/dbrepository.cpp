@@ -438,6 +438,8 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
 
 QMap<QString, URLInfo*> DBRepository::findURLInfos(QString* err)
 {
+    this->mutex.lock();
+
     *err = "";
 
     QMap<QString, URLInfo*> ret;
@@ -464,12 +466,20 @@ QMap<QString, URLInfo*> DBRepository::findURLInfos(QString* err)
         ret.insert(address, info);
     }
 
+    this->mutex.unlock();
+
     return ret;
 }
 
 QString DBRepository::findCategory(int cat) const
 {
-    return categories.value(cat);
+    this->mutex.lock();
+
+    QString r = categories.value(cat);
+
+    this->mutex.unlock();
+
+    return r;
 }
 
 PackageVersion* DBRepository::findPackageVersion_(
@@ -546,6 +556,8 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
 QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
         QString *err) const
 {
+    this->mutex.lock();
+
     *err = QStringLiteral("");
 
     QList<PackageVersion*> r;
@@ -572,12 +584,16 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
 
+    this->mutex.unlock();
+
     return r;
 }
 
 QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
         const QString &name, QString *err) const
 {
+    this->mutex.lock();
+
     *err = "";
 
     QList<PackageVersion*> r;
@@ -607,6 +623,8 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
     // qCDebug(npackd) << vs.count();
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -653,6 +671,8 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
 
 QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
 {
+    this->mutex.lock();
+
     QString txt = title.toLower();
     txt.replace('(', ' ');
     txt.replace(')', ' ');
@@ -742,6 +762,8 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     qCDebug(npackd) << "searching for" <<  keywords.join(' ') <<
             "found" << what;
 
+    this->mutex.unlock();
+
     return packages;
 }
 
@@ -812,6 +834,8 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
 
 QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
 {
+    this->mutex.lock();
+
     *err = "";
 
     QString sql = QStringLiteral("SELECT NAME FROM CATEGORY WHERE ID IN (") +
@@ -832,6 +856,8 @@ QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
             }
         }
     }
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -898,6 +924,8 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
             where + QStringLiteral(" GROUP BY CATEGORY.ID, CATEGORY.NAME "
             "ORDER BY CATEGORY.NAME");
 
+    this->mutex.lock();
+
     MySQLQuery q(db);
 
     if (!q.prepare(sql))
@@ -923,6 +951,8 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
         }
     }
 
+    this->mutex.unlock();
+
     return r;
 }
 
@@ -930,6 +960,8 @@ QStringList DBRepository::findPackagesWhere(const QString& sql,
         const QList<QVariant>& params,
         QString *err) const
 {
+    this->mutex.lock();
+
     *err = QStringLiteral("");
 
     QStringList r;
@@ -953,12 +985,16 @@ QStringList DBRepository::findPackagesWhere(const QString& sql,
         }
     }
 
+    this->mutex.unlock();
+
     return r;
 }
 
 int DBRepository::insertCategory(int parent, int level,
         const QString& category, QString* err)
 {
+    this->mutex.lock();
+
     *err = QStringLiteral("");
 
     if (!selectCategoryQuery) {
@@ -1009,11 +1045,15 @@ int DBRepository::insertCategory(int parent, int level,
 
     selectCategoryQuery->finish();
 
+    this->mutex.unlock();
+
     return id;
 }
 
 QString DBRepository::deleteLinks(const QString& name)
 {
+    this->mutex.lock();
+
     QString err;
 
     if (!deleteLinkQuery) {
@@ -1033,11 +1073,15 @@ QString DBRepository::deleteLinks(const QString& name)
         deleteLinkQuery->finish();
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 QString DBRepository::deleteCmdFiles(const QString& name, const Version& version)
 {
+    this->mutex.lock();
+
     QString err;
 
     if (!deleteCmdFilesQuery) {
@@ -1061,11 +1105,15 @@ QString DBRepository::deleteCmdFiles(const QString& name, const Version& version
         deleteCmdFilesQuery->finish();
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 QString DBRepository::saveLinks(Package* p)
 {
+    this->mutex.lock();
+
     QString err;
 
     if (!insertLinkQuery) {
@@ -1110,6 +1158,8 @@ QString DBRepository::saveLinks(Package* p)
     }
 
     insertLinkQuery->finish();
+
+    this->mutex.unlock();
 
     return err;
 }
@@ -1159,6 +1209,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
             cat4 = insertCategory(cat3, 4, c, &err);
         }
     }
+
+    this->mutex.lock();
 
     if (!insertPackageQuery) {
         insertPackageQuery = new MySQLQuery(db);
@@ -1267,11 +1319,15 @@ QString DBRepository::savePackage(Package *p, bool replace)
             err = saveLinks(p);
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
 {
+    this->mutex.lock();
+
     QString err;
 
     QList<Package*> r;
@@ -1312,11 +1368,15 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
         r.append(p);
     }
 
+    this->mutex.unlock();
+
     return r;
 }
 
 QString DBRepository::readLinks(Package* p)
 {
+    this->mutex.lock();
+
     QString err;
 
     QList<Package*> r;
@@ -1337,11 +1397,15 @@ QString DBRepository::readLinks(Package* p)
         p->links.insert(q.value(0).toString(), q.value(1).toString());
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 {
+    this->mutex.lock();
+
     QString err;
 
     if (!replacePackageVersionQuery) {
@@ -1439,12 +1503,16 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         q->finish();
     }
 
+    this->mutex.unlock();
+
     return err;
 }
 
 PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
         const QString &guid, QString* err) const
 {
+    this->mutex.lock();
+
     *err = "";
 
     PackageVersion* r = 0;
@@ -1466,6 +1534,8 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
             r = PackageVersion::parse(q.value(2).toByteArray(), err);
         }
     }
+
+    this->mutex.unlock();
 
     return r;
 }
@@ -2243,8 +2313,6 @@ QString DBRepository::updateStatus(const QString& package)
 
 void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 {
-    this->mutex.lock();
-
     bool transactionStarted = false;
 
     QString initialTitle = job->getTitle();
@@ -2389,8 +2457,6 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 
     job->setTitle(initialTitle);
 
-    this->mutex.lock();
-
     job->complete();
 }
 
@@ -2414,8 +2480,6 @@ QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 
 QString DBRepository::updateDatabase()
 {
-    this->mutex.lock();
-
     QString err;
 
     bool e = false;
@@ -2672,16 +2736,12 @@ QString DBRepository::updateDatabase()
         }
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 QString DBRepository::open(const QString& connectionName, const QString& file,
         bool readOnly)
 {
-    this->mutex.lock();
-
     QString err;
 
     // if we cannot write the file, we still try to open in read-only mode.
@@ -2732,8 +2792,6 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     if (err.isEmpty()) {
         err = readCategories();
     }
-
-    this->mutex.unlock();
 
     return err;
 }
