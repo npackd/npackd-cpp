@@ -42,6 +42,8 @@ int main(int argc, char *argv[])
 
     HMODULE m = LoadLibrary(L"exchndl.dll");
 
+    QLoggingCategory::setFilterRules("npackd=false");
+
     QApplication a(argc, argv);
 
     QString packageName;
