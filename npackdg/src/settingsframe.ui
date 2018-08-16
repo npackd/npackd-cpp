@@ -203,10 +203,12 @@ p, li { white-space: pre-wrap; }
  <tabstops>
   <tabstop>plainTextEditReps</tabstop>
   <tabstop>comboBoxDir</tabstop>
+  <tabstop>pushButton</tabstop>
   <tabstop>checkBoxCloseWindows</tabstop>
   <tabstop>checkBoxDeleteFileShares</tabstop>
   <tabstop>checkBoxKillProcesses</tabstop>
   <tabstop>checkBoxStopServices</tabstop>
+  <tabstop>checkBoxCtrlC</tabstop>
  </tabstops>
  <resources/>
  <connections/>
