@@ -2470,7 +2470,9 @@ void WPMUtils::removeDirectory(Job* job, const QString &aDir_, bool firstLevel)
             QFileInfo entryInfo = entries[idx];
             QString path = entryInfo.absoluteFilePath();
             if (entryInfo.isDir()) {
-                Job* sub = job->newSubJob(1 / ((double) count + 1));
+                Job* sub = job->newSubJob(1 / ((double) count + 1),
+                        QObject::tr("Deleting the directory %1").arg(
+                        path.replace('/', '\\')));
                 removeDirectory(sub, path, false);
                 if (!sub->getErrorMessage().isEmpty())
                     job->setErrorMessage(sub->getErrorMessage());
