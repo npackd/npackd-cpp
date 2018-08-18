@@ -588,10 +588,12 @@ void MainWindow::updateProgressTabTitle()
 MainWindow::~MainWindow()
 {
     QThreadPool::globalInstance()->clear();
-    QThreadPool::globalInstance()->waitForDone(5000);
+    QThreadPool::globalInstance()->waitForDone(-1);
 
+    // if a timeout of 5 seconds is used here, there may an access
+    // violation during program shutdown
     DownloadSizeFinder::threadPool.clear();
-    DownloadSizeFinder::threadPool.waitForDone(5000);
+    DownloadSizeFinder::threadPool.waitForDone(-1);
 
     delete ui;
 }
