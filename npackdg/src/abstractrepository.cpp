@@ -479,6 +479,8 @@ void AbstractRepository::process(Job *job,
         }
     }
 
+    QStringList stoppedServices;
+
     // 10% for stopping the packages
     if (job->shouldProceed()) {
         for (int i = 0; i < install.count(); i++) {
@@ -488,7 +490,8 @@ void AbstractRepository::process(Job *job,
                 Job* sub = job->newSubJob(0.1 / n,
                         QObject::tr("Stopping the package %1 of %2").
                         arg(i + 1).arg(n));
-                pv->stop(sub, programCloseType, printScriptOutput);
+                pv->stop(sub, programCloseType, printScriptOutput,
+                        &stoppedServices);
                 if (!sub->getErrorMessage().isEmpty()) {
                     job->setErrorMessage(sub->getErrorMessage());
                     break;
@@ -573,9 +576,10 @@ void AbstractRepository::process(Job *job,
                 }
 
                 pv->install(sub, dir, binary, printScriptOutput,
-                        programCloseType);
+                        programCloseType, &stoppedServices);
             } else
-                pv->uninstall(sub, printScriptOutput, programCloseType);
+                pv->uninstall(sub, printScriptOutput, programCloseType,
+                        &stoppedServices);
 
             if (!job->shouldProceed())
                 break;
@@ -605,6 +609,36 @@ void AbstractRepository::process(Job *job,
     }
 
     qDeleteAll(pvs);
+
+    if (job->shouldProceed()) {
+        QString err;
+
+        SC_HANDLE schSCManager = OpenSCManager(
+                NULL,                    // local computer
+                NULL,                    // ServicesActive database
+                SC_MANAGER_ALL_ACCESS);  // full access rights
+
+        if (NULL == schSCManager) {
+            WPMUtils::formatMessage(GetLastError(), &err);
+            err = QObject::tr("OpenSCManager failed: %0").arg(err);
+
+            if (!err.isEmpty())
+                qCDebug(npackd) << "AbstractRepository::process: " << err;
+        }
+
+        if (err.isEmpty()) {
+            for (int i = 0; i < stoppedServices.size(); i++) {
+                err = WPMUtils::startService(schSCManager, stoppedServices.at(i));
+
+                if (!err.isEmpty())
+                    qCDebug(npackd) << "AbstractRepository::process: " << err;
+            }
+        }
+
+        if (schSCManager)
+            CloseServiceHandle(schSCManager);
+    }
+
 
     if (job->shouldProceed())
         job->setProgress(1);

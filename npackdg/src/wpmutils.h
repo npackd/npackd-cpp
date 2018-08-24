@@ -71,14 +71,6 @@ private:
     static QString waitForServiceStatus(SC_HANDLE schService,
             const QString &operation, DWORD status);
 
-    /**
-     * @brief starts a Windows service
-     * @param schSCManager Windows services manager
-     * @param serviceName internal name of the service
-     * @return error message
-     */
-    static QString startService(SC_HANDLE schSCManager, const QString &serviceName);
-
     static QList<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
 
     static void closeHandles(const QList<HANDLE> handles);
@@ -566,9 +558,11 @@ public:
      * @brief closes all processes that lock the specified directory. This
      *     function ignores the current process.
      * @param dir a directory
+     * @param stoppedServices the names of stopped Windows services will be
+     *     stored here
      */
     static void closeProcessesThatUseDirectory(const QString& dir,
-            DWORD cpt=CLOSE_WINDOW);
+            DWORD cpt, QStringList *stoppedServices);
 
     /**
      * @brief disconnects all users from all shares that include the specified
@@ -754,6 +748,15 @@ public:
      * @return error message
      */
     static QString startService(const QString &serviceName);
+
+    /**
+     * @brief starts a Windows service
+     * @param schSCManager Windows services manager
+     * @param serviceName internal name of the service
+     * @return error message
+     */
+    static QString startService(SC_HANDLE schSCManager,
+            const QString &serviceName);
 
     /**
      * @brief searches for a service with the specified process ID

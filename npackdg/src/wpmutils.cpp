@@ -966,10 +966,8 @@ void WPMUtils::closeHandles(const QList<HANDLE> handles)
 }
 
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
-        DWORD cpt)
+        DWORD cpt, QStringList* stoppedServices)
 {
-    QStringList stoppedServices;
-
     //QString f = dir + "\\abc.txt";
     //test((PCWSTR) f.utf16());
 
@@ -1063,7 +1061,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     if (cpt & DISABLE_SHARES) {
         if (shared) {
-            WPMUtils::stopService("lanmanserver", &stoppedServices);
+            WPMUtils::stopService("lanmanserver", stoppedServices);
 
             closeHandles(ps);
             ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
@@ -1081,7 +1079,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
                 QString service = findService(processId, &err);
 
                 if (!service.isEmpty()) {
-                    WPMUtils::stopService(service, &stoppedServices);
+                    WPMUtils::stopService(service, stoppedServices);
                 }
             }
         }
@@ -3660,6 +3658,8 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
 
     // Attempt to start the service.
     if (err.isEmpty()) {
+        WPMUtils::reportEvent(QObject::tr(
+                "Sending start signal to the service %1").arg(serviceName));
         if (!StartService(
                 schService,  // handle to service
                 0,           // number of arguments

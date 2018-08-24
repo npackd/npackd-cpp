@@ -3386,6 +3386,10 @@ p, li { white-space: pre-wrap; }
         <source>Cannot export to an existing non-empty directory</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Sending start signal to the service %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

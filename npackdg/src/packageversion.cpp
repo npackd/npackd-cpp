@@ -440,7 +440,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
 }
 
 void PackageVersion::uninstall(Job* job, bool printScriptOutput,
-        int programCloseType)
+        int programCloseType, QStringList* stoppedServices)
 {
     if (!installed()) {
         job->setProgress(1);
@@ -567,7 +567,8 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             Job* rjob = job->newSubJob(0.53, QObject::tr("Deleting files"));
 
             // the errors occured while deleting the directory are ignored
-            removeDirectory(rjob, d.absolutePath(), programCloseType);
+            removeDirectory(rjob, d.absolutePath(), programCloseType,
+                    stoppedServices);
 
             QString err = setPath("");
             if (!err.isEmpty())
@@ -610,7 +611,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 }
 
 void PackageVersion::removeDirectory(Job* job, const QString& dir,
-        int programCloseType)
+        int programCloseType, QStringList* stoppedServices)
 {
     // for a .dll loaded in another process it is possible to:
     // - rename the .dll file
@@ -654,7 +655,8 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
 
         d.refresh();
         if (d.exists()) {
-            WPMUtils::closeProcessesThatUseDirectory(dir, programCloseType);
+            WPMUtils::closeProcessesThatUseDirectory(dir, programCloseType,
+                    stoppedServices);
         } else {
             break;
         }
@@ -1680,7 +1682,8 @@ void PackageVersion::installWith(Job* job)
 
 void PackageVersion::install(Job* job, const QString& where,
         const QString& binary,
-        bool printScriptOutput, int programCloseType)
+        bool printScriptOutput, int programCloseType,
+        QStringList* stoppedServices)
 {
     if (installed()) {
         job->setProgress(1);
@@ -1833,7 +1836,8 @@ void PackageVersion::install(Job* job, const QString& where,
         deleteShortcuts(d.absolutePath(), sub, true, true, true);
 
         Job* rjob = job->newSubJob(0.01, QObject::tr("Deleting files"));
-        removeDirectory(rjob, d.absolutePath(), programCloseType);
+        removeDirectory(rjob, d.absolutePath(), programCloseType,
+                stoppedServices);
     }
 
     if (success) {
@@ -2236,7 +2240,7 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
 }
 
 void PackageVersion::stop(Job* job, int programCloseType,
-        bool printScriptOutput)
+        bool printScriptOutput, QStringList* stoppedServices)
 {
     bool me = false;
     QString myPackage = InstalledPackages::packageName;
@@ -2267,7 +2271,8 @@ void PackageVersion::stop(Job* job, int programCloseType,
         this->executeFile2(exec, d.absolutePath(), ".Npackd\\Stop.bat",
                 ".Npackd\\Stop.log", env, printScriptOutput);
     } else {
-        WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType);
+        WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType,
+                stoppedServices);
 
         job->setProgress(0.5);
     }

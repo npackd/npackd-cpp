@@ -94,8 +94,11 @@ private:
      * @param dir this directory will be deleted
      * @param programCloseType how to close running programs. Multiple flags
      *     may be combined here using OR.
+     * @param stoppedServices internal names of the Windows services that were
+     *     stopped
      */
-    void removeDirectory(Job* job, const QString& dir, int programCloseType=0);
+    void removeDirectory(Job* job, const QString& dir, int programCloseType,
+            QStringList *stoppedServices);
 
     void emitStatusChanged();
 
@@ -410,9 +413,12 @@ public:
      *     output stream
      * @param programCloseType how to close running programs. Multiple flags
      *     may be combined here using OR.
+     * @param stoppedServices internal names of the Windows services that were
+     *     stopped will be stored here
      */
     void install(Job* job, const QString& where, const QString &binary,
-            bool printScriptOutput, int programCloseType);
+            bool printScriptOutput, int programCloseType,
+            QStringList *stoppedServices);
 
     /**
      * Downloads the package binary, checks its hash sum, checks the binary for
@@ -441,8 +447,11 @@ public:
      *     output stream
      * @param programCloseType how to close running programs. Multiple flags
      *     may be combined here using OR.
+     * @param stoppedServices internal names of the Windows services that were
+     *     stopped
      */
-    void uninstall(Job* job, bool printScriptOutput, int programCloseType=0);
+    void uninstall(Job* job, bool printScriptOutput, int programCloseType,
+            QStringList *stoppedServices);
 
     /**
      * @return status like "locked, installed"
@@ -495,8 +504,11 @@ public:
      *     may be combined here using OR.
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
+     * @param stoppedServices the names of stopped Windows services will be
+     *     stored here
      */
-    void stop(Job *job, int programCloseType, bool printScriptOutput);
+    void stop(Job *job, int programCloseType, bool printScriptOutput,
+            QStringList *stoppedServices);
 
     /**
      * @brief returns the file name without the path for a command line tool
