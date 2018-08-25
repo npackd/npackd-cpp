@@ -14,6 +14,8 @@
 class AbstractRepository
 {
 private:
+    static QSemaphore installationScripts;
+
     /**
      * @param hk root key
      * @param path registry path

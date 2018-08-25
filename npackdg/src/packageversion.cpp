@@ -42,7 +42,6 @@
 #include "repositoryxmlhandler.h"
 
 QSemaphore PackageVersion::httpConnections(3);
-QSemaphore PackageVersion::installationScripts(1);
 QSet<QString> PackageVersion::lockedPackageVersions;
 QMutex PackageVersion::lockedPackageVersionsMutex(QMutex::Recursive);
 
@@ -476,38 +475,11 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         }
     }
 
-    bool uninstallationScriptAcquired = false;
-
-    if (job->shouldProceed()) {
-        if (!uninstallationScript.isEmpty()) {
-            job->setTitle(initialTitle + " / " +
-                    QObject::tr("Waiting while other (un)installation scripts are running"));
-
-            time_t start = time(NULL);
-            while (!job->isCancelled()) {
-                uninstallationScriptAcquired = installationScripts.
-                        tryAcquire(1, 10000);
-                if (uninstallationScriptAcquired) {
-                    job->setProgress(0.25);
-                    break;
-                }
-
-                time_t seconds = time(NULL) - start;
-                job->setTitle(initialTitle + " / " + QString(
-                        QObject::tr("Waiting while other (un)installation scripts are running (%1 minutes)")).
-                        arg(seconds / 60));
-            }
-        } else {
-            job->setProgress(0.25);
-        }
-    }
-    job->setTitle(initialTitle);
-
     if (job->shouldProceed()) {
         if (!uninstallationScript.isEmpty()) {
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
-            Job* sub = job->newSubJob(0.20,
+            Job* sub = job->newSubJob(0.45,
                     QObject::tr("Running the uninstallation script (this may take some time)"),
                     true, true);
 
@@ -545,9 +517,6 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         }
         job->setProgress(0.45);
     }
-
-    if (uninstallationScriptAcquired)
-        installationScripts.release();
 
     // Uninstall.bat may have deleted some files
     d.refresh();
@@ -1718,33 +1687,6 @@ void PackageVersion::install(Job* job, const QString& where,
         job->setProgress(0.2);
     }
 
-    bool installationScriptAcquired = false;
-
-    if (job->shouldProceed()) {
-        if (!installationScript.isEmpty()) {
-            job->setTitle(initialTitle + " / " +
-                    QObject::tr("Waiting while other (un)installation scripts are running"));
-
-            time_t start = time(NULL);
-            while (!job->isCancelled()) {
-                installationScriptAcquired = installationScripts.
-                        tryAcquire(1, 10000);
-                if (installationScriptAcquired) {
-                    job->setProgress(0.21);
-                    break;
-                }
-
-                time_t seconds = time(NULL) - start;
-                job->setTitle(initialTitle + " / " + QString(
-                        QObject::tr("Waiting while other (un)installation scripts are running (%1 minutes)")).
-                        arg(seconds / 60));
-            }
-        } else {
-            job->setProgress(0.21);
-        }
-    }
-    job->setTitle(initialTitle);
-
     if (job->shouldProceed()) {
         if (!installationScript.isEmpty()) {
             Job* exec = job->newSubJob(0.7,
@@ -1791,9 +1733,6 @@ void PackageVersion::install(Job* job, const QString& where,
         job->setProgress(0.91);
     }
     job->setTitle(initialTitle);
-
-    if (installationScriptAcquired)
-        installationScripts.release();
 
     if (job->shouldProceed()) {
         QString err;

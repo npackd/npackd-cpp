@@ -6,6 +6,8 @@
 #include "installedpackages.h"
 #include "downloader.h"
 
+QSemaphore AbstractRepository::installationScripts(1);
+
 QStringList AbstractRepository::getRepositoryURLs(HKEY hk, const QString& path,
         QString* err, bool* keyExists)
 {
@@ -366,6 +368,8 @@ void AbstractRepository::process(Job *job,
         const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
 {
+    QString initialTitle = job->getTitle();
+
     if (npackd().isDebugEnabled()) {
         qCDebug(npackd) << "AbstractRepository::process: " <<
                 install_.size() << " operations";
@@ -478,6 +482,29 @@ void AbstractRepository::process(Job *job,
                 break;
         }
     }
+
+    bool installationScriptAcquired = false;
+
+    if (job->shouldProceed()) {
+        job->setTitle(initialTitle + " / " +
+                QObject::tr("Waiting while other (un)installation scripts are running"));
+
+        time_t start = time(NULL);
+        while (!job->isCancelled()) {
+            installationScriptAcquired = installationScripts.
+                    tryAcquire(1, 10000);
+            if (installationScriptAcquired) {
+                job->setProgress(0.21);
+                break;
+            }
+
+            time_t seconds = time(NULL) - start;
+            job->setTitle(initialTitle + " / " + QString(
+                    QObject::tr("Waiting while other (un)installation scripts are running (%1 minutes)")).
+                    arg(seconds / 60));
+        }
+    }
+    job->setTitle(initialTitle);
 
     QStringList stoppedServices;
 
@@ -639,6 +666,8 @@ void AbstractRepository::process(Job *job,
             CloseServiceHandle(schSCManager);
     }
 
+    if (installationScriptAcquired)
+        installationScripts.release();
 
     if (job->shouldProceed())
         job->setProgress(1);

@@ -40,7 +40,6 @@ class PackageVersion
 {
 private:    
     static QSemaphore httpConnections;
-    static QSemaphore installationScripts;
 
     /**
      * Set of PackageVersion::getStringId() for the locked package versions.
