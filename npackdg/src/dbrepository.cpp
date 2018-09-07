@@ -1544,7 +1544,9 @@ QString DBRepository::clear()
 {
     Job* job = new Job(QObject::tr("Clearing the repository database"));
 
+    this->mutex.lock();
     this->categories.clear();
+    this->mutex.unlock();
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
