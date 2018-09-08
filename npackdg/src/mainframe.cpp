@@ -7,6 +7,7 @@
 #include <QListWidgetItem>
 #include <QListWidget>
 #include <QDialogButtonBox>
+#include <QAction>
 
 #include "dbrepository.h"
 #include "mainwindow.h"

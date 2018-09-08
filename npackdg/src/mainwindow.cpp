@@ -35,6 +35,7 @@
 #include <QTreeWidget>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QDialogButtonBox>
+#include <QHeaderView>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"

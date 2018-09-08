@@ -8,6 +8,7 @@
 #include <QDesktopServices>
 #include <QSharedPointer>
 #include <QVariant>
+#include <QAction>
 
 #include "package.h"
 #include "repository.h"
