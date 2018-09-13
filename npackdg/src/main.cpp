@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     QTranslator myappTranslator;
     bool r = myappTranslator.load(
-            "wpmcpp_" + QLocale::system().name(),
+            "npackdg_" + QLocale::system().name(),
             ":/translations");
     if (r)
         a.installTranslator(&myappTranslator);
