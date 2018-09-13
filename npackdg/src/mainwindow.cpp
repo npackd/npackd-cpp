@@ -204,9 +204,12 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(applicationFocusChanged(QWidget*, QWidget*)));
 
     this->ui->tabWidget->addTab(mainFrame, QObject::tr("Packages"));
+	QTabBar *tabBar = this->ui->tabWidget->findChild<QTabBar *>();
+	tabBar->setTabButton(0, QTabBar::RightSide, 0);
     this->loadUISettings();
 
     this->addJobsTab();
+	tabBar->setTabButton(1, QTabBar::RightSide, 0);
     connect(VisibleJobs::getDefault(), SIGNAL(changed()),
             this, SLOT(visibleJobsChanged()));
 
