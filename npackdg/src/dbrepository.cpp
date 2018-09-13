@@ -29,7 +29,7 @@
 #include "repositoryxmlhandler.h"
 #include "downloader.h"
 
-Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
+//Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
 
 static bool packageVersionLessThan3(const PackageVersion* a,
         const PackageVersion* b)
