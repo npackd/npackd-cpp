@@ -29,8 +29,6 @@ private:
 
     static QAtomicInt nextNamePipeId;
 
-    static int privileges;
-
     WPMUtils();
 
     static bool isProcessRunning(HANDLE process);

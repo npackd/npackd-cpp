@@ -190,10 +190,10 @@ set(NPACKDG_TRANSLATIONS
     src/npackdg_de.ts
 )
 
+option(NPACKD_ADMIN "Force admin right on program" TRUE)
 set(OUTPUT_FILE_NAME "npackdg.exe")
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-option(NPACKD_GUI_ADMIN "Force admin right on program" TRUE)
-if(${NPACKD_GUI_ADMIN})
+if(${NPACKD_ADMIN})
   file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
 else()
@@ -242,6 +242,11 @@ target_link_libraries(npackdg
 )
 target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
 target_compile_definitions(npackdg PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+if(${NPACKD_ADMIN})
+  target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=1)
+else()
+  target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=0)
+endif()
 
 install(TARGETS npackdg DESTINATION ${CMAKE_INSTALL_PREFIX})
 if(MSVC)
