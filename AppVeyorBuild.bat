@@ -131,6 +131,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact npackdg\build\Npackd%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+rem Coverity build is too slow
+goto :eof
 
 if "%bits%" neq "64" goto :eof
 
