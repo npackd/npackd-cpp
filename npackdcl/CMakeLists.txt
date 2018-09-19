@@ -161,9 +161,9 @@ target_link_libraries(npackdcl
 target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
 target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 if(${NPACKD_ADMIN})
-  target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=1)
+  target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=1)
 else()
-  target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=0)
+  target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=0)
 endif()
 
 install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
