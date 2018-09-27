@@ -1318,20 +1318,26 @@ void App::update(Job* job)
     QList<Dependency*> toUpdate2;
 
     if (job->shouldProceed()) {
-        // WPMUtils::writeln("Searching for options");
-
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
             QString versions = versions_.at(i);
 
             QString err;
             Package* p = AbstractRepository::findOnePackage(package, &err);
-            if (!p)
+            if (!p) {
+                qCDebug(npackd) << "did not found a package" << package;
+
                 job->setErrorMessage(err);
-            else {
+            } else {
+                qCDebug(npackd) << "found a package" << p->name;
+
                 if (versions.isEmpty()) {
+                    qCDebug(npackd) << "using the package" << p->name;
+
                     toUpdate.append(p);
                 } else {
+                    qCDebug(npackd) << "using version range" << versions;
+
                     Dependency* d = new Dependency();
                     if (!d->setVersions(versions)) {
                         delete d;
@@ -1361,12 +1367,17 @@ void App::update(Job* job)
     QList<InstallOperation*> ops;
     bool up2date = false;
     if (job->shouldProceed()) {
-        // WPMUtils::writeln("before planUpdate");
+        qCDebug(npackd) << "planning updates for" << toUpdate.size() <<
+                "packages and " << toUpdate2.size() << "version ranges";
+
         QString err = rep->planUpdates(toUpdate, toUpdate2, ops,
                 keepDirectories, install, file, true);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
+            qCDebug(npackd) << "the update plan contains" << ops.size() <<
+                    "operations";
+
             job->setProgress(0.15);
             up2date = ops.size() == 0;
         }
