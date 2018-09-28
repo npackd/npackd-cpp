@@ -1076,28 +1076,34 @@ QString AbstractRepository::getPackageTitleAndName(const QString &name)
 Package* AbstractRepository::findOnePackage(
         const QString& package, QString* err)
 {
+    *err = "";
+
     DBRepository* rep = DBRepository::getDefault();
     Package* p = rep->findPackage_(package);
 
-    if (!p && !package.contains('.')) {
-        QList<Package*> packages = rep->findPackagesByShortName(package);
+    if (!p) {
+        if (!package.contains('.')) {
+            QList<Package*> packages = rep->findPackagesByShortName(package);
 
-        if (packages.count() == 0) {
-            *err = QObject::tr("Unknown package: %1").arg(package);
-        } else if (packages.count() > 1) {
-            QString names;
-            for (int i = 0; i < packages.count(); ++i) {
-                if (i != 0)
-                    names.append(", ");
-                Package* pi = packages.at(i);
-                names.append(pi->title).append(" (").append(pi->name).
-                        append(")");
+            if (packages.count() == 0) {
+                *err = QObject::tr("Unknown package: %1").arg(package);
+            } else if (packages.count() > 1) {
+                QString names;
+                for (int i = 0; i < packages.count(); ++i) {
+                    if (i != 0)
+                        names.append(", ");
+                    Package* pi = packages.at(i);
+                    names.append(pi->title).append(" (").append(pi->name).
+                            append(")");
+                }
+                *err = QObject::tr("More than one package was found: %1").
+                        arg(names);
+                qDeleteAll(packages);
+            } else {
+                p = packages.at(0);
             }
-            *err = QObject::tr("More than one package was found: %1").
-                    arg(names);
-            qDeleteAll(packages);
         } else {
-            p = packages.at(0);
+            *err = QObject::tr("Unknown package: %1").arg(package);
         }
     }
 
