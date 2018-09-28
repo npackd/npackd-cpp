@@ -1337,7 +1337,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
             "DESCRIPTION, LICENSE, CATEGORY0, "
             "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
             "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME "
-            "LIMIT 1")))
+            "LIMIT 2")))
         err = getErrorString(q);
 
     if (err.isEmpty()) {
