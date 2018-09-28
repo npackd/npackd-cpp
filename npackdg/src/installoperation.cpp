@@ -20,6 +20,12 @@ InstallOperation *InstallOperation::clone() const
     return r;
 }
 
+QString InstallOperation::toString() const
+{
+    return package + " " + version.getVersionString() + " " +
+            (install ? "install" : "uninstall");
+}
+
 void InstallOperation::simplify(QList<InstallOperation*> ops)
 {
     for (int i = 0; i < ops.size(); ) {

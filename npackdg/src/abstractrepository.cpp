@@ -745,6 +745,11 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 }
             }
 
+            qCDebug(npackd) << "planUpdates" <<
+                    (b ? b->version.getVersionString() : "not installed") <<
+                    "to" <<
+                    a->version.getVersionString();
+
             if (b == 0 || a->version.compare(b->version) > 0) {
                 newest.append(a);
                 newesti.append(b);
@@ -794,6 +799,11 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 }
             }
 
+            qCDebug(npackd) << "planUpdates" <<
+                    (b ? b->version.getVersionString() : "not installed") <<
+                    "to" <<
+                    a->version.getVersionString();
+
             if (b == 0 || a->version.compare(b->version) > 0) {
                 newest.append(a);
                 newesti.append(b);
@@ -803,6 +813,8 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
     }
 
     if (err.isEmpty()) {
+        qCDebug(npackd) << "planUpdates: searching install/uninstall pairs";
+
         // many packages cannot be installed side-by-side and overwrite for
         // example
         // the shortcuts of the old version in the start menu. We try to find
@@ -820,6 +832,11 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
             if (b) {
                 QString err = b->planUninstallation(
                         installedCopy, ops2);
+
+                qCDebug(npackd) << "planUpdates: uninstall" <<
+                        b->package << "resulted in" << ops2.count() <<
+                        "operations with result:" << err;
+
                 if (err.isEmpty()) {
                     QString where;
                     if (i == 0 && !where_.isEmpty())
@@ -829,6 +846,11 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
 
                     err = newest.at(i)->planInstallation(installedCopy, ops2,
                             avoid, where);
+
+                    qCDebug(npackd) << "planUpdates: install and uninstall" <<
+                            b->package << "resulted in" << ops2.count() <<
+                            "operations with result:" << err;
+
                     if (err.isEmpty()) {
                         if (ops2.count() == 2) {
                             used[i] = true;
@@ -846,11 +868,13 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
     }
 
     if (err.isEmpty()) {
+        qCDebug(npackd) << "planUpdates:" << newest.count() << "packages";
+
         for (int i = 0; i < newest.count(); i++) {
             if (!used[i]) {
                 bool undo = false;
 
-                // another package should not be completly uninstalled
+                // another package should not be completely uninstalled
                 InstalledPackages installedCopy(installed);
 
                 int oldSize = ops.size();
@@ -900,7 +924,16 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
     }
 
     if (err.isEmpty()) {
+        qCDebug(npackd) << "planUpdates: simplifying" << ops.count() <<
+                "operations";
+
         InstallOperation::simplify(ops);
+    }
+
+    qCDebug(npackd) << "planUpdates: results in" << ops.count() <<
+            "operations with result" << err;
+    for (int i = 0; i < ops.count(); i++) {
+        qCDebug(npackd) << "planUpdates:" << i << ops.at(i)->toString();
     }
 
     qDeleteAll(newest);

@@ -41,6 +41,11 @@ public:
     InstallOperation* clone() const;
 
     /**
+     * @return debug representation
+     */
+    QString toString() const;
+
+    /**
      * Simplifies a list of operations.
      *
      * @param ops a list of operations. The list will be modified and
