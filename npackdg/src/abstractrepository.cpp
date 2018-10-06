@@ -833,7 +833,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 QString err = b->planUninstallation(
                         installedCopy, ops2);
 
-                qCDebug(npackd) << "planUpdates: uninstall" <<
+                qCDebug(npackd) << "planUpdates: 1st uninstall" <<
                         b->package << "resulted in" << ops2.count() <<
                         "operations with result:" << err;
 
@@ -847,7 +847,7 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                     err = newest.at(i)->planInstallation(installedCopy, ops2,
                             avoid, where);
 
-                    qCDebug(npackd) << "planUpdates: install and uninstall" <<
+                    qCDebug(npackd) << "planUpdates: 1st install and uninstall" <<
                             b->package << "resulted in" << ops2.count() <<
                             "operations with result:" << err;
 
@@ -894,6 +894,10 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                 if (b) {
                     if (safe) {
                         err = b->planUninstallation(installedCopy, ops);
+                        qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
+                                b->package << "resulted in" << ops.count() <<
+                                "operations with result:" << err;
+
                         if (!err.isEmpty())
                             break;
 
@@ -907,6 +911,10 @@ QString AbstractRepository::planUpdates(const QList<Package*> packages,
                         }
                     } else {
                         err = b->planUninstallation(installedCopy, ops);
+
+                        qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
+                                b->package << "resulted in" << ops.count() <<
+                                "operations with result:" << err;
 
                         if (!err.isEmpty())
                             break;

@@ -1371,7 +1371,7 @@ void App::update(Job* job)
                 "packages and " << toUpdate2.size() << "version ranges";
 
         QString err = rep->planUpdates(toUpdate, toUpdate2, ops,
-                keepDirectories, install, file, true);
+                keepDirectories, install, file, false);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
