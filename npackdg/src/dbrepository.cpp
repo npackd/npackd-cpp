@@ -18,6 +18,7 @@
 #include <QFuture>
 #include <QSqlResult>
 #include <QtPlugin>
+#include <QMutexLocker>
 
 #include "package.h"
 #include "repository.h"
@@ -75,7 +76,7 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
 {
     QString err;
 
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     if (!insertInstalledQuery) {
         insertInstalledQuery = new MySQLQuery(db);
@@ -118,14 +119,12 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> insta
         insertInstalledQuery->finish();
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 QString DBRepository::saveURLSize(const QString& url, int64_t size)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -153,8 +152,6 @@ QString DBRepository::saveURLSize(const QString& url, int64_t size)
         insertURLSizeQuery->finish();
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
@@ -165,20 +162,18 @@ DBRepository* DBRepository::getDefault()
 
 QString DBRepository::exec(const QString& sql)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     MySQLQuery q(db);
     q.exec(sql);
     QString err = getErrorString(q);
-
-    this->mutex.unlock();
 
     return err;
 }
 
 int DBRepository::count(const QString& sql, QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     int n = 0;
 
@@ -200,14 +195,12 @@ int DBRepository::count(const QString& sql, QString* err)
             *err = QObject::tr("Not a number");
     }
 
-    this->mutex.unlock();
-
     return n;
 }
 
 QString DBRepository::saveLicense(License* p, bool replace)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -234,15 +227,13 @@ QString DBRepository::saveLicense(License* p, bool replace)
             err = getErrorString(q);
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 bool DBRepository::tableExists(QSqlDatabase* db,
         const QString& table, QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = QStringLiteral("");
 
@@ -262,15 +253,13 @@ bool DBRepository::tableExists(QSqlDatabase* db,
         e = q.next();
     }
 
-    this->mutex.unlock();
-
     return e;
 }
 
 bool DBRepository::columnExists(QSqlDatabase* db,
         const QString& table, const QString& column, QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = QStringLiteral("");
 
@@ -291,14 +280,12 @@ bool DBRepository::columnExists(QSqlDatabase* db,
         }
     }
 
-    this->mutex.unlock();
-
     return e;
 }
 
 Package *DBRepository::findPackage_(const QString &name)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -350,14 +337,12 @@ Package *DBRepository::findPackage_(const QString &name)
             err = readLinks(r);
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
 QList<Package*> DBRepository::findPackages(const QStringList& names)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QList<Package*> ret;
     QString err;
@@ -431,14 +416,12 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
         start += block;
     }
 
-    this->mutex.unlock();
-
     return ret;
 }
 
 QMap<QString, URLInfo*> DBRepository::findURLInfos(QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = "";
 
@@ -464,18 +447,14 @@ QMap<QString, URLInfo*> DBRepository::findURLInfos(QString* err)
         }
     }
 
-    this->mutex.unlock();
-
     return ret;
 }
 
 QString DBRepository::findCategory(int cat) const
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString r = categories.value(cat);
-
-    this->mutex.unlock();
 
     return r;
 }
@@ -483,7 +462,7 @@ QString DBRepository::findCategory(int cat) const
 PackageVersion* DBRepository::findPackageVersion_(
         const QString& package, const Version& version, QString* err) const
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = "";
 
@@ -509,15 +488,13 @@ PackageVersion* DBRepository::findPackageVersion_(
         r = PackageVersion::parse(q.value(2).toByteArray(), err);
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
 QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         QString *err) const
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = "";
 
@@ -546,15 +523,13 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
 
-    this->mutex.unlock();
-
     return r;
 }
 
 QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
         QString *err) const
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = QStringLiteral("");
 
@@ -582,15 +557,13 @@ QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
 
-    this->mutex.unlock();
-
     return r;
 }
 
 QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
         const QString &name, QString *err) const
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = "";
 
@@ -622,14 +595,12 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
 
     qSort(r.begin(), r.end(), packageVersionLessThan3);
 
-    this->mutex.unlock();
-
     return r;
 }
 
 License *DBRepository::findLicense_(const QString& name, QString *err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = QStringLiteral("");
 
@@ -662,15 +633,11 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
         r = cached->clone();
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
 QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
 {
-    this->mutex.lock();
-
     QString txt = title.toLower();
     txt.replace('(', ' ');
     txt.replace(')', ' ');
@@ -761,8 +728,6 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
                 "found" << what;
     }
 
-    this->mutex.unlock();
-
     return packages;
 }
 
@@ -833,7 +798,7 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
 
 QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = "";
 
@@ -855,8 +820,6 @@ QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
             }
         }
     }
-
-    this->mutex.unlock();
 
     return r;
 }
@@ -923,7 +886,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
             where + QStringLiteral(" GROUP BY CATEGORY.ID, CATEGORY.NAME "
             "ORDER BY CATEGORY.NAME");
 
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     MySQLQuery q(db);
 
@@ -950,8 +913,6 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
         }
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
@@ -959,7 +920,7 @@ QStringList DBRepository::findPackagesWhere(const QString& sql,
         const QList<QVariant>& params,
         QString *err) const
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = QStringLiteral("");
 
@@ -984,15 +945,13 @@ QStringList DBRepository::findPackagesWhere(const QString& sql,
         }
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
 int DBRepository::insertCategory(int parent, int level,
         const QString& category, QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     int id = -1;
 
@@ -1044,14 +1003,12 @@ int DBRepository::insertCategory(int parent, int level,
 
     selectCategoryQuery->finish();
 
-    this->mutex.unlock();
-
     return id;
 }
 
 QString DBRepository::deleteLinks(const QString& name)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -1071,14 +1028,12 @@ QString DBRepository::deleteLinks(const QString& name)
         deleteLinkQuery->finish();
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 QString DBRepository::deleteCmdFiles(const QString& name, const Version& version)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -1102,14 +1057,12 @@ QString DBRepository::deleteCmdFiles(const QString& name, const Version& version
         deleteCmdFilesQuery->finish();
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 QString DBRepository::saveLinks(Package* p)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -1155,8 +1108,6 @@ QString DBRepository::saveLinks(Package* p)
         }
         insertLinkQuery->finish();
     }
-
-    this->mutex.unlock();
 
     return err;
 }
@@ -1207,7 +1158,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
         }
     }
 
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     if (!insertPackageQuery) {
         insertPackageQuery = new MySQLQuery(db);
@@ -1318,14 +1269,12 @@ QString DBRepository::savePackage(Package *p, bool replace)
             err = saveLinks(p);
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -1367,14 +1316,12 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
         r.append(p);
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
 QString DBRepository::readLinks(Package* p)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -1396,14 +1343,12 @@ QString DBRepository::readLinks(Package* p)
         p->links.insert(q.value(0).toString(), q.value(1).toString());
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -1499,15 +1444,13 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         q->finish();
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
         const QString &guid, QString* err) const
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     *err = "";
 
@@ -1530,8 +1473,6 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
             r = PackageVersion::parse(q.value(2).toByteArray(), err);
         }
     }
-
-    this->mutex.unlock();
 
     return r;
 }
@@ -2078,7 +2019,7 @@ QString DBRepository::getErrorString(const MySQLQuery &q)
 
 QString DBRepository::readCategories()
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -2102,14 +2043,12 @@ QString DBRepository::readCategories()
         }
     }
 
-    this->mutex.unlock();
-
     return err;
 }
 
 QStringList DBRepository::readRepositories(QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QStringList r;
 
@@ -2132,14 +2071,12 @@ QStringList DBRepository::readRepositories(QString* err)
         }
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
 QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString r;
 
@@ -2162,15 +2099,13 @@ QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
         }
     }
 
-    this->mutex.unlock();
-
     return r;
 }
 
 void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
         QString* err)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     MySQLQuery q(db);
 
@@ -2185,14 +2120,12 @@ void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
         if (!q.exec())
             *err = getErrorString(q);
     }
-
-    this->mutex.unlock();
 }
 
 
 QString DBRepository::saveRepositories(const QStringList &reps)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err = exec(QStringLiteral("DELETE FROM REPOSITORY"));
 
@@ -2214,8 +2147,6 @@ QString DBRepository::saveRepositories(const QStringList &reps)
                 err = getErrorString(q);
         }
     }
-
-    this->mutex.unlock();
 
     return err;
 }
@@ -2246,7 +2177,7 @@ QString DBRepository::getCategoryPath(int c0, int c1, int c2, int c3,
 
 QString DBRepository::updateStatus(const QString& package)
 {
-    this->mutex.lock();
+    QMutexLocker ml(&this->mutex);
 
     QString err;
 
@@ -2303,8 +2234,6 @@ QString DBRepository::updateStatus(const QString& package)
         }
     }
     qDeleteAll(pvs);
-
-    this->mutex.unlock();
 
     return err;
 }
