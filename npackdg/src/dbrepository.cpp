@@ -30,7 +30,8 @@
 #include "repositoryxmlhandler.h"
 #include "downloader.h"
 
-//Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
+// this is necessary in Qt 5.11 and earlier versions for the static build
+Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
 
 static bool packageVersionLessThan3(const PackageVersion* a,
         const PackageVersion* b)

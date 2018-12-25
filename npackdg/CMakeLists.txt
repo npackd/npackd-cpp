@@ -117,6 +117,7 @@ set(NPACKDG_SOURCES
     src/downloadsizefinder.cpp
     src/clprocessor.cpp
     src/exportrepositoryframe.cpp
+    src/npackdg_plugin_import.cpp
     src/urlinfo.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
