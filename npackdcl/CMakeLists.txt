@@ -45,6 +45,8 @@ link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
 
+link_directories("$ENV{QTDIR}\\lib")
+
 if(NOT MSVC)
   SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
   SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
@@ -144,14 +146,20 @@ add_executable(npackdcl
     ${NPACKDCL_HEADERS}
 )
 
-# qsqlite and qtpcre2 are somehow necessary in Qt 5.11 for static builds on
-# Appveyor
+# libraries listed here like 'icuin' are necessary in Qt 5.12 for static builds
 target_link_libraries(npackdcl
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
     qsqlite
     Qt5::Sql Qt5::Xml Qt5::Core
     qtpcre2
+
+    icuin
+    icuuc
+    icudt
+    icutu
+
+    userenv
     winmm
     ole32
     uuid

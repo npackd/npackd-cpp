@@ -134,6 +134,13 @@ target_link_libraries(ftests
     qsqlite
     Qt5::Sql Qt5::Test Qt5::Xml Qt5::Core
     qtpcre2
+    icuin
+    icuuc
+    icudt
+    icutu
+    qtharfbuzz
+
+    userenv
     winmm
     ole32
     uuid

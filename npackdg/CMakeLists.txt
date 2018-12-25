@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
 project(npackdg CXX C)
 
-set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
+set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
 # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -51,6 +51,8 @@ link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\styles")
+
+link_directories("$ENV{QTDIR}\\lib")
 
 #  -Wl,--major-os-version,6 -Wl,--minor-os-version,1
 if(NOT MSVC)
@@ -219,22 +221,50 @@ add_executable(npackdg WIN32
 QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
-# qsqlite and qtpcre2 are somehow necessary in Qt 5.11 for static builds on
-# Appveyor
+# libraries listed here like 'icuin' are necessary in Qt 5.12 for static builds
 target_link_libraries(npackdg
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
 
     qsqlite
-    Qt5::WinExtras Qt5::Widgets Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
+    qicns
+    qico
+    qjpeg
+    qgif
+    qjp2
+    qtga
+    qtiff
+    qwbmp
+    qwebp
+    Qt5::WinExtras qwindows qwindowsvistastyle Qt5::Widgets Qt5FontDatabaseSupport
+    Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
+
+    Qt5ThemeSupport
+    Qt5EventDispatcherSupport
+    Qt5FontDatabaseSupport
+    Qt5PlatformCompositorSupport
+    Qt5VulkanSupport
+    Qt5WindowsUIAutomationSupport
+    qdirect2d
+
+    jasper
+    icuin
+    icuuc
+    icudt
+    icutu
+    qtpcre2
+    qtharfbuzz
+    qtfreetype
+    qtlibpng
+    jpeg
 
     imm32
     winmm 
     glu32 
     mpr
     
-    qtpcre2
-
+    userenv
+    wtsapi32
     opengl32
     ole32
     uuid
