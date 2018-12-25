@@ -51,8 +51,6 @@
 
 bool WPMUtils::adminMode = true;
 
-int WPMUtils::privileges = 0;
-
 QAtomicInt WPMUtils::nextNamePipeId;
 
 HANDLE WPMUtils::hEventLog = 0;
@@ -3701,12 +3699,6 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
 
 bool WPMUtils::hasAdminPrivileges()
 {
-    if (privileges == 1)
-        return false;
-
-    if (privileges == 2)
-        return true;
-
     bool fReturn = false;
 	const DWORD ACCESS_READ_CONST = 1;
 	const DWORD ACCESS_WRITE_CONST = 2;
@@ -3828,13 +3820,9 @@ bool WPMUtils::hasAdminPrivileges()
     if (hToken)
         CloseHandle(hToken);
 
-    if (fReturn)
-		privileges = 2;
-	else
-		privileges = 1;
+	adminMode = fReturn;
 
     qCDebug(npackd) << "hasAdminPrivileges" << fReturn;
-
 
     return fReturn;
 }

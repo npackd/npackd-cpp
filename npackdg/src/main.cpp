@@ -44,6 +44,10 @@ int main(int argc, char *argv[])
 
     QLoggingCategory::setFilterRules("npackd=false");
 
+#if NPACKED_ADMIN != 1
+	WPMUtils::hasAdminPrivileges();
+#endif
+
     QApplication a(argc, argv);
 
     QString packageName;

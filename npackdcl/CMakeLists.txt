@@ -5,7 +5,6 @@ project(npackdcl CXX C)
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake")
-SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
@@ -19,6 +18,13 @@ if(NOT MSVC)
   if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   else()
+    set(CMAKE_CXX_STANDARD 11)
+  endif ()
+else()
+  if (MSVC_VERSION LESS "1800")
+    message(FATAL_ERROR "No suitable compiler! C++11 required!")
+  endif()
+  if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 3.0)
     set(CMAKE_CXX_STANDARD 11)
   endif ()
 endif()
@@ -39,7 +45,10 @@ link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
+if(NOT MSVC)
+  SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
+  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
+endif()
 
 include(CheckCXXCompilerFlag)
 
@@ -115,6 +124,7 @@ set(NPACKDCL_HEADERS
     src/app.h
 )
 
+option(NPACKD_ADMIN "Force admin right on program" TRUE)
 set(OUTPUT_FILE_NAME "npackdcl.exe")
 configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
 file(COPY ../npackdg/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -125,7 +135,7 @@ if(MSVC)
     set(QT_USE_IMPORTED_TARGETS TRUE)
     find_package(Qt5Core REQUIRED)
     set(QT_BIN_DIR ${_qt5Core_install_prefix}/bin)
-    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/ncl.vcxproj.user @ONLY)
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.vcxproj.user @ONLY)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql REQUIRED)
@@ -136,9 +146,7 @@ add_executable(npackdcl
 target_link_libraries(npackdcl
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
-    qsqlite
     Qt5::Sql Qt5::Xml Qt5::Core
-    qtpcre2
     winmm
     ole32
     uuid
@@ -152,6 +160,11 @@ target_link_libraries(npackdcl
 )
 target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
 target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+if(${NPACKD_ADMIN})
+  target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=1)
+else()
+  target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=0)
+endif()
 
 install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES ../CrystalIcons_LICENSE.txt ../LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})

@@ -12,7 +12,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake"
     "${QTDIR}/lib/cmake"
     "${QTDIR}/qtwinextras/lib/cmake/Qt5WinExtras")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
@@ -26,6 +25,13 @@ if(NOT MSVC)
   if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   else()
+    set(CMAKE_CXX_STANDARD 11)
+  endif ()
+else()
+  if (MSVC_VERSION LESS "1800")
+    message(FATAL_ERROR "No suitable compiler! C++11 required!")
+  endif()
+  if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 3.0)
     set(CMAKE_CXX_STANDARD 11)
   endif ()
 endif()
@@ -47,7 +53,10 @@ link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\styles")
 
 #  -Wl,--major-os-version,6 -Wl,--minor-os-version,1
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os -Wl,--subsystem,windows:6.1")
+if(NOT MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
+  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os -Wl,--subsystem,windows:6.1")
+endif()
 
 include(CheckCXXCompilerFlag)
 
@@ -108,7 +117,6 @@ set(NPACKDG_SOURCES
     src/downloadsizefinder.cpp
     src/clprocessor.cpp
     src/exportrepositoryframe.cpp
-    src/npackdg_plugin_import.cpp
     src/urlinfo.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
@@ -182,10 +190,15 @@ set(NPACKDG_TRANSLATIONS
     src/npackdg_de.ts
 )
 
+option(NPACKD_ADMIN "Force admin right on program" TRUE)
 set(OUTPUT_FILE_NAME "npackdg.exe")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+if(${NPACKD_ADMIN})
+  file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
+else()
+  configure_file(../npackdcl/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
+endif()
 list(APPEND NPACKDG_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc)
 
 if(MSVC)
@@ -193,7 +206,7 @@ if(MSVC)
     set(QT_USE_IMPORTED_TARGETS TRUE)
     find_package(Qt5Core REQUIRED)
     set(QT_BIN_DIR ${_qt5Core_install_prefix}/bin)
-    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackd.vcxproj.user @ONLY)
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.vcxproj.user @ONLY)
 endif() 
 
 find_package(Qt5 COMPONENTS Gui xml sql widgets WinExtras LinguistTools REQUIRED)
@@ -207,25 +220,13 @@ qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 target_link_libraries(npackdg
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
-    
-    qsqlite
-    Qt5::WinExtras Qt5::Widgets qwindows qwindowsvistastyle Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
-
-    Qt5ThemeSupport
-    Qt5EventDispatcherSupport
-    Qt5FontDatabaseSupport
-    Qt5PlatformCompositorSupport
-    qdirect2d
-    qico 
-    qtlibpng
+    Qt5::WinExtras Qt5::Widgets Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
 
     imm32
     winmm 
     glu32 
     mpr
     
-    qtharfbuzz
-    qtpcre2
     opengl32
     ole32
     uuid
@@ -241,6 +242,11 @@ target_link_libraries(npackdg
 )
 target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
 target_compile_definitions(npackdg PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+if(${NPACKD_ADMIN})
+  target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=1)
+else()
+  target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=0)
+endif()
 
 install(TARGETS npackdg DESTINATION ${CMAKE_INSTALL_PREFIX})
 if(MSVC)
