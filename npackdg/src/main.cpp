@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     QLoggingCategory::setFilterRules("npackd=false");
 
 #if NPACKED_ADMIN != 1
-	WPMUtils::hasAdminPrivileges();
+    WPMUtils::hasAdminPrivileges();
 #endif
 
     QApplication a(argc, argv);
@@ -82,6 +82,8 @@ int main(int argc, char *argv[])
 
     // July, 25 2018:
     // "bmp", "cur", "gif", "ico", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "xbm", "xpm"
+    // December, 25 2018:
+    // "bmp", "cur", "gif", "icns", "ico", "jp2", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "tga", "tif", "tiff", "wbmp", "webp", "xbm", "xpm"
     qCDebug(npackd) << QImageReader::supportedImageFormats();
 
     // July, 25 2018: "windowsvista", "Windows", "Fusion"
