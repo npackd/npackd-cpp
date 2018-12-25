@@ -218,9 +218,14 @@ add_executable(npackdg WIN32
 )
 QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
+
+# qsqlite and qtpcre2 are somehow necessary in Qt 5.11 for static builds on
+# Appveyor
 target_link_libraries(npackdg
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
+
+    qsqlite
     Qt5::WinExtras Qt5::Widgets Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
 
     imm32
@@ -228,6 +233,8 @@ target_link_libraries(npackdg
     glu32 
     mpr
     
+    qtpcre2
+
     opengl32
     ole32
     uuid

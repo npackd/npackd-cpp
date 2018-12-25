@@ -143,10 +143,15 @@ add_executable(npackdcl
     ${NPACKDCL_SOURCES}
     ${NPACKDCL_HEADERS}
 )
+
+# qsqlite and qtpcre2 are somehow necessary in Qt 5.11 for static builds on
+# Appveyor
 target_link_libraries(npackdcl
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
+    qsqlite
     Qt5::Sql Qt5::Xml Qt5::Core
+    qtpcre2
     winmm
     ole32
     uuid
