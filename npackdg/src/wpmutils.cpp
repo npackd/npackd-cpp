@@ -3820,7 +3820,7 @@ bool WPMUtils::hasAdminPrivileges()
     if (hToken)
         CloseHandle(hToken);
 
-    adminMode = fReturn;
+    //adminMode = fReturn;
 
     qCDebug(npackd) << "hasAdminPrivileges" << fReturn;
 

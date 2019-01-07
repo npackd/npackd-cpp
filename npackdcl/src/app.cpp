@@ -88,6 +88,9 @@ int App::process()
     cl.add("keep-directories", 'k',
             "use the same directories for updated packages", "", false,
            "update");
+    cl.add("local", 'l',
+            "install packages for the current user instead of system-wide",
+            "", false);
     cl.add("non-interactive", 'n',
             "assume that there is no user and do not ask for input", "", false);
     cl.add("package", 'p',
@@ -133,6 +136,9 @@ int App::process()
         this->interactive = !cl.isPresent("non-interactive");
 
         this->debug = cl.isPresent("debug");
+
+        if (cl.isPresent("local"))
+            WPMUtils::adminMode = false;
 
         if (debug) {
             clp.setUpdateRate(0);
