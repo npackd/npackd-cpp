@@ -95,7 +95,7 @@ int App::process()
             "assume that there is no user and do not ask for input", "", false);
     cl.add("package", 'p',
             "internal package name (e.g. com.example.Editor or just Editor)",
-            "package", true, "add,info,path,place,remove,update,rm");
+            "package", true, "add,info,path,place,remove,update,rm,build");
     cl.add("query", 'q', "search terms (e.g. editor)",
             "search terms", false, "search");
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
@@ -125,6 +125,10 @@ int App::process()
     cl.add("title", 0, "package title or a regular expression in JavaScript syntax. Example: /PDF/i",
             "title", false, "remove-scp");
 
+    cl.add("output-package", 0,
+            "internal package name (e.g. com.example.Editor or just Editor)",
+            "package", true, "build");
+
     QString err = cl.parse();
     if (!err.isEmpty()) {
         err = "Error: " + err;
@@ -142,7 +146,7 @@ int App::process()
 
         if (debug) {
             clp.setUpdateRate(0);
-            QLoggingCategory::setFilterRules(QStringLiteral("npackd=true"));
+            QLoggingCategory::setFilterRules("npackd=true");
         }
     }
 
@@ -238,6 +242,8 @@ int App::process()
             setInstallPath(job);
         } else if (cmd == "install-dir") {
             getInstallPath(job);
+        } else if (cmd == "build") {
+            build(job);
         } else {
             job->setErrorMessage(QStringLiteral("Wrong command: ") + cmd +
                     QStringLiteral(". Try \"ncl help\""));
@@ -325,6 +331,9 @@ void App::usage(Job* job)
         "        installed, if none is specified.",
         "    ncl add-repo --url <repository>",
         "        appends a repository to the system-wide list of package sources",
+        "    ncl build --package <package> [--version <version> | --versions <versions>])",
+        "            --output-package <package>",
+        "        build a package from another one (e.g. a binary from source code)",
         "    ncl check",
         "        checks the installed packages for missing dependencies",
         "    ncl detect [--user <user name>] [--password <password>]",
@@ -1566,6 +1575,102 @@ void App::processInstallOperations(Job *job,
     }
 }
 
+void App::build(Job* job)
+{
+    job->setTitle("Building a package");
+
+    DBRepository* rep = DBRepository::getDefault();
+    if (job->shouldProceed()) {
+        QString err = rep->openDefault();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
+    if (job->shouldProceed()) {
+        /* we ignore the returned error as it should also work for non-admins */
+        addNpackdCL();
+    }
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+
+    if (job->shouldProceed()) {
+        QString err = ip->readRegistryDatabase();
+        if (!err.isEmpty()) {
+            job->setErrorMessage(err);
+        } else {
+            job->setProgress(0.1);
+        }
+    }
+
+    std::unique_ptr<Dependency> sourceDep;
+
+    if (job->shouldProceed()) {
+        QString err;
+        QList<Dependency*> pvs =
+                WPMUtils::getPackageVersionOptions(cl, &err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else if (pvs.size() != 1)
+            job->setErrorMessage(
+                    QObject::tr("Exactly one source package version should be specified"));
+        else {
+            sourceDep.reset(pvs.takeAt(0));
+        }
+
+        qDeleteAll(pvs);
+    }
+
+    std::unique_ptr<InstalledPackageVersion> source;
+    if (job->shouldProceed()) {
+        source.reset(rep->findHighestInstalledMatch(*sourceDep));
+        if (!source)
+            job->setErrorMessage(
+                    QObject::tr("The installed source package version was not found"));
+    }
+
+    QString outputPackage;
+    if (job->shouldProceed()) {
+        outputPackage = cl.get("output-package");
+        if (outputPackage.isNull()) {
+            job->setErrorMessage("Missing option: --output-package");
+        }
+    }
+
+    std::unique_ptr<PackageVersion> pv;
+    if (job->shouldProceed()) {
+        QString err;
+        pv.reset(rep->findPackageVersion_(source->package, source->version,
+                &err));
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else if (!pv)
+            job->setErrorMessage(QObject::tr("The source package version was not found"));
+    }
+
+    QString outputDir;
+    if (job->shouldProceed()) {
+        std::unique_ptr<PackageVersion> output(new PackageVersion(outputPackage,
+                pv->version));
+        outputDir = output->getPreferredInstallationDirectory();
+        if (!QDir().mkpath(outputDir))
+            job->setErrorMessage(QObject::tr("Cannot create the directory %1").
+                    arg(outputDir));
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.8, QObject::tr("Build package"), true, true);
+        pv->build(sub, outputPackage, outputDir, true);
+    }
+
+    if (job->shouldProceed()) {
+        WPMUtils::writeln(QString(
+                "The package %1 was built successfully in %2").arg(
+                pv->toString()).arg(outputDir));
+    }
+
+    job->complete();
+}
+
 void App::add(Job* job)
 {
     job->setTitle("Installing packages");
@@ -1584,7 +1689,7 @@ void App::add(Job* job)
     InstalledPackages* ip = InstalledPackages::getDefault();
 
     if (job->shouldProceed()) {
-        QString err = InstalledPackages::getDefault()->readRegistryDatabase();
+        QString err = ip->readRegistryDatabase();
         if (!err.isEmpty()) {
             job->setErrorMessage(err);
         } else {
@@ -1630,7 +1735,7 @@ void App::add(Job* job)
     QList<InstallOperation*> ops;
     if (job->shouldProceed()) {
         QString err;
-        InstalledPackages installed(*InstalledPackages::getDefault());
+        InstalledPackages installed(*ip);
 
         QList<PackageVersion*> avoid;
         for (int i = 0; i < toInstall.size(); i++) {

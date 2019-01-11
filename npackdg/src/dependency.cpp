@@ -1,3 +1,5 @@
+#include <limits>
+
 #include "dependency.h"
 #include "repository.h"
 #include "packageversion.h"
@@ -118,6 +120,22 @@ bool Dependency::setVersions(const QString versions)
     this->max = max_;
 
     return true;
+}
+
+void Dependency::setUnboundedVersions()
+{
+    this->minIncluded = true;
+    this->min.setVersion(0, 0);
+    this->maxIncluded = true;
+    this->max.setVersion(std::numeric_limits<int>::max(), 0);
+}
+
+void Dependency::setExactVersion(const Version &version)
+{
+    this->minIncluded = true;
+    this->min = version;
+    this->maxIncluded = true;
+    this->max = version;
 }
 
 bool Dependency::test(const Version& v) const

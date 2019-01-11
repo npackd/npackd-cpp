@@ -507,8 +507,8 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             }
             */
 
-            this->executeFile2(sub, d.absolutePath(), uninstallationScript,
-                    ".Npackd\\Uninstall.log",
+            this->executeFile2(sub, d.absolutePath(), usfn,
+                    d.absolutePath() + "\\.Npackd\\Uninstall.log",
                     env, printScriptOutput);
 
             if (ush != INVALID_HANDLE_VALUE) {
@@ -1705,8 +1705,10 @@ void PackageVersion::install(Job* job, const QString& where,
 
             addDependencyVars(&env);
 
-            this->executeFile2(exec, d.absolutePath(), installationScript,
-                    ".Npackd\\Install.log", env, printScriptOutput);
+            this->executeFile2(exec, d.absolutePath(),
+                    d.absolutePath() + "\\" + installationScript,
+                    d.absolutePath() + "\\.Npackd\\Install.log",
+                    env, printScriptOutput);
             if (exec->getErrorMessage().isEmpty()) {
                 QString path = d.absolutePath();
                 path.replace('/', '\\');
@@ -1892,16 +1894,40 @@ QString PackageVersion::getStatus() const
     return status;
 }
 
+void PackageVersion::build(Job* job, const QString& outputPackage,
+        const QString& outputDir,
+    bool printScriptOutput)
+{
+    // prepare the environment variables
+    QStringList env;
+    QString err = addBasicVars(&env);
+    if (!err.isEmpty())
+        job->setErrorMessage(err);
+    addDependencyVars(&env);
+
+    QString filename = ".Npackd\\Build-" + outputPackage + ".bat";
+    QFileInfo d(this->getPath() + "\\" + filename);
+    if (!d.exists() || !d.isFile()) {
+        job->setErrorMessage(QObject::tr(
+                "%1 is missing or is not a directory").arg(d.absoluteFilePath()));
+        job->complete();
+    } else {
+        executeFile2(job, outputDir, this->getPath() + "\\" + filename,
+                this->getPath() + "\\.Npackd\\Build-" + outputPackage + ".log",
+                env, printScriptOutput, false);
+    }
+}
+
 void PackageVersion::executeFile2(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile,
-        const QStringList& env, bool printScriptOutput)
+        const QStringList& env, bool printScriptOutput, bool unicode)
 {
     WPMUtils::executeBatchFile(
-            job, where, path, outputFile, env, printScriptOutput);
+            job, where, path, outputFile, env, printScriptOutput, unicode);
 
     if (!job->getErrorMessage().isEmpty()) {
-        QString out = where + "\\" + outputFile;
+        QString out = outputFile;
 
         if (QFile::exists(out)) {
             QString lastOutputLines;
@@ -2207,8 +2233,10 @@ void PackageVersion::stop(Job* job, int programCloseType,
 
         addDependencyVars(&env);
 
-        this->executeFile2(exec, d.absolutePath(), ".Npackd\\Stop.bat",
-                ".Npackd\\Stop.log", env, printScriptOutput);
+        this->executeFile2(exec, d.absolutePath(),
+                d.absolutePath() + "\\.Npackd\\Stop.bat",
+                d.absolutePath() + "\\.Npackd\\Stop.log", env,
+                printScriptOutput);
     } else {
         WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType,
                 stoppedServices);

@@ -53,6 +53,7 @@ private:
     void getInstallPath(Job *job);
     void setInstallPath(Job *job);
     void removeSCP(Job *job);
+    void build(Job *job);
 
     bool confirm(const QList<InstallOperation *> ops, QString *title,
             QString *err);

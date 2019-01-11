@@ -51,6 +51,16 @@ public:
     bool setVersions(const QString versions);
 
     /**
+     * @brief changes the range so that any version is allowed
+     */
+    void setUnboundedVersions();
+
+    /**
+     * @brief changes the range so that only the specified version is allowed
+     */
+    void setExactVersion(const Version& version);
+
+    /**
      * Checks whether this dependency is automatically fulfilled if the
      * specified dependency is already fulfilled.
      *

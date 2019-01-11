@@ -64,11 +64,12 @@ private:
      * @param env additional environment variables
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
+     * @param unicode true = use the /U parameter for cmd.exe
      */
     void executeFile2(Job *job, const QString &where, const QString &path,
             const QString &outputFile,
             const QStringList &env,
-            bool printScriptOutput);
+            bool printScriptOutput, bool unicode=true);
 
     void deleteShortcuts(const QString& dir,
             Job* job, bool menu, bool desktop, bool quickLaunch);
@@ -525,6 +526,20 @@ public:
      * @param interactive true = interactive
      */
     void downloadTo(Job &job, const QString &filename, bool interactive);
+
+    /**
+     * Builds another package from this one. This is normally used to build a
+     * binary from the sources.
+     *
+     * @param job job for this method
+     * @param outputDir an existing directory where the output package
+     *     should be built
+     * @param outputPackage the name of the package that should be built
+     * @param printScriptOutput true = redirect the script output to the default
+     *     output stream
+     */
+    void build(Job *job, const QString &outputPackage, const QString &outputDir,
+            bool printScriptOutput);
 };
 
 Q_DECLARE_METATYPE(PackageVersion);

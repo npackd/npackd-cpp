@@ -18,6 +18,7 @@
 #include <limits>
 #include <inttypes.h>
 #include <lm.h>
+#include <memory>
 
 //#define CCH_RM_MAX_APP_NAME 255
 //#define CCH_RM_MAX_SVC_NAME 63
@@ -48,6 +49,7 @@
 #include "version.h"
 #include "windowsregistry.h"
 #include "mstask.h"
+#include "abstractrepository.h"
 
 bool WPMUtils::adminMode = true;
 
@@ -258,6 +260,83 @@ QString WPMUtils::getProgramFilesDir()
         WCHAR dir[MAX_PATH];
         SHGetFolderPath(0, CSIDL_PROGRAM_FILES, NULL, 0, dir);
         ret = QString::fromUtf16(reinterpret_cast<ushort*>(dir));
+    }
+
+    return ret;
+}
+
+QList<Dependency*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
+        QString* err)
+{
+    QList<Dependency*> ret;
+    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
+
+    for (int i = 0; i < pos.size(); i++) {
+        if (!err->isEmpty())
+            break;
+
+        CommandLine::ParsedOption* po = pos.at(i);
+        if (po->opt->nameMathes("package")) {
+            CommandLine::ParsedOption* ponext = 0;
+            if (i + 1 < pos.size())
+                ponext = pos.at(i + 1);
+
+            QString package = po->value;
+            if (!Package::isValidName(package)) {
+                *err = QObject::tr("Invalid package name: %1").arg(package);
+            }
+
+            Package* p = 0;
+            if (err->isEmpty()) {
+                p = AbstractRepository::findOnePackage(package, err);
+                if (err->isEmpty()) {
+                    if (!p)
+                        *err = QObject::tr("Unknown package: %1").arg(package);
+                }
+            }
+
+            if (err->isEmpty()) {
+                QString version;
+                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                    version = ponext->value;
+
+                QString versions;
+                if (ponext != 0 && ponext->opt->nameMathes("versions"))
+                    versions = ponext->value;
+
+                Dependency* dep = 0;
+                if (!versions.isNull()) {
+                    i++;
+                    dep = new Dependency();
+                    dep->package = p->name;
+                    if (!dep->setVersions(versions)) {
+                        *err = QObject::tr("Cannot parse a version range: %1").
+                                arg(versions);
+                        delete dep;
+                        dep = 0;
+                    }
+                } else if (version.isNull()) {
+                    dep = new Dependency();
+                    dep->package = p->name;
+                    dep->setUnboundedVersions();
+                } else {
+                    i++;
+                    Version v;
+                    if (!v.setVersion(version)) {
+                        *err = QObject::tr("Cannot parse version: %1").
+                                arg(version);
+                    } else {
+                        dep = new Dependency();
+                        dep->package = p->name;
+                        dep->setExactVersion(v);
+                    }
+                }
+                if (dep)
+                    ret.append(dep);
+            }
+
+            delete p;
+        }
     }
 
     return ret;
@@ -2883,22 +2962,18 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 void WPMUtils::executeBatchFile(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const QStringList& env,
-        bool printScriptOutput)
+        bool printScriptOutput, bool unicode)
 {
-    QDir d(where);
-
     QString exe = WPMUtils::findCmdExe();
-    QString file = d.absolutePath() + '\\' + path;
-    file.replace('/', '\\');
+    QString params = "/E:ON /V:OFF /C \"\"" +
+            normalizePath(path, false) +
+            "\"\"";
+    if (unicode)
+        params = "/U " + params;
 
-    QString outputPath = outputFile;
-    if (!outputPath.isEmpty())
-        outputPath = d.absolutePath() + '\\' + outputPath;
-
-    executeFile(job, d.absolutePath().replace('/', '\\'), exe,
-            QStringLiteral("/U /E:ON /V:OFF /C \"\"") + file +
-            QStringLiteral("\"\""),
-            outputPath, env, true, printScriptOutput);
+    executeFile(job, normalizePath(where), exe,
+            params,
+            outputFile, env, true, printScriptOutput);
 }
 
 void WPMUtils::reportEvent(const QString &msg, WORD wType)

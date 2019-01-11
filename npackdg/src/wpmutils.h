@@ -16,11 +16,13 @@
 #include "commandline.h"
 #include "package.h"
 #include "hrtimer.h"
+#include "dependency.h"
 
 Q_DECLARE_LOGGING_CATEGORY(npackd)
 
 /**
- * Some utility methods.
+ * Some utility methods. This class is called WPMUtils because of the original
+ * name of Npackd "Windows Package Manager".
  */
 class WPMUtils
 {
@@ -674,14 +676,15 @@ public:
      *     to a non-empty string if the exit code of the process is not 0.
      * @param where working directory
      * @param path relative path to the .bat file
-     * @param outputFile the output will be saved here or "" if not available
+     * @param outputFile the output will be saved here or "" if not available.
      * @param env additional environemnt variables
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
+     * @param unicode true = use the "/U" parameter to cmd.exe
      */
     static void executeBatchFile(Job* job, const QString& where,
             const QString& path, const QString& outputFile,
-            const QStringList& env, bool printScriptOutput);
+            const QStringList& env, bool printScriptOutput, bool unicode=true);
 
     /**
      * @brief reports an event using the Windows Log API
@@ -776,7 +779,17 @@ public:
 	* @brief check user for admin privileges
 	* @return true = admin privileges
 	*/
-	static bool hasAdminPrivileges();
+    static bool hasAdminPrivileges();
+
+    /**
+     * @brief parses the command line and returns the list of chosen package
+     *     versions
+     * @param cl command line
+     * @param err errors will be stored here
+     * @return [owner:caller] list of package versions ranges
+     */
+    static QList<Dependency *> getPackageVersionOptions(const CommandLine &cl,
+            QString *err);
 };
 
 #endif // WPMUTILS_H
