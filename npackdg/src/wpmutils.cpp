@@ -2973,7 +2973,7 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
 
     executeFile(job, normalizePath(where), exe,
             params,
-            outputFile, env, true, printScriptOutput);
+            outputFile, env, true, printScriptOutput, unicode);
 }
 
 void WPMUtils::reportEvent(const QString &msg, WORD wType)
@@ -2998,7 +2998,7 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         const QString& outputFile, const QStringList& env,
-        bool writeUTF16LEBOM, bool printScriptOutput)
+        bool writeUTF16LEBOM, bool printScriptOutput, bool unicode)
 {
     if (!outputFile.isEmpty()) {
         QFile f(outputFile);
@@ -3015,13 +3015,13 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         }
 
         executeFile(job, where, path, nativeArguments,
-                &f, env, printScriptOutput);
+                &f, env, printScriptOutput, unicode);
 
         // ignore possible errors here
         f.close();
     } else {
         executeFile(job, where, path, nativeArguments,
-                0, env, printScriptOutput);
+                0, env, printScriptOutput, unicode);
     }
 }
 
@@ -3114,7 +3114,7 @@ QString WPMUtils::checkURL(const QUrl &base, QString *url, bool allowEmpty)
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         QIODevice* outputFile, const QStringList& env,
-        bool printScriptOutput)
+        bool printScriptOutput, bool unicode)
 
 {
     qCDebug(npackd) << where << path << nativeArguments;
@@ -3362,12 +3362,20 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
             if (hStdout != INVALID_HANDLE_VALUE) {
                 DWORD dwWritten;
-                if (consoleOutput)
-                    WriteConsoleW(hStdout, chBuf, dwRead / 2, &dwWritten, 0);
-                else {
+                if (consoleOutput) {
+                    if (unicode)
+                        WriteConsoleW(hStdout, chBuf, dwRead / 2, &dwWritten, 0);
+                    else
+                        WriteConsoleA(hStdout, chBuf, dwRead, &dwWritten, 0);
+                } else {
                     // convert to UTF-8
                     QString s;
-                    s.setUtf16((const ushort*) chBuf, dwRead / 2);
+
+                    if (unicode)
+                        s.setUtf16((const ushort*) chBuf, dwRead / 2);
+                    else
+                        s = QString::fromLocal8Bit(chBuf, dwRead);
+
                     QByteArray ba = s.toUtf8();
 
                     WriteFile(hStdout, ba.constData(), ba.length(),

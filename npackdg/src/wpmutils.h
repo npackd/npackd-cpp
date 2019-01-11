@@ -644,12 +644,13 @@ public:
      * @param env additional environemnt variables
      * @param printScriptOutput true = redirect the output to the default output
      *     stream
+     * @param unicode true = UTF-16, false = 1 byte system encoding
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             QIODevice *outputFile,
             const QStringList& env,
-            bool printScriptOutput=false);
+            bool printScriptOutput=false, bool unicode=true);
 
     /**
      * @param job job to monitor the progress. The error message will be set
@@ -664,12 +665,13 @@ public:
      *     the output file?
      * @param printScriptOutput true = redirect the output to the default output
      *     stream
+     * @param unicode true = UTF-16, false = 1 byte system encoding
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             const QString& outputFile,
             const QStringList& env, bool writeUTF16LEBOM=true,
-            bool printScriptOutput=false);
+            bool printScriptOutput=false, bool unicode=true);
 
     /**
      * @param job job to monitor the progress. The error message will be set

@@ -64,7 +64,7 @@ private:
      * @param env additional environment variables
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
-     * @param unicode true = use the /U parameter for cmd.exe
+     * @param unicode true = UTF-16, false = 1 byte system encoding
      */
     void executeFile2(Job *job, const QString &where, const QString &path,
             const QString &outputFile,

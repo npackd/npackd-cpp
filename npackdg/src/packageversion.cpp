@@ -1936,22 +1936,37 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
                 qint64 sz = outf.size();
                 qint64 p;
 
-                if (sz > 2048) {
-                    // UTF-16: 2 bytes per character, 2040 to not get the BOM
-                    p = sz - 2040 - sz % 1;
-                } else if (sz >= 2) {
-                    // BOM
-                    p = 2;
+                if (unicode) {
+                    if (sz > 2048) {
+                        // UTF-16: 2 bytes per character, 2040 to not get the BOM
+                        p = sz - 2040 - sz % 1;
+                    } else if (sz >= 2) {
+                        // BOM
+                        p = 2;
+                    } else {
+                        p = 0;
+                    }
                 } else {
-                    p = 0;
+                    if (sz > 1024) {
+                        p = sz - 1024;
+                    } else {
+                        p = 0;
+                    }
                 }
 
                 outf.seek(p);
 
                 QByteArray ba = outf.read(sz - p);
-                lastOutputLines = QString::fromUtf16(
-                        (const ushort*) ba.constData(),
-                        ba.length() / 2);
+
+                if (unicode) {
+                    lastOutputLines = QString::fromUtf16(
+                            (const ushort*) ba.constData(),
+                            ba.length() / 2);
+                } else {
+                    lastOutputLines = QString::fromLocal8Bit(
+                            ba.constData(),
+                            ba.length());
+                }
 
                 outf.close();
             }
