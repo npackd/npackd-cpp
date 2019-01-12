@@ -1903,9 +1903,13 @@ void PackageVersion::build(Job* job, const QString& outputPackage,
     QString err = addBasicVars(&env);
     if (!err.isEmpty())
         job->setErrorMessage(err);
+    env.append("NPACKD_PACKAGE_DIR");
+    env.append(this->getPath());
+    env.append("NPACKD_OUTPUT_PACKAGE");
+    env.append(outputPackage);
     addDependencyVars(&env);
 
-    QString filename = ".Npackd\\Build-" + outputPackage + ".bat";
+    QString filename = ".Npackd\\Build.bat";
     QFileInfo d(this->getPath() + "\\" + filename);
     if (!d.exists() || !d.isFile()) {
         job->setErrorMessage(QObject::tr(
@@ -1913,7 +1917,7 @@ void PackageVersion::build(Job* job, const QString& outputPackage,
         job->complete();
     } else {
         executeFile2(job, outputDir, this->getPath() + "\\" + filename,
-                this->getPath() + "\\.Npackd\\Build-" + outputPackage + ".log",
+                this->getPath() + "\\.Npackd\\Build.log",
                 env, printScriptOutput, false);
     }
 }

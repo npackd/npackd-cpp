@@ -1663,9 +1663,9 @@ void App::build(Job* job)
     }
 
     if (job->shouldProceed()) {
-        WPMUtils::writeln(QString(
-                "The package %1 was built successfully in %2").arg(
-                pv->toString()).arg(outputDir));
+        WPMUtils::writeln(QObject::tr(
+                "The package %1 was built successfully in %2 to %3").arg(
+                pv->toString()).arg(outputDir).arg(outputPackage));
     }
 
     job->complete();
