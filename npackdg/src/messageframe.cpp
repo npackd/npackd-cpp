@@ -27,6 +27,21 @@ MessageFrame::MessageFrame(QWidget *parent, const QString& msg,
     this->ui->pushButtonDetails->setEnabled(!details.isEmpty());
     this->icon = icon;
 
+    QColor c;
+    switch (icon) {
+        case QMessageBox::Warning:
+            c = 0xffff7f;
+            break;
+        case QMessageBox::Critical:
+            c = 0xf8d7da;
+            break;
+        default:
+            c = 0xd4edda;
+    }
+    QPalette pal;
+    pal.setColor(QPalette::Background, c);
+    setPalette(pal);
+
     if (seconds > 0) {
         QTimer* t = new QTimer(this);
         connect(t, SIGNAL(timeout()), this, SLOT(timerTimeout()));

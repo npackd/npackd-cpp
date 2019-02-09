@@ -283,11 +283,14 @@ void PackageFrame::screenshotsItemActivated(QListWidgetItem *item)
     QString err;
     QString filename = mw->fileLoader.downloadOrQueue(url, &err);
     if (!err.isEmpty()) {
-        mw->addErrorMessage(QObject::tr("Error downloading the file %1: %2").
-                arg(url).arg(err));
+        QString msg = QObject::tr("Error downloading the file %1: %2").
+                arg(url).arg(err);
+        mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
     } else if (!filename.isEmpty()) {
-        if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename)))
-            mw->addErrorMessage(QObject::tr("Cannot open the file %1").
-                    arg(filename));
+        if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename))) {
+            QString msg = QObject::tr("Cannot open the file %1").
+                    arg(filename);
+            mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
+        }
     }
 }

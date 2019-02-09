@@ -184,10 +184,11 @@ public:
      * @param msg short error message
      * @param details error details
      * @param autoHide true = automatically hide the message after some time
-     * @param icon message icon
+     * @param icon message icon. This determines the background color of the
+     *     message
      */
     void addErrorMessage(const QString& msg, const QString& details="",
-            bool autoHide=true, QMessageBox::Icon icon=QMessageBox::NoIcon);
+            bool autoHide=true, QMessageBox::Icon icon=QMessageBox::Critical);
 
     /**
      * Adds a new tab with the specified text

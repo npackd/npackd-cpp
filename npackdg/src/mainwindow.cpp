@@ -479,7 +479,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
         this->saveUISettings();
         event->accept();
     } else {
-        addErrorMessage(QObject::tr("Cannot exit while jobs are running"));
+        QString msg = QObject::tr("Cannot exit while jobs are running");
+        addErrorMessage(msg, msg, true, QMessageBox::Critical);
         event->ignore();
     }
 }
@@ -989,9 +990,10 @@ void MainWindow::on_actionExit_triggered()
 {
     int n = VisibleJobs::getDefault()->runningJobs.count();
 
-    if (n > 0)
-        addErrorMessage(QObject::tr("Cannot exit while jobs are running"));
-    else
+    if (n > 0) {
+        QString msg = QObject::tr("Cannot exit while jobs are running");
+        addErrorMessage(msg, msg, true, QMessageBox::Critical);
+    } else
         this->close();
 }
 
@@ -2006,9 +2008,12 @@ void MainWindow::on_actionReload_Repositories_triggered()
     if (!err.isEmpty())
         addErrorMessage(err, err, true, QMessageBox::Critical);
     if (locked) {
-        QString msg(QObject::tr("Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal."));
-        this->addErrorMessage(msg.arg(locked->toString()));
+        QString msg = QObject::tr(
+                "Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.").
+                arg(locked->toString());
         delete locked;
+
+        this->addErrorMessage(msg, msg, true, QMessageBox::Critical);
     } else {
         recognizeAndLoadRepositories(true);
     }
@@ -2171,9 +2176,11 @@ void MainWindow::on_actionAdd_package_triggered()
 }
 
 void MainWindow::openURL(const QUrl& url) {
-    if (!QDesktopServices::openUrl(url))
-        this->addErrorMessage(QObject::tr("Cannot open the URL %1").
-                arg(url.toString()));
+    if (!QDesktopServices::openUrl(url)) {
+        QString err = QObject::tr("Cannot open the URL %1").
+                arg(url.toString());
+        this->addErrorMessage(err, err, true, QMessageBox::Critical);
+    }
 }
 
 void MainWindow::on_actionOpen_folder_triggered()
@@ -2318,9 +2325,11 @@ void MainWindow::on_actionRun_triggered()
 
                 QString filename = pv->getPath() + "\\" + impf;
 
-                if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename)))
-                    addErrorMessage(QObject::tr("Cannot open the file %1").
-                            arg(filename));
+                if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename))) {
+                    QString msg = QObject::tr("Cannot open the file %1").
+                            arg(filename);
+                    addErrorMessage(msg, msg, true, QMessageBox::Critical);
+                }
             }
         }
     }
@@ -2411,8 +2420,11 @@ void MainWindow::on_actionCheck_dependencies_triggered()
             ip->findFirstWithMissingDependency());
 
     if (ipv) {
-        this->addErrorMessage(QObject::tr("%1 is missing some dependencies").
-                arg(ipv->toString()));
-    } else
-        this->addErrorMessage(QObject::tr("All dependencies are installed"));
+        QString msg = QObject::tr("%1 is missing some dependencies").
+                arg(ipv->toString());
+        this->addErrorMessage(msg, msg, true, QMessageBox::Critical);
+    } else {
+        QString msg = QObject::tr("All dependencies are installed");
+        this->addErrorMessage(msg, msg, true, QMessageBox::Information);
+    }
 }

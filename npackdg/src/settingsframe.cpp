@@ -176,8 +176,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
     QString err;
     PackageVersion* locked = PackageVersion::findLockedPackageVersion(&err);
     if (locked) {
-        QString msg(QObject::tr("Cannot change settings now. The package %1 is locked by a currently running installation/removal."));
-        mw->addErrorMessage(msg.arg(locked->toString()));
+        QString msg = QObject::tr("Cannot change settings now. The package %1 is locked by a currently running installation/removal.").
+                arg(locked->toString());
+        mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
         delete locked;
         return;
     }

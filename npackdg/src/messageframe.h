@@ -22,7 +22,8 @@ public:
      * @param details multi-line message
      * @param seconds automatically close after this number of seconds or 0 for
      *     "do not close automatically"
-     * @param icon message icon
+     * @param icon message icon. This determines the background color of the
+     *     frame
      */
     explicit MessageFrame(QWidget *parent, const QString& msg,
             const QString& details, int seconds, QMessageBox::Icon icon);

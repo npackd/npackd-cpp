@@ -246,6 +246,7 @@ void PackageVersionForm::dependencyLinkActivated(const QString &link)
     }
 
     if (!err.isEmpty())
-        MainWindow::getInstance()->addErrorMessage(err);
+        MainWindow::getInstance()->addErrorMessage(err, err, true,
+                QMessageBox::Critical);
 }
 
