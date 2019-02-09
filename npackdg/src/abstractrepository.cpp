@@ -494,7 +494,7 @@ void AbstractRepository::process(Job *job,
             installationScriptAcquired = installationScripts.
                     tryAcquire(1, 10000);
             if (installationScriptAcquired) {
-                job->setProgress(0.21);
+                job->setProgress(job->getProgress() + 0.01);
                 break;
             }
 
@@ -545,7 +545,7 @@ void AbstractRepository::process(Job *job,
                 txt = QString(QObject::tr("Uninstalling %1")).arg(
                         pv->toString());
 
-            Job* sub = job->newSubJob(0.19 / n, txt, true, true);
+            Job* sub = job->newSubJob(0.18 / n, txt, true, true);
             if (op->install) {
                 QString dir = dirs.at(i);
                 QString binary = binaries.at(i);
