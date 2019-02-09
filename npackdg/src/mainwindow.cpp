@@ -1793,6 +1793,14 @@ void MainWindow::on_actionUpdate_triggered()
 {
     QString err;
 
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    std::unique_ptr<InstalledPackageVersion> ipv(
+            ip->findFirstWithMissingDependency());
+
+    if (ipv)
+        err = QObject::tr("%1 is missing some dependencies").
+                arg(ipv->toString());
+
     QList<Package*> packages;
     DBRepository* r = DBRepository::getDefault();
     if (err.isEmpty()) {
@@ -2029,6 +2037,14 @@ void MainWindow::on_actionInstall_triggered()
 {
     QString err;
 
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    std::unique_ptr<InstalledPackageVersion> ipv(
+            ip->findFirstWithMissingDependency());
+
+    if (ipv)
+        err = QObject::tr("%1 is missing some dependencies").
+                arg(ipv->toString());
+
     QList<PackageVersion*> pvs;
 
     if (err.isEmpty()) {
@@ -2059,7 +2075,7 @@ void MainWindow::on_actionInstall_triggered()
     }
 
     QList<InstallOperation*> ops;
-    InstalledPackages installed(*InstalledPackages::getDefault());
+    InstalledPackages installed(*ip);
     QList<PackageVersion*> avoid;
 
     if (err.isEmpty()) {
@@ -2086,6 +2102,14 @@ void MainWindow::on_actionInstall_triggered()
 void MainWindow::on_actionUninstall_triggered()
 {
     QString err;
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    std::unique_ptr<InstalledPackageVersion> ipv(
+            ip->findFirstWithMissingDependency());
+
+    if (ipv)
+        err = QObject::tr("%1 is missing some dependencies").
+                arg(ipv->toString());
 
     QList<PackageVersion*> pvs;
 
@@ -2122,7 +2146,7 @@ void MainWindow::on_actionUninstall_triggered()
     QList<InstallOperation*> ops;
 
     if (err.isEmpty()) {
-        InstalledPackages installed(*InstalledPackages::getDefault());
+        InstalledPackages installed(*ip);
 
         for (int i = 0; i < pvs.count(); i++) {
             PackageVersion* pv = pvs.at(i);
