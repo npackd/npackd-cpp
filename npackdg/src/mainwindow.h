@@ -320,6 +320,7 @@ private slots:
     void monitoredJobCompleted();
     void on_actionRun_triggered();
     void on_actionExport_triggered();
+    void on_actionCheck_dependencies_triggered();
 };
 
 #endif // MAINWINDOW_H

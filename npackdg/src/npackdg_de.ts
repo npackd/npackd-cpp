@@ -393,6 +393,14 @@ p, li { white-space: pre-wrap; }
         <source>exports the selected packages as a repository</source>
         <translation>exportiert die ausgewählten Pakete als ein Repository</translation>
     </message>
+    <message>
+        <source>Check dependencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checks installed packages for missing dependencies</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MessageFrame</name>
@@ -2551,6 +2559,18 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Sending start signal to the service %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is missing or is not a directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is missing some dependencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All dependencies are installed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

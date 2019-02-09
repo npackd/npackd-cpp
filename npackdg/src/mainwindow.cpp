@@ -1,5 +1,6 @@
 ﻿#include <math.h>
 #include <stdint.h>
+#include <memory>
 
 #include <qabstractitemview.h>
 #include <qmessagebox.h>
@@ -2377,4 +2378,17 @@ void MainWindow::on_actionExport_triggered()
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
     qDeleteAll(pvs);
+}
+
+void MainWindow::on_actionCheck_dependencies_triggered()
+{
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    std::unique_ptr<InstalledPackageVersion> ipv(
+            ip->findFirstWithMissingDependency());
+
+    if (ipv) {
+        this->addErrorMessage(QObject::tr("%1 is missing some dependencies").
+                arg(ipv->toString()));
+    } else
+        this->addErrorMessage(QObject::tr("All dependencies are installed"));
 }
