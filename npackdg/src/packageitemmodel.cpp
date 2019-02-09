@@ -135,7 +135,6 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             }
             case 6: {
                 MainWindow* mw = MainWindow::getInstance();
-                QString err;
                 QString v;
                 if (cached->newestDownloadURL.isEmpty()) {
                     v = "";
@@ -189,6 +188,14 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             case 1:
                 r = p;
                 break;
+        }
+    } else if (role == Qt::TextAlignmentRole) {
+        switch (index.column()) {
+            case 2:
+                r = Qt::AlignLeft + Qt::AlignTop;
+                break;
+            default:
+                r = Qt::AlignLeft + Qt::AlignVCenter;
         }
     }
 

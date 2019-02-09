@@ -32,6 +32,7 @@ MainFrame::MainFrame(QWidget *parent) :
     delete sm;
     delete m;
 
+    t->setTextElideMode(Qt::ElideRight);
     t->setEditTriggers(QTableWidget::NoEditTriggers);
     t->setSortingEnabled(false);
     t->horizontalHeader()->setSectionsMovable(true);
