@@ -697,6 +697,35 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
     return ret;
 }
 
+QString AbstractRepository::planAddMissingDeps(QList<InstallOperation*>& ops)
+{
+    QString err;
+    InstalledPackages ip = *InstalledPackages::getDefault();
+
+    QList<PackageVersion*> avoid;
+    QList<InstalledPackageVersion*> all = ip.getAll();
+    for (int i = 0; i < all.size(); i++) {
+        InstalledPackageVersion* ipv = all.at(i);
+
+        PackageVersion* pv = this->findPackageVersion_(ipv->package,
+                ipv->version, &err);
+        if (!err.isEmpty())
+            break;
+
+        if (pv) {
+            qDeleteAll(avoid);
+            avoid.clear();
+            err = pv->planInstallation(ip, ops, avoid);
+            if (!err.isEmpty())
+                break;
+        }
+    }
+    qDeleteAll(all);
+    qDeleteAll(avoid);
+
+    return err;
+}
+
 QString AbstractRepository::planUpdates(const QList<Package*> packages,
         QList<Dependency*> ranges,
         QList<InstallOperation*>& ops, bool keepDirectories,

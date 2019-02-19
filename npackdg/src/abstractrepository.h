@@ -321,6 +321,14 @@ public:
      */
     void exportPackagesCoInitializeAndFree(Job *job,
             const QList<PackageVersion *> &pvs, const QString &where, int def);
+
+    /**
+     * @brief plans adding missing dependencies
+     *
+     * @param ops installation operations will be appended here
+     * @return error message or ""
+     */
+    QString planAddMissingDeps(QList<InstallOperation *> &ops);
 };
 
 #endif // ABSTRACTREPOSITORY_H
