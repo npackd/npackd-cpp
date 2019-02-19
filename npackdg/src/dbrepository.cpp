@@ -1650,6 +1650,7 @@ void DBRepository::load(Job* job, bool useCache, bool interactive,
 
 void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
     QTemporaryDir* dir = 0;
+    QFile* xmlInZIP = 0;
     if (job->shouldProceed()) {
         if (f->open(QFile::ReadOnly) &&
                 f->seek(0) && f->read(4) == QByteArray::fromRawData(
@@ -1668,7 +1669,8 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
                 } else {
                     QString repfn = dir->path() + QStringLiteral("\\Rep.xml");
                     if (QFile::exists(repfn)) {
-                        f = new QFile(repfn);
+                        xmlInZIP = new QFile(repfn);
+                        f = xmlInZIP;
                     } else {
                         job->setErrorMessage(QObject::tr(
                                 "Rep.xml is missing in a repository in ZIP format"));
@@ -1694,6 +1696,7 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
         }
     }
 
+    delete xmlInZIP;
     delete dir;
 
     job->complete();
