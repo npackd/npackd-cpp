@@ -83,8 +83,13 @@ QString CLProcessor::remove()
     }
 
     QList<InstallOperation*> ops;
+    InstalledPackages installed(*InstalledPackages::getDefault());
+
     if (err.isEmpty()) {
-        InstalledPackages installed(*InstalledPackages::getDefault());
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+    }
+
+    if (err.isEmpty()) {
         for (int i = 0; i < toRemove.count(); i++) {
             PackageVersion* pv = toRemove.at(i);
             err = pv->planUninstallation(installed, ops);
@@ -182,6 +187,10 @@ QString CLProcessor::add()
     QList<InstallOperation*> ops;
 
     InstalledPackages installed(*InstalledPackages::getDefault());
+
+    if (err.isEmpty()) {
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+    }
 
     if (err.isEmpty()) {
         QList<PackageVersion*> avoid;

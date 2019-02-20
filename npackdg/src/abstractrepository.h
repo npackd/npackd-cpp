@@ -325,10 +325,13 @@ public:
     /**
      * @brief plans adding missing dependencies
      *
+     * @param installed list of installed packages. This object will be
+     *      modified.
      * @param ops installation operations will be appended here
      * @return error message or ""
      */
-    QString planAddMissingDeps(QList<InstallOperation *> &ops);
+    QString planAddMissingDeps(InstalledPackages &installed,
+            QList<InstallOperation *> &ops);
 };
 
 #endif // ABSTRACTREPOSITORY_H

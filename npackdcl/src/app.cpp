@@ -1380,6 +1380,15 @@ void App::update(Job* job)
     bool install = cl.isPresent("install");
 
     QList<InstallOperation*> ops;
+
+    if (job->shouldProceed()) {
+        InstalledPackages installed(*InstalledPackages::getDefault());
+        QString err = DBRepository::getDefault()->planAddMissingDeps(
+                installed, ops);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
     bool up2date = false;
     if (job->shouldProceed()) {
         qCDebug(npackd) << "planning updates for" << toUpdate.size() <<
@@ -1733,9 +1742,16 @@ void App::add(Job* job)
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     QList<InstallOperation*> ops;
+    InstalledPackages installed(*ip);
+
+    if (job->shouldProceed()) {
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
     if (job->shouldProceed()) {
         QString err;
-        InstalledPackages installed(*ip);
 
         QList<PackageVersion*> avoid;
         for (int i = 0; i < toInstall.size(); i++) {
@@ -1929,9 +1945,16 @@ void App::remove(Job *job)
         job->setErrorMessage(err);
 
     QList<InstallOperation*> ops;
+    InstalledPackages installed(*InstalledPackages::getDefault());
+
+    if (job->shouldProceed()) {
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
     if (job->shouldProceed()) {
         QString err;
-        InstalledPackages installed(*InstalledPackages::getDefault());
         if (!err.isEmpty())
             job->setErrorMessage(err);
 

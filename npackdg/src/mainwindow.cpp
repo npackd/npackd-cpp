@@ -1832,9 +1832,10 @@ void MainWindow::on_actionUpdate_triggered()
     }
 
     QList<InstallOperation*> ops;
+    InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(ops);
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
     }
 
     if (err.isEmpty() && packages.count() > 0) {
@@ -2073,7 +2074,7 @@ void MainWindow::on_actionInstall_triggered()
     QList<PackageVersion*> avoid;
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(ops);
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
     }
 
     if (err.isEmpty()) {
@@ -2134,14 +2135,13 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     QList<InstallOperation*> ops;
+    InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(ops);
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
     }
 
     if (err.isEmpty()) {
-        InstalledPackages installed(*InstalledPackages::getDefault());
-
         for (int i = 0; i < pvs.count(); i++) {
             PackageVersion* pv = pvs.at(i);
             err = pv->planUninstallation(installed, ops);
