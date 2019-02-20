@@ -3407,10 +3407,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 is missing some dependencies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>All dependencies are installed</source>
         <translation type="unfinished"></translation>
     </message>

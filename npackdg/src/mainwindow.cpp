@@ -2405,13 +2405,38 @@ void MainWindow::on_actionExport_triggered()
 
 void MainWindow::on_actionCheck_dependencies_triggered()
 {
-    InstalledPackages* ip = InstalledPackages::getDefault();
-    std::unique_ptr<InstalledPackageVersion> ipv(
-            ip->findFirstWithMissingDependency());
+    QString err;
 
-    if (ipv) {
-        QString msg = QObject::tr("%1 is missing some dependencies").
-                arg(ipv->toString());
+    QString msg;
+
+    InstalledPackages* ip = InstalledPackages::getDefault();
+    DBRepository* dbr = DBRepository::getDefault();
+
+    QList<InstalledPackageVersion*> all = ip->getAll();
+    int n = 0;
+    for (int i = 0; i < all.size(); i++) {
+        InstalledPackageVersion* ipv = all.at(i);
+        if (ipv->installed()) {
+            std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion_(
+                    ipv->package, ipv->version, &err));
+            if (!err.isEmpty())
+                break;
+
+            for (int j = 0; j < pv->dependencies.count(); j++) {
+                Dependency* d = pv->dependencies.at(j);
+                if (!ip->isInstalled(*d)) {
+                    msg += "\r\n" + QString(
+                            "%1 depends on %2, which is not installed").
+                            arg(pv->toString(true)).
+                            arg(dbr->toString(*d, true));
+                    n++;
+                }
+            }
+        }
+    }
+    qDeleteAll(all);
+
+    if (n > 0) {
         this->addErrorMessage(msg, msg, true, QMessageBox::Critical);
     } else {
         QString msg = QObject::tr("All dependencies are installed");
