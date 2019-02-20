@@ -53,7 +53,6 @@ class RepositoryXMLHandler: public QXmlDefaultHandler
     PackageVersion* pv;
     PackageVersionFile* pvf;
     Dependency* dep;
-    DetectFile* df;
 
     QString chars;
     QString error;

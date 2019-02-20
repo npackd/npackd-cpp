@@ -66,7 +66,6 @@ set(TESTS_SOURCES
     ../../npackdg/src/downloader.cpp
     ../../npackdg/src/license.cpp
     ../../npackdg/src/windowsregistry.cpp
-    ../../npackdg/src/detectfile.cpp
     src/app.cpp
     ../../npackdg/src/commandline.cpp
     ../../npackdg/src/installedpackages.cpp
@@ -99,7 +98,6 @@ set(TESTS_HEADERS
     ../../npackdg/src/downloader.h
     ../../npackdg/src/license.h
     ../../npackdg/src/windowsregistry.h
-    ../../npackdg/src/detectfile.h
     src/app.h
     ../../npackdg/src/installedpackages.h
     ../../npackdg/src/installedpackageversion.h

@@ -2487,11 +2487,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
-        <translation>Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
+        <translation type="vanished">Пустой тэг &lt;path&gt; под &lt;detect-file&gt;</translation>
     </message>
     <message>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
-        <translation>Неверная SHA1 у &lt;detect-file&gt;: </translation>
+        <translation type="vanished">Неверная SHA1 у &lt;detect-file&gt;: </translation>
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
@@ -2656,7 +2656,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scanning %1</source>
-        <translation>Сканирование %1</translation>
+        <translation type="vanished">Сканирование %1</translation>
     </message>
     <message>
         <source>Cannot change settings now. The hard drive scan is running.</source>

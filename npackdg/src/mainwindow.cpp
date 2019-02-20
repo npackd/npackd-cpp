@@ -57,7 +57,6 @@
 #include "packageitemmodel.h"
 #include "installedpackages.h"
 #include "flowlayout.h"
-#include "scandiskthirdpartypm.h"
 #include "visiblejobs.h"
 #include "progresstree2.h"
 #include "exportrepositoryframe.h"

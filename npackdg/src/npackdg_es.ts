@@ -2527,11 +2527,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
-        <translation>Etiqueta vacía &lt;path&gt; bajo &lt;detect-file&gt;</translation>
+        <translation type="vanished">Etiqueta vacía &lt;path&gt; bajo &lt;detect-file&gt;</translation>
     </message>
     <message>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
-        <translation>Mal SHA1 en &lt;detect-file&gt;: </translation>
+        <translation type="vanished">Mal SHA1 en &lt;detect-file&gt;: </translation>
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
@@ -2696,7 +2696,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scanning %1</source>
-        <translation>Escaneando %1</translation>
+        <translation type="vanished">Escaneando %1</translation>
     </message>
     <message>
         <source>Cannot change settings now. The hard drive scan is running.</source>

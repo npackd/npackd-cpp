@@ -1407,8 +1407,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         q->bindValue(QStringLiteral(":PACKAGE"), p->package);
         q->bindValue(QStringLiteral(":URL"), p->download.toString());
         q->bindValue(QStringLiteral(":MSIGUID"), p->msiGUID);
-        q->bindValue(QStringLiteral(":DETECT_FILE_COUNT"),
-                p->detectFiles.count());
+        q->bindValue(QStringLiteral(":DETECT_FILE_COUNT"), 0);
 
         QByteArray file;
         file.reserve(1024);

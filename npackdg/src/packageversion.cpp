@@ -365,7 +365,6 @@ QString PackageVersion::getShortPackageName()
 
 PackageVersion::~PackageVersion()
 {
-    qDeleteAll(this->detectFiles);
     qDeleteAll(this->files);
     qDeleteAll(this->dependencies);
 }
@@ -1977,10 +1976,6 @@ PackageVersion* PackageVersion::clone() const
         PackageVersionFile* f = this->files.at(i);
         r->files.append(f->clone());
     }
-    for (int i = 0; i < this->detectFiles.count(); i++) {
-        DetectFile* f = this->detectFiles.at(i);
-        r->detectFiles.append(f->clone());
-    }
     for (int i = 0; i < dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
         r->dependencies.append(d->clone());
@@ -2074,13 +2069,6 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
     if (!this->msiGUID.isEmpty()) {
         w->writeTextElement("detect-msi", this->msiGUID);
     }
-    for (int i = 0; i < detectFiles.count(); i++) {
-        DetectFile* df = this->detectFiles.at(i);
-        w->writeStartElement("detect-file");
-        w->writeTextElement("path", df->path);
-        w->writeTextElement("sha1", df->sha1);
-        w->writeEndElement();
-    }
     w->writeEndElement();
 }
 
@@ -2149,18 +2137,6 @@ void PackageVersion::toJSON(QJsonObject& w) const
 
     if (!this->msiGUID.isEmpty()) {
         w["detectMSI"] = this->msiGUID;
-    }
-
-    if (!detectFiles.isEmpty()) {
-        QJsonArray detectFile;
-        for (int i = 0; i < detectFiles.count(); i++) {
-            DetectFile* df = this->detectFiles.at(i);
-            QJsonObject obj;
-            obj["path"] = df->path;
-            obj["sha1"] = df->sha1;
-            detectFile.append(obj);
-        }
-        w["detectFiles"] = detectFile;
     }
 }
 

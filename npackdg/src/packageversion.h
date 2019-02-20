@@ -18,7 +18,6 @@
 #include "version.h"
 #include "dependency.h"
 #include "installoperation.h"
-#include "detectfile.h"
 #include "commandline.h"
 
 // 30ed381d-59ea-4ca5-bd1d-5ee8ec97b2be
@@ -206,11 +205,6 @@ public:
      * Text files.
      */
     QList<PackageVersionFile*> files;
-
-    /**
-     * Package detection
-     */
-    QList<DetectFile*> detectFiles;
 
     /**
      * Dependencies.

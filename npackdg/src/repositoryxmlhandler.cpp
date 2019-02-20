@@ -90,7 +90,7 @@ int RepositoryXMLHandler::findWhere()
 
 RepositoryXMLHandler::RepositoryXMLHandler(AbstractRepository *rep,
         const QUrl &url) :
-        rep(rep), lic(0), p(0), pv(0), pvf(0), dep(0), df(0), url(url)
+        rep(rep), lic(0), p(0), pv(0), pvf(0), dep(0), url(url)
 {
 }
 
@@ -230,10 +230,6 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
         if (!dep->setVersions(versions))
             error = QObject::tr("Error in attribute 'versions' in <dependency> in %1").
                     arg(pv->toString());
-    } else if (where == TAG_VERSION_DETECT_FILE) {
-        // qCDebug(npackd) << pv->toString();
-        df = new DetectFile();
-        pv->detectFiles.append(df);
     } else if (where == TAG_PACKAGE) {
         QString name = atts.value(QStringLiteral("name"));
         p = new Package(name, name);
@@ -322,18 +318,6 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
         }
     } else if (where == TAG_VERSION_DEPENDENCY_VARIABLE) {
         dep->var = chars.trimmed();
-    } else if (where == TAG_VERSION_DETECT_FILE_PATH) {
-        df->path = chars.trimmed();
-        df->path.replace('/', '\\');
-        if (df->path.isEmpty()) {
-            error = QObject::tr("Empty tag <path> under <detect-file>");
-        }
-    } else if (where == TAG_VERSION_DETECT_FILE_SHA1) {
-        df->sha1 = chars.trimmed();
-        error = WPMUtils::validateSHA1(df->sha1);
-        if (!error.isEmpty()) {
-            error = QObject::tr("Wrong SHA1 in <detect-file>: ").arg(error);
-        }
     } else if (where == TAG_PACKAGE) {
         error = rep->savePackage(p, false);
 

@@ -53,7 +53,6 @@ readVersion("../../appveyor.yml")
 
 set(FTESTS_SOURCES
     src/app.cpp
-    ../../npackdg/src/detectfile.cpp
     ../../npackdg/src/downloader.cpp
     ../../npackdg/src/commandline.cpp
     ../../npackdg/src/repositoryxmlhandler.cpp
@@ -85,7 +84,6 @@ set(FTESTS_SOURCES
 )
 set(FTESTS_HEADERS
     src/app.h
-    ../../npackdg/src/detectfile.h
     ../../npackdg/src/downloader.h
     ../../npackdg/src/commandline.h
     ../../npackdg/src/repositoryxmlhandler.h

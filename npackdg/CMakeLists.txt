@@ -89,7 +89,6 @@ set(NPACKDG_SOURCES
     src/license.cpp
     src/licenseform.cpp
     src/windowsregistry.cpp
-    src/detectfile.cpp
     src/uiutils.cpp
     src/commandline.cpp
     src/messageframe.cpp
@@ -110,7 +109,6 @@ set(NPACKDG_SOURCES
     src/wellknownprogramsthirdpartypm.cpp
     src/installedpackagesthirdpartypm.cpp
     src/flowlayout.cpp
-    src/scandiskthirdpartypm.cpp
     src/mysqlquery.cpp
     src/repositoryxmlhandler.cpp
     src/cbsthirdpartypm.cpp
@@ -140,7 +138,6 @@ set(NPACKDG_HEADERS
     src/license.h
     src/licenseform.h
     src/windowsregistry.h
-    src/detectfile.h
     src/uiutils.h
     src/commandline.h
     src/messageframe.h
@@ -162,7 +159,6 @@ set(NPACKDG_HEADERS
     src/wellknownprogramsthirdpartypm.h
     src/installedpackagesthirdpartypm.h
     src/flowlayout.h
-    src/scandiskthirdpartypm.h
     src/mysqlquery.h
     src/repositoryxmlhandler.h
     src/cbsthirdpartypm.h

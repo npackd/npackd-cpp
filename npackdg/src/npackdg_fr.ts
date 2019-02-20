@@ -2273,11 +2273,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
-        <translation>Etiquette &lt;path&gt; vide dans &lt;detect-file&gt;</translation>
+        <translation type="vanished">Etiquette &lt;path&gt; vide dans &lt;detect-file&gt;</translation>
     </message>
     <message>
         <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
-        <translation>SHA1 incorrect dans &lt;detect-file&gt; :</translation>
+        <translation type="vanished">SHA1 incorrect dans &lt;detect-file&gt; :</translation>
     </message>
     <message>
         <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
@@ -2426,7 +2426,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scanning %1</source>
-        <translation>Scan de %1</translation>
+        <translation type="vanished">Scan de %1</translation>
     </message>
     <message>
         <source>Cannot change settings now. The hard drive scan is running.</source>

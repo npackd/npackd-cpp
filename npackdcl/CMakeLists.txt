@@ -74,7 +74,6 @@ set(NPACKDCL_SOURCES
     ../npackdg/src/downloader.cpp
     ../npackdg/src/license.cpp
     ../npackdg/src/windowsregistry.cpp
-    ../npackdg/src/detectfile.cpp
     ../npackdg/src/commandline.cpp
     ../npackdg/src/installedpackages.cpp
     ../npackdg/src/installedpackageversion.cpp
@@ -107,7 +106,6 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/downloader.h
     ../npackdg/src/license.h
     ../npackdg/src/windowsregistry.h
-    ../npackdg/src/detectfile.h
     ../npackdg/src/installedpackages.h
     ../npackdg/src/installedpackageversion.h
     ../npackdg/src/commandline.h
