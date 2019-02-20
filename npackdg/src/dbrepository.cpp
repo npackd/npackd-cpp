@@ -678,7 +678,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         }
     }
 
-    // remove stop words and numbers and KBXXXXXX
+    // remove stop words and numbers and KBXXXXXX and KBXXXXXXX
     for (int i = 0; i < keywords.size(); ) {
         const QString& p = keywords.at(i);
         if (stopWords.contains(p)) {
@@ -689,6 +689,12 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
                 (p.at(1).toUpper() == 'B') && p.at(2).isDigit() &&
                 p.at(3).isDigit() && p.at(4).isDigit() &&
                 p.at(5).isDigit() && p.at(6).isDigit() && p.at(7).isDigit()) {
+            keywords.removeAt(i);
+        } else if (p.length() == 9 && (p.at(0).toUpper() == 'K') &&
+                (p.at(1).toUpper() == 'B') && p.at(2).isDigit() &&
+                p.at(3).isDigit() && p.at(4).isDigit() &&
+                p.at(5).isDigit() && p.at(6).isDigit() && p.at(7).isDigit() &&
+                p.at(8).isDigit()) {
             keywords.removeAt(i);
         } else {
             i++;
