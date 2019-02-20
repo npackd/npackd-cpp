@@ -1380,9 +1380,9 @@ void App::update(Job* job)
     bool install = cl.isPresent("install");
 
     QList<InstallOperation*> ops;
+    InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
-        InstalledPackages installed(*InstalledPackages::getDefault());
         QString err = DBRepository::getDefault()->planAddMissingDeps(
                 installed, ops);
         if (!err.isEmpty())
@@ -1394,7 +1394,7 @@ void App::update(Job* job)
         qCDebug(npackd) << "planning updates for" << toUpdate.size() <<
                 "packages and " << toUpdate2.size() << "version ranges";
 
-        QString err = rep->planUpdates(toUpdate, toUpdate2, ops,
+        QString err = rep->planUpdates(installed, toUpdate, toUpdate2, ops,
                 keepDirectories, install, file, false);
         if (!err.isEmpty())
             job->setErrorMessage(err);

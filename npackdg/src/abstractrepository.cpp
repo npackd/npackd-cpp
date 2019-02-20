@@ -726,14 +726,14 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
     return err;
 }
 
-QString AbstractRepository::planUpdates(const QList<Package*> packages,
+QString AbstractRepository::planUpdates(InstalledPackages& installed,
+        const QList<Package*> packages,
         QList<Dependency*> ranges,
         QList<InstallOperation*>& ops, bool keepDirectories,
         bool install, const QString &where_, bool safe)
 {
     QString err;
 
-    InstalledPackages installed(*InstalledPackages::getDefault());
     QList<PackageVersion*> newest, newesti;
     QList<bool> used;
 

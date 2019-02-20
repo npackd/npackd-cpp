@@ -185,6 +185,7 @@ public:
     /**
      * Plans updates for the given packages.
      *
+     * @param installed list of installed packages. This object will be modified
      * @param packages these packages should be updated. No duplicates are
      *     allowed here
      * @param ranges these packages should be updated. No duplicates are
@@ -202,7 +203,7 @@ public:
      *     be used if only one package should be updated
      * @return error message or ""
      */
-    QString planUpdates(const QList<Package*> packages,
+    QString planUpdates(InstalledPackages &installed, const QList<Package*> packages,
                         QList<Dependency *> ranges,
                         QList<InstallOperation*>& ops, bool keepDirectories=false,
                         bool install=false, const QString& where_="",

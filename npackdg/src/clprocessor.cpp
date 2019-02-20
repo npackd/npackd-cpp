@@ -275,10 +275,19 @@ QString CLProcessor::update()
     }
 
     QList<InstallOperation*> ops;
+    InstalledPackages installed(*InstalledPackages::getDefault());
+
+    if (job->shouldProceed()) {
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
+
     bool up2date = false;
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.12, QObject::tr("Planning"));
-        QString err = rep->planUpdates(toUpdate, QList<Dependency*>(), ops);
+        QString err = rep->planUpdates(installed,
+                toUpdate, QList<Dependency*>(), ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
