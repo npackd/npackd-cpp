@@ -859,8 +859,8 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
             PackageVersion* b = newesti.at(i);
             if (b) {
-                QString err = b->planUninstallation(
-                        installedCopy, ops2);
+                QString err = planUninstallation(
+                        installedCopy, b->package, b->version, ops2);
 
                 qCDebug(npackd) << "planUpdates: 1st uninstall" <<
                         b->package << "resulted in" << ops2.count() <<
@@ -922,7 +922,8 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 PackageVersion* b = newesti.at(i);
                 if (b) {
                     if (safe) {
-                        err = b->planUninstallation(installedCopy, ops);
+                        err = planUninstallation(installedCopy, b->package,
+                                b->version, ops);
                         qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
                                 b->package << "resulted in" << ops.count() <<
                                 "operations with result:" << err;
@@ -939,7 +940,8 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                             }
                         }
                     } else {
-                        err = b->planUninstallation(installedCopy, ops);
+                        err = planUninstallation(installedCopy, b->package,
+                                b->version, ops);
 
                         qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
                                 b->package << "resulted in" << ops.count() <<
@@ -977,6 +979,49 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
     qDeleteAll(newesti);
 
     return err;
+}
+
+QString AbstractRepository::planUninstallation(InstalledPackages &installed,
+        const QString &package, const Version &version,
+        QList<InstallOperation *> &ops)
+{
+    // qCDebug(npackd) << "PackageVersion::planUninstallation()" << this->toString();
+    QString res;
+
+    if (!installed.isInstalled(package, version))
+        return res;
+
+    installed.setPackageVersionPath(package, version, "", false);
+
+    // this loop ensures that all the items in "installed" are processed
+    // even if changes in the list were done in nested calls to
+    // "planUninstallation"
+    while (true) {
+        QScopedPointer<InstalledPackageVersion> ipv(installed.
+                findFirstWithMissingDependency());
+        if (ipv.data()) {
+            QScopedPointer<PackageVersion> pv(findPackageVersion_(
+                    ipv.data()->package, ipv.data()->version, &res));
+            if (!res.isEmpty())
+                break;
+
+            res = planUninstallation(installed, pv->package, pv->version, ops);
+            if (!res.isEmpty())
+                break;
+        } else {
+            break;
+        }
+    }
+
+    if (res.isEmpty()) {
+        InstallOperation* op = new InstallOperation();
+        op->install = false;
+        op->package = package;
+        op->version = version;
+        ops.append(op);
+    }
+
+    return res;
 }
 
 QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)

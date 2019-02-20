@@ -347,20 +347,6 @@ public:
             const QString &where="");
 
     /**
-     * Plans un-installation of this package and all the dependent recursively.
-     *
-     * @param installed list of installed packages. This list should be
-     *     consulted instead of .installed() and will be updated and contains
-     *     all installed package versions after the process. The list will also
-     *     be updated to reflect packages "uninstalled" by this method
-     * @param op necessary operations will be added here. The existing
-     *     elements will not be modified in any way.
-     * @return error message or ""
-     */
-    QString planUninstallation(InstalledPackages& installed,
-            QList<InstallOperation*>& ops);
-
-    /**
      * @param includeFullPackageName true = full package name will be added
      * @return package title
      */

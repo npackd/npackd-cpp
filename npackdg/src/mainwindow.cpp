@@ -2144,7 +2144,8 @@ void MainWindow::on_actionUninstall_triggered()
     if (err.isEmpty()) {
         for (int i = 0; i < pvs.count(); i++) {
             PackageVersion* pv = pvs.at(i);
-            err = pv->planUninstallation(installed, ops);
+            err = DBRepository::getDefault()->planUninstallation(installed,
+                    pv->package, pv->version, ops);
             if (!err.isEmpty())
                 break;
         }

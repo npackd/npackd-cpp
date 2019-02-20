@@ -748,51 +748,6 @@ QString PackageVersion::planInstallation(InstalledPackages &installed,
     return res;
 }
 
-QString PackageVersion::planUninstallation(InstalledPackages &installed,
-        QList<InstallOperation*>& ops)
-{
-    // qCDebug(npackd) << "PackageVersion::planUninstallation()" << this->toString();
-    QString res;
-
-    if (!installed.isInstalled(this->package, this->version))
-        return res;
-
-    installed.setPackageVersionPath(this->package, this->version,
-            "", false);
-
-    DBRepository* dbr = DBRepository::getDefault();
-
-    // this loop ensures that all the items in "installed" are processed
-    // even if changes in the list were done in nested calls to
-    // "planUninstallation"
-    while (true) {
-        QScopedPointer<InstalledPackageVersion> ipv(installed.
-                findFirstWithMissingDependency());
-        if (ipv.data()) {
-            QScopedPointer<PackageVersion> pv(dbr->findPackageVersion_(
-                    ipv.data()->package, ipv.data()->version, &res));
-            if (!res.isEmpty())
-                break;
-
-            res = pv->planUninstallation(installed, ops);
-            if (!res.isEmpty())
-                break;
-        } else {
-            break;
-        }
-    }
-
-    if (res.isEmpty()) {
-        InstallOperation* op = new InstallOperation();
-        op->install = false;
-        op->package = this->package;
-        op->version = this->version;
-        ops.append(op);
-    }
-
-    return res;
-}
-
 QString PackageVersion::getFileExtension()
 {
     if (this->download.isValid()) {

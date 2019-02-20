@@ -92,7 +92,8 @@ QString CLProcessor::remove()
     if (err.isEmpty()) {
         for (int i = 0; i < toRemove.count(); i++) {
             PackageVersion* pv = toRemove.at(i);
-            err = pv->planUninstallation(installed, ops);
+            err = DBRepository::getDefault()->planUninstallation(installed,
+                    pv->package, pv->version, ops);
             if (!err.isEmpty())
                 break;
         }

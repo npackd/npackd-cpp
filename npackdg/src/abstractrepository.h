@@ -210,6 +210,24 @@ public:
                         bool safe=false);
 
     /**
+     * Plans un-installation of a package version and all the dependent
+     * recursively.
+     *
+     * @param installed list of installed packages. This list should be
+     *     consulted instead of .installed() and will be updated and contains
+     *     all installed package versions after the process. The list will also
+     *     be updated to reflect packages "uninstalled" by this method
+     * @param package full package name
+     * @param version version number to be uninstalled
+     * @param op necessary operations will be added here. The existing
+     *     elements will not be modified in any way.
+     * @return error message or ""
+     */
+    QString planUninstallation(InstalledPackages& installed,
+            const QString& package, const Version& version,
+            QList<InstallOperation*>& ops);
+
+    /**
      * @brief searches for a package version by the associated MSI GUID
      * @param guid MSI package GUID
      * @param err error message will be stored here

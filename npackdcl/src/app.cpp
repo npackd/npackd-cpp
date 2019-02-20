@@ -1961,7 +1961,8 @@ void App::remove(Job *job)
         if (job->shouldProceed()) {
             for (int i = 0; i < toRemove.size(); i++) {
                 PackageVersion* pv = toRemove.at(i);
-                err = pv->planUninstallation(installed, ops);
+                err = DBRepository::getDefault()->planUninstallation(installed,
+                        pv->package, pv->version, ops);
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);
                     break;
