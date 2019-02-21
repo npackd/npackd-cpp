@@ -45,9 +45,9 @@ QString Package::getChangeLog() const
 void Package::setChangeLog(const QString &changelog)
 {
     if (changelog.isEmpty())
-        links.remove("icon");
+        links.remove("changelog");
     else
-        links.replace("icon", changelog);
+        links.replace("changelog", changelog);
 }
 
 void Package::setIcon(const QString &icon)
