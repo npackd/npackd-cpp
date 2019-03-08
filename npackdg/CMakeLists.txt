@@ -239,7 +239,6 @@ target_link_libraries(npackdg
     Qt5EventDispatcherSupport
     Qt5FontDatabaseSupport
     Qt5PlatformCompositorSupport
-    Qt5VulkanSupport
     Qt5WindowsUIAutomationSupport
     qdirect2d
 

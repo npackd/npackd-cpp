@@ -8,11 +8,13 @@ their 32 bit versions.
 
 - download and unpack QuaZIP from https://github.com/tim-lebedkov/npackd-scripts/releases/download/release_2018.01.01_2/quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static-0.7.3.zip
 - install and start MSYS2
-- pacman -S --noconfirm mingw64/mingw-w64-x86_64-cmake mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static
+- execute "pacman -Syuu" twice to update everything
+- pacman -S --noconfirm mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-cmake mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static
 - export PATH=/mingw64/bin:$PATH
 - mkdir build
 - cd build
-- cmake -G "MinGW Makefiles" ..\ "-DQUAZIP_ROOT:PATH=C:\Program Files\QuaZIP"
+- export QTDIR=C:/msys64/mingw64/qt5-static (note the use of the forward slashes here!!!)
+- cmake -G "MinGW Makefiles" ..\ "-DQUAZIP_ROOT:PATH=C:\Program Files\QuaZIP" "-DQTDIR:PATH=C:\msys64\mingw64\qt5-static" "-DCMAKE_BUILD_TYPE=MinSizeRel"
 - make.exe
 
 
