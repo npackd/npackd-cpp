@@ -24,6 +24,9 @@ rem Python will be detected, but needs NpackdCL
 "%npackd_cl%\ncl" add -p com.googlecode.windows-package-manager.NpackdCL
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+rem update all packages to the newest versions
+C:\msys64\usr\bin\pacman -Syu
+
 if %bits% equ 64 goto bits64
 
 C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-i686-libtool mingw32/mingw-w64-i686-jasper mingw32/mingw-w64-i686-qt5-static mingw32/mingw-w64-i686-icu
