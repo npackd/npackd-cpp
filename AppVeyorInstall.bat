@@ -25,7 +25,7 @@ rem Python will be detected, but needs NpackdCL
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem update all packages to the newest versions
-C:\msys64\usr\bin\pacman -Syu
+C:\msys64\usr\bin\pacman -Syu --noconfirm 
 
 if %bits% equ 64 goto bits64
 
