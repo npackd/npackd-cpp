@@ -90,7 +90,7 @@ int RepositoryXMLHandler::findWhere()
 
 RepositoryXMLHandler::RepositoryXMLHandler(AbstractRepository *rep,
         const QUrl &url) :
-        rep(rep), lic(0), p(0), pv(0), pvf(0), dep(0), url(url)
+        rep(rep), lic(nullptr), p(nullptr), pv(nullptr), pvf(nullptr), dep(nullptr), url(url)
 {
 }
 
@@ -278,10 +278,10 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
                     arg(pv->package).arg(pv->version.getVersionString()).
                     arg(error);
         delete pv;
-        pv = 0;
+        pv = nullptr;
     } else if (where == TAG_VERSION_FILE) {
         pvf->content = chars;
-        pvf = 0;
+        pvf = nullptr;
     } else if (where == TAG_VERSION_URL) {
         QString url = chars;
         error = WPMUtils::checkURL(this->url, &url, true);
@@ -325,7 +325,7 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
             error = QObject::tr("Error saving the package %1: %2").
                     arg(p->title).arg(error);
         delete p;
-        p = 0;
+        p = nullptr;
     } else if (where == TAG_PACKAGE_TITLE) {
         p->title = chars.trimmed();
     } else if (where == TAG_PACKAGE_URL) {
@@ -365,7 +365,7 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
                     arg(lic->title).
                     arg(error);
         delete lic;
-        lic = 0;
+        lic = nullptr;
     } else if (where == TAG_LICENSE_TITLE) {
         lic->title = chars.trimmed();
     } else if (where == TAG_LICENSE_URL) {

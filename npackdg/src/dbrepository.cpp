@@ -49,15 +49,15 @@ DBRepository DBRepository::def;
 DBRepository::DBRepository(): mutex(QMutex::Recursive)
 {
     currentRepository = -1;
-    replacePackageVersionQuery = 0;
-    insertPackageVersionQuery = 0;
-    insertPackageQuery = 0;
-    insertLinkQuery = 0;
-    deleteLinkQuery = 0;
-    replacePackageQuery = 0;
-    selectCategoryQuery = 0;
-    insertInstalledQuery = 0;
-    insertURLSizeQuery = 0;
+    replacePackageVersionQuery = nullptr;
+    insertPackageVersionQuery = nullptr;
+    insertPackageQuery = nullptr;
+    insertLinkQuery = nullptr;
+    deleteLinkQuery = nullptr;
+    replacePackageQuery = nullptr;
+    selectCategoryQuery = nullptr;
+    insertInstalledQuery = nullptr;
+    insertURLSizeQuery = nullptr;
 }
 
 DBRepository::~DBRepository()
@@ -146,7 +146,7 @@ QString DBRepository::saveURLSize(const QString& url, int64_t size)
         insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
         insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
         insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
-                static_cast<qlonglong>(time(0)));
+                static_cast<qlonglong>(time(nullptr)));
         if (!insertURLSizeQuery->exec())
             err = getErrorString(*insertURLSizeQuery);
 
@@ -290,7 +290,7 @@ Package *DBRepository::findPackage_(const QString &name)
 
     QString err;
 
-    Package* r = 0;
+    Package* r = nullptr;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral(
@@ -470,7 +470,7 @@ PackageVersion* DBRepository::findPackageVersion_(
     Version v = version;
     v.normalize();
     QString version_ = v.getVersionString();
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral("SELECT NAME, "
@@ -605,7 +605,7 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
 
     *err = QStringLiteral("");
 
-    License* r = 0;
+    License* r = nullptr;
     License* cached = this->licenses.object(name);
     if (!cached) {
         MySQLQuery q(db);
@@ -768,8 +768,8 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
 
         where += QStringLiteral("STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS");
 
-        params.append(QVariant((int) minStatus));
-        params.append(QVariant((int) maxStatus));
+        params.append(QVariant(static_cast<int>(minStatus)));
+        params.append(QVariant(static_cast<int>(maxStatus)));
     }
 
     if (cat0 == 0) {
@@ -780,7 +780,7 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
         if (!where.isEmpty())
             where += QStringLiteral(" AND ");
         where += QStringLiteral("CATEGORY0 = :CATEGORY0");
-        params.append(QVariant((int) cat0));
+        params.append(QVariant(cat0));
     }
 
     if (cat1 == 0) {
@@ -791,7 +791,7 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
         if (!where.isEmpty())
             where += QStringLiteral(" AND ");
         where += QStringLiteral("CATEGORY1 = :CATEGORY1");
-        params.append(QVariant((int) cat1));
+        params.append(QVariant(cat1));
     }
 
     if (!where.isEmpty())
@@ -856,8 +856,8 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
             where += QStringLiteral(" AND ");
         where += QStringLiteral("STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS");
 
-        params.append(QVariant((int) minStatus));
-        params.append(QVariant((int) maxStatus));
+        params.append(QVariant(static_cast<int>(minStatus)));
+        params.append(QVariant(static_cast<int>(maxStatus)));
     }
 
     if (cat0 == 0) {
@@ -868,7 +868,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
         if (!where.isEmpty())
             where += QStringLiteral(" AND ");
         where += QStringLiteral("CATEGORY0 = :CATEGORY0");
-        params.append(QVariant((int) cat0));
+        params.append(QVariant(cat0));
     }
 
     if (cat1 == 0) {
@@ -879,7 +879,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
         if (!where.isEmpty())
             where += QStringLiteral(" AND ");
         where += QStringLiteral("CATEGORY1 = :CATEGORY1");
-        params.append(QVariant((int) cat1));
+        params.append(QVariant(cat1));
     }
 
     if (!where.isEmpty())
@@ -1049,7 +1049,7 @@ QString DBRepository::deleteCmdFiles(const QString& name, const Version& version
         if (!deleteCmdFilesQuery->prepare(QStringLiteral(
                 "DELETE FROM CMD_FILE WHERE PACKAGE=:PACKAGE AND VERSION=:VERSION"))) {
             err = getErrorString(*deleteCmdFilesQuery);
-            deleteCmdFilesQuery.reset(0);
+            deleteCmdFilesQuery.reset(nullptr);
         }
     }
 
@@ -1386,7 +1386,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
                 "PACKAGE, VERSION, PATH, NAME) "
                 "VALUES (:PACKAGE, :VERSION, :PATH, :NAME)"))) {
             err = getErrorString(*insertCmdFileQuery);
-            insertCmdFileQuery = 0;
+            insertCmdFileQuery = nullptr;
         }
     }
 
@@ -1460,7 +1460,7 @@ PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
 
     *err = "";
 
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral("SELECT NAME, "
@@ -1654,8 +1654,8 @@ void DBRepository::load(Job* job, bool useCache, bool interactive,
 }
 
 void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
-    QTemporaryDir* dir = 0;
-    QFile* xmlInZIP = 0;
+    QTemporaryDir* dir = nullptr;
+    QFile* xmlInZIP = nullptr;
     if (job->shouldProceed()) {
         if (f->open(QFile::ReadOnly) &&
                 f->seek(0) && f->read(4) == QByteArray::fromRawData(
@@ -1871,7 +1871,7 @@ void DBRepository::updateF5Runnable(Job *job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.77,
                 QObject::tr("Updating the temporary database"), true, true);
-        CoInitialize(0);
+        CoInitialize(nullptr);
         tempdb.updateF5(sub, true, "", "", "", "");
         CoUninitialize();
     }
@@ -2191,8 +2191,8 @@ QString DBRepository::updateStatus(const QString& package)
     QString err;
 
     QList<PackageVersion*> pvs = getPackageVersions_(package, &err);
-    PackageVersion* newestInstallable = 0;
-    PackageVersion* newestInstalled = 0;
+    PackageVersion* newestInstallable = nullptr;
+    PackageVersion* newestInstalled = nullptr;
     if (err.isEmpty()) {
         for (int j = 0; j < pvs.count(); j++) {
             PackageVersion* pv = pvs.at(j);
