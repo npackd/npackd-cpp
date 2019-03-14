@@ -52,7 +52,7 @@ HRESULT CreateAttachmentServices(IAttachmentExecute **ppae)
 {
     // Assume that CoInitialize has already been called for this thread.
     HRESULT hr = CoCreateInstance(CLSID_AttachmentServices,
-                                  NULL,
+                                  nullptr,
                                   CLSCTX_ALL,
                                   IID_IAttachmentExecute,
                                   (void**)ppae);
@@ -85,7 +85,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     if (!SUCCEEDED(hr)) {
         WPMUtils::formatMessage(hr, &err);
         // err = "1: " + err;
-        pExecute = 0;
+        pExecute = nullptr;
     }
 
     if (err.isEmpty() && pExecute) {
@@ -214,7 +214,7 @@ PackageVersion* PackageVersion::findLockedPackageVersion(QString *err)
 {
     *err = "";
 
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     lockedPackageVersionsMutex.lock();
     QSetIterator<QString> i(lockedPackageVersions);
@@ -1985,7 +1985,6 @@ PackageVersion* PackageVersion::clone() const
     r->sha1 = this->sha1;
     r->hashSumType = this->hashSumType;
     r->download = this->download;
-    r->msiGUID = this->msiGUID;
 
     return r;
 }
@@ -2066,9 +2065,6 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
             w->writeTextElement("variable", d->var);
         w->writeEndElement();
     }
-    if (!this->msiGUID.isEmpty()) {
-        w->writeTextElement("detect-msi", this->msiGUID);
-    }
     w->writeEndElement();
 }
 
@@ -2133,10 +2129,6 @@ void PackageVersion::toJSON(QJsonObject& w) const
             dependency.append(obj);
         }
         w["dependencies"] = dependency;
-    }
-
-    if (!this->msiGUID.isEmpty()) {
-        w["detectMSI"] = this->msiGUID;
     }
 }
 

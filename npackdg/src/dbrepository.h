@@ -296,9 +296,6 @@ public:
      */
     void updateF5Runnable(Job* job);
 
-    PackageVersion* findPackageVersionByMSIGUID_(
-            const QString& guid, QString *err) const;
-
     PackageVersion* findPackageVersion_(const QString& package,
             const Version& version, QString *err) const;
 

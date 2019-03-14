@@ -146,9 +146,6 @@ public:
 
     QString saveLicense(License *p, bool replace);
 
-    PackageVersion* findPackageVersionByMSIGUID_(
-            const QString& guid, QString *err) const;
-
     PackageVersion* findPackageVersion_(const QString& package,
             const Version& version, QString* err) const;
 

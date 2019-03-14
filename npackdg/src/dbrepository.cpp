@@ -1366,9 +1366,9 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 
         QString sql = QStringLiteral(" INTO PACKAGE_VERSION "
                 "(NAME, PACKAGE, URL, "
-                "CONTENT, MSIGUID, DETECT_FILE_COUNT)"
+                "CONTENT, DETECT_FILE_COUNT)"
                 "VALUES(:NAME, :PACKAGE, "
-                ":URL, :CONTENT, :MSIGUID, "
+                ":URL, :CONTENT, "
                 ":DETECT_FILE_COUNT)");
 
         if (!replacePackageVersionQuery->prepare(
@@ -1406,7 +1406,6 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
                 v.getVersionString());
         q->bindValue(QStringLiteral(":PACKAGE"), p->package);
         q->bindValue(QStringLiteral(":URL"), p->download.toString());
-        q->bindValue(QStringLiteral(":MSIGUID"), p->msiGUID);
         q->bindValue(QStringLiteral(":DETECT_FILE_COUNT"), 0);
 
         QByteArray file;
@@ -1451,36 +1450,6 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
     }
 
     return err;
-}
-
-PackageVersion *DBRepository::findPackageVersionByMSIGUID_(
-        const QString &guid, QString* err) const
-{
-    QMutexLocker ml(&this->mutex);
-
-    *err = "";
-
-    PackageVersion* r = nullptr;
-
-    MySQLQuery q(db);
-    if (!q.prepare(QStringLiteral("SELECT NAME, "
-            "PACKAGE, CONTENT FROM PACKAGE_VERSION "
-            "WHERE MSIGUID = :MSIGUID")))
-        *err = getErrorString(q);
-
-    if (err->isEmpty()) {
-        q.bindValue(QStringLiteral(":MSIGUID"), guid);
-        if (!q.exec())
-            *err = getErrorString(q);
-    }
-
-    if (err->isEmpty()) {
-        if (q.next()) {
-            r = PackageVersion::parse(q.value(2).toByteArray(), err);
-        }
-    }
-
-    return r;
 }
 
 QString DBRepository::clear()

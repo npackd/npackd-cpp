@@ -228,15 +228,6 @@ public:
             QList<InstallOperation*>& ops);
 
     /**
-     * @brief searches for a package version by the associated MSI GUID
-     * @param guid MSI package GUID
-     * @param err error message will be stored here
-     * @return [ownership:new] found package version or 0
-     */
-    virtual PackageVersion* findPackageVersionByMSIGUID_(
-            const QString& guid, QString* err) const = 0;
-
-    /**
      * Find the newest available package version.
      *
      * @param package name of the package like "org.server.Word"

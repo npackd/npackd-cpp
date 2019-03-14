@@ -308,14 +308,6 @@ bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
                         arg(pv->toString()).arg(error);
             }
         }
-    } else if (where == TAG_VERSION_DETECT_MSI) {
-        pv->msiGUID = chars.trimmed().toLower();
-        if (!pv->msiGUID.isEmpty()) {
-            error = WPMUtils::validateGUID(pv->msiGUID);
-            if (!error.isEmpty())
-                error = QObject::tr("Wrong MSI GUID for %1: %2 (%3)").
-                        arg(pv->toString()).arg(pv->msiGUID).arg(error);
-        }
     } else if (where == TAG_VERSION_DEPENDENCY_VARIABLE) {
         dep->var = chars.trimmed();
     } else if (where == TAG_PACKAGE) {

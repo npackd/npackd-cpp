@@ -293,27 +293,6 @@ QString Repository::savePackageVersion(PackageVersion *p, bool replace)
     return "";
 }
 
-PackageVersion *Repository::findPackageVersionByMSIGUID_(
-        const QString &guid, QString* err) const
-{
-    *err = "";
-
-    PackageVersion* r = 0;
-    for (int i = 0; i < this->packageVersions.count(); i++) {
-        PackageVersion* pv = static_cast<PackageVersion*>(
-                this->packageVersions.at(i));
-        if (pv->msiGUID == guid) {
-            r = pv;
-            break;
-        }
-    }
-
-    if (r)
-        r = r->clone();
-
-    return r;
-}
-
 PackageVersion *Repository::findPackageVersion_(const QString &package,
         const Version &version, QString *err) const
 {

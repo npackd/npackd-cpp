@@ -3068,7 +3068,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Wrong MSI GUID for %1: %2 (%3)</source>
-        <translation>MSI GUID erróneo para %1: %2 (%3)</translation>
+        <translation type="vanished">MSI GUID erróneo para %1: %2 (%3)</translation>
     </message>
     <message>
         <source>Error saving the package %1: %2</source>
