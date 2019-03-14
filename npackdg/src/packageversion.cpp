@@ -2065,6 +2065,9 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
             w->writeTextElement("variable", d->var);
         w->writeEndElement();
     }
+    if (!this->getPath().isEmpty()) {
+        w->writeTextElement("installed", this->getPath());
+    }
     w->writeEndElement();
 }
 
@@ -2129,6 +2132,10 @@ void PackageVersion::toJSON(QJsonObject& w) const
             dependency.append(obj);
         }
         w["dependencies"] = dependency;
+    }
+
+    if (!this->getPath().isEmpty()) {
+        w["installed"] = this->getPath();
     }
 }
 
