@@ -382,7 +382,7 @@ void PackageVersion::deleteShortcutsRunnable(const QString& dir, Job* job,
     bool b = SetThreadPriority(GetCurrentThread(),
             THREAD_MODE_BACKGROUND_BEGIN);
 
-    CoInitialize(0);
+    CoInitialize(nullptr);
     deleteShortcuts(dir, job, menu, desktop, quickLaunch);
     CoUninitialize();
 
@@ -498,7 +498,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             QString usfn = d.absolutePath() + "\\" + uninstallationScript;
             HANDLE ush = CreateFile((LPCWSTR) usfn.utf16(),
                     GENERIC_READ,
-                    FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
+                    FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
 
             /* debugging
             if (ush != INVALID_HANDLE_VALUE) {
@@ -892,7 +892,7 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
 
         CommandLine::ParsedOption* po = pos.at(i);
         if (po->opt->nameMathes("package")) {
-            CommandLine::ParsedOption* ponext = 0;
+            CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
 
@@ -901,7 +901,7 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
                 *err = QObject::tr("Invalid package name: %1").arg(package);
             }
 
-            Package* p = 0;
+            Package* p = nullptr;
             if (err->isEmpty()) {
                 p = AbstractRepository::findOnePackage(package, err);
                 if (err->isEmpty()) {
@@ -910,14 +910,14 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
                 }
             }
 
-            PackageVersion* pv = 0;
+            PackageVersion* pv = nullptr;
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt->nameMathes("version"))
                     version = ponext->value;
 
                 QString versions;
-                if (ponext != 0 && ponext->opt->nameMathes("versions"))
+                if (ponext != nullptr && ponext->opt->nameMathes("versions"))
                     versions = ponext->value;
 
                 if (!versions.isNull()) {
@@ -1005,7 +1005,7 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
 
         CommandLine::ParsedOption* po = pos.at(i);
         if (po->opt->nameMathes("package")) {
-            CommandLine::ParsedOption* ponext = 0;
+            CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
 
@@ -1014,7 +1014,7 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
                 *err = QObject::tr("Invalid package name: %1").arg(package);
             }
 
-            Package* p = 0;
+            Package* p = nullptr;
             if (err->isEmpty()) {
                 p = AbstractRepository::findOnePackage(package, err);
                 if (err->isEmpty()) {
@@ -1023,10 +1023,10 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
                 }
             }
 
-            PackageVersion* pv = 0;
+            PackageVersion* pv = nullptr;
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt->nameMathes("version"))
                     version = ponext->value;
                 if (version.isNull()) {
                     QList<InstalledPackageVersion*> ipvs =
@@ -1103,7 +1103,7 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
 
         CommandLine::ParsedOption* po = pos.at(i);
         if (po->opt->nameMathes("package")) {
-            CommandLine::ParsedOption* ponext = 0;
+            CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
 
@@ -1112,7 +1112,7 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
                 *err = QObject::tr("Invalid package name: %1").arg(package);
             }
 
-            Package* p = 0;
+            Package* p = nullptr;
             if (err->isEmpty()) {
                 p = AbstractRepository::findOnePackage(package, err);
                 if (err->isEmpty()) {
@@ -1121,14 +1121,14 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
                 }
             }
 
-            InstalledPackageVersion* ipv = 0;
+            InstalledPackageVersion* ipv = nullptr;
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt->nameMathes("version"))
                     version = ponext->value;
 
                 QString versions;
-                if (ponext != 0 && ponext->opt->nameMathes("versions"))
+                if (ponext != nullptr && ponext->opt->nameMathes("versions"))
                     versions = ponext->value;
 
                 if (!versions.isNull()) {
@@ -1203,7 +1203,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
             QList<PackageVersion*> pvs = dbr->findPackageVersionsWithCmdFile(
                     cmdFileName, errMsg);
             if (pvs.size() > 0) {
-                PackageVersion* last = 0;
+                PackageVersion* last = nullptr;
                 for (int i = pvs.size() - 1; i >= 0; i--) {
                     PackageVersion* pv = pvs.at(i);
                     if (pv->installed()) {
@@ -1241,7 +1241,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
                     WPMUtils::executeFile(job.get(), dir, exeProxy,
                             "exeproxy-copy \"" + sourcePath + "\" \"" +
                             targetPath + "\"",
-                            0,
+                            nullptr,
                             QStringList());
                 }
             }
@@ -1418,7 +1418,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
         job->setTitle(initialTitle + " / " +
                 QObject::tr("Waiting for a free HTTP connection"));
 
-        time_t start = time(NULL);
+        time_t start = time(nullptr);
         while (!job->isCancelled()) {
             httpConnectionAcquired = httpConnections.tryAcquire(1, 10000);
             if (httpConnectionAcquired) {
@@ -1426,7 +1426,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
                 break;
             }
 
-            time_t seconds = time(NULL) - start;
+            time_t seconds = time(nullptr) - start;
             job->setTitle(initialTitle + " / " + QString(
                     QObject::tr("Waiting for a free HTTP connection (%1 minutes)")).
                     arg(seconds / 60));
@@ -1828,7 +1828,7 @@ QString PackageVersion::getStatus() const
     if (installed) {
         status = QObject::tr("installed");
     }
-    if (installed && newest != 0 && version.compare(newest->version) < 0) {
+    if (installed && newest != nullptr && version.compare(newest->version) < 0) {
         if (!newest->installed())
             status += ", " + QObject::tr("updateable");
         else
@@ -1991,7 +1991,7 @@ PackageVersion* PackageVersion::clone() const
 
 PackageVersion *PackageVersion::parse(const QByteArray &xml, QString *err, bool validate)
 {
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     Repository rep;
     RepositoryXMLHandler handler(&rep, QUrl());
@@ -2134,7 +2134,7 @@ void PackageVersion::toJSON(QJsonObject& w) const
 
 PackageVersionFile* PackageVersion::findFile(const QString& path) const
 {
-    PackageVersionFile* r = 0;
+    PackageVersionFile* r = nullptr;
     QString lowerPath = path.toLower();
     for (int i = 0; i < this->files.count(); i++) {
         PackageVersionFile* pvf = this->files.at(i);
