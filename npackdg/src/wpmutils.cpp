@@ -55,7 +55,7 @@ bool WPMUtils::adminMode = true;
 
 QAtomicInt WPMUtils::nextNamePipeId;
 
-HANDLE WPMUtils::hEventLog = 0;
+HANDLE WPMUtils::hEventLog = nullptr;
 
 const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
 
@@ -258,7 +258,7 @@ QString WPMUtils::getProgramFilesDir()
 
     if (ret.isEmpty()) {
         WCHAR dir[MAX_PATH];
-        SHGetFolderPath(0, CSIDL_PROGRAM_FILES, NULL, 0, dir);
+        SHGetFolderPath(nullptr, CSIDL_PROGRAM_FILES, nullptr, 0, dir);
         ret = QString::fromUtf16(reinterpret_cast<ushort*>(dir));
     }
 
@@ -277,7 +277,7 @@ QList<Dependency*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
 
         CommandLine::ParsedOption* po = pos.at(i);
         if (po->opt->nameMathes("package")) {
-            CommandLine::ParsedOption* ponext = 0;
+            CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
 
@@ -286,7 +286,7 @@ QList<Dependency*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
                 *err = QObject::tr("Invalid package name: %1").arg(package);
             }
 
-            Package* p = 0;
+            Package* p = nullptr;
             if (err->isEmpty()) {
                 p = AbstractRepository::findOnePackage(package, err);
                 if (err->isEmpty()) {
@@ -297,11 +297,11 @@ QList<Dependency*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
 
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != 0 && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt->nameMathes("version"))
                     version = ponext->value;
 
                 QString versions;
-                if (ponext != 0 && ponext->opt->nameMathes("versions"))
+                if (ponext != nullptr && ponext->opt->nameMathes("versions"))
                     versions = ponext->value;
 
                 Dependency* dep = 0;
@@ -3793,7 +3793,7 @@ bool WPMUtils::hasAdminPrivileges()
 	PRIVILEGE_SET ps;
 	DWORD dwStatus;
 	PACL pACL = NULL;
-	PSECURITY_DESCRIPTOR psdAdmin = NULL;
+    PSECURITY_DESCRIPTOR psdAdmin = nullptr;
 
     QString err;
 

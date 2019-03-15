@@ -240,8 +240,12 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         }
     }
 
-    //qCDebug(npackd) << "0" << ipv->package << ipv->version.getVersionString() <<
-    //        ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
+    // this is the only consistent output place for all packages detected by
+    // third party package managers and should be keeped for eventual
+    // debugging via "npackdcl -d"
+    qCDebug(npackd) << "InstalledPackages::processOneInstalled3rdParty" <<
+            ipv->package << ipv->version.getVersionString() <<
+            ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
 
     if (!d.isEmpty()) {
         if (!qd.exists(d))
@@ -345,7 +349,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         }
     }
 
-    PackageVersionFile* u = 0;
+    PackageVersionFile* u = nullptr;
     if (err.isEmpty()) {
         // qCDebug(npackd) << "    1";
 
@@ -354,7 +358,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     // special case: we don't know where the package is installed and we
     // don't know how to remove it
-    if (err.isEmpty() && d.isEmpty() && u == 0 && pv) {
+    if (err.isEmpty() && d.isEmpty() && u == nullptr && pv) {
         u = new PackageVersionFile(".Npackd\\Uninstall.bat",
                 "echo no removal procedure for this package is available"
                 "\r\n"
@@ -385,7 +389,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         err = pv->saveFiles(QDir(d));
     }
 
-    InstalledPackageVersion* ipv2 = 0;
+    InstalledPackageVersion* ipv2 = nullptr;
     if (err.isEmpty()) {
         // qCDebug(npackd) << "    4";
         ipv2 = this->findOrCreate(ipv->package, ipv->version, &err);
@@ -455,7 +459,7 @@ InstalledPackageVersion *InstalledPackages::findOwner(
 {
     this->mutex.lock();
 
-    InstalledPackageVersion* f = 0;
+    InstalledPackageVersion* f = nullptr;
     QList<InstalledPackageVersion*> ipvs = this->data.values();
     for (int i = 0; i < ipvs.count(); ++i) {
         InstalledPackageVersion* ipv = ipvs.at(i);
@@ -516,7 +520,7 @@ InstalledPackageVersion* InstalledPackages::getNewestInstalled(
     this->mutex.lock();
 
     QList<InstalledPackageVersion*> all = this->data.values();
-    InstalledPackageVersion* r = 0;
+    InstalledPackageVersion* r = nullptr;
     for (int i = 0; i < all.count(); i++) {
         InstalledPackageVersion* ipv = all.at(i);
         if (ipv->package == package && ipv->installed()) {
@@ -569,7 +573,7 @@ QSet<QString> InstalledPackages::getPackages() const
 InstalledPackageVersion*
         InstalledPackages::findFirstWithMissingDependency() const
 {
-    InstalledPackageVersion* r = 0;
+    InstalledPackageVersion* r = nullptr;
 
     this->mutex.lock();
 

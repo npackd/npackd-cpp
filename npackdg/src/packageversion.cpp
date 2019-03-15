@@ -2065,9 +2065,12 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
             w->writeTextElement("variable", d->var);
         w->writeEndElement();
     }
+    /*
+    XML is never shown on the console
     if (!this->getPath().isEmpty()) {
         w->writeTextElement("installed", this->getPath());
     }
+    */
     w->writeEndElement();
 }
 
