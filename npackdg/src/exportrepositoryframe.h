@@ -12,7 +12,7 @@ class ExportRepositoryFrame : public QFrame
     Q_OBJECT
 
 public:
-    explicit ExportRepositoryFrame(QWidget *parent = 0);
+    explicit ExportRepositoryFrame(QWidget *parent = nullptr);
     ~ExportRepositoryFrame();
 
     /**

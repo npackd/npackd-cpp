@@ -65,7 +65,7 @@ extern HWND defaultPasswordWindow;
 
 QIcon MainWindow::genericAppIcon;
 QIcon MainWindow::waitAppIcon;
-MainWindow* MainWindow::instance = 0;
+MainWindow* MainWindow::instance = nullptr;
 
 /* creating a tag cloud
 QString err;
@@ -149,9 +149,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->taskbarMessageId = 0;
 
-    this->pt = 0;
-    this->jobsTab = 0;
-    this->taskbarInterface = 0;
+    this->pt = nullptr;
+    this->jobsTab = nullptr;
+    this->taskbarInterface = nullptr;
 
     this->reloadRepositoriesThreadRunning = false;
 
@@ -205,11 +205,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->ui->tabWidget->addTab(mainFrame, QObject::tr("Packages"));
 	QTabBar *tabBar = this->ui->tabWidget->findChild<QTabBar *>();
-	tabBar->setTabButton(0, QTabBar::RightSide, 0);
+    tabBar->setTabButton(0, QTabBar::RightSide, nullptr);
     this->loadUISettings();
 
     this->addJobsTab();
-	tabBar->setTabButton(1, QTabBar::RightSide, 0);
+    tabBar->setTabButton(1, QTabBar::RightSide, nullptr);
     connect(VisibleJobs::getDefault(), SIGNAL(changed()),
             this, SLOT(visibleJobsChanged()));
 
@@ -234,7 +234,7 @@ MainWindow::MainWindow(QWidget *parent) :
             (LPFCHANGEWINDOWMESSAGEFILTEREX)
             GetProcAddress(hInstLib, "ChangeWindowMessageFilterEx");
     if (lpfChangeWindowMessageFilterEx) {
-        lpfChangeWindowMessageFilterEx((HWND) winId(), taskbarMessageId, 1, 0);
+        lpfChangeWindowMessageFilterEx((HWND) winId(), taskbarMessageId, 1, nullptr);
         // qCDebug(npackd) << "allow taskbar event " << taskbarMessageId;
     }
     FreeLibrary(hInstLib);
@@ -251,7 +251,7 @@ bool MainWindow::nativeEvent(const QByteArray & eventType, void * message,
     MSG* msg = static_cast<MSG*>(message);
     if (msg->message == taskbarMessageId) {
         // qCDebug(npackd) << "taskbarmessageid";
-        HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL,
+        HRESULT hr = CoCreateInstance(CLSID_TaskbarList, nullptr,
                 CLSCTX_INPROC_SERVER, IID_ITaskbarList3,
                 reinterpret_cast<void**> (&(taskbarInterface)));
 
@@ -260,7 +260,7 @@ bool MainWindow::nativeEvent(const QByteArray & eventType, void * message,
 
             if (FAILED(hr)) {
                 taskbarInterface->Release();
-                taskbarInterface = 0;
+                taskbarInterface = nullptr;
             }
         }
         return true;
@@ -1006,7 +1006,7 @@ bool MainWindow::isUpdateEnabled(const QString& package)
             package, &err);
     PackageVersion* newesti = r->findNewestInstalledPackageVersion_(
             package, &err);
-    if (newest != 0 && newesti != 0) {
+    if (newest != nullptr && newesti != nullptr) {
         // qCDebug(npackd) << newest->version.getVersionString() << " " <<
                 newesti->version.getVersionString();
         bool canInstall = !newest->isLocked() && !newest->installed() &&
@@ -1482,7 +1482,7 @@ void MainWindow::closeDetailTabs()
         PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
         PackageFrame* pf = dynamic_cast<PackageFrame*>(w);
         LicenseForm* lf = dynamic_cast<LicenseForm*>(w);
-        if (pvf != 0 || lf != 0 || pf != 0) {
+        if (pvf != nullptr || lf != nullptr || pf != nullptr) {
             this->ui->tabWidget->removeTab(i);
         } else {
             i++;
@@ -1758,7 +1758,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    SettingsFrame* d = 0;
+    SettingsFrame* d = nullptr;
     for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
         d = dynamic_cast<SettingsFrame*>(w);
@@ -1813,7 +1813,7 @@ void MainWindow::on_actionUpdate_triggered()
                 if (!used.contains(pv->package)) {
                     Package* p = r->findPackage_(pv->package);
 
-                    if (p != 0) {
+                    if (p != nullptr) {
                         packages.append(p);
                         used.insert(pv->package);
                     }

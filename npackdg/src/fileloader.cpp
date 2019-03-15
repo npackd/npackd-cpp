@@ -89,7 +89,7 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
         bool b = SetThreadPriority(GetCurrentThread(),
                 THREAD_MODE_BACKGROUND_BEGIN);
 
-        CoInitialize(NULL);
+        CoInitialize(nullptr);
 
         QString filename = QString::number(id.fetchAndAddAcquire(1));
         QString fn = dir.path() + "\\" + filename;

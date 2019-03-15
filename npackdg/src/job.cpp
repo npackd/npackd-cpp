@@ -282,7 +282,7 @@ int Job::getLevel() const
 
 const Job *Job::getTopJob() const
 {
-    const Job* r = 0;
+    const Job* r = nullptr;
 
     this->mutex.lock();
     r = this;

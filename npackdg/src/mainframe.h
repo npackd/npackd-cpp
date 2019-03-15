@@ -33,7 +33,7 @@ private:
 
     void fillList();
 public:
-    explicit MainFrame(QWidget *parent = 0);
+    explicit MainFrame(QWidget *parent = nullptr);
     ~MainFrame();
 
     QList<void*> getSelected(const QString& type) const;

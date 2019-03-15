@@ -142,7 +142,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     this->ui->textEditCmdFiles->setText(details);
 
     QLayoutItem *child;
-    while ((child = this->ui->frameDependencies->layout()->takeAt(0)) != 0) {
+    while ((child = this->ui->frameDependencies->layout()->takeAt(0)) != nullptr) {
         delete child;
     }
     for (int i = 0; i < pv->dependencies.count(); i++) {
@@ -217,7 +217,7 @@ void PackageVersionForm::on_labelLicense_linkActivated(QString link)
     DBRepository* r = DBRepository::getDefault();
     Package* p = r->findPackage_(pv->package);
 
-    License* lic = 0;
+    License* lic = nullptr;
     QString err;
     if (p) {
         lic = r->findLicense_(p->license, &err);

@@ -123,7 +123,7 @@ QString CommandLine::processOneParam(QStringList* params)
 
 CommandLine::Option* CommandLine::findOption(const QString& name)
 {
-    Option* r = 0;
+    Option* r = nullptr;
     for (int i = 0; i < this->options.count(); i++) {
         Option* opt = this->options.at(i);
         if (opt->nameMathes(name)) {
@@ -206,7 +206,7 @@ QString CommandLine::parse()
 
     int nArgs;
     LPWSTR* szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-    if (NULL == szArglist) {
+    if (nullptr == szArglist) {
         err = QObject::tr("CommandLineToArgvW failed");
     } else {
         for(int i = 1; i < nArgs; i++) {

@@ -101,7 +101,7 @@ public:
      * @param title title for this job
      * @param parent parent job or 0
      */
-    Job(const QString& title="", Job* parent=0);
+    Job(const QString& title="", Job* parent=nullptr);
 
     ~Job();
 

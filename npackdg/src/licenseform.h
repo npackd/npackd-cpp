@@ -20,7 +20,7 @@ public:
     /** the license */
     License* license;
 
-    LicenseForm(QWidget *parent = 0);
+    LicenseForm(QWidget *parent = nullptr);
     ~LicenseForm();
 
     /**

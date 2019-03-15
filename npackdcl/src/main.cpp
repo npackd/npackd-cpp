@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication ca(argc, argv);
 
-    CoInitializeEx(0, COINIT_MULTITHREADED);
+    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     qRegisterMetaType<Version>("Version");
 

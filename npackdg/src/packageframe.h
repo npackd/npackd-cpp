@@ -26,7 +26,7 @@ public:
     /** package associated with this form or 0 */
     Package* p;
 
-    explicit PackageFrame(QWidget *parent = 0);
+    explicit PackageFrame(QWidget *parent = nullptr);
     ~PackageFrame();
 
     /**

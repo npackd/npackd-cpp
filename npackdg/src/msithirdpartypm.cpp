@@ -187,7 +187,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
         rep->savePackage(p, true);
         delete p;
-        p = 0;
+        p = nullptr;
 
         // qCDebug(npackd) << "MSIThirdPartyPM::scan loop 3";
 

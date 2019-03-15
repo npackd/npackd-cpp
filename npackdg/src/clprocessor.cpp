@@ -140,19 +140,19 @@ QString CLProcessor::startNewestNpackdg()
         PROCESS_INFORMATION pinfo;
 
         STARTUPINFOW startupInfo = {
-            sizeof(STARTUPINFO), 0, 0, 0,
+            sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
         };
         startupInfo.dwFlags = STARTF_USESHOWWINDOW;
         startupInfo.wShowWindow = SW_HIDE;
         bool success = CreateProcess(
                 (wchar_t*) exe.utf16(),
                 (wchar_t*) args.utf16(),
-                0, 0, TRUE,
-                CREATE_UNICODE_ENVIRONMENT, 0,
-                0, &startupInfo, &pinfo);
+                nullptr, nullptr, TRUE,
+                CREATE_UNICODE_ENVIRONMENT, nullptr,
+                nullptr, &startupInfo, &pinfo);
 
         if (success) {
             CloseHandle(pinfo.hThread);
@@ -359,7 +359,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
     bool confirmed = false;
     QString title;
     if (err.isEmpty())
-        confirmed = UIUtils::confirmInstallOperations(0, install, &title, &err);
+        confirmed = UIUtils::confirmInstallOperations(nullptr, install, &title, &err);
 
     if (err.isEmpty()) {
         if (confirmed) {
@@ -367,7 +367,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
 
             if (rep->includesRemoveItself(install)) {
                 QString txt = QObject::tr("Chosen changes require an update of this Npackd instance. Are you sure?");
-                if (UIUtils::confirm(0, QObject::tr("Warning"), txt, txt)) {
+                if (UIUtils::confirm(nullptr, QObject::tr("Warning"), txt, txt)) {
                     Job* job = new Job(title);
                     UIUtils::processWithSelfUpdate(job, install,
                             programCloseType);
@@ -391,7 +391,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
     }
 
     if (!err.isEmpty()) {
-        QMessageBox::critical(0, QObject::tr("Error"), err);
+        QMessageBox::critical(nullptr, QObject::tr("Error"), err);
     }
 
     qDeleteAll(install);
@@ -477,7 +477,7 @@ void CLProcessor::usage()
         sl.append(QString(lines2[i]));
     }
 
-    QMessageBox mb(0);
+    QMessageBox mb(nullptr);
     mb.setWindowTitle(QString(
             "Npackd %1\r\n").arg(NPACKD_VERSION));
     mb.setText("npackdg [command] [options]\r\n"
@@ -533,7 +533,7 @@ bool CLProcessor::process(int* errorCode)
     if (!commandLineParsingError.isEmpty()) {
         QString msg = QObject::tr("Error parsing the command line: %1").
                 arg(commandLineParsingError);
-        QMessageBox::critical(0, QObject::tr("Error"), msg);
+        QMessageBox::critical(nullptr, QObject::tr("Error"), msg);
         *errorCode = 1;
     } else if (fr.count() == 1) {
         QString cmd = fr.at(0);
@@ -575,13 +575,13 @@ bool CLProcessor::process(int* errorCode)
             err = QObject::tr("Wrong command: %1. Try npackdg help").arg(cmd);
         }
         if (!err.isEmpty()) {
-            QMessageBox::critical(0, QObject::tr("Error"), err);
+            QMessageBox::critical(nullptr, QObject::tr("Error"), err);
             *errorCode = 1;
         }
     } else if (fr.count() > 1) {
         QString err = QObject::tr("Unexpected argument: %1").
                 arg(fr.at(1));
-        QMessageBox::critical(0, QObject::tr("Error"), err);
+        QMessageBox::critical(nullptr, QObject::tr("Error"), err);
         *errorCode = 1;
     } else {
         ret = false;

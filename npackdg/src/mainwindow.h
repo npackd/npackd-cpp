@@ -160,7 +160,7 @@ public:
     /** finds download sizes */
     DownloadSizeFinder downloadSizeFinder;
 
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     /**

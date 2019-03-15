@@ -24,7 +24,7 @@ private:
     time_t lastJobChange;
     QString lastHint;
 public:
-    explicit CLProgress(QObject *parent = 0);
+    explicit CLProgress(QObject *parent = nullptr);
 
     /**
      * @return a new job object connected to the console output

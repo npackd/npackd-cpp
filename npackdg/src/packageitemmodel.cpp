@@ -41,8 +41,8 @@ PackageItemModel::Info* PackageItemModel::createInfo(
     QString err;
     QList<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &err);
 
-    PackageVersion* newestInstallable = 0;
-    PackageVersion* newestInstalled = 0;
+    PackageVersion* newestInstallable = nullptr;
+    PackageVersion* newestInstalled = nullptr;
     for (int j = 0; j < pvs.count(); j++) {
         PackageVersion* pv = pvs.at(j);
         if (pv->installed()) {

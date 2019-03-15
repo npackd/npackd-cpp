@@ -16,7 +16,7 @@
 #include "job.h"
 #include "wpmutils.h"
 
-HWND defaultPasswordWindow = 0;
+HWND defaultPasswordWindow = nullptr;
 QMutex loginDialogMutex;
 
 DWORD __stdcall myInternetAuthNotifyCallback(DWORD_PTR dwContext,
@@ -61,9 +61,9 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
     HINTERNET internet = InternetOpenW((WCHAR*) agent.utf16(),
             INTERNET_OPEN_TYPE_PRECONFIG,
-            0, 0, 0);
+            nullptr, nullptr, 0);
 
-    if (internet == 0) {
+    if (internet == nullptr) {
         QString errMsg;
         WPMUtils::formatMessage(GetLastError(), &errMsg);
         job->setErrorMessage(errMsg);
@@ -90,14 +90,14 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
     // here "internet" cannot be 0, but we add the comparison to silence
     // Coverity
-    HINTERNET hConnectHandle = 0;
-    if (job->shouldProceed() && internet != 0) {
+    HINTERNET hConnectHandle = nullptr;
+    if (job->shouldProceed() && internet != nullptr) {
         INTERNET_PORT port = url.port(url.scheme() == "https" ?
                 INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT);
         hConnectHandle = InternetConnectW(internet,
-                (WCHAR*) server.utf16(), port, 0, 0, INTERNET_SERVICE_HTTP, 0, 0);
+                (WCHAR*) server.utf16(), port, nullptr, nullptr, INTERNET_SERVICE_HTTP, 0, 0);
 
-        if (hConnectHandle == 0) {
+        if (hConnectHandle == nullptr) {
             QString errMsg;
             WPMUtils::formatMessage(GetLastError(), &errMsg);
             job->setErrorMessage(errMsg);
@@ -134,11 +134,11 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     // of a file
     //
     // hConnectHandle is only checked here to silence Coverity
-    HINTERNET hResourceHandle = 0;
-    if (job->shouldProceed() && hConnectHandle != 0) {
+    HINTERNET hResourceHandle = nullptr;
+    if (job->shouldProceed() && hConnectHandle != nullptr) {
         LPCTSTR ppszAcceptTypes[2];
         ppszAcceptTypes[0] = L"*/*";
-        ppszAcceptTypes[1] = NULL;
+        ppszAcceptTypes[1] = nullptr;
         DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0);
         if (keepConnection)
             flags |= INTERNET_FLAG_KEEP_CONNECTION;
@@ -151,9 +151,9 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         hResourceHandle = HttpOpenRequestW(hConnectHandle,
                 reinterpret_cast<LPCWSTR>(verb.utf16()),
                 (WCHAR*) resource.utf16(),
-                0, 0, ppszAcceptTypes,
+                nullptr, nullptr, ppszAcceptTypes,
                 flags, 0);
-        if (hResourceHandle == 0) {
+        if (hResourceHandle == nullptr) {
             QString errMsg;
             WPMUtils::formatMessage(GetLastError(), &errMsg);
             job->setErrorMessage(errMsg);
@@ -164,7 +164,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
     int64_t contentLength = -1;
 
-    if (hResourceHandle != 0 && hConnectHandle != 0) {
+    if (hResourceHandle != nullptr && hConnectHandle != nullptr) {
         if (job->shouldProceed()) {
             // do not check for errors here
             HttpAddRequestHeadersW(hResourceHandle,
@@ -185,8 +185,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             // the following call uses NULL for headers in case there are no headers
             // because Windows 2003 generates the error 12150 otherwise
             if (!HttpSendRequestW(hResourceHandle,
-                    request.headers.length() == 0 ? NULL : reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
-                    request.postData.length() == 0 ? NULL : const_cast<char*>(request.postData.data()),
+                    request.headers.length() == 0 ? nullptr : reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
+                    request.postData.length() == 0 ? nullptr : const_cast<char*>(request.postData.data()),
                     request.postData.length())) {
                 sendRequestError = GetLastError();
             }
@@ -194,7 +194,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
             if (sendRequestError == 0) {
                 if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
-                        HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
+                        HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, nullptr)) {
                     QString errMsg;
                     WPMUtils::formatMessage(GetLastError(), &errMsg);
                     job->setErrorMessage(errMsg);
@@ -216,7 +216,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             // the InternetErrorDlg calls below can either handle
             // sendRequestError <> 0 or HTTP error code <> 2xx
 
-            void* p = 0;
+            void* p = nullptr;
 
             // both calls to InternetErrorDlg should be enclosed by one
             // mutex, so that only one dialog will be shown
@@ -226,7 +226,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
             // first call is processed differently
             if (callNumber == 0) {
-                r = InternetErrorDlg(0,
+                r = InternetErrorDlg(nullptr,
                        hResourceHandle, sendRequestError,
                         FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
                         FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
@@ -331,7 +331,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
             // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
             if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
-                    HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL)) {
+                    HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, nullptr)) {
                 QString errMsg;
                 WPMUtils::formatMessage(GetLastError(), &errMsg);
                 job->setErrorMessage(errMsg);
@@ -677,9 +677,9 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
                 }
             }*/
 
-            d_stream.zalloc = (alloc_func) 0;
-            d_stream.zfree = (free_func) 0;
-            d_stream.opaque = (voidpf) 0;
+            d_stream.zalloc = (alloc_func) nullptr;
+            d_stream.zfree = (free_func) nullptr;
+            d_stream.opaque = (voidpf) nullptr;
 
             d_stream.next_in = buffer + cur;
             d_stream.avail_in = bufferLength - cur;
@@ -878,7 +878,7 @@ Downloader::Response Downloader::download(Job *job,
 {
     Downloader::Response r;
 
-    QString* sha1 = request.hashSum ? &r.hashSum : 0;
+    QString* sha1 = request.hashSum ? &r.hashSum : nullptr;
     if (request.url.scheme() == "https" || request.url.scheme() == "http")
         downloadWin(job, request, &r);
     else if (request.url.toString().startsWith("data:image/png;base64,")) {
@@ -970,13 +970,13 @@ QTemporaryFile* Downloader::downloadToTemporary(Job* job,
 
         if (!job->shouldProceed()) {
             delete file;
-            file = 0;
+            file = nullptr;
         }
     } else {
         job->setErrorMessage(QString(QObject::tr("Error opening file: %1")).
                 arg(file->fileName()));
         delete file;
-        file = 0;
+        file = nullptr;
         job->complete();
     }
 

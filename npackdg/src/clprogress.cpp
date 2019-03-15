@@ -13,7 +13,7 @@ void CLProgress::jobChanged(Job* s)
 {
     HANDLE hOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    time_t now = time(0);
+    time_t now = time(nullptr);
     if (!s->isCompleted()) {
         if (now - this->lastJobChange >= this->updateRate) {
             this->lastJobChange = now;
@@ -50,7 +50,7 @@ void CLProgress::jobChanged(Job* s)
 void CLProgress::jobChangedSimple(Job* s)
 {
     bool output = false;
-    time_t now = time(0);
+    time_t now = time(nullptr);
     if (now - this->lastJobChange >= this->updateRate) {
         this->lastJobChange = now;
 
@@ -103,7 +103,7 @@ Job* CLProgress::createJob()
             SLOT(jobChangedSimple(Job*)));
 
     // -updateRate so that we do not have the initial delay
-    this->lastJobChange = time(0) - this->updateRate;
+    this->lastJobChange = time(nullptr) - this->updateRate;
 
     return job;
 }

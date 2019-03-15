@@ -38,7 +38,7 @@ bool packageLessThan(const Package* p1, const Package* p2)
     return p1->title.toLower() < p2->title.toLower();
 }
 
-App::App() : currentJob(0)
+App::App() : currentJob(nullptr)
 {
 
 }
@@ -251,7 +251,7 @@ int App::process()
 
         err = job->getErrorMessage();
 
-        this->currentJob = 0;
+        this->currentJob = nullptr;
 
         delete job;
     }
@@ -302,7 +302,7 @@ QString App::addNpackdCL()
         r->savePackageVersion(pv, true);
     }
     delete pv;
-    pv = 0;
+    pv = nullptr;
 
     err = r->updateNpackdCLEnvVar();
 
@@ -697,7 +697,7 @@ void App::addRepo(Job* job)
         }
     }
 
-    QUrl* url_ = 0;
+    QUrl* url_ = nullptr;
     if (job->shouldProceed()) {
         url_ = new QUrl();
         url_->setUrl(url, QUrl::TolerantMode);
@@ -722,7 +722,7 @@ void App::addRepo(Job* job)
                         "This repository is already registered: " + url);
             } else {
                 urls.append(url_);
-                url_ = 0;
+                url_ = nullptr;
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     WPMUtils::writeln("The repository was added successfully. Run \"ncl detect\" to update the local database.");
@@ -980,7 +980,7 @@ void App::removeRepo(Job* job)
         }
     }
 
-    QUrl* url_ = 0;
+    QUrl* url_ = nullptr;
     if (job->shouldProceed()) {
         url_ = new QUrl();
         url_->setUrl(url, QUrl::TolerantMode);
@@ -1548,10 +1548,10 @@ void App::processInstallOperations(Job *job,
             PROCESS_INFORMATION pinfo;
 
             STARTUPINFOW startupInfo = {
-                sizeof(STARTUPINFO), 0, 0, 0,
+                sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
                 (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
                 (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
             };
 
             // we do to not use CREATE_UNICODE_ENVIRONMENT here to not start
@@ -1561,8 +1561,8 @@ void App::processInstallOperations(Job *job,
             success = CreateProcess(
                     (wchar_t*) prg.utf16(),
                     (wchar_t*) args.utf16(),
-                    0, 0, TRUE,
-                    0 /*CREATE_UNICODE_ENVIRONMENT*/, 0,
+                    nullptr, nullptr, TRUE,
+                    0 /*CREATE_UNICODE_ENVIRONMENT*/, nullptr,
                     (wchar_t*) winDir.utf16(), &startupInfo, &pinfo);
 
             if (success) {
@@ -2041,7 +2041,7 @@ void App::info(Job* job)
     }
 
     DBRepository* rep = DBRepository::getDefault();
-    Package* p = 0;
+    Package* p = nullptr;
     if (job->shouldProceed()) {
         QString r;
         p = AbstractRepository::findOnePackage(package, &r);
@@ -2059,7 +2059,7 @@ void App::info(Job* job)
         }
     }
 
-    PackageVersion* pv = 0;
+    PackageVersion* pv = nullptr;
     if (job->shouldProceed()) {
         if (!version.isNull()) {
             QString r;
@@ -2225,7 +2225,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
         Dependency* d = pv->dependencies.at(i);
         InstalledPackageVersion* ipv = rep->findHighestInstalledMatch(*d);
 
-        PackageVersion* pvd = 0;
+        PackageVersion* pvd = nullptr;
 
         QString s;
         if (ipv) {
@@ -2337,7 +2337,7 @@ void App::removeSCP(Job *job)
         cppm.scan(scanJob, &installed, &rep);
     }
 
-    Package* found = 0;
+    Package* found = nullptr;
     if (job->shouldProceed()) {
         if (title.startsWith('/')) {
             title = title.mid(1);
@@ -2381,7 +2381,7 @@ void App::removeSCP(Job *job)
             job->setErrorMessage("Cannot find the package");
     }
 
-    PackageVersion* pv = 0;
+    PackageVersion* pv = nullptr;
     if (job->shouldProceed()) {
         qCDebug(npackd) << "found package" << found->name;
 
@@ -2406,7 +2406,7 @@ void App::removeSCP(Job *job)
             job->setErrorMessage("Cannot find the package version");
     }
 
-    PackageVersionFile* pvf = 0;
+    PackageVersionFile* pvf = nullptr;
     if (job->shouldProceed()) {
         for (int j = 0; j < pv->files.size(); j++) {
             if (pv->files.at(j)->path.compare(

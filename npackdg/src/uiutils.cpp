@@ -392,16 +392,16 @@ void UIUtils::processWithSelfUpdate(Job* job,
         PROCESS_INFORMATION pinfo;
 
         STARTUPINFOW startupInfo = {
-            sizeof(STARTUPINFO), 0, 0, 0,
+            sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
         };
         bool success = CreateProcess(
                 (wchar_t*) prg.utf16(),
                 (wchar_t*) args.utf16(),
-                0, 0, TRUE,
-                CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, 0,
+                nullptr, nullptr, TRUE,
+                CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, nullptr,
                 (wchar_t*) winDir.utf16(), &startupInfo, &pinfo);
 
         if (success) {

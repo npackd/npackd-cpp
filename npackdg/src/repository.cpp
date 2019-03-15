@@ -71,12 +71,12 @@ Repository::~Repository()
 PackageVersion* Repository::findNewestInstallablePackageVersion(
         const QString &package)
 {
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     QList<PackageVersion*> pvs = this->getPackageVersions(package);
     for (int i = 0; i < pvs.count(); i++) {
         PackageVersion* p = pvs.at(i);
-        if (r == 0 || p->version.compare(r->version) > 0) {
+        if (r == nullptr || p->version.compare(r->version) > 0) {
             if (p->download.isValid())
                 r = p;
         }
@@ -90,7 +90,7 @@ License* Repository::findLicense(const QString& name)
         if (this->licenses.at(i)->name == name)
             return this->licenses.at(i);
     }
-    return 0;
+    return nullptr;
 }
 
 Package* Repository::findPackage(const QString& name)
@@ -99,7 +99,7 @@ Package* Repository::findPackage(const QString& name)
         if (this->packages.at(i)->name == name)
             return this->packages.at(i);
     }
-    return 0;
+    return nullptr;
 }
 
 /*
@@ -142,7 +142,7 @@ QString Repository::writeTo(const QString& filename) const
 PackageVersion* Repository::findPackageVersion(const QString& package,
         const Version& version) const
 {
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     QList<PackageVersion*> pvs = this->getPackageVersions(package);
     for (int i = 0; i < pvs.count(); i++) {

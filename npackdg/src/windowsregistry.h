@@ -142,7 +142,7 @@ public:
      * @return error message or ""     
      */
     QString open(HKEY hk, QString path, bool useWow6432Node,
-            REGSAM samDesired = KEY_ALL_ACCESS, LONG* e = 0);
+            REGSAM samDesired = KEY_ALL_ACCESS, LONG* e = nullptr);
 
     /**
      * Opens a key. The previously open key (if any) will be closed.

@@ -304,7 +304,7 @@ QList<Dependency*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
                 if (ponext != nullptr && ponext->opt->nameMathes("versions"))
                     versions = ponext->value;
 
-                Dependency* dep = 0;
+                Dependency* dep = nullptr;
                 if (!versions.isNull()) {
                     i++;
                     dep = new Dependency();
@@ -313,7 +313,7 @@ QList<Dependency*> WPMUtils::getPackageVersionOptions(const CommandLine& cl,
                         *err = QObject::tr("Cannot parse a version range: %1").
                                 arg(versions);
                         delete dep;
-                        dep = 0;
+                        dep = nullptr;
                     }
                 } else if (version.isNull()) {
                     dep = new Dependency();
@@ -379,7 +379,7 @@ QStringList WPMUtils::parseCommandLine(const QString& commandLine,
 
     int nArgs;
     LPWSTR* szArglist = CommandLineToArgvW((WCHAR*) commandLine.utf16(), &nArgs);
-    if (NULL == szArglist) {
+    if (nullptr == szArglist) {
         *err = QObject::tr("CommandLineToArgvW failed");
     } else {
         for(int i = 0; i < nArgs; i++) {
@@ -702,11 +702,11 @@ void WPMUtils::formatMessage(DWORD err, QString* errMsg)
         n = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                        FORMAT_MESSAGE_FROM_HMODULE,
                        GetModuleHandle(L"wininet.dll"),
-                       err, 0, (LPTSTR)&pBuffer, 0, 0);
+                       err, 0, (LPTSTR)&pBuffer, 0, nullptr);
     } else {
         n = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                        FORMAT_MESSAGE_FROM_SYSTEM,
-                       0, err, 0, (LPTSTR)&pBuffer, 0, 0);
+                       nullptr, err, 0, (LPTSTR)&pBuffer, 0, nullptr);
     }
     if (n == 0)
         errMsg->append(QString(QObject::tr("Error %1")).arg(err));
@@ -867,11 +867,11 @@ QString WPMUtils::disconnectFrom(LMSTR netname)
     CONNECTION_INFO_1* ci;
     DWORD entriesRead, totalEntries, resumeHandle;
     resumeHandle = 0;
-    if (NetConnectionEnum(0, netname, 1,
+    if (NetConnectionEnum(nullptr, netname, 1,
             (LPBYTE*) &ci, MAX_PREFERRED_LENGTH,
             &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
         for (int i = 0; i < (int) entriesRead; i++) {
-            NetSessionDel(0, ci[i].coni1_netname, ci[i].coni1_username);
+            NetSessionDel(nullptr, ci[i].coni1_netname, ci[i].coni1_username);
         }
     } else {
         formatMessage(GetLastError(), &err);
@@ -886,7 +886,7 @@ void WPMUtils::disconnectShareUsersFrom(const QString &dir)
     SHARE_INFO_502* buf;
     DWORD entriesRead, totalEntries, resumeHandle;
     resumeHandle = 0;
-    if (NetShareEnum(0, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
+    if (NetShareEnum(nullptr, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
             &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
         QString dirNormalized = normalizePath(dir);
 #ifndef STYPE_MASK
@@ -925,7 +925,7 @@ bool WPMUtils::isDirShared(const QString &dir)
     SHARE_INFO_502* buf;
     DWORD entriesRead, totalEntries, resumeHandle;
     resumeHandle = 0;
-    if (NetShareEnum(0, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
+    if (NetShareEnum(nullptr, 502, (LPBYTE*) &buf, MAX_PREFERRED_LENGTH,
             &entriesRead, &totalEntries, &resumeHandle) == NERR_Success) {
         QString dirNormalized = normalizePath(dir);
 #ifndef STYPE_MASK
@@ -961,24 +961,24 @@ QString WPMUtils::findService(DWORD processId, QString* err)
     DWORD pcbBytesNeeded;
     DWORD lpServicesReturned;
     DWORD lpResumeHandle = 0;
-    ENUM_SERVICE_STATUS_PROCESS* lpServices = 0;
+    ENUM_SERVICE_STATUS_PROCESS* lpServices = nullptr;
     DWORD bufSize;
 
     // Get a handle to the SCM database.
     SC_HANDLE schSCManager = OpenSCManager(
-            NULL,                    // local computer
-            NULL,                    // ServicesActive database
+            nullptr,                    // local computer
+            nullptr,                    // ServicesActive database
             SC_MANAGER_ALL_ACCESS);  // full access rights
 
-    if (NULL == schSCManager) {
+    if (nullptr == schSCManager) {
         formatMessage(GetLastError(), err);
         *err = QObject::tr("OpenSCManager failed: %0").arg(*err);
     }
 
     if (err->isEmpty()) {
         if (EnumServicesStatusEx(schSCManager, SC_ENUM_PROCESS_INFO,
-                SERVICE_WIN32, SERVICE_ACTIVE, NULL, 0, &pcbBytesNeeded,
-                &lpServicesReturned, &lpResumeHandle, NULL)) {
+                SERVICE_WIN32, SERVICE_ACTIVE, nullptr, 0, &pcbBytesNeeded,
+                &lpServicesReturned, &lpResumeHandle, nullptr)) {
             *err = QObject::tr("EnumServicesStatusEx: no services found");
         } else {
             DWORD e = GetLastError();
@@ -998,7 +998,7 @@ QString WPMUtils::findService(DWORD processId, QString* err)
                 SERVICE_WIN32, SERVICE_ACTIVE,
                 reinterpret_cast<LPBYTE>(lpServices), bufSize,
                 &pcbBytesNeeded,
-                &lpServicesReturned, &lpResumeHandle, NULL)) {
+                &lpServicesReturned, &lpResumeHandle, nullptr)) {
             formatMessage(GetLastError(), err);
             *err = QObject::tr("EnumServicesStatusEx failed: %0").arg(*err);
         }
@@ -1216,7 +1216,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
     // start flashing
     for (int i = 0; i < processWindows.size(); i++) {
         HWND w = processWindows.at(i);
-        if (w != 0 && IsWindow(w) &&
+        if (w != nullptr && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
                 IsWindowVisible(w) &&
                 getClassName(w) != QStringLiteral("Shell_TrayWnd")) {
@@ -1241,7 +1241,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
                         GetAncestor(w, GA_PARENT) != GetDesktopWindow() ||
                         !IsWindowVisible(w) ||
                         getClassName(w) == QStringLiteral("Shell_TrayWnd")) {
-                    ws[i] = 0;
+                    ws[i] = nullptr;
                 } else {
                     c++;
                     if ((GetWindowLong(w, GWL_STYLE) & WS_DISABLED) == 0) {
@@ -1266,7 +1266,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
     // stop flashing
     for (int i = 0; i < processWindows.size(); i++) {
         HWND w = processWindows.at(i);
-        if (w != 0 && IsWindow(w) &&
+        if (w != nullptr && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
                 IsWindowVisible(w) &&
                 getClassName(w) != QStringLiteral("Shell_TrayWnd")) {
@@ -1285,7 +1285,7 @@ QString WPMUtils::getProcessFile(HANDLE hProcess)
 {
     QString res;
     res.resize(MAX_PATH + 1);
-    DWORD r = GetModuleFileNameEx(hProcess, 0, (LPWSTR) res.data(),
+    DWORD r = GetModuleFileNameEx(hProcess, nullptr, (LPWSTR) res.data(),
             res.length());
     if (r != 0) {
         res.resize(r);
@@ -1366,7 +1366,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
                                 if (WPMUtils::pathEquals(s, dir) ||
                                         WPMUtils::isUnder(s, dir)) {
                                     r.append(hProc);
-                                    hProc = 0;
+                                    hProc = nullptr;
                                 }
                             }
                         }
@@ -1505,7 +1505,7 @@ public:
         _NtQueryObject NtQueryObject;
         NtQueryObject = (_NtQueryObject) GetProcAddress(module, "NtQueryObject");
 
-        PVOID objectNameInfo = 0;
+        PVOID objectNameInfo = nullptr;
         ULONG returnLength = 0;
 
         objectNameInfo = malloc(0x1000);
@@ -1544,7 +1544,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
     QList<HANDLE> result;
 
     HMODULE module = GetModuleHandleA("ntdll.dll");
-    if (module == 0) {
+    if (module == nullptr) {
         return result;
     }
 
@@ -1568,7 +1568,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
     NTSTATUS status;
     while ((status = NtQuerySystemInformation(
             SystemHandleInformation, handleInfo, handleInfoSize,
-            NULL)) == STATUS_INFO_LENGTH_MISMATCH) {
+            nullptr)) == STATUS_INFO_LENGTH_MISMATCH) {
         handleInfo = (PSYSTEM_HANDLE_INFORMATION) realloc(handleInfo,
                 handleInfoSize *= 2);
     }
@@ -1584,7 +1584,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
 
         SYSTEM_HANDLE handle = handleInfo->Handles[i];
         HANDLE dupHandle = INVALID_HANDLE_VALUE;
-        POBJECT_TYPE_INFORMATION objectTypeInfo = 0;
+        POBJECT_TYPE_INFORMATION objectTypeInfo = nullptr;
 
         HANDLE processHandle = INVALID_HANDLE_VALUE;
 
@@ -1809,7 +1809,7 @@ QString WPMUtils::getShellDir(int type)
         }
      */
     WCHAR dir[MAX_PATH];
-    SHGetFolderPath(0, type, NULL, 0, dir);
+    SHGetFolderPath(nullptr, type, nullptr, 0, dir);
     return QString::fromUtf16(reinterpret_cast<ushort*>(dir));
 }
 
@@ -2006,7 +2006,7 @@ void WPMUtils::fireEnvChanged()
 {
     SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,
             (LPARAM) L"Environment",
-            SMTO_ABORTIFHUNG, 5000, 0);
+            SMTO_ABORTIFHUNG, 5000, nullptr);
 }
 
 QString WPMUtils::getSystemEnvVar(const QString& name, QString* err)
@@ -2274,7 +2274,7 @@ QString WPMUtils::findCmdExe()
 QString WPMUtils::getExeFile()
 {
     TCHAR path[MAX_PATH];
-    GetModuleFileName(0, path, sizeof(path) / sizeof(path[0]));
+    GetModuleFileName(nullptr, path, sizeof(path) / sizeof(path[0]));
     QString r;
     r.setUtf16((ushort*) path, wcslen(path));
 
@@ -2284,7 +2284,7 @@ QString WPMUtils::getExeFile()
 QString WPMUtils::getExeDir()
 {
     TCHAR path[MAX_PATH];
-    GetModuleFileName(0, path, sizeof(path) / sizeof(path[0]));
+    GetModuleFileName(nullptr, path, sizeof(path) / sizeof(path[0]));
     QString r;
     r.setUtf16((ushort*) path, wcslen(path));
 
@@ -2298,7 +2298,7 @@ QString WPMUtils::regQueryValue(HKEY hk, const QString &var)
     QString value_;
     char value[255];
     DWORD valueSize = sizeof(value);
-    if (RegQueryValueEx(hk, (WCHAR*) var.utf16(), 0, 0, (BYTE*) value,
+    if (RegQueryValueEx(hk, (WCHAR*) var.utf16(), nullptr, nullptr, (BYTE*) value,
             &valueSize) == ERROR_SUCCESS) {
         // the next line is important
         // valueSize is sometimes == 0 and the expression (valueSize /2 - 1)
@@ -2496,7 +2496,7 @@ QString WPMUtils::createLink(LPCWSTR lpszPathObj, LPCWSTR lpszPathLink,
     IShellLink* psl;
 
     // Get a pointer to the IShellLink interface.
-    hres = CoCreateInstance(CLSID_ShellLink, NULL,
+    hres = CoCreateInstance(CLSID_ShellLink, nullptr,
             CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *) &psl);
 
     if (SUCCEEDED(hres)) {
@@ -2628,11 +2628,11 @@ void WPMUtils::outputTextConsole(const QString& txt, bool stdout_)
         if (consoleOutput) {
             // WriteConsole automatically converts UTF-16 to the code page used
             // by the console
-            WriteConsoleW(hStdout, txt.utf16(), txt.length(), &written, 0);
+            WriteConsoleW(hStdout, txt.utf16(), txt.length(), &written, nullptr);
         } else {
             // we always write UTF-8 to the output file
             QByteArray arr = txt.toUtf8();
-            WriteFile(hStdout, arr.constData(), arr.length(), &written, NULL);
+            WriteFile(hStdout, arr.constData(), arr.length(), &written, nullptr);
         }
     }
 }
@@ -2679,7 +2679,7 @@ QString WPMUtils::inputTextConsole()
 
     WCHAR buffer[255];
     DWORD read;
-    if (!ReadConsoleW(hStdin, &buffer, sizeof(buffer) / sizeof(buffer[0]), &read, 0))
+    if (!ReadConsoleW(hStdin, &buffer, sizeof(buffer) / sizeof(buffer[0]), &read, nullptr))
         return "";
 
     QString r;
@@ -2716,17 +2716,17 @@ QString WPMUtils::inputPasswordConsole()
     DWORD count;
     WCHAR c;
     while (true) {
-        if (!ReadConsoleW(ih, &c, 1, &count, NULL) ||
+        if (!ReadConsoleW(ih, &c, 1, &count, nullptr) ||
                 (c == '\r') || (c == '\n'))
             break;
 
         if (c == '\b') {
             if (result.length()) {
-                WriteConsoleW(oh, L"\b \b", 3, &count, NULL);
+                WriteConsoleW(oh, L"\b \b", 3, &count, nullptr);
                 result.chop(1);
             }
         } else {
-            WriteConsoleW(oh, L"*", 1, &count, NULL);
+            WriteConsoleW(oh, L"*", 1, &count, nullptr);
             result.push_back(c);
         }
     }
@@ -2757,7 +2757,7 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
 {
     // Get a pointer to the IShellLink interface.
     IShellLink* psl;
-    HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL,
+    HRESULT hres = CoCreateInstance(CLSID_ShellLink, nullptr,
             CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *) &psl);
 
     if (SUCCEEDED(hres)) {
@@ -2788,7 +2788,7 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
                         if (SUCCEEDED(hres)) {
                             WCHAR info[MAX_PATH + 1];
                             hres = psl->GetPath(info, MAX_PATH,
-                                    (WIN32_FIND_DATAW*) 0, 0);
+                                    (WIN32_FIND_DATAW*) nullptr, 0);
                             if (SUCCEEDED(hres)) {
                                 QString targetPath;
                                 targetPath.setUtf16((ushort*) info, wcslen(info));
@@ -2978,8 +2978,8 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
 
 void WPMUtils::reportEvent(const QString &msg, WORD wType)
 {
-    if (hEventLog == 0) {
-        hEventLog = RegisterEventSource(NULL, L"Npackd");
+    if (hEventLog == nullptr) {
+        hEventLog = RegisterEventSource(nullptr, L"Npackd");
     }
 
     if (hEventLog) {
@@ -2987,9 +2987,9 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
         LPCWSTR strings[1];
         strings[0] = (LPCWSTR) msg.utf16();
 
-        ReportEvent(hEventLog, wType, 0, 1, NULL,
+        ReportEvent(hEventLog, wType, 0, 1, nullptr,
                 1, 0, strings,
-                NULL);
+                nullptr);
     }
 
     qCDebug(npackd) << msg;
@@ -3121,7 +3121,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     QString initialTitle = job->getTitle();
 
-    time_t start = time(NULL);
+    time_t start = time(nullptr);
 
     LPWCH env2 = GetEnvironmentStrings();
     QMap<QString, QString> env_ = parseEnv(env2);
@@ -3142,12 +3142,12 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     SECURITY_ATTRIBUTES saAttr = {0};
     saAttr.nLength = sizeof(saAttr);
     saAttr.bInheritHandle = TRUE;
-    saAttr.lpSecurityDescriptor = NULL;
+    saAttr.lpSecurityDescriptor = nullptr;
 
-    HANDLE g_hChildStd_IN_Rd = NULL;
-    HANDLE g_hChildStd_IN_Wr = NULL;
+    HANDLE g_hChildStd_IN_Rd = nullptr;
+    HANDLE g_hChildStd_IN_Wr = nullptr;
     HANDLE g_hChildStd_OUT_Rd = INVALID_HANDLE_VALUE;
-    HANDLE g_hChildStd_OUT_Wr = NULL;
+    HANDLE g_hChildStd_OUT_Wr = nullptr;
 
     QString name = QStringLiteral("\\\\.\\Pipe\\NpackdExecute.%1.%2").arg(
             GetCurrentProcessId()).arg(
@@ -3170,7 +3170,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 &saAttr,
                 OPEN_EXISTING,
                 FILE_ATTRIBUTE_NORMAL,
-                NULL);
+                nullptr);
         job->checkOSCall(g_hChildStd_OUT_Wr != INVALID_HANDLE_VALUE);
     }
 
@@ -3196,10 +3196,10 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     // create the process
     if (job->shouldProceed()) {
         STARTUPINFOW startupInfo = {
-            sizeof(STARTUPINFO), 0, 0, 0,
+            sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
             (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
         };
 
         startupInfo.dwFlags |= STARTF_USESTDHANDLES;
@@ -3213,7 +3213,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         success = CreateProcess(
                 (wchar_t*) path.utf16(),
                 (wchar_t*) args.utf16(),
-                0, &saAttr, TRUE,
+                nullptr, &saAttr, TRUE,
                 CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
                 ba.data(),
                 (wchar_t*) where.utf16(),
@@ -3229,8 +3229,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     HANDLE job_ = INVALID_HANDLE_VALUE;
     if (job->shouldProceed()) {
         BOOL r;
-        if (IsProcessInJob(pinfo.hProcess, 0, &r) && !r) {
-            job_ = CreateJobObject(NULL, NULL);
+        if (IsProcessInJob(pinfo.hProcess, nullptr, &r) && !r) {
+            job_ = CreateJobObject(nullptr, nullptr);
             if (job_) {
                 if (!AssignProcessToJobObject(job_, pinfo.hProcess)) {
                     CloseHandle(job_);
@@ -3269,7 +3269,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     // read the output
     if (job->shouldProceed()) {
         OVERLAPPED stOverlapped = {0};
-        HANDLE hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+        HANDLE hEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
         stOverlapped.hEvent = hEvent;
 
         int64_t outputLen = 0;
@@ -3364,9 +3364,9 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 DWORD dwWritten;
                 if (consoleOutput) {
                     if (unicode)
-                        WriteConsoleW(hStdout, chBuf, dwRead / 2, &dwWritten, 0);
+                        WriteConsoleW(hStdout, chBuf, dwRead / 2, &dwWritten, nullptr);
                     else
-                        WriteConsoleA(hStdout, chBuf, dwRead, &dwWritten, 0);
+                        WriteConsoleA(hStdout, chBuf, dwRead, &dwWritten, nullptr);
                 } else {
                     // convert to UTF-8
                     QString s;
@@ -3379,7 +3379,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                     QByteArray ba = s.toUtf8();
 
                     WriteFile(hStdout, ba.constData(), ba.length(),
-                            &dwWritten, 0);
+                            &dwWritten, nullptr);
                 }
             }
 
@@ -3390,7 +3390,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
                 }
             }
 
-            time_t seconds = time(NULL) - start;
+            time_t seconds = time(nullptr) - start;
             double percents = ((double) seconds) / 300; // 5 Minutes
             if (percents > 0.9)
                 percents = 0.9;
@@ -3401,7 +3401,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         }
         delete[] chBuf;
 
-        if (hEvent != 0)
+        if (hEvent != nullptr)
             CloseHandle(hEvent);
 
         // ignore possible errors here
@@ -3450,11 +3450,11 @@ QString WPMUtils::stopService(const QString& serviceName,
 
     // Get a handle to the SCM database.
     SC_HANDLE schSCManager = OpenSCManager(
-            NULL,                    // local computer
-            NULL,                    // ServicesActive database
+            nullptr,                    // local computer
+            nullptr,                    // ServicesActive database
             SC_MANAGER_ALL_ACCESS);  // full access rights
 
-    if (NULL == schSCManager) {
+    if (nullptr == schSCManager) {
         formatMessage(GetLastError(), &err);
         err = QObject::tr("OpenSCManager failed: %0").arg(err);
     }
@@ -3477,7 +3477,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
     SERVICE_STATUS_PROCESS ssp;
     DWORD dwBytesNeeded;
 
-    SC_HANDLE schService = NULL;
+    SC_HANDLE schService = nullptr;
     if (err.isEmpty()) {
         // Get a handle to the service.
 
@@ -3485,7 +3485,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
                 // name of service
                 reinterpret_cast<LPCWSTR>(serviceName.utf16()),
                 SERVICE_ALL_ACCESS);
-        if (schService == NULL) {
+        if (schService == nullptr) {
             formatMessage(GetLastError(), &err);
             err = QObject::tr("OpenService failed: %1").arg(err);
         }
@@ -3547,7 +3547,7 @@ QString WPMUtils::StopDependentServices(SC_HANDLE schSCManager,
     DWORD dwBytesNeeded;
     DWORD dwCount;
 
-    LPENUM_SERVICE_STATUS   lpDependencies = NULL;
+    LPENUM_SERVICE_STATUS   lpDependencies = nullptr;
 
     // Pass a zero-length buffer to get the required buffer size.
     if (EnumDependentServices(schService, SERVICE_ACTIVE,
@@ -3672,11 +3672,11 @@ QString WPMUtils::startService(const QString& serviceName)
 
     // Get a handle to the SCM database.
     SC_HANDLE schSCManager = OpenSCManager(
-            NULL,                    // local computer
-            NULL,                    // ServicesActive database
+            nullptr,                    // local computer
+            nullptr,                    // ServicesActive database
             SC_MANAGER_ALL_ACCESS);  // full access rights
 
-    if (NULL == schSCManager) {
+    if (nullptr == schSCManager) {
         formatMessage(GetLastError(), &err);
         err = QObject::tr("OpenSCManager failed: %0").arg(err);
     }
@@ -3705,7 +3705,7 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
             schSCManager,         // SCM database
             reinterpret_cast<LPCWSTR>(serviceName.utf16()), // name of service
             SERVICE_ALL_ACCESS);  // full access
-    if (schService == NULL) {
+    if (schService == nullptr) {
         formatMessage(GetLastError(), &err);
         err = QObject::tr("OpenService failed: %1").arg(err);
     }
@@ -3744,7 +3744,7 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
         if (!StartService(
                 schService,  // handle to service
                 0,           // number of arguments
-                NULL)) {      // no arguments
+                nullptr)) {      // no arguments
             formatMessage(GetLastError(), &err);
             err = QObject::tr("StartService failed: %1").arg(err);
         }
@@ -3785,14 +3785,14 @@ bool WPMUtils::hasAdminPrivileges()
     bool fReturn = false;
 	const DWORD ACCESS_READ_CONST = 1;
 	const DWORD ACCESS_WRITE_CONST = 2;
-	HANDLE hToken = NULL;
-	HANDLE hImpersonationToken = NULL;
-	PSID psidAdmin = NULL;
+    HANDLE hToken = nullptr;
+    HANDLE hImpersonationToken = nullptr;
+    PSID psidAdmin = nullptr;
 	SID_IDENTIFIER_AUTHORITY SystemSidAuthority = SECURITY_NT_AUTHORITY;
 	GENERIC_MAPPING GenericMapping;
 	PRIVILEGE_SET ps;
 	DWORD dwStatus;
-	PACL pACL = NULL;
+    PACL pACL = nullptr;
     PSECURITY_DESCRIPTOR psdAdmin = nullptr;
 
     QString err;

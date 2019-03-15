@@ -10,7 +10,7 @@ Selection::Selection()
 Selection* Selection::findCurrent()
 {
     QWidget* w = QApplication::focusWidget();
-    Selection* ret = 0;
+    Selection* ret = nullptr;
     while (w) {
         ret = dynamic_cast<Selection*>(w);
         if (ret)

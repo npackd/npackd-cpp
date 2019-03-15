@@ -8,7 +8,7 @@ LicenseForm::LicenseForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LicenseForm)
 {
-    this->license = 0;
+    this->license = nullptr;
     ui->setupUi(this);
 }
 

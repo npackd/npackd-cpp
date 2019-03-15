@@ -19,7 +19,7 @@ class CancelPushButton: public QPushButton
 public:
     QTreeWidgetItem* item;
 
-    CancelPushButton(QWidget *parent): QPushButton(parent), item(0) {}
+    CancelPushButton(QWidget *parent): QPushButton(parent), item(nullptr) {}
 };
 
 ProgressTree2::ProgressTree2(QWidget *parent) :
@@ -64,10 +64,10 @@ QTreeWidgetItem* ProgressTree2::findItem(Job* job, bool create)
         v = v->parentJob;
     }
 
-    QTreeWidgetItem* c = 0;
+    QTreeWidgetItem* c = nullptr;
     for (int i = 0; i < path.count(); i++) {
         Job* toFind = path.at(i);
-        QTreeWidgetItem* found = 0;
+        QTreeWidgetItem* found = nullptr;
         if (i == 0) {
             for (int j = 0; j < this->topLevelItemCount(); j++) {
                 QTreeWidgetItem* item = this->topLevelItem(j);
@@ -105,7 +105,7 @@ QTreeWidgetItem* ProgressTree2::findItem(Job* job, bool create)
                     }
                 }
             } else {
-                c = 0;
+                c = nullptr;
                 break;
             }
         }
@@ -189,7 +189,7 @@ void ProgressTree2::monitoredJobChanged(Job* state)
 
     if (state->isCompleted()) {
         if (item) {
-            setItemWidget(item, 4, 0);
+            setItemWidget(item, 4, nullptr);
         }
     }
 }

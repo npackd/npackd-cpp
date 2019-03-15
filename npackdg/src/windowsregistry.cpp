@@ -9,14 +9,14 @@
 
 WindowsRegistry::WindowsRegistry()
 {
-    this->hkey = 0;
+    this->hkey = nullptr;
     this->useWow6432Node = false;
     this->samDesired = KEY_ALL_ACCESS;
 }
 
 WindowsRegistry::WindowsRegistry(const WindowsRegistry& wr)
 {
-    this->hkey = 0;
+    this->hkey = nullptr;
     this->useWow6432Node = false;
     this->samDesired = KEY_ALL_ACCESS;
     *this = wr;
@@ -43,8 +43,8 @@ WindowsRegistry& WindowsRegistry::operator=(const WindowsRegistry& wr)
         this->useWow6432Node = wr.useWow6432Node;
         this->samDesired = wr.samDesired;
 
-        if (wr.hkey == 0)
-            this->hkey = 0;
+        if (wr.hkey == nullptr)
+            this->hkey = nullptr;
         else
             this->hkey = SHRegDuplicateHKey(wr.hkey);
     }
@@ -90,7 +90,7 @@ QString WindowsRegistry::get(QString name, QString* err) const
 {
     err->clear();
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         err->append(QObject::tr("No key is open"));
         return "";
     }
@@ -100,7 +100,7 @@ QString WindowsRegistry::get(QString name, QString* err) const
     BYTE small_[256];
     valueSize = sizeof(small_);
     LONG r = RegQueryValueEx(this->hkey,
-                (WCHAR*) name.utf16(), 0, 0, small_,
+                (WCHAR*) name.utf16(), nullptr, nullptr, small_,
                 &valueSize);
 
     // valueSize may be 0!
@@ -108,7 +108,7 @@ QString WindowsRegistry::get(QString name, QString* err) const
         if (valueSize != 0) {
             char* value = new char[valueSize];
             r = RegQueryValueEx(this->hkey,
-                        (WCHAR*) name.utf16(), 0, 0, (BYTE*) value,
+                        (WCHAR*) name.utf16(), nullptr, nullptr, (BYTE*) value,
                         &valueSize);
             if (r != ERROR_SUCCESS) {
                 WPMUtils::formatMessage(r, err);
@@ -132,7 +132,7 @@ DWORD WindowsRegistry::getDWORD(QString name, QString* err) const
 {
     err->clear();
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         err->append(QObject::tr("No key is open"));
         return 0;
     }
@@ -141,7 +141,7 @@ DWORD WindowsRegistry::getDWORD(QString name, QString* err) const
     DWORD valueSize = sizeof(value);
     DWORD type;
     LONG r = RegQueryValueEx(this->hkey,
-                (WCHAR*) name.utf16(), 0, &type, (BYTE*) &value,
+                (WCHAR*) name.utf16(), nullptr, &type, (BYTE*) &value,
                 &valueSize);
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, err);
@@ -155,7 +155,7 @@ QString WindowsRegistry::setDWORD(QString name, DWORD value) const
 {
     QString err;
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         return QObject::tr("No key is open");
     }
 
@@ -173,23 +173,23 @@ QByteArray WindowsRegistry::getBytes(QString name, QString *err) const
 {
     err->clear();
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         err->append(QObject::tr("No key is open"));
-        return 0;
+        return nullptr;
     }
 
     QByteArray value;
     DWORD valueSize = 0;
     DWORD type;
     LONG r = RegQueryValueEx(this->hkey,
-                (WCHAR*) name.utf16(), 0, &type, (BYTE*) value.data(),
+                (WCHAR*) name.utf16(), nullptr, &type, (BYTE*) value.data(),
                 &valueSize);
     if (type != REG_BINARY) {
         *err = QObject::tr("Wrong registry value type (BINARY expected)");
     } else if (r == ERROR_MORE_DATA) {
         value.resize(valueSize);
         LONG r = RegQueryValueEx(this->hkey,
-                    (WCHAR*) name.utf16(), 0, &type, (BYTE*) value.data(),
+                    (WCHAR*) name.utf16(), nullptr, &type, (BYTE*) value.data(),
                     &valueSize);
         if (r != ERROR_SUCCESS) {
             WPMUtils::formatMessage(r, err);
@@ -204,7 +204,7 @@ QString WindowsRegistry::setBytes(QString name, const QByteArray& value) const
 {
     QString err;
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         err = QObject::tr("No key is open");
     } else {
         DWORD valueSize = value.length();
@@ -223,7 +223,7 @@ QString WindowsRegistry::set(QString name, QString value) const
 {
     QString err;
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         return QObject::tr("No key is open");
     }
 
@@ -241,7 +241,7 @@ QString WindowsRegistry::setExpand(QString name, QString value) const
 {
     QString err;
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         return QObject::tr("No key is open");
     }
 
@@ -260,7 +260,7 @@ QStringList WindowsRegistry::list(QString* err) const
     err->clear();
 
     QStringList res;
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         err->append(QObject::tr("No key is open"));
         return res;
     }
@@ -270,7 +270,7 @@ QStringList WindowsRegistry::list(QString* err) const
     while (true) {
         DWORD nameSize = sizeof(name) / sizeof(name[0]);
         LONG r = RegEnumKeyEx(this->hkey, index, name, &nameSize,
-                0, 0, 0, 0);
+                nullptr, nullptr, nullptr, nullptr);
         if (r == ERROR_SUCCESS) {
             QString v_;
             v_.setUtf16((ushort*) name, nameSize);
@@ -292,7 +292,7 @@ QStringList WindowsRegistry::listValues(QString *err) const
     err->clear();
 
     QStringList res;
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         err->append(QObject::tr("No key is open"));
         return res;
     }
@@ -304,7 +304,7 @@ QStringList WindowsRegistry::listValues(QString *err) const
     while (true) {
         DWORD nameSize = nameReserved;
         LONG r = RegEnumValue(this->hkey, index, name, &nameSize,
-                0, 0, 0, 0);
+                nullptr, nullptr, nullptr, nullptr);
         if (r == ERROR_SUCCESS) {
             QString v_;
             v_.setUtf16((ushort*) name, nameSize);
@@ -372,7 +372,7 @@ WindowsRegistry WindowsRegistry::createSubKey(QString name, QString* err,
 {
     err->clear();
 
-    if (this->hkey == 0) {
+    if (this->hkey == nullptr) {
         err->append(QObject::tr("No key is open"));
         return WindowsRegistry();
     }
@@ -385,11 +385,11 @@ WindowsRegistry WindowsRegistry::createSubKey(QString name, QString* err,
     HKEY hk;
     LONG r = RegCreateKeyEx(this->hkey,
             (WCHAR*) name.utf16(),
-            0, 0, 0, sd, 0,
-            &hk, 0);
+            0, nullptr, 0, sd, nullptr,
+            &hk, nullptr);
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, err);
-        hk = 0;
+        hk = nullptr;
     }
 
     return WindowsRegistry(hk, this->useWow6432Node, samDesired);
@@ -397,9 +397,9 @@ WindowsRegistry WindowsRegistry::createSubKey(QString name, QString* err,
 
 QString WindowsRegistry::close()
 {
-    if (this->hkey != 0) {
+    if (this->hkey != nullptr) {
         LONG r = RegCloseKey(this->hkey);
-        this->hkey = 0;
+        this->hkey = nullptr;
         if (r == ERROR_SUCCESS) {
             return "";
         } else {

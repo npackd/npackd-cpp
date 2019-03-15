@@ -97,7 +97,7 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
             THREAD_MODE_BACKGROUND_BEGIN);
     */
 
-    CoInitialize(NULL);
+    CoInitialize(nullptr);
     process(job, install_, programCloseType, false, true, "", "", "", "");
     CoUninitialize();
 
@@ -117,7 +117,7 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
 
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
-    CoInitialize(NULL);
+    CoInitialize(nullptr);
 
     if (job->shouldProceed()) {
         if (!d.mkpath(where)) {
@@ -268,7 +268,7 @@ PackageVersion *AbstractRepository::findBestMatchToInstall(
         const Dependency &dep, const QList<PackageVersion *> &avoid,
         QString *err)
 {
-    PackageVersion* res = 0;
+    PackageVersion* res = nullptr;
 
     QList<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
     if (err->isEmpty()) {
@@ -277,7 +277,7 @@ PackageVersion *AbstractRepository::findBestMatchToInstall(
             if (dep.test(pv->version) &&
                     pv->download.isValid() &&
                     PackageVersion::indexOf(avoid, pv) < 0) {
-                if (res == 0 || pv->version.compare(res->version) > 0)
+                if (res == nullptr || pv->version.compare(res->version) > 0)
                     res = pv;
             }
         }
@@ -295,10 +295,10 @@ InstalledPackageVersion *AbstractRepository::findHighestInstalledMatch(
         const Dependency &dep) const
 {
     QList<InstalledPackageVersion*> list = findAllInstalledMatches(dep);
-    InstalledPackageVersion* res = 0;
+    InstalledPackageVersion* res = nullptr;
     for (int i = 0; i < list.count(); i++) {
         InstalledPackageVersion* ipv = list.at(i);
-        if (res == 0 || ipv->version.compare(res->version) > 0)
+        if (res == nullptr || ipv->version.compare(res->version) > 0)
             res = ipv;
     }
     if (res)
@@ -489,7 +489,7 @@ void AbstractRepository::process(Job *job,
         job->setTitle(initialTitle + " / " +
                 QObject::tr("Waiting while other (un)installation scripts are running"));
 
-        time_t start = time(NULL);
+        time_t start = time(nullptr);
         while (!job->isCancelled()) {
             installationScriptAcquired = installationScripts.
                     tryAcquire(1, 10000);
@@ -498,7 +498,7 @@ void AbstractRepository::process(Job *job,
                 break;
             }
 
-            time_t seconds = time(NULL) - start;
+            time_t seconds = time(nullptr) - start;
             job->setTitle(initialTitle + " / " + QString(
                     QObject::tr("Waiting while other (un)installation scripts are running (%1 minutes)")).
                     arg(seconds / 60));
@@ -641,11 +641,11 @@ void AbstractRepository::process(Job *job,
         QString err;
 
         SC_HANDLE schSCManager = OpenSCManager(
-                NULL,                    // local computer
-                NULL,                    // ServicesActive database
+                nullptr,                    // local computer
+                nullptr,                    // ServicesActive database
                 SC_MANAGER_ALL_ACCESS);  // full access rights
 
-        if (NULL == schSCManager) {
+        if (nullptr == schSCManager) {
             WPMUtils::formatMessage(GetLastError(), &err);
             err = QObject::tr("OpenSCManager failed: %0").arg(err);
 
@@ -753,7 +753,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             if (!err.isEmpty())
                 break;
 
-            if (a == 0) {
+            if (a == nullptr) {
                 err = QString(QObject::tr("No installable version found for the package %1")).
                         arg(p->title);
                 break;
@@ -766,7 +766,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 break;
             }
 
-            if (b == 0) {
+            if (b == nullptr) {
                 if (!install) {
                     err = QString(QObject::tr("No installed version found for the package %1")).
                             arg(p->title);
@@ -779,7 +779,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     "to" <<
                     a->version.getVersionString();
 
-            if (b == 0 || a->version.compare(b->version) > 0) {
+            if (b == nullptr || a->version.compare(b->version) > 0) {
                 newest.append(a);
                 newesti.append(b);
                 used.append(false);
@@ -803,14 +803,14 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             if (!err.isEmpty())
                 break;
 
-            if (a == 0) {
+            if (a == nullptr) {
                 err = QString(QObject::tr("No installable version found for the package %1")).
                         arg(p->title);
                 break;
             }
 
             InstalledPackageVersion* ipv = findHighestInstalledMatch(*d);
-            PackageVersion* b = 0;
+            PackageVersion* b = nullptr;
             if (ipv) {
                 b = findPackageVersion_(ipv->package, ipv->version, &err);
                 if (!err.isEmpty()) {
@@ -820,7 +820,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 }
             }
 
-            if (b == 0) {
+            if (b == nullptr) {
                 if (!install) {
                     err = QString(QObject::tr("No installed version found for the package %1")).
                             arg(p->title);
@@ -833,7 +833,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     "to" <<
                     a->version.getVersionString();
 
-            if (b == 0 || a->version.compare(b->version) > 0) {
+            if (b == nullptr || a->version.compare(b->version) > 0) {
                 newest.append(a);
                 newesti.append(b);
                 used.append(false);
@@ -1105,7 +1105,7 @@ PackageVersion* AbstractRepository::findNewestInstalledPackageVersion_(
 {
     *err = "";
 
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     InstalledPackageVersion* ipv = InstalledPackages::getDefault()->
             getNewestInstalled(name);
@@ -1127,7 +1127,7 @@ QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
         ipv = InstalledPackages::getDefault()->getNewestInstalled(
                 "com.googlecode.windows-package-manager.NpackdCL64");
     } else
-        ipv = 0;
+        ipv = nullptr;
 
     if (!ipv)
         ipv = InstalledPackages::getDefault()->getNewestInstalled(
@@ -1146,13 +1146,13 @@ QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
 PackageVersion* AbstractRepository::findNewestInstallablePackageVersion_(
         const QString &package, QString* err) const
 {
-    PackageVersion* r = 0;
+    PackageVersion* r = nullptr;
 
     QList<PackageVersion*> pvs = this->getPackageVersions_(package, err);
     if (err->isEmpty()) {
         for (int i = 0; i < pvs.count(); i++) {
             PackageVersion* p = pvs.at(i);
-            if (r == 0 || p->version.compare(r->version) > 0) {
+            if (r == nullptr || p->version.compare(r->version) > 0) {
                 if (p->download.isValid())
                     r = p;
             }

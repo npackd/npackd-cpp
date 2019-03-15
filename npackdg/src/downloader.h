@@ -174,8 +174,8 @@ public:
         /**
          * @param url http:/https:/file: URL
          */
-        Request(const QUrl& url): file(0), interactive(true),
-                parentWindow(0), url(url), hashSum(false),
+        Request(const QUrl& url): file(nullptr), interactive(true),
+                parentWindow(nullptr), url(url), hashSum(false),
                 alg(QCryptographicHash::Sha256), useCache(true),
                 useInternet(true),
                 keepConnection(true), httpMethod("GET"),

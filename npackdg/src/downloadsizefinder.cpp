@@ -37,7 +37,7 @@ int64_t DownloadSizeFinder::downloadOrQueue(const QString &url)
         r = v->size;
 
         // if the value is older than 10 days, it is considered obsolete
-        if (r >= 0 && time(0) - v->sizeModified > 10 * 24 * 60 * 60) {
+        if (r >= 0 && time(nullptr) - v->sizeModified > 10 * 24 * 60 * 60) {
             r = -1;
         }
     } else {
@@ -96,7 +96,7 @@ URLInfo DownloadSizeFinder::downloadRunnable(
             THREAD_MODE_BACKGROUND_BEGIN);
     */
 
-    CoInitialize(NULL);
+    CoInitialize(nullptr);
 
     URLInfo r(url);
 
@@ -120,14 +120,14 @@ URLInfo DownloadSizeFinder::downloadRunnable(
     this->mutex.unlock();
 
     // if the value is older than 10 days, it is considered obsolete
-    if (r.size >= 0 && time(0) - r.sizeModified > 10 * 24 * 60 * 60) {
+    if (r.size >= 0 && time(nullptr) - r.sizeModified > 10 * 24 * 60 * 60) {
         r.size = -1;
     }
 
     if (r.size < 0) {
         Job* job = new Job();
         r.size = Downloader::getContentLength(job, url, defaultPasswordWindow);
-        r.sizeModified = time(0);
+        r.sizeModified = time(nullptr);
 
         if (!job->getErrorMessage().isEmpty() || r.size < 0) {
             r.size = -2;
@@ -146,7 +146,7 @@ URLInfo DownloadSizeFinder::downloadRunnable(
     return r;
 }
 
-DownloadSizeFinder::DownloadSizeFinder(): dbr(0)
+DownloadSizeFinder::DownloadSizeFinder(): dbr(nullptr)
 {
 }
 
