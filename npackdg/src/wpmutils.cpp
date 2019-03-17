@@ -259,7 +259,7 @@ QString WPMUtils::getProgramFilesDir()
     if (ret.isEmpty()) {
         WCHAR dir[MAX_PATH];
         SHGetFolderPath(nullptr, CSIDL_PROGRAM_FILES, nullptr, 0, dir);
-        ret = QString::fromUtf16(reinterpret_cast<ushort*>(dir));
+        ret = QString::fromWCharArray(dir);
     }
 
     return ret;
@@ -1007,8 +1007,7 @@ QString WPMUtils::findService(DWORD processId, QString* err)
     if (err->isEmpty()) {
         for (DWORD i = 0; i < lpServicesReturned; i++) {
             if ((lpServices + i)->ServiceStatusProcess.dwProcessId == processId) {
-                r = QString::fromUtf16(reinterpret_cast<ushort*>(
-                        (lpServices + i)->lpServiceName));
+                r = QString::fromWCharArray((lpServices + i)->lpServiceName);
                 break;
             }
         }
@@ -1810,7 +1809,7 @@ QString WPMUtils::getShellDir(int type)
      */
     WCHAR dir[MAX_PATH];
     SHGetFolderPath(nullptr, type, nullptr, 0, dir);
-    return QString::fromUtf16(reinterpret_cast<ushort*>(dir));
+    return QString::fromWCharArray(dir);
 }
 
 QString WPMUtils::validateFullPackageName(const QString& n)
@@ -2259,7 +2258,7 @@ QString WPMUtils::getWindowsDir()
     WCHAR dir[MAX_PATH];
     // this sometimes returns wrong value (Terminal Services?): SHGetFolderPath(0, CSIDL_WINDOWS, NULL, 0, dir);
     GetSystemWindowsDirectory(dir, MAX_PATH);
-    return QString::fromUtf16(reinterpret_cast<ushort*>(dir));
+    return QString::fromWCharArray(dir);
 }
 
 QString WPMUtils::findCmdExe()
@@ -3577,7 +3576,7 @@ QString WPMUtils::StopDependentServices(SC_HANDLE schSCManager,
         for (DWORD i = 0; i < dwCount; i++ ) {
             ENUM_SERVICE_STATUS ess = *(lpDependencies + i);
 
-            QString name = QString::fromUtf16((ushort*) ess.lpServiceName);
+            QString name = QString::fromWCharArray(ess.lpServiceName);
 
             // ignore the error
             DoStopSvc(schSCManager, name, stoppedServices);
