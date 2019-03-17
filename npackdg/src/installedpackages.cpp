@@ -254,80 +254,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
             d = "";
     }
 
-    QString windowsDir = WPMUtils::getWindowsDir();
-
-    // ancestor of the Windows directory
-    if (!d.isEmpty() && WPMUtils::isUnder(windowsDir, d)) {
-        d = "";
-    }
-
-    // child of the Windows directory
-    if (!d.isEmpty() && WPMUtils::isUnder(d,
-            windowsDir)) {
-        d = "";
-    }
-
-    // Windows directory
-    if (!d.isEmpty() && WPMUtils::pathEquals(d,
-            windowsDir)) {
-        if (ipv->package != "com.microsoft.Windows" &&
-                ipv->package != "com.microsoft.Windows32" &&
-                ipv->package != "com.microsoft.Windows64") {
-            d = "";
-        }
-    }
-
-    QString programFilesDir = WPMUtils::getProgramFilesDir();
-
-    // ancestor of "C:\Program Files"
-    if (!d.isEmpty() && (WPMUtils::isUnder(programFilesDir, d) ||
-            WPMUtils::pathEquals(d, programFilesDir))) {
-        d = "";
-    }
-
-    QString programFilesX86Dir = WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86);
-
-    // ancestor of "C:\Program Files (x86)"
-    if (!d.isEmpty() && WPMUtils::is64BitWindows() &&
-            (WPMUtils::isUnder(programFilesX86Dir, d) ||
-            WPMUtils::pathEquals(d,
-            programFilesX86Dir))) {
-        d = "";
-    }
-
-    // qCDebug(npackd) << "    0.1";
-
     // if "err" is not empty, we ignore the detected package version
     QString err;
-
-    // we cannot handle nested directories
-    if (!d.isEmpty()) {
-        QStringList packagePaths = this->getAllInstalledPackagePaths();
-        for (int i = 0; i < packagePaths.size(); i++) {
-            packagePaths[i] = packagePaths.at(i);
-        }
-
-        bool ignore = false;
-        for (int i = 0; i < packagePaths.size(); i++) {
-            // e.g. an MSI package and a package from the Control Panel
-            // "Software" have the same path
-            if (WPMUtils::isUnderOrEquals(d, packagePaths.at(i))) {
-                ignore = true;
-                break;
-            }
-
-            if (WPMUtils::isUnderOrEquals(packagePaths.at(i), d)) {
-                d = "";
-                break;
-            }
-        }
-
-        if (ignore) {
-            err = "Cannot handle nested directories";
-        }
-
-        //qCDebug(npackd) << "not ignoring" << d;
-    }
 
     QString betterPackageName = ipv->package;
 
@@ -346,8 +274,94 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
                 ipv->version);
         if (existing && existing->installed()) {
             err = "Package version is already installed";
+        } else {
+            qCDebug(npackd) << "Cannot find installed" << betterPackageName << ipv->version.getVersionString();
         }
         delete existing;
+    }
+
+    QString windowsDir = WPMUtils::getWindowsDir();
+
+    // ancestor of the Windows directory
+    if (err.isEmpty()) {
+        if (!d.isEmpty() && WPMUtils::isUnder(windowsDir, d)) {
+            d = "";
+        }
+    }
+
+    // child of the Windows directory
+    if (err.isEmpty()) {
+        if (!d.isEmpty() && WPMUtils::isUnder(d,
+                windowsDir)) {
+            d = "";
+        }
+    }
+
+    // Windows directory
+    if (err.isEmpty()) {
+        if (!d.isEmpty() && WPMUtils::pathEquals(d,
+                windowsDir)) {
+            if (betterPackageName != "com.microsoft.Windows" &&
+                    betterPackageName != "com.microsoft.Windows32" &&
+                    betterPackageName != "com.microsoft.Windows64") {
+                d = "";
+            }
+        }
+    }
+
+    QString programFilesDir = WPMUtils::getProgramFilesDir();
+
+    // ancestor of "C:\Program Files"
+    if (err.isEmpty()) {
+        if (!d.isEmpty() && (WPMUtils::isUnder(programFilesDir, d) ||
+                WPMUtils::pathEquals(d, programFilesDir))) {
+            d = "";
+        }
+    }
+
+    QString programFilesX86Dir = WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86);
+
+    // ancestor of "C:\Program Files (x86)"
+    if (err.isEmpty()) {
+        if (!d.isEmpty() && WPMUtils::is64BitWindows() &&
+                (WPMUtils::isUnder(programFilesX86Dir, d) ||
+                WPMUtils::pathEquals(d,
+                programFilesX86Dir))) {
+            d = "";
+        }
+    }
+
+    // qCDebug(npackd) << "    0.1";
+
+    // we cannot handle nested directories
+    if (err.isEmpty()) {
+        if (!d.isEmpty()) {
+            QStringList packagePaths = this->getAllInstalledPackagePaths();
+            for (int i = 0; i < packagePaths.size(); i++) {
+                packagePaths[i] = packagePaths.at(i);
+            }
+
+            bool ignore = false;
+            for (int i = 0; i < packagePaths.size(); i++) {
+                // e.g. an MSI package and a package from the Control Panel
+                // "Software" have the same path
+                if (WPMUtils::isUnderOrEquals(d, packagePaths.at(i))) {
+                    ignore = true;
+                    break;
+                }
+
+                if (WPMUtils::isUnderOrEquals(packagePaths.at(i), d)) {
+                    d = "";
+                    break;
+                }
+            }
+
+            if (ignore) {
+                err = "Cannot handle nested directories";
+            }
+
+            //qCDebug(npackd) << "not ignoring" << d;
+        }
     }
 
     QScopedPointer<PackageVersion> pv;
