@@ -36,8 +36,12 @@ public:
      *     possible that some packages are installed in nested directories
      *     to each other or to one of the package versions defined in Npackd.
      *     Please also note that the directory for an object stored here
-     *     may be empty even if a package
-     *     version is installed. This means that the directory is not known.
+     *     may be empty even if a package version is installed.
+     *     This means that the directory is not known. The order is important
+     *     as the data is later processed in this order. For example,
+     *     "com.microsoft.Windows" package should be placed first as its
+     *     location is detected precisely and other packages cannot be under
+     *     the Windows directory.
      * @param rep [ownership:caller] packages, package versions and licenses
      *     will be stored here. Package versions with a file named
      *     ".Npackd\Uninstall.bat" will be used to define uninstallers

@@ -553,6 +553,21 @@ QList<InstalledPackageVersion *> InstalledPackages::getByPackage(
     return r;
 }
 
+void InstalledPackages::remove(const QString &package)
+{
+    this->mutex.lock();
+
+    QList<InstalledPackageVersion*> all = this->data.values();
+    for (int i = 0; i < all.count(); i++) {
+        InstalledPackageVersion* ipv = all.at(i);
+        if (ipv->package == package) {
+            data.remove(PackageVersion::getStringId(package, ipv->version));
+        }
+    }
+
+    this->mutex.unlock();
+}
+
 InstalledPackageVersion* InstalledPackages::getNewestInstalled(
         const QString &package) const
 {
@@ -736,8 +751,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         replace.append(false);
         prefixes.append("");
 
-        if (WPMUtils::adminMode)
-		{
+        if (WPMUtils::adminMode) {
 			jobTitles.append(QObject::tr("Adding well-known packages"));
 			tpms.append(new WellKnownProgramsThirdPartyPM(
 				InstalledPackages::packageName));
@@ -762,6 +776,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             installeds.append(new QList<InstalledPackageVersion*>());
         }
 
+        // detect everything in threads
         QList<QFuture<void> > futures;
         for (int i = 0; i < tpms.count(); i++) {
             AbstractThirdPartyPM* tpm = tpms.at(i);
@@ -775,6 +790,8 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             futures.append(future);
         }
 
+        // waiting for threads to end and store the detected
+        // packages, versions and licenses
         for (int i = 0; i < futures.count(); i++) {
             futures[i].waitForFinished();
 
@@ -793,6 +810,17 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             Job* sub = job->newSubJob(0.1,
                     QObject::tr("Adding detected versions %1").arg(i),
                     false, true);
+
+            // WellKnownProgramsThirdPartyPM
+            if (i == 1) {
+                // detect Windows again if it was updated
+                // or for Npackd < 1.25 where Windows versions newer than 7
+                // were detected as 6.x
+                remove("com.microsoft.Windows");
+                remove("com.microsoft.Windows32");
+                remove("com.microsoft.Windows64");
+            }
+
             detect3rdParty(sub, rep,
                     *installeds.at(i),
                     prefixes.at(i));
@@ -816,18 +844,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             sub->completeWithProgress();
     }
 
-/*
- * use DISM API instead
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.01,
-                QObject::tr("Detecting Component Based Servicing packages"),
-                true, true);
-
-        AbstractThirdPartyPM* pm = new CBSThirdPartyPM();
-        detect3rdParty(sub, rep, pm, true, "cbs:");
-        delete pm;
-    }
- */
 
 /* WUA
 #include "stdafx.h"

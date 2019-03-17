@@ -54,7 +54,15 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
 
             if (ipv->installed() && !ipv->package.startsWith("msi.") &&
                     !ipv->package.startsWith("control-panel.")) {
-                installed->append(ipv->clone());
+                // placing package versions of Windows in front so that
+                // the directories are not used by something else
+                if (ipv->package == "com.microsoft.Windows64" ||
+                        ipv->package == "com.microsoft.Windows32" ||
+                        ipv->package == "com.microsoft.Windows") {
+                    installed->prepend(ipv->clone());
+                } else {
+                    installed->append(ipv->clone());
+                }
             }
         }
         qDeleteAll(ipvs);

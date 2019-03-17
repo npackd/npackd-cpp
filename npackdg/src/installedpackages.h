@@ -292,6 +292,13 @@ public:
      * @return error message
      */
     QString set(const InstalledPackages &other);
+
+    /**
+     * @brief removes all installed versions for the specified package
+     *
+     * @param package full package name
+     */
+    void remove(const QString &package);
 signals:
     /**
      * @brief fired if a package version was installed or uninstalled

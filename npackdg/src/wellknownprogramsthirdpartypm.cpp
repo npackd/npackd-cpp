@@ -175,6 +175,7 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
     v.setVersion(osvi.dwMajorVersion, osvi.dwMinorVersion,
             osvi.dwBuildNumber);
 
+
     if (!WPMUtils::is64BitWindows()) {
         QScopedPointer<Package> p32(new Package("com.microsoft.Windows32",
                 QObject::tr("Windows 32 bit")));
@@ -418,7 +419,11 @@ WellKnownProgramsThirdPartyPM::WellKnownProgramsThirdPartyPM(
 void WellKnownProgramsThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed, Repository *rep) const
 {
+    // the newly detected versions are placed in front in the list
+    // as Windows directory is very important and also the detection
+    // works really good here
     detectWindows(installed, rep);
+
     scanDotNet(installed, rep);
 
     QString err = detectMSXML(installed, rep);
