@@ -342,7 +342,12 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
                 // e.g. an MSI package and a package from the Control Panel
                 // "Software" have the same path
-                if (WPMUtils::pathEquals(d, v->getDirectory()) &&
+                /* not yet ready
+                 *
+                 * It make sense to only consider versions > 1.0 as "1.0" is
+                 * often used instead of an actual version number.
+                 *
+                 * if (WPMUtils::pathEquals(d, v->getDirectory()) &&
                         //ipv.package == v->package &&
                         (detectionInfoPrefix == "msi:" ||
                          detectionInfoPrefix == "control-panel:")) {
@@ -350,7 +355,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
                             ipv.package << ipv.version.getVersionString() <<
                             "to" << v->package << v->version.getVersionString();
                     //setPackageVersionPath(v->package, v->version, "", false);
-                }
+                }*/
 
                 if (WPMUtils::isUnderOrEquals(d, v->getDirectory())) {
                     err = "Cannot handle nested directories";
