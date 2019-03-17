@@ -358,8 +358,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     if (err.isEmpty()) {
         if (!pv) {
-            err = "Cannot find the package version " + betterPackageName + " " +
-                    ipv->version.getVersionString();
+            pv.reset(new PackageVersion(betterPackageName, ipv->version));
+            err = r->savePackageVersion(pv.data(), false);
         }
     }
 
