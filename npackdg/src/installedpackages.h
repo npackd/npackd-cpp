@@ -35,12 +35,12 @@ private:
 
     /**
      * @brief processOneInstalled3rdParty
-     * @param r
-     * @param ipv
+     * @param r database repository
+     * @param found detected package version
      * @threadsafe
      */
     void processOneInstalled3rdParty(DBRepository *r,
-            const InstalledPackageVersion *ipv, const QString &detectionInfoPrefix);
+            const InstalledPackageVersion *found, const QString &detectionInfoPrefix);
 
     /**
      * THIS METHOD IS NOT THREAD-SAFE

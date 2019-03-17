@@ -678,10 +678,13 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         }
     }
 
-    // remove stop words and numbers and KBXXXXXX and KBXXXXXXX
+    // remove stop words and numbers and KBXXXXXX and KBXXXXXXX and all words
+    // shorter than 3 characters
     for (int i = 0; i < keywords.size(); ) {
         const QString& p = keywords.at(i);
         if (stopWords.contains(p)) {
+            keywords.removeAt(i);
+        } else if (p.length() < 3) {
             keywords.removeAt(i);
         } else if (p.length() > 0 && p.at(0).isDigit()) {
             keywords.removeAt(i);

@@ -224,24 +224,28 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
 }
 
 void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
-        const InstalledPackageVersion* ipv, const QString& detectionInfoPrefix)
+        const InstalledPackageVersion* found, const QString& detectionInfoPrefix)
 {
     // this is a consistent output place for all packages detected by
     // third party package managers and should be kept for eventual
     // debugging via "npackdcl -d"
     qCDebug(npackd) << "InstalledPackages::processOneInstalled3rdParty enter" <<
-            ipv->package << ipv->version.getVersionString() <<
-            ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
+            found->package << found->version.getVersionString() <<
+            found->directory << found->detectionInfo << detectionInfoPrefix;
+
+    InstalledPackageVersion ipv(found->package,
+            found->version, found->directory);
+    ipv.detectionInfo = found->detectionInfo;
 
     QDir qd;
 
-    QString d = ipv->directory;
+    QString d = ipv.directory;
 
     // ?
-    if (ipv->package.startsWith("msi.") ||
-            ipv->package.startsWith("control-panel.")) {
+    if (ipv.package.startsWith("msi.") ||
+            ipv.package.startsWith("control-panel.")) {
         InstalledPackageVersion* orig = InstalledPackages::getDefault()->
-                find(ipv->package, ipv->version);
+                find(ipv.package, ipv.version);
         if (orig) {
             d = orig->getDirectory();
             delete orig;
@@ -257,25 +261,20 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     // if "err" is not empty, we ignore the detected package version
     QString err;
 
-    QString betterPackageName = ipv->package;
-
     // trying to find an existing "real" package name
     // instead of a generic "msi.xxx" or "control-panel.xxx"
     if (err.isEmpty()) {
-        QString b = findBetterPackageName(r, ipv->package);
+        QString b = findBetterPackageName(r, ipv.package);
         if (!b.isEmpty()) {
-            betterPackageName = b;
+            ipv.package = b;
         }
     }
 
     // if the package version is already installed, we skip it
     if (err.isEmpty()) {
-        InstalledPackageVersion* existing = find(betterPackageName,
-                ipv->version);
+        InstalledPackageVersion* existing = find(ipv.package, ipv.version);
         if (existing && existing->installed()) {
             err = "Package version is already installed";
-        } else {
-            qCDebug(npackd) << "Cannot find installed" << betterPackageName << ipv->version.getVersionString();
         }
         delete existing;
     }
@@ -301,9 +300,9 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     if (err.isEmpty()) {
         if (!d.isEmpty() && WPMUtils::pathEquals(d,
                 windowsDir)) {
-            if (betterPackageName != "com.microsoft.Windows" &&
-                    betterPackageName != "com.microsoft.Windows32" &&
-                    betterPackageName != "com.microsoft.Windows64") {
+            if (ipv.package != "com.microsoft.Windows" &&
+                    ipv.package != "com.microsoft.Windows32" &&
+                    ipv.package != "com.microsoft.Windows64") {
                 d = "";
             }
         }
@@ -336,43 +335,47 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     // we cannot handle nested directories
     if (err.isEmpty()) {
         if (!d.isEmpty()) {
-            QStringList packagePaths = this->getAllInstalledPackagePaths();
-            for (int i = 0; i < packagePaths.size(); i++) {
-                packagePaths[i] = packagePaths.at(i);
-            }
+            QList<InstalledPackageVersion*> all = this->getAll();
 
-            bool ignore = false;
-            for (int i = 0; i < packagePaths.size(); i++) {
+            for (int i = 0; i < all.size(); i++) {
+                InstalledPackageVersion* v = all.at(i);
+
                 // e.g. an MSI package and a package from the Control Panel
                 // "Software" have the same path
-                if (WPMUtils::isUnderOrEquals(d, packagePaths.at(i))) {
-                    ignore = true;
+                if (WPMUtils::pathEquals(d, v->getDirectory()) &&
+                        //ipv.package == v->package &&
+                        (detectionInfoPrefix == "msi:" ||
+                         detectionInfoPrefix == "control-panel:")) {
+                    qCDebug(npackd) << "Found update from" <<
+                            ipv.package << ipv.version.getVersionString() <<
+                            "to" << v->package << v->version.getVersionString();
+                    //setPackageVersionPath(v->package, v->version, "", false);
+                }
+
+                if (WPMUtils::isUnderOrEquals(d, v->getDirectory())) {
+                    err = "Cannot handle nested directories";
                     break;
                 }
 
-                if (WPMUtils::isUnderOrEquals(packagePaths.at(i), d)) {
+                if (WPMUtils::isUnderOrEquals(v->getDirectory(), d)) {
                     d = "";
                     break;
                 }
             }
 
-            if (ignore) {
-                err = "Cannot handle nested directories";
-            }
-
-            //qCDebug(npackd) << "not ignoring" << d;
+            qDeleteAll(all);
         }
     }
 
     QScopedPointer<PackageVersion> pv;
 
     if (err.isEmpty()) {
-        pv.reset(r->findPackageVersion_(betterPackageName, ipv->version, &err));
+        pv.reset(r->findPackageVersion_(ipv.package, ipv.version, &err));
     }
 
     if (err.isEmpty()) {
         if (!pv) {
-            pv.reset(new PackageVersion(betterPackageName, ipv->version));
+            pv.reset(new PackageVersion(ipv.package, ipv.version));
             err = r->savePackageVersion(pv.data(), false);
         }
     }
@@ -399,17 +402,17 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     if (err.isEmpty() && d.isEmpty()) {
         // qCDebug(npackd) << "    2";
 
-        Package* p = r->findPackage_(betterPackageName);
+        Package* p = r->findPackage_(ipv.package);
 
         d = WPMUtils::normalizePath(
                 WPMUtils::getProgramFilesDir(),
                 false) +
                 "\\NpackdDetected\\" +
-                WPMUtils::makeValidFilename(p ? p->title : betterPackageName, '_');
+                WPMUtils::makeValidFilename(p ? p->title : ipv.package, '_');
         if (qd.exists(d)) {
             d = WPMUtils::findNonExistingFile(
                     d + "-" +
-                    ipv->version.getVersionString(), "");
+                    ipv.version.getVersionString(), "");
         }
         qd.mkpath(d);
         delete p;
@@ -422,12 +425,12 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     InstalledPackageVersion* ipv2 = nullptr;
     if (err.isEmpty()) {
         // qCDebug(npackd) << "    4";
-        ipv2 = this->findOrCreate(betterPackageName, ipv->version, &err);
+        ipv2 = this->findOrCreate(ipv.package, ipv.version, &err);
     }
 
     if (err.isEmpty()) {
         // qCDebug(npackd) << "    5";
-        ipv2->detectionInfo = ipv->detectionInfo;
+        ipv2->detectionInfo = ipv.detectionInfo;
         ipv2->setPath(d);
     }
 
