@@ -148,8 +148,8 @@ QString CLProcessor::startNewestNpackdg()
         startupInfo.dwFlags = STARTF_USESHOWWINDOW;
         startupInfo.wShowWindow = SW_HIDE;
         bool success = CreateProcess(
-                (wchar_t*) exe.utf16(),
-                (wchar_t*) args.utf16(),
+                WPMUtils::toLPWSTR(exe),
+                WPMUtils::toLPWSTR(args),
                 nullptr, nullptr, TRUE,
                 CREATE_UNICODE_ENVIRONMENT, nullptr,
                 nullptr, &startupInfo, &pinfo);

@@ -89,7 +89,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     }
 
     if (err.isEmpty() && pExecute) {
-        hr = pExecute->SetLocalPath((LPCWSTR) filename.utf16());
+        hr = pExecute->SetLocalPath(WPMUtils::toLPWSTR(filename));
         if (!SUCCEEDED(hr)) {
             WPMUtils::formatMessage(hr, &err);
             // err = "2: " + err;
@@ -97,7 +97,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     }
 
     if (err.isEmpty() && pExecute) {
-        pExecute->SetSource((LPCWSTR) url.utf16());
+        pExecute->SetSource(WPMUtils::toLPWSTR(url));
         if (!SUCCEEDED(hr)) {
             WPMUtils::formatMessage(hr, &err);
             // err = "3: " + err;
@@ -496,7 +496,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             // this case and stops the script execution. We try to prevent
             // this by locking the Uninstall.bat script
             QString usfn = d.absolutePath() + "\\" + uninstallationScript;
-            HANDLE ush = CreateFile((LPCWSTR) usfn.utf16(),
+            HANDLE ush = CreateFile(WPMUtils::toLPWSTR(usfn),
                     GENERIC_READ,
                     FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
 
@@ -1324,10 +1324,10 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
             desc = desc.left(255) + "...";
 
         QString r = WPMUtils::createLink(
-                (WCHAR*) path.replace('/', '\\').utf16(),
-                (WCHAR*) from.utf16(),
-                (WCHAR*) desc.utf16(),
-                (WCHAR*) workingDir.utf16());
+                WPMUtils::toLPWSTR(path.replace('/', '\\')),
+                WPMUtils::toLPWSTR(from),
+                WPMUtils::toLPWSTR(desc),
+                WPMUtils::toLPWSTR(workingDir));
 
         if (!r.isEmpty()) {
             *errMsg = QString(QObject::tr("Shortcut creation from %1 to %2 failed: %3")).

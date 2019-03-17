@@ -378,7 +378,7 @@ QStringList WPMUtils::parseCommandLine(const QString& commandLine,
     QStringList params;
 
     int nArgs;
-    LPWSTR* szArglist = CommandLineToArgvW((WCHAR*) commandLine.utf16(), &nArgs);
+    LPWSTR* szArglist = CommandLineToArgvW(WPMUtils::toLPWSTR(commandLine), &nArgs);
     if (nullptr == szArglist) {
         *err = QObject::tr("CommandLineToArgvW failed");
     } else {
@@ -544,7 +544,7 @@ QString WPMUtils::extractIconURL(const QString& iconFile)
         // qCDebug(npackd) << "extractIconURL 2" << icon << iconIndex;
 
         HICON ic = ExtractIcon(GetModuleHandle(NULL),
-                (LPCWSTR) icon.utf16(), iconIndex);
+                WPMUtils::toLPWSTR(icon), iconIndex);
 
         // qCDebug(npackd) << "extractIconURL 2.1" << ((UINT_PTR) ic);
 
@@ -1461,7 +1461,7 @@ QMap<QString, QString> mapDevices2Drives() {
 
                     // may return multiple strings!
                     // returns very weird strings for network shares
-                    if (QueryDosDevice((LPCWSTR) logicalDrive.utf16(), devices,
+                    if (QueryDosDevice(WPMUtils::toLPWSTR(logicalDrive), devices,
                             2000)) {
                         WCHAR* device = devices;
                         while (*device) {
@@ -2041,10 +2041,10 @@ Version WPMUtils::getDLLVersion(const QString &path)
 
     DWORD dwVerHnd;
     DWORD size;
-    size = GetFileVersionInfoSize((LPWSTR) path.utf16(), &dwVerHnd);
+    size = GetFileVersionInfoSize(WPMUtils::toLPWSTR(path), &dwVerHnd);
     if (size != 0) {
         void* mem = malloc(size);
-        if (GetFileVersionInfo((LPWSTR) path.utf16(), 0, size, mem)) {
+        if (GetFileVersionInfo(WPMUtils::toLPWSTR(path), 0, size, mem)) {
             VS_FIXEDFILEINFO *pFileInfo;
             unsigned int bufLen;
             if (VerQueryValue(mem, (WCHAR*) L"\\", (LPVOID *) &pFileInfo,
@@ -2120,7 +2120,7 @@ QString WPMUtils::getMSIProductAttribute(const QString &guid,
 
     len = sizeof(value) / sizeof(value[0]);
     UINT r = MsiGetProductInfo(
-            (WCHAR*) guid.utf16(),
+            WPMUtils::toLPWSTR(guid),
             attribute,
             value, &len);
     QString p;
@@ -2143,8 +2143,8 @@ QString WPMUtils::getMSIComponentPath(const QString& product,
 
     len = sizeof(value) / sizeof(value[0]);
     UINT r = MsiGetComponentPath(
-            (WCHAR*) product.utf16(),
-            (WCHAR*) guid.utf16(),
+            WPMUtils::toLPWSTR(product),
+            WPMUtils::toLPWSTR(guid),
             value, &len);
     QString p;
     if (r == INSTALLSTATE_LOCAL) {
@@ -2245,7 +2245,7 @@ QMultiMap<QString, QString> WPMUtils::mapMSIComponentsToProducts(
     WCHAR buf[39];
     for (int i = 0; i < components.count(); i++) {
         QString c = components.at(i);
-        if (MsiGetProductCode((LPCWSTR) c.utf16(), buf) == ERROR_SUCCESS) {
+        if (MsiGetProductCode(WPMUtils::toLPWSTR(c), buf) == ERROR_SUCCESS) {
             QString v;
             v.setUtf16((ushort*) buf, 38);
             map.insert(v.toLower(), c);
@@ -2298,7 +2298,7 @@ QString WPMUtils::regQueryValue(HKEY hk, const QString &var)
     QString value_;
     char value[255];
     DWORD valueSize = sizeof(value);
-    if (RegQueryValueEx(hk, (WCHAR*) var.utf16(), nullptr, nullptr, (BYTE*) value,
+    if (RegQueryValueEx(hk, WPMUtils::toLPWSTR(var), nullptr, nullptr, (BYTE*) value,
             &valueSize) == ERROR_SUCCESS) {
         // the next line is important
         // valueSize is sometimes == 0 and the expression (valueSize /2 - 1)
@@ -2443,7 +2443,7 @@ QString WPMUtils::moveToRecycleBin(QString dir)
     SHFILEOPSTRUCTW f;
     memset(&f, 0, sizeof(f));
     WCHAR* from = new WCHAR[dir.length() + 2];
-    wcscpy(from, (WCHAR*) dir.utf16());
+    wcscpy(from, WPMUtils::toLPWSTR(dir));
     from[wcslen(from) + 1] = 0;
     f.wFunc = FO_DELETE;
     f.pFrom = from;
@@ -2783,7 +2783,7 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
                     if (SUCCEEDED(hres)) {
                         //qCDebug(npackd) << "Loading " << path;
 
-                        hres = ppf->Load((WCHAR*) path.utf16(), STGM_READ);
+                        hres = ppf->Load(WPMUtils::toLPWSTR(path), STGM_READ);
 
                         if (SUCCEEDED(hres)) {
                             WCHAR info[MAX_PATH + 1];
@@ -2985,7 +2985,7 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
     if (hEventLog) {
         // qCDebug(npackd) << "ReportEvent";
         LPCWSTR strings[1];
-        strings[0] = (LPCWSTR) msg.utf16();
+        strings[0] = WPMUtils::toLPWSTR(msg);
 
         ReportEvent(hEventLog, wType, 0, 1, nullptr,
                 1, 0, strings,
@@ -3155,7 +3155,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     if (job->shouldProceed()) {
         g_hChildStd_OUT_Rd = CreateNamedPipe(
-                reinterpret_cast<LPCWSTR>(name.utf16()),
+                WPMUtils::toLPWSTR(name),
                 PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
                 PIPE_TYPE_BYTE | PIPE_WAIT, 1,
                 128, 128, 1000, &saAttr);
@@ -3164,7 +3164,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     if (job->shouldProceed()) {
         g_hChildStd_OUT_Wr = CreateFileW(
-                reinterpret_cast<LPCWSTR>(name.utf16()),
+                WPMUtils::toLPWSTR(name),
                 GENERIC_WRITE,
                 0,
                 &saAttr,
@@ -3211,12 +3211,12 @@ void WPMUtils::executeFile(Job* job, const QString& where,
         if (!nativeArguments.isEmpty())
             args = args + ' ' + nativeArguments;
         success = CreateProcess(
-                (wchar_t*) path.utf16(),
-                (wchar_t*) args.utf16(),
+                WPMUtils::toLPWSTR(path),
+                WPMUtils::toLPWSTR(args),
                 nullptr, &saAttr, TRUE,
                 CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
                 ba.data(),
-                (wchar_t*) where.utf16(),
+                WPMUtils::toLPWSTR(where),
                 &startupInfo, &pinfo);
 
         job->checkOSCall(success);
@@ -3483,7 +3483,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
         schService = OpenService(schSCManager,         // SCM database
                 // name of service
-                reinterpret_cast<LPCWSTR>(serviceName.utf16()),
+                WPMUtils::toLPWSTR(serviceName),
                 SERVICE_ALL_ACCESS);
         if (schService == nullptr) {
             formatMessage(GetLastError(), &err);
@@ -3703,7 +3703,7 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
 
     SC_HANDLE schService = OpenService(
             schSCManager,         // SCM database
-            reinterpret_cast<LPCWSTR>(serviceName.utf16()), // name of service
+            WPMUtils::toLPWSTR(serviceName), // name of service
             SERVICE_ALL_ACCESS);  // full access
     if (schService == nullptr) {
         formatMessage(GetLastError(), &err);

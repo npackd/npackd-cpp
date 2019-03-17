@@ -100,7 +100,7 @@ QString WindowsRegistry::get(QString name, QString* err) const
     BYTE small_[256];
     valueSize = sizeof(small_);
     LONG r = RegQueryValueEx(this->hkey,
-                (WCHAR*) name.utf16(), nullptr, nullptr, small_,
+                WPMUtils::toLPWSTR(name), nullptr, nullptr, small_,
                 &valueSize);
 
     // valueSize may be 0!
@@ -108,7 +108,7 @@ QString WindowsRegistry::get(QString name, QString* err) const
         if (valueSize != 0) {
             char* value = new char[valueSize];
             r = RegQueryValueEx(this->hkey,
-                        (WCHAR*) name.utf16(), nullptr, nullptr, (BYTE*) value,
+                        WPMUtils::toLPWSTR(name), nullptr, nullptr, (BYTE*) value,
                         &valueSize);
             if (r != ERROR_SUCCESS) {
                 WPMUtils::formatMessage(r, err);
@@ -141,7 +141,7 @@ DWORD WindowsRegistry::getDWORD(QString name, QString* err) const
     DWORD valueSize = sizeof(value);
     DWORD type;
     LONG r = RegQueryValueEx(this->hkey,
-                (WCHAR*) name.utf16(), nullptr, &type, (BYTE*) &value,
+                WPMUtils::toLPWSTR(name), nullptr, &type, (BYTE*) &value,
                 &valueSize);
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, err);
@@ -161,7 +161,7 @@ QString WindowsRegistry::setDWORD(QString name, DWORD value) const
 
     DWORD valueSize = sizeof(value);
     LONG r = RegSetValueEx(this->hkey,
-                (WCHAR*) name.utf16(), 0, REG_DWORD, (BYTE*) &value,
+                WPMUtils::toLPWSTR(name), 0, REG_DWORD, (BYTE*) &value,
                 valueSize);
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, &err);
@@ -182,14 +182,14 @@ QByteArray WindowsRegistry::getBytes(QString name, QString *err) const
     DWORD valueSize = 0;
     DWORD type;
     LONG r = RegQueryValueEx(this->hkey,
-                (WCHAR*) name.utf16(), nullptr, &type, (BYTE*) value.data(),
+                WPMUtils::toLPWSTR(name), nullptr, &type, (BYTE*) value.data(),
                 &valueSize);
     if (type != REG_BINARY) {
         *err = QObject::tr("Wrong registry value type (BINARY expected)");
     } else if (r == ERROR_MORE_DATA) {
         value.resize(valueSize);
         LONG r = RegQueryValueEx(this->hkey,
-                    (WCHAR*) name.utf16(), nullptr, &type, (BYTE*) value.data(),
+                    WPMUtils::toLPWSTR(name), nullptr, &type, (BYTE*) value.data(),
                     &valueSize);
         if (r != ERROR_SUCCESS) {
             WPMUtils::formatMessage(r, err);
@@ -209,7 +209,7 @@ QString WindowsRegistry::setBytes(QString name, const QByteArray& value) const
     } else {
         DWORD valueSize = value.length();
         LONG r = RegSetValueEx(this->hkey,
-                    (WCHAR*) name.utf16(), 0, REG_BINARY, (BYTE*) value.data(),
+                    WPMUtils::toLPWSTR(name), 0, REG_BINARY, (BYTE*) value.data(),
                     valueSize);
         if (r != ERROR_SUCCESS) {
             WPMUtils::formatMessage(r, &err);
@@ -229,7 +229,7 @@ QString WindowsRegistry::set(QString name, QString value) const
 
     DWORD valueSize = (value.length() + 1) * 2;
     LONG r = RegSetValueEx(this->hkey,
-                (WCHAR*) name.utf16(), 0, REG_SZ, (BYTE*) value.utf16(),
+                WPMUtils::toLPWSTR(name), 0, REG_SZ, (BYTE*) value.utf16(),
                 valueSize);
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, &err);
@@ -247,7 +247,7 @@ QString WindowsRegistry::setExpand(QString name, QString value) const
 
     DWORD valueSize = (value.length() + 1) * 2;
     LONG r = RegSetValueEx(this->hkey,
-                (WCHAR*) name.utf16(), 0, REG_EXPAND_SZ, (BYTE*) value.utf16(),
+                WPMUtils::toLPWSTR(name), 0, REG_EXPAND_SZ, (BYTE*) value.utf16(),
                 valueSize);
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, &err);
@@ -351,7 +351,7 @@ QString WindowsRegistry::open(HKEY hk, QString path, bool useWow6432Node,
     }
 
     error = RegOpenKeyEx(hk,
-            (WCHAR*) path.utf16(),
+            WPMUtils::toLPWSTR(path),
             0, samDesired,
             &this->hkey);
     if (error != ERROR_SUCCESS) {
@@ -384,7 +384,7 @@ WindowsRegistry WindowsRegistry::createSubKey(QString name, QString* err,
 
     HKEY hk;
     LONG r = RegCreateKeyEx(this->hkey,
-            (WCHAR*) name.utf16(),
+            WPMUtils::toLPWSTR(name),
             0, nullptr, 0, sd, nullptr,
             &hk, nullptr);
     if (r != ERROR_SUCCESS) {
@@ -415,7 +415,7 @@ QString WindowsRegistry::close()
 QString WindowsRegistry::remove(const QString& name) const
 {
     QString result;
-    LONG r = RegDeleteKeyW(this->hkey, (WCHAR*) name.utf16());
+    LONG r = RegDeleteKeyW(this->hkey, WPMUtils::toLPWSTR(name));
     if (r != ERROR_SUCCESS && r != ERROR_FILE_NOT_FOUND) {
         WPMUtils::formatMessage(r, &result);
         result = QObject::tr("Error removing registry node %1: %2").
@@ -427,7 +427,7 @@ QString WindowsRegistry::remove(const QString& name) const
 QString WindowsRegistry::removeRecursively(const QString& name) const
 {
     QString result;
-    LONG r = SHDeleteKeyW(this->hkey, (WCHAR*) name.utf16());
+    LONG r = SHDeleteKeyW(this->hkey, WPMUtils::toLPWSTR(name));
     if (r != ERROR_SUCCESS) {
         WPMUtils::formatMessage(r, &result);
     }

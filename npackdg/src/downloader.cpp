@@ -59,7 +59,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
     agent += " (compatible; MSIE 9.0)";
 
-    HINTERNET internet = InternetOpenW((WCHAR*) agent.utf16(),
+    HINTERNET internet = InternetOpenW(WPMUtils::toLPWSTR(agent),
             INTERNET_OPEN_TYPE_PRECONFIG,
             nullptr, nullptr, 0);
 
@@ -95,7 +95,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         INTERNET_PORT port = url.port(url.scheme() == "https" ?
                 INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT);
         hConnectHandle = InternetConnectW(internet,
-                (WCHAR*) server.utf16(), port, nullptr, nullptr, INTERNET_SERVICE_HTTP, 0, 0);
+                WPMUtils::toLPWSTR(server), port, nullptr, nullptr, INTERNET_SERVICE_HTTP, 0, 0);
 
         if (hConnectHandle == nullptr) {
             QString errMsg;
@@ -149,8 +149,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
                     INTERNET_FLAG_RELOAD;
         hResourceHandle = HttpOpenRequestW(hConnectHandle,
-                reinterpret_cast<LPCWSTR>(verb.utf16()),
-                (WCHAR*) resource.utf16(),
+                WPMUtils::toLPWSTR(verb),
+                WPMUtils::toLPWSTR(resource),
                 nullptr, nullptr, ppszAcceptTypes,
                 flags, 0);
         if (hResourceHandle == nullptr) {
@@ -185,7 +185,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             // the following call uses NULL for headers in case there are no headers
             // because Windows 2003 generates the error 12150 otherwise
             if (!HttpSendRequestW(hResourceHandle,
-                    request.headers.length() == 0 ? nullptr : reinterpret_cast<LPCWSTR>(request.headers.utf16()), -1,
+                    request.headers.length() == 0 ? nullptr : WPMUtils::toLPWSTR(request.headers), -1,
                     request.postData.length() == 0 ? nullptr : const_cast<char*>(request.postData.data()),
                     request.postData.length())) {
                 sendRequestError = GetLastError();
@@ -451,7 +451,7 @@ QString Downloader::setStringOption(HINTERNET hInternet, DWORD dwOption,
 {
     QString result;
     if (!InternetSetOptionW(hInternet,
-            dwOption, (void*) value.utf16(), value.length() + 1)) {
+            dwOption, WPMUtils::toLPWSTR(value), value.length() + 1)) {
         WPMUtils::formatMessage(GetLastError(), &result);
     }
     return result;

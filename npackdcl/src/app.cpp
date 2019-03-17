@@ -1558,11 +1558,11 @@ void App::processInstallOperations(Job *job,
             // normally the case if you start cmd.exe from the Windows start
             // menu
             success = CreateProcess(
-                    (wchar_t*) prg.utf16(),
-                    (wchar_t*) args.utf16(),
+                    WPMUtils::toLPWSTR(prg),
+                    WPMUtils::toLPWSTR(args),
                     nullptr, nullptr, TRUE,
                     0 /*CREATE_UNICODE_ENVIRONMENT*/, nullptr,
-                    (wchar_t*) winDir.utf16(), &startupInfo, &pinfo);
+                    WPMUtils::toLPWSTR(winDir), &startupInfo, &pinfo);
 
             if (success) {
                 CloseHandle(pinfo.hThread);

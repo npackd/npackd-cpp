@@ -398,11 +398,11 @@ void UIUtils::processWithSelfUpdate(Job* job,
             0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
         };
         bool success = CreateProcess(
-                (wchar_t*) prg.utf16(),
-                (wchar_t*) args.utf16(),
+                WPMUtils::toLPWSTR(prg),
+                WPMUtils::toLPWSTR(args),
                 nullptr, nullptr, TRUE,
                 CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW, nullptr,
-                (wchar_t*) winDir.utf16(), &startupInfo, &pinfo);
+                WPMUtils::toLPWSTR(winDir), &startupInfo, &pinfo);
 
         if (success) {
             CloseHandle(pinfo.hThread);

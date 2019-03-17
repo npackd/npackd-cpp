@@ -792,6 +792,18 @@ public:
      */
     static QList<Dependency *> getPackageVersionOptions(const CommandLine &cl,
             QString *err);
+
+    /**
+     * @brief returns the content of a QString as LPWSTR = WCHAR* for use in
+     *     win32 API functions. The returned data should be considered
+     *     read-only.
+     *
+     * @param s a string
+     * @return read-only contents of the string
+     */
+    inline static LPWSTR toLPWSTR(const QString& s) {
+        return reinterpret_cast<LPWSTR>(const_cast<ushort*>(s.utf16()));
+    }
 };
 
 #endif // WPMUTILS_H
