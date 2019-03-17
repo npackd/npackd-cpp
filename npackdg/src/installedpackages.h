@@ -40,7 +40,7 @@ private:
      * @threadsafe
      */
     void processOneInstalled3rdParty(DBRepository *r,
-            InstalledPackageVersion *ipv, const QString &detectionInfoPrefix);
+            const InstalledPackageVersion *ipv, const QString &detectionInfoPrefix);
 
     /**
      * THIS METHOD IS NOT THREAD-SAFE
@@ -111,7 +111,7 @@ private:
     void detect3rdParty(Job* job, DBRepository* r,
             const QList<InstalledPackageVersion*>& installed, const QString& detectionInfoPrefix);
 
-    QString findBetterPackageName(DBRepository *r, InstalledPackageVersion *ipv);
+    QString findBetterPackageName(DBRepository *r, const QString &package);
 
     void addPackages(Job *job, DBRepository *r, Repository *rep, const QList<InstalledPackageVersion *> &installed, bool replace, const QString &detectionInfoPrefix);
 

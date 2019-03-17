@@ -195,14 +195,14 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
 }
 
 QString InstalledPackages::findBetterPackageName(DBRepository *r,
-        InstalledPackageVersion* ipv)
+        const QString& package)
 {
     QString result;
 
-    if (ipv->package.startsWith("msi.") ||
-            ipv->package.startsWith("control-panel.")) {
+    if (package.startsWith("msi.") ||
+            package.startsWith("control-panel.")) {
         // find another package with the same title
-        Package* p = r->findPackage_(ipv->package);
+        Package* p = r->findPackage_(package);
         if (p) {
             QString err;
 
@@ -224,12 +224,20 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
 }
 
 void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
-        InstalledPackageVersion* ipv, const QString& detectionInfoPrefix)
+        const InstalledPackageVersion* ipv, const QString& detectionInfoPrefix)
 {
+    // this is a consistent output place for all packages detected by
+    // third party package managers and should be kept for eventual
+    // debugging via "npackdcl -d"
+    qCDebug(npackd) << "InstalledPackages::processOneInstalled3rdParty enter" <<
+            ipv->package << ipv->version.getVersionString() <<
+            ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
+
     QDir qd;
 
     QString d = ipv->directory;
 
+    // ?
     if (ipv->package.startsWith("msi.") ||
             ipv->package.startsWith("control-panel.")) {
         InstalledPackageVersion* orig = InstalledPackages::getDefault()->
@@ -240,13 +248,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         }
     }
 
-    // this is the only consistent output place for all packages detected by
-    // third party package managers and should be keeped for eventual
-    // debugging via "npackdcl -d"
-    qCDebug(npackd) << "InstalledPackages::processOneInstalled3rdParty" <<
-            ipv->package << ipv->version.getVersionString() <<
-            ipv->directory << ipv->detectionInfo << detectionInfoPrefix;
-
+    // if the directory does not exist on disk, we should create one
     if (!d.isEmpty()) {
         if (!qd.exists(d))
             d = "";
@@ -295,6 +297,9 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     // qCDebug(npackd) << "    0.1";
 
+    // if "err" is not empty, we ignore the detected package version
+    QString err;
+
     // we cannot handle nested directories
     if (!d.isEmpty()) {
         QStringList packagePaths = this->getAllInstalledPackagePaths();
@@ -317,34 +322,43 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
             }
         }
 
-        if (ignore)
-            return;
+        if (ignore) {
+            err = "Cannot handle nested directories";
+        }
 
         //qCDebug(npackd) << "not ignoring" << d;
     }
 
-    QString betterPackageName = findBetterPackageName(r, ipv);
-    if (!betterPackageName.isEmpty()) {
-        ipv->package = betterPackageName;
+    QString betterPackageName = ipv->package;
+
+    // trying to find an existing "real" package name
+    // instead of a generic "msi.xxx" or "control-panel.xxx"
+    if (err.isEmpty()) {
+        QString b = findBetterPackageName(r, ipv->package);
+        if (!b.isEmpty()) {
+            betterPackageName = b;
+        }
     }
 
     // if the package version is already installed, we skip it
-    InstalledPackageVersion* existing = find(ipv->package,
-            ipv->version);
-    if (existing && existing->installed()) {
+    if (err.isEmpty()) {
+        InstalledPackageVersion* existing = find(betterPackageName,
+                ipv->version);
+        if (existing && existing->installed()) {
+            err = "Package version is already installed";
+        }
         delete existing;
-        return;
     }
-    delete existing;
 
-    QString err;
+    QScopedPointer<PackageVersion> pv;
 
-    QScopedPointer<PackageVersion> pv(
-            r->findPackageVersion_(ipv->package, ipv->version, &err));
+    if (err.isEmpty()) {
+        pv.reset(r->findPackageVersion_(betterPackageName, ipv->version, &err));
+    }
 
     if (err.isEmpty()) {
         if (!pv) {
-            err = "Cannot find the package version " + ipv->package + " " +
+            err = "Cannot find the package version " + betterPackageName + " " +
                     ipv->version.getVersionString();
         }
     }
@@ -366,16 +380,18 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         pv->files.append(u);
     }
 
+    // create a directory under "NpackdDetected", if the installation
+    // directory is not known
     if (err.isEmpty() && d.isEmpty()) {
         // qCDebug(npackd) << "    2";
 
-        Package* p = r->findPackage_(ipv->package);
+        Package* p = r->findPackage_(betterPackageName);
 
         d = WPMUtils::normalizePath(
                 WPMUtils::getProgramFilesDir(),
                 false) +
                 "\\NpackdDetected\\" +
-                WPMUtils::makeValidFilename(p ? p->title : ipv->package, '_');
+                WPMUtils::makeValidFilename(p ? p->title : betterPackageName, '_');
         if (qd.exists(d)) {
             d = WPMUtils::findNonExistingFile(
                     d + "-" +
@@ -392,16 +408,25 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     InstalledPackageVersion* ipv2 = nullptr;
     if (err.isEmpty()) {
         // qCDebug(npackd) << "    4";
-        ipv2 = this->findOrCreate(ipv->package, ipv->version, &err);
+        ipv2 = this->findOrCreate(betterPackageName, ipv->version, &err);
     }
 
     if (err.isEmpty()) {
         // qCDebug(npackd) << "    5";
         ipv2->detectionInfo = ipv->detectionInfo;
         ipv2->setPath(d);
+    }
 
-        //qCDebug(npackd) << ipv2->package << ipv2->version.getVersionString() <<
-        //        ipv2->directory << ipv2->detectionInfo;
+    // this is a consistent output place for all packages detected by
+    // third party package managers and should be kept for eventual
+    // debugging via "npackdcl -d"
+    if (err.isEmpty()) {
+        qCDebug(npackd) << "InstalledPackages::processOneInstalled3rdParty leave" <<
+                ipv2->package << ipv2->version.getVersionString() <<
+                ipv2->getDirectory() << ipv2->detectionInfo;
+    } else {
+        qCDebug(npackd) << "InstalledPackages::processOneInstalled3rdParty leave" <<
+                "error" << err;
     }
 }
 
@@ -678,10 +703,6 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         clear();
         job->setProgress(0.2);
     }
-
-    // adding well-known packages should happen before adding packages
-    // determined from the list of installed packages to get better
-    // package descriptions for com.microsoft.Windows64 and similar packages
 
     // detecting from the list of installed packages should happen first
     // as all other packages consult the list of installed packages. Secondly,
