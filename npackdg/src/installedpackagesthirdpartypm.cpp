@@ -14,7 +14,7 @@ InstalledPackagesThirdPartyPM::InstalledPackagesThirdPartyPM()
 void InstalledPackagesThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed, Repository *rep) const
 {
-    QScopedPointer<InstalledPackages> ip(new InstalledPackages());
+    std::unique_ptr<InstalledPackages> ip(new InstalledPackages());
     QString err = ip->readRegistryDatabase();
     if (!err.isEmpty()) {
         job->setErrorMessage(err);

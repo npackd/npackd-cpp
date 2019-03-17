@@ -372,7 +372,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         }
     }
 
-    QScopedPointer<PackageVersion> pv;
+    std::unique_ptr<PackageVersion> pv;
 
     if (err.isEmpty()) {
         pv.reset(r->findPackageVersion_(ipv.package, ipv.version, &err));
@@ -381,7 +381,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     if (err.isEmpty()) {
         if (!pv) {
             pv.reset(new PackageVersion(ipv.package, ipv.version));
-            err = r->savePackageVersion(pv.data(), false);
+            err = r->savePackageVersion(pv.get(), false);
         }
     }
 
@@ -646,14 +646,14 @@ InstalledPackageVersion*
         InstalledPackageVersion* ipv = all.at(i);
         if (ipv->installed()) {
             QString err;
-            QScopedPointer<PackageVersion> pv(dbr->findPackageVersion_(
+            std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion_(
                     ipv->package, ipv->version, &err));
 
             //if (!pv.data()) {
             //    qCDebug(npackd) << "cannot find" << ipv->package << ipv->version.getVersionString();
             //}
 
-            if (err.isEmpty() && pv.data()) {
+            if (err.isEmpty() && pv.get()) {
                 for (int j = 0; j < pv->dependencies.size(); j++) {
                     if (!isInstalled(*pv->dependencies.at(j))) {
                         r = ipv->clone();

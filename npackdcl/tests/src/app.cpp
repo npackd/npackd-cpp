@@ -3,7 +3,6 @@
 #include <memory>
 
 #include <QRegExp>
-#include <QScopedPointer>
 #include <QProcess>
 
 #include "app.h"

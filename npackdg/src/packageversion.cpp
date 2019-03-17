@@ -661,7 +661,7 @@ QString PackageVersion::planInstallation(InstalledPackages &installed,
 
             /* old code:
             QString err;
-            QScopedPointer<PackageVersion> pv(d->findBestMatchToInstall(avoid,
+            _ScopedPointer<PackageVersion> pv(d->findBestMatchToInstall(avoid,
                     &err));
             if (!err.isEmpty()) {
                 res = QString(QObject::tr("Error searching for the best dependency match: %1")).

@@ -1740,7 +1740,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
             for (int i = 0; i < selected.count(); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
-                QScopedPointer<Package> p(r->findPackage_(pv->package));
+                std::unique_ptr<Package> p(r->findPackage_(pv->package));
                 if (p) {
                     QUrl url(p->url);
                     if (url.isValid())
@@ -1869,7 +1869,7 @@ void MainWindow::on_actionTest_Download_Site_triggered()
             selected = sel->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
-                QScopedPointer<PackageVersion> pv(
+                std::unique_ptr<PackageVersion> pv(
                         r->findNewestInstallablePackageVersion_(p->name,
                         &err));
                 if (!err.isEmpty())
@@ -2244,7 +2244,7 @@ void MainWindow::on_actionShow_changelog_triggered()
             for (int i = 0; i < selected.count(); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
-                QScopedPointer<Package> p(r->findPackage_(pv->package));
+                std::unique_ptr<Package> p(r->findPackage_(pv->package));
                 if (p) {
                     QUrl url(p->getChangeLog());
                     if (url.isValid())

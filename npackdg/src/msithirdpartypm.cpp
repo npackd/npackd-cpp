@@ -1,3 +1,5 @@
+#include <memory>
+
 #include <windows.h>
 #include <msi.h>
 #include <QBuffer>
@@ -41,7 +43,7 @@ void MSIThirdPartyPM::scan(Job* job,
         package = "msi." + guid.mid(1, 36);
 
         // create package version
-        QScopedPointer<PackageVersion> pv(new PackageVersion(package));
+        std::unique_ptr<PackageVersion> pv(new PackageVersion(package));
 
         QString version_ = WPMUtils::getMSIProductAttribute(guid,
                 INSTALLPROPERTY_VERSIONSTRING, &err);
@@ -75,7 +77,7 @@ void MSIThirdPartyPM::scan(Job* job,
                 "rem the program should be stopped by the uninstaller\r\n");
         pv->files.append(pvf);
 
-        rep->savePackageVersion(pv.data(), true);
+        rep->savePackageVersion(pv.get(), true);
 
         // qCDebug(npackd) << "MSIThirdPartyPM::scan loop 1.3";
 

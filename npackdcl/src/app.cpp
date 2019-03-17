@@ -1,7 +1,6 @@
 #include <limits>
 #include <math.h>
 
-#include <QScopedPointer>
 #include <QMultiMap>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -1799,13 +1798,13 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
     for (int i = 0; i < install.count(); i++) {
         InstallOperation* op = install.at(i);
         if (!op->install) {
-            QScopedPointer<PackageVersion> pv(op->findPackageVersion(err));
+            std::unique_ptr<PackageVersion> pv(op->findPackageVersion(err));
             if (!err->isEmpty())
                 break;
 
             if (!names.isEmpty())
                 names.append(", ");
-            if (pv.isNull())
+            if (!pv)
                 names.append(op->package + " " +
                         op->version.getVersionString());
             else
@@ -1818,13 +1817,13 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
         for (int i = 0; i < install.count(); i++) {
             InstallOperation* op = install.at(i);
             if (op->install) {
-                QScopedPointer<PackageVersion> pv(op->findPackageVersion(err));
+                std::unique_ptr<PackageVersion> pv(op->findPackageVersion(err));
                 if (!err->isEmpty())
                     break;
 
                 if (!installNames.isEmpty())
                     installNames.append(", ");
-                if (pv.isNull())
+                if (!pv)
                     installNames.append(op->package + " " +
                             op->version.getVersionString());
                 else
@@ -1854,9 +1853,9 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
         *title = "Uninstalling";
         InstallOperation* op0 = install.at(0);
 
-        QScopedPointer<PackageVersion> pv(op0->findPackageVersion(err));
+        std::unique_ptr<PackageVersion> pv(op0->findPackageVersion(err));
         if (err->isEmpty()) {
-            if (pv.isNull())
+            if (!pv)
                 pv.reset(new PackageVersion(op0->package, op0->version));
 
             msg = QString("The package %1 will be uninstalled. "

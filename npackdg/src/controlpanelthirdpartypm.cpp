@@ -143,7 +143,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         }
     }
 
-    QScopedPointer<Package> p(new Package(package, package));
+    std::unique_ptr<Package> p(new Package(package, package));
 
     QString title = k.get("DisplayName", &err);
     if (!err.isEmpty() || title.isEmpty())
@@ -189,7 +189,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
 
     //qCDebug(npackd) << "CP: adding package " << p.data()->name << p.data()->title;
 
-    rep->savePackage(p.data(), true);
+    rep->savePackage(p.get(), true);
 
     QDir d;
 
@@ -266,7 +266,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         ipv->detectionInfo = "control-panel:" + registryPath;
         installed->append(ipv);
 
-        QScopedPointer<PackageVersion> pv(new PackageVersion(package));
+        std::unique_ptr<PackageVersion> pv(new PackageVersion(package));
         pv->version = version;
 
         PackageVersionFile* pvf = new PackageVersionFile(
@@ -278,6 +278,6 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
                 "rem the program should be stopped by the uninstaller\r\n");
         pv->files.append(pvf);
 
-        rep->savePackageVersion(pv.data(), true);
+        rep->savePackageVersion(pv.get(), true);
     }
 }

@@ -89,9 +89,9 @@ void CBSThirdPartyPM::detectOneCBSPackage(
     if (err.isEmpty()) {
         QString title = keyNameParts.at(0);
         title.replace('-', ' ');
-        QScopedPointer<Package> p(new Package(package, title));
+        std::unique_ptr<Package> p(new Package(package, title));
         p->categories.append(QObject::tr("Component-Based Servicing"));
-        rep->savePackage(p.data(), true);
+        rep->savePackage(p.get(), true);
     }
 
     // find the version number
@@ -105,12 +105,12 @@ void CBSThirdPartyPM::detectOneCBSPackage(
     }
 
     if (err.isEmpty()) {
-        QScopedPointer<PackageVersion> pv(new PackageVersion(package));
+        std::unique_ptr<PackageVersion> pv(new PackageVersion(package));
         pv->version = version;
         PackageVersionFile* pvf = new PackageVersionFile(
                 ".Npackd\\Uninstall.bat", "\r\n"); // TODO
         pv->files.append(pvf);
-        rep->savePackageVersion(pv.data(), true);
+        rep->savePackageVersion(pv.get(), true);
     }
 
     DWORD state = 0;
@@ -171,19 +171,19 @@ void CBSThirdPartyPM::detectOneCBSPackageUpdate(
             QString title = name;
             title.replace('-', ' ');
 
-            QScopedPointer<Package> p(new Package(packageName, title));
+            std::unique_ptr<Package> p(new Package(packageName, title));
             p->description = title; // TODO
             p->categories.append(QObject::tr("Component-Based Servicing"));
-            rep->savePackage(p.data(), true);
+            rep->savePackage(p.get(), true);
 
             Version version;
 
-            QScopedPointer<PackageVersion> pv(new PackageVersion(packageName));
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(packageName));
             pv->version = version;
             PackageVersionFile* pvf = new PackageVersionFile(
                     ".Npackd\\Uninstall.bat", "\r\n"); // TODO
             pv->files.append(pvf);
-            rep->savePackageVersion(pv.data(), true);
+            rep->savePackageVersion(pv.get(), true);
 
             if (superPackageInstalled && value == 1) {
                 InstalledPackageVersion* ipv = new InstalledPackageVersion(

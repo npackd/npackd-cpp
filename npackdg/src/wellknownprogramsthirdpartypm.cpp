@@ -96,13 +96,13 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
 {
     QString err;
 
-    QScopedPointer<Package> p(
+    std::unique_ptr<Package> p(
             new Package("com.microsoft.MSXML",
             QObject::tr("Microsoft Core XML Services (MSXML)")));
     p->url = "http://www.microsoft.com/downloads/en/details.aspx?FamilyID=993c0bcf-3bcf-4009-be21-27e85e1857b1#Overview";
     p->description = QObject::tr("XML library");
     p->setChangeLog("http://msdn.microsoft.com/en-us/library/ms753751(v=vs.85).aspx");
-    err = rep->savePackage(p.data(), true);
+    err = rep->savePackage(p.get(), true);
 
     Version v;
     Version nullNull(0, 0);
@@ -110,8 +110,8 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
     if (err.isEmpty()) {
         v = WPMUtils::getDLLVersion("msxml.dll");
         if (v.compare(nullNull) > 0) {
-            QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+            err = rep->savePackageVersion(pv.get(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -119,8 +119,8 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
     if (err.isEmpty()) {
         v = WPMUtils::getDLLVersion("msxml2.dll");
         if (v.compare(nullNull) > 0) {
-            QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+            err = rep->savePackageVersion(pv.get(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -129,8 +129,8 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         v = WPMUtils::getDLLVersion("msxml3.dll");
         if (v.compare(nullNull) > 0) {
             v.prepend(3);
-            QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+            err = rep->savePackageVersion(pv.get(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -138,8 +138,8 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
     if (err.isEmpty()) {
         v = WPMUtils::getDLLVersion("msxml4.dll");
         if (v.compare(nullNull) > 0) {
-            QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+            err = rep->savePackageVersion(pv.get(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -147,8 +147,8 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
     if (err.isEmpty()) {
         v = WPMUtils::getDLLVersion("msxml5.dll");
         if (v.compare(nullNull) > 0) {
-            QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+            err = rep->savePackageVersion(pv.get(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -156,8 +156,8 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
     if (err.isEmpty()) {
         v = WPMUtils::getDLLVersion("msxml6.dll");
         if (v.compare(nullNull) > 0) {
-            QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+            err = rep->savePackageVersion(pv.get(), true);
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }
     }
@@ -177,34 +177,34 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
 
 
     if (!WPMUtils::is64BitWindows()) {
-        QScopedPointer<Package> p32(new Package("com.microsoft.Windows32",
+        std::unique_ptr<Package> p32(new Package("com.microsoft.Windows32",
                 QObject::tr("Windows 32 bit")));
         p32->description = QObject::tr("operating system");
         p32->url = "http://www.microsoft.com/windows/";
-        QScopedPointer<PackageVersion> pv32(new PackageVersion(p32->name, v));
-        rep->savePackage(p32.data(), true);
-        rep->savePackageVersion(pv32.data(), true);
+        std::unique_ptr<PackageVersion> pv32(new PackageVersion(p32->name, v));
+        rep->savePackage(p32.get(), true);
+        rep->savePackageVersion(pv32.get(), true);
         installed->append(new InstalledPackageVersion(p32->name, v,
                 WPMUtils::getWindowsDir()));
     } else {
-        QScopedPointer<Package> p64(new Package("com.microsoft.Windows64",
+        std::unique_ptr<Package> p64(new Package("com.microsoft.Windows64",
                 QObject::tr("Windows 64 bit")));
         p64->description = QObject::tr("operating system");
         p64->url = "http://www.microsoft.com/windows/";
-        QScopedPointer<PackageVersion> pv64(new PackageVersion(p64->name, v));
-        rep->savePackage(p64.data(), true);
-        rep->savePackageVersion(pv64.data(), true);
+        std::unique_ptr<PackageVersion> pv64(new PackageVersion(p64->name, v));
+        rep->savePackage(p64.get(), true);
+        rep->savePackageVersion(pv64.get(), true);
         installed->append(new InstalledPackageVersion(p64->name, v,
                 WPMUtils::getWindowsDir()));
     }
 
-    QScopedPointer<Package> p(new Package("com.microsoft.Windows",
+    std::unique_ptr<Package> p(new Package("com.microsoft.Windows",
             "Windows"));
     p->description = QObject::tr("operating system");
     p->url = "http://www.microsoft.com/windows/";
-    rep->savePackage(p.data(), true);
-    QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-    rep->savePackageVersion(pv.data(), true);
+    rep->savePackage(p.get(), true);
+    std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+    rep->savePackageVersion(pv.get(), true);
 
     // "" is used here as the installation directory as Npackd does not allow
     // multiple package versions to be installed in the same directory
@@ -223,12 +223,12 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
     QString package = w64bit ? "com.oracle.JRE64" :
             "com.oracle.JRE";
 
-    QScopedPointer<Package> p(new Package(package, w64bit ? "JRE 64 bit" :
+    std::unique_ptr<Package> p(new Package(package, w64bit ? "JRE 64 bit" :
             QObject::tr("JRE")));
     p->description = QObject::tr("Java runtime");
     p->url = "http://www.java.com/";
     p->setChangeLog("http://en.wikipedia.org/wiki/Java_version_history");
-    rep->savePackage(p.data(), true);
+    rep->savePackage(p.get(), true);
 
     WindowsRegistry jreWR;
     QString err = jreWR.open(HKEY_LOCAL_MACHINE,
@@ -258,8 +258,8 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
             if (!d.exists())
                 continue;
 
-            QScopedPointer<PackageVersion> pv(new PackageVersion(package, v));
-            rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(package, v));
+            rep->savePackageVersion(pv.get(), true);
 
             installed->append(new InstalledPackageVersion(package, v, path));
         }
@@ -276,11 +276,11 @@ void WellKnownProgramsThirdPartyPM::detectPython(
     QString package = w64bit ? "org.python.Python64" :
             "org.python.Python";
 
-    QScopedPointer<Package> p(new Package(package, w64bit ? "Python 64 bit" :
+    std::unique_ptr<Package> p(new Package(package, w64bit ? "Python 64 bit" :
             QObject::tr("Python")));
     p->description = QObject::tr("programming language");
     p->url = "http://www.python.org";
-    rep->savePackage(p.data(), true);
+    rep->savePackage(p.get(), true);
 
     WindowsRegistry pythonWR;
     QString err = pythonWR.open(HKEY_LOCAL_MACHINE,
@@ -317,8 +317,8 @@ void WellKnownProgramsThirdPartyPM::detectPython(
             if (!d.exists())
                 continue;
 
-            QScopedPointer<PackageVersion> pv(new PackageVersion(package, v));
-            rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(package, v));
+            rep->savePackageVersion(pv.get(), true);
 
             // qCDebug(npackd) << package << v_ << path;
 
@@ -336,12 +336,12 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
     if (w64bit && !WPMUtils::is64BitWindows())
         return;
 
-    QScopedPointer<Package> p(new Package(package,
+    std::unique_ptr<Package> p(new Package(package,
             w64bit ? QObject::tr("JDK 64 bit") : QObject::tr("JDK")));
     p->url = "http://www.oracle.com/technetwork/java/javase/overview/index.html";
     p->description = QObject::tr("Java development kit");
     p->setChangeLog("http://en.wikipedia.org/wiki/Java_version_history");
-    rep->savePackage(p.data(), true);
+    rep->savePackage(p.get(), true);
 
     WindowsRegistry wr;
     QString err = wr.open(HKEY_LOCAL_MACHINE,
@@ -373,9 +373,9 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
                 if (!d.exists())
                     continue;
 
-                QScopedPointer<PackageVersion> pv(
+                std::unique_ptr<PackageVersion> pv(
                         new PackageVersion(package, v));
-                rep->savePackageVersion(pv.data(), true);
+                rep->savePackageVersion(pv.get(), true);
 
                 installed->append(new InstalledPackageVersion(package, v, path));
             }
@@ -388,20 +388,20 @@ QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
 {
     QString err;
 
-    QScopedPointer<Package> p(new Package("com.microsoft.WindowsInstaller",
+    std::unique_ptr<Package> p(new Package("com.microsoft.WindowsInstaller",
             QObject::tr("Windows Installer")));
     p->url = "http://msdn.microsoft.com/en-us/library/cc185688(VS.85).aspx";
     p->description = QObject::tr("Package manager");
 
-    err = rep->savePackage(p.data(), true);
+    err = rep->savePackage(p.get(), true);
 
     Version v;
     Version nullNull(0, 0);
     if (err.isEmpty()) {
         v = WPMUtils::getDLLVersion("MSI.dll");
         if (v.compare(nullNull) > 0) {
-            QScopedPointer<PackageVersion> pv(new PackageVersion(p->name, v));
-            err = rep->savePackageVersion(pv.data(), true);
+            std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
+            err = rep->savePackageVersion(pv.get(), true);
 
             installed->append(new InstalledPackageVersion(p->name, v, ""));
         }

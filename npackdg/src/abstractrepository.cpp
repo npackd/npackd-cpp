@@ -161,13 +161,13 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
         Repository* rep = new Repository();
 
         if (def == 0 || def == 2 || def == 3) {
-            QScopedPointer<Package> super(new Package(
+            std::unique_ptr<Package> super(new Package(
                     WPMUtils::getHostName() + ".super",
                     QObject::tr("List of packages")));
-            rep->savePackage(super.data(), true);
+            rep->savePackage(super.get(), true);
 
-            QScopedPointer<PackageVersion> superv(
-                    new PackageVersion(super.data()->name));
+            std::unique_ptr<PackageVersion> superv(
+                    new PackageVersion(super.get()->name));
             if (!superv->version.setVersion(QDateTime::currentDateTime().toString(
                     "yyyy.M.d.h.m.s"))) {
                 job->setErrorMessage("Internal error: unexpected version syntax");
@@ -179,9 +179,9 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
                 Dependency* d = new Dependency();
                 d->package = pv->package;
                 d->setVersions("[0,2000000000)");
-                superv.data()->dependencies.append(d);
+                superv.get()->dependencies.append(d);
             }
-            rep->savePackageVersion(superv.data(), true);
+            rep->savePackageVersion(superv.get(), true);
         }
 
         if (def == 1 || def == 2 || def == 3) {
@@ -196,17 +196,17 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
                     break;
                 }
 
-                QScopedPointer<Package> p(findPackage_(pv->package));
+                std::unique_ptr<Package> p(findPackage_(pv->package));
                 if (p) {
-                    err = rep->savePackage(p.data(), false);
+                    err = rep->savePackage(p.get(), false);
                     if (!err.isEmpty()) {
                         job->setErrorMessage(err);
                         break;
                     }
                     if (!p->license.isEmpty()) {
-                        QScopedPointer<License> lic(findLicense_(p->license, &err));
+                        std::unique_ptr<License> lic(findLicense_(p->license, &err));
                         if (lic) {
-                            err = rep->saveLicense(lic.data(), false);
+                            err = rep->saveLicense(lic.get(), false);
                             if (!err.isEmpty()) {
                                 job->setErrorMessage(err);
                                 break;
@@ -791,8 +791,8 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
     if (err.isEmpty()) {
         for (int i = 0; i < ranges.count(); i++) {
             Dependency* d = ranges.at(i);
-            QScopedPointer<Package> p(findPackage_(d->package));
-            if (!p.data()) {
+            std::unique_ptr<Package> p(findPackage_(d->package));
+            if (!p.get()) {
                 err = QString(QObject::tr("Cannot find the package %1")).
                         arg(d->package);
                 break;
@@ -997,11 +997,11 @@ QString AbstractRepository::planUninstallation(InstalledPackages &installed,
     // even if changes in the list were done in nested calls to
     // "planUninstallation"
     while (true) {
-        QScopedPointer<InstalledPackageVersion> ipv(installed.
+        std::unique_ptr<InstalledPackageVersion> ipv(installed.
                 findFirstWithMissingDependency());
-        if (ipv.data()) {
-            QScopedPointer<PackageVersion> pv(findPackageVersion_(
-                    ipv.data()->package, ipv.data()->version, &res));
+        if (ipv.get()) {
+            std::unique_ptr<PackageVersion> pv(findPackageVersion_(
+                    ipv.get()->package, ipv.get()->version, &res));
             if (!res.isEmpty())
                 break;
 
