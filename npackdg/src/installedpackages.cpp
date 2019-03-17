@@ -562,6 +562,7 @@ void InstalledPackages::remove(const QString &package)
         InstalledPackageVersion* ipv = all.at(i);
         if (ipv->package == package) {
             data.remove(PackageVersion::getStringId(package, ipv->version));
+            delete ipv;
         }
     }
 
@@ -937,8 +938,10 @@ QString InstalledPackages::save()
     QString err = other.readRegistryDatabase();
 
     if (err.isEmpty()) {
+        qCDebug(npackd) << "Installed packages just read from the registry";
         other.dump();
 
+        // save entries that are not yet in the Windows registry
         QList<InstalledPackageVersion*> myInfos = getAll();
         for (int i = 0; i < myInfos.size(); i++) {
             InstalledPackageVersion* myIpv = myInfos.at(i);
@@ -957,13 +960,14 @@ QString InstalledPackages::save()
         qDeleteAll(myInfos);
         myInfos.clear();
 
+        // remove unnecessary entries from the Windows registry
         QList<InstalledPackageVersion*> otherInfos = other.getAll();
         for (int i = 0; i < otherInfos.size(); i++) {
             InstalledPackageVersion* otherIpv = otherInfos.at(i);
             InstalledPackageVersion* myIpv = find(
                     otherIpv->package, otherIpv->version);
 
-            if (!myIpv) {
+            if (!myIpv || !myIpv->installed()) {
                 err = setPackageVersionPath(otherIpv->package,
                         otherIpv->version, "", true);
             }
