@@ -72,7 +72,7 @@ QString CLProcessor::remove()
         err = InstalledPackages::getDefault()->readRegistryDatabase();
     }
 
-    int programCloseType = WPMUtils::CLOSE_WINDOW;
+    DWORD programCloseType = WPMUtils::CLOSE_WINDOW;
     if (err.isEmpty())
         programCloseType = WPMUtils::getProgramCloseType(cl, &err);
 
@@ -231,7 +231,7 @@ QString CLProcessor::update()
 
     DBRepository* rep = DBRepository::getDefault();
 
-    int programCloseType = WPMUtils::CLOSE_WINDOW;
+    DWORD programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
         programCloseType = WPMUtils::getProgramCloseType(cl, &err);

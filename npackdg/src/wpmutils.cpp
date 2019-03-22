@@ -2811,7 +2811,7 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
     }
 }
 
-int WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
+DWORD WPMUtils::getProgramCloseType(const CommandLine& cl, QString* err)
 {
     int r = WPMUtils::CLOSE_WINDOW;
     QString v = cl.get(QStringLiteral("end-process"));

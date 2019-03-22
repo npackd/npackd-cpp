@@ -1264,7 +1264,7 @@ void App::update(Job* job)
     QString proxyUser = cl.get("proxy-user");
     QString proxyPassword = cl.get("proxy-password");
 
-    int programCloseType = WPMUtils::CLOSE_WINDOW;
+    DWORD programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
         programCloseType = WPMUtils::getProgramCloseType(cl, &err);
@@ -1928,7 +1928,7 @@ void App::remove(Job *job)
             sub->completeWithProgress();
     }
 
-    int programCloseType = WPMUtils::CLOSE_WINDOW;
+    DWORD programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
         QString err;
         programCloseType = WPMUtils::getProgramCloseType(cl, &err);

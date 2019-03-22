@@ -595,7 +595,7 @@ public:
      * @param err error message will be stored here
      * @return program close type
      */
-    static int getProgramCloseType(const CommandLine &cl, QString *err);
+    static DWORD getProgramCloseType(const CommandLine &cl, QString *err);
 
     /**
      * @brief maps MSI components to the corresponding products
