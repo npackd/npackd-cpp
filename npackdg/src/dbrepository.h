@@ -30,6 +30,7 @@ class DBRepository: public AbstractRepository
 {
 private:
     static DBRepository def;
+
     bool tableExists(QSqlDatabase* db,
             const QString& table, QString* err);
     bool columnExists(QSqlDatabase *db, const QString &table,
@@ -54,6 +55,7 @@ private:
     std::unique_ptr<MySQLQuery> deleteCmdFilesQuery;
     MySQLQuery* insertInstalledQuery;
     MySQLQuery* insertURLSizeQuery;
+    QStringList stopWords;
 
     QSqlDatabase db;
 

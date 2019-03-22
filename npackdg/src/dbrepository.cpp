@@ -58,6 +58,12 @@ DBRepository::DBRepository(): mutex(QMutex::Recursive)
     selectCategoryQuery = nullptr;
     insertInstalledQuery = nullptr;
     insertURLSizeQuery = nullptr;
+
+    // please note that words shorter than 3 characters are removed later anyway
+    stopWords = QString("version build edition remove only "
+            "bit sp1 sp2 sp3 deu enu update microsoft corporation setup package "
+            "and are but for into not such that the their then there these "
+            "they this was will with windows").split(' ');
 }
 
 DBRepository::~DBRepository()
@@ -651,9 +657,6 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     txt.replace('/', ' ');
     txt = txt.simplified();
     QStringList keywords = txt.split(' ', QString::SkipEmptyParts);
-    QStringList stopWords = QStringLiteral("version build edition remove only "
-            "bit sp1 sp2 sp3 deu enu update microsoft corporation setup package").
-            split(' ');
 
     // synonyms
     for (int i = 0; i < keywords.size(); i++) {
@@ -678,8 +681,13 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         }
     }
 
-    // remove stop words and numbers and KBXXXXXX and KBXXXXXXX and all words
-    // shorter than 3 characters
+    // remove (X == a digit)
+    //  - stop words
+    //  - numbers
+    //  - KBXXXXXX
+    //  - KBXXXXXXX
+    //  - all words shorter than 3 characters
+    //  - vX...
     for (int i = 0; i < keywords.size(); ) {
         const QString& p = keywords.at(i);
         if (stopWords.contains(p)) {
@@ -687,6 +695,9 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         } else if (p.length() < 3) {
             keywords.removeAt(i);
         } else if (p.length() > 0 && p.at(0).isDigit()) {
+            keywords.removeAt(i);
+        } else if (p.length() >= 2 && (p.at(0).toUpper() == 'V') &&
+               p.at(1).isDigit()) {
             keywords.removeAt(i);
         } else if (p.length() == 8 && (p.at(0).toUpper() == 'K') &&
                 (p.at(1).toUpper() == 'B') && p.at(2).isDigit() &&
