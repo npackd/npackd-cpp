@@ -671,7 +671,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     // "32 bit" and "64 bit"
     for (int i = 0; i < keywords.size() - 1; i++) {
         const QString& p = keywords.at(i);
-        const QString& p2 = keywords.at(i + 1);
+        const QString& p2 = keywords.at(i + 1).toLower();
         if (p == QStringLiteral("32") && p2 == QStringLiteral("bit")) {
             keywords[i] = QStringLiteral("i686");
             keywords.removeAt(i + 1);
