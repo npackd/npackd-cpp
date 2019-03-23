@@ -139,6 +139,7 @@ private:
     QString updateDatabase();
     void transferFrom(Job *job, const QString &databaseFilename);
     QString deleteCmdFiles(const QString &name, const Version &version);
+    QStringList tokenizeTitle(const QString &title);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;

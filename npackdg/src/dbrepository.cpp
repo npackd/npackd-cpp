@@ -643,7 +643,7 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     return r;
 }
 
-QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
+QStringList DBRepository::tokenizeTitle(const QString& title)
 {
     QString txt = title.toLower();
     txt.replace('(', ' ');
@@ -655,7 +655,9 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     txt.replace('-', ' ');
     txt.replace('_', ' ');
     txt.replace('/', ' ');
+    txt.replace('@', ' ');
     txt = txt.simplified();
+
     QStringList keywords = txt.split(' ', QString::SkipEmptyParts);
 
     // synonyms
@@ -680,6 +682,9 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
             keywords.removeAt(i + 1);
         }
     }
+    if (!keywords.contains(QStringLiteral("x86_64")) &&
+            !keywords.contains(QStringLiteral("i686")))
+        keywords.append(QStringLiteral("i686"));
 
     // remove (X == a digit)
     //  - stop words
@@ -715,7 +720,14 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         }
     }
 
+    return keywords;
+}
+
+QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
+{
     QStringList packages;
+
+    QStringList keywords = tokenizeTitle(title);
 
     if (keywords.size() > 0) {
         QString where = QStringLiteral("select name from package "
@@ -728,10 +740,10 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
             if (kw.length() > 1) {
                 if (!where.isEmpty())
                     where += QStringLiteral(" AND ");
-                where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") +
+                where += QStringLiteral("TITLE_FULLTEXT LIKE :TITLE_FULLTEXT") +
                         QString::number(i);
-                params.append(QStringLiteral("%") + kw +
-                        QStringLiteral("%"));
+                params.append(QStringLiteral("% ") + kw +
+                        QStringLiteral(" %"));
             }
         }
 
@@ -1192,11 +1204,12 @@ QString DBRepository::savePackage(Package *p, bool replace)
                 "(REPOSITORY, NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
-                " CATEGORY4)"
+                " CATEGORY4, TITLE_FULLTEXT)"
                 "VALUES(:REPOSITORY, :NAME, :TITLE, :URL, "
                 ":ICON, :DESCRIPTION, :LICENSE, "
                 ":FULLTEXT, :STATUS, :SHORT_NAME, "
-                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4)");
+                ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4, "
+                ":TITLE_FULLTEXT)");
 
         insertSQL += add;
         replaceSQL += add;
@@ -1269,6 +1282,9 @@ QString DBRepository::savePackage(Package *p, bool replace)
                         QVariant(QVariant::Int));
             else
                 savePackageQuery->bindValue(QStringLiteral(":CATEGORY4"), cat4);
+            savePackageQuery->bindValue(QStringLiteral(":TITLE_FULLTEXT"),
+                    ' ' + tokenizeTitle(p->title).join(' ') + ' ');
+
             if (!savePackageQuery->exec())
                 err = getErrorString(*savePackageQuery);
             else
@@ -2287,9 +2303,11 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
                 "INSERT INTO PACKAGE(NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, STATUS, SHORT_NAME, "
                 "REPOSITORY, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, "
-                "CATEGORY4) SELECT NAME, TITLE, URL, ICON, DESCRIPTION, "
+                "CATEGORY4, TITLE_FULLTEXT) "
+                "SELECT NAME, TITLE, URL, ICON, DESCRIPTION, "
                 "LICENSE, FULLTEXT, STATUS, SHORT_NAME, REPOSITORY, "
-                "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+                "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, "
+                "TITLE_FULLTEXT "
                 "FROM tempdb.PACKAGE"));
         if (err.isEmpty())
             err = exec(QStringLiteral(
@@ -2403,8 +2421,19 @@ QString DBRepository::updateDatabase()
 
     bool e = false;
 
+    // PACKAGE
     if (err.isEmpty()) {
         e = tableExists(&db, QStringLiteral("PACKAGE"), &err);
+    }
+    if (err.isEmpty()) {
+        if (e) {
+            // PACKAGE.TITLE_FULLTEXT is new in 1.25
+            if (!columnExists(&db, "PACKAGE",
+                    "TITLE_FULLTEXT", &err)) {
+                exec(QStringLiteral("DROP TABLE PACKAGE"));
+                e = false;
+            }
+        }
     }
     if (err.isEmpty()) {
         if (!e) {
@@ -2424,7 +2453,8 @@ QString DBRepository::updateDatabase()
                     "CATEGORY1 INTEGER, "
                     "CATEGORY2 INTEGER, "
                     "CATEGORY3 INTEGER, "
-                    "CATEGORY4 INTEGER"
+                    "CATEGORY4 INTEGER, "
+                    "TITLE_FULLTEXT TEXT"
                     ")"));
             err = toString(db.lastError());
         }
@@ -2444,6 +2474,7 @@ QString DBRepository::updateDatabase()
         }
     }
 
+    // REPOSITORY
     if (err.isEmpty()) {
         e = tableExists(&db, QStringLiteral("REPOSITORY"), &err);
     }
