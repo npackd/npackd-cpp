@@ -61,7 +61,8 @@ DBRepository::DBRepository(): mutex(QMutex::Recursive)
 
     // please note that words shorter than 3 characters are removed later anyway
     stopWords = QString("version build edition remove only "
-            "bit sp1 sp2 sp3 deu enu update microsoft corporation setup package "
+            "bit sp1 sp2 sp3 deu enu update microsoft corporation mozilla "
+            "setup package "
             "and are but for into not such that the their then there these "
             "they this was will with windows").split(' ');
 }
