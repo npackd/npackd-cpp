@@ -3088,7 +3088,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Component-Based Servicing</source>
-        <translation>Servicio basado en componentes</translation>
+        <translation type="vanished">Servicio basado en componentes</translation>
     </message>
     <message>
         <source>Cannot open the file %1</source>

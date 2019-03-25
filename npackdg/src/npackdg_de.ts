@@ -2294,7 +2294,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Component-Based Servicing</source>
-        <translation>Component-Based Servicing</translation>
+        <translation type="vanished">Component-Based Servicing</translation>
     </message>
     <message>
         <source>Cannot open the file %1</source>

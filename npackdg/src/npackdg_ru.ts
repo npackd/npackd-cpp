@@ -3099,10 +3099,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Component-Based Servicing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Newer Npackd GUI was not found</source>
         <translation type="unfinished"></translation>
     </message>

@@ -30,7 +30,6 @@
 #include "hrtimer.h"
 #include "installedpackagesthirdpartypm.h"
 #include "dbrepository.h"
-//#include "cbsthirdpartypm.h"
 
 InstalledPackages InstalledPackages::def;
 

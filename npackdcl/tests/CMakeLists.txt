@@ -81,7 +81,6 @@ set(TESTS_SOURCES
     ../../npackdg/src/repositoryxmlhandler.cpp
     ../../npackdg/src/mysqlquery.cpp
     ../../npackdg/src/installedpackagesthirdpartypm.cpp
-    ../../npackdg/src/cbsthirdpartypm.cpp
     ../../npackdg/src/urlinfo.cpp
     )
 set(TESTS_HEADERS
@@ -113,7 +112,6 @@ set(TESTS_HEADERS
     ../../npackdg/src/repositoryxmlhandler.h
     ../../npackdg/src/mysqlquery.h
     ../../npackdg/src/installedpackagesthirdpartypm.h
-    ../../npackdg/src/cbsthirdpartypm.h
     ../../npackdg/src/urlinfo.h
 )
 

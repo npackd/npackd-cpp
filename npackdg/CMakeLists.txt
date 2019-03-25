@@ -111,7 +111,6 @@ set(NPACKDG_SOURCES
     src/flowlayout.cpp
     src/mysqlquery.cpp
     src/repositoryxmlhandler.cpp
-    src/cbsthirdpartypm.cpp
     src/visiblejobs.cpp
     src/progresstree2.cpp
     src/downloadsizefinder.cpp
@@ -161,7 +160,6 @@ set(NPACKDG_HEADERS
     src/flowlayout.h
     src/mysqlquery.h
     src/repositoryxmlhandler.h
-    src/cbsthirdpartypm.h
     src/msoav2.h
     src/visiblejobs.h
     src/clprocessor.h
