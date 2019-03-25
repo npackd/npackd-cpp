@@ -26,6 +26,8 @@ public:
      * This signal will be emitted each time the selection changes.
      */
     // void selectionChanged();
+
+    virtual ~Selection();
 };
 
 #endif // SELECTION_H

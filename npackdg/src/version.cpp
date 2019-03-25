@@ -26,7 +26,7 @@ Version::Version(const Version &v): basic()
     else
         this->parts = new int[v.nparts];
     this->nparts = v.nparts;
-    memcpy(parts, v.parts, sizeof(parts[0]) * nparts);
+    memcpy(parts, v.parts, sizeof(parts[0]) * static_cast<size_t>(nparts));
 }
 
 Version& Version::operator =(const Version& v)
@@ -39,7 +39,7 @@ Version& Version::operator =(const Version& v)
         else
             this->parts = new int[v.nparts];
         this->nparts = v.nparts;
-        memcpy(parts, v.parts, sizeof(parts[0]) * nparts);
+        memcpy(parts, v.parts, sizeof(parts[0]) * static_cast<size_t>(nparts));
     }
     return *this;
 }
@@ -149,7 +149,8 @@ void Version::prepend(int number)
         newParts = new int[nparts + 1];
 
     newParts[0] = number;
-    memmove(newParts + 1, this->parts, sizeof(parts[0]) * (this->nparts));
+    memmove(newParts + 1, this->parts, sizeof(parts[0]) *
+            static_cast<size_t>(this->nparts));
     if (this->parts != basic)
         delete[] this->parts;
     this->parts = newParts;
@@ -202,7 +203,8 @@ void Version::normalize()
             newParts = basic;
         else
             newParts = new int[this->nparts - n];
-        memmove(newParts, this->parts, sizeof(parts[0]) * (this->nparts - n));
+        memmove(newParts, this->parts, sizeof(parts[0]) *
+                static_cast<size_t>(this->nparts - n));
         if (this->parts != basic)
             delete[] this->parts;
         this->parts = newParts;

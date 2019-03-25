@@ -172,8 +172,9 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     GetVersionEx(&osvi);
     Version v;
-    v.setVersion(osvi.dwMajorVersion, osvi.dwMinorVersion,
-            osvi.dwBuildNumber);
+    v.setVersion(static_cast<int>(osvi.dwMajorVersion),
+            static_cast<int>(osvi.dwMinorVersion),
+            static_cast<int>(osvi.dwBuildNumber));
 
 
     if (!WPMUtils::is64BitWindows()) {

@@ -7,6 +7,10 @@ Selection::Selection()
 {
 }
 
+Selection::~Selection()
+{
+}
+
 Selection* Selection::findCurrent()
 {
     QWidget* w = QApplication::focusWidget();
