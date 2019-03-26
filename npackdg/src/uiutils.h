@@ -1,6 +1,8 @@
 #ifndef UIUTILS_H
 #define UIUTILS_H
 
+#include <windows.h>
+
 #include <QWidget>
 #include <QString>
 
@@ -25,7 +27,7 @@ public:
      * @param programCloseType how to close processes
      */
     static void processWithSelfUpdate(Job *job,
-            QList<InstallOperation *> &install, int programCloseType);
+            QList<InstallOperation *> &install, DWORD programCloseType);
 
     /**
      * Shows a confirmation dialog.

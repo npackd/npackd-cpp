@@ -438,7 +438,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
 }
 
 void PackageVersion::uninstall(Job* job, bool printScriptOutput,
-        int programCloseType, QStringList* stoppedServices)
+        DWORD programCloseType, QStringList* stoppedServices)
 {
     if (!installed()) {
         job->setProgress(1);
@@ -1605,7 +1605,7 @@ void PackageVersion::installWith(Job* job)
 
 void PackageVersion::install(Job* job, const QString& where,
         const QString& binary,
-        bool printScriptOutput, int programCloseType,
+        bool printScriptOutput, DWORD programCloseType,
         QStringList* stoppedServices)
 {
     if (installed()) {
@@ -2156,7 +2156,7 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
     return r;
 }
 
-void PackageVersion::stop(Job* job, int programCloseType,
+void PackageVersion::stop(Job* job, DWORD programCloseType,
         bool printScriptOutput, QStringList* stoppedServices)
 {
     bool me = false;

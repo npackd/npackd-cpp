@@ -18,9 +18,9 @@ QStringList AbstractRepository::getRepositoryURLs(HKEY hk, const QString& path,
     QStringList urls;
     if (err->isEmpty()) {
         *keyExists = true;
-        int size = wr.getDWORD("size", err);
+        DWORD size = wr.getDWORD("size", err);
         if (err->isEmpty()) {
-            for (int i = 1; i <= size; i++) {
+            for (int i = 1; i <= static_cast<int>(size); i++) {
                 WindowsRegistry er;
                 *err = er.open(wr, QString("%1").arg(i), KEY_READ);
                 if (err->isEmpty()) {
@@ -1032,8 +1032,8 @@ QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
 
     bool keyExists;
 	QStringList urls = getRepositoryURLs(
-		HKEY_LOCAL_MACHINE,
-		"SOFTWARE\\Policies\\Npackd\\Reps", &e, &keyExists);
+            HKEY_LOCAL_MACHINE,
+            "SOFTWARE\\Policies\\Npackd\\Reps", &e, &keyExists);
 
 	if (!keyExists) {
 		urls = getRepositoryURLs(
@@ -1087,7 +1087,7 @@ void AbstractRepository::setRepositoryURLs(QList<QUrl*>& urls, QString* err)
                 "Software\\Npackd\\Npackd\\Reps", err,
                 KEY_ALL_ACCESS);
         if (err->isEmpty()) {
-            wrr.setDWORD("size", urls.count());
+            wrr.setDWORD("size", static_cast<DWORD>(urls.count()));
             for (int i = 0; i < urls.count(); i++) {
                 WindowsRegistry r = wrr.createSubKey(QString("%1").arg(i + 1),
                         err, KEY_ALL_ACCESS);

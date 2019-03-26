@@ -295,7 +295,7 @@ bool UIUtils::confirm(QWidget* parent, QString title, QString text,
 }
 
 void UIUtils::processWithSelfUpdate(Job* job,
-        QList<InstallOperation*> &ops, int programCloseType)
+        QList<InstallOperation*> &ops, DWORD programCloseType)
 {
     QString newExe;
 

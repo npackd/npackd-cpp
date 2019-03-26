@@ -390,7 +390,7 @@ void App::usage(Job* job)
         "    ncl which --file <file> [--bare-format | --json]",
         "        finds the package that owns the specified file or directory",
     };
-    for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
+    for (int i = 0; i < static_cast<int>(sizeof(lines) / sizeof(lines[0])); i++) {
         WPMUtils::writeln(QString(lines[i]));
     }
 
@@ -407,7 +407,7 @@ void App::usage(Job* job)
         "",
         "See https://github.com/tim-lebedkov/npackd/wiki/CommandLine for more details.",
     };
-    for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
+    for (int i = 0; i < static_cast<int>(sizeof(lines2) / sizeof(lines2[0])); i++) {
         WPMUtils::writeln(QString(lines2[i]));
     }
 
@@ -1548,8 +1548,10 @@ void App::processInstallOperations(Job *job,
 
             STARTUPINFOW startupInfo = {
                 sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
-                (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-                (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+                static_cast<DWORD>(CW_USEDEFAULT),
+                static_cast<DWORD>(CW_USEDEFAULT),
+                static_cast<DWORD>(CW_USEDEFAULT),
+                static_cast<DWORD>(CW_USEDEFAULT),
                 0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
             };
 
@@ -2217,9 +2219,9 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
     for (int i = 0; i < pv->dependencies.count(); ++i) {
         QString prefix;
         if (i == pv->dependencies.count() - 1)
-            prefix = (QString() + ((QChar)0x2514) + ((QChar)0x2500));
+            prefix = QString() + QChar(0x2514) + QChar(0x2500);
         else
-            prefix = (QString() + ((QChar)0x251c) + ((QChar)0x2500));
+            prefix = QString() + QChar(0x251c) + QChar(0x2500);
 
         Dependency* d = pv->dependencies.at(i);
         InstalledPackageVersion* ipv = rep->findHighestInstalledMatch(*d);
@@ -2254,7 +2256,8 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
                 s += " (not yet installed)";
 
             if (pvd->dependencies.count() > 0)
-                before = (QChar) 0xb7;
+                // middle dot (Unicode)
+                before = QChar(0xb7);
             else
                 before = ' ';
         }
@@ -2266,7 +2269,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
             if (i == pv->dependencies.count() - 1)
                 nestedPrefix = parentPrefix + "  ";
             else
-                nestedPrefix = parentPrefix + ((QChar)0x2502) + " ";
+                nestedPrefix = parentPrefix + QChar(0x2502) + " ";
             err = printDependencies(onlyInstalled,
                     nestedPrefix,
                     level + 1, pvd);

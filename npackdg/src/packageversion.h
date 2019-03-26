@@ -2,6 +2,7 @@
 #define PACKAGEVERSION_H
 
 #include <guiddef.h>
+#include <windows.h>
 
 #include <QString>
 #include <QMetaType>
@@ -391,7 +392,7 @@ public:
      *     stopped will be stored here
      */
     void install(Job* job, const QString& where, const QString &binary,
-            bool printScriptOutput, int programCloseType,
+            bool printScriptOutput, DWORD programCloseType,
             QStringList *stoppedServices);
 
     /**
@@ -424,7 +425,7 @@ public:
      * @param stoppedServices internal names of the Windows services that were
      *     stopped
      */
-    void uninstall(Job* job, bool printScriptOutput, int programCloseType,
+    void uninstall(Job* job, bool printScriptOutput, DWORD programCloseType,
             QStringList *stoppedServices);
 
     /**
@@ -481,7 +482,7 @@ public:
      * @param stoppedServices the names of stopped Windows services will be
      *     stored here
      */
-    void stop(Job *job, int programCloseType, bool printScriptOutput,
+    void stop(Job *job, DWORD programCloseType, bool printScriptOutput,
             QStringList *stoppedServices);
 
     /**

@@ -86,6 +86,18 @@ public:
     DWORD getDWORD(QString name, QString* err) const;
 
     /**
+     * Reads a DWORD value and interpretes it as an int32_t.
+     *
+     * @param name name of the variable
+     * @param err error message will be stored here
+     * @return the value
+     */
+    inline int32_t getInt(QString name, QString* err) const
+    {
+        return static_cast<int32_t>(getDWORD(name, err));
+    }
+
+    /**
      * Writes a DWORD value.
      *
      * @param name name of the variable
