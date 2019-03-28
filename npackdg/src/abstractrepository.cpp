@@ -1026,6 +1026,8 @@ QString AbstractRepository::planUninstallation(InstalledPackages &installed,
 
 QList<QUrl*> AbstractRepository::getRepositoryURLs(QString* err)
 {
+    *err = "";
+
     // the most errors in this method are ignored so that we get the URLs even
     // if something cannot be done
     QString e;
@@ -1121,6 +1123,8 @@ PackageVersion* AbstractRepository::findNewestInstalledPackageVersion_(
 
 QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
 {
+    *err = "";
+
     QString v;
     InstalledPackageVersion* ipv;
     if (WPMUtils::is64BitWindows()) {

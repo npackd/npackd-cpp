@@ -19,8 +19,8 @@
 HWND defaultPasswordWindow = nullptr;
 QMutex loginDialogMutex;
 
-DWORD __stdcall myInternetAuthNotifyCallback(DWORD_PTR dwContext,
-        DWORD dwReturn, LPVOID lpReserved) {
+DWORD __stdcall myInternetAuthNotifyCallback(DWORD_PTR /* dwContext */,
+        DWORD dwReturn, LPVOID /* lpReserved */) {
     qCDebug(npackd) << "myInternetAuthNotifyCallback" << dwReturn;
     return 0;
 }
@@ -38,7 +38,6 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     bool useCache = request.useCache;
     QCryptographicHash::Algorithm alg = request.alg;
     bool keepConnection = request.keepConnection;
-    int timeout = request.timeout;
     bool interactive = request.interactive;
 
     QString initialTitle = job->getTitle();
@@ -71,7 +70,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
     if (job->shouldProceed()) {
         // change the timeout to 5 minutes
-        DWORD rec_timeout = timeout * 1000;
+        DWORD rec_timeout = static_cast<DWORD>(request.timeout) * 1000;
         InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
                 &rec_timeout, sizeof(rec_timeout));
         InternetSetOption(internet, INTERNET_OPTION_SEND_TIMEOUT,
@@ -92,8 +91,9 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     // Coverity
     HINTERNET hConnectHandle = nullptr;
     if (job->shouldProceed() && internet != nullptr) {
-        INTERNET_PORT port = url.port(url.scheme() == "https" ?
-                INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT);
+        INTERNET_PORT port = static_cast<INTERNET_PORT>(
+                url.port(url.scheme() == "https" ?
+                INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT));
         hConnectHandle = InternetConnectW(internet,
                 WPMUtils::toLPWSTR(server), port, nullptr, nullptr, INTERNET_SERVICE_HTTP, 0, 0);
 
@@ -168,7 +168,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         if (job->shouldProceed()) {
             // do not check for errors here
             HttpAddRequestHeadersW(hResourceHandle,
-                    L"Accept-Encoding: gzip, deflate", -1,
+                    L"Accept-Encoding: gzip, deflate",
+                    static_cast<DWORD>(-1),
                     HTTP_ADDREQ_FLAG_ADD);
         }
 
@@ -185,9 +186,10 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             // the following call uses NULL for headers in case there are no headers
             // because Windows 2003 generates the error 12150 otherwise
             if (!HttpSendRequestW(hResourceHandle,
-                    request.headers.length() == 0 ? nullptr : WPMUtils::toLPWSTR(request.headers), -1,
+                    request.headers.length() == 0 ? nullptr : WPMUtils::toLPWSTR(request.headers),
+                    static_cast<DWORD>(-1),
                     request.postData.length() == 0 ? nullptr : const_cast<char*>(request.postData.data()),
-                    request.postData.length())) {
+                    static_cast<DWORD>(request.postData.length()))) {
                 sendRequestError = GetLastError();
             }
 
@@ -359,7 +361,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                         &mimeBuffer, &bufferLength, &index)) {
                     *mime = "application/octet-stream";
                 } else {
-                    mime->setUtf16((ushort*) mimeBuffer, bufferLength / 2);
+                    *mime = QString::fromWCharArray(
+                            mimeBuffer, bufferLength / 2);
                 }
             }
         }
@@ -373,9 +376,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             DWORD index = 0;
             if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_ENCODING,
                     &contentEncodingBuffer, &bufferLength, &index)) {
-                QString contentEncoding;
-                contentEncoding.setUtf16((ushort*) contentEncodingBuffer,
-                        bufferLength / 2);
+                QString contentEncoding = QString::fromWCharArray(
+                        contentEncodingBuffer, bufferLength / 2);
                 gzip = contentEncoding == "gzip" || contentEncoding == "deflate";
             }
 
@@ -391,8 +393,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 DWORD index = 0;
                 if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CUSTOM,
                         &cdBuffer, &bufferLength, &index)) {
-                    contentDisposition->setUtf16((ushort*) cdBuffer,
-                            bufferLength / 2);
+                    *contentDisposition = QString::fromWCharArray(
+                            cdBuffer, bufferLength / 2);
                 }
             }
         }
@@ -404,8 +406,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
             DWORD index = 0;
             if (HttpQueryInfoW(hResourceHandle, HTTP_QUERY_CONTENT_LENGTH,
                     contentLengthBuffer, &bufferLength, &index)) {
-                QString s;
-                s.setUtf16((ushort*) contentLengthBuffer, bufferLength / 2);
+                QString s = QString::fromWCharArray(
+                        contentLengthBuffer, bufferLength / 2);
                 bool ok;
                 contentLength = s.toLongLong(&ok, 10);
                 if (!ok)
@@ -451,7 +453,8 @@ QString Downloader::setStringOption(HINTERNET hInternet, DWORD dwOption,
 {
     QString result;
     if (!InternetSetOptionW(hInternet,
-            dwOption, WPMUtils::toLPWSTR(value), value.length() + 1)) {
+            dwOption, WPMUtils::toLPWSTR(value),
+            static_cast<DWORD>(value.length() + 1))) {
         WPMUtils::formatMessage(GetLastError(), &result);
     }
     return result;
@@ -557,7 +560,7 @@ bool Downloader::internetReadFileFully(HINTERNET resourceHandle,
     while (true) {
         DWORD len;
         result = InternetReadFile(resourceHandle,
-                ((char*) buffer) + alreadyRead,
+                static_cast<uint8_t*>(buffer) + alreadyRead,
                 bufferSize - alreadyRead, &len);
 
         if (!result) {
@@ -677,9 +680,9 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
                 }
             }*/
 
-            d_stream.zalloc = (alloc_func) nullptr;
-            d_stream.zfree = (free_func) nullptr;
-            d_stream.opaque = (voidpf) nullptr;
+            d_stream.zalloc = nullptr;
+            d_stream.zfree = nullptr;
+            d_stream.opaque = nullptr;
 
             d_stream.next_in = buffer + cur;
             d_stream.avail_in = bufferLength - cur;
@@ -718,11 +721,11 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
                 break;
             } else {
                 if (sha1)
-                    hash.addData((char*) buffer2,
-                            buffer2Size - d_stream.avail_out);
+                    hash.addData(reinterpret_cast<char*>(buffer2),
+                            buffer2Size - static_cast<int>(d_stream.avail_out));
 
                 file->write((char*) buffer2,
-                        buffer2Size - d_stream.avail_out);
+                        buffer2Size - static_cast<int>(d_stream.avail_out));
             }
         } while (d_stream.avail_out == 0);
 

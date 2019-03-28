@@ -141,8 +141,10 @@ QString CLProcessor::startNewestNpackdg()
 
         STARTUPINFOW startupInfo = {
             sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
-            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            static_cast<DWORD>(CW_USEDEFAULT),
+            static_cast<DWORD>(CW_USEDEFAULT),
+            static_cast<DWORD>(CW_USEDEFAULT),
+            static_cast<DWORD>(CW_USEDEFAULT),
             0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
         };
         startupInfo.dwFlags = STARTF_USESHOWWINDOW;
@@ -352,7 +354,7 @@ QString CLProcessor::update()
 }
 
 QString CLProcessor::process(QList<InstallOperation*> &install,
-        int programCloseType)
+        DWORD programCloseType)
 {
     QString err;
 
@@ -377,7 +379,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
             } else {
                 Job* job = new Job(title);
 
-                QtConcurrent::run((AbstractRepository*) rep,
+                QtConcurrent::run(static_cast<AbstractRepository*>(rep),
                         &AbstractRepository::processWithCoInitializeAndFree,
                         job, install,
                         WPMUtils::getCloseProcessType());
@@ -460,7 +462,7 @@ void CLProcessor::usage()
         "Options:",
     };
     QStringList sl;
-    for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
+    for (int i = 0; i < static_cast<int>(sizeof(lines) / sizeof(lines[0])); i++) {
         sl.append(QString(lines[i]));
     }
 
@@ -473,7 +475,7 @@ void CLProcessor::usage()
         //"",
         // "See https://github.com/tim-lebedkov/npackd/wiki/CommandLine for more details.",
     };
-    for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
+    for (int i = 0; i < static_cast<int>(sizeof(lines2) / sizeof(lines2[0])); i++) {
         sl.append(QString(lines2[i]));
     }
 

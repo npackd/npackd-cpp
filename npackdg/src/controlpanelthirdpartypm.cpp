@@ -61,7 +61,7 @@ void ControlPanelThirdPartyPM::
         else if (root == HKEY_DYN_DATA)
             fullPath = "HKEY_DYN_DATA";
         else
-            fullPath = QString("%1").arg((uintptr_t) root);
+            fullPath = QString("%1").arg(reinterpret_cast<uintptr_t>(root));
         fullPath += "\\" + path;
 
         QStringList entries = wr.list(&err);
@@ -108,9 +108,10 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         if (err.isEmpty()) {
             DWORD minor = k.getDWORD("VersionMinor", &err);
             if (err.isEmpty())
-                version.setVersion(major, minor);
+                version.setVersion(static_cast<int>(major),
+                        static_cast<int>(minor));
             else
-                version.setVersion(major, 0);
+                version.setVersion(static_cast<int>(major), 0);
             version.normalize();
             versionFound = true;
         }

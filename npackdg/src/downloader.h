@@ -14,6 +14,9 @@
 
 #include "job.h"
 
+extern HWND defaultPasswordWindow;
+extern QMutex loginDialogMutex;
+
 /**
  * Blocks execution and downloads a file over http.
  */

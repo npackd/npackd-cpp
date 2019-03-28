@@ -210,8 +210,7 @@ QString CommandLine::parse()
         err = QObject::tr("CommandLineToArgvW failed");
     } else {
         for(int i = 1; i < nArgs; i++) {
-            QString s;
-            s.setUtf16((ushort*) szArglist[i], wcslen(szArglist[i]));
+            QString s = QString::fromWCharArray(szArglist[i]);
             params.append(s);
         }
         LocalFree(szArglist);
