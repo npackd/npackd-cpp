@@ -149,7 +149,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 void InstalledPackages::addPackages(Job* job, DBRepository* r,
         Repository* rep,
         const QList<InstalledPackageVersion*>& installed,
-        bool replace, const QString& detectionInfoPrefix)
+        bool replace, const QString& /*detectionInfoPrefix*/)
 {
     // this method does not manipulate "data" directly => no locking
 

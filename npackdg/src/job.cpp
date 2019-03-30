@@ -40,7 +40,7 @@ time_t Job::remainingTime()
         time_t now;
         time(&now);
 
-        time_t diff = difftime(now, started_);
+        time_t diff = static_cast<time_t>(difftime(now, started_));
         diff = lround(diff * (1 / progress_ - 1));
         result = diff;
     } else {

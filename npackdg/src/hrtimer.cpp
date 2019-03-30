@@ -12,7 +12,8 @@ HRTimer::HRTimer(int size)
     this->lastMeasurement = -1;
 
     this->durations = new LONGLONG[size];
-    memset(this->durations, 0, sizeof(durations[0]) * size);
+    memset(this->durations, 0, sizeof(durations[0]) *
+            static_cast<size_t>(size));
 
     LARGE_INTEGER liFrequency;
     QueryPerformanceFrequency(&liFrequency);
@@ -55,5 +56,5 @@ HRTimer::~HRTimer()
 
 double HRTimer::getTime(int point)
 {
-    return ((double) this->durations[point]) / this->frequency;
+    return static_cast<double>(this->durations[point]) / this->frequency;
 }

@@ -52,7 +52,7 @@ void ExportRepositoryFrame::on_pushButtonDir_clicked()
         this->ui->lineEditDir->setText(d);
 }
 
-void ExportRepositoryFrame::on_lineEditDir_textChanged(const QString &arg1)
+void ExportRepositoryFrame::on_lineEditDir_textChanged(const QString &/*arg1*/)
 {
     validate();
 }

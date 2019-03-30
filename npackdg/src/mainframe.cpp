@@ -305,7 +305,7 @@ QList<Package*> MainFrame::getSelectedPackagesInTable() const
     return this->selectedPackages;
 }
 
-void MainFrame::on_tableWidget_doubleClicked(QModelIndex index)
+void MainFrame::on_tableWidget_doubleClicked(QModelIndex /*index*/)
 {
     MainWindow* mw = MainWindow::getInstance();
     QAction *a = mw->findChild<QAction *>("actionShow_Details");
@@ -344,29 +344,29 @@ void MainFrame::fillList()
     mw->fillListInBackground();
 }
 
-void MainFrame::on_radioButtonAll_toggled(bool checked)
+void MainFrame::on_radioButtonAll_toggled(bool /*checked*/)
 {
     fillList();
 }
 
-void MainFrame::on_radioButtonInstalled_toggled(bool checked)
+void MainFrame::on_radioButtonInstalled_toggled(bool /*checked*/)
 {
     fillList();
 }
 
-void MainFrame::on_radioButtonUpdateable_toggled(bool checked)
+void MainFrame::on_radioButtonUpdateable_toggled(bool /*checked*/)
 {
     fillList();
 }
 
-void MainFrame::on_comboBoxCategory0_currentIndexChanged(int index)
+void MainFrame::on_comboBoxCategory0_currentIndexChanged(int /*index*/)
 {
     if (categoryCombosEvents) {
         fillList();
     }
 }
 
-void MainFrame::on_comboBoxCategory1_currentIndexChanged(int index)
+void MainFrame::on_comboBoxCategory1_currentIndexChanged(int /*index*/)
 {
     if (categoryCombosEvents) {
         fillList();

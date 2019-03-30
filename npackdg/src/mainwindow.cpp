@@ -240,13 +240,13 @@ MainWindow::MainWindow(QWidget *parent) :
     FreeLibrary(hInstLib);
 }
 
-void MainWindow::applicationFocusChanged(QWidget* old, QWidget* now)
+void MainWindow::applicationFocusChanged(QWidget* /*old*/, QWidget* /*now*/)
 {
     updateActions();
 }
 
-bool MainWindow::nativeEvent(const QByteArray & eventType, void * message,
-        long * result)
+bool MainWindow::nativeEvent(const QByteArray & /*eventType*/, void * message,
+        long * /*result*/)
 {
     MSG* msg = static_cast<MSG*>(message);
     if (msg->message == taskbarMessageId) {
@@ -521,12 +521,12 @@ void MainWindow::repositoryStatusChanged(const QString& package,
 }*/
 
 void MainWindow::downloadCompleted(const QString& url,
-        const QString& filename, const QString& error)
+        const QString& /*filename*/, const QString& /*error*/)
 {
     updateIcon(url);
 }
 
-void MainWindow::downloadSizeCompleted(const QString& url, int64_t size)
+void MainWindow::downloadSizeCompleted(const QString& url, int64_t /*size*/)
 {
     QTableView* t = this->mainFrame->getTableWidget();
     PackageItemModel* m = static_cast<PackageItemModel*>(t->model());

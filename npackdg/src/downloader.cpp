@@ -724,7 +724,7 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
                     hash.addData(reinterpret_cast<char*>(buffer2),
                             buffer2Size - static_cast<int>(d_stream.avail_out));
 
-                file->write((char*) buffer2,
+                file->write(reinterpret_cast<char*>(buffer2),
                         buffer2Size - static_cast<int>(d_stream.avail_out));
             }
         } while (d_stream.avail_out == 0);
@@ -734,7 +734,7 @@ void Downloader::readDataGZip(Job* job, HINTERNET hResourceHandle, QFile* file,
 
         alreadyRead += bufferLength;
         if (contentLength > 0) {
-            job->setProgress(((double) alreadyRead) / contentLength);
+            job->setProgress((static_cast<double>(alreadyRead)) / contentLength);
             job->setTitle(initialTitle + " / " +
                     QString(QObject::tr("%L0 of %L1 bytes")).
                     arg(alreadyRead).
@@ -798,14 +798,16 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
 
         // update SHA1 if necessary
         if (sha1)
-            hash.addData((char*) buffer, bufferLength);
+            hash.addData(reinterpret_cast<char*>(buffer),
+                    static_cast<int>(bufferLength));
 
         if (file)
-            file->write((char*) buffer, bufferLength);
+            file->write(reinterpret_cast<char*>(buffer), bufferLength);
 
         alreadyRead += bufferLength;
         if (contentLength > 0) {
-            job->setProgress(((double) alreadyRead) / contentLength);
+            job->setProgress((static_cast<double>(alreadyRead)) /
+                    contentLength);
             job->setTitle(initialTitle + " / " +
                     QString(QObject::tr("%L0 of %L1 bytes")).
                     arg(alreadyRead).
@@ -858,13 +860,13 @@ void Downloader::copyFile(Job* job, const QString& source, QFile* file,
                 break;
 
             if (sha1)
-                crypto.addData(data, c);
+                crypto.addData(data, static_cast<int>(c));
             if (file)
                 file->write(data, c);
 
             progress += c;
             if (srcSize != 0)
-                job->setProgress(((double) progress) / srcSize);
+                job->setProgress((static_cast<double>(progress)) / srcSize);
         }
 
         if (sha1)
