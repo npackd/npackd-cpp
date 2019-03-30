@@ -875,7 +875,7 @@ void App::search(Job* job)
     }
 
     Package::Status minStatus = Package::INSTALLED;
-    Package::Status maxStatus = Package::NOT_INSTALLED_NOT_AVAILABLE;
+    Package::Status maxStatus = Package::INSTALLED;
     if (job->shouldProceed()) {
         QString status = cl.get("status");
         if (!status.isNull()) {
