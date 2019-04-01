@@ -1709,7 +1709,7 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
 
 void DBRepository::updateF5(Job* job, bool interactive, const QString user,
         const QString password, const QString proxyUser,
-        const QString proxyPassword)
+        const QString proxyPassword, bool useCache)
 {
     bool transactionStarted = false;
     if (job->shouldProceed()) {
@@ -1737,7 +1737,7 @@ void DBRepository::updateF5(Job* job, bool interactive, const QString user,
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.27,
                 QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"));
-        load(sub, true, interactive, user, password, proxyUser, proxyPassword);
+        load(sub, useCache, interactive, user, password, proxyUser, proxyPassword);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -1834,7 +1834,7 @@ void DBRepository::updateF5(Job* job, bool interactive, const QString user,
     job->complete();
 }
 
-void DBRepository::updateF5Runnable(Job *job)
+void DBRepository::updateF5Runnable(Job *job, bool useCache)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
@@ -1872,7 +1872,7 @@ void DBRepository::updateF5Runnable(Job *job)
         Job* sub = job->newSubJob(0.77,
                 QObject::tr("Updating the temporary database"), true, true);
         CoInitialize(nullptr);
-        tempdb.updateF5(sub, true, "", "", "", "");
+        tempdb.updateF5(sub, true, "", "", "", "", useCache);
         CoUninitialize();
     }
 

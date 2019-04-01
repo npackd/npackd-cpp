@@ -235,7 +235,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
                 Repository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty()) {
                     mw->closeDetailTabs();
-                    mw->recognizeAndLoadRepositories(false);
+                    mw->recognizeAndLoadRepositories(true);
                 }
             }
         }

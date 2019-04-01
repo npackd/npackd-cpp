@@ -2310,7 +2310,8 @@ void App::detect(Job* job)
     }
 
     DBRepository* rep = DBRepository::getDefault();
-    rep->updateF5(job, interactive, user, password, proxyUser, proxyPassword);
+    rep->updateF5(job, interactive, user, password, proxyUser, proxyPassword,
+            true);
     if (job->shouldProceed()) {
         WPMUtils::writeln("Package detection completed successfully");
     }

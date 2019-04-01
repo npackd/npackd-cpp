@@ -1509,7 +1509,7 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
 
     QtConcurrent::run(DBRepository::getDefault(),
             &DBRepository::updateF5Runnable,
-            job);
+            job, useCache);
 }
 
 void MainWindow::setMenuAccelerators(){
@@ -2015,7 +2015,7 @@ void MainWindow::on_actionReload_Repositories_triggered()
 
         this->addErrorMessage(msg, msg, true, QMessageBox::Critical);
     } else {
-        recognizeAndLoadRepositories(true);
+        recognizeAndLoadRepositories(false);
     }
 }
 

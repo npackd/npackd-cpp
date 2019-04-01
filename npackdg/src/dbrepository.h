@@ -288,16 +288,19 @@ public:
      * @param password password for the HTTP authentication or ""
      * @param proxyUser user name for the HTTP proxy authentication or ""
      * @param proxyPassword password for the HTTP proxy authentication or ""
+     * @param useCache true = use the HTTP cache
      */
     void updateF5(Job *job, bool interactive, const QString user,
             const QString password,
-            const QString proxyUser, const QString proxyPassword);
+            const QString proxyUser, const QString proxyPassword,
+            bool useCache);
 
     /**
      * @brief updateF5() that can be used with QtConcurrent::Run
      * @param job job
+     * @param useCache true = cache will be used
      */
-    void updateF5Runnable(Job* job);
+    void updateF5Runnable(Job* job, bool useCache);
 
     PackageVersion* findPackageVersion_(const QString& package,
             const Version& version, QString *err) const;
