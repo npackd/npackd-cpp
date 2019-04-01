@@ -20,12 +20,12 @@ PackageItemModel::~PackageItemModel()
 {
 }
 
-int PackageItemModel::rowCount(const QModelIndex &parent) const
+int PackageItemModel::rowCount(const QModelIndex &/*parent*/) const
 {
     return this->packages.count();
 }
 
-int PackageItemModel::columnCount(const QModelIndex &parent) const
+int PackageItemModel::columnCount(const QModelIndex &/*parent*/) const
 {
     return 7;
 }
@@ -143,7 +143,8 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                             cached->newestDownloadURL);
                     if (sz >= 0)
                         v = QString::number(
-                            ((double) sz) / (1024.0 * 1024.0), 'f', 1) +
+                                    static_cast<double>(sz) /
+                                    (1024.0 * 1024.0), 'f', 1) +
                             " MiB";
                     else if (sz == -1)
                         v = QObject::tr("computing");
@@ -248,20 +249,20 @@ void PackageItemModel::setPackages(const QStringList& packages)
     this->endResetModel();
 }
 
-void PackageItemModel::iconUpdated(const QString &url)
+void PackageItemModel::iconUpdated(const QString &/*url*/)
 {
     this->dataChanged(this->index(0, 0), this->index(
             this->packages.count() - 1, 0));
 }
 
-void PackageItemModel::downloadSizeUpdated(const QString &url)
+void PackageItemModel::downloadSizeUpdated(const QString &/*url*/)
 {
     this->dataChanged(this->index(0, 5), this->index(
             this->packages.count() - 1, 5));
 }
 
 void PackageItemModel::installedStatusChanged(const QString& package,
-        const Version& version)
+        const Version& /*version*/)
 {
     //qCDebug(npackd) << "PackageItemModel::installedStatusChanged" << package <<
     //        version.getVersionString();

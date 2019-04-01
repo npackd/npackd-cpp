@@ -226,7 +226,7 @@ void PackageFrame::changeEvent(QEvent *e)
     }
 }
 
-void PackageFrame::on_labelLicense_linkActivated(const QString &link)
+void PackageFrame::on_labelLicense_linkActivated(const QString &/*link*/)
 {
     MainWindow::getInstance()->openLicense(p->license, true);
 }
@@ -266,7 +266,7 @@ QList<void*> PackageFrame::getSelected(const QString& type) const
     return res;
 }
 
-void PackageFrame::on_tableWidgetVersions_doubleClicked(const QModelIndex &index)
+void PackageFrame::on_tableWidgetVersions_doubleClicked(const QModelIndex &/*index*/)
 {
     showDetails();
 }
