@@ -14,7 +14,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${QTDIR}/qtwinextras/lib/cmake/Qt5WinExtras")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
- 
+
 if(WIN32)
   set(CMAKE_USE_RELATIVE_PATHS true)
   set(CMAKE_SUPPRESS_REGENERATION true)

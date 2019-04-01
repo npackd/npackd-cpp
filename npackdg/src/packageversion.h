@@ -97,7 +97,7 @@ private:
      * @param stoppedServices internal names of the Windows services that were
      *     stopped
      */
-    void removeDirectory(Job* job, const QString& dir, int programCloseType,
+    void removeDirectory(Job* job, const QString& dir, DWORD programCloseType,
             QStringList *stoppedServices);
 
     void emitStatusChanged();

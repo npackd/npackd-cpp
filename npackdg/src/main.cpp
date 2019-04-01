@@ -1,5 +1,3 @@
-#define _WIN32_IE 0x0500
-
 #include <windows.h>
 #include <shobjidl.h>
 #include <shellapi.h>

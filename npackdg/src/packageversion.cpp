@@ -1,6 +1,3 @@
-// IE 6 SP2
-#define _WIN32_IE 0x0603
-
 #include <shobjidl.h>
 #include <windows.h>
 #include <initguid.h>
@@ -55,7 +52,7 @@ HRESULT CreateAttachmentServices(IAttachmentExecute **ppae)
                                   nullptr,
                                   CLSCTX_ALL,
                                   IID_IAttachmentExecute,
-                                  (void**)ppae);
+                                  reinterpret_cast<void**>(ppae));
 
     if (SUCCEEDED(hr))
     {
@@ -83,7 +80,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     // MS Security Essentials does not support the interface
     HRESULT hr = CreateAttachmentServices(&pExecute);
     if (!SUCCEEDED(hr)) {
-        WPMUtils::formatMessage(hr, &err);
+        WPMUtils::formatMessage(static_cast<DWORD>(hr), &err);
         // err = "1: " + err;
         pExecute = nullptr;
     }
@@ -91,7 +88,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     if (err.isEmpty() && pExecute) {
         hr = pExecute->SetLocalPath(WPMUtils::toLPWSTR(filename));
         if (!SUCCEEDED(hr)) {
-            WPMUtils::formatMessage(hr, &err);
+            WPMUtils::formatMessage(static_cast<DWORD>(hr), &err);
             // err = "2: " + err;
         }
     }
@@ -99,7 +96,7 @@ bool isFileSafe(const QString& filename, const QString& url)
     if (err.isEmpty() && pExecute) {
         pExecute->SetSource(WPMUtils::toLPWSTR(url));
         if (!SUCCEEDED(hr)) {
-            WPMUtils::formatMessage(hr, &err);
+            WPMUtils::formatMessage(static_cast<DWORD>(hr), &err);
             // err = "3: " + err;
         }
     }
@@ -579,7 +576,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 }
 
 void PackageVersion::removeDirectory(Job* job, const QString& dir,
-        int programCloseType, QStringList* stoppedServices)
+        DWORD programCloseType, QStringList* stoppedServices)
 {
     // for a .dll loaded in another process it is possible to:
     // - rename the .dll file
@@ -1598,7 +1595,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
     return binary;
 }
 
-void PackageVersion::installWith(Job* job)
+void PackageVersion::installWith(Job* /*job*/)
 {
 
 }
@@ -1918,7 +1915,7 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
 
                 if (unicode) {
                     lastOutputLines = QString::fromUtf16(
-                            (const ushort*) ba.constData(),
+                            reinterpret_cast<const ushort*>(ba.constData()),
                             ba.length() / 2);
                 } else {
                     lastOutputLines = QString::fromLocal8Bit(
@@ -1989,7 +1986,8 @@ PackageVersion* PackageVersion::clone() const
     return r;
 }
 
-PackageVersion *PackageVersion::parse(const QByteArray &xml, QString *err, bool validate)
+PackageVersion *PackageVersion::parse(const QByteArray &xml, QString *err,
+        bool /*validate*/)
 {
     PackageVersion* r = nullptr;
 
