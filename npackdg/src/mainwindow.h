@@ -284,7 +284,7 @@ protected:
      * @param install the objects will be destroyed
      * @param programCloseType how the programs should be closed
      */
-    void process(QList<InstallOperation*>& install, int programCloseType);
+    void process(QList<InstallOperation*>& install, DWORD programCloseType);
 private slots:
     void processThreadFinished();
     void recognizeAndLoadRepositoriesThreadFinished();

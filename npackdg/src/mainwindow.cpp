@@ -220,7 +220,7 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(repositoryStatusChanged(const QString&, const Version&)),
             Qt::QueuedConnection);
 
-    defaultPasswordWindow = (HWND) this->winId();
+    defaultPasswordWindow = reinterpret_cast<HWND>(this->winId());
 
     this->taskbarMessageId = RegisterWindowMessage(L"TaskbarButtonCreated");
     // qCDebug(npackd) << "id " << taskbarMessageId;
@@ -231,10 +231,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	typedef BOOL(WINAPI *LPFCHANGEWINDOWMESSAGEFILTEREX)
 		(HWND, UINT, DWORD, void*);
 	LPFCHANGEWINDOWMESSAGEFILTEREX lpfChangeWindowMessageFilterEx =
-            (LPFCHANGEWINDOWMESSAGEFILTEREX)
-            GetProcAddress(hInstLib, "ChangeWindowMessageFilterEx");
+            reinterpret_cast<LPFCHANGEWINDOWMESSAGEFILTEREX>(
+            GetProcAddress(hInstLib, "ChangeWindowMessageFilterEx"));
     if (lpfChangeWindowMessageFilterEx) {
-        lpfChangeWindowMessageFilterEx((HWND) winId(), taskbarMessageId, 1, nullptr);
+        lpfChangeWindowMessageFilterEx(reinterpret_cast<HWND>(winId()),
+                taskbarMessageId, 1, nullptr);
         // qCDebug(npackd) << "allow taskbar event " << taskbarMessageId;
     }
     FreeLibrary(hInstLib);
@@ -580,12 +581,14 @@ void MainWindow::updateProgressTabTitle()
         this->ui->tabWidget->setTabText(index, title);
 
     if (this->taskbarInterface) {
+        HWND w = reinterpret_cast<HWND>(winId());
         if (n == 0)
-            taskbarInterface->SetProgressState((HWND) winId(), TBPF_NOPROGRESS);
+            taskbarInterface->SetProgressState(w, TBPF_NOPROGRESS);
         else {
-            taskbarInterface->SetProgressState((HWND) winId(), TBPF_NORMAL);
-            taskbarInterface->SetProgressValue((HWND) winId(),
-                    lround(maxProgress * 10000), 10000);
+            taskbarInterface->SetProgressState(w, TBPF_NORMAL);
+            taskbarInterface->SetProgressValue(w,
+                    static_cast<ULONGLONG>(lround(maxProgress * 10000)),
+                    10000);
         }
     }
 }
@@ -687,7 +690,7 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
 
 void MainWindow::monitoredJobCompleted()
 {
-    Job* job = (Job*) sender();
+    Job* job = reinterpret_cast<Job*>(sender());
     if (!job->getErrorMessage().isEmpty()) {
         addErrorMessage(job->getErrorMessage(),
                 job->getTitle() + ": " + job->getErrorMessage(),
@@ -884,7 +887,7 @@ void MainWindow::fillList()
 
     DWORD dur = GetTickCount() - start;
 
-    this->mainFrame->setDuration(dur);
+    this->mainFrame->setDuration(static_cast<int>(dur));
 }
 
 QString MainWindow::createPackageVersionsHTML(const QStringList& names)
@@ -903,7 +906,7 @@ QString MainWindow::createPackageVersionsHTML(const QStringList& names)
 }
 
 void MainWindow::process(QList<InstallOperation*> &install,
-        int programCloseType)
+        DWORD programCloseType)
 {
     QString err;
 
@@ -934,7 +937,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
                 monitor(job);
 
-                QtConcurrent::run((AbstractRepository*)rep,
+                QtConcurrent::run(reinterpret_cast<AbstractRepository*>(rep),
                         &DBRepository::processWithCoInitializeAndFree,
                         job, install,
                         WPMUtils::getCloseProcessType());
@@ -1922,7 +1925,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     }
 }
 
-void MainWindow::on_tabWidget_currentChanged(int index)
+void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 {
     updateActions();
 }
@@ -2385,7 +2388,7 @@ void MainWindow::on_actionExport_triggered()
                 monitor(job);
 
                 DBRepository* rep = DBRepository::getDefault();
-                QtConcurrent::run((AbstractRepository*)rep,
+                QtConcurrent::run(reinterpret_cast<AbstractRepository*>(rep),
                         &AbstractRepository::exportPackagesCoInitializeAndFree,
                         job, pvs, list->getDirectory(),
                         list->getExportDefinitions());
