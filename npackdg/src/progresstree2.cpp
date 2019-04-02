@@ -20,7 +20,15 @@ public:
     QTreeWidgetItem* item;
 
     CancelPushButton(QWidget *parent): QPushButton(parent), item(nullptr) {}
+    virtual ~CancelPushButton();
 };
+
+CancelPushButton::~CancelPushButton()
+{
+    // this virtual destructor is necessary to remove the Clang warning
+    // 'CancelPushButton' has no out-of-line virtual method definitions;
+    // its vtable will be emitted in every translation unit [-Wweak-vtables]
+}
 
 ProgressTree2::ProgressTree2(QWidget *parent) :
     QTreeWidget(parent)
@@ -131,7 +139,7 @@ void ProgressTree2::fillItem(QTreeWidgetItem* item,
             SLOT(cancelClicked()));
     setItemWidget(item, 4, cancel);
 
-    item->setData(0, Qt::UserRole, qVariantFromValue((void*) job));
+    item->setData(0, Qt::UserRole, qVariantFromValue(static_cast<void*>(job)));
 }
 
 QTreeWidgetItem* ProgressTree2::addJob(Job* job)
@@ -202,7 +210,7 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, Job* s)
     time(&now);
 
     if (s->getStarted() != 0) {
-        time_t diff = difftime(now, s->getStarted());
+        time_t diff = static_cast<time_t>(difftime(now, s->getStarted()));
 
         QTime e = WPMUtils::durationToTime(diff);
         item->setText(1, e.toString());
@@ -219,8 +227,8 @@ void ProgressTree2::updateItem(QTreeWidgetItem* item, Job* s)
         item->setText(2, "");
     }
 
-    QProgressBar* pb = (QProgressBar*) itemWidget(item, 3);
-    QPushButton* b = (QPushButton*) itemWidget(item, 4);
+    QProgressBar* pb = reinterpret_cast<QProgressBar*>(itemWidget(item, 3));
+    QPushButton* b = reinterpret_cast<QPushButton*>(itemWidget(item, 4));
     if (s->isCompleted()) {
         pb->setValue(10000);
         if (b)

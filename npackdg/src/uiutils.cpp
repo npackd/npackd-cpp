@@ -291,7 +291,8 @@ bool UIUtils::confirm(QWidget* parent, QString title, QString text,
     mb.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     mb.setDefaultButton(QMessageBox::Ok);
     mb.setDetailedText(detailedText);
-    return ((QMessageBox::StandardButton) mb.exec()) == QMessageBox::Ok;
+    return static_cast<QMessageBox::StandardButton>(mb.exec()) ==
+            QMessageBox::Ok;
 }
 
 void UIUtils::processWithSelfUpdate(Job* job,
@@ -393,8 +394,10 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
         STARTUPINFOW startupInfo = {
             sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
-            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
-            (ulong) CW_USEDEFAULT, (ulong) CW_USEDEFAULT,
+            static_cast<DWORD>(CW_USEDEFAULT),
+            static_cast<DWORD>(CW_USEDEFAULT),
+            static_cast<DWORD>(CW_USEDEFAULT),
+            static_cast<DWORD>(CW_USEDEFAULT),
             0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
         };
         bool success = CreateProcess(

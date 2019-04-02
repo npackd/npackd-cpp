@@ -169,7 +169,7 @@ DWORD SettingsFrame::getCloseProcessType()
     return cpt;
 }
 
-void SettingsFrame::on_buttonBox_clicked(QAbstractButton *button)
+void SettingsFrame::on_buttonBox_clicked(QAbstractButton */*button*/)
 {
     MainWindow* mw = MainWindow::getInstance();
 

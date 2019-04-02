@@ -17,7 +17,7 @@ public:
     /** PackageVersion associated with this form or 0 */
     PackageVersion* pv;
 
-    PackageVersionForm(QWidget *parent = 0);
+    PackageVersionForm(QWidget *parent = nullptr);
     ~PackageVersionForm();
 
     /**

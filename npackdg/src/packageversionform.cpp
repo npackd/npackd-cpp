@@ -212,7 +212,7 @@ void PackageVersionForm::changeEvent(QEvent *e)
     }
 }
 
-void PackageVersionForm::on_labelLicense_linkActivated(QString link)
+void PackageVersionForm::on_labelLicense_linkActivated(QString /*link*/)
 {
     DBRepository* r = DBRepository::getDefault();
     Package* p = r->findPackage_(pv->package);

@@ -106,9 +106,9 @@ void RepositoryXMLHandler::enter(const QString &qName)
     tags.append(qName);
 }
 
-bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
+bool RepositoryXMLHandler::startElement(const QString &/*namespaceURI*/,
     const QString &localName,
-    const QString &qName,
+    const QString &/*qName*/,
     const QXmlAttributes &atts)
 {
     chars.clear();
@@ -266,8 +266,8 @@ bool RepositoryXMLHandler::startElement(const QString &namespaceURI,
     return error.isEmpty();
 }
 
-bool RepositoryXMLHandler::endElement(const QString &namespaceURI,
-    const QString &localName, const QString &qName)
+bool RepositoryXMLHandler::endElement(const QString &/*namespaceURI*/,
+    const QString &/*localName*/, const QString &/*qName*/)
 {
     int where = findWhere();
     if (where == TAG_VERSION) {
