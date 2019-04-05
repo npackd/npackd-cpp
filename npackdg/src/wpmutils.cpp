@@ -893,9 +893,8 @@ void WPMUtils::disconnectShareUsersFrom(const QString &dir)
         for (int i = 0; i < (int) entriesRead; i++) {
             // qCDebug(npackd) << "share " << buf[i].shi502_type;
             if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
-                QString path;
-                path.setUtf16((const ushort*) buf[i].shi502_path,
-                        wcslen(buf[i].shi502_path));
+                QString path = QString::fromUtf16(
+                        (const ushort*) buf[i].shi502_path);
                 path = normalizePath(path);
                 //qCDebug(npackd) << "share found" << path;
                 if (isUnderOrEquals(path, dirNormalized)) {
@@ -1488,50 +1487,53 @@ QMap<QString, QString> mapDevices2Drives() {
 class MyThread : public QThread {
 public:
     HANDLE h;
-    bool ok;
     QString name;
+    bool ok;
 
     MyThread(HANDLE h) {
         this->h = h;
         ok = false;
     }
 
-    void run() {
-        HMODULE module = GetModuleHandleA("ntdll.dll");
-        _NtQueryObject NtQueryObject;
-        NtQueryObject = (_NtQueryObject) GetProcAddress(module, "NtQueryObject");
-
-        PVOID objectNameInfo = nullptr;
-        ULONG returnLength = 0;
-
-        objectNameInfo = malloc(0x1000);
-        ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
-                objectNameInfo, 0x1000, &returnLength));
-        if (!ok) {
-            /* Reallocate the buffer and try again. */
-            objectNameInfo = realloc(objectNameInfo, returnLength);
-            ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
-                    objectNameInfo, returnLength, NULL));
-        }
-
-        if (ok) {
-            UNICODE_STRING objectName = {};
-
-            /* Cast our buffer into an UNICODE_STRING. */
-            objectName = *(PUNICODE_STRING) objectNameInfo;
-
-            /* Print the information! */
-            if (objectName.Length) {
-                name.setUtf16((const ushort*) objectName.Buffer,
-                        objectName.Length / 2);
-            } else {
-                ok = false;
-            }
-        }
-
-        free(objectNameInfo);
-    }
+    void run();
 };
+
+void MyThread::run()
+{
+    HMODULE module = GetModuleHandleA("ntdll.dll");
+    _NtQueryObject NtQueryObject;
+    NtQueryObject = (_NtQueryObject) GetProcAddress(module, "NtQueryObject");
+
+    PVOID objectNameInfo = nullptr;
+    ULONG returnLength = 0;
+
+    objectNameInfo = malloc(0x1000);
+    ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
+            objectNameInfo, 0x1000, &returnLength));
+    if (!ok) {
+        /* Reallocate the buffer and try again. */
+        objectNameInfo = realloc(objectNameInfo, returnLength);
+        ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
+                objectNameInfo, returnLength, NULL));
+    }
+
+    if (ok) {
+        UNICODE_STRING objectName = {};
+
+        /* Cast our buffer into an UNICODE_STRING. */
+        objectName = *(PUNICODE_STRING) objectNameInfo;
+
+        /* Print the information! */
+        if (objectName.Length) {
+            name.setUtf16((const ushort*) objectName.Buffer,
+                    objectName.Length / 2);
+        } else {
+            ok = false;
+        }
+    }
+
+    free(objectNameInfo);
+}
 
 
 QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
@@ -3374,7 +3376,8 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
                     QByteArray ba = s.toUtf8();
 
-                    WriteFile(hStdout, ba.constData(), ba.length(),
+                    WriteFile(hStdout, ba.constData(),
+                            static_cast<DWORD>(ba.length()),
                             &dwWritten, nullptr);
                 }
             }
