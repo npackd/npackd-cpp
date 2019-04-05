@@ -3085,10 +3085,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%3 package(s) will be updated:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3298,6 +3294,22 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1 is missing or is not a directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>installing %1 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>uninstalling %1 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>updating %1 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

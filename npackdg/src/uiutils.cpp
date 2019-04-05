@@ -192,10 +192,24 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 arg(uninstallNames.count()) + "\r\n" +
                 uninstallNames.join("\r\n");
     } else {
-        *title = QObject::tr("Installing %1 packages, uninstalling %2 packages, updating %3 packages").
-                arg(installNames.count()).
-                arg(uninstallNames.count()).
-                arg(updateNames.count());
+        *title = "";
+
+        if (installNames.count() > 0) {
+            *title += QObject::tr("installing %1 packages").
+                    arg(installNames.count());
+        }
+        if (uninstallNames.count() > 0) {
+            *title += ", " + QObject::tr("uninstalling %1 packages").
+                    arg(uninstallNames.count());
+        }
+        if (updateNames.count() > 0) {
+            *title += ", " + QObject::tr("updating %1 packages").
+                    arg(updateNames.count());
+        }
+        if (title->startsWith(", "))
+            title->remove(0, 2);
+        *title = QObject::tr("Process") + ": " + *title;
+
         dialogTitle = QObject::tr("Install/Uninstall");
         msg = "<html><head/><body>";
         if (updateNames.count() > 0) {

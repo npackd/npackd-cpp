@@ -1180,7 +1180,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
-        <translation>Installiere %1 Pakete, deinstalliere %2 Pakete, aktualisiere %3 Pakete</translation>
+        <translation type="vanished">Installiere %1 Pakete, deinstalliere %2 Pakete, aktualisiere %3 Pakete</translation>
     </message>
     <message>
         <source>%3 package(s) will be updated:</source>
@@ -2567,6 +2567,22 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>All dependencies are installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>installing %1 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>uninstalling %1 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>updating %1 packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
