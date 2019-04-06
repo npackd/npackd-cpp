@@ -195,6 +195,9 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             case 2:
                 r = Qt::AlignLeft + Qt::AlignTop;
                 break;
+            case 6:
+                r = Qt::AlignRight + Qt::AlignVCenter;
+                break;
             default:
                 r = Qt::AlignLeft + Qt::AlignVCenter;
         }
