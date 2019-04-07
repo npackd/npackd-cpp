@@ -46,22 +46,65 @@ int64_t AsyncDownloader::downloadWin(Job* job,
             INTERNET_OPEN_TYPE_PRECONFIG,
             nullptr, nullptr, INTERNET_FLAG_ASYNC);
 
-    /* todo if (SessionHandle == nullptr) {
+    if (SessionHandle == nullptr) {
         QString errMsg;
         WPMUtils::formatMessage(GetLastError(), &errMsg);
         job->setErrorMessage(errMsg);
-    }*/
+    }
+
+    if (job->shouldProceed()) {
+/*
+        // Note: This only works for INTERNET_OPTION_RECEIVE_TIMEOUT.
+        // The connect timeout (INTERNET_OPTION_CONNECT_TIMEOUT) and
+        // Send Timeout (INTERNET_OPTION_SEND_TIMEOUT) are broken with Win
+        // Inet in synchronous mode.
+        DWORD rec_timeout = static_cast<DWORD>(request.timeout) * 1000;
+        InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
+                &rec_timeout, sizeof(rec_timeout));
+        InternetSetOption(internet, INTERNET_OPTION_SEND_TIMEOUT,
+                &rec_timeout, sizeof(rec_timeout));
+
+         InternetSetOption(internet, INTERNET_OPTION_CONNECT_TIMEOUT,
+                &rec_timeout, sizeof(rec_timeout));
+/*
+         InternetSetOption(internet, INTERNET_OPTION_DATA_RECEIVE_TIMEOUT,
+                &rec_timeout, sizeof(rec_timeout));
+        InternetSetOption(internet, INTERNET_OPTION_DATA_SEND_TIMEOUT,
+                &rec_timeout, sizeof(rec_timeout));
+
+
+*        rec_timeout = 1;
+        InternetSetOption(internet, INTERNET_OPTION_CONNECT_RETRIES,
+                &rec_timeout, sizeof(rec_timeout));
+
+*
+ * INTERNET_OPTION_CONNECT_TIMEOUT,
+(void *)&var, sizeof(var));
+b = InternetSetOption(fSession, INTERNET_OPTION_DATA_RECEIVE_TIMEOUT,
+(void *)&var, sizeof(var));
+b = InternetSetOption(fSession, INTERNET_OPTION_DATA_SEND_TIMEOUT,
+(void *)&var, sizeof(var));
+b = InternetSetOption(fSession, INTERNET_OPTION_SEND_TIMEOUT, (void
+*)&var, sizeof(var));
+b = InternetSetOption(fSession, INTERNET_OPTION_RECEIVE_TIMEOUT, (void
+*)&var, sizeof(var));
+var = 4;  // Retries
+b = InternetSetOption(fSession, INTERNET_OPTION_CONNECT_RETRIES, (void
+*)&var, sizeof(var));
+*
+ */
+        // enable automatic gzip decoding
+#ifndef INTERNET_OPTION_HTTP_DECODING
+        const DWORD INTERNET_OPTION_HTTP_DECODING = 65;
+#endif
+        BOOL b = TRUE;
+        InternetSetOption(SessionHandle, INTERNET_OPTION_HTTP_DECODING,
+                &b, sizeof(b));
+
+        job->setProgress(0.01);
+    }
 
     DWORD Error = 0;
-
-    CONFIGURATION Configuration = {
-        METHOD_GET,
-        L"www.microsoft.com",
-        L"/",
-        nullptr,
-        L"abc.htm",
-        TRUE
-    };
 
     PREQUEST_CONTEXT ReqContext = nullptr;
 
@@ -91,7 +134,6 @@ int64_t AsyncDownloader::downloadWin(Job* job,
 
     // Initialize the ReqContext to be used in the asynchronous calls
     Error = AsyncDownloader::AllocateAndInitializeRequestContext(SessionHandle,
-                                                &Configuration,
                                                 &ReqContext,
                                                 request);
     if (Error != ERROR_SUCCESS)
@@ -971,9 +1013,17 @@ Return Value:
 
 --*/
 DWORD AsyncDownloader::AllocateAndInitializeRequestContext(HINTERNET SessionHandle,
-    PCONFIGURATION Configuration, PREQUEST_CONTEXT *ReqContext,
+    PREQUEST_CONTEXT *ReqContext,
     const Downloader::Request &request)
 {
+    CONFIGURATION Configuration = {
+        METHOD_GET,
+        L"/",
+        nullptr,
+        L"abc.htm",
+        TRUE
+    };
+
     DWORD Error = ERROR_SUCCESS;
     BOOL Success;
     PREQUEST_CONTEXT LocalReqContext;
@@ -998,7 +1048,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(HINTERNET SessionHand
     LocalReqContext->FileSize = 0;
     LocalReqContext->HandleUsageCount = 0;
     LocalReqContext->Closing = FALSE;
-    LocalReqContext->Method = Configuration->Method;
+    LocalReqContext->Method = Configuration.Method;
     LocalReqContext->CompletionEvent = nullptr;
     LocalReqContext->CleanUpEvent = nullptr;
     LocalReqContext->OutputBuffer = nullptr;
@@ -1055,9 +1105,9 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(HINTERNET SessionHand
     // Open the file to dump the response entity body and
     // if required the file with the data to post
     Error = OpenFiles(LocalReqContext,
-                      Configuration->Method,
-                      Configuration->InputFileName,
-                      Configuration->OutputFileName);
+                      Configuration.Method,
+                      Configuration.InputFileName,
+                      Configuration.OutputFileName);
 
     if(Error != ERROR_SUCCESS)
     {
@@ -1081,9 +1131,9 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(HINTERNET SessionHand
 
     Error = CreateWininetHandles(LocalReqContext,
                                  SessionHandle,
-                                 Configuration->HostName,
-                                 Configuration->ResourceOnServer,
-                                 Configuration->IsSecureConnection);
+                                 Configuration.ResourceOnServer,
+                                 Configuration.IsSecureConnection,
+                                 request);
 
     if(Error != ERROR_SUCCESS)
     {
@@ -1122,8 +1172,9 @@ Return Value:
 
 --*/
 DWORD CreateWininetHandles(PREQUEST_CONTEXT ReqContext,
-        HINTERNET SessionHandle, LPWSTR HostName,
-        LPWSTR Resource, BOOL IsSecureConnection)
+        HINTERNET SessionHandle,
+        LPWSTR Resource, BOOL IsSecureConnection,
+        const Downloader::Request &request)
 {
     DWORD Error = ERROR_SUCCESS;
     INTERNET_PORT ServerPort = INTERNET_DEFAULT_HTTP_PORT;
@@ -1142,9 +1193,11 @@ DWORD CreateWininetHandles(PREQUEST_CONTEXT ReqContext,
         RequestFlags = INTERNET_FLAG_SECURE;
     }
 
+    QString server = request.url.host();
+
     // Create Connection handle and provide context for async operations
     ReqContext->ConnectHandle = InternetConnect(SessionHandle,
-                                                HostName,                  // Name of the server to connect to
+                                                WPMUtils::toLPWSTR(server),                  // Name of the server to connect to
                                                 ServerPort,                // HTTP (80) or HTTPS (443)
                                                 nullptr,                      // Do not provide a user name for the server
                                                 nullptr,                      // Do not provide a password for the server

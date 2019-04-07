@@ -55,7 +55,6 @@
 typedef struct _CONFIGURATION
 {
     DWORD Method;                 // Method, GET or POST
-    LPWSTR HostName;              // Host to connect to
     LPWSTR ResourceOnServer;      // Resource to get from the server
     LPWSTR InputFileName;         // File containing data to post
     LPWSTR OutputFileName;        // File to write the data received from the server
@@ -106,7 +105,7 @@ public:
 private:
     static DWORD AllocateAndInitializeRequestContext(
             HINTERNET SessionHandle,
-            PCONFIGURATION Configuration, PREQUEST_CONTEXT *ReqContext,
+            PREQUEST_CONTEXT *ReqContext,
             const Downloader::Request& request);
 };
 
@@ -142,10 +141,10 @@ DWORD RecvResponseData(PREQUEST_CONTEXT ReqContext);
 DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
 
 
-DWORD CreateWininetHandles(
-    __inout PREQUEST_CONTEXT ReqContext,
-    HINTERNET SessionHandle, LPWSTR HostName,
-    LPWSTR Resource, BOOL IsSecureConnection);
+DWORD CreateWininetHandles(PREQUEST_CONTEXT ReqContext,
+        HINTERNET SessionHandle,
+        LPWSTR Resource, BOOL IsSecureConnection,
+        const Downloader::Request &request);
 
 
 //
