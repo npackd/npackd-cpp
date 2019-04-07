@@ -699,11 +699,13 @@ void WPMUtils::formatMessage(DWORD err, QString* errMsg)
         n = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                        FORMAT_MESSAGE_FROM_HMODULE,
                        GetModuleHandle(L"wininet.dll"),
-                       err, 0, (LPTSTR)&pBuffer, 0, nullptr);
+                       err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                       (LPTSTR)&pBuffer, 0, nullptr);
     } else {
         n = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                        FORMAT_MESSAGE_FROM_SYSTEM,
-                       nullptr, err, 0, (LPTSTR)&pBuffer, 0, nullptr);
+                       nullptr, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                       (LPTSTR)&pBuffer, 0, nullptr);
     }
     if (n == 0)
         errMsg->append(QString(QObject::tr("Error %1")).arg(err));
