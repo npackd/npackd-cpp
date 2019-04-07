@@ -29,7 +29,6 @@ int64_t AsyncDownloader::downloadWin2(Job* job,
         const Downloader::Request& request, Downloader::Response *response)
 {
     QUrl url = request.url;
-    QFile* file = request.file;
     QString* mime = &response->mimeType;
     QString* contentDisposition = &response->contentDisposition;
     HWND parentWindow = defaultPasswordWindow;
@@ -137,7 +136,7 @@ b = InternetSetOption(fSession, INTERNET_OPTION_CONNECT_RETRIES, (void
 
     if (CallbackPointer == INTERNET_INVALID_STATUS_CALLBACK)
     {
-        fprintf(stderr, "InternetSetStatusCallback failed with INTERNET_INVALID_STATUS_CALLBACK\n");
+        qCDebug(npackd) << "InternetSetStatusCallback failed with INTERNET_INVALID_STATUS_CALLBACK";
         goto Exit;
     }
 
@@ -146,9 +145,12 @@ b = InternetSetOption(fSession, INTERNET_OPTION_CONNECT_RETRIES, (void
     // Initialize the ReqContext to be used in the asynchronous calls
     Error = AsyncDownloader::AllocateAndInitializeRequestContext(
             job, SessionHandle, &ReqContext, request);
+    ReqContext->request = &request;
+    ReqContext->response = response;
+
     if (Error != ERROR_SUCCESS)
     {
-        fprintf(stderr, "AllocateAndInitializeRequestContext failed with error %d\n", Error);
+        qCDebug(npackd) << "AllocateAndInitializeRequestContext failed with error" << Error;
         goto Exit;
     }
 
@@ -198,21 +200,21 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
 
     UNREFERENCED_PARAMETER(dwStatusInformationLength);
 
-    fprintf(stderr, "Callback Received for Handle %p \t", hInternet);
+    qCDebug(npackd) << "Callback Received for Handle" << hInternet;
 
     switch(dwInternetStatus)
     {
         case INTERNET_STATUS_COOKIE_SENT:
-            fprintf(stderr, "Status: Cookie found and will be sent with request\n");
+            qCDebug(npackd) << "Status: Cookie found and will be sent with request";
             break;
 
         case INTERNET_STATUS_COOKIE_RECEIVED:
-            fprintf(stderr, "Status: Cookie Received\n");
+            qCDebug(npackd) << "Status: Cookie Received";
             break;
 
         case INTERNET_STATUS_COOKIE_HISTORY:
 
-            fprintf(stderr, "Status: Cookie History\n");
+            qCDebug(npackd) << "Status: Cookie History";
 
             // ASYNC_ASSERT(lpvStatusInformation);
             // ASYNC_ASSERT(dwStatusInformationLength == sizeof(InternetCookieHistory));
@@ -221,42 +223,42 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
 
             if(cookieHistory.fAccepted)
             {
-                fprintf(stderr, "Cookie Accepted\n");
+                qCDebug(npackd) << "Cookie Accepted";
             }
             if(cookieHistory.fLeashed)
             {
-                fprintf(stderr, "Cookie Leashed\n");
+                qCDebug(npackd) << "Cookie Leashed";
             }
             if(cookieHistory.fDowngraded)
             {
-                fprintf(stderr, "Cookie Downgraded\n");
+                qCDebug(npackd) << "Cookie Downgraded";
             }
             if(cookieHistory.fRejected)
             {
-                fprintf(stderr, "Cookie Rejected\n");
+                qCDebug(npackd) << "Cookie Rejected";
             }
 
 
             break;
 
         case INTERNET_STATUS_CLOSING_CONNECTION:
-            fprintf(stderr, "Status: Closing Connection\n");
+            qCDebug(npackd) << "Status: Closing Connection";
             break;
 
         case INTERNET_STATUS_CONNECTED_TO_SERVER:
-            fprintf(stderr, "Status: Connected to Server\n");
+            qCDebug(npackd) << "Status: Connected to Server";
             break;
 
         case INTERNET_STATUS_CONNECTING_TO_SERVER:
-            fprintf(stderr, "Status: Connecting to Server\n");
+            qCDebug(npackd) << "Status: Connecting to Server";
             break;
 
         case INTERNET_STATUS_CONNECTION_CLOSED:
-            fprintf(stderr, "Status: Connection Closed\n");
+            qCDebug(npackd) << "Status: Connection Closed";
             break;
 
         case INTERNET_STATUS_HANDLE_CLOSING:
-            fprintf(stderr, "Status: Handle Closing\n");
+            qCDebug(npackd) << "Status: Handle Closing";
 
             //
             // Signal the cleanup routine that it is
@@ -270,35 +272,34 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
 
         case INTERNET_STATUS_HANDLE_CREATED:
             // ASYNC_ASSERT(lpvStatusInformation);
-            fprintf(stderr,
-                    "Handle %x created\n",
-                    ((LPINTERNET_ASYNC_RESULT)lpvStatusInformation)->dwResult);
+            qCDebug(npackd) << "Handle %x created"
+            <<                  ((LPINTERNET_ASYNC_RESULT)lpvStatusInformation)->dwResult;
 
             break;
 
         case INTERNET_STATUS_INTERMEDIATE_RESPONSE:
-            fprintf(stderr, "Status: Intermediate response\n");
+            qCDebug(npackd) << "Status: Intermediate response";
             break;
 
         case INTERNET_STATUS_RECEIVING_RESPONSE:
-            fprintf(stderr, "Status: Receiving Response\n");
+            qCDebug(npackd) << "Status: Receiving Response";
             break;
 
         case INTERNET_STATUS_RESPONSE_RECEIVED:
             // ASYNC_ASSERT(lpvStatusInformation);
             // ASYNC_ASSERT(dwStatusInformationLength == sizeof(DWORD));
 
-            fprintf(stderr, "Status: Response Received (%d Bytes)\n",
-                *((LPDWORD)lpvStatusInformation));
+            qCDebug(npackd) << "Status: Response Received (%d Bytes)"<<
+                *((LPDWORD)lpvStatusInformation);
 
             break;
 
         case INTERNET_STATUS_REDIRECT:
-            fprintf(stderr, "Status: Redirect\n");
+            qCDebug(npackd) << "Status: Redirect";
             break;
 
         case INTERNET_STATUS_REQUEST_COMPLETE:
-            fprintf(stderr, "Status: Request complete\n");
+            qCDebug(npackd) << "Status: Request complete";
 
             // ASYNC_ASSERT(lpvStatusInformation);
 
@@ -310,35 +311,36 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
             // ASYNC_ASSERT(lpvStatusInformation);
             // ASYNC_ASSERT(dwStatusInformationLength == sizeof(DWORD));
 
-            fprintf(stderr,"Status: Request sent (%d Bytes)\n", *((LPDWORD)lpvStatusInformation));
+            qCDebug(npackd) << "Status: Request sent (%d Bytes)"<<
+                    *((LPDWORD)lpvStatusInformation);
             break;
 
         case INTERNET_STATUS_DETECTING_PROXY:
-            fprintf(stderr, "Status: Detecting Proxy\n");
+            qCDebug(npackd) << "Status: Detecting Proxy";
             break;
 
         case INTERNET_STATUS_RESOLVING_NAME:
-            fprintf(stderr, "Status: Resolving Name\n");
+            qCDebug(npackd) << "Status: Resolving Name";
             break;
 
         case INTERNET_STATUS_NAME_RESOLVED:
-            fprintf(stderr, "Status: Name Resolved\n");
+            qCDebug(npackd) << "Status: Name Resolved";
             break;
 
         case INTERNET_STATUS_SENDING_REQUEST:
-            fprintf(stderr, "Status: Sending request\n");
+            qCDebug(npackd) << "Status: Sending request";
             break;
 
         case INTERNET_STATUS_STATE_CHANGE:
-            fprintf(stderr, "Status: State Change\n");
+            qCDebug(npackd) << "Status: State Change";
             break;
 
         case INTERNET_STATUS_P3P_HEADER:
-            fprintf(stderr, "Status: Received P3P header\n");
+            qCDebug(npackd) << "Status: Received P3P header";
             break;
 
         default:
-            fprintf(stderr, "Status: Unknown (%d)\n", dwInternetStatus);
+            qCDebug(npackd) << "Status: Unknown (%d)"<< dwInternetStatus;
             break;
     }
 
@@ -419,11 +421,14 @@ DWORD AsyncDownloader::SendRequest(PREQUEST_CONTEXT ReqContext)
         goto Exit;
     }
 
+    // the following call uses NULL for headers in case there are no headers
+    // because Windows 2003 generates the error 12150 otherwise
     Success = HttpSendRequest(ReqContext->RequestHandle,
-                              NULL,                   // do not provide additional Headers
-                              0,                      // dwHeadersLength
-                              NULL,                   // Do not send any data
-                              0);                     // dwOptionalLength
+            ReqContext->request->headers.length() == 0 ? nullptr :
+            WPMUtils::toLPWSTR(ReqContext->request->headers),                   // do not provide additional Headers
+            0,                      // dwHeadersLength
+            NULL,                   // Do not send any data
+            0);                     // dwOptionalLength
 
     ReleaseRequestHandle(ReqContext);
 
@@ -471,6 +476,8 @@ DWORD AsyncDownloader::SendRequestWithBody(PREQUEST_CONTEXT ReqContext)
         goto Exit;
     }
 
+    // TODO: headers
+
     Success = HttpSendRequestEx(ReqContext->RequestHandle,
                                 &BuffersIn,
                                 nullptr,                 // Do not use output buffers
@@ -499,7 +506,7 @@ Exit:
 DWORD AsyncDownloader::GetDataToPost(PREQUEST_CONTEXT ReqContext)
 {
     DWORD Error = ERROR_SUCCESS;
-    BOOL Success;
+//    BOOL Success;
 
 
     //
@@ -511,6 +518,12 @@ DWORD AsyncDownloader::GetDataToPost(PREQUEST_CONTEXT ReqContext)
     // queued to another thread and not block the callback thread
     //
     //
+
+/* todo
+    ReqContext->request->postData.length() == 0 ? nullptr :
+            const_cast<char*>(ReqContext->request->postData.data());
+    static_cast<DWORD>(request.postData.length())
+
 
     Success = ReadFile(ReqContext->UploadFile,
                        ReqContext->OutputBuffer,
@@ -524,8 +537,8 @@ DWORD AsyncDownloader::GetDataToPost(PREQUEST_CONTEXT ReqContext)
         goto Exit;
     }
 
-
 Exit:
+*/
 
     return Error;
 }
@@ -573,7 +586,7 @@ DWORD AsyncDownloader::PostDataToServer(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
 
         if(Error == ERROR_IO_PENDING)
         {
-            fprintf(stderr, "Waiting for InternetWriteFile to complete\n");
+            qCDebug(npackd) << "Waiting for InternetWriteFile to complete";
         }
         else
         {
@@ -597,7 +610,7 @@ DWORD AsyncDownloader::CompleteRequest(PREQUEST_CONTEXT ReqContext)
     DWORD Error = ERROR_SUCCESS;
     BOOL Success;
 
-    fprintf(stderr, "Finished posting file\n");
+    qCDebug(npackd) << "Finished posting file";
 
     Success = AcquireRequestHandle(ReqContext);
     if(!Success)
@@ -615,7 +628,7 @@ DWORD AsyncDownloader::CompleteRequest(PREQUEST_CONTEXT ReqContext)
         Error = GetLastError();
         if(Error == ERROR_IO_PENDING)
         {
-            fprintf(stderr, "Waiting for HttpEndRequest to complete \n");
+            qCDebug(npackd) << "Waiting for HttpEndRequest to complete";
         }
         else
         {
@@ -664,7 +677,7 @@ DWORD AsyncDownloader::RecvResponseData(PREQUEST_CONTEXT ReqContext)
         Error = GetLastError();
         if(Error == ERROR_IO_PENDING)
         {
-            fprintf(stderr, "Waiting for InternetReadFile to complete\n");
+            qCDebug(npackd) << "Waiting for InternetReadFile to complete";
         }
         else
         {
@@ -924,7 +937,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
 
     if(Error != ERROR_SUCCESS)
     {
-        fprintf(stderr, "CreateWininetHandles failed with %d\n", Error);
+        qCDebug(npackd) << "CreateWininetHandles failed with" << Error;
         goto Exit;
     }
 
@@ -1057,20 +1070,18 @@ void AsyncDownloader::WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWOR
     {
         case WAIT_OBJECT_0:
 
-            printf("Done!\n");
+            qCDebug(npackd) << "Done!";
             break;
 
         case WAIT_TIMEOUT:
 
-            fprintf(stderr,
-                    "Timeout while waiting for completion event (request will be cancelled)\n");
+            qCDebug(npackd) << "Timeout while waiting for completion event (request will be cancelled)";
             break;
 
         case WAIT_FAILED:
 
-            fprintf(stderr,
-                    "Wait failed with Error %d while waiting for completion event (request will be cancelled)\n",
-                    GetLastError());
+            qCDebug(npackd) << "Wait failed with Error %d while waiting for completion event (request will be cancelled)"<<
+                    GetLastError();
             break;
 
         default:
@@ -1179,16 +1190,16 @@ void AsyncDownloader::LogInetError(DWORD Err, LPCWSTR Str)
 
     if (Result)
     {
-        fprintf(stderr, "%ws: %ws\n", Str, MsgBuffer);
+        qCDebug(npackd) << "%ws: %ws" << Str << MsgBuffer;
         LocalFree(MsgBuffer);
     }
     else
     {
-        fprintf(stderr,
-                "Error %d while formatting message for %d in %ws\n",
-                GetLastError(),
-                Err,
-                Str);
+        qCDebug(npackd) <<
+                "Error %d while formatting message for %d in %ws"<<
+                GetLastError()<<
+                Err<<
+                Str;
     }
 
     return;
@@ -1210,19 +1221,19 @@ void AsyncDownloader::LogSysError(DWORD Err, LPCWSTR Str)
 
     if (Result)
     {
-        fprintf(stderr,
-                "%ws: %ws\n",
-                Str,
-                MsgBuffer);
+        qCDebug(npackd) <<
+                "%ws: %ws\n"<<
+                Str<<
+                MsgBuffer;
        LocalFree(MsgBuffer);
     }
     else
     {
-        fprintf(stderr,
-                "Error %d while formatting message for %d in %ws\n",
-                GetLastError(),
-                Err,
-                Str);
+        qCDebug(npackd) <<
+                "Error %d while formatting message for %d in %ws"<<
+                GetLastError()<<
+                Err<<
+                Str;
     }
 
     return;

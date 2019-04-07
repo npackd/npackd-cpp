@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <wininet.h>
-#include <stdio.h>
 #include <cstdint>
 
 #include "job.h"
@@ -26,6 +25,7 @@ typedef struct _REQUEST_CONTEXT {
     QFile* DownloadFile;
     DWORD State;
 
+    const Downloader::Request* request;
     Downloader::Response* response;
 
     CRITICAL_SECTION CriticalSection;
