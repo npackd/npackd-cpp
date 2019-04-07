@@ -852,11 +852,12 @@ DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
     //
     //
 
-    Success = WriteFile(ReqContext->DownloadFile,
-                        ReqContext->OutputBuffer,
-                        ReqContext->DownloadedBytes,
-                        &BytesWritten,
-                        nullptr);
+    if (ReqContext->DownloadFile)
+    {
+            // TODO: check the returned value. -1 means error
+        BytesWritten = ReqContext->DownloadFile->write(ReqContext->OutputBuffer,
+                        ReqContext->DownloadedBytes);
+    }
 
     if (!Success)
     {
@@ -1026,8 +1027,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
     CONFIGURATION Configuration = {
         METHOD_GET,
         L"/",
-        nullptr,
-        L"abc.htm"
+        nullptr
     };
 
     DWORD Error = ERROR_SUCCESS;
@@ -1050,7 +1050,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
     LocalReqContext->WrittenBytes = 0;
     LocalReqContext->ReadBytes = 0;
     LocalReqContext->UploadFile = INVALID_HANDLE_VALUE;
-    LocalReqContext->DownloadFile = INVALID_HANDLE_VALUE;
+    LocalReqContext->DownloadFile = request.file;
     LocalReqContext->FileSize = 0;
     LocalReqContext->HandleUsageCount = 0;
     LocalReqContext->Closing = FALSE;
@@ -1112,8 +1112,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
     // if required the file with the data to post
     Error = OpenFiles(LocalReqContext,
                       Configuration.Method,
-                      Configuration.InputFileName,
-                      Configuration.OutputFileName);
+                      Configuration.InputFileName);
 
     if(Error != ERROR_SUCCESS)
     {
@@ -1135,10 +1134,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
     }
 
 
-    Error = CreateWininetHandles(job, LocalReqContext,
-                                 SessionHandle,
-                                 Configuration.ResourceOnServer,
-                                 request);
+    Error = CreateWininetHandles(job, LocalReqContext, SessionHandle, request);
 
     if(Error != ERROR_SUCCESS)
     {
@@ -1178,7 +1174,6 @@ Return Value:
 --*/
 DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
-        LPWSTR Resource,
         const Downloader::Request &request)
 {
     QString server = request.url.host();
@@ -1383,10 +1378,14 @@ void CleanUpRequestContext(PREQUEST_CONTEXT ReqContext)
         CloseHandle(ReqContext->UploadFile);
     }
 
-    if(ReqContext->DownloadFile != INVALID_HANDLE_VALUE)
+/*    maybe it makes sense to close request->file
+ * What if the download fails?
+ *
+ * if(ReqContext->DownloadFile != INVALID_HANDLE_VALUE)
     {
         CloseHandle(ReqContext->DownloadFile);
     }
+    */
 
     if(ReqContext->CompletionEvent)
     {
@@ -1470,7 +1469,7 @@ Return Value:
 
 --*/
 DWORD OpenFiles(PREQUEST_CONTEXT ReqContext, DWORD Method,
-    LPWSTR InputFileName, LPWSTR OutputFileName)
+    LPWSTR InputFileName)
 {
     DWORD Error = ERROR_SUCCESS;
 
@@ -1491,22 +1490,6 @@ DWORD OpenFiles(PREQUEST_CONTEXT ReqContext, DWORD Method,
             LogSysError(Error, L"CreateFile for input file");
             goto Exit;
         }
-    }
-
-    // Open output file
-    ReqContext->DownloadFile = CreateFile(OutputFileName,
-                                          GENERIC_WRITE,
-                                          0,                        // Open exclusively
-                                          nullptr,                     // handle cannot be inherited
-                                          CREATE_ALWAYS,            // if file exists, delete it
-                                          FILE_ATTRIBUTE_NORMAL,
-                                          nullptr);                    // No template file
-
-    if (ReqContext->DownloadFile == INVALID_HANDLE_VALUE)
-    {
-            Error = GetLastError();
-            LogSysError(Error, L"CreateFile for output file");
-            goto Exit;
     }
 
 Exit:

@@ -2412,6 +2412,9 @@ void MainWindow::on_actionCheck_dependencies_triggered()
 
     Job* job = new Job("TODO");
     Downloader::Request request(QUrl("https://www.microsoft.com"));
+    QFile file("abc.htm");
+    file.open(QFile::WriteOnly | QFile::Truncate);
+    request.file = &file;
     Downloader::Response response;
     AsyncDownloader::downloadWin(job, request, &response);
     delete job;

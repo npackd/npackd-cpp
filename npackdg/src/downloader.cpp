@@ -803,6 +803,7 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
                     static_cast<int>(bufferLength));
 
         if (file)
+            // TODO: check the returned value. -1 means error
             file->write(reinterpret_cast<char*>(buffer), bufferLength);
 
         alreadyRead += bufferLength;

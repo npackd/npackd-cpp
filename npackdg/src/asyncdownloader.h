@@ -57,7 +57,6 @@ typedef struct _CONFIGURATION
     DWORD Method;                 // Method, GET or POST
     LPWSTR ResourceOnServer;      // Resource to get from the server
     LPWSTR InputFileName;         // File containing data to post
-    LPWSTR OutputFileName;        // File to write the data received from the server
 } CONFIGURATION, *PCONFIGURATION;
 
 //
@@ -75,7 +74,7 @@ typedef struct _REQUEST_CONTEXT {
     DWORD ReadBytes;
     HANDLE UploadFile;
     DWORD FileSize;
-    HANDLE DownloadFile;
+    QFile* DownloadFile;
     DWORD Method;
     DWORD State;
 
@@ -142,7 +141,6 @@ DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
 
 DWORD CreateWininetHandles(Job *job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
-        LPWSTR Resource,
         const Downloader::Request &request);
 
 
@@ -174,7 +172,7 @@ VOID ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext);
 void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout);
 
 DWORD OpenFiles(PREQUEST_CONTEXT ReqContext, DWORD Method,
-    LPWSTR InputFileName, LPWSTR OutputFileName);
+    LPWSTR InputFileName);
 
 void LogInetError(DWORD Err, LPCWSTR Str);
 
