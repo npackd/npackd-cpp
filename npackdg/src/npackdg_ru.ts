@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>AsyncDownloader</name>
+    <message>
+        <source>Connecting</source>
+        <translation type="unfinished">Соединение</translation>
+    </message>
+</context>
+<context>
     <name>ExportRepositoryFrame</name>
     <message>
         <source>Frame</source>

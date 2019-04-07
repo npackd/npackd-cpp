@@ -247,6 +247,7 @@ private:
     static QString setPassword(HINTERNET hConnectHandle, DWORD dwStatus,
                                const Request &request);
 
+protected:
     static QString setStringOption(HINTERNET hInternet, DWORD dwOption,
         const QString &value);
 };

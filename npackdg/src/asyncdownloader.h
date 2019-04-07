@@ -42,7 +42,7 @@ typedef struct _REQUEST_CONTEXT {
 /**
  * @brief asynchrouns WinInet
  */
-class AsyncDownloader
+class AsyncDownloader: public Downloader
 {
 public:
     /**
@@ -58,7 +58,7 @@ public:
      * @param response
      * @return
      */
-    static int64_t downloadWin(Job* job, const Downloader::Request& request,
+    static int64_t downloadWin2(Job* job, const Downloader::Request& request,
             Downloader::Response *response);
 
     /**
@@ -90,9 +90,6 @@ private:
             HINTERNET SessionHandle,
             PREQUEST_CONTEXT *ReqContext,
             const Downloader::Request& request);
-
-    static QString setStringOption(HINTERNET hInternet, DWORD dwOption,
-        const QString &value);
 
     /*++
 

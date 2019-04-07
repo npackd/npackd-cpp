@@ -1,6 +1,8 @@
 #include <windows.h>
 #include <wininet.h>
 
+#include <QObject>
+
 #include "asyncdownloader.h"
 #include "wpmutils.h"
 
@@ -23,19 +25,7 @@ AsyncDownloader::AsyncDownloader()
     // TODO: gzip, authentication, progress, POST, SHA1
 }
 
-QString AsyncDownloader::setStringOption(HINTERNET hInternet, DWORD dwOption,
-        const QString& value)
-{
-    QString result;
-    if (!InternetSetOptionW(hInternet,
-            dwOption, WPMUtils::toLPWSTR(value),
-            static_cast<DWORD>(value.length() + 1))) {
-        WPMUtils::formatMessage(GetLastError(), &result);
-    }
-    return result;
-}
-
-int64_t AsyncDownloader::downloadWin(Job* job,
+int64_t AsyncDownloader::downloadWin2(Job* job,
         const Downloader::Request& request, Downloader::Response *response)
 {
     QUrl url = request.url;
@@ -51,7 +41,7 @@ int64_t AsyncDownloader::downloadWin(Job* job,
 
     QString initialTitle = job->getTitle();
 
-    job->setTitle(initialTitle + " / " + QObject::tr("Connecting"));
+    job->setTitle(initialTitle + " / " + tr("Connecting"));
 
     if (sha1)
         sha1->clear();

@@ -2416,7 +2416,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
     file.open(QFile::WriteOnly | QFile::Truncate);
     request.file = &file;
     Downloader::Response response;
-    AsyncDownloader::downloadWin(job, request, &response);
+    AsyncDownloader::downloadWin2(job, request, &response);
     delete job;
 
     QString err;
