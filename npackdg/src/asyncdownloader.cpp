@@ -133,9 +133,8 @@ b = InternetSetOption(fSession, INTERNET_OPTION_CONNECT_RETRIES, (void
 
 
     // Initialize the ReqContext to be used in the asynchronous calls
-    Error = AsyncDownloader::AllocateAndInitializeRequestContext(SessionHandle,
-                                                &ReqContext,
-                                                request);
+    Error = AsyncDownloader::AllocateAndInitializeRequestContext(
+            job, SessionHandle, &ReqContext, request);
     if (Error != ERROR_SUCCESS)
     {
         fprintf(stderr, "AllocateAndInitializeRequestContext failed with error %d\n", Error);
@@ -1012,9 +1011,10 @@ Return Value:
     Error Code for the operation.
 
 --*/
-DWORD AsyncDownloader::AllocateAndInitializeRequestContext(HINTERNET SessionHandle,
-    PREQUEST_CONTEXT *ReqContext,
-    const Downloader::Request &request)
+DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
+        Job* job, HINTERNET SessionHandle,
+        PREQUEST_CONTEXT *ReqContext,
+        const Downloader::Request &request)
 {
     CONFIGURATION Configuration = {
         METHOD_GET,
@@ -1129,7 +1129,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(HINTERNET SessionHand
     }
 
 
-    Error = CreateWininetHandles(LocalReqContext,
+    Error = CreateWininetHandles(job, LocalReqContext,
                                  SessionHandle,
                                  Configuration.ResourceOnServer,
                                  Configuration.IsSecureConnection,
@@ -1171,13 +1171,12 @@ Return Value:
     Error Code for the operation.
 
 --*/
-DWORD CreateWininetHandles(PREQUEST_CONTEXT ReqContext,
+DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
         LPWSTR Resource, BOOL IsSecureConnection,
         const Downloader::Request &request)
 {
     DWORD Error = ERROR_SUCCESS;
-    INTERNET_PORT ServerPort = INTERNET_DEFAULT_HTTP_PORT;
     DWORD RequestFlags = 0;
     LPWSTR Verb;
 
@@ -1189,22 +1188,92 @@ DWORD CreateWininetHandles(PREQUEST_CONTEXT ReqContext,
 
     if(IsSecureConnection)
     {
-        ServerPort = INTERNET_DEFAULT_HTTPS_PORT;
         RequestFlags = INTERNET_FLAG_SECURE;
     }
 
     QString server = request.url.host();
 
-    // Create Connection handle and provide context for async operations
-    ReqContext->ConnectHandle = InternetConnect(SessionHandle,
-                                                WPMUtils::toLPWSTR(server),                  // Name of the server to connect to
-                                                ServerPort,                // HTTP (80) or HTTPS (443)
-                                                nullptr,                      // Do not provide a user name for the server
-                                                nullptr,                      // Do not provide a password for the server
-                                                INTERNET_SERVICE_HTTP,
-                                                0,                         // Do not provide any special flag
-                                                (DWORD_PTR)ReqContext);    // Provide the context to be
-                                                                           // used during the callbacks
+    // here "internet" cannot be 0, but we add the comparison to silence
+    // Coverity
+    HINTERNET hConnectHandle = nullptr;
+    if (job->shouldProceed() && SessionHandle != nullptr) {
+        INTERNET_PORT port = static_cast<INTERNET_PORT>(
+                request.url.port(request.url.scheme() == "https" ?
+                INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT));
+        hConnectHandle = InternetConnectW(SessionHandle,
+                WPMUtils::toLPWSTR(server), port, nullptr, nullptr,
+                INTERNET_SERVICE_HTTP, 0, (DWORD_PTR)ReqContext);
+
+        if (hConnectHandle == nullptr) {
+            QString errMsg;
+            WPMUtils::formatMessage(GetLastError(), &errMsg);
+            job->setErrorMessage(errMsg);
+        }
+    }
+
+    ReqContext->ConnectHandle = hConnectHandle;
+
+/* todo
+
+    if (job->shouldProceed()) {
+        if (!request.user.isEmpty()) {
+            setStringOption(hConnectHandle, INTERNET_OPTION_USERNAME,
+                    request.user);
+
+            if (!request.password.isEmpty()) {
+                setStringOption(hConnectHandle, INTERNET_OPTION_PASSWORD,
+                        request.password);
+            }
+        }
+    }
+
+    if (job->shouldProceed()) {
+        if (!request.proxyUser.isEmpty()) {
+            setStringOption(hConnectHandle, INTERNET_OPTION_PROXY_USERNAME,
+                    request.proxyUser);
+
+            if (!request.proxyPassword.isEmpty()) {
+                setStringOption(hConnectHandle, INTERNET_OPTION_PROXY_PASSWORD,
+                        request.proxyPassword);
+            }
+        }
+    }
+
+    // flags: http://msdn.microsoft.com/en-us/library/aa383661(v=vs.85).aspx
+    // We support accepting any mime file type since this is a simple download
+    // of a file
+    //
+    // hConnectHandle is only checked here to silence Coverity
+    HINTERNET hResourceHandle = nullptr;
+    if (job->shouldProceed() && hConnectHandle != nullptr) {
+        LPCTSTR ppszAcceptTypes[2];
+        ppszAcceptTypes[0] = L"*               todo / *";
+        ppszAcceptTypes[1] = nullptr;
+        DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0);
+        if (keepConnection)
+            flags |= INTERNET_FLAG_KEEP_CONNECTION;
+        if (!request.useInternet)
+            flags |= INTERNET_FLAG_FROM_CACHE;
+        flags |= INTERNET_FLAG_RESYNCHRONIZE;
+        if (!useCache)
+            flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
+                    INTERNET_FLAG_RELOAD;
+        hResourceHandle = HttpOpenRequestW(hConnectHandle,
+                WPMUtils::toLPWSTR(verb),
+                WPMUtils::toLPWSTR(resource),
+                nullptr, nullptr, ppszAcceptTypes,
+                flags, 0);
+        if (hResourceHandle == nullptr) {
+            QString errMsg;
+            WPMUtils::formatMessage(GetLastError(), &errMsg);
+            job->setErrorMessage(errMsg);
+        }
+    }
+
+    qCDebug(npackd) << "HttpOpenRequestW succeeded";
+
+*/
+
     //
     // For HTTP InternetConnect returns synchronously because it does not
     // actually make the connection.

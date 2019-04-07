@@ -2411,7 +2411,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
     AsyncDownloader ad;
 
     Job* job = new Job("TODO");
-    Downloader::Request request(QUrl("http://www.microsoft.com"));
+    Downloader::Request request(QUrl("https://www.microsoft.com"));
     Downloader::Response response;
     AsyncDownloader::downloadWin(job, request, &response);
     delete job;

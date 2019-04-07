@@ -103,7 +103,7 @@ public:
     static int64_t downloadWin(Job* job, const Downloader::Request& request,
             Downloader::Response *response);
 private:
-    static DWORD AllocateAndInitializeRequestContext(
+    static DWORD AllocateAndInitializeRequestContext(Job *job,
             HINTERNET SessionHandle,
             PREQUEST_CONTEXT *ReqContext,
             const Downloader::Request& request);
@@ -141,7 +141,7 @@ DWORD RecvResponseData(PREQUEST_CONTEXT ReqContext);
 DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
 
 
-DWORD CreateWininetHandles(PREQUEST_CONTEXT ReqContext,
+DWORD CreateWininetHandles(Job *job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
         LPWSTR Resource, BOOL IsSecureConnection,
         const Downloader::Request &request);
