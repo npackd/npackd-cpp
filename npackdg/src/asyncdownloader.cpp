@@ -4,9 +4,23 @@
 #include "asyncdownloader.h"
 #include "wpmutils.h"
 
+#define BUFFER_LEN  4096
+#define ERR_MSG_LEN 512
+
+#define REQ_STATE_SEND_REQ             0
+#define REQ_STATE_SEND_REQ_WITH_BODY   1
+#define REQ_STATE_POST_GET_DATA        2
+#define REQ_STATE_POST_SEND_DATA       3
+#define REQ_STATE_POST_COMPLETE        4
+#define REQ_STATE_RESPONSE_RECV_DATA   5
+#define REQ_STATE_RESPONSE_WRITE_DATA  6
+#define REQ_STATE_COMPLETE             7
+
+#define SPIN_COUNT 4000
+
 AsyncDownloader::AsyncDownloader()
 {
-
+    // TODO: gzip, authentication, progress, POST, SHA1
 }
 
 QString setStringOption(HINTERNET hInternet, DWORD dwOption,
@@ -173,22 +187,6 @@ Exit:
     return 0;
 }
 
-/*++
-
-Routine Description:
-    Callback routine for asynchronous WinInet operations
-
-Arguments:
-     hInternet - The handle for which the callback function is called.
-     dwContext - Pointer to the application defined context.
-     dwInternetStatus - Status code indicating why the callback is called.
-     lpvStatusInformation - Pointer to a buffer holding callback specific data.
-     dwStatusInformationLength - Specifies size of lpvStatusInformation buffer.
-
-Return Value:
-    None.
-
---*/
 void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
         DWORD dwInternetStatus, LPVOID lpvStatusInformation,
         DWORD dwStatusInformationLength)
@@ -214,8 +212,8 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
 
             fprintf(stderr, "Status: Cookie History\n");
 
-            ASYNC_ASSERT(lpvStatusInformation);
-            ASYNC_ASSERT(dwStatusInformationLength == sizeof(InternetCookieHistory));
+            // ASYNC_ASSERT(lpvStatusInformation);
+            // ASYNC_ASSERT(dwStatusInformationLength == sizeof(InternetCookieHistory));
 
             cookieHistory = *((InternetCookieHistory*)lpvStatusInformation);
 
@@ -263,13 +261,13 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
             // safe to cleanup the request context
             //
 
-            ASYNC_ASSERT(ReqContext);
+            // ASYNC_ASSERT(ReqContext);
             SetEvent(ReqContext->CleanUpEvent);
 
             break;
 
         case INTERNET_STATUS_HANDLE_CREATED:
-            ASYNC_ASSERT(lpvStatusInformation);
+            // ASYNC_ASSERT(lpvStatusInformation);
             fprintf(stderr,
                     "Handle %x created\n",
                     ((LPINTERNET_ASYNC_RESULT)lpvStatusInformation)->dwResult);
@@ -285,8 +283,8 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
             break;
 
         case INTERNET_STATUS_RESPONSE_RECEIVED:
-            ASYNC_ASSERT(lpvStatusInformation);
-            ASYNC_ASSERT(dwStatusInformationLength == sizeof(DWORD));
+            // ASYNC_ASSERT(lpvStatusInformation);
+            // ASYNC_ASSERT(dwStatusInformationLength == sizeof(DWORD));
 
             fprintf(stderr, "Status: Response Received (%d Bytes)\n",
                 *((LPDWORD)lpvStatusInformation));
@@ -300,15 +298,15 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
         case INTERNET_STATUS_REQUEST_COMPLETE:
             fprintf(stderr, "Status: Request complete\n");
 
-            ASYNC_ASSERT(lpvStatusInformation);
+            // ASYNC_ASSERT(lpvStatusInformation);
 
             ProcessRequest(ReqContext, ((LPINTERNET_ASYNC_RESULT)lpvStatusInformation)->dwError);
 
             break;
 
         case INTERNET_STATUS_REQUEST_SENT:
-            ASYNC_ASSERT(lpvStatusInformation);
-            ASYNC_ASSERT(dwStatusInformationLength == sizeof(DWORD));
+            // ASYNC_ASSERT(lpvStatusInformation);
+            // ASYNC_ASSERT(dwStatusInformationLength == sizeof(DWORD));
 
             fprintf(stderr,"Status: Request sent (%d Bytes)\n", *((LPDWORD)lpvStatusInformation));
             break;
@@ -346,25 +344,11 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
 }
 
 
-/*++
-
-Routine Description:
-    Process the request context - Sending the request and
-    receiving the response
-
-Arguments:
-    ReqContext - Pointer to request context structure
-    Error - error returned from last asynchronous call
-
-Return Value:
-    None.
-
---*/
 void ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error)
 {
     BOOL Eof = FALSE;
 
-    ASYNC_ASSERT(ReqContext);
+    // ASYNC_ASSERT(ReqContext);
 
 
     while(Error == ERROR_SUCCESS && ReqContext->State != REQ_STATE_COMPLETE)
@@ -400,7 +384,7 @@ void ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error)
 
                 if(Eof)
                 {
-                    ASYNC_ASSERT(Error == ERROR_SUCCESS);
+                    // ASYNC_ASSERT(Error == ERROR_SUCCESS);
                     ReqContext->State = REQ_STATE_POST_COMPLETE;
                 }
 
@@ -427,7 +411,7 @@ void ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error)
 
                 if(Eof)
                 {
-                    ASYNC_ASSERT(Error == ERROR_SUCCESS);
+                    // ASYNC_ASSERT(Error == ERROR_SUCCESS);
                     ReqContext->State = REQ_STATE_COMPLETE;
                 }
 
@@ -435,7 +419,7 @@ void ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error)
 
             default:
 
-                ASYNC_ASSERT(FALSE);
+                // ASYNC_ASSERT(FALSE);
 
                 break;
         }
@@ -455,25 +439,11 @@ void ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error)
     return;
 }
 
-/*++
-
-Routine Description:
-    Send the request using HttpSendRequest
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error code for the operation.
-
---*/
 DWORD SendRequest(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Success;
     DWORD Error = ERROR_SUCCESS;
 
-
-    ASYNC_ASSERT(ReqContext->Method == METHOD_GET);
 
     Success = AcquireRequestHandle(ReqContext);
     if(!Success)
@@ -506,18 +476,6 @@ Exit:
     return Error;
 }
 
-/*++
-
-Routine Description:
-    Send the request with entity-body using HttpSendRequestEx
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error code for the operation.
-
---*/
 DWORD SendRequestWithBody(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Success;
@@ -530,9 +488,6 @@ DWORD SendRequestWithBody(PREQUEST_CONTEXT ReqContext)
     // parameter and it's size on dwOptionalLength.
     // Here we decided to depict the use of HttpSendRequestEx function.
     //
-
-
-    ASYNC_ASSERT(ReqContext->Method == METHOD_POST);
 
     //Prepare the Buffers to be passed to HttpSendRequestEx
     ZeroMemory(&BuffersIn, sizeof(INTERNET_BUFFERS));
@@ -574,18 +529,6 @@ Exit:
     return Error;
 }
 
-/*++
-
-Routine Description:
-    Reads data from a file
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error code for the operation.
-
---*/
 DWORD GetDataToPost(PREQUEST_CONTEXT ReqContext)
 {
     DWORD Error = ERROR_SUCCESS;
@@ -620,19 +563,6 @@ Exit:
     return Error;
 }
 
-/*++
-
-Routine Description:
-    Post data in the http request
-
-Arguments:
-    ReqContext - Pointer to request context structure
-    Eof - Done posting data to server
-
-Return Value:
-    Error code for the operation.
-
---*/
 DWORD PostDataToServer(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
 {
     DWORD Error = ERROR_SUCCESS;
@@ -695,19 +625,6 @@ Exit:
     return Error;
 }
 
-
-/*++
-
-Routine Description:
-    Perform completion of asynchronous post.
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error Code for the operation.
-
---*/
 DWORD CompleteRequest(PREQUEST_CONTEXT ReqContext)
 {
     DWORD Error = ERROR_SUCCESS;
@@ -745,18 +662,6 @@ Exit:
     return Error;
 }
 
-/*++
-
-Routine Description:
-     Receive response
-
-Arguments:
-     ReqContext - Pointer to request context structure
-
-Return Value:
-     Error Code for the operation.
-
---*/
 DWORD RecvResponseData(PREQUEST_CONTEXT ReqContext)
 {
     DWORD Error = ERROR_SUCCESS;
@@ -808,20 +713,6 @@ Exit:
     return Error;
 }
 
-
-/*++
-
-Routine Description:
-     Write response to a file
-
-Arguments:
-     ReqContext - Pointer to request context structure
-     Eof - Done with response
-
-Return Value:
-     Error Code for the operation.
-
---*/
 DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
 {
     DWORD Error = ERROR_SUCCESS;
@@ -873,21 +764,6 @@ Exit:
     return Error;
 }
 
-/*++
-
-Routine Description:
-    Safely  close the request handle by synchronizing
-    with all threads using the handle.
-
-    When this function returns no more calls can be made with the
-    handle.
-
-Arguments:
-    ReqContext - Pointer to Request context structure
-Return Value:
-    None.
-
---*/
 void CloseRequestHandle(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Close = FALSE;
@@ -905,7 +781,7 @@ void CloseRequestHandle(PREQUEST_CONTEXT ReqContext)
     // where the context has already been freed.
     //
 
-    ASYNC_ASSERT(ReqContext->Closing == FALSE);
+    // ASYNC_ASSERT(ReqContext->Closing == FALSE);
     ReqContext->Closing = TRUE;
 
     if(ReqContext->HandleUsageCount == 0)
@@ -931,16 +807,6 @@ void CloseRequestHandle(PREQUEST_CONTEXT ReqContext)
     return;
 }
 
-/*++
-
-Routine Description:
-    Acquire use of the request handle to make a wininet call
-Arguments:
-    ReqContext - Pointer to Request context structure
-Return Value:
-    TRUE - Success
-    FALSE - Failure
---*/
 BOOL AcquireRequestHandle(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Success = TRUE;
@@ -961,23 +827,13 @@ BOOL AcquireRequestHandle(PREQUEST_CONTEXT ReqContext)
     return Success;
 }
 
-/*++
-
-Routine Description:
-    release use of the request handle
-Arguments:
-    ReqContext - Pointer to Request context structure
-Return Value:
-    None.
-
---*/
 void ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Close = FALSE;
 
     EnterCriticalSection(&ReqContext->CriticalSection);
 
-    ASYNC_ASSERT(ReqContext->HandleUsageCount > 0);
+    // ASYNC_ASSERT(ReqContext->HandleUsageCount > 0);
 
     ReqContext->HandleUsageCount--;
 
@@ -1004,21 +860,6 @@ void ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext)
     return;
 }
 
-/*++
-
-Routine Description:
-    Allocate the request context and initialize it values
-
-Arguments:
-    ReqContext - Pointer to Request context structure
-    Configuration - Pointer to configuration structure
-    SessionHandle - Wininet session handle to use when creating
-                    connect handle
-
-Return Value:
-    Error Code for the operation.
-
---*/
 DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
         Job* job, HINTERNET SessionHandle,
         PREQUEST_CONTEXT *ReqContext,
@@ -1048,12 +889,13 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
     LocalReqContext->FileSize = 0;
     LocalReqContext->HandleUsageCount = 0;
     LocalReqContext->Closing = FALSE;
-    LocalReqContext->Method = METHOD_GET; // TODO
     LocalReqContext->CompletionEvent = nullptr;
     LocalReqContext->CleanUpEvent = nullptr;
     LocalReqContext->OutputBuffer = nullptr;
-    LocalReqContext->State =
-        (LocalReqContext->Method == METHOD_GET) ?  REQ_STATE_SEND_REQ : REQ_STATE_SEND_REQ_WITH_BODY;
+    if (request.httpMethod == "GET")
+        LocalReqContext->State = REQ_STATE_SEND_REQ;
+    else
+        LocalReqContext->State = REQ_STATE_SEND_REQ_WITH_BODY;
     LocalReqContext->CritSecInitialized = FALSE;
 
 
@@ -1137,23 +979,6 @@ Exit:
     return Error;
 }
 
-/*++
-
-Routine Description:
-    Create connect and request handles
-
-Arguments:
-    ReqContext - Pointer to Request context structure
-    SessionHandle - Wininet session handle used to create
-                    connect handle
-    HostName - Hostname to connect
-    Resource - Resource to get/post
-    IsSecureConnection - SSL?
-
-Return Value:
-    Error Code for the operation.
-
---*/
 DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
         const Downloader::Request &request)
@@ -1252,18 +1077,6 @@ DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
     return 0; // TODO: process errors
 }
 
-/*++
-
-Routine Description:
-    Wait for the request to complete or timeout to occur
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    None.
-
---*/
 void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout)
 {
     DWORD SyncResult;
@@ -1300,7 +1113,7 @@ void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout)
 
         default:
             // Not expecting any other error codes
-            ASYNC_ASSERT(FALSE);
+            // ASYNC_ASSERT(FALSE);
             break;
 
 
@@ -1309,18 +1122,6 @@ void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout)
     return;
 }
 
-/*++
-
-Routine Description:
-    Used to cleanup the request context before exiting.
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    None.
-
---*/
 void CleanUpRequestContext(PREQUEST_CONTEXT ReqContext)
 {
     if(ReqContext == nullptr)
@@ -1400,18 +1201,6 @@ Exit:
 }
 
 
-/*++
-
-Routine Description:
-    Used to cleanup session before exiting.
-
-Arguments:
-    SessionHandle - Wininet session handle
-
-Return Value:
-    None.
-
---*/
 void CleanUpSessionHandle(HINTERNET SessionHandle)
 {
 
@@ -1434,25 +1223,7 @@ void CleanUpSessionHandle(HINTERNET SessionHandle)
     return;
 }
 
-
-/*++
-
-Routine Description:
-     This routine is used to log WinInet errors in human readable form.
-
-Arguments:
-     Err - Error number obtained from GetLastError()
-     Str - String pointer holding caller-context information
-
-Return Value:
-    None.
-
---*/
-VOID
-LogInetError(
-    DWORD Err,
-    LPCWSTR Str
-    )
+void LogInetError(DWORD Err, LPCWSTR Str)
 {
     DWORD Result;
     PWSTR MsgBuffer = NULL;
@@ -1483,24 +1254,7 @@ LogInetError(
     return;
 }
 
-/*++
-
-Routine Description:
-     This routine is used to log System Errors in human readable form.
-
-Arguments:
-     Err - Error number obtained from GetLastError()
-     Str - String pointer holding caller-context information
-
-Return Value:
-    None.
-
---*/
-VOID
-LogSysError(
-    DWORD Err,
-    LPCWSTR Str
-    )
+void LogSysError(DWORD Err, LPCWSTR Str)
 {
     DWORD Result;
     PWSTR MsgBuffer = NULL;
