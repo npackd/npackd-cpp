@@ -60,6 +60,7 @@
 #include "visiblejobs.h"
 #include "progresstree2.h"
 #include "exportrepositoryframe.h"
+#include "asyncdownloader.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -2407,6 +2408,14 @@ void MainWindow::on_actionExport_triggered()
 
 void MainWindow::on_actionCheck_dependencies_triggered()
 {
+    AsyncDownloader ad;
+
+    Job* job = new Job("TODO");
+    Downloader::Request request(QUrl("http://www.microsoft.com"));
+    Downloader::Response response;
+    AsyncDownloader::downloadWin(job, request, &response);
+    delete job;
+
     QString err;
 
     QString msg;

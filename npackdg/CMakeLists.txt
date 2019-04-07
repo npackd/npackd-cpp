@@ -118,6 +118,7 @@ set(NPACKDG_SOURCES
     src/exportrepositoryframe.cpp
     src/npackdg_plugin_import.cpp
     src/urlinfo.cpp
+    src/asyncdownloader.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -169,6 +170,7 @@ set(NPACKDG_HEADERS
     src/stable.h
     src/exportrepositoryframe.h
     src/urlinfo.h
+    src/asyncdownloader.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui
