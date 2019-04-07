@@ -23,7 +23,7 @@ AsyncDownloader::AsyncDownloader()
     // TODO: gzip, authentication, progress, POST, SHA1
 }
 
-QString setStringOption(HINTERNET hInternet, DWORD dwOption,
+QString AsyncDownloader::setStringOption(HINTERNET hInternet, DWORD dwOption,
         const QString& value)
 {
     QString result;
@@ -182,7 +182,19 @@ Exit:
     // Clean up the allocated resources
     CleanUpRequestContext(ReqContext);
 
-    CleanUpSessionHandle(SessionHandle);
+    if (SessionHandle) {
+        //
+        // Remove the callback from the SessionHandle since
+        // we don't want the closing notification
+        //
+        (void)InternetSetStatusCallback(SessionHandle, NULL);
+
+        //
+        // Call InternetCloseHandle and do not wait for the closing notification
+        // in the callback function
+        //
+        (void)InternetCloseHandle(SessionHandle);
+    }
 
     return 0;
 }
@@ -300,7 +312,7 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
 
             // ASYNC_ASSERT(lpvStatusInformation);
 
-            ProcessRequest(ReqContext, ((LPINTERNET_ASYNC_RESULT)lpvStatusInformation)->dwError);
+            AsyncDownloader::ProcessRequest(ReqContext, ((LPINTERNET_ASYNC_RESULT)lpvStatusInformation)->dwError);
 
             break;
 
@@ -344,102 +356,67 @@ void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
 }
 
 
-void ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error)
+void AsyncDownloader::ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error)
 {
     BOOL Eof = FALSE;
 
     // ASYNC_ASSERT(ReqContext);
 
-
-    while(Error == ERROR_SUCCESS && ReqContext->State != REQ_STATE_COMPLETE)
-    {
-
-        switch(ReqContext->State)
-        {
+    while (Error == ERROR_SUCCESS && ReqContext->State != REQ_STATE_COMPLETE) {
+        switch (ReqContext->State) {
             case REQ_STATE_SEND_REQ:
-
                 ReqContext->State = REQ_STATE_RESPONSE_RECV_DATA;
                 Error = SendRequest(ReqContext);
-
                 break;
-
             case REQ_STATE_SEND_REQ_WITH_BODY:
-
                 ReqContext->State = REQ_STATE_POST_GET_DATA;
                 Error = SendRequestWithBody(ReqContext);
-
                 break;
-
             case REQ_STATE_POST_GET_DATA:
-
                 ReqContext->State = REQ_STATE_POST_SEND_DATA;
                 Error = GetDataToPost(ReqContext);
-
                 break;
-
             case REQ_STATE_POST_SEND_DATA:
-
                 ReqContext->State = REQ_STATE_POST_GET_DATA;
                 Error = PostDataToServer(ReqContext, &Eof);
-
-                if(Eof)
-                {
+                if(Eof) {
                     // ASYNC_ASSERT(Error == ERROR_SUCCESS);
                     ReqContext->State = REQ_STATE_POST_COMPLETE;
                 }
-
                 break;
-
             case REQ_STATE_POST_COMPLETE:
-
                 ReqContext->State = REQ_STATE_RESPONSE_RECV_DATA;
                 Error = CompleteRequest(ReqContext);
-
                 break;
-
             case REQ_STATE_RESPONSE_RECV_DATA:
-
                 ReqContext->State = REQ_STATE_RESPONSE_WRITE_DATA;
                 Error = RecvResponseData(ReqContext);
-
                 break;
-
             case REQ_STATE_RESPONSE_WRITE_DATA:
-
                 ReqContext->State = REQ_STATE_RESPONSE_RECV_DATA;
                 Error = WriteResponseData(ReqContext, &Eof);
-
-                if(Eof)
-                {
+                if (Eof) {
                     // ASYNC_ASSERT(Error == ERROR_SUCCESS);
                     ReqContext->State = REQ_STATE_COMPLETE;
                 }
-
                 break;
-
             default:
-
                 // ASYNC_ASSERT(FALSE);
-
                 break;
         }
     }
 
-    if(Error != ERROR_IO_PENDING)
-    {
+    if (Error != ERROR_IO_PENDING) {
         //
         // Everything has been procesed or has failed.
         // In either case, the signal processing has
         // completed
         //
-
         SetEvent(ReqContext->CompletionEvent);
     }
-
-    return;
 }
 
-DWORD SendRequest(PREQUEST_CONTEXT ReqContext)
+DWORD AsyncDownloader::SendRequest(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Success;
     DWORD Error = ERROR_SUCCESS;
@@ -476,7 +453,7 @@ Exit:
     return Error;
 }
 
-DWORD SendRequestWithBody(PREQUEST_CONTEXT ReqContext)
+DWORD AsyncDownloader::SendRequestWithBody(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Success;
     INTERNET_BUFFERS BuffersIn;
@@ -529,7 +506,7 @@ Exit:
     return Error;
 }
 
-DWORD GetDataToPost(PREQUEST_CONTEXT ReqContext)
+DWORD AsyncDownloader::GetDataToPost(PREQUEST_CONTEXT ReqContext)
 {
     DWORD Error = ERROR_SUCCESS;
     BOOL Success;
@@ -563,7 +540,7 @@ Exit:
     return Error;
 }
 
-DWORD PostDataToServer(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
+DWORD AsyncDownloader::PostDataToServer(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
 {
     DWORD Error = ERROR_SUCCESS;
     BOOL Success;
@@ -625,7 +602,7 @@ Exit:
     return Error;
 }
 
-DWORD CompleteRequest(PREQUEST_CONTEXT ReqContext)
+DWORD AsyncDownloader::CompleteRequest(PREQUEST_CONTEXT ReqContext)
 {
     DWORD Error = ERROR_SUCCESS;
     BOOL Success;
@@ -662,7 +639,7 @@ Exit:
     return Error;
 }
 
-DWORD RecvResponseData(PREQUEST_CONTEXT ReqContext)
+DWORD AsyncDownloader::RecvResponseData(PREQUEST_CONTEXT ReqContext)
 {
     DWORD Error = ERROR_SUCCESS;
     BOOL Success;
@@ -713,7 +690,7 @@ Exit:
     return Error;
 }
 
-DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
+DWORD AsyncDownloader::WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
 {
     DWORD Error = ERROR_SUCCESS;
     DWORD BytesWritten = 0;
@@ -764,7 +741,7 @@ Exit:
     return Error;
 }
 
-void CloseRequestHandle(PREQUEST_CONTEXT ReqContext)
+void AsyncDownloader::CloseRequestHandle(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Close = FALSE;
 
@@ -801,24 +778,21 @@ void CloseRequestHandle(PREQUEST_CONTEXT ReqContext)
         // including ERROR_IO_PENDING, and none will be made after
         // InternetCloseHandle.
         //
-        (VOID)InternetCloseHandle(ReqContext->RequestHandle);
+        (void)InternetCloseHandle(ReqContext->RequestHandle);
     }
 
     return;
 }
 
-BOOL AcquireRequestHandle(PREQUEST_CONTEXT ReqContext)
+BOOL AsyncDownloader::AcquireRequestHandle(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Success = TRUE;
 
     EnterCriticalSection(&ReqContext->CriticalSection);
 
-    if(ReqContext->Closing == TRUE)
-    {
+    if (ReqContext->Closing == TRUE) {
         Success = FALSE;
-    }
-    else
-    {
+    } else {
         ReqContext->HandleUsageCount++;
     }
 
@@ -827,7 +801,7 @@ BOOL AcquireRequestHandle(PREQUEST_CONTEXT ReqContext)
     return Success;
 }
 
-void ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext)
+void AsyncDownloader::ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext)
 {
     BOOL Close = FALSE;
 
@@ -854,10 +828,8 @@ void ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext)
         // including ERROR_IO_PENDING, and none will be made after
         // InternetCloseHandle.
         //
-        (VOID)InternetCloseHandle(ReqContext->RequestHandle);
+        (void)InternetCloseHandle(ReqContext->RequestHandle);
     }
-
-    return;
 }
 
 DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
@@ -979,7 +951,7 @@ Exit:
     return Error;
 }
 
-DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
+DWORD AsyncDownloader::CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
         const Downloader::Request &request)
 {
@@ -1077,7 +1049,7 @@ DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
     return 0; // TODO: process errors
 }
 
-void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout)
+void AsyncDownloader::WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout)
 {
     DWORD SyncResult;
 
@@ -1122,7 +1094,7 @@ void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout)
     return;
 }
 
-void CleanUpRequestContext(PREQUEST_CONTEXT ReqContext)
+void AsyncDownloader::CleanUpRequestContext(PREQUEST_CONTEXT ReqContext)
 {
     if(ReqContext == nullptr)
     {
@@ -1140,7 +1112,7 @@ void CleanUpRequestContext(PREQUEST_CONTEXT ReqContext)
         // This is the only safe way to get rid of the context
         //
 
-        (VOID)WaitForSingleObject(ReqContext->CleanUpEvent, INFINITE);
+        (void)WaitForSingleObject(ReqContext->CleanUpEvent, INFINITE);
     }
 
     if(ReqContext->ConnectHandle)
@@ -1150,10 +1122,10 @@ void CleanUpRequestContext(PREQUEST_CONTEXT ReqContext)
         // we don't want the closing notification
         // The callback was inherited from the session handle
         //
-        (VOID)InternetSetStatusCallback(ReqContext->ConnectHandle,
+        (void)InternetSetStatusCallback(ReqContext->ConnectHandle,
                                         NULL);
 
-        (VOID)InternetCloseHandle(ReqContext->ConnectHandle);
+        (void)InternetCloseHandle(ReqContext->ConnectHandle);
     }
 
     if(ReqContext->UploadFile != INVALID_HANDLE_VALUE)
@@ -1201,29 +1173,7 @@ Exit:
 }
 
 
-void CleanUpSessionHandle(HINTERNET SessionHandle)
-{
-
-    if(SessionHandle)
-    {
-        //
-        // Remove the callback from the SessionHandle since
-        // we don't want the closing notification
-        //
-        (VOID)InternetSetStatusCallback(SessionHandle,
-                                        NULL);
-        //
-        // Call InternetCloseHandle and do not wait for the closing notification
-        // in the callback function
-        //
-        (VOID)InternetCloseHandle(SessionHandle);
-
-    }
-
-    return;
-}
-
-void LogInetError(DWORD Err, LPCWSTR Str)
+void AsyncDownloader::LogInetError(DWORD Err, LPCWSTR Str)
 {
     DWORD Result;
     PWSTR MsgBuffer = NULL;
@@ -1254,7 +1204,7 @@ void LogInetError(DWORD Err, LPCWSTR Str)
     return;
 }
 
-void LogSysError(DWORD Err, LPCWSTR Str)
+void AsyncDownloader::LogSysError(DWORD Err, LPCWSTR Str)
 {
     DWORD Result;
     PWSTR MsgBuffer = NULL;

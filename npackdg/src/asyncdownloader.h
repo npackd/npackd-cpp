@@ -10,7 +10,7 @@
 #include "downloader.h"
 
 /*
- * Structure used for storing the context for the asynchronous calls
+ * @brief structure used for storing the context for the asynchronous calls
  */
 typedef struct _REQUEST_CONTEXT {
     HINTERNET RequestHandle;
@@ -37,7 +37,6 @@ typedef struct _REQUEST_CONTEXT {
 
     DWORD HandleUsageCount; // Request object is in use(not safe to close handle)
     BOOL Closing;           // Request is closing(don't use handle)
-
 } REQUEST_CONTEXT, *PREQUEST_CONTEXT;
 
 /**
@@ -61,6 +60,16 @@ public:
      */
     static int64_t downloadWin(Job* job, const Downloader::Request& request,
             Downloader::Response *response);
+
+    /**
+     * @brief Process the request context - Sending the request and
+        receiving the response
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+        Error - error returned from last asynchronous call
+     */
+    static void ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error);
 private:
     /*++
 
@@ -81,6 +90,229 @@ private:
             HINTERNET SessionHandle,
             PREQUEST_CONTEXT *ReqContext,
             const Downloader::Request& request);
+
+    static QString setStringOption(HINTERNET hInternet, DWORD dwOption,
+        const QString &value);
+
+    /*++
+
+    Routine Description:
+        Send the request using HttpSendRequest
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+
+    Return Value:
+        Error code for the operation.
+
+    --*/
+    static DWORD SendRequest(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+        Send the request with entity-body using HttpSendRequestEx
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+
+    Return Value:
+        Error code for the operation.
+
+    --*/
+    static DWORD SendRequestWithBody(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+        Reads data from a file
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+
+    Return Value:
+        Error code for the operation.
+
+    --*/
+    static DWORD GetDataToPost(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+        Post data in the http request
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+        Eof - Done posting data to server
+
+    Return Value:
+        Error code for the operation.
+
+    --*/
+    static DWORD PostDataToServer(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
+
+    /*++
+
+    Routine Description:
+        Perform completion of asynchronous post.
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+
+    Return Value:
+        Error Code for the operation.
+
+    --*/
+    static DWORD CompleteRequest(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+         Receive response
+
+    Arguments:
+         ReqContext - Pointer to request context structure
+
+    Return Value:
+         Error Code for the operation.
+
+    --*/
+    static DWORD RecvResponseData(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+         Write response to a file
+
+    Arguments:
+         ReqContext - Pointer to request context structure
+         Eof - Done with response
+
+    Return Value:
+         Error Code for the operation.
+
+    --*/
+    static DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
+
+    /*++
+
+    Routine Description:
+        Create connect and request handles
+
+    Arguments:
+        ReqContext - Pointer to Request context structure
+        SessionHandle - Wininet session handle used to create
+                        connect handle
+        HostName - Hostname to connect
+        Resource - Resource to get/post
+        IsSecureConnection - SSL?
+
+    Return Value:
+        Error Code for the operation.
+
+    --*/
+    static DWORD CreateWininetHandles(Job *job, PREQUEST_CONTEXT ReqContext,
+            HINTERNET SessionHandle,
+            const Downloader::Request &request);
+
+    /*++
+
+    Routine Description:
+        Used to cleanup the request context before exiting.
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+
+    Return Value:
+        None.
+
+    --*/
+    static void CleanUpRequestContext(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+        Safely  close the request handle by synchronizing
+        with all threads using the handle.
+
+        When this function returns no more calls can be made with the
+        handle.
+
+    Arguments:
+        ReqContext - Pointer to Request context structure
+    Return Value:
+        None.
+
+    --*/
+    static void CloseRequestHandle(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+        Acquire use of the request handle to make a wininet call
+    Arguments:
+        ReqContext - Pointer to Request context structure
+    Return Value:
+        TRUE - Success
+        FALSE - Failure
+    --*/
+    static BOOL AcquireRequestHandle(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+        release use of the request handle
+    Arguments:
+        ReqContext - Pointer to Request context structure
+    Return Value:
+        None.
+
+    --*/
+    static void ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext);
+
+    /*++
+
+    Routine Description:
+        Wait for the request to complete or timeout to occur
+
+    Arguments:
+        ReqContext - Pointer to request context structure
+
+    Return Value:
+        None.
+
+    --*/
+    static void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout);
+
+    /*++
+
+    Routine Description:
+         This routine is used to log WinInet errors in human readable form.
+
+    Arguments:
+         Err - Error number obtained from GetLastError()
+         Str - String pointer holding caller-context information
+
+    Return Value:
+        None.
+
+    --*/
+    static void LogInetError(DWORD Err, LPCWSTR Str);
+
+    /*++
+
+    Routine Description:
+         This routine is used to log System Errors in human readable form.
+
+    Arguments:
+         Err - Error number obtained from GetLastError()
+         Str - String pointer holding caller-context information
+
+    Return Value:
+        None.
+
+    --*/
+    static void LogSysError(DWORD Err, LPCWSTR Str);
 };
 
 /*++
@@ -99,273 +331,8 @@ Return Value:
     None.
 
 --*/
-VOID CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
+void CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
         DWORD dwInternetStatus, LPVOID lpvStatusInformation,
         DWORD dwStatusInformationLength);
-
-/*++
-
-Routine Description:
-    Process the request context - Sending the request and
-    receiving the response
-
-Arguments:
-    ReqContext - Pointer to request context structure
-    Error - error returned from last asynchronous call
-
-Return Value:
-    None.
-
---*/
-VOID ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error);
-
-/*++
-
-Routine Description:
-    Send the request using HttpSendRequest
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error code for the operation.
-
---*/
-DWORD SendRequest(PREQUEST_CONTEXT ReqContext);
-
-/*++
-
-Routine Description:
-    Send the request with entity-body using HttpSendRequestEx
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error code for the operation.
-
---*/
-DWORD SendRequestWithBody(PREQUEST_CONTEXT ReqContext);
-
-/*++
-
-Routine Description:
-    Reads data from a file
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error code for the operation.
-
---*/
-DWORD GetDataToPost(PREQUEST_CONTEXT ReqContext);
-
-/*++
-
-Routine Description:
-    Post data in the http request
-
-Arguments:
-    ReqContext - Pointer to request context structure
-    Eof - Done posting data to server
-
-Return Value:
-    Error code for the operation.
-
---*/
-DWORD PostDataToServer(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
-
-/*++
-
-Routine Description:
-    Perform completion of asynchronous post.
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    Error Code for the operation.
-
---*/
-DWORD CompleteRequest(PREQUEST_CONTEXT ReqContext);
-
-/*++
-
-Routine Description:
-     Receive response
-
-Arguments:
-     ReqContext - Pointer to request context structure
-
-Return Value:
-     Error Code for the operation.
-
---*/
-DWORD RecvResponseData(PREQUEST_CONTEXT ReqContext);
-
-/*++
-
-Routine Description:
-     Write response to a file
-
-Arguments:
-     ReqContext - Pointer to request context structure
-     Eof - Done with response
-
-Return Value:
-     Error Code for the operation.
-
---*/
-DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
-
-
-/*++
-
-Routine Description:
-    Create connect and request handles
-
-Arguments:
-    ReqContext - Pointer to Request context structure
-    SessionHandle - Wininet session handle used to create
-                    connect handle
-    HostName - Hostname to connect
-    Resource - Resource to get/post
-    IsSecureConnection - SSL?
-
-Return Value:
-    Error Code for the operation.
-
---*/
-DWORD CreateWininetHandles(Job *job, PREQUEST_CONTEXT ReqContext,
-        HINTERNET SessionHandle,
-        const Downloader::Request &request);
-
-/*++
-
-Routine Description:
-    Used to cleanup the request context before exiting.
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    None.
-
---*/
-VOID CleanUpRequestContext(PREQUEST_CONTEXT ReqContext);
-
-
-/*++
-
-Routine Description:
-    Used to cleanup session before exiting.
-
-Arguments:
-    SessionHandle - Wininet session handle
-
-Return Value:
-    None.
-
---*/
-VOID CleanUpSessionHandle(HINTERNET SessionHandle);
-
-//
-// Cancellation support functions
-//
-
-
-/*++
-
-Routine Description:
-    Safely  close the request handle by synchronizing
-    with all threads using the handle.
-
-    When this function returns no more calls can be made with the
-    handle.
-
-Arguments:
-    ReqContext - Pointer to Request context structure
-Return Value:
-    None.
-
---*/
-VOID CloseRequestHandle(PREQUEST_CONTEXT ReqContext);
-
-/*++
-
-Routine Description:
-    Acquire use of the request handle to make a wininet call
-Arguments:
-    ReqContext - Pointer to Request context structure
-Return Value:
-    TRUE - Success
-    FALSE - Failure
---*/
-BOOL AcquireRequestHandle(PREQUEST_CONTEXT ReqContext);
-
-/*++
-
-Routine Description:
-    release use of the request handle
-Arguments:
-    ReqContext - Pointer to Request context structure
-Return Value:
-    None.
-
---*/
-VOID ReleaseRequestHandle(PREQUEST_CONTEXT ReqContext);
-
-
-//
-// Utility functions
-//
-
-/*++
-
-Routine Description:
-    Wait for the request to complete or timeout to occur
-
-Arguments:
-    ReqContext - Pointer to request context structure
-
-Return Value:
-    None.
-
---*/
-void WaitForRequestCompletion(PREQUEST_CONTEXT ReqContext, DWORD Timeout);
-
-DWORD OpenFiles(PREQUEST_CONTEXT ReqContext, DWORD Method,
-    LPWSTR InputFileName);
-
-/*++
-
-Routine Description:
-     This routine is used to log WinInet errors in human readable form.
-
-Arguments:
-     Err - Error number obtained from GetLastError()
-     Str - String pointer holding caller-context information
-
-Return Value:
-    None.
-
---*/
-void LogInetError(DWORD Err, LPCWSTR Str);
-
-/*++
-
-Routine Description:
-     This routine is used to log System Errors in human readable form.
-
-Arguments:
-     Err - Error number obtained from GetLastError()
-     Str - String pointer holding caller-context information
-
-Return Value:
-    None.
-
---*/
-void LogSysError(DWORD Err, LPCWSTR Str);
 
 #endif // ASYNCDOWNLOADER_H
