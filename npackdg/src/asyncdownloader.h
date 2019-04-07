@@ -48,18 +48,6 @@
 #define SPIN_COUNT 4000
 
 //
-// Structure to store configuration in that was gathered from
-// passed in arguments
-//
-
-typedef struct _CONFIGURATION
-{
-    DWORD Method;                 // Method, GET or POST
-    LPWSTR ResourceOnServer;      // Resource to get from the server
-    LPWSTR InputFileName;         // File containing data to post
-} CONFIGURATION, *PCONFIGURATION;
-
-//
 // Structure used for storing the context for the asynchronous calls
 //
 
@@ -80,7 +68,6 @@ typedef struct _REQUEST_CONTEXT {
 
     CRITICAL_SECTION CriticalSection;
     BOOL CritSecInitialized;
-
 
     //
     // Synchronized by CriticalSection
@@ -108,19 +95,9 @@ private:
 };
 
 // WinInet Callback function
-VOID CALLBACK
-CallBack(
-    HINTERNET hInternet,
-    DWORD_PTR dwContext,
-    DWORD dwInternetStatus,
-    LPVOID lpvStatusInformation,
-    DWORD dwStatusInformationLength
-    );
-
-
-//
-// IO related functions
-//
+VOID CALLBACK CallBack(HINTERNET hInternet, DWORD_PTR dwContext,
+        DWORD dwInternetStatus, LPVOID lpvStatusInformation,
+        DWORD dwStatusInformationLength);
 
 VOID ProcessRequest(PREQUEST_CONTEXT ReqContext, DWORD Error);
 
@@ -142,11 +119,6 @@ DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
 DWORD CreateWininetHandles(Job *job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
         const Downloader::Request &request);
-
-
-//
-// Cleanup functions
-//
 
 VOID CleanUpRequestContext(PREQUEST_CONTEXT ReqContext);
 

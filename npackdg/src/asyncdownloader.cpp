@@ -1024,12 +1024,6 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
         PREQUEST_CONTEXT *ReqContext,
         const Downloader::Request &request)
 {
-    CONFIGURATION Configuration = {
-        METHOD_GET,
-        L"/",
-        nullptr
-    };
-
     DWORD Error = ERROR_SUCCESS;
     BOOL Success;
     PREQUEST_CONTEXT LocalReqContext;
@@ -1054,7 +1048,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
     LocalReqContext->FileSize = 0;
     LocalReqContext->HandleUsageCount = 0;
     LocalReqContext->Closing = FALSE;
-    LocalReqContext->Method = Configuration.Method;
+    LocalReqContext->Method = METHOD_GET; // TODO
     LocalReqContext->CompletionEvent = nullptr;
     LocalReqContext->CleanUpEvent = nullptr;
     LocalReqContext->OutputBuffer = nullptr;
@@ -1106,18 +1100,6 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
         Error = GetLastError();
         LogSysError(Error, L"CreateEvent CleanUpEvent");
         goto Exit;
-    }
-
-    // Open the file to dump the response entity body and
-    // if required the file with the data to post
-    Error = OpenFiles(LocalReqContext,
-                      Configuration.Method,
-                      Configuration.InputFileName);
-
-    if(Error != ERROR_SUCCESS)
-    {
-            fprintf(stderr, "OpenFiles failed with %d\n", Error);
-            goto Exit;
     }
 
     // Verify if we've opened a file to post and get its size
@@ -1450,50 +1432,6 @@ void CleanUpSessionHandle(HINTERNET SessionHandle)
     }
 
     return;
-}
-
-/*++
-
-Routine Description:
-    This routine opens files, one to post data from, and
-    one to write response into
-
-Arguments:
-    ReqContext - Pointer to request context structure
-    Method - GET or POST - do we need to open the input file
-    InputFileName - Input file name
-    OutputFileName - output file name
-
-Return Value:
-    Error Code for the operation.
-
---*/
-DWORD OpenFiles(PREQUEST_CONTEXT ReqContext, DWORD Method,
-    LPWSTR InputFileName)
-{
-    DWORD Error = ERROR_SUCCESS;
-
-    if (Method == METHOD_POST)
-    {
-        // Open input file
-        ReqContext->UploadFile = CreateFile(InputFileName,
-                                            GENERIC_READ,
-                                            FILE_SHARE_READ,
-                                            nullptr,                   // handle cannot be inherited
-                                            OPEN_ALWAYS,            // if file exists, open it
-                                            FILE_ATTRIBUTE_NORMAL,
-                                            nullptr);                  // No template file
-
-        if (ReqContext->UploadFile == INVALID_HANDLE_VALUE)
-        {
-            Error = GetLastError();
-            LogSysError(Error, L"CreateFile for input file");
-            goto Exit;
-        }
-    }
-
-Exit:
-    return Error;
 }
 
 
