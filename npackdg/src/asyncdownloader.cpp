@@ -9,11 +9,22 @@ AsyncDownloader::AsyncDownloader()
 
 }
 
+QString setStringOption(HINTERNET hInternet, DWORD dwOption,
+        const QString& value)
+{
+    QString result;
+    if (!InternetSetOptionW(hInternet,
+            dwOption, WPMUtils::toLPWSTR(value),
+            static_cast<DWORD>(value.length() + 1))) {
+        WPMUtils::formatMessage(GetLastError(), &result);
+    }
+    return result;
+}
+
 int64_t AsyncDownloader::downloadWin(Job* job,
         const Downloader::Request& request, Downloader::Response *response)
 {
     QUrl url = request.url;
-    //QString verb = request.httpMethod;
     QFile* file = request.file;
     QString* mime = &response->mimeType;
     QString* contentDisposition = &response->contentDisposition;
@@ -32,10 +43,6 @@ int64_t AsyncDownloader::downloadWin(Job* job,
         sha1->clear();
 
     QString server = url.host();
-    QString resource = url.path();
-    QString encQuery = url.query(QUrl::FullyEncoded);
-    if (!encQuery.isEmpty())
-        resource.append('?').append(encQuery);
 
     QString agent("Npackd/");
     agent.append(NPACKD_VERSION);
@@ -1020,8 +1027,7 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
         METHOD_GET,
         L"/",
         nullptr,
-        L"abc.htm",
-        TRUE
+        L"abc.htm"
     };
 
     DWORD Error = ERROR_SUCCESS;
@@ -1132,7 +1138,6 @@ DWORD AsyncDownloader::AllocateAndInitializeRequestContext(
     Error = CreateWininetHandles(job, LocalReqContext,
                                  SessionHandle,
                                  Configuration.ResourceOnServer,
-                                 Configuration.IsSecureConnection,
                                  request);
 
     if(Error != ERROR_SUCCESS)
@@ -1173,33 +1178,22 @@ Return Value:
 --*/
 DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
-        LPWSTR Resource, BOOL IsSecureConnection,
+        LPWSTR Resource,
         const Downloader::Request &request)
 {
-    DWORD Error = ERROR_SUCCESS;
-    DWORD RequestFlags = 0;
-    LPWSTR Verb;
-
-
-    //
-    // Set the correct server port if using SSL
-    // Also set the flag for HttpOpenRequest
-    //
-
-    if(IsSecureConnection)
-    {
-        RequestFlags = INTERNET_FLAG_SECURE;
-    }
-
     QString server = request.url.host();
 
     // here "internet" cannot be 0, but we add the comparison to silence
     // Coverity
     HINTERNET hConnectHandle = nullptr;
     if (job->shouldProceed() && SessionHandle != nullptr) {
+        // TODO: support other port numbers
         INTERNET_PORT port = static_cast<INTERNET_PORT>(
                 request.url.port(request.url.scheme() == "https" ?
                 INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT));
+
+        // For HTTP InternetConnect returns synchronously because it does not
+        // actually make the connection.
         hConnectHandle = InternetConnectW(SessionHandle,
                 WPMUtils::toLPWSTR(server), port, nullptr, nullptr,
                 INTERNET_SERVICE_HTTP, 0, (DWORD_PTR)ReqContext);
@@ -1212,8 +1206,6 @@ DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
     }
 
     ReqContext->ConnectHandle = hConnectHandle;
-
-/* todo
 
     if (job->shouldProceed()) {
         if (!request.user.isEmpty()) {
@@ -1246,97 +1238,41 @@ DWORD CreateWininetHandles(Job* job, PREQUEST_CONTEXT ReqContext,
     // hConnectHandle is only checked here to silence Coverity
     HINTERNET hResourceHandle = nullptr;
     if (job->shouldProceed() && hConnectHandle != nullptr) {
+        // WinInet example uses NULL for the accepted types. Is "*/*" better?
         LPCTSTR ppszAcceptTypes[2];
-        ppszAcceptTypes[0] = L"*               todo / *";
+        ppszAcceptTypes[0] = L"*/*";
         ppszAcceptTypes[1] = nullptr;
-        DWORD flags = (url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0);
-        if (keepConnection)
+
+        DWORD flags = (request.url.scheme() == "https" ? INTERNET_FLAG_SECURE : 0);
+        if (request.keepConnection)
             flags |= INTERNET_FLAG_KEEP_CONNECTION;
         if (!request.useInternet)
             flags |= INTERNET_FLAG_FROM_CACHE;
         flags |= INTERNET_FLAG_RESYNCHRONIZE;
-        if (!useCache)
+        if (!request.useCache)
             flags |= INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_PRAGMA_NOCACHE |
                     INTERNET_FLAG_RELOAD;
+
+        QString resource = request.url.path();
+        QString encQuery = request.url.query(QUrl::FullyEncoded);
+        if (!encQuery.isEmpty())
+            resource.append('?').append(encQuery);
+
         hResourceHandle = HttpOpenRequestW(hConnectHandle,
-                WPMUtils::toLPWSTR(verb),
+                WPMUtils::toLPWSTR(request.httpMethod),
                 WPMUtils::toLPWSTR(resource),
                 nullptr, nullptr, ppszAcceptTypes,
-                flags, 0);
+                flags, (DWORD_PTR)ReqContext);
         if (hResourceHandle == nullptr) {
             QString errMsg;
             WPMUtils::formatMessage(GetLastError(), &errMsg);
             job->setErrorMessage(errMsg);
         }
+
+        ReqContext->RequestHandle = hResourceHandle;
     }
 
-    qCDebug(npackd) << "HttpOpenRequestW succeeded";
-
-*/
-
-    //
-    // For HTTP InternetConnect returns synchronously because it does not
-    // actually make the connection.
-    //
-    // For FTP InternetConnect connects the control channel, and therefore
-    // can be completed asynchronously.  This sample would have to be
-    // changed, so that the InternetConnect's asynchronous completion
-    // is handled correctly to support FTP.
-    //
-
-    if (ReqContext->ConnectHandle == nullptr)
-    {
-        Error = GetLastError();
-        LogInetError(Error, L"InternetConnect");
-        goto Exit;
-    }
-
-
-    // Set the Verb depending on the operation to perform
-    if(ReqContext->Method == METHOD_GET)
-    {
-        Verb = L"GET";
-    }
-    else
-    {
-        ASYNC_ASSERT(ReqContext->Method == METHOD_POST);
-
-        Verb = L"POST";
-    }
-
-    //
-    // We're overriding WinInet's default behavior.
-    // Setting these flags, we make sure we get the response from the server and not the cache.
-    // Also ask WinInet not to store the response in the cache.
-    //
-    // These flags are NOT performant and are only used to show case WinInet's Async I/O.
-    // A real WinInet application would not want to use this flags.
-    //
-
-    RequestFlags |= INTERNET_FLAG_RELOAD | INTERNET_FLAG_NO_CACHE_WRITE;
-
-    // Create a Request handle
-    ReqContext->RequestHandle = HttpOpenRequest(ReqContext->ConnectHandle,
-                                                Verb,                     // GET or POST
-                                                Resource,                 // root "/" by default
-                                                NULL,                     // Use default HTTP/1.1 as the version
-                                                NULL,                     // Do not provide any referrer
-                                                NULL,                     // Do not provide Accept types
-                                                RequestFlags,
-                                                (DWORD_PTR)ReqContext);
-
-    if (ReqContext->RequestHandle == NULL)
-    {
-        Error = GetLastError();
-        LogInetError(Error, L"HttpOpenRequest");
-
-        goto Exit;
-    }
-
-
-Exit:
-
-    return Error;
+    return 0; // TODO: process errors
 }
 
 /*++

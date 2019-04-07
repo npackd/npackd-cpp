@@ -91,6 +91,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     // Coverity
     HINTERNET hConnectHandle = nullptr;
     if (job->shouldProceed() && internet != nullptr) {
+        // TODO: support other port numbers
         INTERNET_PORT port = static_cast<INTERNET_PORT>(
                 url.port(url.scheme() == "https" ?
                 INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT));

@@ -58,7 +58,6 @@ typedef struct _CONFIGURATION
     LPWSTR ResourceOnServer;      // Resource to get from the server
     LPWSTR InputFileName;         // File containing data to post
     LPWSTR OutputFileName;        // File to write the data received from the server
-    BOOL IsSecureConnection;      // Flag to indicate the use of SSL
 } CONFIGURATION, *PCONFIGURATION;
 
 //
@@ -143,7 +142,7 @@ DWORD WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof);
 
 DWORD CreateWininetHandles(Job *job, PREQUEST_CONTEXT ReqContext,
         HINTERNET SessionHandle,
-        LPWSTR Resource, BOOL IsSecureConnection,
+        LPWSTR Resource,
         const Downloader::Request &request);
 
 
