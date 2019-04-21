@@ -2336,6 +2336,7 @@ void App::removeSCP(Job *job)
     if (job->shouldProceed()) {
         ControlPanelThirdPartyPM cppm;
         cppm.ignoreMSIEntries = false;
+        cppm.cleanPackageTitles = false;
         Job* scanJob = job->newSubJob(0.1, "Scanning for packages", true, true);
         cppm.scan(scanJob, &installed, &rep);
     }

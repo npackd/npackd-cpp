@@ -34,6 +34,12 @@ public:
     bool ignoreMSIEntries;
 
     /**
+     * @brief should the package titles be changed (e.g. package remove package
+     *    version)
+     */
+    bool cleanPackageTitles = true;
+
+    /**
      * @brief -
      */
     ControlPanelThirdPartyPM();

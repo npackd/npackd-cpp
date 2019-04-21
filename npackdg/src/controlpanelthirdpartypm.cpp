@@ -150,9 +150,11 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     if (!err.isEmpty() || title.isEmpty())
         title = keyName;
 
-    if (title.endsWith(version.getVersionString())) {
-        title.chop(version.getVersionString().length());
-        title = title.trimmed();
+    if (this->cleanPackageTitles) {
+        if (title.endsWith(version.getVersionString())) {
+            title.chop(version.getVersionString().length());
+            title = title.trimmed();
+        }
     }
 
     p->title = title;
