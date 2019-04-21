@@ -5,7 +5,7 @@
     <name>AsyncDownloader</name>
     <message>
         <source>Connecting</source>
-        <translation type="unfinished">Verbinde</translation>
+        <translation>Verbinde</translation>
     </message>
 </context>
 <context>
@@ -402,11 +402,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Check dependencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Abhängigkeiten überprüfen</translation>
     </message>
     <message>
         <source>Checks installed packages for missing dependencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Prüft die installierten Pakete auf fehlende Abhängigkeiten</translation>
     </message>
 </context>
 <context>
@@ -2562,35 +2562,35 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot export to an existing non-empty directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann nicht in ein existierendes und nicht leeres Verzeichnis exportieren</translation>
     </message>
     <message>
         <source>Sending start signal to the service %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Sende das Startsignal an den Dienst %1</translation>
     </message>
     <message>
         <source>%1 is missing or is not a directory</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 fehlt oder ist kein Verzeichnis</translation>
     </message>
     <message>
         <source>All dependencies are installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Abhängigkeiten sind installiert</translation>
     </message>
     <message>
         <source>installing %1 packages</source>
-        <translation type="unfinished"></translation>
+        <translation>installiere %1 Pakete</translation>
     </message>
     <message>
         <source>uninstalling %1 packages</source>
-        <translation type="unfinished"></translation>
+        <translation>deinstalliere %1 Pakete</translation>
     </message>
     <message>
         <source>updating %1 packages</source>
-        <translation type="unfinished"></translation>
+        <translation>aktualisiere %1 Pakete</translation>
     </message>
     <message>
         <source>Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Verarbeitung</translation>
     </message>
 </context>
 <context>

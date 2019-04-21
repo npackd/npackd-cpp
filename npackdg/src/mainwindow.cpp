@@ -2410,6 +2410,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
 {
     AsyncDownloader ad;
 
+    /*
     Job* job = new Job("TODO");
     Downloader::Request request(QUrl("https://www.microsoft.com"));
     QFile file("abc.htm");
@@ -2418,6 +2419,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
     Downloader::Response response;
     AsyncDownloader::downloadWin2(job, request, &response);
     delete job;
+    */
 
     QString err;
 
