@@ -1358,8 +1358,9 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
                             WCHAR szName[MAX_PATH];
                             if (lpfQueryFullProcessImageName(hProc, 0, szName,
                                     &len)) {
-                                QString s;
-                                s.setUtf16((ushort*) szName, len);
+                                QString s = QString::fromUtf16(
+                                        reinterpret_cast<ushort*>(szName),
+                                        static_cast<int>(len));
                                 if (WPMUtils::pathEquals(s, dir) ||
                                         WPMUtils::isUnder(s, dir)) {
                                     r.append(hProc);
@@ -1667,6 +1668,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 // Finished
                 ok = t.ok;
                 name = t.name;
+                qCDebug(npackd) << "File object" << name;
             } else {
                 // Not finished
                 t.terminate();
@@ -1682,8 +1684,11 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
                 i.next();
                 if (name.startsWith(i.key())) {
                     name = i.value() + name.mid(i.key().length());
-                    if (QFileInfo(name).isFile() &&
-                            WPMUtils::isUnder(name, dir)) {
+
+                    qCDebug(npackd) << "File object converted" << name;
+
+                    if (QFileInfo(name).exists() &&
+                            WPMUtils::isUnderOrEquals(name, dir)) {
                         result.append(processHandle);
                         processHandle = INVALID_HANDLE_VALUE;
                         usedProcessIds.insert(handle.ProcessId);
