@@ -1842,12 +1842,13 @@ void MainWindow::on_actionUpdate_triggered()
     }
 
     if (err.isEmpty() && packages.count() > 0) {
-        err = r->planUpdates(installed, packages, QList<Dependency*>(), ops);
+        err = r->planUpdates(installed, packages, QList<Dependency*>(), ops, true);
     }
 
     if (err.isEmpty()) {
-        if (ops.count() > 0)
+        if (ops.count() > 0) {
             process(ops, WPMUtils::getCloseProcessType());
+        }
     } else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 

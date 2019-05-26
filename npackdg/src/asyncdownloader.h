@@ -5,6 +5,8 @@
 #include <wininet.h>
 #include <cstdint>
 
+#include <QObject>
+
 #include "job.h"
 #include "downloader.h"
 
@@ -44,11 +46,12 @@ typedef struct _REQUEST_CONTEXT {
  */
 class AsyncDownloader: public Downloader
 {
+    Q_OBJECT
 public:
     /**
      * @brief constructor
      */
-    AsyncDownloader();
+    //AsyncDownloader();
 
     /**
      * @brief HTTP request

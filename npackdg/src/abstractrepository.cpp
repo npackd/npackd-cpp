@@ -730,7 +730,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
         const QList<Package*> packages,
         QList<Dependency*> ranges,
         QList<InstallOperation*>& ops, bool keepDirectories,
-        bool install, const QString &where_, bool safe)
+        bool install, const QString &where_)
 {
     QString err;
 
@@ -739,9 +739,6 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
     // get the list of installed packages
     QSet<QString> before;
-    if (safe) {
-        before = installed.getPackages();
-    }
 
     // packages first
     if (err.isEmpty()) {
@@ -921,35 +918,15 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
                 PackageVersion* b = newesti.at(i);
                 if (b) {
-                    if (safe) {
-                        err = planUninstallation(installedCopy, b->package,
-                                b->version, ops);
-                        qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
-                                b->package << "resulted in" << ops.count() <<
-                                "operations with result:" << err;
+                    err = planUninstallation(installedCopy, b->package,
+                            b->version, ops);
 
-                        if (!err.isEmpty())
-                            break;
+                    qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
+                            b->package << "resulted in" << ops.count() <<
+                            "operations with result:" << err;
 
-                        if ((ops.size() - oldSize) > 1) {
-                            QSet<QString> after = before;
-                            after.subtract(installedCopy.getPackages());
-
-                            if (!after.isEmpty()) {
-                                undo = true;
-                            }
-                        }
-                    } else {
-                        err = planUninstallation(installedCopy, b->package,
-                                b->version, ops);
-
-                        qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
-                                b->package << "resulted in" << ops.count() <<
-                                "operations with result:" << err;
-
-                        if (!err.isEmpty())
-                            break;
-                    }
+                    if (!err.isEmpty())
+                        break;
                 }
 
                 if (undo) {

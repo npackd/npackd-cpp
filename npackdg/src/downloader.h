@@ -20,7 +20,7 @@ extern QMutex loginDialogMutex;
 /**
  * Blocks execution and downloads a file over http.
  */
-class Downloader: QObject
+class Downloader: public QObject
 {
     Q_OBJECT
 

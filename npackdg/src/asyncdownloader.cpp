@@ -20,10 +20,10 @@
 
 #define SPIN_COUNT 4000
 
-AsyncDownloader::AsyncDownloader()
-{
+//AsyncDownloader::AsyncDownloader()
+//{
     // TODO: gzip, authentication, progress, POST, SHA1
-}
+//}
 
 int64_t AsyncDownloader::downloadWin2(Job* job,
         const Downloader::Request& request, Downloader::Response *response)

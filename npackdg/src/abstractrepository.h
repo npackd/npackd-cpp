@@ -188,7 +188,7 @@ public:
      * @param installed list of installed packages. This object will be modified
      * @param packages these packages should be updated. No duplicates are
      *     allowed here
-     * @param ranges these packages should be updated. No duplicates are
+     * @param ranges these package versions should be updated. No duplicates are
      *     allowed here. Only the versions in the specified range are considered
      *     for an update. This means that the newest installed version from a
      *     range will be uninstalled and the newest available in the range will
@@ -206,8 +206,7 @@ public:
     QString planUpdates(InstalledPackages &installed, const QList<Package*> packages,
                         QList<Dependency *> ranges,
                         QList<InstallOperation*>& ops, bool keepDirectories=false,
-                        bool install=false, const QString& where_="",
-                        bool safe=false);
+                        bool install=false, const QString& where_="");
 
     /**
      * Plans un-installation of a package version and all the dependent

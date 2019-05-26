@@ -21,6 +21,13 @@ public:
     Version version;
 
     /**
+     * if "where" is not empty:
+     * true = exact location is necessary, fail otherwise
+     * false = choose a similar installation directory, e.g. "Notepad_2.81" instead of "Notepad"
+     */
+    bool exactLocation = true;
+
+    /**
      * the directory where the package version should be installed on "" if the
      * the installation directory should be determined automatically.
      */
