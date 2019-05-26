@@ -201,12 +201,17 @@ public:
      *     returned.
      * @param where_ where to install the new version. This parameter will only
      *     be used if only one package should be updated
+     * @param exactLocation if keepDirectories=true or "where" is not empty:
+     *     true = fail if a package cannot be updated in the exact same location
+     *     false = choose a similar location like "Notepad_2.81" instead of
+     *     "Notepad"
      * @return error message or ""
      */
     QString planUpdates(InstalledPackages &installed, const QList<Package*> packages,
                         QList<Dependency *> ranges,
                         QList<InstallOperation*>& ops, bool keepDirectories=false,
-                        bool install=false, const QString& where_="");
+                        bool install=false, const QString& where_="",
+                        bool exactLocation=true);
 
     /**
      * Plans un-installation of a package version and all the dependent

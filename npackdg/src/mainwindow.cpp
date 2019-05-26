@@ -1842,7 +1842,8 @@ void MainWindow::on_actionUpdate_triggered()
     }
 
     if (err.isEmpty() && packages.count() > 0) {
-        err = r->planUpdates(installed, packages, QList<Dependency*>(), ops, true);
+        err = r->planUpdates(installed, packages, QList<Dependency*>(), ops,
+                true, false, "", false);
     }
 
     if (err.isEmpty()) {

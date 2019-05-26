@@ -572,7 +572,8 @@ void AbstractRepository::process(Job *job,
                     }
                 } else {
                     if (d.exists(op->where)) {
-                        if (!WPMUtils::pathEquals(op->where, dir)) {
+                        if (!WPMUtils::pathEquals(op->where, dir) &&
+                                op->exactLocation) {
                             // we should install in a particular directory, but it
                             // exists.
                             Job* djob = sub->newSubJob(1,
@@ -587,7 +588,7 @@ void AbstractRepository::process(Job *job,
                     } else {
                         if (d.rename(dir, op->where))
                             dir = op->where;
-                        else {
+                        else if (op->exactLocation) {
                             // we should install in a particular directory, but it
                             // exists.
                             Job* djob = sub->newSubJob(1,
@@ -730,7 +731,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
         const QList<Package*> packages,
         QList<Dependency*> ranges,
         QList<InstallOperation*>& ops, bool keepDirectories,
-        bool install, const QString &where_)
+        bool install, const QString &where_, bool exactLocation)
 {
     QString err;
 
@@ -944,6 +945,12 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 "operations";
 
         InstallOperation::simplify(ops);
+    }
+
+    for (int i = 0; i < ops.count(); i++) {
+        InstallOperation* op = ops.at(i);
+        if (op->install && !op->where.isEmpty())
+            op->exactLocation = exactLocation;
     }
 
     qCDebug(npackd) << "planUpdates: results in" << ops.count() <<
