@@ -76,7 +76,7 @@ int64_t AsyncDownloader::downloadWin2(Job* job,
 
          InternetSetOption(internet, INTERNET_OPTION_CONNECT_TIMEOUT,
                 &rec_timeout, sizeof(rec_timeout));
-/*
+/ *
          InternetSetOption(internet, INTERNET_OPTION_DATA_RECEIVE_TIMEOUT,
                 &rec_timeout, sizeof(rec_timeout));
         InternetSetOption(internet, INTERNET_OPTION_DATA_SEND_TIMEOUT,

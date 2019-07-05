@@ -239,16 +239,6 @@ public:
             QString *err) const;
 
     /**
-     * @brief returns all package versions with at least one <detect-file>
-     *     entry
-     * @param err error message will be stored here
-     * @return [owner:caller] list of package versions sorted by full package
-     *     name and version
-     */
-    QList<PackageVersion*> getPackageVersionsWithDetectFiles(
-            QString *err) const;
-
-    /**
      * @brief returns all package versions with a <cmd-file> entry with the
      *     specified path
      * @param name name of the command line tool without \ or /

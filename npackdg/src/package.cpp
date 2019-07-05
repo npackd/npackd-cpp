@@ -96,8 +96,13 @@ void Package::toXML(QXmlStreamWriter *w) const
         w->writeTextElement("icon", this->getIcon());
     if (!this->license.isEmpty())
         w->writeTextElement("license", this->license);
+
     for (int i = 0; i < this->categories.count(); i++) {
         w->writeTextElement("category", this->categories.at(i));
+    }
+
+    for (int i = 0; i < this->tags.count(); i++) {
+        w->writeTextElement("tag", this->tags.at(i));
     }
 
     // <link>
@@ -135,6 +140,14 @@ void Package::toJSON(QJsonObject& w) const
             category.append(this->categories.at(i));
         }
         w["categories"] = category;
+    }
+
+    if (!this->tags.isEmpty()) {
+        QJsonArray tag;
+        for (int i = 0; i < this->tags.count(); i++) {
+            tag.append(this->tags.at(i));
+        }
+        w["tags"] = tag;
     }
 
     QJsonArray link;

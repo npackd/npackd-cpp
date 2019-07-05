@@ -2057,7 +2057,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Empty package name</source>
-        <translation>Leerer Paketname</translation>
+        <translation type="vanished">Leerer Paketname</translation>
     </message>
     <message>
         <source>Empty segment at position %1 in %2</source>
@@ -2591,6 +2591,18 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Process</source>
         <translation>Verarbeitung</translation>
+    </message>
+    <message>
+        <source>Error in &lt;tag&gt; for %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More than one &lt;tag&gt; %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty ID</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

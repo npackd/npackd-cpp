@@ -1821,7 +1821,7 @@ QString WPMUtils::getShellDir(int type)
 QString WPMUtils::validateFullPackageName(const QString& n)
 {
     if (n.length() == 0) {
-        return QObject::tr("Empty package name");
+        return QObject::tr("Empty ID");
     } else {
         int pos = n.indexOf(QStringLiteral(".."));
         if (pos >= 0)

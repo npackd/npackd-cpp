@@ -534,40 +534,6 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     return r;
 }
 
-QList<PackageVersion *> DBRepository::getPackageVersionsWithDetectFiles(
-        QString *err) const
-{
-    QMutexLocker ml(&this->mutex);
-
-    *err = QStringLiteral("");
-
-    QList<PackageVersion*> r;
-
-    MySQLQuery q(db);
-    if (!q.prepare(QStringLiteral("SELECT CONTENT FROM PACKAGE_VERSION "
-            "WHERE DETECT_FILE_COUNT > 0")))
-        *err = getErrorString(q);
-
-    if (err->isEmpty()) {
-        if (!q.exec()) {
-            *err = getErrorString(q);
-        }
-    }
-
-    while (err->isEmpty() && q.next()) {
-        PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
-                err);
-        if (err->isEmpty())
-            r.append(pv);
-    }
-
-    // qCDebug(npackd) << vs.count();
-
-    qSort(r.begin(), r.end(), packageVersionLessThan3);
-
-    return r;
-}
-
 QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
         const QString &name, QString *err) const
 {

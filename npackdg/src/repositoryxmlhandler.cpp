@@ -57,6 +57,8 @@ int RepositoryXMLHandler::findWhere()
                     r = TAG_PACKAGE_LICENSE;
                 else if (tag2 == QStringLiteral("category"))
                     r = TAG_PACKAGE_CATEGORY;
+                else if (tag2 == QStringLiteral("tag"))
+                    r = TAG_PACKAGE_TAG;
                 else if (tag2 == QStringLiteral("link"))
                     r = TAG_PACKAGE_LINK;
             } else if (tag1 == QStringLiteral("license")) {
@@ -90,7 +92,8 @@ int RepositoryXMLHandler::findWhere()
 
 RepositoryXMLHandler::RepositoryXMLHandler(AbstractRepository *rep,
         const QUrl &url) :
-        rep(rep), lic(nullptr), p(nullptr), pv(nullptr), pvf(nullptr), dep(nullptr), url(url)
+        rep(rep), lic(nullptr), p(nullptr), pv(nullptr),
+        pvf(nullptr), dep(nullptr), url(url)
 {
 }
 
@@ -348,6 +351,17 @@ bool RepositoryXMLHandler::endElement(const QString &/*namespaceURI*/,
             error = QObject::tr("More than one <category> %1").arg(c);
         } else {
             p->categories.append(c);
+        }
+    } else if (where == TAG_PACKAGE_TAG) {
+        QString c = chars.trimmed();
+        QString err = WPMUtils::validateFullPackageName(c);
+        if (!err.isEmpty()) {
+            error = QObject::tr("Error in <tag> for %1: %2").
+                    arg(p->title).arg(err);
+        } else if (p->tags.contains(c)) {
+            error = QObject::tr("More than one <tag> %1").arg(c);
+        } else {
+            p->tags.append(c);
         }
     } else if (where == TAG_LICENSE) {
         error = rep->saveLicense(lic, false);

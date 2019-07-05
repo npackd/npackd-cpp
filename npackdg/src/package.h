@@ -50,6 +50,9 @@ public:
     /** categories. Sub-categories are separated by / */
     QStringList categories;
 
+    /** tags */
+    QStringList tags;
+
     /**
      * <link> rel->href. The order of the values in QMultiMap is from
      * most recently to least recently inserted, but the appearance in XML is
