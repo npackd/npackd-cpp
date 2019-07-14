@@ -52,9 +52,12 @@ private:
     MySQLQuery* selectCategoryQuery;
     MySQLQuery* insertLinkQuery;
     MySQLQuery* deleteLinkQuery;
+    std::unique_ptr<MySQLQuery> insertTagQuery;
+    std::unique_ptr<MySQLQuery> deleteTagQuery;
     std::unique_ptr<MySQLQuery> deleteCmdFilesQuery;
     MySQLQuery* insertInstalledQuery;
     MySQLQuery* insertURLSizeQuery;
+
     QStringList stopWords;
 
     QSqlDatabase db;
@@ -140,6 +143,8 @@ private:
     void transferFrom(Job *job, const QString &databaseFilename);
     QString deleteCmdFiles(const QString &name, const Version &version);
     QStringList tokenizeTitle(const QString &title);
+    QString deleteTags(const QString &name);
+    QString saveTags(Package *p);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;

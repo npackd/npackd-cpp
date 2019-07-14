@@ -1031,6 +1031,31 @@ QString DBRepository::deleteLinks(const QString& name)
     return err;
 }
 
+QString DBRepository::deleteTags(const QString& name)
+{
+    QMutexLocker ml(&this->mutex);
+
+    QString err;
+
+    if (!deleteTagQuery) {
+        deleteTagQuery.reset(new MySQLQuery(db));
+        if (!deleteTagQuery->prepare(
+                QStringLiteral("DELETE FROM TAG WHERE PACKAGE=:PACKAGE"))) {
+            err = getErrorString(*deleteTagQuery);
+            deleteTagQuery->clear();
+        }
+    }
+
+    if (err.isEmpty()) {
+        deleteTagQuery->bindValue(QStringLiteral(":PACKAGE"), name);
+        if (!deleteTagQuery->exec())
+            err = getErrorString(*deleteTagQuery);
+        deleteTagQuery->finish();
+    }
+
+    return err;
+}
+
 QString DBRepository::deleteCmdFiles(const QString& name, const Version& version)
 {
     QMutexLocker ml(&this->mutex);
@@ -1112,6 +1137,44 @@ QString DBRepository::saveLinks(Package* p)
     return err;
 }
 
+QString DBRepository::saveTags(Package* p)
+{
+    QMutexLocker ml(&this->mutex);
+
+    QString err;
+
+    if (!insertTagQuery) {
+        insertTagQuery.reset(new MySQLQuery(db));
+
+        QString insertSQL = QStringLiteral("INSERT INTO TAG "
+                "(PACKAGE, VALUE) "
+                "VALUES(:PACKAGE, :VALUE)");
+
+        if (!insertTagQuery->prepare(insertSQL)) {
+            err = getErrorString(*insertTagQuery);
+            insertTagQuery->clear();
+        }
+    }
+
+    if (err.isEmpty()) {
+        for (int j = 0; j < p->tags.size(); j++) {
+            if (!err.isEmpty())
+                break;
+
+            QString value = p->tags.at(j);
+
+            if (!value.isEmpty()) {
+                insertTagQuery->bindValue(QStringLiteral(":PACKAGE"), p->name);
+                insertTagQuery->bindValue(QStringLiteral(":VALUE"), value);
+                if (!insertTagQuery->exec())
+                    err = getErrorString(*insertTagQuery);
+            }
+        }
+        insertTagQuery->finish();
+    }
+
+    return err;
+}
 
 QString DBRepository::savePackage(Package *p, bool replace)
 {
@@ -1270,7 +1333,17 @@ QString DBRepository::savePackage(Package *p, bool replace)
 
     if (err.isEmpty()) {
         if (!exists)
+            err = deleteTags(p->name);
+    }
+
+    if (err.isEmpty()) {
+        if (!exists)
             err = saveLinks(p);
+    }
+
+    if (err.isEmpty()) {
+        if (!exists)
+            err = saveTags(p);
     }
 
     return err;
@@ -2649,6 +2722,19 @@ QString DBRepository::updateDatabase()
                     "SIZE INTEGER, "
                     "SIZE_MODIFIED INTEGER, "
                     "CONTENT BLOB)");
+            err = toString(db.lastError());
+        }
+    }
+
+    // TAG is new in 1.26
+    if (err.isEmpty()) {
+        e = tableExists(&db, "TAG", &err);
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE TAG("
+                    "PACKAGE TEXT NOT NULL PRIMARY KEY, "
+                    "VALUE TEXT NOT NULL)");
             err = toString(db.lastError());
         }
     }
