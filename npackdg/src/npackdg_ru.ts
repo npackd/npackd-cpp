@@ -523,6 +523,14 @@ p, li { white-space: pre-wrap; }
         <source>Screen shots:</source>
         <translation>Скриншоты:</translation>
     </message>
+    <message>
+        <source>Tags:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tags assigned to this package</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PackageVersionForm</name>
@@ -3431,6 +3439,18 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Empty ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clearing the tags table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Category</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tags</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

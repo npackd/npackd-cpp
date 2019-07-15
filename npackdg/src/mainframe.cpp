@@ -45,7 +45,11 @@ MainFrame::MainFrame(QWidget *parent) :
     t->setColumnWidth(4, 100);
     t->setColumnWidth(5, 100);
     t->setColumnWidth(6, 100);
+    t->setColumnWidth(7, 100);
+    t->setColumnWidth(8, 100);
     t->horizontalHeader()->setSectionHidden(6, true);
+    t->horizontalHeader()->setSectionHidden(7, true);
+    t->horizontalHeader()->setSectionHidden(8, true);
     t->setIconSize(QSize(32, 32));
 
     connect(t->selectionModel(),

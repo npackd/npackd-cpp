@@ -27,7 +27,7 @@ int PackageItemModel::rowCount(const QModelIndex &/*parent*/) const
 
 int PackageItemModel::columnCount(const QModelIndex &/*parent*/) const
 {
-    return 7;
+    return 9;
 }
 
 PackageItemModel::Info* PackageItemModel::createInfo(
@@ -89,6 +89,14 @@ PackageItemModel::Info* PackageItemModel::createInfo(
         r->licenseTitle = lic->title;
 
     r->icon = p->getIcon();
+
+    if (p->categories.size() > 0) {
+        r->category = p->categories.at(0);
+    } else {
+        r->category.clear();
+    }
+
+    r->tags = p->tags.join(QStringLiteral(", "));
 
     return r;
 }
@@ -153,6 +161,14 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                 }
 
                 r = qVariantFromValue(v);
+                break;
+            }
+            case 7: {
+                r = cached->category;
+                break;
+            }
+            case 8: {
+                r = cached->tags;
                 break;
             }
         }
@@ -236,6 +252,12 @@ QVariant PackageItemModel::headerData(int section, Qt::Orientation orientation,
                     break;
                 case 6:
                     r = QObject::tr("Download size");
+                    break;
+                case 7:
+                    r = QObject::tr("Category");
+                    break;
+                case 8:
+                    r = QObject::tr("Tags");
                     break;
             }
         } else {

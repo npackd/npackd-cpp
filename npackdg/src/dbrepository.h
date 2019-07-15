@@ -145,6 +145,7 @@ private:
     QStringList tokenizeTitle(const QString &title);
     QString deleteTags(const QString &name);
     QString saveTags(Package *p);
+    QString readTags(Package *p);
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;

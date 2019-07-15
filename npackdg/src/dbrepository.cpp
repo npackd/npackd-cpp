@@ -343,6 +343,9 @@ Package *DBRepository::findPackage_(const QString &name)
 
         if (err.isEmpty())
             err = readLinks(r);
+
+        if (err.isEmpty())
+            err = readTags(r);
     }
 
     return r;
@@ -397,6 +400,11 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
             r->license = q.value(5).toString();
 
             err = readLinks(r);
+
+            if (!err.isEmpty())
+                break;
+
+            err = readTags(r);
 
             if (!err.isEmpty())
                 break;
@@ -1283,7 +1291,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
                     (p->title + QStringLiteral(" ") + p->description +
                     QStringLiteral(" ") +
                     p->name + QStringLiteral(" ") +
-                    p->categories.join(' ')).toLower());
+                    p->categories.join(' ') + QStringLiteral(" ") +
+                    p->tags.join(' ')).toLower());
             savePackageQuery->bindValue(QStringLiteral(":STATUS"), 0);
             savePackageQuery->bindValue(QStringLiteral(":SHORT_NAME"),
                     p->getShortName());
@@ -1418,6 +1427,33 @@ QString DBRepository::readLinks(Package* p)
 
     while (err.isEmpty() && q.next()) {
         p->links.insert(q.value(0).toString(), q.value(1).toString());
+    }
+
+    return err;
+}
+
+QString DBRepository::readTags(Package* p)
+{
+    QMutexLocker ml(&this->mutex);
+
+    QString err;
+
+    QList<Package*> r;
+
+    MySQLQuery q(db);
+    if (!q.prepare(QStringLiteral("SELECT VALUE "
+            "FROM TAG WHERE PACKAGE = :PACKAGE "
+            "ORDER BY VALUE")))
+        err = getErrorString(q);
+
+    if (err.isEmpty()) {
+        q.bindValue(QStringLiteral(":PACKAGE"), p->name);
+        if (!q.exec())
+            err = getErrorString(q);
+    }
+
+    while (err.isEmpty() && q.next()) {
+        p->tags.append(q.value(0).toString());
     }
 
     return err;
@@ -1561,9 +1597,19 @@ QString DBRepository::clear()
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.10,
+        Job* sub = job->newSubJob(0.05,
                 QObject::tr("Clearing the links table"));
         QString err = exec(QStringLiteral("DELETE FROM LINK"));
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+        else
+            sub->completeWithProgress();
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.05,
+                QObject::tr("Clearing the tags table"));
+        QString err = exec(QStringLiteral("DELETE FROM TAG"));
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -2378,6 +2424,10 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
                     "SELECT PACKAGE, VERSION, CVERSION, WHEN_, WHERE_, "
                     "DETECTION_INFO FROM tempdb.INSTALLED"));
         if (err.isEmpty())
+            err = exec(QStringLiteral(
+                    "INSERT INTO TAG(PACKAGE, VALUE) "
+                    "SELECT PACKAGE, VALUE FROM tempdb.TAG"));
+        if (err.isEmpty())
             job->setProgress(0.90);
         else
             job->setErrorMessage(err);
@@ -2733,8 +2783,14 @@ QString DBRepository::updateDatabase()
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE TAG("
-                    "PACKAGE TEXT NOT NULL PRIMARY KEY, "
+                    "PACKAGE TEXT NOT NULL, "
                     "VALUE TEXT NOT NULL)");
+            err = toString(db.lastError());
+        }
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE INDEX TAG_PACKAGE ON TAG(PACKAGE)");
             err = toString(db.lastError());
         }
     }

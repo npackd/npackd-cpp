@@ -19,6 +19,14 @@ class PackageItemModel: public QAbstractTableModel
 
     QStringList packages;
 
+    /**
+     * @brief package information for one row
+     *
+     * To add a new column:
+     * - add a field here
+     * - update PackageItemModel.cpp
+     * - update MainFrame::MainFrame
+     */
     class Info {
     public:
         QString avail;
@@ -29,6 +37,8 @@ class PackageItemModel: public QAbstractTableModel
         QString title;
         QString licenseTitle;
         QString icon;
+        QString category;
+        QString tags;
     };
 
     mutable QCache<QString, Info> cache;

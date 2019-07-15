@@ -142,6 +142,8 @@ void PackageFrame::fillForm(Package* p)
 
     this->ui->labelCategory->setText(p->categories.join(", "));
 
+    this->ui->labelTags->setText(p->tags.join(", "));
+
     QString changelog;
     if (p->getChangeLog().isEmpty())
         changelog = QObject::tr("n/a");
