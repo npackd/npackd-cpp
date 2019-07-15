@@ -227,12 +227,11 @@ target_link_libraries(npackdg
     qico
     qjpeg
     qgif
-    qjp2
     qtga
     qtiff
     qwbmp
     qwebp
-    Qt5::WinExtras qwindows qwindowsvistastyle Qt5::Widgets Qt5FontDatabaseSupport
+    Qt5::WinExtras qwindows Qt5VulkanSupport qwindowsvistastyle Qt5::Widgets Qt5FontDatabaseSupport
     Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
 
     Qt5ThemeSupport
