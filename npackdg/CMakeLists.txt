@@ -234,6 +234,8 @@ target_link_libraries(npackdg
     Qt5::WinExtras qwindows Qt5VulkanSupport qwindowsvistastyle Qt5::Widgets Qt5FontDatabaseSupport
     Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
 
+    mingwex
+
     Qt5ThemeSupport
     Qt5EventDispatcherSupport
     Qt5FontDatabaseSupport

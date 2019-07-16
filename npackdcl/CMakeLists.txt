@@ -150,6 +150,8 @@ target_link_libraries(npackdcl
     ${ZLIB_LIBRARIES}
     qsqlite
     Qt5::Sql Qt5::Xml Qt5::Core
+
+    mingwex
     qtpcre2
 
     icuin
