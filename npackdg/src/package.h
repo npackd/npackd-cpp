@@ -19,6 +19,7 @@
  * - update MainFrame::MainFrame
  * - update RepositoryXMLHandler
  * - add field in the database (DBRepository.cpp)
+ * - add the field to the package detail frame
  */
 class Package
 {

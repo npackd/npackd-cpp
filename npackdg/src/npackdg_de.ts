@@ -532,6 +532,14 @@ p, li { white-space: pre-wrap; }
         <source>tags assigned to this package</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stars:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>number of stars</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PackageVersionForm</name>

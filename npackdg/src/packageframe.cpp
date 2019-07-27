@@ -144,6 +144,8 @@ void PackageFrame::fillForm(Package* p)
 
     this->ui->labelTags->setText(p->tags.join(", "));
 
+    this->ui->labelStars->setText(QString::number(p->stars));
+
     QString changelog;
     if (p->getChangeLog().isEmpty())
         changelog = QObject::tr("n/a");
