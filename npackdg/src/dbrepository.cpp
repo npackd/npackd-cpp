@@ -302,7 +302,7 @@ Package *DBRepository::findPackage_(const QString &name)
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral(
             "SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE, "
-            "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+            "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, STARS "
             "FROM PACKAGE WHERE NAME = :NAME LIMIT 1")))
         err = getErrorString(q);
 
@@ -324,6 +324,7 @@ Package *DBRepository::findPackage_(const QString &name)
         int cat2 = q.value(7).toInt();
         int cat3 = q.value(8).toInt();
         int cat4 = q.value(9).toInt();
+        r->stars = q.value(10).toInt();
         QString c;
         if (cat0 > 0) {
             c.append(findCategory(cat0));
@@ -363,7 +364,7 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
     const int block = 10;
 
     QString sql = QStringLiteral(
-            "SELECT NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE "
+            "SELECT NAME, TITLE, URL, ICON, DESCRIPTION, LICENSE, STARS "
             "FROM PACKAGE WHERE NAME IN (:NAME0");
     for (int i = 1; i < block; i++) {
         sql = sql + QStringLiteral(", :NAME") + QString::number(i);
@@ -398,6 +399,7 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
             r->setIcon(q.value(3).toString());
             r->description = q.value(4).toString();
             r->license = q.value(5).toString();
+            r->stars = q.value(6).toInt();
 
             err = readLinks(r);
 
@@ -1242,12 +1244,12 @@ QString DBRepository::savePackage(Package *p, bool replace)
                 "(REPOSITORY, NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, "
                 "STATUS, SHORT_NAME, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3,"
-                " CATEGORY4, TITLE_FULLTEXT)"
+                " CATEGORY4, TITLE_FULLTEXT, STARS)"
                 "VALUES(:REPOSITORY, :NAME, :TITLE, :URL, "
                 ":ICON, :DESCRIPTION, :LICENSE, "
                 ":FULLTEXT, :STATUS, :SHORT_NAME, "
                 ":CATEGORY0, :CATEGORY1, :CATEGORY2, :CATEGORY3, :CATEGORY4, "
-                ":TITLE_FULLTEXT)");
+                ":TITLE_FULLTEXT, :STARS)");
 
         insertSQL += add;
         replaceSQL += add;
@@ -1323,6 +1325,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
                 savePackageQuery->bindValue(QStringLiteral(":CATEGORY4"), cat4);
             savePackageQuery->bindValue(QStringLiteral(":TITLE_FULLTEXT"),
                     ' ' + tokenizeTitle(p->title).join(' ') + ' ');
+            savePackageQuery->bindValue(QStringLiteral(":STARS"), p->stars);
 
             if (!savePackageQuery->exec())
                 err = getErrorString(*savePackageQuery);
@@ -1369,7 +1372,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral("SELECT NAME, TITLE, URL, ICON, "
             "DESCRIPTION, LICENSE, CATEGORY0, "
-            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4 "
+            "CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, STARS "
             "FROM PACKAGE WHERE SHORT_NAME = :SHORT_NAME "
             "LIMIT 2")))
         err = getErrorString(q);
@@ -1386,6 +1389,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
         p->setIcon(q.value(3).toString());
         p->description = q.value(4).toString();
         p->license = q.value(5).toString();
+        p->stars = q.value(11).toInt();
 
         QString path = getCategoryPath(
                 q.value(6).toInt(),
@@ -2389,11 +2393,11 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
                 "INSERT INTO PACKAGE(NAME, TITLE, URL, ICON, "
                 "DESCRIPTION, LICENSE, FULLTEXT, STATUS, SHORT_NAME, "
                 "REPOSITORY, CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, "
-                "CATEGORY4, TITLE_FULLTEXT) "
+                "CATEGORY4, TITLE_FULLTEXT, STARS) "
                 "SELECT NAME, TITLE, URL, ICON, DESCRIPTION, "
                 "LICENSE, FULLTEXT, STATUS, SHORT_NAME, REPOSITORY, "
                 "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, "
-                "TITLE_FULLTEXT "
+                "TITLE_FULLTEXT, STARS "
                 "FROM tempdb.PACKAGE"));
         if (err.isEmpty())
             err = exec(QStringLiteral(
@@ -2526,6 +2530,16 @@ QString DBRepository::updateDatabase()
         }
     }
     if (err.isEmpty()) {
+        if (e) {
+            // PACKAGE.STARS is new in 1.26
+            if (!columnExists(&db, "PACKAGE",
+                    "STARS", &err)) {
+                exec(QStringLiteral("DROP TABLE PACKAGE"));
+                e = false;
+            }
+        }
+    }
+    if (err.isEmpty()) {
         if (!e) {
             // NULL should be stored in CATEGORYx if a package is not
             // categorized
@@ -2544,7 +2558,8 @@ QString DBRepository::updateDatabase()
                     "CATEGORY2 INTEGER, "
                     "CATEGORY3 INTEGER, "
                     "CATEGORY4 INTEGER, "
-                    "TITLE_FULLTEXT TEXT"
+                    "TITLE_FULLTEXT TEXT, "
+                    "STARS INTEGER NOT NULL"
                     ")"));
             err = toString(db.lastError());
         }

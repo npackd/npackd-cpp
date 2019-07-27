@@ -212,7 +212,7 @@ Package *Repository::findPackage_(const QString &name)
 {
     Package* p = findPackage(name);
     if (p)
-        p = p->clone();
+        p = new Package(*p);
     return p;
 }
 
@@ -336,7 +336,7 @@ QList<Package*> Repository::findPackagesByShortName(const QString &name)
     for (int i = 0; i < this->packages.count(); i++) {
         QString n = this->packages.at(i)->name;
         if (n.endsWith(suffix) || n == name) {
-            r.append(this->packages.at(i)->clone());
+            r.append(new Package(*this->packages.at(i)));
         }
     }
 

@@ -18,7 +18,7 @@ int Package::indexOf(const QList<Package*> pvs, Package* f)
     return r;
 }
 
-Package::Package(const QString& name, const QString& title)
+Package::Package(const QString& name, const QString& title): stars(0)
 {
     this->name = name;
     this->title = title;
@@ -105,6 +105,10 @@ void Package::toXML(QXmlStreamWriter *w) const
         w->writeTextElement("tag", this->tags.at(i));
     }
 
+    if (this->stars > 0) {
+        w->writeTextElement("tag", QString::number(this->stars));
+    }
+
     // <link>
     QList<QString> rels = links.uniqueKeys();
     for (int i = 0; i < rels.size(); i++) {
@@ -150,6 +154,10 @@ void Package::toJSON(QJsonObject& w) const
         w["tags"] = tag;
     }
 
+    if (this->stars > 0) {
+        w["stars"] = QString::number(this->stars);
+    }
+
     QJsonArray link;
     QList<QString> rels = links.uniqueKeys();
     for (int i = 0; i < rels.size(); i++) {
@@ -179,14 +187,3 @@ void Package::toJSON(QJsonObject& w) const
         w["installed"] = installed;
 }
 
-Package *Package::clone() const
-{
-    Package* np = new Package(this->name, this->title);
-    np->url = this->url;
-    np->description = this->description;
-    np->license = this->license;
-    np->categories = this->categories;
-    np->links = this->links;
-
-    return np;
-}

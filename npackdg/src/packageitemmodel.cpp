@@ -27,7 +27,7 @@ int PackageItemModel::rowCount(const QModelIndex &/*parent*/) const
 
 int PackageItemModel::columnCount(const QModelIndex &/*parent*/) const
 {
-    return 9;
+    return 10;
 }
 
 PackageItemModel::Info* PackageItemModel::createInfo(
@@ -97,6 +97,8 @@ PackageItemModel::Info* PackageItemModel::createInfo(
     }
 
     r->tags = p->tags.join(QStringLiteral(", "));
+
+    r->stars = p->stars;
 
     return r;
 }
@@ -171,6 +173,11 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                 r = cached->tags;
                 break;
             }
+            case 9: {
+                if (cached->stars > 0)
+                    r = QString::number(cached->stars);
+                break;
+            }
         }
     } else if (role == Qt::UserRole) {
         switch (index.column()) {
@@ -212,6 +219,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                 r = Qt::AlignLeft + Qt::AlignTop;
                 break;
             case 6:
+            case 9:
                 r = Qt::AlignRight + Qt::AlignVCenter;
                 break;
             default:
@@ -258,6 +266,9 @@ QVariant PackageItemModel::headerData(int section, Qt::Orientation orientation,
                     break;
                 case 8:
                     r = QObject::tr("Tags");
+                    break;
+                case 9:
+                    r = QObject::tr("Stars");
                     break;
             }
         } else {

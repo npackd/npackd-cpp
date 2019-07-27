@@ -962,7 +962,7 @@ void MainWindow::processThreadFinished()
     QItemSelectionModel* sm = t->selectionModel();
     QList<Package*> sel = mainFrame->getSelectedPackagesInTable();
     for (int i = 0; i < sel.count(); i++) {
-        sel[i] = sel[i]->clone();
+        sel[i] = new Package(*sel[i]);
     }
     QModelIndex index = sm->currentIndex();
     fillList();
@@ -1620,7 +1620,7 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
     QItemSelectionModel* sm = t->selectionModel();
     QList<Package*> sel = mainFrame->getSelectedPackagesInTable();
     for (int i = 0; i < sel.count(); i++) {
-        sel[i] = sel[i]->clone();
+        sel[i] = new Package(*sel[i]);
     }
     QModelIndex index = sm->currentIndex();
 
@@ -1828,7 +1828,7 @@ void MainWindow::on_actionUpdate_triggered()
                 selected = sel->getSelected("Package");
                 for (int i = 0; i < selected.count(); i++) {
                     Package* p = static_cast<Package*>(selected.at(i));
-                    packages.append(p->clone());
+                    packages.append(new Package(*p));
                 }
             }
         }

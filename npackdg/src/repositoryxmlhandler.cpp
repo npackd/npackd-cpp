@@ -59,6 +59,8 @@ int RepositoryXMLHandler::findWhere()
                     r = TAG_PACKAGE_CATEGORY;
                 else if (tag2 == QStringLiteral("tag"))
                     r = TAG_PACKAGE_TAG;
+                else if (tag2 == QStringLiteral("stars"))
+                    r = TAG_PACKAGE_STARS;
                 else if (tag2 == QStringLiteral("link"))
                     r = TAG_PACKAGE_LINK;
             } else if (tag1 == QStringLiteral("license")) {
@@ -362,6 +364,16 @@ bool RepositoryXMLHandler::endElement(const QString &/*namespaceURI*/,
             error = QObject::tr("More than one <tag> %1").arg(c);
         } else {
             p->tags.append(c);
+        }
+    } else if (where == TAG_PACKAGE_STARS) {
+        QString c = chars.trimmed();
+        bool ok;
+        int stars = c.toInt(&ok);
+        if (!ok) {
+            error = QObject::tr("Error in <stars> for %1: not a number").
+                    arg(p->title);
+        } else {
+            p->stars = stars;
         }
     } else if (where == TAG_LICENSE) {
         error = rep->saveLicense(lic, false);

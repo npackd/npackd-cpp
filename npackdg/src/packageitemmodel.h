@@ -21,11 +21,6 @@ class PackageItemModel: public QAbstractTableModel
 
     /**
      * @brief package information for one row
-     *
-     * To add a new column:
-     * - add a field here
-     * - update PackageItemModel.cpp
-     * - update MainFrame::MainFrame
      */
     class Info {
     public:
@@ -39,6 +34,7 @@ class PackageItemModel: public QAbstractTableModel
         QString icon;
         QString category;
         QString tags;
+        int stars;
     };
 
     mutable QCache<QString, Info> cache;

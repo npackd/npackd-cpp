@@ -13,8 +13,12 @@
  *
  * Adding a field:
  * - add the member variable
- * - update toJSON
- * - update toXML
+ * - update package.cpp
+ * - add a field to PackageItemModel::Info
+ * - update PackageItemModel.cpp
+ * - update MainFrame::MainFrame
+ * - update RepositoryXMLHandler
+ * - add field in the database (DBRepository.cpp)
  */
 class Package
 {
@@ -60,6 +64,9 @@ public:
      */
     QMultiMap<QString, QString> links;
 
+    /** number of users that starred this package */
+    int stars;
+
     Package(const QString& name, const QString& title);
 
     /**
@@ -101,11 +108,6 @@ public:
      *     part after the last dot.
      */
     static QString getShortName(const QString& fullname);
-
-    /**
-     * @return copy of this object
-     */
-    Package* clone() const;
 
     /**
      * @return short name for this package. The short name contains only the

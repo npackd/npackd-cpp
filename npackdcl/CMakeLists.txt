@@ -144,7 +144,7 @@ add_executable(npackdcl
     ${NPACKDCL_HEADERS}
 )
 
-# libraries listed here like 'icuin' are necessary in Qt 5.12 for static builds
+# libraries listed here like 'icuin' are necessary for static builds
 target_link_libraries(npackdcl
     ${QUAZIP_LIBRARIES}
     ${ZLIB_LIBRARIES}
