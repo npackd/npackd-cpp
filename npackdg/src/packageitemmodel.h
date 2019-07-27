@@ -17,6 +17,8 @@ class PackageItemModel: public QAbstractTableModel
 {
     QBrush obsoleteBrush;
 
+    mutable int maxStars;
+
     QStringList packages;
 
     /**

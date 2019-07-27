@@ -364,6 +364,12 @@ public:
      * @return list of found packages.
      */
     QStringList findBetterPackages(const QString &title, QString *err);
+
+    /**
+     * @return maximum number of stars for a package
+     * @param err error message will be stored here
+     */
+    int getMaxStars(QString *err);
 };
 
 #endif // DBREPOSITORY_H

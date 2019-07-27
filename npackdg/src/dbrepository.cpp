@@ -741,6 +741,11 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
     return packages;
 }
 
+int DBRepository::getMaxStars(QString* err)
+{
+    return count("SELECT MAX(STARS) FROM PACKAGE", err);
+}
+
 QStringList DBRepository::findPackages(Package::Status minStatus,
         Package::Status maxStatus,
         const QString& query, int cat0, int cat1, QString *err) const

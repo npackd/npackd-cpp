@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <cmath>
 
 #include <QSharedPointer>
 #include <QApplication>
@@ -11,7 +12,8 @@
 #include "wpmutils.h"
 
 PackageItemModel::PackageItemModel(const QStringList& packages) :
-        obsoleteBrush(QColor(255, 0xc7, 0xc7))
+        obsoleteBrush(QColor(255, 0xc7, 0xc7)),
+        maxStars(-1)
 {
     this->packages = packages;
 }
@@ -204,6 +206,20 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             case 4: {
                 if (!cached->up2date)
                     r = qVariantFromValue(obsoleteBrush);
+                break;
+            }
+            case 9: {
+                if (cached->stars > 0) {
+                    if (maxStars < 0) {
+                        QString err;
+                        maxStars = rep->getMaxStars(&err);
+                    }
+
+                    int f = static_cast<int>(100.0 *
+                        (1.0 + log(maxStars / cached->stars)));
+                    r = qVariantFromValue(QBrush(QColor(
+                            0xd4, 0xed, 0xda).lighter(f)));
+                }
                 break;
             }
         }
