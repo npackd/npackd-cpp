@@ -5,7 +5,7 @@ rem This script is used by AppVeyor to build the project.
 if %bits% equ 64 goto :eof
 if %prg% neq npackdcl goto :eof
 
-SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
+SET NPACKD_CL=C:\Program Files\NpackdCL
 
 set onecmd="%npackd_cl%\ncl.exe" path -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,20)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x

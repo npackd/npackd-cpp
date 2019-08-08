@@ -4,10 +4,10 @@ echo on
 rem This script is used by AppVeyor automatic builds to install the necessary
 rem software dependencies.
 
-msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.23.2/NpackdCL-1.23.2.msi
+msiexec.exe /qn /i https://github.com/tim-lebedkov/npackd-cpp/releases/download/version_1.25/NpackdCL64-1.25.0.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
+SET NPACKD_CL=C:\Program Files\NpackdCL
 "%npackd_cl%\ncl" set-repo -u  https://www.npackd.org/rep/recent-xml -u https://www.npackd.org/rep/xml?tag=stable -u https://www.npackd.org/rep/xml?tag=stable64 -u https://www.npackd.org/rep/xml?tag=libs
 if %errorlevel% neq 0 exit /b %errorlevel%
 

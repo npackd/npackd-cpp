@@ -9,7 +9,7 @@ where cmake
 
 set version=%APPVEYOR_BUILD_VERSION:~0,-4%
 
-SET NPACKD_CL=C:\Program Files (x86)\NpackdCL
+SET NPACKD_CL=C:\Program Files\NpackdCL
 
 set onecmd="%npackd_cl%\ncl.exe" path -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,20)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x
