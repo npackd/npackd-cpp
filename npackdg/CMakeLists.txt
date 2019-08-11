@@ -43,12 +43,11 @@ else()
 endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\styles")
-
-link_directories("$ENV{QTDIR}\\lib")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\styles")
+link_directories("${Qt5_DIR}\\..\\..")
 
 #  -Wl,--major-os-version,6 -Wl,--minor-os-version,1
 if(NOT MSVC)

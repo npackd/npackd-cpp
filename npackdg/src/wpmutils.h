@@ -27,7 +27,7 @@ Q_DECLARE_LOGGING_CATEGORY(npackd)
 class WPMUtils
 {
 private:
-    static HANDLE hEventLog;
+    static HANDLE hEventLog ;
 
     static QAtomicInt nextNamePipeId;
 
