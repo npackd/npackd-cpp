@@ -4,7 +4,9 @@ project(npackdcl CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake")
+
+LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
 if(WIN32)
   set(CMAKE_USE_RELATIVE_PATHS true)
@@ -39,10 +41,11 @@ endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
 
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
-link_directories("${Qt5_DIR}\\..\\..")
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
+
+link_directories("$ENV{QTDIR}\\lib")
 
 if(NOT MSVC)
   SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
