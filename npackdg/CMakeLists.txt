@@ -7,11 +7,10 @@ set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Qt5_DIR=C:\msys64\mingw64\qt5-static\lib\cmake\Qt5
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/"
-    "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake"
-    "${QTDIR}/lib/cmake"
-    "${QTDIR}/qtwinextras/lib/cmake/Qt5WinExtras")
+    "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
 
