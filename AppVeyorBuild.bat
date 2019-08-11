@@ -174,6 +174,8 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+cmake -LAH
+
 mingw32-make.exe install VERBOSE=1
 if %errorlevel% neq 0 exit /b %errorlevel%
 
