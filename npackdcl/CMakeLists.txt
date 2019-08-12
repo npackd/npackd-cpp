@@ -41,12 +41,6 @@ endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
 
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
-
-link_directories("$ENV{QTDIR}\\lib")
-
 if(NOT MSVC)
   SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
   SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
@@ -139,6 +133,14 @@ if(MSVC)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql REQUIRED)
+
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
+link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
+
+link_directories("$ENV{QTDIR}\\lib")
+
+
 add_executable(npackdcl
     ${NPACKDCL_SOURCES}
     ${NPACKDCL_HEADERS}
