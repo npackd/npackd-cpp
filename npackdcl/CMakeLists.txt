@@ -4,7 +4,7 @@ project(npackdcl CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/")
 
 LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
@@ -134,11 +134,11 @@ endif()
 
 find_package(Qt5 COMPONENTS xml sql REQUIRED)
 
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 
-link_directories("$ENV{QTDIR}\\lib")
+link_directories("${Qt5_DIR}\\..\\..")
 
 
 add_executable(npackdcl
