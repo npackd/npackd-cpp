@@ -43,7 +43,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
 link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 
 link_directories("$ENV{QTDIR}\\lib")
 
