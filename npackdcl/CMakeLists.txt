@@ -135,7 +135,6 @@ find_package(Qt5 COMPONENTS xml sql REQUIRED)
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
-
 link_directories("${Qt5_DIR}\\..\\..")
 
 

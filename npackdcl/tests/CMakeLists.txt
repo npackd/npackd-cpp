@@ -33,11 +33,6 @@ endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
 
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\platforms")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\imageformats")
-link_directories("$ENV{QTDIR}\\share\\qt5\\plugins\\sqldrivers")
-link_directories("$ENV{QTDIR}\\lib")
-
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
 
 include(CheckCXXCompilerFlag)
@@ -124,6 +119,12 @@ if(MSVC)
 endif() 
 
 find_package(Qt5 COMPONENTS xml sql test REQUIRED)
+
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
+link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
+link_directories("${Qt5_DIR}\\..\\..")
+
 add_executable(tests
     ${TESTS_SOURCES}
     ${TESTS_HEADERS}
