@@ -4,9 +4,6 @@ project(npackdg CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
-# build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Qt5_DIR=C:\msys64\mingw64\qt5-static\lib\cmake\Qt5
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/")
@@ -15,8 +12,6 @@ if(WIN32)
   set(CMAKE_USE_RELATIVE_PATHS true)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
-
-set(CMAKE_CXX_STANDARD 11)
 
 include(CheckTypeSize)
 CHECK_TYPE_SIZE("void*" OSMSCOUT_PTR_SIZE BUILTIN_TYPES_ONLY)

@@ -115,3 +115,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_CXX_STANDARD 11)
+

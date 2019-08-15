@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 project(tests CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
-set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../../cmake/")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
@@ -11,8 +10,6 @@ if(WIN32)
   set(CMAKE_USE_RELATIVE_PATHS true)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
-
-set(CMAKE_CXX_STANDARD 11)
 
 include(CheckTypeSize)
 CHECK_TYPE_SIZE("void*" OSMSCOUT_PTR_SIZE BUILTIN_TYPES_ONLY)
