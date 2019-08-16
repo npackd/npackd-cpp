@@ -138,5 +138,27 @@ void App::testCommandLine()
     QVERIFY(err.isEmpty());
     QVERIFY(params.count() == 4);
     QVERIFY2(params.at(0) == "C:\\Program Files (x86)\\InstallShield Installation Information\\{96D0B6C6-5A72-4B47-8583-A87E55F5FE81}\\setup.exe",
-            qPrintable(params.at(0)));
+             qPrintable(params.at(0)));
+}
+
+void App::testCopyDirectory()
+{
+    QString from = QDir::currentPath() + "\\..\\ftests";
+    QString to = from + "_copy";
+
+    qCDebug(npackd) << from << to;
+
+    QVERIFY2(WPMUtils::copyDirectory(from, to),
+             qPrintable(QString("directory copying %1 to %2").arg(from).arg(to)));
+
+    Job* job = new Job("Deleting directory");
+    WPMUtils::removeDirectory(job, to, true);
+    QVERIFY2(job->getErrorMessage().isEmpty(), qPrintable(job->getErrorMessage()));
+    QVERIFY2(job->isCompleted(), "job not completed");
+    delete job;
+}
+
+void App::testNormalizePath()
+{
+    QCOMPARE(WPMUtils::normalizePath("../", false), "..");
 }

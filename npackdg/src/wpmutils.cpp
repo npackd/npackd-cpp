@@ -33,6 +33,7 @@
 #include <QByteArray>
 #include <QUrl>
 #include <QLoggingCategory>
+#include <QDirIterator>
 
 #include <quazip.h>
 #include <quazipfile.h>
@@ -364,7 +365,7 @@ void WPMUtils::normalizePath2(QString* path, bool lowerCase)
 
     if (path->endsWith('\\'))
         path->chop(1);
-    if (path->endsWith('.'))
+    if (path != QStringLiteral("..") && path->endsWith('.'))
         path->chop(1);
 }
 
@@ -2530,6 +2531,78 @@ QString WPMUtils::createLink(LPCWSTR lpszPathObj, LPCWSTR lpszPathLink,
     }
 
     return r;
+}
+
+bool WPMUtils::copyDirectory(QString src, QString dest)
+{
+    // qCDebug(npackd) << "copyDirectory";
+
+    QDir srcDir(src);
+    QDir destDir(dest);
+
+    if (!destDir.mkpath(dest))
+        return false;
+
+    QDirIterator it(src, QDir::AllEntries | QDir::PermissionMask | QDir::AccessMask |
+            QDir::CaseSensitive | QDir::NoDotAndDotDot | QDir::NoSymLinks, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        QString relPath = srcDir.relativeFilePath(it.next());
+
+        // qCDebug(npackd) << "next file" << relPath;
+
+        QFileInfo fi = it.fileInfo();
+        if (fi.isDir()) {
+            // qCDebug(npackd) << "dir!";
+            relPath = WPMUtils::normalizePath(relPath, false);
+            // qCDebug(npackd) << "normalized" << relPath;
+            if (!relPath.isEmpty() && relPath != QStringLiteral(".") && relPath != QStringLiteral("..")) {
+                // qCDebug(npackd) << "mkdir!";
+                if (!destDir.mkdir(relPath)) {
+                    // qCDebug(npackd) << "mkdir failed";
+                    return false;
+                }
+            }
+        } else {
+            // qCDebug(npackd) << "file!";
+            if (!QFile::copy(srcDir.filePath(relPath), destDir.filePath(relPath)))
+                return false;
+        }
+    }
+
+    return true;
+}
+
+void WPMUtils::renameDirectory(Job* job, const QString &oldName, const QString &newName)
+{
+    bool done = false;
+
+    QDir dir;
+    for (int i = 0; i < 4; i++) {
+        if (!job->shouldProceed() || done)
+            break;
+
+        if (i < 3) {
+            done = dir.rename(oldName, newName);
+        } else {
+            if (WPMUtils::copyDirectory(oldName, newName)) {
+                job->setProgress(0.5);
+
+                Job* sub = job->newSubJob(0.5, QObject::tr("Deleting %1").arg(oldName), true, true);
+                WPMUtils::removeDirectory(sub, oldName, true);
+            } else {
+                job->setErrorMessage(QObject::tr("Error copying %1 to %2").arg(oldName).arg(newName));
+            }
+        }
+    }
+
+    if (done) {
+        job->setProgress(1);
+    } else {
+        job->setErrorMessage(QObject::tr("Cannot rename directory %1 to %2").
+                             arg(oldName).arg(newName));
+    }
+
+    job->complete();
 }
 
 void WPMUtils::removeDirectory(Job* job, const QString &aDir_, bool firstLevel)

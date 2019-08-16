@@ -35,6 +35,16 @@ private slots:
      * Tests for CommandLine
      */
     void testCommandLine();
+
+    /**
+     * Tests for WPMUtils::copyDirectory
+     */
+    void testCopyDirectory();
+
+    /**
+     * Tests for WPMUtils::normalizePath
+     */
+    void testNormalizePath();
 };
 
 #endif // APP_H

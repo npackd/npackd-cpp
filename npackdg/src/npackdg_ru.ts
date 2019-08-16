@@ -3469,6 +3469,14 @@ p, li { white-space: pre-wrap; }
         <source>Error in &lt;stars&gt; for %1: not a number</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Error copying %1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot rename directory %1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

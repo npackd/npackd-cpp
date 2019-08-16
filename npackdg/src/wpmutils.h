@@ -804,6 +804,25 @@ public:
     inline static LPWSTR toLPWSTR(const QString& s) {
         return reinterpret_cast<LPWSTR>(const_cast<ushort*>(s.utf16()));
     }
+
+    /**
+     * Renames a directory. This function makes several attempts and waits
+     * between them. Also the directory is copied if it cannot be renamed.
+     *
+     * @param job progress for this task
+     * @param oldName old directory path
+     * @param newName new directory path
+     */
+    static void renameDirectory(Job *job, const QString &oldName, const QString &newName);
+
+    /**
+     * Copies a directory.
+     *
+     * @param job progress for this task
+     * @param src source path
+     * @param dest destination path
+     */
+    static bool copyDirectory(QString src, QString dest);
 };
 
 #endif // WPMUTILS_H
