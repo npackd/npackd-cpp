@@ -3372,7 +3372,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot rename directory %1 to %2</source>
+        <source>Renaming directory</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

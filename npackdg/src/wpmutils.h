@@ -808,6 +808,8 @@ public:
     /**
      * Renames a directory. This function makes several attempts and waits
      * between them. Also the directory is copied if it cannot be renamed.
+     * If the old directory cannot be removed, it does not lead to an error message
+     * in "job".
      *
      * @param job progress for this task
      * @param oldName old directory path

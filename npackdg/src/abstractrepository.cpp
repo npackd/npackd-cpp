@@ -586,7 +586,9 @@ void AbstractRepository::process(Job *job,
                             break;
                         }
                     } else {
-                        if (d.rename(dir, op->where))
+                        Job* moveJob = sub->newSubJob(0.01, QObject::tr("Renaming directory"), true, true);
+                        WPMUtils::renameDirectory(moveJob, dir, op->where);
+                        if (moveJob->getErrorMessage().isEmpty())
                             dir = op->where;
                         else if (op->exactLocation) {
                             // we should install in a particular directory, but it

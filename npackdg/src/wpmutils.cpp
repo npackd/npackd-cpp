@@ -2544,7 +2544,8 @@ bool WPMUtils::copyDirectory(QString src, QString dest)
         return false;
 
     QDirIterator it(src, QDir::AllEntries | QDir::PermissionMask | QDir::AccessMask |
-            QDir::CaseSensitive | QDir::NoDotAndDotDot | QDir::NoSymLinks, QDirIterator::Subdirectories);
+            QDir::CaseSensitive | QDir::NoDotAndDotDot | QDir::NoSymLinks,
+            QDirIterator::Subdirectories);
     while (it.hasNext()) {
         QString relPath = srcDir.relativeFilePath(it.next());
 
@@ -2577,29 +2578,39 @@ void WPMUtils::renameDirectory(Job* job, const QString &oldName, const QString &
     bool done = false;
 
     QDir dir;
-    for (int i = 0; i < 4; i++) {
-        if (!job->shouldProceed() || done)
-            break;
 
-        if (i < 3) {
-            done = dir.rename(oldName, newName);
-        } else {
-            if (WPMUtils::copyDirectory(oldName, newName)) {
-                job->setProgress(0.5);
-
-                Job* sub = job->newSubJob(0.5, QObject::tr("Deleting %1").arg(oldName), true, true);
-                WPMUtils::removeDirectory(sub, oldName, true);
-            } else {
-                job->setErrorMessage(QObject::tr("Error copying %1 to %2").arg(oldName).arg(newName));
-            }
-        }
+    if (job->shouldProceed() && !done) {
+        done = dir.rename(oldName, newName);
+        if (done)
+            job->setProgress(1);
     }
 
-    if (done) {
-        job->setProgress(1);
-    } else {
-        job->setErrorMessage(QObject::tr("Cannot rename directory %1 to %2").
-                             arg(oldName).arg(newName));
+    if (job->shouldProceed() && !done) {
+        // 5 seconds
+        Sleep(5000);
+        done = dir.rename(oldName, newName);
+        if (done)
+            job->setProgress(1);
+    }
+
+    if (job->shouldProceed() && !done) {
+        // 10 seconds
+        Sleep(10000);
+        done = dir.rename(oldName, newName);
+        if (done)
+            job->setProgress(1);
+    }
+
+    if (job->shouldProceed() && !done) {
+        if (WPMUtils::copyDirectory(oldName, newName)) {
+            job->setProgress(0.5);
+
+            Job* sub = job->newSubJob(0.5, QObject::tr("Deleting %1").arg(oldName), true, false);
+            WPMUtils::removeDirectory(sub, oldName, true);
+            job->setProgress(1);
+        } else {
+            job->setErrorMessage(QObject::tr("Error copying %1 to %2").arg(oldName).arg(newName));
+        }
     }
 
     job->complete();
