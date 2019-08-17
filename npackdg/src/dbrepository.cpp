@@ -2564,7 +2564,7 @@ QString DBRepository::updateDatabase()
                     "CATEGORY3 INTEGER, "
                     "CATEGORY4 INTEGER, "
                     "TITLE_FULLTEXT TEXT, "
-                    "STARS INTEGER NOT NULL"
+                    "STARS INTEGER"
                     ")"));
             err = toString(db.lastError());
         }
