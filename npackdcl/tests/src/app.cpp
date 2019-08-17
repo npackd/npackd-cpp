@@ -143,19 +143,55 @@ void App::testCommandLine()
 
 void App::testCopyDirectory()
 {
-    QString from = QDir::currentPath() + "\\..\\ftests";
+    QString from = QDir::currentPath();
     QString to = from + "_copy";
+    QString to2 = from + "_copy2";
 
     qCDebug(npackd) << from << to;
 
     QVERIFY2(WPMUtils::copyDirectory(from, to),
              qPrintable(QString("directory copying %1 to %2").arg(from).arg(to)));
 
-    Job* job = new Job("Deleting directory");
+    // lock the directory
+    QProcess p;
+    p.start("cmd /K cd \"" + to + "\"");
+
+    // wait till the "cd" command gets executed
+    Sleep(5000);
+
+    Job* job = new Job("Rename directory");
+    WPMUtils::renameDirectory(job, to, to2);
+    QVERIFY2(job->getErrorMessage().isEmpty(),
+             qPrintable(job->getTitle() + ":" + job->getErrorMessage()));
+    delete job;
+
+    QDir d;
+    QVERIFY2(d.exists(to), qPrintable("1" + to));
+    QVERIFY2(d.exists(to2), qPrintable("1" + to2));
+
+    // unlock the directory
+    p.kill();
+    p.waitForFinished();
+
+    job = new Job("Deleting directory to");
     WPMUtils::removeDirectory(job, to, true);
-    QVERIFY2(job->getErrorMessage().isEmpty(), qPrintable(job->getErrorMessage()));
+    QVERIFY2(job->getErrorMessage().isEmpty(), qPrintable(job->getTitle() + ":" + job->getErrorMessage()));
     QVERIFY2(job->isCompleted(), "job not completed");
     delete job;
+
+    d.refresh();
+    QVERIFY2(!d.exists(to), qPrintable("2" + to));
+    QVERIFY2(d.exists(to2), qPrintable("2" + to2));
+
+    job = new Job("Deleting directory to2");
+    WPMUtils::removeDirectory(job, to2, true);
+    QVERIFY2(job->getErrorMessage().isEmpty(), qPrintable(job->getTitle() + ":" + job->getErrorMessage()));
+    QVERIFY2(job->isCompleted(), "job not completed");
+    delete job;
+
+    d.refresh();
+    QVERIFY2(!d.exists(to), qPrintable("3" + to));
+    QVERIFY2(!d.exists(to2), qPrintable("3" + to2));
 }
 
 void App::testNormalizePath()

@@ -33,11 +33,6 @@ void App::init()
 
 QString App::captureNpackdCLOutput(const QString& params)
 {
-#ifdef __x86_64__
-    QString bits = "64";
-#else
-    QString bits = "32";
-#endif
     QDir d(WPMUtils::getExeDir() + "\\..\\..\\install");
 
     QString where = d.absolutePath();
