@@ -11,8 +11,6 @@ if(WIN32)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
-add_definitions(-DUNICODE -D_UNICODE)
-
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
 
 include(CheckCXXCompilerFlag)

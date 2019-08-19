@@ -10,8 +10,6 @@ if(WIN32)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
-add_definitions(-DUNICODE -D_UNICODE)
-
 if(NOT MSVC)
   SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
   SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
