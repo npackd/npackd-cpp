@@ -1,3 +1,13 @@
+include(CheckTypeSize)
+CHECK_TYPE_SIZE("void*" OSMSCOUT_PTR_SIZE BUILTIN_TYPES_ONLY)
+if(OSMSCOUT_PTR_SIZE EQUAL 8)
+  set(NPACKD_PLATFORM_X64 TRUE)
+  set(BITS 64)
+else()
+  set(NPACKD_PLATFORM_X64 FALSE)
+  set(BITS 32)
+endif()
+
 # compiler warnings
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC)
   set(NPACKD_WARNING_FLAGS "-Wall -Winit-self -Wwrite-strings -Wextra -Wno-long-long -Wno-overloaded-virtual -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unknown-pragmas -Wno-cast-function-type")

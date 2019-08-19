@@ -13,16 +13,6 @@ if(WIN32)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
-include(CheckTypeSize)
-CHECK_TYPE_SIZE("void*" OSMSCOUT_PTR_SIZE BUILTIN_TYPES_ONLY)
-if(OSMSCOUT_PTR_SIZE EQUAL 8)
-  set(NPACKD_PLATFORM_X64 TRUE)
-  set(BITS 64)
-else()
-  set(NPACKD_PLATFORM_X64 FALSE)
-  set(BITS 32)
-endif()
-
 add_definitions(-DUNICODE -D_UNICODE)
 
 #  -Wl,--major-os-version,6 -Wl,--minor-os-version,1
