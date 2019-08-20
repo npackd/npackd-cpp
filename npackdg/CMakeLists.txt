@@ -31,6 +31,7 @@ file(GLOB RESOURCE_IMAGES "src/*.png")
 file(COPY ${RESOURCE_IMAGES} src/npackdg.qrc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(NPACKDG_SOURCES
+    src/appsthirdpartypm.cpp
     src/main.cpp
     src/mainwindow.cpp
     src/packageversion.cpp
@@ -81,6 +82,7 @@ set(NPACKDG_SOURCES
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
+    src/appsthirdpartypm.h
     src/mainwindow.h
     src/packageversion.h
     src/repository.h
