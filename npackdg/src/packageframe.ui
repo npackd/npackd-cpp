@@ -70,7 +70,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Title:</string>
@@ -80,7 +80,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QLineEdit" name="lineEditTitle">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
@@ -93,14 +93,14 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Screen shots:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="8" column="1">
         <widget class="QListWidget" name="listWidgetScreenshots">
          <property name="iconSize">
           <size>
@@ -116,7 +116,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="9" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>Description:</string>
@@ -126,7 +126,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="9" column="1">
         <widget class="QTextEdit" name="textEditDescription">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -145,14 +145,14 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="10" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
           <string>License:</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="10" column="1">
         <widget class="QLabel" name="labelLicense">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
@@ -168,7 +168,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="11" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>Internal name:</string>
@@ -178,7 +178,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="11" column="1">
         <widget class="QLineEdit" name="lineEditInternalName">
          <property name="toolTip">
           <string>internal package name</string>
@@ -188,14 +188,14 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="12" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>Package home page:</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
+       <item row="12" column="1">
         <widget class="QLabel" name="labelHomePage">
          <property name="mouseTracking">
           <bool>true</bool>
@@ -221,14 +221,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item row="14" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
           <string>Change log:</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="14" column="1">
         <widget class="QLabel" name="labelChangeLog">
          <property name="mouseTracking">
           <bool>true</bool>
@@ -254,14 +254,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="15" column="0">
         <widget class="QLabel" name="label_15">
          <property name="text">
           <string>Category:</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="15" column="1">
         <widget class="QLabel" name="labelCategory">
          <property name="mouseTracking">
           <bool>true</bool>
@@ -287,14 +287,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
+       <item row="16" column="0">
         <widget class="QLabel" name="label_9">
          <property name="text">
           <string>Tags:</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="16" column="1">
         <widget class="QLabel" name="labelTags">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
@@ -310,14 +310,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
+       <item row="18" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
           <string>Versions:</string>
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="18" column="1">
         <widget class="QTableWidget" name="tableWidgetVersions">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -342,14 +342,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="11" column="0">
+       <item row="17" column="0">
         <widget class="QLabel" name="label_10">
          <property name="text">
           <string>Stars:</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
+       <item row="17" column="1">
         <widget class="QLabel" name="labelStars">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
@@ -362,6 +362,13 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="textInteractionFlags">
           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>Update automatically</string>
          </property>
         </widget>
        </item>
@@ -380,6 +387,9 @@ p, li { white-space: pre-wrap; }
   <tabstop>lineEditInternalName</tabstop>
   <tabstop>labelHomePage</tabstop>
   <tabstop>labelChangeLog</tabstop>
+  <tabstop>labelCategory</tabstop>
+  <tabstop>labelTags</tabstop>
+  <tabstop>labelStars</tabstop>
   <tabstop>tableWidgetVersions</tabstop>
  </tabstops>
  <resources/>

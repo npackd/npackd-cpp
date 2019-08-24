@@ -16,6 +16,8 @@
 #include <inttypes.h>
 #include <lm.h>
 #include <memory>
+#include <taskschd.h>
+#include <comdef.h>
 
 //#define CCH_RM_MAX_APP_NAME 255
 //#define CCH_RM_MAX_SVC_NAME 63
@@ -46,7 +48,6 @@
 #include "wpmutils.h"
 #include "version.h"
 #include "windowsregistry.h"
-#include "mstask.h"
 #include "abstractrepository.h"
 
 bool WPMUtils::adminMode = true;
@@ -161,45 +162,242 @@ WPMUtils::WPMUtils()
 {
 }
 
-/*
-void WPMUtils::createMSTask()
+QString WPMUtils::createMSTask()
 {
+    QString err;
+
     // this function requires better error handling
-    ITaskScheduler *pITS;
-    HRESULT hr = CoCreateInstance(CLSID_CTaskScheduler,
-            NULL,
+    ITaskService *pITS = nullptr;
+    HRESULT hr = CoCreateInstance(CLSID_TaskScheduler,
+            nullptr,
             CLSCTX_INPROC_SERVER,
-            IID_ITaskScheduler,
-            (void **) &pITS);
+            IID_ITaskService,
+            reinterpret_cast<void **>(&pITS));
+    if (FAILED(hr)) {
+        err = QObject::tr("Cannot create the task scheduler service");
+    }
 
-    ITask *pITask;
-    LPCWSTR lpcwszTaskName;
-    lpcwszTaskName = L"Test Task";
-    hr = pITS->NewWorkItem(L"NpackdTest5", CLSID_CTask,
-                         IID_ITask,
-                         (IUnknown**) &pITask);
+    if (err.isEmpty()) {
+        hr = pITS->Connect(_variant_t(), _variant_t(),
+                _variant_t(), _variant_t());
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot connect to the task scheduler service");
+        }
+    }
 
-    //Release ITaskScheduler interface.
-    pITS->Release();
+    ITaskFolder *f = nullptr;
+    if (err.isEmpty()) {
+        hr = pITS->GetFolder(_bstr_t(L"\\"), &f);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get the root folder from the task scheduler service");
+        }
+    }
 
-    // !!!!!!!!! if (FAILED(hr))
+    const wchar_t* taskName = L"NpackdTest9";
+    if (err.isEmpty()) {
+        f->DeleteTask(_bstr_t(taskName), 0);
+    }
 
-    IPersistFile *pIPersistFile;
+    ITaskDefinition *pTask = nullptr;
+    if (err.isEmpty()) {
+        hr = pITS->NewTask(0, &pTask);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot create the task");
+        }
+    }
 
-    // save to disk
-    hr = pITask->QueryInterface(IID_IPersistFile,
-            (void **)&pIPersistFile);
+    IRegistrationInfo *pRegInfo = nullptr;
+    if (err.isEmpty()) {
+        hr = pTask->get_RegistrationInfo(&pRegInfo);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get the registration information");
+        }
+    }
 
+    if (err.isEmpty()) {
+        hr = pRegInfo->put_Author(_bstr_t(L"Npackd"));
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get the registration information");
+        }
+    }
 
-    hr = pIPersistFile->Save(NULL,
-                       TRUE);
-    pIPersistFile->Release();
+    IPrincipal *pPrincipal = nullptr;
+    if (err.isEmpty()) {
+        hr = pTask->get_Principal(&pPrincipal);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get the principal");
+        }
+    }
 
-    pITask->EditWorkItem(0, 0);
-    pITask->Release();
+    if (err.isEmpty()) {
+        hr = pPrincipal->put_LogonType(TASK_LOGON_INTERACTIVE_TOKEN);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot change the principal logon type");
+        }
+    }
 
+    ITaskSettings *pSettings = nullptr;
+    if (err.isEmpty()) {
+        hr = pTask->get_Settings(&pSettings);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get task settings");
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pSettings->put_StartWhenAvailable(VARIANT_TRUE);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot set start when available");
+        }
+    }
+
+    IIdleSettings *pIdleSettings = nullptr;
+    if (err.isEmpty()) {
+        hr = pSettings->get_IdleSettings(&pIdleSettings);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get idle settings");
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pIdleSettings->put_WaitTimeout(_bstr_t(L"PT5M"));
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot put wait timeout");
+        }
+    }
+
+    ITriggerCollection *pTriggerCollection = nullptr;
+    if (err.isEmpty()) {
+        hr = pTask->get_Triggers( &pTriggerCollection );
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get trigger collection");
+        }
+    }
+
+    ITrigger *pTrigger = nullptr;
+    if (err.isEmpty()) {
+        hr = pTriggerCollection->Create( TASK_TRIGGER_TIME, &pTrigger );
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot create the trigger");
+        }
+    }
+
+    ITimeTrigger *pTimeTrigger = nullptr;
+    if (err.isEmpty()) {
+        hr = pTrigger->QueryInterface(
+                IID_ITimeTrigger, reinterpret_cast<void**>(&pTimeTrigger));
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get the time trigger");
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pTimeTrigger->put_Id(_bstr_t(L"Trigger1"));
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot put the trigger id");
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pTimeTrigger->put_StartBoundary( _bstr_t(L"2005-01-01T12:05:00") );
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot put the trigger start boundary");
+        }
+    }
+
+    IActionCollection *pActionCollection = nullptr;
+    if (err.isEmpty()) {
+        hr = pTask->get_Actions(&pActionCollection);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get actions");
+        }
+    }
+
+    IAction *pAction = nullptr;
+    if (err.isEmpty()) {
+        hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot create the action");
+        }
+    }
+
+    IExecAction *pExecAction = nullptr;
+    if (err.isEmpty()) {
+        hr = pAction->QueryInterface(
+                IID_IExecAction, reinterpret_cast<void**>(&pExecAction));
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot create the action");
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pExecAction->put_Path(_bstr_t(getExeDir().utf16()));
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot put the path");
+        }
+    }
+
+    IRegisteredTask *pRegisteredTask = nullptr;
+    if (err.isEmpty()) {
+        hr = f->RegisterTaskDefinition(
+                _bstr_t(taskName),
+                pTask,
+                TASK_CREATE_OR_UPDATE,
+                _variant_t(),
+                _variant_t(),
+                TASK_LOGON_INTERACTIVE_TOKEN,
+                _variant_t(L""),
+                &pRegisteredTask);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot register the task");
+        }
+    }
+
+    if (pRegisteredTask) {
+        pRegisteredTask->Release();
+    }
+    if (pExecAction) {
+        pExecAction->Release();
+    }
+    if (pAction) {
+        pAction->Release();
+    }
+    if (pActionCollection) {
+        pActionCollection->Release();
+    }
+    if (pTimeTrigger) {
+        pTimeTrigger->Release();
+    }
+    if (pTrigger) {
+        pTrigger->Release();
+    }
+    if (pTriggerCollection) {
+        pTriggerCollection->Release();
+    }
+    if (pIdleSettings) {
+        pIdleSettings->Release();
+    }
+    if (pSettings) {
+        pSettings->Release();
+    }
+    if (pPrincipal) {
+        pPrincipal->Release();
+    }
+    if (pRegInfo) {
+        pRegInfo->Release();
+    }
+    if (pTask) {
+        pTask->Release();
+    }
+    if (f) {
+        f->Release();
+    }
+    if (pITS) {
+        pITS->Release();
+    }
+
+    return err;
 }
-*/
 
 QString WPMUtils::parentDirectory(const QString& path)
 {

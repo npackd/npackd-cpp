@@ -286,6 +286,10 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton */*button*/)
         err = "";
     }
 
+    // test: scheduling a task
+    //CoInitialize(NULL);
+    err = WPMUtils::createMSTask();
+
     if (!err.isEmpty())
         mw->addErrorMessage(err, err, true, QMessageBox::Critical);
 

@@ -34,10 +34,6 @@ int main(int argc, char *argv[])
 {
     //qCDebug(npackd) << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
 
-    // test: scheduling a task
-    //CoInitialize(NULL);
-    //WPMUtils::createMSTask();
-
     HMODULE m = LoadLibrary(L"exchndl.dll");
 
     QLoggingCategory::setFilterRules("npackd=false");

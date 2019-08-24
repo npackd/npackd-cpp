@@ -101,7 +101,6 @@ set(NPACKDG_HEADERS
     src/commandline.h
     src/messageframe.h
     src/settingsframe.h
-    src/mstask.h
     src/packageframe.h
     src/selection.h
     src/hrtimer.h

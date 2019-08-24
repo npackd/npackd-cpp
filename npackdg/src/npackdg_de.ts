@@ -548,6 +548,10 @@ p, li { white-space: pre-wrap; }
         <source>number of stars</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Update automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PackageVersionForm</name>
@@ -2656,6 +2660,90 @@ p, li { white-space: pre-wrap; }
         <source>Renaming directory</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot create the task scheduler service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot connect to the task scheduler service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get the root folder from the task scheduler service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the task</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get the registration information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get the principal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot change the principal logon type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get task settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot set start when available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get idle settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put wait timeout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get trigger collection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the trigger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get the time trigger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put the trigger id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put the trigger end boundary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put the trigger start boundary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put the path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot register the task</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
@@ -2834,6 +2922,18 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Send Ctrl+C</source>
         <translation>Ctrl+C senden</translation>
+    </message>
+    <message>
+        <source>Automatic update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm before update</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

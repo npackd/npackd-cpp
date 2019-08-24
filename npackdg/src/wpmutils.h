@@ -527,7 +527,7 @@ public:
      */
     static void fireEnvChanged();
 
-    //static void createMSTask();
+    static QString createMSTask();
 
     /**
      * Asks the user to confirm an operation
@@ -803,6 +803,18 @@ public:
      */
     inline static LPWSTR toLPWSTR(const QString& s) {
         return reinterpret_cast<LPWSTR>(const_cast<ushort*>(s.utf16()));
+    }
+
+    /**
+     * @brief returns the content of a QString as LPWSTR = WCHAR* for use in
+     *     win32 API functions. The returned data should be considered
+     *     read-only.
+     *
+     * @param s a string
+     * @return read-only contents of the string
+     */
+    inline static LPWSTR toLPWSTR(const wchar_t* s) {
+        return reinterpret_cast<LPWSTR>(const_cast<wchar_t*>(s));
     }
 
     /**
