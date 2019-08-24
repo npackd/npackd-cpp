@@ -746,29 +746,39 @@ int DBRepository::getMaxStars(QString* err)
     return count("SELECT MAX(STARS) FROM PACKAGE", err);
 }
 
-QStringList DBRepository::findPackages(Package::Status minStatus,
-        Package::Status maxStatus,
-        const QString& query, int cat0, int cat1, QString *err) const
+QString DBRepository::createQuery(Package::Status minStatus,
+      Package::Status maxStatus,
+      const QString& query, int cat0, int cat1, QList<QVariant>& params) const
 {
-    // qCDebug(npackd) << "DBRepository::findPackages.0";
-
     QString where;
-    QList<QVariant> params;
 
+    // simplified() returns single spaces between words and none
+    // at the beginning or at the end
     QStringList keywords = query.toLower().simplified().split(
             QStringLiteral(" "),
             QString::SkipEmptyParts);
 
     for (int i = 0; i < keywords.count(); i++) {
         QString kw = keywords.at(i);
-        if (kw.length() > 1) {
-            if (!where.isEmpty())
-                where += QStringLiteral(" AND ");
+
+        if (kw.length() <= 1)
+            continue;
+
+        if (kw.length() == 2 && kw.at(0) == '-')
+            continue;
+
+        if (!where.isEmpty())
+            where += QStringLiteral(" AND ");
+        if (kw.startsWith('-')) {
+            where += QStringLiteral("FULLTEXT NOT LIKE :FULLTEXT") +
+                    QString::number(i);
+            kw.remove(0, 1);
+        } else {
             where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") +
                     QString::number(i);
-            params.append(QStringLiteral("%") + kw.toLower() +
-                    QStringLiteral("%"));
         }
+        params.append(QStringLiteral("%") + kw.toLower() +
+                QStringLiteral("%"));
     }
     if (minStatus < maxStatus) {
         if (!where.isEmpty())
@@ -801,6 +811,18 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
         where += QStringLiteral("CATEGORY1 = :CATEGORY1");
         params.append(QVariant(cat1));
     }
+
+    return where;
+}
+
+QStringList DBRepository::findPackages(Package::Status minStatus,
+        Package::Status maxStatus,
+        const QString& query, int cat0, int cat1, QString *err) const
+{
+    // qCDebug(npackd) << "DBRepository::findPackages.0";
+
+    QList<QVariant> params;
+    QString where = createQuery(minStatus, maxStatus, query, cat0, cat1, params);
 
     if (!where.isEmpty())
         where = QStringLiteral("WHERE ") + where;
@@ -845,50 +867,8 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
 {
     // qCDebug(npackd) << "DBRepository::findPackages.0";
 
-    QString where;
     QList<QVariant> params;
-
-    QStringList keywords = query.toLower().simplified().split(
-            QStringLiteral(" "),
-            QString::SkipEmptyParts);
-
-    for (int i = 0; i < keywords.count(); i++) {
-        if (!where.isEmpty())
-            where += QStringLiteral(" AND ");
-        where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") + QString::number(i);
-        params.append(QStringLiteral("%") + keywords.at(i).toLower() +
-                QStringLiteral("%"));
-    }
-    if (maxStatus > minStatus) {
-        if (!where.isEmpty())
-            where += QStringLiteral(" AND ");
-        where += QStringLiteral("STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS");
-
-        params.append(QVariant(static_cast<int>(minStatus)));
-        params.append(QVariant(static_cast<int>(maxStatus)));
-    }
-
-    if (cat0 == 0) {
-        if (!where.isEmpty())
-            where += QStringLiteral(" AND ");
-        where += QStringLiteral("CATEGORY0 IS NULL");
-    } else if (cat0 > 0) {
-        if (!where.isEmpty())
-            where += QStringLiteral(" AND ");
-        where += QStringLiteral("CATEGORY0 = :CATEGORY0");
-        params.append(QVariant(cat0));
-    }
-
-    if (cat1 == 0) {
-        if (!where.isEmpty())
-            where += QStringLiteral(" AND ");
-        where += QStringLiteral("CATEGORY1 IS NULL");
-    } else if (cat1 > 0) {
-        if (!where.isEmpty())
-            where += QStringLiteral(" AND ");
-        where += QStringLiteral("CATEGORY1 = :CATEGORY1");
-        params.append(QVariant(cat1));
-    }
+    QString where = createQuery(minStatus, maxStatus, query, cat0, cat1, params);
 
     if (!where.isEmpty())
         where = QStringLiteral("WHERE ") + where;

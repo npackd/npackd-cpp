@@ -48,6 +48,10 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
+    // this does not work unfortunately. The only way to ensure the maximum width of a tooltip is to
+    // use HTML
+    // a.setStyleSheet("QToolTip { height: auto; max-width: 400px; color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+
     QString packageName;
 #if !defined(__x86_64__) && !defined(_WIN64)
     packageName = "com.googlecode.windows-package-manager.Npackd";

@@ -146,6 +146,8 @@ private:
     QString deleteTags(const QString &name);
     QString saveTags(Package *p);
     QString readTags(Package *p);
+    QString createQuery(Package::Status minStatus, Package::Status maxStatus,
+            const QString &query, int cat0, int cat1, QList<QVariant> &params) const;
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;
