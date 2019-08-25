@@ -36,13 +36,11 @@ int main(int argc, char *argv[])
 
     HMODULE m = LoadLibrary(L"exchndl.dll");
 
-    QLoggingCategory::setFilterRules("npackd=false");
+    //QLoggingCategory::setFilterRules("npackd=false");
 
 #if NPACKED_ADMIN != 1
     WPMUtils::hasAdminPrivileges();
 #endif
-
-    QApplication a(argc, argv);
 
     // this does not work unfortunately. The only way to ensure the maximum width of a tooltip is to
     // use HTML
@@ -55,13 +53,6 @@ int main(int argc, char *argv[])
     packageName = "com.googlecode.windows-package-manager.Npackd64";
 #endif
     InstalledPackages::packageName = packageName;
-
-    QTranslator myappTranslator;
-    bool r = myappTranslator.load(
-            "npackdg_" + QLocale::system().name(),
-            ":/translations");
-    if (r)
-        a.installTranslator(&myappTranslator);
 
     qRegisterMetaType<Version>("Version");
     qRegisterMetaType<int64_t>("int64_t");
@@ -76,8 +67,6 @@ int main(int argc, char *argv[])
 #endif
 
 
-    CLProcessor clp;
-
     // July, 25 2018:
     // "bmp", "cur", "gif", "ico", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "xbm", "xpm"
     // December, 25 2018:
@@ -89,14 +78,10 @@ int main(int argc, char *argv[])
     // July, 25 2018: "windowsvista", "Windows", "Fusion"
     qCDebug(npackd) << QStyleFactory::keys();
 
-    int errorCode;
-    if (!clp.process(&errorCode)){
-        MainWindow w;
+    CLProcessor clp;
 
-        w.prepare();
-        w.show();
-        errorCode = QApplication::exec();
-    }
+    int errorCode;
+    clp.process(argc, argv, &errorCode);
 
     //WPMUtils::timer.dump();
 

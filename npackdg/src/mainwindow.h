@@ -199,7 +199,7 @@ public:
      */
     void addTextTab(const QString& title, const QString& text, bool html=false);
 
-    virtual bool nativeEvent(const QByteArray & eventType, void * message, long * result);
+    bool nativeEvent(const QByteArray & eventType, void * message, long * result);
 
     /**
      * Prepares the UI after the constructor was called.

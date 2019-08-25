@@ -294,6 +294,16 @@ int MainFrame::getStatusFilter() const
     return r;
 }
 
+void MainFrame::setStatusFilter(int status)
+{
+    if (status == 1)
+        this->ui->radioButtonInstalled->setChecked(true);
+    else if (status == 2)
+        this->ui->radioButtonUpdateable->setChecked(true);
+    else
+        this->ui->radioButtonAll->setChecked(true);
+}
+
 QList<void*> MainFrame::getSelected(const QString& type) const
 {
     QList<void*> res;

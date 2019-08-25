@@ -4,6 +4,7 @@
 #include <QString>
 #include <QThread>
 #include <QList>
+#include <QApplication>
 
 #include "commandline.h"
 #include "job.h"
@@ -20,6 +21,8 @@ public:
      * @brief -
      */
     CLProcessor();
+
+    ~CLProcessor();
 
     /**
      * @brief installs packages
@@ -46,10 +49,12 @@ public:
 
     /**
      * @brief process the command line
+     * @param arg number of arguments
+     * @param argv program arguments
      * @param errorCode error code will be stored here
      * @return false = GUI should be started
      */
-    bool process(int *errorCode);
+    bool process(int argc, char *argv[], int *errorCode);
 private:
     /**
      * @param install the objects will be destroyed
@@ -65,6 +70,8 @@ private:
     void monitorAndWaitFor(Job *job);
 
     QString startNewestNpackdg();
+
+    QString checkForUpdates();
 };
 
 #endif // CLPROCESSOR_H

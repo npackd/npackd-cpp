@@ -262,8 +262,6 @@ public:
      *     by the status will be applied if minStatus >= maxStatus
      * @param minStatus filter for the package status >=
      * @param maxStatus filter for the package status <
-     * @param statusInclude true = only return packages with the given status,
-     *     false = return all packages with the status not equal to the given
      * @param query search query (keywords)
      * @param cat0 filter for the level 0 of categories. -1 means "All",
      *     0 means "Uncategorized"

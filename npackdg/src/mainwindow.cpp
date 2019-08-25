@@ -266,7 +266,25 @@ bool MainWindow::nativeEvent(const QByteArray & /*eventType*/, void * message,
             }
         }
         return true;
+    } else if (msg->message == WM_ICONTRAY) {
+        //QMessageBox::critical(nullptr, QObject::tr("Warn"), "wm_icontray");
+        // qCDebug(npackd) << "MainWindow::winEvent " << message->lParam;
+        switch (msg->lParam) {
+            case (LPARAM) NIN_BALLOONUSERCLICK:
+                this->mainFrame->setStatusFilter(2);
+                //this->prepare();
+                ((QApplication*) QApplication::instance())->
+                        setQuitOnLastWindowClosed(true);
+                this->showMaximized();
+                this->activateWindow();
+                break;
+            case (LPARAM) NIN_BALLOONTIMEOUT:
+                ((QApplication*) QApplication::instance())->quit();
+                break;
+        }
+        return true;
     }
+
     return false;
 }
 

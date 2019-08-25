@@ -104,6 +104,12 @@ public:
      * @param d duration in milliseconds
      */
     void setDuration(int d);
+
+    /**
+     * @brief changes the status filter
+     * @param status new filter. 0=All, 1=Installed, 2=Updateable
+     */
+    void setStatusFilter(int status);
 private:
     Ui::MainFrame *ui;
 private slots:
