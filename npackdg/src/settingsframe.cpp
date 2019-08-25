@@ -1,4 +1,5 @@
 #include <shlobj.h>
+#include <taskschd.h>
 
 #include "settingsframe.h"
 #include "ui_settingsframe.h"
@@ -79,6 +80,16 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 			this->ui->plainTextEditReps->setEnabled(false);
 		}
 	}
+
+    IRegisteredTask* t = WPMUtils::findTask(&err);
+    if (t) {
+        VARIANT_BOOL enabled;
+        HRESULT hr = t->get_Enabled(&enabled);
+        if (SUCCEEDED(hr)) {
+            ui->checkBoxAutomaticUpdates->setChecked(enabled);
+        }
+        t->Release();
+    }
 }
 
 SettingsFrame::~SettingsFrame()
@@ -288,7 +299,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton */*button*/)
 
     // test: scheduling a task
     //CoInitialize(NULL);
-    err = WPMUtils::createMSTask();
+    if (err.isEmpty()) {
+        err = WPMUtils::createMSTask(ui->checkBoxAutomaticUpdates->isChecked());
+    }
 
     if (!err.isEmpty())
         mw->addErrorMessage(err, err, true, QMessageBox::Critical);

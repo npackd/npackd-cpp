@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <time.h>
+#include <taskschd.h>
 
 #include <QString>
 #include <QDir>
@@ -99,7 +100,7 @@ public:
      * @param res value returned by SHFileOperation
      * @return error message or "", if OK
      */
-    static QString getShellFileOperationErrorMessage(int res);
+    static QString getShellFileOperationErrorMessage(DWORD res);
 
     /**
      * Moves a directory to a recycle bin.
@@ -273,6 +274,17 @@ public:
      * @param errMsg the message will be stored here
      */
     static void formatMessage(DWORD err, QString* errMsg);
+
+    /**
+     * Formats a Windows error message.
+     *
+     * @param err see GetLastError() or HRESULT
+     * @param errMsg the message will be stored here
+     */
+    inline static void formatMessage(HRESULT err, QString* errMsg)
+    {
+        return formatMessage(static_cast<DWORD>(err), errMsg);
+    }
 
     /**
      * Checks whether a file is somewhere in a directory (at any level).
@@ -527,7 +539,13 @@ public:
      */
     static void fireEnvChanged();
 
-    static QString createMSTask();
+    /**
+     * @brief creates the task "Npackd\UpdatePackages" in the Windows scheduler.
+     * The task search for updates and shows a notification if any were found.
+     * @param enabled is the task enabled?
+     * @return error message
+     */
+    static QString createMSTask(bool enabled);
 
     /**
      * Asks the user to confirm an operation
@@ -837,6 +855,13 @@ public:
      * @param dest destination path
      */
     static bool copyDirectory(QString src, QString dest);
+
+    /**
+     * @brief search for a task "Npackd\UpdatePackages" in the Windows scheduler
+     * @param err error message will be stored here
+     * @return found task
+     */
+    static IRegisteredTask *findTask(QString* err);
 };
 
 #endif // WPMUTILS_H

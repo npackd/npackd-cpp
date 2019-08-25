@@ -3632,15 +3632,11 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Automatic update</source>
+        <source>enables daily search and notification about existing updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Confirm before update</source>
+        <source>Automatic updates</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

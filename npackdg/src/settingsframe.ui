@@ -186,26 +186,13 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_2">
-        <property name="title">
-         <string>Automatic update</string>
+       <widget class="QCheckBox" name="checkBoxAutomaticUpdates">
+        <property name="toolTip">
+         <string>enables daily search and notification about existing updates</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QCheckBox" name="checkBox">
-           <property name="text">
-            <string>Enabled</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="text">
-            <string>Confirm before update</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <property name="text">
+         <string>Automatic updates</string>
+        </property>
        </widget>
       </item>
      </layout>

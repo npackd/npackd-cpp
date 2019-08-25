@@ -162,7 +162,100 @@ WPMUtils::WPMUtils()
 {
 }
 
-QString WPMUtils::createMSTask()
+IRegisteredTask* WPMUtils::findTask(QString* err)
+{
+    err->clear();
+
+    IRegisteredTask* res = nullptr;
+
+    // this function requires better error handling
+    ITaskService *pITS = nullptr;
+    HRESULT hr = CoCreateInstance(CLSID_TaskScheduler,
+            nullptr,
+            CLSCTX_INPROC_SERVER,
+            IID_ITaskService,
+            reinterpret_cast<void **>(&pITS));
+    if (FAILED(hr)) {
+        formatMessage(hr, err);
+    }
+
+    if (err->isEmpty()) {
+        hr = pITS->Connect(_variant_t(), _variant_t(),
+                _variant_t(), _variant_t());
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    ITaskFolder *rootFolder = nullptr;
+    if (err->isEmpty()) {
+        hr = pITS->GetFolder(_bstr_t(L"\\"), &rootFolder);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    ITaskFolderCollection* folders = nullptr;
+    if (err->isEmpty()) {
+        hr = rootFolder->GetFolders(0, &folders);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    const wchar_t* taskName = L"UpdatePackages";
+
+    ITaskFolder* npackdFolder = nullptr;
+    const _bstr_t npackdFolderName(L"Npackd");
+    if (err->isEmpty()) {
+        LONG count;
+        hr = folders->get_Count(&count);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        } else {
+            for (int i = 1; i <= count; i++) {
+                ITaskFolder* ff;
+                hr = folders->get_Item(_variant_t(static_cast<long>(i)), &ff);
+                if (SUCCEEDED(hr)) {
+                    BSTR n;
+                    hr = ff->get_Name(&n);
+                    if (SUCCEEDED(hr)) {
+                        _bstr_t folderName(n, false);
+                        if (folderName == npackdFolderName) {
+                            npackdFolder = ff;
+                        }
+                    }
+
+                    if (npackdFolder)
+                        break;
+
+                    ff->Release();
+                }
+            }
+        }
+    }
+
+    if (err->isEmpty()) {
+        npackdFolder->GetTask(_bstr_t(taskName), &res);
+    }
+
+    if (npackdFolder) {
+        npackdFolder->Release();
+    }
+    if (folders) {
+        folders->Release();
+    }
+    if (rootFolder) {
+        rootFolder->Release();
+    }
+    if (pITS) {
+        pITS->Release();
+    }
+
+    return res;
+}
+
+QString WPMUtils::createMSTask(bool enabled)
 {
     QString err;
 
@@ -441,7 +534,7 @@ QString WPMUtils::createMSTask()
     }
 
     if (err.isEmpty()) {
-        _bstr_t path(L"update --all");
+        _bstr_t path(L"check-for-updates");
         hr = pExecAction->put_Arguments(path);
         if (FAILED(hr)) {
             formatMessage(hr, &err);
@@ -461,6 +554,13 @@ QString WPMUtils::createMSTask()
                 TASK_LOGON_INTERACTIVE_TOKEN,
                 _variant_t(L""),
                 &pRegisteredTask);
+        if (FAILED(hr)) {
+            formatMessage(hr, &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pRegisteredTask->put_Enabled(enabled);
         if (FAILED(hr)) {
             formatMessage(hr, &err);
         }
@@ -2681,7 +2781,7 @@ QString WPMUtils::hashSum(const QString& filename,
         return hash.result().toHex().toLower();
 }
 
-QString WPMUtils::getShellFileOperationErrorMessage(int res)
+QString WPMUtils::getShellFileOperationErrorMessage(DWORD res)
 {
     QString r;
     switch (res) {
