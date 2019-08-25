@@ -166,6 +166,9 @@ QString WPMUtils::createMSTask()
 {
     QString err;
 
+    qCDebug(npackd) << "createMSTask";
+
+
     // this function requires better error handling
     ITaskService *pITS = nullptr;
     HRESULT hr = CoCreateInstance(CLSID_TaskScheduler,
@@ -185,17 +188,76 @@ QString WPMUtils::createMSTask()
         }
     }
 
-    ITaskFolder *f = nullptr;
+    ITaskFolder *rootFolder = nullptr;
     if (err.isEmpty()) {
-        hr = pITS->GetFolder(_bstr_t(L"\\"), &f);
+        hr = pITS->GetFolder(_bstr_t(L"\\"), &rootFolder);
         if (FAILED(hr)) {
             err = QObject::tr("Cannot get the root folder from the task scheduler service");
         }
     }
 
-    const wchar_t* taskName = L"NpackdTest9";
+    qCDebug(npackd) << "createMSTask.1";
+
+    ITaskFolderCollection* folders = nullptr;
     if (err.isEmpty()) {
-        f->DeleteTask(_bstr_t(taskName), 0);
+        hr = rootFolder->GetFolders(0, &folders);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get the folders");
+        }
+    }
+
+    const wchar_t* taskName = L"UpdatePackages";
+
+    ITaskFolder* npackdFolder = nullptr;
+    const _bstr_t npackdFolderName(L"Npackd");
+    if (err.isEmpty()) {
+        LONG count;
+        hr = folders->get_Count(&count);
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot get the folders");
+        } else {
+            for (int i = 1; i <= count; i++) {
+                ITaskFolder* ff;
+                hr = folders->get_Item(_variant_t(static_cast<long>(i)), &ff);
+                if (SUCCEEDED(hr)) {
+                    BSTR n;
+                    hr = ff->get_Name(&n);
+                    if (SUCCEEDED(hr)) {
+                        _bstr_t folderName(n, false);
+                        if (folderName == npackdFolderName) {
+                            npackdFolder = ff;
+                        }
+                    }
+
+                    if (npackdFolder)
+                        break;
+
+                    ff->Release();
+                }
+            }
+        }
+    }
+
+    qCDebug(npackd) << "createMSTask.2";
+
+    if (err.isEmpty()) {
+        if (!npackdFolder) {
+            // G:BA - SDDL_BUILTIN_ADMINISTRATORS
+            // D:(A;OICI;GRGW;;;BA) -
+            //     A = access allowed
+            //     OI = SDDL_OBJECT_INHERIT
+            //     CI = SDDL_CONTAINER_INHERIT
+            //     GA = SDDL_GENERIC_ALL
+            //     BA = SDDL_BUILTIN_ADMINISTRATORS
+            hr = rootFolder->CreateFolder(npackdFolderName, _variant_t(L"G:BAD:(A;OICI;GA;;;BA)"), &npackdFolder);
+            if (FAILED(hr)) {
+                err = QObject::tr("Cannot create the folder");
+            }
+        }
+    }
+
+    if (err.isEmpty()) {
+        npackdFolder->DeleteTask(_bstr_t(taskName), 0);
     }
 
     ITaskDefinition *pTask = nullptr;
@@ -205,6 +267,8 @@ QString WPMUtils::createMSTask()
             err = QObject::tr("Cannot create the task");
         }
     }
+
+    qCDebug(npackd) << "createMSTask.3";
 
     IRegistrationInfo *pRegInfo = nullptr;
     if (err.isEmpty()) {
@@ -217,7 +281,17 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pRegInfo->put_Author(_bstr_t(L"Npackd"));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get the registration information");
+            err = QObject::tr("Cannot put the author");
+        }
+    }
+
+    qCDebug(npackd) << "createMSTask.4";
+
+    if (err.isEmpty()) {
+        hr = pRegInfo->put_Description(_bstr_t(L"WARNING: do not change this task. It is automatically re-created. "
+                "Updates packages marked for automatic updates in Npackd"));
+        if (FAILED(hr)) {
+            err = QObject::tr("Cannot put the description");
         }
     }
 
@@ -243,6 +317,8 @@ QString WPMUtils::createMSTask()
             err = QObject::tr("Cannot get task settings");
         }
     }
+
+    qCDebug(npackd) << "createMSTask.5";
 
     if (err.isEmpty()) {
         hr = pSettings->put_StartWhenAvailable(VARIANT_TRUE);
@@ -274,9 +350,11 @@ QString WPMUtils::createMSTask()
         }
     }
 
+    qCDebug(npackd) << "createMSTask.6";
+
     ITrigger *pTrigger = nullptr;
     if (err.isEmpty()) {
-        hr = pTriggerCollection->Create( TASK_TRIGGER_TIME, &pTrigger );
+        hr = pTriggerCollection->Create(TASK_TRIGGER_TIME, &pTrigger);
         if (FAILED(hr)) {
             err = QObject::tr("Cannot create the trigger");
         }
@@ -313,6 +391,8 @@ QString WPMUtils::createMSTask()
         }
     }
 
+    qCDebug(npackd) << "createMSTask.7";
+
     IAction *pAction = nullptr;
     if (err.isEmpty()) {
         hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
@@ -331,15 +411,19 @@ QString WPMUtils::createMSTask()
     }
 
     if (err.isEmpty()) {
-        hr = pExecAction->put_Path(_bstr_t(getExeDir().utf16()));
+        //QString exePath = getExeFile();
+        //_bstr_t path(L"mypath");
+        hr = pExecAction->put_Path(L"mypath");
         if (FAILED(hr)) {
             err = QObject::tr("Cannot put the path");
         }
     }
 
+    qCDebug(npackd) << "createMSTask.8";
+
     IRegisteredTask *pRegisteredTask = nullptr;
     if (err.isEmpty()) {
-        hr = f->RegisterTaskDefinition(
+        hr = npackdFolder->RegisterTaskDefinition(
                 _bstr_t(taskName),
                 pTask,
                 TASK_CREATE_OR_UPDATE,
@@ -353,6 +437,8 @@ QString WPMUtils::createMSTask()
         }
     }
 
+    qCDebug(npackd) << "createMSTask.9";
+
     if (pRegisteredTask) {
         pRegisteredTask->Release();
     }
@@ -362,6 +448,9 @@ QString WPMUtils::createMSTask()
     if (pAction) {
         pAction->Release();
     }
+
+    qCDebug(npackd) << "createMSTask.9.25";
+
     if (pActionCollection) {
         pActionCollection->Release();
     }
@@ -371,6 +460,9 @@ QString WPMUtils::createMSTask()
     if (pTrigger) {
         pTrigger->Release();
     }
+
+    qCDebug(npackd) << "createMSTask9.5";
+
     if (pTriggerCollection) {
         pTriggerCollection->Release();
     }
@@ -386,15 +478,26 @@ QString WPMUtils::createMSTask()
     if (pRegInfo) {
         pRegInfo->Release();
     }
+
+    qCDebug(npackd) << "createMSTask9.75";
+
     if (pTask) {
         pTask->Release();
     }
-    if (f) {
-        f->Release();
+    if (npackdFolder) {
+        npackdFolder->Release();
+    }
+    if (folders) {
+        folders->Release();
+    }
+    if (rootFolder) {
+        rootFolder->Release();
     }
     if (pITS) {
         pITS->Release();
     }
+
+    qCDebug(npackd) << "createMSTask.10";
 
     return err;
 }

@@ -2721,10 +2721,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot put the trigger end boundary</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot put the trigger start boundary</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2737,11 +2733,27 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot put the path</source>
+        <source>Cannot register the task</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot register the task</source>
+        <source>Cannot get the folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put the author</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put the description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot put the path</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
