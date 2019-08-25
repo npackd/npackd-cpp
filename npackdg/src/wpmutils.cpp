@@ -177,14 +177,14 @@ QString WPMUtils::createMSTask()
             IID_ITaskService,
             reinterpret_cast<void **>(&pITS));
     if (FAILED(hr)) {
-        err = QObject::tr("Cannot create the task scheduler service");
+        formatMessage(hr, &err);
     }
 
     if (err.isEmpty()) {
         hr = pITS->Connect(_variant_t(), _variant_t(),
                 _variant_t(), _variant_t());
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot connect to the task scheduler service");
+            formatMessage(hr, &err);
         }
     }
 
@@ -192,7 +192,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pITS->GetFolder(_bstr_t(L"\\"), &rootFolder);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get the root folder from the task scheduler service");
+            formatMessage(hr, &err);
         }
     }
 
@@ -202,7 +202,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = rootFolder->GetFolders(0, &folders);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get the folders");
+            formatMessage(hr, &err);
         }
     }
 
@@ -214,7 +214,7 @@ QString WPMUtils::createMSTask()
         LONG count;
         hr = folders->get_Count(&count);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get the folders");
+            formatMessage(hr, &err);
         } else {
             for (int i = 1; i <= count; i++) {
                 ITaskFolder* ff;
@@ -251,7 +251,7 @@ QString WPMUtils::createMSTask()
             //     BA = SDDL_BUILTIN_ADMINISTRATORS
             hr = rootFolder->CreateFolder(npackdFolderName, _variant_t(L"G:BAD:(A;OICI;GA;;;BA)"), &npackdFolder);
             if (FAILED(hr)) {
-                err = QObject::tr("Cannot create the folder");
+                formatMessage(hr, &err);
             }
         }
     }
@@ -264,7 +264,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pITS->NewTask(0, &pTask);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot create the task");
+            formatMessage(hr, &err);
         }
     }
 
@@ -274,14 +274,14 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pTask->get_RegistrationInfo(&pRegInfo);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get the registration information");
+            formatMessage(hr, &err);
         }
     }
 
     if (err.isEmpty()) {
         hr = pRegInfo->put_Author(_bstr_t(L"Npackd"));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot put the author");
+            formatMessage(hr, &err);
         }
     }
 
@@ -291,7 +291,7 @@ QString WPMUtils::createMSTask()
         hr = pRegInfo->put_Description(_bstr_t(L"WARNING: do not change this task. It is automatically re-created. "
                 "Updates packages marked for automatic updates in Npackd"));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot put the description");
+            formatMessage(hr, &err);
         }
     }
 
@@ -299,14 +299,21 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pTask->get_Principal(&pPrincipal);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get the principal");
+            formatMessage(hr, &err);
         }
     }
 
     if (err.isEmpty()) {
         hr = pPrincipal->put_LogonType(TASK_LOGON_INTERACTIVE_TOKEN);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot change the principal logon type");
+            formatMessage(hr, &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pPrincipal->put_RunLevel(TASK_RUNLEVEL_HIGHEST);
+        if (FAILED(hr)) {
+            formatMessage(hr, &err);
         }
     }
 
@@ -314,7 +321,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pTask->get_Settings(&pSettings);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get task settings");
+            formatMessage(hr, &err);
         }
     }
 
@@ -323,7 +330,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pSettings->put_StartWhenAvailable(VARIANT_TRUE);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot set start when available");
+            formatMessage(hr, &err);
         }
     }
 
@@ -331,14 +338,14 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pSettings->get_IdleSettings(&pIdleSettings);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get idle settings");
+            formatMessage(hr, &err);
         }
     }
 
     if (err.isEmpty()) {
         hr = pIdleSettings->put_WaitTimeout(_bstr_t(L"PT5M"));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot put wait timeout");
+            formatMessage(hr, &err);
         }
     }
 
@@ -346,7 +353,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pTask->get_Triggers( &pTriggerCollection );
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get trigger collection");
+            formatMessage(hr, &err);
         }
     }
 
@@ -354,32 +361,46 @@ QString WPMUtils::createMSTask()
 
     ITrigger *pTrigger = nullptr;
     if (err.isEmpty()) {
-        hr = pTriggerCollection->Create(TASK_TRIGGER_TIME, &pTrigger);
+        hr = pTriggerCollection->Create(TASK_TRIGGER_DAILY, &pTrigger);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot create the trigger");
+            formatMessage(hr, &err);
         }
     }
 
-    ITimeTrigger *pTimeTrigger = nullptr;
+    IDailyTrigger *pTimeTrigger = nullptr;
     if (err.isEmpty()) {
         hr = pTrigger->QueryInterface(
-                IID_ITimeTrigger, reinterpret_cast<void**>(&pTimeTrigger));
+                IID_IDailyTrigger, reinterpret_cast<void**>(&pTimeTrigger));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get the time trigger");
+            formatMessage(hr, &err);
         }
     }
 
     if (err.isEmpty()) {
         hr = pTimeTrigger->put_Id(_bstr_t(L"Trigger1"));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot put the trigger id");
+            formatMessage(hr, &err);
         }
     }
 
     if (err.isEmpty()) {
-        hr = pTimeTrigger->put_StartBoundary( _bstr_t(L"2005-01-01T12:05:00") );
+        hr = pTimeTrigger->put_StartBoundary(_bstr_t(L"2019-01-01T12:00:00"));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot put the trigger start boundary");
+            formatMessage(hr, &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pTimeTrigger->put_RandomDelay(_bstr_t(L"P1D") );
+        if (FAILED(hr)) {
+            formatMessage(hr, &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        hr = pTimeTrigger->put_ExecutionTimeLimit(_bstr_t(L"PT30M") );
+        if (FAILED(hr)) {
+            formatMessage(hr, &err);
         }
     }
 
@@ -387,7 +408,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pTask->get_Actions(&pActionCollection);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot get actions");
+            formatMessage(hr, &err);
         }
     }
 
@@ -397,7 +418,7 @@ QString WPMUtils::createMSTask()
     if (err.isEmpty()) {
         hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot create the action");
+            formatMessage(hr, &err);
         }
     }
 
@@ -406,16 +427,24 @@ QString WPMUtils::createMSTask()
         hr = pAction->QueryInterface(
                 IID_IExecAction, reinterpret_cast<void**>(&pExecAction));
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot create the action");
+            formatMessage(hr, &err);
         }
     }
 
     if (err.isEmpty()) {
-        //QString exePath = getExeFile();
-        //_bstr_t path(L"mypath");
-        hr = pExecAction->put_Path(L"mypath");
+        QString exePath = getExeFile();
+        _bstr_t path(toLPWSTR(exePath));
+        hr = pExecAction->put_Path(path);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot put the path");
+            formatMessage(hr, &err);
+        }
+    }
+
+    if (err.isEmpty()) {
+        _bstr_t path(L"update --all");
+        hr = pExecAction->put_Arguments(path);
+        if (FAILED(hr)) {
+            formatMessage(hr, &err);
         }
     }
 
@@ -433,7 +462,7 @@ QString WPMUtils::createMSTask()
                 _variant_t(L""),
                 &pRegisteredTask);
         if (FAILED(hr)) {
-            err = QObject::tr("Cannot register the task");
+            formatMessage(hr, &err);
         }
     }
 
