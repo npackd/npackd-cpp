@@ -81,15 +81,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 		}
 	}
 
-    IRegisteredTask* t = WPMUtils::findTask(&err);
-    if (t) {
-        VARIANT_BOOL enabled;
-        HRESULT hr = t->get_Enabled(&enabled);
-        if (SUCCEEDED(hr)) {
-            ui->checkBoxAutomaticUpdates->setChecked(enabled);
-        }
-        t->Release();
-    }
+    ui->checkBoxAutomaticUpdates->setChecked(WPMUtils::isTaskEnabled(&err));
 }
 
 SettingsFrame::~SettingsFrame()

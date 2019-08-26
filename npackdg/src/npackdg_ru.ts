@@ -3632,11 +3632,11 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>enables daily search and notification about existing updates</source>
+        <source>Automatic updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Automatic updates</source>
+        <source>enables daily search and notification about existing updates. The time will be chosen at random.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

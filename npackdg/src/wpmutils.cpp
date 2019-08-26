@@ -162,8 +162,10 @@ WPMUtils::WPMUtils()
 {
 }
 
-IRegisteredTask* WPMUtils::findTask(QString* err)
+bool WPMUtils::isTaskEnabled(QString* err)
 {
+    bool result = false;
+
     err->clear();
 
     IRegisteredTask* res = nullptr;
@@ -236,9 +238,29 @@ IRegisteredTask* WPMUtils::findTask(QString* err)
     }
 
     if (err->isEmpty()) {
-        npackdFolder->GetTask(_bstr_t(taskName), &res);
+        if (npackdFolder) {
+            hr = npackdFolder->GetTask(_bstr_t(taskName), &res);
+            if (FAILED(hr)) {
+                formatMessage(hr, err);
+            }
+        }
     }
 
+    if (err->isEmpty()) {
+        if (res) {
+            VARIANT_BOOL b;
+            hr = res->get_Enabled(&b);
+            if (FAILED(hr)) {
+                formatMessage(hr, err);
+            } else {
+                result = b;
+            }
+        }
+    }
+
+    if (res) {
+        res->Release();
+    }
     if (npackdFolder) {
         npackdFolder->Release();
     }
@@ -252,7 +274,7 @@ IRegisteredTask* WPMUtils::findTask(QString* err)
         pITS->Release();
     }
 
-    return res;
+    return result;
 }
 
 QString WPMUtils::createMSTask(bool enabled)
@@ -811,9 +833,7 @@ QStringList WPMUtils::parseCommandLine(const QString& commandLine,
         *err = QObject::tr("CommandLineToArgvW failed");
     } else {
         for(int i = 0; i < nArgs; i++) {
-            QString s;
-            s.setUtf16((ushort*) szArglist[i], wcslen(szArglist[i]));
-            params.append(s);
+            params.append(QString::fromUtf16(reinterpret_cast<ushort*>(szArglist[i])));
         }
         LocalFree(szArglist);
     }

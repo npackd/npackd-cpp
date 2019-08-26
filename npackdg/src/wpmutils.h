@@ -859,9 +859,9 @@ public:
     /**
      * @brief search for a task "Npackd\UpdatePackages" in the Windows scheduler
      * @param err error message will be stored here
-     * @return found task
+     * @return whether the task is enabled
      */
-    static IRegisteredTask *findTask(QString* err);
+    static bool isTaskEnabled(QString* err);
 };
 
 #endif // WPMUTILS_H
