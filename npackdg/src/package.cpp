@@ -50,6 +50,23 @@ void Package::setChangeLog(const QString &changelog)
         links.replace("changelog", changelog);
 }
 
+QString Package::getIssueTracker() const
+{
+    QString r;
+    QList<QString> values = links.values("issues");
+    if (!values.isEmpty())
+        r = values.last();
+    return r;
+}
+
+void Package::setIssueTracker(const QString &v)
+{
+    if (v.isEmpty())
+        links.remove("issues");
+    else
+        links.replace("issues", v);
+}
+
 void Package::setIcon(const QString &icon)
 {
     if (icon.isEmpty())

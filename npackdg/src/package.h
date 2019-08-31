@@ -85,9 +85,21 @@ public:
 
     /**
      * @brief changes the URL of the changelog
-     * @param icon URL or ""
+     * @param changelog URL or ""
      */
     void setChangeLog(const QString& changelog);
+
+    /**
+     * @brief returns the issue tracker URL
+     * @return URL of the issue tracker or ""
+     */
+    QString getIssueTracker() const;
+
+    /**
+     * @brief changes the URL of the issue tracker
+     * @param v URL or ""
+     */
+    void setIssueTracker(const QString& v);
 
     /**
      * @brief changes the icon

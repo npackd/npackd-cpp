@@ -536,6 +536,10 @@ p, li { white-space: pre-wrap; }
         <source>Update automatically</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Issue tracker:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PackageVersionForm</name>

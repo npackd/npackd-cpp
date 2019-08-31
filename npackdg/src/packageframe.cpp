@@ -156,6 +156,16 @@ void PackageFrame::fillForm(Package* p)
     }
     this->ui->labelChangeLog->setText(changelog);
 
+    QString s;
+    if (p->getIssueTracker().isEmpty())
+        s = QObject::tr("n/a");
+    else{
+        s = p->getIssueTracker();
+        s = "<a href=\"" + s.toHtmlEscaped() + "\">" +
+                s.toHtmlEscaped() + "</a>";
+    }
+    this->ui->labelIssues->setText(s);
+
     QIcon icon = MainWindow::getPackageIcon(p->name);
     QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
     this->ui->labelIcon->setPixmap(pixmap);
