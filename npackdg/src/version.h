@@ -3,6 +3,9 @@
 
 #include "qstring.h"
 
+/**
+ * @brief a version number
+ */
 class Version
 {
 private:
@@ -19,6 +22,7 @@ private:
 
     int nparts;
 public:
+    /** an empty/null object */
     static const Version EMPTY;
 
     /**

@@ -1026,14 +1026,14 @@ bool MainWindow::isUpdateEnabled(const QString& package)
     DBRepository* r = DBRepository::getDefault();
     PackageVersion* newest = r->findNewestInstallablePackageVersion_(
             package, &err);
-    PackageVersion* newesti = r->findNewestInstalledPackageVersion_(
-            package, &err);
+    InstalledPackageVersion* newesti = InstalledPackages::getDefault()->getNewestInstalled(
+            package);
     if (newest != nullptr && newesti != nullptr) {
         // qCDebug(npackd) << newest->version.getVersionString() << " " <<
                 newesti->version.getVersionString();
         bool canInstall = !newest->isLocked() && !newest->installed() &&
                 newest->download.isValid();
-        bool canUninstall = !newesti->isLocked() &&
+        bool canUninstall = !PackageVersion::isLocked(newesti->package, newesti->version) &&
                 !newesti->isInWindowsDir();
 
         // qCDebug(npackd) << canInstall << " " << canUninstall;
@@ -1187,16 +1187,11 @@ void MainWindow::updateShowFolderAction()
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
-                PackageVersion* pv = r->findNewestInstalledPackageVersion_(
-                        p->name, &err);
-                if (!err.isEmpty()) {
-                    err = QObject::tr("Error finding the newest installed version for %1: %2").
-                            arg(p->title).arg(err);
-                    addErrorMessage(err, err, true, QMessageBox::Critical);
-                }
+                InstalledPackageVersion* pv = InstalledPackages::getDefault()->getNewestInstalled(
+                        p->name);
 
                 enabled = enabled &&
-                        pv && !pv->isLocked() &&
+                        pv && !PackageVersion::isLocked(pv->package, pv->version) &&
                         pv->installed() && !pv->isInWindowsDir();
 
                 delete pv;
@@ -1231,7 +1226,6 @@ void MainWindow::updateUninstallAction()
             }
             // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
-            DBRepository* r = DBRepository::getDefault();
             QList<void*> selected = selection->getSelected("Package");
             enabled = selected.count() > 0;
             for (int i = 0; i < selected.count(); i++) {
@@ -1240,17 +1234,11 @@ void MainWindow::updateUninstallAction()
 
                 Package* p = static_cast<Package*>(selected.at(i));
 
-                QString err;
-                PackageVersion* pv = r->findNewestInstalledPackageVersion_(
-                        p->name, &err);
-                if (!err.isEmpty()) {
-                    err = QObject::tr("Error finding the newest installed version for %1: %2").
-                            arg(p->title).arg(err);
-                    addErrorMessage(err, err, true, QMessageBox::Critical);
-                }
+                InstalledPackageVersion* pv = InstalledPackages::getDefault()->getNewestInstalled(
+                        p->name);
 
                 enabled = enabled &&
-                        pv && !pv->isLocked() &&
+                        pv && !PackageVersion::isLocked(pv->package, pv->version) &&
                         pv->installed() && !pv->isInWindowsDir();
 
                 delete pv;
@@ -1303,9 +1291,9 @@ void MainWindow::updateReloadRepositoriesAction()
 
 void MainWindow::updateCloseTabAction()
 {
-    QWidget* w = this->ui->tabWidget->currentWidget();
-    this->ui->actionClose_Tab->setEnabled(
-            w != this->mainFrame && w != this->jobsTab);
+    QTabWidget* t = this->ui->tabWidget;
+    bool e = this->ui->tabWidget->tabBar()->tabButton(t->currentIndex(), QTabBar::RightSide) != nullptr;
+    this->ui->actionClose_Tab->setEnabled(e);
 }
 
 void MainWindow::updateActionShowDetailsAction()

@@ -2,6 +2,7 @@
 
 #include <QDir>
 
+#include "wpmutils.h"
 #include "windowsregistry.h"
 #include "repository.h"
 #include "installedpackages.h"
@@ -14,6 +15,13 @@ InstalledPackageVersion::InstalledPackageVersion(const QString &package,
 
     //qCDebug(npackd) << "InstalledPackageVersion::InstalledPackageVersion " <<
     //        package << " " << directory;
+}
+
+bool InstalledPackageVersion::isInWindowsDir() const
+{
+    QString dir = WPMUtils::getWindowsDir();
+    return this->installed() && (WPMUtils::pathEquals(this->directory, dir) ||
+            WPMUtils::isUnder(this->directory, dir));
 }
 
 bool InstalledPackageVersion::operator==(const InstalledPackageVersion &other)

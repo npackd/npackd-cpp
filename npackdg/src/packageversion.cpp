@@ -297,9 +297,14 @@ void PackageVersion::unlock()
 
 bool PackageVersion::isLocked() const
 {
+    return isLocked(this->package, this->version);
+}
+
+bool PackageVersion::isLocked(const QString& package, const Version& version)
+{
     bool r;
     lockedPackageVersionsMutex.lock();
-    r = lockedPackageVersions.contains(getStringId());
+    r = lockedPackageVersions.contains(getStringId(package, version));
     lockedPackageVersionsMutex.unlock();
     return r;
 }

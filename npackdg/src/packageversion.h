@@ -514,7 +514,17 @@ public:
      *     output stream
      */
     void build(Job *job, const QString &outputPackage, const QString &outputDir,
-            bool printScriptOutput);
+               bool printScriptOutput);
+
+    /**
+     * @brief checks whether a package version is locked and cannot be installed
+     *     or removed
+     * @param package package name
+     * @param version version number
+     * @return true if this package version is locked and cannot be installed
+     *     or removed
+     */
+    static bool isLocked(const QString &package, const Version &version);
 };
 
 Q_DECLARE_METATYPE(PackageVersion);

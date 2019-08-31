@@ -72,6 +72,12 @@ public:
      * @return string representation
      */
     QString toString() const;
+
+    /**
+     * @return true if this package is in c:\Windows or one of the nested
+     *     directories
+     */
+    bool isInWindowsDir() const;
 };
 
 #endif // INSTALLEDPACKAGEVERSION_H

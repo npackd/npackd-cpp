@@ -759,7 +759,13 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 break;
             }
 
-            PackageVersion* b = findNewestInstalledPackageVersion_(p->name, &err);
+            InstalledPackageVersion* ib = installed.getNewestInstalled(p->name);
+            PackageVersion* b = nullptr;
+            if (ib) {
+                b = this->findPackageVersion_(p->name, ib->version, &err);
+                delete ib;
+            }
+
             if (!err.isEmpty()) {
                 err = QString(QObject::tr("Cannot find the newest installed version for %1: %2")).
                         arg(p->title).arg(err);

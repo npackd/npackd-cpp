@@ -253,7 +253,7 @@ public:
     /**
      * @brief returns the newest installed version for a package
      * @param package full package name
-     * @return [owner:caller] found installed version or 0. This is a copy.
+     * @return [move] found installed version or 0. This is a copy.
      */
     InstalledPackageVersion *getNewestInstalled(const QString &package) const;
 
