@@ -10,6 +10,8 @@ environment:
     prg: npackdcl
   - bits: 32
     prg: npackd
+  - bits: 32
+    prg: clu
   covtoken:
     secure: yPwsn7ojqxg5m7pxyjIf3LV1GwoHd4m3q5iQrKCDzZ4=
 init:

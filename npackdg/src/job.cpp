@@ -341,11 +341,9 @@ void Job::setTitle(const QString &title)
 void Job::checkOSCall(bool v)
 {
     if (!v) {
-        this->mutex.lock();
         QString msg;
         WPMUtils::formatMessage(GetLastError(), &msg);
         setErrorMessage(msg);
-        this->mutex.unlock();
     }
 }
 

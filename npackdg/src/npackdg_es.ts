@@ -544,6 +544,10 @@ p, li { white-space: pre-wrap; }
         <source>Issue tracker:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>issue tracker</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PackageVersionForm</name>
