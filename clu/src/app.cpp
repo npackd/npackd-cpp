@@ -28,6 +28,48 @@ int App::listMSI()
     return 0;
 }
 
+void App::catFile(Job *job)
+{
+    job->setTitle("Outputting the text file");
+
+    QString file = cl.get("file");
+
+    if (job->shouldProceed()) {
+        if (file.isNull()) {
+            job->setErrorMessage("Missing option: --file");
+        }
+    }
+
+    HANDLE hStdout = INVALID_HANDLE_VALUE;
+    if (job->shouldProceed()) {
+        hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hStdout == INVALID_HANDLE_VALUE) {
+            job->setErrorMessage("Invalid stdout handle");
+        }
+    }
+
+    QFile* qfile = nullptr;
+    if (job->shouldProceed()) {
+        qfile = new QFile(file);
+        if (!qfile->open(QIODevice::ReadOnly | QIODevice::Unbuffered | QIODevice::ExistingOnly)) {
+            job->setErrorMessage("Cannot open the file");
+        }
+    }
+
+    if (job->shouldProceed()) {
+        QTextStream in(qfile);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            line.append("\r\n");
+            WPMUtils::outputTextConsole(line);
+        }
+    }
+
+    delete qfile;
+
+    job->complete();
+}
+
 int App::process()
 {
     cl.add("path", 'p',
@@ -74,6 +116,14 @@ int App::process()
         r = wait();
     } else if (fr.at(0) == "remove" || fr.at(0) == "rm") {
         r = remove();
+    } else if (fr.at(0) == "cat-file") {
+        Job* job = new Job();
+        catFile(job);
+        if (!job->getErrorMessage().isEmpty()) {
+            r = 1;
+            WPMUtils::writeln(job->getErrorMessage() + "\n", false);
+        }
+        delete job;
     } else {
         WPMUtils::writeln("Wrong command: " + fr.at(0), false);
         r = 1;
@@ -266,6 +316,8 @@ int App::help()
         "        prints this help",
         "    clu add-path --path=<path>",
         "        appends the specified path to the system-wide PATH variable",
+        "    clu cat-file --file <path>",
+        "        output a text file to the console (faster than 'type')",
         "    clu remove-path --path=<path>",
         "        removes the specified path from the system-wide PATH variable",
         "    clu list-msi",

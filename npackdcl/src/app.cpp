@@ -79,7 +79,7 @@ int App::process()
             "list of ways to close running applications \r\n(c=close, k=kill, s=disconnect from file shares, d=stop services, t=send Ctrl+C). The default value is 'c'.",
             "[c][k][s][t]", false, "remove,rm,update");
     cl.add("file", 'f', "file or directory", "file", false,
-            "add,place,set-install-dir,update,where,which,path,cat-file");
+            "add,place,set-install-dir,update,where,which,path");
     cl.add("install", 'i',
             "install a package if it was not installed", "", false, "update");
     cl.add("json", 'j', "json format for the output",
@@ -178,7 +178,7 @@ int App::process()
 
         Job* job;
         if (cl.isPresent("bare-format") || cl.isPresent("json") ||
-                cmd == "help" || cmd == "path" || cmd == "cat-file")
+                cmd == "help" || cmd == "path")
             job = new Job();
         else
             job = clp.createJob();
@@ -243,8 +243,6 @@ int App::process()
             getInstallPath(job);
         } else if (cmd == "build") {
             build(job);
-        } else if (cmd == "cat-file") {
-            catFile(job);
         } else {
             job->setErrorMessage(QStringLiteral("Wrong command: ") + cmd +
                     QStringLiteral(". Try \"ncl help\""));
@@ -332,8 +330,6 @@ void App::usage(Job* job)
         "        installed, if none is specified.",
         "    ncl add-repo --url <repository>",
         "        appends a repository to the system-wide list of package sources",
-        "    ncl cat-file --file <path>",
-        "        output a text file to the console (faster than 'type')",
         "    ncl build --package <package> [--version <version> | --versions <versions>])",
         "            --output-package <package>",
         "        build a package from another one (e.g. a binary from source code)",
@@ -1681,48 +1677,6 @@ void App::build(Job* job)
                 "The package %1 was built successfully in %2 to %3").arg(
                 pv->toString()).arg(outputDir).arg(outputPackage));
     }
-
-    job->complete();
-}
-
-void App::catFile(Job *job)
-{
-    job->setTitle("Outputting the text file");
-
-    QString file = cl.get("file");
-
-    if (job->shouldProceed()) {
-        if (file.isNull()) {
-            job->setErrorMessage("Missing option: --file");
-        }
-    }
-
-    HANDLE hStdout = INVALID_HANDLE_VALUE;
-    if (job->shouldProceed()) {
-        hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-        if (hStdout == INVALID_HANDLE_VALUE) {
-            job->setErrorMessage("Invalid stdout handle");
-        }
-    }
-
-    QFile* qfile = nullptr;
-    if (job->shouldProceed()) {
-        qfile = new QFile(file);
-        if (!qfile->open(QIODevice::ReadOnly | QIODevice::Unbuffered | QIODevice::ExistingOnly)) {
-            job->setErrorMessage("Cannot open the file");
-        }
-    }
-
-    if (job->shouldProceed()) {
-        QTextStream in(qfile);
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            line.append("\r\n");
-            WPMUtils::outputTextConsole(line);
-        }
-    }
-
-    delete qfile;
 
     job->complete();
 }

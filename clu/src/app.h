@@ -17,6 +17,7 @@ private:
     int getProductCode();
     int wait();
     int remove();
+    void catFile(Job *job);
 public:
     App();
 
