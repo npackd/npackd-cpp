@@ -1177,7 +1177,6 @@ void MainWindow::updateShowFolderAction()
             }
             // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
-            DBRepository* r = DBRepository::getDefault();
             QList<void*> selected = selection->getSelected("Package");
             enabled = selected.count() > 0;
             for (int i = 0; i < selected.count(); i++) {
@@ -1529,54 +1528,14 @@ void MainWindow::setMenuAccelerators(){
             titles.append(m->title());
         }
     }
-    chooseAccelerators(&titles);
+
+    UIUtils::chooseAccelerators(&titles);
     for (int i = 0, j = 0; i < mb->children().count(); i++) {
         QMenu* m = dynamic_cast<QMenu*>(mb->children().at(i));
         if (m) {
             m->setTitle(titles.at(j));
             j++;
         }
-    }
-}
-
-void MainWindow::chooseAccelerators(QStringList* titles)
-{
-    QList<QChar> used;
-    for (int i = 0; i < titles->count(); i++) {
-        QString title = titles->at(i);
-
-        if (title.contains('&')) {
-            int pos = title.indexOf('&');
-            if (pos + 1 < title.length()) {
-                QChar c = title.at(pos + 1);
-                if (c.isLetter()) {
-                    if (!used.contains(c))
-                        used.append(c);
-                    else
-                        title.remove(pos, 1);
-                }
-            }
-        }
-
-        if (!title.contains('&')) {
-            QString s = title.toUpper();
-            int pos = -1;
-            for (int j = 0; j < s.length(); j++) {
-                QChar c = s.at(j);
-                if (c.isLetter() && !used.contains(c)) {
-                    pos = j;
-                    break;
-                }
-            }
-
-            if (pos >= 0) {
-                QChar c = s.at(pos);
-                used.append(c);
-                title.insert(pos, '&');
-            }
-        }
-
-        titles->replace(i, title);
     }
 }
 
@@ -1588,7 +1547,7 @@ void MainWindow::setActionAccelerators(QWidget* w) {
             titles.append(m->text());
         }
     }
-    chooseAccelerators(&titles);
+    UIUtils::chooseAccelerators(&titles);
     for (int i = 0, j = 0; i < w->children().count(); i++) {
         QAction* m = dynamic_cast<QAction*>(w->children().at(i));
         if (m) {
@@ -1780,6 +1739,18 @@ void MainWindow::on_actionSettings_triggered()
         this->ui->tabWidget->setCurrentWidget(d);
     } else {
         d = new SettingsFrame(this->ui->tabWidget);
+
+        QMenuBar* mb = this->menuBar();
+
+        QStringList titles;
+        for (int i = 0; i < mb->children().count(); i++) {
+            QMenu* m = dynamic_cast<QMenu*>(mb->children().at(i));
+            if (m) {
+                titles.append(m->title());
+            }
+        }
+
+        UIUtils::chooseAccelerators(d, UIUtils::extractAccelerators(titles));
 
         QString err;
         QList<QUrl*> urls = Repository::getRepositoryURLs(&err);

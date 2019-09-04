@@ -80,7 +80,6 @@ private:
     bool isUpdateEnabled(const QString& package);
     void setMenuAccelerators();
     void setActionAccelerators(QWidget* w);
-    void chooseAccelerators(QStringList* titles);
 
     void updateInstallAction();
     void updateUninstallAction();

@@ -51,6 +51,27 @@ public:
      */
     static bool confirmInstallOperations(QWidget *parent,
             QList<InstallOperation *> &install, QString *title, QString *err);
+
+    /**
+     * @brief choose the accelerators automatically
+     * @param titles existing titles with or without accelerators (will be modified)
+     * @param ignore lower case characters that should be ignored
+     */
+    static void chooseAccelerators(QStringList* titles, const QString &ignore=QString());
+
+    /**
+     * @brief choose the accelerators automatically
+     * @param w a widget
+     * @param ignore lower case characters that should be ignored
+     */
+    static void chooseAccelerators(QWidget* w, const QString &ignore=QString());
+
+    /**
+     * @brief searches for accelerators
+     * @param titles titles
+     * @return lower case characters for found accelerators
+     */
+    static QString extractAccelerators(const QStringList &titles);
 };
 
 #endif // UIUTILS_H

@@ -138,10 +138,6 @@ void SettingsFrame::setRepositoryURLs(const QStringList &urls)
     this->ui->plainTextEditReps->setPlainText(texts.join("\r\n"));
 }
 
-void SettingsFrame::on_buttonBox_accepted()
-{
-}
-
 void SettingsFrame::setCloseProcessType(DWORD v)
 {
     this->ui->checkBoxCloseWindows->setChecked(v &
@@ -308,5 +304,7 @@ void SettingsFrame::on_pushButton_clicked()
             this, QObject::tr("Choose installation directory"),
             getInstallationDirectory(),
             QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    setInstallationDirectory(WPMUtils::normalizePath(dir));
+     if (!dir.isEmpty())
+         setInstallationDirectory(WPMUtils::normalizePath(dir));
 }
+

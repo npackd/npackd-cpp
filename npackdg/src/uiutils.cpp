@@ -15,6 +15,8 @@
 #include <QBuffer>
 #include <qwinfunctions.h>
 #include <QPixmap>
+#include <QLabel>
+#include <QAbstractButton>
 #include <QtConcurrent/QtConcurrent>
 
 #include "uiutils.h"
@@ -435,3 +437,113 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
     job->complete();
 }
+
+QString UIUtils::extractAccelerators(const QStringList& titles)
+{
+    QString valid = "abcdefghijklmnopqrstuvwxyz";
+
+    QString used;
+    for (int i = 0; i < titles.count(); i++) {
+        QString title = titles.at(i);
+
+        int pos = title.indexOf('&');
+        if (pos >= 0 && pos + 1 < title.length()) {
+            QChar c = title.at(pos + 1).toLower();
+            if (valid.contains(c)) {
+                if (!used.contains(c))
+                    used.append(c);
+                else
+                    title.remove(pos, 1);
+            }
+        }
+    }
+
+    return used;
+}
+
+void UIUtils::chooseAccelerators(QStringList* titles, const QString& ignore)
+{
+    QString valid = "abcdefghijklmnopqrstuvwxyz";
+
+    QString used = ignore;
+    for (int i = 0; i < titles->count(); i++) {
+        QString title = titles->at(i);
+
+        if (title.contains('&')) {
+            int pos = title.indexOf('&');
+            if (pos + 1 < title.length()) {
+                QChar c = title.at(pos + 1).toLower();
+                if (valid.contains(c)) {
+                    if (!used.contains(c))
+                        used.append(c);
+                    else
+                        title.remove(pos, 1);
+                }
+            }
+        }
+
+        if (!title.contains('&')) {
+            QString s = title.toUpper();
+            int pos = -1;
+            for (int j = 0; j < s.length(); j++) {
+                QChar c = s.at(j).toLower();
+                if (valid.contains(c) && !used.contains(c)) {
+                    pos = j;
+                    break;
+                }
+            }
+
+            if (pos >= 0) {
+                QChar c = s.at(pos);
+                used.append(c);
+                title.insert(pos, '&');
+            }
+        }
+
+        titles->replace(i, title);
+    }
+}
+
+void UIUtils::chooseAccelerators(QWidget *w, const QString& ignore)
+{
+    QList<QWidget*> widgets = w->findChildren<QWidget*>();
+
+    QList<QWidget*> used;
+    QStringList usedTexts;
+    for (int i = 0; i < widgets.count(); i++) {
+        QWidget* w = widgets.at(i);
+
+        QLabel *label = dynamic_cast<QLabel*>(w);
+        if (label) {
+            used.append(label);
+            usedTexts.append(label->text());
+            continue;
+        }
+
+        QAbstractButton *button= dynamic_cast<QAbstractButton*>(w);
+        if (button) {
+            used.append(button);
+            usedTexts.append(button->text());
+            continue;
+        }
+    }
+
+    chooseAccelerators(&usedTexts, ignore);
+
+    for (int i = 0; i < used.count(); i++) {
+        QWidget* w = used.at(i);
+
+        QLabel *label = dynamic_cast<QLabel*>(w);
+        if (label) {
+            label->setText(usedTexts.at(i));
+            continue;
+        }
+
+        QAbstractButton *button= dynamic_cast<QAbstractButton*>(w);
+        if (button) {
+            button->setText(usedTexts.at(i));
+            continue;
+        }
+    }
+}
+
