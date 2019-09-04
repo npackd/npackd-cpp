@@ -231,9 +231,6 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == Qt::TextAlignmentRole) {
         switch (index.column()) {
-            case 2:
-                r = Qt::AlignLeft + Qt::AlignTop;
-                break;
             case 6:
             case 9:
                 r = Qt::AlignRight + Qt::AlignVCenter;

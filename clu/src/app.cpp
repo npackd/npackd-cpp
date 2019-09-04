@@ -114,8 +114,8 @@ int App::process()
         r = getProductCode();
     } else if (fr.at(0) == "wait") {
         r = wait();
-    } else if (fr.at(0) == "remove" || fr.at(0) == "rm") {
-        r = remove();
+//    } else if (fr.at(0) == "remove" || fr.at(0) == "rm") {
+//        r = remove();
     } else if (fr.at(0) == "cat-file") {
         Job* job = new Job();
         catFile(job);
@@ -153,7 +153,7 @@ int App::remove()
         cppm.scan(scanJob, &installed, &rep);
     }
 
-    Package* found = 0;
+    Package* found = nullptr;
     if (job->shouldProceed()) {
         QRegExp re(title, Qt::CaseInsensitive);
         for (int i = 0; i < rep.packages.size(); i++) {
@@ -168,7 +168,7 @@ int App::remove()
             job->setErrorMessage("Cannot find the package");
     }
 
-    PackageVersion* pv = 0;
+    PackageVersion* pv = nullptr;
     if (job->shouldProceed()) {
         for (int i = 0; i < installed.size(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
@@ -186,7 +186,7 @@ int App::remove()
             job->setErrorMessage("Cannot find the package version");
     }
 
-    PackageVersionFile* pvf = 0;
+    PackageVersionFile* pvf = nullptr;
     if (job->shouldProceed()) {
         for (int j = 0; j < pv->files.size(); j++) {
             if (pv->files.at(j)->path.compare(
@@ -254,14 +254,13 @@ int App::getProductCode()
 
     if (ret == 0) {
         MSIHANDLE hProduct;
-        UINT r = MsiOpenPackageW((WCHAR*) file.utf16(), &hProduct);
+        UINT r = MsiOpenPackageW(WPMUtils::toLPWSTR(file), &hProduct);
         if (!r) {
             WCHAR guid[40];
             DWORD pcchValueBuf = 40;
             r = MsiGetProductPropertyW(hProduct, L"ProductCode", guid, &pcchValueBuf);
             if (!r) {
-                QString s;
-                s.setUtf16((ushort*) guid, pcchValueBuf);
+                QString s = QString::fromUtf16(reinterpret_cast<ushort*>(guid));
                 WPMUtils::writeln(s);
             } else {
                 WPMUtils::writeln(
@@ -301,7 +300,7 @@ int App::wait()
     }
 
     if (ret == 0) {
-        Sleep(t);
+        Sleep(static_cast<DWORD>(t));
     }
 
     return ret;
@@ -326,11 +325,11 @@ int App::help()
         "        prints the product code of an MSI file",
         "    clu wait --timeout=<milliseconds>",
         "        wait for the specified amount of time",
-        "    clu remove|rm --title=<regular expression>",
-        "        removes one installed program from the Software control panel",
+//        "    clu remove|rm --title=<regular expression>",
+//        "        removes one installed program from the Software control panel",
         "Options:",
     };
-    for (int i = 0; i < (int) (sizeof(lines) / sizeof(lines[0])); i++) {
+    for (int i = 0; i < static_cast<int>(sizeof(lines) / sizeof(lines[0])); i++) {
         WPMUtils::writeln(QString(lines[i]));
     }
     this->cl.printOptions();
@@ -339,7 +338,7 @@ int App::help()
         "The process exits with the code unequal to 0 if an error occcures.",
         "If the output is redirected, the texts will be encoded as UTF-8.",
     };
-    for (int i = 0; i < (int) (sizeof(lines2) / sizeof(lines2[0])); i++) {
+    for (int i = 0; i < static_cast<int>(sizeof(lines2) / sizeof(lines2[0])); i++) {
         WPMUtils::writeln(QString(lines2[i]));
     }
 
