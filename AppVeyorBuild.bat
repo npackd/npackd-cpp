@@ -266,10 +266,10 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip ..\install\clu.exe
+mingw32-make.exe -j 2 install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-mingw32-make.exe -j 2 install
+strip ..\install\clu.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install
