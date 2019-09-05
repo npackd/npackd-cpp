@@ -82,8 +82,10 @@ int App::process()
             "timeout in milliseconds (e.g. 10000)",
             "duration", false);
     cl.add("title", 'c',
-            "software title in the Software control panel)",
+            "software title in the Software control panel",
             "title", false);
+    cl.add("encoding", 'e', "file encoding",
+            "UTF-8 or UTF-16", false);
 
     QString err = cl.parse();
     if (!err.isEmpty()) {
@@ -116,7 +118,7 @@ int App::process()
         r = wait();
 //    } else if (fr.at(0) == "remove" || fr.at(0) == "rm") {
 //        r = remove();
-    } else if (fr.at(0) == "cat-file") {
+    } else if (fr.at(0) == "cat") {
         Job* job = new Job();
         catFile(job);
         if (!job->getErrorMessage().isEmpty()) {
@@ -315,7 +317,7 @@ int App::help()
         "        prints this help",
         "    clu add-path --path=<path>",
         "        appends the specified path to the system-wide PATH variable",
-        "    clu cat-file --file <path>",
+        "    clu cat --file <path>",
         "        output a text file to the console (faster than 'type')",
         "    clu remove-path --path=<path>",
         "        removes the specified path from the system-wide PATH variable",
@@ -332,7 +334,10 @@ int App::help()
     for (int i = 0; i < static_cast<int>(sizeof(lines) / sizeof(lines[0])); i++) {
         WPMUtils::writeln(QString(lines[i]));
     }
-    this->cl.printOptions();
+    QStringList txt = this->cl.printOptions();
+    for (int i = 0; i < txt.count(); i++) {
+        WPMUtils::writeln(txt[i]);
+    }
     const char* lines2[] = {
         "",
         "The process exits with the code unequal to 0 if an error occcures.",
