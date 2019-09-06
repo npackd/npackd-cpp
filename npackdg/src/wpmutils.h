@@ -32,6 +32,8 @@ private:
 
     static QAtomicInt nextNamePipeId;
 
+    static QString taskName;
+
     WPMUtils();
 
     static bool isProcessRunning(HANDLE process);
@@ -75,6 +77,8 @@ private:
     static QList<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
 
     static void closeHandles(const QList<HANDLE> handles);
+
+    static QString getTaskName();
 public:
     /** true = install programs globally, false = locally */
     static bool adminMode;
@@ -540,7 +544,7 @@ public:
     static void fireEnvChanged();
 
     /**
-     * @brief creates the task "Npackd\UpdatePackages" in the Windows scheduler.
+     * @brief creates the task "Npackd\CheckForUpdates" in the Windows scheduler.
      * The task search for updates and shows a notification if any were found.
      * @param enabled is the task enabled?
      * @return error message
@@ -857,11 +861,25 @@ public:
     static bool copyDirectory(QString src, QString dest);
 
     /**
-     * @brief search for a task "Npackd\UpdatePackages" in the Windows scheduler
+     * @brief search for a task "Npackd\CheckForUpdates" in the Windows scheduler
      * @param err error message will be stored here
      * @return whether the task is enabled
      */
     static bool isTaskEnabled(QString* err);
+
+    /**
+     * @brief converts the given SID to a string format.
+     * @param pSID
+     * @param err error message will be stored here
+     * @return SID string
+     */
+    static QString convertSidToString(PSID pSID, QString* err);
+
+    /**
+     * @param err error message will be stored here
+     * @return [move] token data or nullptr
+     */
+    static PTOKEN_USER getUserSID(QString *err);
 };
 
 #endif // WPMUTILS_H

@@ -186,12 +186,12 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBoxAutomaticUpdates">
+       <widget class="QCheckBox" name="checkBoxCheckForUpdates">
         <property name="toolTip">
-         <string>enables daily search and notification about existing updates. The time will be chosen at random.</string>
+         <string>enables daily search and notification about existing updates. The time will be chosen at random. The notifications are only shown to the current user.</string>
         </property>
         <property name="text">
-         <string>Automatic updates</string>
+         <string>Update notifications</string>
         </property>
        </widget>
       </item>

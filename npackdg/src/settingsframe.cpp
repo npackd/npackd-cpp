@@ -81,7 +81,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 		}
 	}
 
-    ui->checkBoxAutomaticUpdates->setChecked(WPMUtils::isTaskEnabled(&err));
+    ui->checkBoxCheckForUpdates->setChecked(WPMUtils::isTaskEnabled(&err));
 }
 
 SettingsFrame::~SettingsFrame()
@@ -288,7 +288,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton */*button*/)
     // test: scheduling a task
     //CoInitialize(NULL);
     if (err.isEmpty()) {
-        err = WPMUtils::createMSTask(ui->checkBoxAutomaticUpdates->isChecked());
+        err = WPMUtils::createMSTask(ui->checkBoxCheckForUpdates->isChecked());
     }
 
     if (!err.isEmpty())

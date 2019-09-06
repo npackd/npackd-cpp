@@ -18,6 +18,7 @@
 #include <memory>
 #include <taskschd.h>
 #include <comdef.h>
+#include <sddl.h>
 
 //#define CCH_RM_MAX_APP_NAME 255
 //#define CCH_RM_MAX_SVC_NAME 63
@@ -59,6 +60,8 @@ HANDLE WPMUtils::hEventLog = nullptr;
 const char* WPMUtils::UCS2LE_BOM = "\xFF\xFE";
 
 const char* WPMUtils::CRLF = "\r\n";
+
+QString WPMUtils::taskName;
 
 HRTimer WPMUtils::timer(2);
 
@@ -205,7 +208,9 @@ bool WPMUtils::isTaskEnabled(QString* err)
         }
     }
 
-    const wchar_t* taskName = L"UpdatePackages";
+    if (taskName.isEmpty()) {
+        taskName = getTaskName();
+    }
 
     ITaskFolder* npackdFolder = nullptr;
     const _bstr_t npackdFolderName(L"Npackd");
@@ -239,7 +244,7 @@ bool WPMUtils::isTaskEnabled(QString* err)
 
     if (err->isEmpty()) {
         if (npackdFolder) {
-            hr = npackdFolder->GetTask(_bstr_t(taskName), &res);
+            hr = npackdFolder->GetTask(_bstr_t(toLPWSTR(taskName)), &res);
             if (FAILED(hr)) {
                 formatMessage(hr, err);
             }
@@ -275,6 +280,84 @@ bool WPMUtils::isTaskEnabled(QString* err)
     }
 
     return result;
+}
+
+PTOKEN_USER WPMUtils::getUserSID(QString* err)
+{
+    HANDLE hToken = nullptr;
+
+    if (!OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, TRUE, &hToken)) {
+        DWORD e = GetLastError();
+        if (e == ERROR_NO_TOKEN) {
+            if (!OpenProcessToken(GetCurrentProcess(),
+                    TOKEN_QUERY, &hToken)) {
+                WPMUtils::formatMessage(GetLastError(), err);
+            }
+        } else {
+            WPMUtils::formatMessage(e, err);
+        }
+        qCDebug(npackd) << "hasAdminPrivileges.1";
+    }
+
+    // Get the size of the memory buffer needed for the SID
+    DWORD dwBufferSize = 0;
+    if (err->isEmpty()) {
+        if (!GetTokenInformation(hToken, TokenUser, nullptr, 0, &dwBufferSize)) {
+            DWORD e = GetLastError();
+            if (e != ERROR_INSUFFICIENT_BUFFER)   {
+                WPMUtils::formatMessage(e, err);
+            }
+        }
+    }
+
+    PTOKEN_USER pTokenUser = nullptr;
+    if (err->isEmpty()) {
+        pTokenUser = reinterpret_cast<PTOKEN_USER>(new char[dwBufferSize]);
+
+        // Retrieve the token information in a TOKEN_USER structure
+        if (!GetTokenInformation(hToken, TokenUser, pTokenUser,
+                dwBufferSize, &dwBufferSize)) {
+            WPMUtils::formatMessage(GetLastError(), err);
+        }
+    }
+
+    // Check if SID is valid
+    if (err->isEmpty()) {
+        if (!IsValidSid(pTokenUser->User.Sid)) {
+            *err = "Invalid user SID";
+        }
+    }
+
+    if (hToken)
+        CloseHandle(hToken);
+
+    if (!err->isEmpty()) {
+        delete[] pTokenUser;
+        pTokenUser = nullptr;
+    }
+
+    return pTokenUser;
+}
+
+QString WPMUtils::convertSidToString(PSID pSID, QString *err)
+{
+    QString r;
+
+    err->clear();
+
+    // Get string corresponding to SID
+    LPTSTR pszSID = nullptr;
+    if (!ConvertSidToStringSid(pSID, &pszSID)) {
+        formatMessage(GetLastError(), err);
+    } else {
+        r = QString::fromWCharArray(pszSID);
+    }
+
+    // Release buffer allocated by ConvertSidToStringSid API
+    LocalFree(pszSID);
+
+    // Return string representation of the SID
+    return r;
 }
 
 QString WPMUtils::createMSTask(bool enabled)
@@ -321,7 +404,9 @@ QString WPMUtils::createMSTask(bool enabled)
         }
     }
 
-    const wchar_t* taskName = L"UpdatePackages";
+    if (taskName.isEmpty()) {
+        taskName = getTaskName();
+    }
 
     ITaskFolder* npackdFolder = nullptr;
     const _bstr_t npackdFolderName(L"Npackd");
@@ -372,7 +457,7 @@ QString WPMUtils::createMSTask(bool enabled)
     }
 
     if (err.isEmpty()) {
-        npackdFolder->DeleteTask(_bstr_t(taskName), 0);
+        npackdFolder->DeleteTask(_bstr_t(toLPWSTR(taskName)), 0);
     }
 
     ITaskDefinition *pTask = nullptr;
@@ -404,7 +489,7 @@ QString WPMUtils::createMSTask(bool enabled)
 
     if (err.isEmpty()) {
         hr = pRegInfo->put_Description(_bstr_t(L"WARNING: do not change this task. It is automatically re-created. "
-                "Updates packages marked for automatic updates in Npackd"));
+                "Checks for package updates and shows a notification if any were found."));
         if (FAILED(hr)) {
             formatMessage(hr, &err);
         }
@@ -556,8 +641,8 @@ QString WPMUtils::createMSTask(bool enabled)
     }
 
     if (err.isEmpty()) {
-        _bstr_t path(L"check-for-updates");
-        hr = pExecAction->put_Arguments(path);
+        _bstr_t args(L"check-for-updates");
+        hr = pExecAction->put_Arguments(args);
         if (FAILED(hr)) {
             formatMessage(hr, &err);
         }
@@ -568,7 +653,7 @@ QString WPMUtils::createMSTask(bool enabled)
     IRegisteredTask *pRegisteredTask = nullptr;
     if (err.isEmpty()) {
         hr = npackdFolder->RegisterTaskDefinition(
-                _bstr_t(taskName),
+                _bstr_t(toLPWSTR(taskName)),
                 pTask,
                 TASK_CREATE_OR_UPDATE,
                 _variant_t(),
@@ -1488,6 +1573,25 @@ void WPMUtils::closeHandles(const QList<HANDLE> handles)
     for (int i = 0; i < handles.size(); i++) {
         CloseHandle(handles[i]);
     }
+}
+
+QString WPMUtils::getTaskName()
+{
+    QString r = "CheckForUpdates";
+
+    QString err;
+    PTOKEN_USER t = getUserSID(&err);
+    if (err.isEmpty()) {
+        QString sid = convertSidToString(t->User.Sid, &err);
+        if (err.isEmpty()) {
+            r.append("-");
+            r.append(sid);
+        }
+    }
+
+    delete[] t;
+
+    return r;
 }
 
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
