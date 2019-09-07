@@ -3797,11 +3797,13 @@ void WPMUtils::executeFile(Job* job, const QString& where,
             nextNamePipeId.fetchAndAddOrdered(1));
 
     if (job->shouldProceed()) {
+        // the output buffer is much bigger so that processes that
+        // output a lot of data do not slow down the execution
         g_hChildStd_OUT_Rd = CreateNamedPipe(
                 WPMUtils::toLPWSTR(name),
                 PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
                 PIPE_TYPE_BYTE | PIPE_WAIT, 1,
-                128, 128, 1000, &saAttr);
+                128, 512 * 1024, 1000, &saAttr);
         job->checkOSCall(g_hChildStd_OUT_Rd != INVALID_HANDLE_VALUE);
     }
 
@@ -3917,7 +3919,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
         int64_t outputLen = 0;
         DWORD ec = 0;
-        const int BUFSIZE = 1024;
+        const int BUFSIZE = 512 * 1024;
         char* chBuf = new char[BUFSIZE];
         while (true) {
             job->checkTimeout();
