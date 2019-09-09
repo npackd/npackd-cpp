@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>591</width>
-    <height>421</height>
+    <width>824</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,6 +58,12 @@
           <horstretch>0</horstretch>
           <verstretch>1</verstretch>
          </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>400</height>
+         </size>
         </property>
         <property name="toolTip">
          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -130,6 +136,16 @@ p, li { white-space: pre-wrap; }
        </layout>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBoxCheckForUpdates">
+        <property name="toolTip">
+         <string>enables daily search and notification about existing updates. The time will be chosen at random. The notifications are only shown to the current user.</string>
+        </property>
+        <property name="text">
+         <string>Update notifications</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="title">
          <string>How to close running applications:</string>
@@ -186,14 +202,17 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBoxCheckForUpdates">
-        <property name="toolTip">
-         <string>enables daily search and notification about existing updates. The time will be chosen at random. The notifications are only shown to the current user.</string>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <property name="text">
-         <string>Update notifications</string>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
         </property>
-       </widget>
+       </spacer>
       </item>
      </layout>
     </widget>
