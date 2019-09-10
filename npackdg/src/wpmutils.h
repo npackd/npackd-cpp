@@ -854,7 +854,6 @@ public:
     /**
      * Copies a directory.
      *
-     * @param job progress for this task
      * @param src source path
      * @param dest destination path
      */

@@ -28,44 +28,61 @@ int App::listMSI()
     return 0;
 }
 
-void App::catFile(Job *job)
+void App::unwrapDir(Job *job)
 {
-    job->setTitle("Outputting the text file");
-
-    QString file = cl.get("file");
+    QString path = cl.get("path");
 
     if (job->shouldProceed()) {
-        if (file.isNull()) {
-            job->setErrorMessage("Missing option: --file");
-        }
-    }
-
-    HANDLE hStdout = INVALID_HANDLE_VALUE;
-    if (job->shouldProceed()) {
-        hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-        if (hStdout == INVALID_HANDLE_VALUE) {
-            job->setErrorMessage("Invalid stdout handle");
-        }
-    }
-
-    QFile* qfile = nullptr;
-    if (job->shouldProceed()) {
-        qfile = new QFile(file);
-        if (!qfile->open(QIODevice::ReadOnly | QIODevice::Unbuffered | QIODevice::ExistingOnly)) {
-            job->setErrorMessage("Cannot open the file");
+        if (path.isNull()) {
+            job->setErrorMessage("Missing option: --path");
         }
     }
 
     if (job->shouldProceed()) {
-        QTextStream in(qfile);
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            line.append("\r\n");
-            WPMUtils::outputTextConsole(line);
+        QFileInfo fi(path);
+        if (!fi.exists() || !fi.isDir()) {
+            job->setErrorMessage(QString("Invalid directory: %0").arg(path));
         }
     }
 
-    delete qfile;
+    if (job->shouldProceed()) {
+        QDir aDir(path);
+        QFileInfoList entries = aDir.entryInfoList(
+                QDir::NoDotAndDotDot |
+                QDir::AllEntries | QDir::System);
+        int count = entries.size();
+        for (int idx = 0; idx < count; idx++) {
+            QFileInfo entryInfo = entries[idx];
+
+            // special case: a sub-directory/file with the same name as the parent directory
+            if (entryInfo.fileName().compare(aDir.dirName(), Qt::CaseInsensitive) != 0) {
+                aDir.rename(entryInfo.fileName(), QStringLiteral("..\\") + entryInfo.fileName());
+            }
+            job->setProgress(idx / static_cast<double>(count + 1));
+
+            if (!job->shouldProceed())
+                break;
+        }
+
+        // if an entry with the same name exists inside
+        if (!aDir.dirName().isEmpty() && aDir.exists(aDir.dirName())) {
+            Job* sub = job->newSubJob(1 / static_cast<double>(count + 1),
+                    QString("Unwrap directory %0").arg(aDir.path() + "\\" + aDir.dirName()),
+                    true, true);
+            unwrapDir(sub);
+        }
+
+        if (job->shouldProceed()) {
+            // if the directory was not deleted, it is not a problem
+            Job* sub = job->newSubJob(1 / static_cast<double>(count + 1),
+                    QString("Delete directory %0").arg(aDir.path()),
+                    true, false);
+            WPMUtils::removeDirectory(sub, aDir.absolutePath());
+        }
+
+        if (job->shouldProceed())
+            job->setProgress(1);
+    }
 
     job->complete();
 }
@@ -118,14 +135,15 @@ int App::process()
         r = wait();
 //    } else if (fr.at(0) == "remove" || fr.at(0) == "rm") {
 //        r = remove();
-    } else if (fr.at(0) == "cat") {
+    } else if (fr.at(0) == "unwrap-dir") {
         Job* job = new Job();
-        catFile(job);
+        unwrapDir(job);
         if (!job->getErrorMessage().isEmpty()) {
             r = 1;
             WPMUtils::writeln(job->getErrorMessage() + "\n", false);
         }
         delete job;
+
     } else {
         WPMUtils::writeln("Wrong command: " + fr.at(0), false);
         r = 1;
@@ -317,14 +335,14 @@ int App::help()
         "        prints this help",
         "    clu add-path --path=<path>",
         "        appends the specified path to the system-wide PATH variable",
-        "    clu cat --file <path>",
-        "        output a text file to the console (faster than 'type')",
         "    clu remove-path --path=<path>",
         "        removes the specified path from the system-wide PATH variable",
         "    clu list-msi",
         "        lists all installed MSI packages",
         "    clu get-product-code --file=<file>",
         "        prints the product code of an MSI file",
+        "    clu unwrap-dir --path <path>",
+        "        move the content of a directory one level higher",
         "    clu wait --timeout=<milliseconds>",
         "        wait for the specified amount of time",
 //        "    clu remove|rm --title=<regular expression>",
