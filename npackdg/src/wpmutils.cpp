@@ -3757,7 +3757,7 @@ QString WPMUtils::checkURL(const QUrl &base, QString *url, bool allowEmpty)
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         QIODevice* outputFile, const QStringList& env,
-        bool printScriptOutput, bool unicode)
+        bool printScriptOutput, bool unicode, bool wait)
 
 {
     qCDebug(npackd) << where << path << nativeArguments;
@@ -3797,43 +3797,53 @@ void WPMUtils::executeFile(Job* job, const QString& where,
             nextNamePipeId.fetchAndAddOrdered(1));
 
     if (job->shouldProceed()) {
-        // the output buffer is much bigger so that processes that
-        // output a lot of data do not slow down the execution
-        g_hChildStd_OUT_Rd = CreateNamedPipe(
-                WPMUtils::toLPWSTR(name),
-                PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
-                PIPE_TYPE_BYTE | PIPE_WAIT, 1,
-                128, 512 * 1024, 1000, &saAttr);
-        job->checkOSCall(g_hChildStd_OUT_Rd != INVALID_HANDLE_VALUE);
+        if (wait) {
+            // the output buffer is much bigger so that processes that
+            // output a lot of data do not slow down the execution
+            g_hChildStd_OUT_Rd = CreateNamedPipe(
+                    WPMUtils::toLPWSTR(name),
+                    PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
+                    PIPE_TYPE_BYTE | PIPE_WAIT, 1,
+                    128, 512 * 1024, 1000, &saAttr);
+            job->checkOSCall(g_hChildStd_OUT_Rd != INVALID_HANDLE_VALUE);
+        }
     }
 
     if (job->shouldProceed()) {
-        g_hChildStd_OUT_Wr = CreateFileW(
-                WPMUtils::toLPWSTR(name),
-                GENERIC_WRITE,
-                0,
-                &saAttr,
-                OPEN_EXISTING,
-                FILE_ATTRIBUTE_NORMAL,
-                nullptr);
-        job->checkOSCall(g_hChildStd_OUT_Wr != INVALID_HANDLE_VALUE);
+        if (wait) {
+            g_hChildStd_OUT_Wr = CreateFileW(
+                    WPMUtils::toLPWSTR(name),
+                    GENERIC_WRITE,
+                    0,
+                    &saAttr,
+                    OPEN_EXISTING,
+                    FILE_ATTRIBUTE_NORMAL,
+                    nullptr);
+            job->checkOSCall(g_hChildStd_OUT_Wr != INVALID_HANDLE_VALUE);
+        }
     }
 
     if (job->shouldProceed()) {
-        job->checkOSCall(
-                SetHandleInformation(g_hChildStd_OUT_Rd,
-                HANDLE_FLAG_INHERIT, 0));
+        if (wait) {
+            job->checkOSCall(
+                    SetHandleInformation(g_hChildStd_OUT_Rd,
+                    HANDLE_FLAG_INHERIT, 0));
+        }
     }
 
     if (job->shouldProceed()) {
-        job->checkOSCall(
-                CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0));
+        if (wait) {
+            job->checkOSCall(
+                    CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0));
+        }
     }
 
     if (job->shouldProceed()) {
-        job->checkOSCall(
-                SetHandleInformation(g_hChildStd_IN_Wr,
-                HANDLE_FLAG_INHERIT, 0));
+        if (wait) {
+            job->checkOSCall(
+                    SetHandleInformation(g_hChildStd_IN_Wr,
+                    HANDLE_FLAG_INHERIT, 0));
+        }
     }
 
     bool success = false;
@@ -3912,7 +3922,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     }
 
     // read the output
-    if (job->shouldProceed()) {
+    if (job->shouldProceed() && wait) {
         OVERLAPPED stOverlapped = {0};
         HANDLE hEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
         stOverlapped.hEvent = hEvent;

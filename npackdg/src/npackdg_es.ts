@@ -3659,5 +3659,9 @@ p, li { white-space: pre-wrap; }
         <source>Update notifications</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Configure proxy settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

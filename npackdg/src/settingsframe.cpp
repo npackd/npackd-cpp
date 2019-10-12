@@ -308,3 +308,15 @@ void SettingsFrame::on_pushButton_clicked()
          setInstallationDirectory(WPMUtils::normalizePath(dir));
 }
 
+void SettingsFrame::on_pushButtonProxySettings_clicked()
+{
+    Job* job = new Job();
+    QString d = WPMUtils::getWindowsDir();
+
+    WPMUtils::executeFile(job, d, d + "\\System32\\rundll32.exe",
+            "inetcpl.cpl,LaunchConnectionDialog", nullptr,
+            QStringList(), false, true, false);
+    if (!job->getErrorMessage().isEmpty())
+        MainWindow::getInstance()->addErrorMessage(job->getErrorMessage());
+    delete job;
+}

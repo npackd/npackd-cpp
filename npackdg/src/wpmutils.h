@@ -667,12 +667,13 @@ public:
      * @param printScriptOutput true = redirect the output to the default output
      *     stream
      * @param unicode true = UTF-16, false = 1 byte system encoding
+     * @param wait true = wait for the process to end
      */
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             QIODevice *outputFile,
             const QStringList& env,
-            bool printScriptOutput=false, bool unicode=true);
+            bool printScriptOutput=false, bool unicode=true, bool wait=true);
 
     /**
      * @param job job to monitor the progress. The error message will be set
