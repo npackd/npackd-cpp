@@ -40,7 +40,7 @@ QList<PackageVersion*> Repository::getPackageVersions(const QString& package)
 {
     QList<PackageVersion*> ret = this->package2versions.values(package);
 
-    qSort(ret.begin(), ret.end(), packageVersionLessThan2);
+    std::sort(ret.begin(), ret.end(), packageVersionLessThan2);
 
     return ret;
 }
@@ -52,7 +52,7 @@ QList<PackageVersion*> Repository::getPackageVersions_(const QString& package,
 
     QList<PackageVersion*> ret = this->package2versions.values(package);
 
-    qSort(ret.begin(), ret.end(), packageVersionLessThan2);
+    std::sort(ret.begin(), ret.end(), packageVersionLessThan2);
 
     for (int i = 0; i < ret.count(); i++) {
         ret[i] = ret.at(i)->clone();

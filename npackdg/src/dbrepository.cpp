@@ -539,7 +539,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
 
     // qCDebug(npackd) << vs.count();
 
-    qSort(r.begin(), r.end(), packageVersionLessThan3);
+    std::sort(r.begin(), r.end(), packageVersionLessThan3);
 
     return r;
 }
@@ -577,7 +577,7 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
 
     // qCDebug(npackd) << vs.count();
 
-    qSort(r.begin(), r.end(), packageVersionLessThan3);
+    std::sort(r.begin(), r.end(), packageVersionLessThan3);
 
     return r;
 }

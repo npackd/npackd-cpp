@@ -56,7 +56,7 @@ QStringList App::sortPackageVersionsByPackageTitle(
         items.append(pair);
     }
 
-    qSort(items.begin(), items.end(), compareByPackageTitle);
+    std::sort(items.begin(), items.end(), compareByPackageTitle);
 
     QStringList titles;
     for (int i = 0; i < list->count(); i++) {
@@ -931,7 +931,7 @@ void App::search(Job* job)
     }
 
     if (job->shouldProceed()) {
-        qSort(list.begin(), list.end(), packageLessThan);
+        std::sort(list.begin(), list.end(), packageLessThan);
 
         if (json) {
             QJsonObject top;

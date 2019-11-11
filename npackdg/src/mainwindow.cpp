@@ -108,7 +108,7 @@ for (int i = 0; i < words.count(); i++) {
     QString w = words.at(i);
     entries.append(QPair<QString, int>(w, it->words.value(w)));
 }
-qSort(entries.begin(), entries.end(), comparesi);
+std::sort(entries.begin(), entries.end(), comparesi);
 
 QWidget *window = new QWidget(jobsScrollArea);
 FlowLayout *layout = new FlowLayout();
