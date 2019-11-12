@@ -48,8 +48,8 @@ private:
     mutable QMutex mutex;
 
     QCache<QString, License> licenses;
-
     mutable QCache<QString, PackageVersionList> packageVersions;
+    mutable QCache<QString, Package> packages;
 
     QMap<int, QString> categories;
 

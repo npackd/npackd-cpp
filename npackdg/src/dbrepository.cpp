@@ -299,56 +299,67 @@ Package *DBRepository::findPackage_(const QString &name)
 
     QString err;
 
-    Package* r = nullptr;
+    Package* r = packages.object(name);
 
-    MySQLQuery q(db);
-    if (!q.prepare(QStringLiteral(
-            "SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE, "
-            "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, STARS "
-            "FROM PACKAGE WHERE NAME = :NAME LIMIT 1")))
-        err = getErrorString(q);
-
-    if (err.isEmpty()) {
-        q.bindValue(QStringLiteral(":NAME"), name);
-        if (!q.exec())
+    if (r) {
+        r = new Package(*r);
+    } else {
+        MySQLQuery q(db);
+        if (!q.prepare(QStringLiteral(
+                "SELECT TITLE, URL, ICON, DESCRIPTION, LICENSE, "
+                "CATEGORY0, CATEGORY1, CATEGORY2, CATEGORY3, CATEGORY4, STARS "
+                "FROM PACKAGE WHERE NAME = :NAME LIMIT 1")))
             err = getErrorString(q);
-    }
 
-    if (err.isEmpty() && q.next()) {
-        r = new Package(name, name);
-        r->title = q.value(0).toString();
-        r->url = q.value(1).toString();
-        r->setIcon(q.value(2).toString());
-        r->description = q.value(3).toString();
-        r->license = q.value(4).toString();
-        int cat0 = q.value(5).toInt();
-        int cat1 = q.value(6).toInt();
-        int cat2 = q.value(7).toInt();
-        int cat3 = q.value(8).toInt();
-        int cat4 = q.value(9).toInt();
-        r->stars = q.value(10).toInt();
-        QString c;
-        if (cat0 > 0) {
-            c.append(findCategory(cat0));
-            if (cat1 > 0) {
-                c.append('/').append(findCategory(cat1));
-                if (cat2 > 0) {
-                    c.append('/').append(findCategory(cat2));
-                    if (cat3 > 0) {
-                        c.append('/').append(findCategory(cat3));
-                        if (cat4 > 0)
-                            c.append('/').append(findCategory(cat4));
+        if (npackd().isDebugEnabled()) {
+            qCDebug(npackd) << name;
+        }
+
+        if (err.isEmpty()) {
+            q.bindValue(QStringLiteral(":NAME"), name);
+            if (!q.exec())
+                err = getErrorString(q);
+        }
+
+        if (err.isEmpty() && q.next()) {
+            r = new Package(name, name);
+            r->title = q.value(0).toString();
+            r->url = q.value(1).toString();
+            r->setIcon(q.value(2).toString());
+            r->description = q.value(3).toString();
+            r->license = q.value(4).toString();
+            int cat0 = q.value(5).toInt();
+            int cat1 = q.value(6).toInt();
+            int cat2 = q.value(7).toInt();
+            int cat3 = q.value(8).toInt();
+            int cat4 = q.value(9).toInt();
+            r->stars = q.value(10).toInt();
+            QString c;
+            if (cat0 > 0) {
+                c.append(findCategory(cat0));
+                if (cat1 > 0) {
+                    c.append('/').append(findCategory(cat1));
+                    if (cat2 > 0) {
+                        c.append('/').append(findCategory(cat2));
+                        if (cat3 > 0) {
+                            c.append('/').append(findCategory(cat3));
+                            if (cat4 > 0)
+                                c.append('/').append(findCategory(cat4));
+                        }
                     }
                 }
             }
+            r->categories.append(c);
+
+            if (err.isEmpty())
+                err = readLinks(r);
+
+            if (err.isEmpty())
+                err = readTags(r);
         }
-        r->categories.append(c);
 
         if (err.isEmpty())
-            err = readLinks(r);
-
-        if (err.isEmpty())
-            err = readTags(r);
+            packages.insert(name, new Package(*r));
     }
 
     return r;
@@ -1362,6 +1373,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
             err = saveTags(p);
     }
 
+    packages.clear();
+
     return err;
 }
 
@@ -1576,6 +1589,7 @@ QString DBRepository::clear()
     this->categories.clear();
     this->licenses.clear();
     this->packageVersions.clear();
+    this->packages.clear();
     this->mutex.unlock();
 
     if (job->shouldProceed()) {

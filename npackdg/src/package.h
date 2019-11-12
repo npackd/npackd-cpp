@@ -68,6 +68,8 @@ public:
     /** number of users that starred this package */
     int stars;
 
+    Package(const Package& p) = default;
+
     Package(const QString& name, const QString& title);
 
     /**
