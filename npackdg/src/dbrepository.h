@@ -29,6 +29,13 @@
 class DBRepository: public AbstractRepository
 {
 private:
+    class PackageVersionList {
+    public:
+        QList<PackageVersion*> data;
+
+        virtual ~PackageVersionList();
+    };
+
     static DBRepository def;
 
     bool tableExists(QSqlDatabase* db,
@@ -41,6 +48,8 @@ private:
     mutable QMutex mutex;
 
     QCache<QString, License> licenses;
+
+    mutable QCache<QString, PackageVersionList> packageVersions;
 
     QMap<int, QString> categories;
 

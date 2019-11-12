@@ -235,6 +235,8 @@ QString DBRepository::saveLicense(License* p, bool replace)
             err = getErrorString(q);
     }
 
+    licenses.clear();
+
     return err;
 }
 
@@ -518,28 +520,45 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
 
     QList<PackageVersion*> r;
 
-    MySQLQuery q(db);
-    if (!q.prepare(QStringLiteral("SELECT CONTENT FROM PACKAGE_VERSION "
-            "WHERE PACKAGE = :PACKAGE")))
-        *err = getErrorString(q);
-
-    if (err->isEmpty()) {
-        q.bindValue(QStringLiteral(":PACKAGE"), package);
-        if (!q.exec()) {
+    PackageVersionList* pvl = packageVersions.object(package);
+    if (pvl) {
+        r.reserve(pvl->data.size());
+        for (int i = 0; i < pvl->data.size(); i++) {
+            r.append(pvl->data.at(i)->clone());
+        }
+    } else {
+        MySQLQuery q(db);
+        if (!q.prepare(QStringLiteral("SELECT CONTENT FROM PACKAGE_VERSION "
+                "WHERE PACKAGE = :PACKAGE")))
             *err = getErrorString(q);
+
+        if (err->isEmpty()) {
+            q.bindValue(QStringLiteral(":PACKAGE"), package);
+            if (!q.exec()) {
+                *err = getErrorString(q);
+            }
+        }
+
+        while (err->isEmpty() && q.next()) {
+            PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
+                    err, false);
+            if (err->isEmpty())
+                r.append(pv);
+        }
+
+        // qCDebug(npackd) << vs.count();
+
+        std::sort(r.begin(), r.end(), packageVersionLessThan3);
+
+        if (err->isEmpty()) {
+            pvl = new PackageVersionList();
+            pvl->data.reserve(r.size());
+            for (int i = 0; i < r.size(); i++) {
+                pvl->data.append(r.at(i)->clone());
+            }
+            this->packageVersions.insert(package, pvl);
         }
     }
-
-    while (err->isEmpty() && q.next()) {
-        PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
-                err, false);
-        if (err->isEmpty())
-            r.append(pv);
-    }
-
-    // qCDebug(npackd) << vs.count();
-
-    std::sort(r.begin(), r.end(), packageVersionLessThan3);
 
     return r;
 }
@@ -1544,6 +1563,8 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
         q->finish();
     }
 
+    packageVersions.clear();
+
     return err;
 }
 
@@ -1553,6 +1574,8 @@ QString DBRepository::clear()
 
     this->mutex.lock();
     this->categories.clear();
+    this->licenses.clear();
+    this->packageVersions.clear();
     this->mutex.unlock();
 
     if (job->shouldProceed()) {
@@ -2855,3 +2878,8 @@ QString DBRepository::open(const QString& connectionName, const QString& file,
     return err;
 }
 
+
+DBRepository::PackageVersionList::~PackageVersionList()
+{
+    qDeleteAll(data);
+}
