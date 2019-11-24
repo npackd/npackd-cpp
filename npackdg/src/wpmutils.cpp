@@ -2996,9 +2996,9 @@ QString WPMUtils::getShellFileOperationErrorMessage(DWORD res)
 
 QString WPMUtils::moveToRecycleBin(QString dir)
 {
-    WPMUtils::reportEvent(QObject::tr(
+    qCInfo(npackd) << QObject::tr(
             "Moving %1 to the recycle bin").
-            arg(dir.replace('/', '\\')));
+            arg(dir.replace('/', '\\'));
 
     SHFILEOPSTRUCTW f;
     memset(&f, 0, sizeof(f));
@@ -3174,9 +3174,8 @@ void WPMUtils::removeDirectory(Job* job, const QString &aDir_, bool firstLevel)
 {
     QDir aDir(aDir_);
     if (firstLevel) {
-        WPMUtils::reportEvent(QObject::tr(
-                "Deleting %1").
-                arg(aDir.absolutePath().replace('/', '\\')));
+        qCInfo(npackd) << QObject::tr("Deleting %1").
+                arg(aDir.absolutePath().replace('/', '\\'));
     }
 
     if (aDir.exists()) {
@@ -4172,8 +4171,8 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
     // Send a stop code to the service.
     if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
-        WPMUtils::reportEvent(QObject::tr(
-                "Sending stop signal to the service %1").arg(serviceName));
+        qCInfo(npackd) << QObject::tr(
+                "Sending stop signal to the service %1").arg(serviceName);
         if (ControlService(schService, SERVICE_CONTROL_STOP,
                 (LPSERVICE_STATUS) &ssp) == 0) {
             formatMessage(GetLastError(), &err);
@@ -4395,8 +4394,8 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
 
     // Attempt to start the service.
     if (err.isEmpty()) {
-        WPMUtils::reportEvent(QObject::tr(
-                "Sending start signal to the service %1").arg(serviceName));
+        qCInfo(npackd) << QObject::tr(
+                "Sending start signal to the service %1").arg(serviceName);
         if (!StartService(
                 schService,  // handle to service
                 0,           // number of arguments

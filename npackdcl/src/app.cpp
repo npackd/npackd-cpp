@@ -1229,7 +1229,7 @@ void App::place(Job* job)
                 "The package %1 %2 was placed successfully in %3").
                 arg(package, version, where);
         WPMUtils::writeln(msg);
-        WPMUtils::reportEvent(msg);
+        qCInfo(npackd) << msg;
     }
 
     if (job->shouldProceed())

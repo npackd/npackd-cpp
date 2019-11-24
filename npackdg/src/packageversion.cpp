@@ -568,14 +568,13 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     deleteShortcutsFuture.waitForFinished();
 
     if (success)
-        WPMUtils::reportEvent(QObject::tr(
+        qCInfo(npackd) << QObject::tr(
                 "The package %1 was removed successfully from %2").
-                arg(this->toString(true), where));
+                arg(this->toString(true), where);
     else
-        WPMUtils::reportEvent(QObject::tr(
+        qCCritical(npackd) << QObject::tr(
                 "The removal of the package %1 from %2 failed: %3").
-                arg(this->toString(true), where, job->getErrorMessage()),
-                EVENTLOG_ERROR_TYPE);
+                arg(this->toString(true), where, job->getErrorMessage());
 
     job->complete();
 }
@@ -1738,14 +1737,13 @@ void PackageVersion::install(Job* job, const QString& where,
     }
 
     if (success) {
-        WPMUtils::reportEvent(QObject::tr(
+        qCInfo(npackd) << QObject::tr(
                 "The package %1 was installed successfully in %2").
-                arg(this->toString(true), where));
+                arg(this->toString(true), where);
     } else {
-        WPMUtils::reportEvent(QObject::tr(
+        qCCritical(npackd) << QObject::tr(
                 "The installation of the package %1 in %2 failed: %3").
-                arg(this->toString(true), where, job->getErrorMessage()),
-                EVENTLOG_ERROR_TYPE);
+                arg(this->toString(true), where, job->getErrorMessage());
     }
 
     if (job->shouldProceed()) {
