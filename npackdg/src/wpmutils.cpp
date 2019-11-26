@@ -3633,8 +3633,6 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
                 1, 0, strings,
                 nullptr);
     }
-
-    qCDebug(npackd) << msg;
 }
 
 void WPMUtils::executeFile(Job* job, const QString& where,

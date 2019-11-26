@@ -11,6 +11,7 @@
 #include "dbrepository.h"
 #include "version.h"
 #include "installedpackages.h"
+#include "eventlogmessagehandler.h"
 
 #include "app.h"
 
@@ -36,11 +37,17 @@ BOOL WINAPI ctrlHandler(DWORD fdwCtrlType)
 
 int main(int argc, char *argv[])
 {
+
+    oldMessageHandler = qInstallMessageHandler(eventLogMessageHandler);
+
     HMODULE m = LoadLibrary(L"exchndl.dll");
 
-    QLoggingCategory::setFilterRules("npackd=false");
+    QLoggingCategory::setFilterRules("npackd=true\nnpackd.debug=false");
 
-#if NPACKED_ADMIN != 1
+    // WPMUtils::writeln(QString("npackd.isDebugEnabled %1").arg(npackd().isDebugEnabled()));
+    // WPMUtils::writeln(QString("npackd.isInfoEnabled %1").arg(npackd().isInfoEnabled()));
+
+#if NPACKD_ADMIN != 1
 	WPMUtils::hasAdminPrivileges();
 #endif
 

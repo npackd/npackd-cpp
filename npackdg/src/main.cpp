@@ -31,17 +31,15 @@
 // Modern and efficient C++ Thread Pool Library
 // https://github.com/vit-vit/CTPL
 
-static QtMessageHandler originalHandler = nullptr;
-
 int main(int argc, char *argv[])
 {
     //qCDebug(npackd) << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
 
-    originalHandler = qInstallMessageHandler(eventLogMessageHandler);
+    qInstallMessageHandler(eventLogMessageHandler);
 
     HMODULE m = LoadLibrary(L"exchndl.dll");
 
-    //QLoggingCategory::setFilterRules("npackd=false");
+    QLoggingCategory::setFilterRules("npackd=true\nnpackd.debug=false");
 
 #if NPACKD_ADMIN != 1
     WPMUtils::hasAdminPrivileges();

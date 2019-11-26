@@ -145,7 +145,10 @@ int App::process()
 
         if (debug) {
             clp.setUpdateRate(0);
+
             QLoggingCategory::setFilterRules("npackd=true");
+            // WPMUtils::writeln(QString("npackd.isDebugEnabled2 %1").arg(npackd().isDebugEnabled()));
+            // WPMUtils::writeln(QString("npackd.isInfoEnabled2 %1").arg(npackd().isInfoEnabled()));
         }
     }
 

@@ -2668,6 +2668,14 @@ p, li { white-space: pre-wrap; }
         <source>Renaming directory</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>The preferred installation directory &quot;%1&quot; is not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to delete the package directory &quot;%1&quot;: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

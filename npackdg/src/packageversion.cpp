@@ -540,6 +540,13 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             removeDirectory(rjob, d.absolutePath(), programCloseType,
                     stoppedServices);
 
+            d.refresh();
+            if (d.exists()) {
+                qCWarning(npackd) << QObject::tr(
+                        "Failed to delete the package directory \"%1\": %2").
+                        arg(d.absolutePath()).arg(rjob->getErrorMessage());
+            }
+
             QString err = setPath("");
             if (!err.isEmpty())
                 job->setErrorMessage(err);

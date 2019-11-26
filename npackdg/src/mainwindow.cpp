@@ -61,6 +61,7 @@
 #include "progresstree2.h"
 #include "exportrepositoryframe.h"
 #include "asyncdownloader.h"
+#include "eventlogmessagehandler.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -714,6 +715,11 @@ void MainWindow::monitoredJobCompleted()
         addErrorMessage(job->getErrorMessage(),
                 job->getTitle() + ": " + job->getErrorMessage(),
                 true, QMessageBox::Critical);
+    }
+
+    QStringList logMessages = getLogMessages();
+    if (!logMessages.isEmpty()) {
+        addTextTab("log", logMessages.join('\n'));
     }
 
     VisibleJobs::getDefault()->unregisterJob(job);

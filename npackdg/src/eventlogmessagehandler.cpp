@@ -5,15 +5,41 @@
 
 #include "QtMessageHandler"
 #include "QMutex"
+#include "QLoggingCategory"
+#include "QTime"
 
 #include "wpmutils.h"
 
-void eventLogMessageHandler(QtMsgType type,const QMessageLogContext& /*context*/,const QString&message) {
+QtMessageHandler oldMessageHandler = nullptr;
+QStringList logMessages;
+QMutex logMutex;
+
+void clearLogMessages()
+{
+    static QMutex mutex;
+    QMutexLocker lock(&mutex);
+
+    logMessages.clear();
+}
+
+QStringList getLogMessages()
+{
+    static QMutex mutex;
+    QMutexLocker lock(&mutex);
+
+    QStringList copy;
+    copy.append(logMessages);
+    return copy;
+}
+
+void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& /*context*/, const QString& message) {
+    QMutexLocker lock(&logMutex);
+
+    if (!npackd().isEnabled(type))
+        return;
+
     // event log is too slow for debug messages
     if (type != QtDebugMsg) {
-        static QMutex mutex;
-        QMutexLocker lock(&mutex);
-
         WORD t;
         switch (type) {
             case QtWarningMsg:
@@ -29,5 +55,27 @@ void eventLogMessageHandler(QtMsgType type,const QMessageLogContext& /*context*/
 
         WPMUtils::reportEvent(message, t);
     }
+
+#ifdef QT_GUI_LIB
+    QTime time = QTime::currentTime();
+    QString s = time.toString("hh:mm:ss.zzz ");
+    s.append(message);
+
+    logMessages.append(s);
+    if (logMessages.size() > 1000) {
+        int n = logMessages.size() - 1000;
+        logMessages.erase(logMessages.begin(), logMessages.begin() + n);
+    }
+#else
+    switch (type) {
+        case QtCriticalMsg:
+        case QtFatalMsg:
+            WPMUtils::writeln(message, false);
+            break;
+        default:
+            WPMUtils::writeln(message, true);
+            break;
+    }
+#endif
 }
 
