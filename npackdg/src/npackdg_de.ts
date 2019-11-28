@@ -2402,19 +2402,19 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The package %1 was installed successfully in %2</source>
-        <translation>Das Paket %1 wurde erfolgreich installiert in %2</translation>
+        <translation type="vanished">Das Paket %1 wurde erfolgreich installiert in %2</translation>
     </message>
     <message>
         <source>The package %1 was removed successfully from %2</source>
-        <translation>Das Paket %1 wurde erfolgreich aus %2 entfernt</translation>
+        <translation type="vanished">Das Paket %1 wurde erfolgreich aus %2 entfernt</translation>
     </message>
     <message>
         <source>The removal of the package %1 from %2 failed: %3</source>
-        <translation>Das Entfernen des Paketes %1 aus %2 ist fehlgeschlagen: %3</translation>
+        <translation type="vanished">Das Entfernen des Paketes %1 aus %2 ist fehlgeschlagen: %3</translation>
     </message>
     <message>
         <source>The installation of the package %1 in %2 failed: %3</source>
-        <translation>Die Installation des Paketes %1 in %2 ist fehlgeschlagen: %3</translation>
+        <translation type="vanished">Die Installation des Paketes %1 in %2 ist fehlgeschlagen: %3</translation>
     </message>
     <message>
         <source>Show the package for this dependency</source>
@@ -2422,7 +2422,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Moving %1 to the recycle bin</source>
-        <translation>Verschiebe %1 in den Papierkorb</translation>
+        <translation type="vanished">Verschiebe %1 in den Papierkorb</translation>
     </message>
     <message>
         <source>Deleting the directory %1</source>
@@ -2674,6 +2674,30 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Failed to delete the package directory &quot;%1&quot;: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The package %1 was removed successfully from &quot;%2&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The removal of the package %1 from &quot;%2&quot; failed: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The package %1 was installed successfully in &quot;%2&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The installation of the package %1 in &quot;%2&quot; failed: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Moving &quot;%1&quot; to the recycle bin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleting &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

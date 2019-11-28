@@ -542,7 +542,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
             d.refresh();
             if (d.exists()) {
-                qCWarning(npackd) << QObject::tr(
+                qCWarning(npackd).noquote() << QObject::tr(
                         "Failed to delete the package directory \"%1\": %2").
                         arg(d.absolutePath()).arg(rjob->getErrorMessage());
             }
@@ -575,12 +575,12 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     deleteShortcutsFuture.waitForFinished();
 
     if (success)
-        qCInfo(npackd) << QObject::tr(
-                "The package %1 was removed successfully from %2").
+        qCInfo(npackd).noquote() << QObject::tr(
+                "The package %1 was removed successfully from \"%2\"").
                 arg(this->toString(true), where);
     else
-        qCCritical(npackd) << QObject::tr(
-                "The removal of the package %1 from %2 failed: %3").
+        qCCritical(npackd).noquote() << QObject::tr(
+                "The removal of the package %1 from \"%2\" failed: %3").
                 arg(this->toString(true), where, job->getErrorMessage());
 
     job->complete();
@@ -1744,12 +1744,12 @@ void PackageVersion::install(Job* job, const QString& where,
     }
 
     if (success) {
-        qCInfo(npackd) << QObject::tr(
-                "The package %1 was installed successfully in %2").
+        qCInfo(npackd).noquote() << QObject::tr(
+                "The package %1 was installed successfully in \"%2\"").
                 arg(this->toString(true), where);
     } else {
-        qCCritical(npackd) << QObject::tr(
-                "The installation of the package %1 in %2 failed: %3").
+        qCCritical(npackd).noquote() << QObject::tr(
+                "The installation of the package %1 in \"%2\" failed: %3").
                 arg(this->toString(true), where, job->getErrorMessage());
     }
 

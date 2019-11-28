@@ -70,7 +70,9 @@ void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& /*context*
     switch (type) {
         case QtCriticalMsg:
         case QtFatalMsg:
-            WPMUtils::writeln(message, false);
+            WPMUtils::outputTextConsole(message + QStringLiteral("\r\n"), false, true,
+                    FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE |
+                    FOREGROUND_INTENSITY | BACKGROUND_RED);
             break;
         default:
             WPMUtils::writeln(message, true);

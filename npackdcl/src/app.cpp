@@ -147,8 +147,6 @@ int App::process()
             clp.setUpdateRate(0);
 
             QLoggingCategory::setFilterRules("npackd=true");
-            // WPMUtils::writeln(QString("npackd.isDebugEnabled2 %1").arg(npackd().isDebugEnabled()));
-            // WPMUtils::writeln(QString("npackd.isInfoEnabled2 %1").arg(npackd().isInfoEnabled()));
         }
     }
 
@@ -263,7 +261,7 @@ int App::process()
         r = 0;
     else {
         r = 1;
-        WPMUtils::writeln(err, false);
+        qCCritical(npackd).noquote() << err;
     }
 
     QCoreApplication::instance()->exit(r);
@@ -1229,10 +1227,10 @@ void App::place(Job* job)
 
     if (success) {
         QString msg = QString(
-                "The package %1 %2 was placed successfully in %3").
+                "The package %1 %2 was placed successfully in \"%3\"").
                 arg(package, version, where);
         WPMUtils::writeln(msg);
-        qCInfo(npackd) << msg;
+        qCInfo(npackd).noquote() << msg;
     }
 
     if (job->shouldProceed())

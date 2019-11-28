@@ -558,7 +558,7 @@ void AbstractRepository::process(Job *job,
                             (!d.exists(try_) && d.rename(dir, try_))) {
                         dir = try_;
                     } else {
-                        qCWarning(npackd) << QObject::tr(
+                        qCWarning(npackd).noquote() << QObject::tr(
                                 "The preferred installation directory \"%1\" is not available").arg(try_);
 
                         try_ = pv->getSecondaryInstallationDirectory();

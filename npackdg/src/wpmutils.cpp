@@ -2996,8 +2996,8 @@ QString WPMUtils::getShellFileOperationErrorMessage(DWORD res)
 
 QString WPMUtils::moveToRecycleBin(QString dir)
 {
-    qCInfo(npackd) << QObject::tr(
-            "Moving %1 to the recycle bin").
+    qCInfo(npackd).noquote() << QObject::tr(
+            "Moving \"%1\" to the recycle bin").
             arg(dir.replace('/', '\\'));
 
     SHFILEOPSTRUCTW f;
@@ -3174,7 +3174,7 @@ void WPMUtils::removeDirectory(Job* job, const QString &aDir_, bool firstLevel)
 {
     QDir aDir(aDir_);
     if (firstLevel) {
-        qCInfo(npackd) << QObject::tr("Deleting %1").
+        qCInfo(npackd).noquote() << QObject::tr("Deleting \"%1\"").
                 arg(aDir.absolutePath().replace('/', '\\'));
     }
 
@@ -3241,7 +3241,7 @@ void WPMUtils::writeln(const QString& txt, bool stdout_)
     outputTextConsole(txt + QStringLiteral("\r\n"), stdout_);
 }
 
-void WPMUtils::outputTextConsole(const QString& txt, bool stdout_)
+void WPMUtils::outputTextConsole(const QString& txt, bool stdout_, bool useColor, WORD attrs)
 {
     HANDLE hStdout;
     if (stdout_)
@@ -3268,9 +3268,19 @@ void WPMUtils::outputTextConsole(const QString& txt, bool stdout_)
 
         DWORD written;
         if (consoleOutput) {
+            CONSOLE_SCREEN_BUFFER_INFO info;
+            if (useColor) {
+                GetConsoleScreenBufferInfo(hStdout, &info);
+                SetConsoleTextAttribute(hStdout, attrs);
+            }
+
             // WriteConsole automatically converts UTF-16 to the code page used
             // by the console
             WriteConsoleW(hStdout, txt.utf16(), txt.length(), &written, nullptr);
+
+            if (useColor) {
+                SetConsoleTextAttribute(hStdout, info.wAttributes);
+            }
         } else {
             // we always write UTF-8 to the output file
             QByteArray arr = txt.toUtf8();
@@ -4169,7 +4179,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
     // Send a stop code to the service.
     if (err.isEmpty() && ssp.dwCurrentState != SERVICE_STOPPED) {
-        qCInfo(npackd) << QObject::tr(
+        qCInfo(npackd).noquote() << QObject::tr(
                 "Sending stop signal to the service %1").arg(serviceName);
         if (ControlService(schService, SERVICE_CONTROL_STOP,
                 (LPSERVICE_STATUS) &ssp) == 0) {
@@ -4392,7 +4402,7 @@ QString WPMUtils::startService(SC_HANDLE schSCManager,
 
     // Attempt to start the service.
     if (err.isEmpty()) {
-        qCInfo(npackd) << QObject::tr(
+        qCInfo(npackd).noquote() << QObject::tr(
                 "Sending start signal to the service %1").arg(serviceName);
         if (!StartService(
                 schService,  // handle to service

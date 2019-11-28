@@ -364,7 +364,8 @@ public:
      * @param txt the text
      * @param stdout_ true = stdout, false = stderr
      */
-    static void outputTextConsole(const QString& txt, bool stdout_=true);
+    static void outputTextConsole(const QString& txt, bool stdout_=true,
+            bool useColor=false, WORD attrs=FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 
     /**
      * Output text to the console. \r\n will be appended automatically.
