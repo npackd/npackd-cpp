@@ -356,9 +356,14 @@ Package *DBRepository::findPackage_(const QString &name)
 
             if (err.isEmpty())
                 err = readTags(r);
+
+            if (!err.isEmpty()) {
+                delete r;
+                r = nullptr;
+            }
         }
 
-        if (err.isEmpty())
+        if (r)
             packages.insert(name, new Package(*r));
     }
 
