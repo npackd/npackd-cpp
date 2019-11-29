@@ -171,7 +171,11 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Enter here your search text. You can enter multiple words if a package should contain all of them. The words prefixed with a minus act as negative filters. The search is case insensitive. No special characters are filtered out.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Geben Sie hier Ihren Suchtext ein. Sie können mehrere Wörter eingeben, wenn ein Paket alle enthalten soll. Die mit einem Minuszeichen versehenen Wörter wirken als Negativfilter. Bei der Suche wird nicht zwischen Groß- und Kleinschreibung unterschieden. Es werden keine Sonderzeichen herausgefiltert.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -534,31 +538,31 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Tags:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tags:</translation>
     </message>
     <message>
         <source>tags assigned to this package</source>
-        <translation type="unfinished"></translation>
+        <translation>Tags, die diesem Paket zugeordnet sind</translation>
     </message>
     <message>
         <source>Stars:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sterne:</translation>
     </message>
     <message>
         <source>number of stars</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzahl Sterne</translation>
     </message>
     <message>
         <source>Update automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisches Update</translation>
     </message>
     <message>
         <source>Issue tracker:</source>
-        <translation type="unfinished"></translation>
+        <translation>Problemverfolger:</translation>
     </message>
     <message>
         <source>issue tracker</source>
-        <translation type="unfinished"></translation>
+        <translation>Problemverfolger</translation>
     </message>
 </context>
 <context>
@@ -2630,75 +2634,75 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Error in &lt;tag&gt; for %1: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler in &lt;tag&gt; für %1: %2</translation>
     </message>
     <message>
         <source>More than one &lt;tag&gt; %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Mehr als ein &lt;tag&gt; %1</translation>
     </message>
     <message>
         <source>Empty ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Leere ID</translation>
     </message>
     <message>
         <source>Clearing the tags table</source>
-        <translation type="unfinished"></translation>
+        <translation>Löschen der Tags-Tabelle</translation>
     </message>
     <message>
         <source>Category</source>
-        <translation type="unfinished"></translation>
+        <translation>Kategorie</translation>
     </message>
     <message>
         <source>Tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Tags</translation>
     </message>
     <message>
         <source>Stars</source>
-        <translation type="unfinished"></translation>
+        <translation>Sterne</translation>
     </message>
     <message>
         <source>Error in &lt;stars&gt; for %1: not a number</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler in &lt;stars&gt; für %1: Keine Zahl</translation>
     </message>
     <message>
         <source>Error copying %1 to %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim kopieren von %1 nach %2</translation>
     </message>
     <message>
         <source>Renaming directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Verzeichnis umbenennen</translation>
     </message>
     <message>
         <source>The preferred installation directory &quot;%1&quot; is not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Das bevorzugte Installationsverzeichnis &quot;%1&quot; ist nicht verfügbar</translation>
     </message>
     <message>
         <source>Failed to delete the package directory &quot;%1&quot;: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Paketverzeichnis &quot;%1&quot; konnte nicht gelöscht werden: %2</translation>
     </message>
     <message>
         <source>The package %1 was removed successfully from &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Paket %1 wurde erfolgreich aus &quot;%2&quot; entfernt</translation>
     </message>
     <message>
         <source>The removal of the package %1 from &quot;%2&quot; failed: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Entfernen des Pakets %1 von &quot;%2&quot; ist fehlgeschlagen: %3</translation>
     </message>
     <message>
         <source>The package %1 was installed successfully in &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Paket %1 wurde erfolgreich in &quot;%2&quot; installiert</translation>
     </message>
     <message>
         <source>The installation of the package %1 in &quot;%2&quot; failed: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Installation des Pakets %1 in &quot;%2&quot; ist fehlgeschlagen: %3</translation>
     </message>
     <message>
         <source>Moving &quot;%1&quot; to the recycle bin</source>
-        <translation type="unfinished"></translation>
+        <translation>Verschieben von &quot;%1&quot; in den Papierkorb</translation>
     </message>
     <message>
         <source>Deleting &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Lösche &quot;%1&quot;</translation>
     </message>
 </context>
 <context>
@@ -2881,15 +2885,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>enables daily search and notification about existing updates. The time will be chosen at random. The notifications are only shown to the current user.</source>
-        <translation type="unfinished"></translation>
+        <translation>ermöglicht die tägliche Suche und Benachrichtigung über bestehende Updates. Die Zeit wird nach dem Zufallsprinzip gewählt. Die Benachrichtigungen werden nur dem aktuellen Benutzer angezeigt.</translation>
     </message>
     <message>
         <source>Update notifications</source>
-        <translation type="unfinished"></translation>
+        <translation>Update-Benachrichtigungen</translation>
     </message>
     <message>
         <source>Configure proxy settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Proxy-Einstellungen konfigurieren</translation>
     </message>
 </context>
 </TS>
