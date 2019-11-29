@@ -1,21 +1,16 @@
 # QUAZIP_FOUND               - QuaZip library was found
 # QUAZIP_INCLUDE_DIRS        - Path to QuaZip include dir
 # QUAZIP_LIBRARIES           - List of QuaZip libraries
+# QUAZIP_DEFINE              - Compiler definitions for QuaZip
+# QUAZIP_STATIC              - QuaZip is static
 
-set(_OLD_FIND_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a" ".so" ".sl" ".dylib" ".dll.a")
-FIND_PACKAGE(ZLIB REQUIRED)
-#find_package(${ARGN})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ${_OLD_FIND_SUFFIXES})
-unset(_OLD_FIND_SUFFIXES)
+find_package(PkgConfig) 
+pkg_check_modules(PC_QUAZIP QUIET QUAZIP) 
 
-FIND_PACKAGE(PkgConfig) 
-PKG_CHECK_MODULES(PC_QUAZIP QUIET QUAZIP) 
-
-FIND_PATH(QUAZIP_INCLUDE_DIRS
+find_path(QUAZIP_INCLUDE_DIR
     NAMES quazip.h
     HINTS ${QUAZIP_ROOT}/include
-			${PC_QUAZIP_INCLUDEDIR}
+          ${PC_QUAZIP_INCLUDEDIR}
           ${PC_QUAZIP_INCLUDE_DIRS}
           $ENV{QUAZIP_HOME}/quazip
           $ENV{QUAZIP_HOME}/include
@@ -23,16 +18,16 @@ FIND_PATH(QUAZIP_INCLUDE_DIRS
           /usr/local/include
           /usr/include
           /quazip/include
-		  "C:/Programme/"
-		  "C:/Program Files"
+          "C:/Programme/"
+          "C:/Program Files"
     PATH_SUFFIXES QuaZip quazip QuaZip5 quazip5
 )
 
-FIND_LIBRARY(QUAZIP_LIBRARIES
-	WIN32_DEBUG_POSTFIX d
-    NAMES libquazip libquazip5
+find_library(QUAZIP_LIBRARIES
+    WIN32_DEBUG_POSTFIX d
+    NAMES libquazip libquazip5 quazip5
     HINTS ${QUAZIP_ROOT}/lib
-			${PC_QUAZIP_LIBDIR}
+          ${PC_QUAZIP_LIBDIR}
           ${PC_QUAZIP_LIBRARY_DIRS}
           $ENV{QUAZIP_HOME}/quazip/release
           $ENV{QUAZIP_HOME}/lib
@@ -41,8 +36,27 @@ FIND_LIBRARY(QUAZIP_LIBRARIES
           /usr/lib
           /lib
           /quazip/lib
-    PATH_SUFFIXES agg agg2
+    PATH_SUFFIXES QuaZip quazip QuaZip5 quazip5
 )
 
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(QUAZIP DEFAULT_MSG QUAZIP_INCLUDE_DIRS QUAZIP_LIBRARIES)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(QUAZIP FOUND_VAR QUAZIP_FOUND REQUIRED_VARS QUAZIP_LIBRARIES QUAZIP_INCLUDE_DIR)
+
+set(QUAZIP_STATIC OFF)
+if(QUAZIP_FOUND)
+    foreach(_QZIP_LIB ${QUAZIP_LIBRARIES})
+        get_filename_component(_QZIP_LIB_NAME ${_QZIP_LIB} NAME_WLE)
+        if(${_QZIP_LIB_NAME} MATCHES "(.*)static[d]*")
+            set(QUAZIP_STATIC ON)
+        endif()
+    endforeach()
+endif()
+
+if(QUAZIP_STATIC)
+    set(QUAZIP_DEFINE "-DQUAZIP_STATIC")
+    find_package(ZLIB REQUIRED)
+else()
+    set(QUAZIP_DEFINE "")
+endif()
+
+mark_as_advanced(QUAZIP_LIBRARIES QUAZIP_INCLUDE_DIR QUAZIP_STATIC QUAZIP_DEFINE)

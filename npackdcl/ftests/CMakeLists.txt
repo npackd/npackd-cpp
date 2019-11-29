@@ -1,26 +1,3 @@
-cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
-
-project(ftests CXX C)
-
-set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../../cmake/")
-SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
-
-if(WIN32)
-  set(CMAKE_USE_RELATIVE_PATHS true)
-  set(CMAKE_SUPPRESS_REGENERATION true)
-endif()
-
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
-
-include(CheckCXXCompilerFlag)
-
-include(../../cmake/Common.cmake)
-
-find_package(QuaZip REQUIRED)
-
-readVersion("../../appveyor.yml")
-
 set(FTESTS_SOURCES
     src/app.cpp
     ../../npackdg/src/downloader.cpp
@@ -83,60 +60,31 @@ set(FTESTS_HEADERS
     ../../npackdg/src/urlinfo.h
 )
 
-set(OUTPUT_FILE_NAME "ftests.exe")
-
 if(MSVC)
-    # Configure the template file that allows debugging
-    set(QT_USE_IMPORTED_TARGETS TRUE)
-    find_package(Qt5Core REQUIRED)
-    set(QT_BIN_DIR ${_qt5Core_install_prefix}/bin)
-    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/ncl.vcxproj.user @ONLY)
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/ftests.vcxproj.user @ONLY)
 endif() 
 
-find_package(Qt5 COMPONENTS xml sql test REQUIRED)
-
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
-link_directories("${Qt5_DIR}\\..\\..")
+find_package(Qt5 COMPONENTS test REQUIRED)
 
 add_executable(ftests
-        ${FTESTS_SOURCES}
-        ${FTESTS_HEADERS}
+	${FTESTS_SOURCES}
+	${FTESTS_HEADERS}
 )
 target_link_libraries(ftests
-    ${QUAZIP_LIBRARIES}
-    ${ZLIB_LIBRARIES}
-    qsqlite
-    Qt5::Sql Qt5::Test Qt5::Xml Qt5::Core
-    qtpcre2
-    icuin
-    icuuc
-    icudt
-    icutu
-    qtharfbuzz
-
-    userenv
-    winmm
-    ole32
-    uuid
-    wininet
-    psapi
-    version
-    shlwapi
-    msi
-    netapi32
-    Ws2_32
+    ${NPACKED_BASE_LIBS}
+    Qt5::Test
 )
-target_include_directories(ftests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../../npackdg/src)
-target_compile_definitions(ftests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
+if(${NPACKED_FORCE_STATIC_QT})
+    target_link_libraries(ftests
+        qtharfbuzz
+        icuin
+        icuuc
+        icudt
+        icutu
+    )
+endif()
 
 install(TARGETS ftests DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-if(MSVC)
-    set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb)
-    set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll)
-    install(FILES ${QT5_BIN_DEBUG} CONFIGURATIONS Debug DESTINATION ${CMAKE_INSTALL_PREFIX})
-    install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
+if(WIN32)
+  install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime \"${CMAKE_INSTALL_PREFIX}/ftests.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\" COMMAND_ECHO STDOUT)")
 endif()

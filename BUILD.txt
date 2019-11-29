@@ -14,7 +14,7 @@ their 32 bit versions.
 - mkdir build
 - cd build
 - export QTDIR=C:/msys64/mingw64/qt5-static (note the use of the forward slashes here!!!)
-- cmake -G "MinGW Makefiles" ..\ "-DQUAZIP_ROOT:PATH=C:\Program Files\QuaZIP" "-DQTDIR:PATH=C:\msys64\mingw64\qt5-static" "-DCMAKE_BUILD_TYPE=MinSizeRel"
+- cmake -G "MinGW Makefiles" ..\ "-DQUAZIP_ROOT:PATH=C:\Program Files\QuaZIP" "-DQTDIR:PATH=C:\msys64\mingw64\qt5-static" "-DNPACKED_FORCE_STATIC_QT:BOOL=ON" "-DCMAKE_BUILD_TYPE=MinSizeRel"
 - make.exe
 
 

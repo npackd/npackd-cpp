@@ -1,28 +1,3 @@
-cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
-
-project(npackdcl CXX C)
-
-set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/")
-
-if(WIN32)
-  set(CMAKE_USE_RELATIVE_PATHS true)
-  set(CMAKE_SUPPRESS_REGENERATION true)
-endif()
-
-if(NOT MSVC)
-  SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
-  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
-endif()
-
-include(CheckCXXCompilerFlag)
-
-include(../cmake/Common.cmake)
-
-find_package(QuaZip REQUIRED)
-
-readVersion("../appveyor.yml")
-
 set(NPACKDCL_SOURCES
     ../npackdg/src/visiblejobs.cpp
     ../npackdg/src/repository.cpp
@@ -89,77 +64,35 @@ set(NPACKDCL_HEADERS
     src/app.h
 )
 
-option(NPACKD_ADMIN "Force admin right on program" TRUE)
-set(OUTPUT_FILE_NAME "npackdcl.exe")
 configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
 file(COPY ../npackdg/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 list(APPEND NPACKDCL_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc)
-
 if(MSVC)
-    # Configure the template file that allows debugging
-    set(QT_USE_IMPORTED_TARGETS TRUE)
-    find_package(Qt5Core REQUIRED)
-    set(QT_BIN_DIR ${_qt5Core_install_prefix}/bin)
     configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.vcxproj.user @ONLY)
 endif() 
-
-find_package(Qt5 COMPONENTS xml sql REQUIRED)
-
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
-link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
-link_directories("${Qt5_DIR}\\..\\..")
-
 
 add_executable(npackdcl
     ${NPACKDCL_SOURCES}
     ${NPACKDCL_HEADERS}
 )
 
-# libraries listed here like 'icuin' are necessary for static builds
-target_link_libraries(npackdcl
-    ${QUAZIP_LIBRARIES}
-    ${ZLIB_LIBRARIES}
-    qsqlite
-    Qt5::Sql Qt5::Xml Qt5::Core
-
-    mingwex
-    qtpcre2
-
-    icuin
-    icuuc
-    icudt
-    icutu
-
-    userenv
-    winmm
-    ole32
-    uuid
-    wininet
-    psapi
-    version
-    shlwapi
-    msi
-    netapi32
-    Ws2_32
-)
-target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
-target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
-if(${NPACKD_ADMIN})
-  target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=1)
-else()
-  target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=0)
+target_link_libraries(npackdcl ${NPACKED_BASE_LIBS})
+if(${NPACKED_FORCE_STATIC_QT})
+    target_link_libraries(npackdcl
+        mingwex
+        icuin
+        icuuc
+        icudt
+        icutu
+    )
 endif()
 
 install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES ../CrystalIcons_LICENSE.txt ../LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-if(MSVC)
-    set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb)
-    set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll)
-    install(FILES ${QT5_BIN_DEBUG} CONFIGURATIONS Debug DESTINATION ${CMAKE_INSTALL_PREFIX})
-    install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
+if(WIN32)
+  install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime \"${CMAKE_INSTALL_PREFIX}/npackdcl.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\" COMMAND_ECHO STDOUT)")
 endif()
 
-add_subdirectory(tests)
-add_subdirectory(ftests)
+if(${NPACKD_BUILD_TESTS})
+    add_subdirectory(tests)
+    add_subdirectory(ftests)
+endif()
