@@ -45,8 +45,6 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 goto start
 
 :start
-cd npackdcl
-cd tests
 
 mkdir build
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -59,26 +57,13 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install -DNPACKED_FORCE_STATIC_QT:BOOL=ON -DNPACKED_BUILD_CLU:BOOL=OFF -DNPACKED_BUILD_NPACKDCL:BOOL=ON -DNPACKED_BUILD_NPACKDG:BOOL=OFF -DNPACKD_BUILD_TESTS:BOOL=ON
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 ..\install\tests -v2
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-cd ..\..\ftests
-
-mkdir build
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-cd build
-
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 ..\install\ftests -v2
