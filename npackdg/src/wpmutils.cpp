@@ -19,6 +19,7 @@
 #include <taskschd.h>
 #include <comdef.h>
 #include <sddl.h>
+#include <VersionHelpers.h>
 
 //#define CCH_RM_MAX_APP_NAME 255
 //#define CCH_RM_MAX_SVC_NAME 63
@@ -1872,12 +1873,8 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 {
     QList<HANDLE> r;
 
-    OSVERSIONINFO osvi;
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    GetVersionEx(&osvi);
-
     // >= Windows Vista
-    if (osvi.dwMajorVersion >= 6) {
+    if (IsWindowsVistaOrGreater()) {
         typedef BOOL (WINAPI *LPFQUERYFULLPROCESSIMAGENAME)(
                 HANDLE, DWORD, LPTSTR, PDWORD);
 
@@ -2272,12 +2269,8 @@ QStringList WPMUtils::getProcessFiles()
 {
     QStringList r;
 
-    OSVERSIONINFO osvi;
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    GetVersionEx(&osvi);
-
     // >= Windows Vista
-    if (osvi.dwMajorVersion >= 6) {
+    if (IsWindowsVistaOrGreater()) {
         typedef BOOL (WINAPI *LPFQUERYFULLPROCESSIMAGENAME)(
                 HANDLE, DWORD, LPTSTR, PDWORD);
 

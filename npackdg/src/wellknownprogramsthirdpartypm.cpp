@@ -170,7 +170,29 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
 {
     OSVERSIONINFO osvi;
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    GetVersionEx(&osvi);
+	osvi.dwMajorVersion = 6;
+	osvi.dwMinorVersion = 2;
+	osvi.dwBuildNumber = 0;
+	DWORD dwDummy = 0;
+	DWORD dwFVISize = GetFileVersionInfoSize(L"Kernel32.dll", &dwDummy);
+	LPBYTE lpVersionInfo = new BYTE[dwFVISize];
+	if (GetFileVersionInfo(L"Kernel32.dll", 0, dwFVISize, lpVersionInfo) == 0)
+		delete lpVersionInfo;
+	else
+	{
+		UINT uLen;
+		VS_FIXEDFILEINFO *lpFfi;
+		BOOL bVer = VerQueryValue(lpVersionInfo, L"\\", (LPVOID *)&lpFfi, &uLen);
+		if (!(!bVer || uLen == 0))
+		{
+			DWORD dwFileVersionMS = lpFfi->dwProductVersionMS;
+			DWORD dwFileVersionLS = lpFfi->dwProductVersionLS;
+			osvi.dwMajorVersion = HIWORD(dwFileVersionMS);
+			osvi.dwMinorVersion = LOWORD(dwFileVersionMS);
+			osvi.dwBuildNumber = HIWORD(dwFileVersionLS);
+		}
+		delete[] lpVersionInfo;
+	}
     Version v;
     v.setVersion(static_cast<int>(osvi.dwMajorVersion),
             static_cast<int>(osvi.dwMinorVersion),
