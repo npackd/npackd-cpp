@@ -40,9 +40,9 @@ readVersion("appveyor.yml")
 
 option(NPACKD_ADMIN "Force admin right on program" TRUE)
 option(NPACKD_BUILD_TESTS "Build tests" TRUE)
-option(NPACKED_BUILD_CLU "Build command line tool" TRUE)
-option(NPACKED_BUILD_NPACKDCL "Build command line tool" TRUE)
-option(NPACKED_BUILD_NPACKDG "Build command line tool" TRUE)
+option(NPACKED_BUILD_CLU "Build command line utility" TRUE)
+option(NPACKED_BUILD_NPACKDCL "Build command line interface for the Npackd software package manager" TRUE)
+option(NPACKED_BUILD_NPACKDG "Build the graphical interface for the Npackd software package manager" TRUE)
 option(NPACKED_FORCE_STATIC_QT "Force generator to link Qt static" FALSE)
 mark_as_advanced(NPACKED_FORCE_STATIC_QT)
 

@@ -75,6 +75,6 @@ add_executable(clu
 target_link_libraries(clu ${NPACKED_BASE_LIBS})
 
 install(TARGETS clu DESTINATION ${CMAKE_INSTALL_PREFIX})
-if(WIN32)
-  install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime \"${CMAKE_INSTALL_PREFIX}/clu.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\" COMMAND_ECHO STDOUT)")
+if(WIN32 AND NOT ${NPACKED_FORCE_STATIC_QT})
+  install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime --pdb \"${CMAKE_INSTALL_PREFIX}/clu.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
 endif()
