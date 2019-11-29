@@ -698,7 +698,7 @@ DWORD AsyncDownloader::WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
     DWORD Error = ERROR_SUCCESS;
     DWORD BytesWritten = 0;
 
-    BOOL Success;
+    BOOL Success = FALSE;
 
      *Eof = FALSE;
 
