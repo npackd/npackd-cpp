@@ -32,7 +32,7 @@ QStringList getLogMessages()
     return copy;
 }
 
-void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& /*context*/, const QString& message) {
+void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message) {
     QMutexLocker lock(&logMutex);
 
     if (!npackd().isEnabled(type))
@@ -68,15 +68,26 @@ void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& /*context*
     }
 #else
     switch (type) {
+        case QtWarningMsg:
+            WPMUtils::writeln("WARNING: " + message, true);
+            break;
         case QtCriticalMsg:
         case QtFatalMsg:
-            WPMUtils::outputTextConsole(message + QStringLiteral("\r\n"), false, true,
+            WPMUtils::outputTextConsole("ERROR: " + message + QStringLiteral("\r\n"), false, true,
                     FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE |
                     FOREGROUND_INTENSITY | BACKGROUND_RED);
             break;
+        case QtInfoMsg:
+            if (strcmp("npackd.important", context.category) == 0) {
+                WPMUtils::outputTextConsole(message + QStringLiteral("\r\n"), false, true,
+                        FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE |
+                        FOREGROUND_INTENSITY | BACKGROUND_GREEN);
+            } else {
+                WPMUtils::writeln(message, true);
+            }
+            break;
         default:
             WPMUtils::writeln(message, true);
-            break;
     }
 #endif
 }

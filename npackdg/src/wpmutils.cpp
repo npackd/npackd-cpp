@@ -66,6 +66,7 @@ QString WPMUtils::taskName;
 HRTimer WPMUtils::timer(2);
 
 Q_LOGGING_CATEGORY(npackd, "npackd")
+Q_LOGGING_CATEGORY(npackdImportant, "npackd.important")
 
 // definitions for .getProcessHandlesLockingDirectory2
 #define NT_SUCCESS(x) ((x) >= 0)
