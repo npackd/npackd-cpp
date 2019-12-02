@@ -10,6 +10,10 @@
 
 #include "wpmutils.h"
 
+#ifdef QT_GUI_LIB
+#include "mainwindow.h"
+#endif
+
 QtMessageHandler oldMessageHandler = nullptr;
 QStringList logMessages;
 QMutex logMutex;
@@ -58,6 +62,15 @@ void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, c
 
 #ifdef QT_GUI_LIB
     QTime time = QTime::currentTime();
+
+    if (type == QtWarningMsg && strcmp("npackd.important", context.category) == 0) {
+        QMetaObject::invokeMethod(MainWindow::getInstance(), "on_errorMessage",
+                Qt::QueuedConnection,
+                Q_ARG(QString, message),
+                Q_ARG(QString, message), Q_ARG(bool, true),
+                Q_ARG(QMessageBox::Icon, QMessageBox::Warning));
+    }
+
     QString s = time.toString("hh:mm:ss.zzz ");
     s.append(message);
 

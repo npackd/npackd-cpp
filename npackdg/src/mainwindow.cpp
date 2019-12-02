@@ -717,10 +717,12 @@ void MainWindow::monitoredJobCompleted()
                 true, QMessageBox::Critical);
     }
 
+    /*
     QStringList logMessages = getLogMessages();
     if (!logMessages.isEmpty()) {
         addTextTab("log", logMessages.join('\n'));
     }
+    */
 
     VisibleJobs::getDefault()->unregisterJob(job);
     pt->removeJob(job);
@@ -978,6 +980,12 @@ void MainWindow::process(QList<InstallOperation*> &install,
 
     qDeleteAll(install);
     install.clear();
+}
+
+void MainWindow::on_errorMessage(const QString &msg,
+        const QString &details, bool autoHide, QMessageBox::Icon icon)
+{
+    addErrorMessage(msg, details, autoHide, icon);
 }
 
 void MainWindow::processThreadFinished()

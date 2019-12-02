@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<Version>("Version");
     qRegisterMetaType<int64_t>("int64_t");
+    qRegisterMetaType<QMessageBox::Icon>("QMessageBox::Icon");
 
 #if !defined(__x86_64__) && !defined(_WIN64)
     if (WPMUtils::is64BitWindows()) {
