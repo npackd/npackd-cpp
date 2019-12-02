@@ -19,7 +19,13 @@
 #include "hrtimer.h"
 #include "dependency.h"
 
+// Logging category for the whole application.
 Q_DECLARE_LOGGING_CATEGORY(npackd)
+
+// This category can be used for important messages.
+// Currently the only difference is that qInfo() for this category
+// on the console uses green as the background color.
+Q_DECLARE_LOGGING_CATEGORY(npackdImportant)
 
 /**
  * Some utility methods. This class is called WPMUtils because of the original
