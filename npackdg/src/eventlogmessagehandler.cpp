@@ -92,7 +92,7 @@ void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, c
             break;
         case QtInfoMsg:
             if (strcmp("npackd.important", context.category) == 0) {
-                WPMUtils::outputTextConsole(message + QStringLiteral("\r\n"), false, true,
+                WPMUtils::outputTextConsole(message + QStringLiteral("\r\n"), true, true,
                         FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE |
                         FOREGROUND_INTENSITY | BACKGROUND_GREEN);
             } else {
