@@ -1,4 +1,4 @@
-#include "eventlogmessagehandler.h"
+#include "uimessagehandler.h"
 
 #include <iostream>
 #include <fstream>
@@ -9,10 +9,7 @@
 #include "QTime"
 
 #include "wpmutils.h"
-
-#ifdef QT_GUI_LIB
 #include "mainwindow.h"
-#endif
 
 QtMessageHandler oldMessageHandler = nullptr;
 QStringList logMessages;
@@ -60,7 +57,6 @@ void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, c
         WPMUtils::reportEvent(message, t);
     }
 
-#ifdef QT_GUI_LIB
     QTime time = QTime::currentTime();
 
     if (type == QtWarningMsg && strcmp("npackd.important", context.category) == 0) {
@@ -79,29 +75,5 @@ void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, c
         int n = logMessages.size() - 1000;
         logMessages.erase(logMessages.begin(), logMessages.begin() + n);
     }
-#else
-    switch (type) {
-        case QtWarningMsg:
-            WPMUtils::writeln("WARNING: " + message, true);
-            break;
-        case QtCriticalMsg:
-        case QtFatalMsg:
-            WPMUtils::outputTextConsole("ERROR: " + message + QStringLiteral("\r\n"), false, true,
-                    FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE |
-                    FOREGROUND_INTENSITY | BACKGROUND_RED);
-            break;
-        case QtInfoMsg:
-            if (strcmp("npackd.important", context.category) == 0) {
-                WPMUtils::outputTextConsole(message + QStringLiteral("\r\n"), true, true,
-                        FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE |
-                        FOREGROUND_INTENSITY | BACKGROUND_GREEN);
-            } else {
-                WPMUtils::writeln(message, true);
-            }
-            break;
-        default:
-            WPMUtils::writeln(message, true);
-    }
-#endif
 }
 

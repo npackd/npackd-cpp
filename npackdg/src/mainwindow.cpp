@@ -61,7 +61,7 @@
 #include "progresstree2.h"
 #include "exportrepositoryframe.h"
 #include "asyncdownloader.h"
-#include "eventlogmessagehandler.h"
+#include "uimessagehandler.h"
 
 extern HWND defaultPasswordWindow;
 

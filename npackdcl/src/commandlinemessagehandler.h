@@ -6,19 +6,14 @@
 #include "QMutex"
 
 extern QtMessageHandler oldMessageHandler;
-extern QStringList logMessages;
 extern QMutex logMutex;
 
-void clearLogMessages();
-
-QStringList getLogMessages();
-
 /**
- * @brief logs to the Windows event log
+ * @brief logs to the Windows event log and to the console
  * @param type message type
  * @param context context
  * @param message message
  */
-void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context,const QString& message);
+void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message);
 
 #endif // EVENTLOGMESSAGEHANDLER_H

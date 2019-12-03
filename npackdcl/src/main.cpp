@@ -11,7 +11,7 @@
 #include "dbrepository.h"
 #include "version.h"
 #include "installedpackages.h"
-#include "eventlogmessagehandler.h"
+#include "commandlinemessagehandler.h"
 
 #include "app.h"
 

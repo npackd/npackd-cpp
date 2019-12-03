@@ -26,7 +26,7 @@
 #include "installoperation.h"
 #include "uiutils.h"
 #include "clprocessor.h"
-#include "eventlogmessagehandler.h"
+#include "uimessagehandler.h"
 
 // Modern and efficient C++ Thread Pool Library
 // https://github.com/vit-vit/CTPL
