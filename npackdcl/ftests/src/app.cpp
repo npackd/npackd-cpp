@@ -146,18 +146,18 @@ void App::addToDir()
     QString output = captureNpackdCLOutput(
             "add -p active-directory-explorer -f \"C:\\Program Files\\ADE\"");
     QVERIFY2(output.contains(
-            "installed successfully in C:\\Program Files\\ADE"),
+            "installed successfully in \"C:\\Program Files\\ADE\""),
             output.toLatin1());
 
     output = captureNpackdCLOutput("add -p active-directory-explorer");
     QVERIFY2(output.contains(
-            "installed successfully in C:\\Program Files\\ADE"),
+            "installed successfully in \"C:\\Program Files\\ADE\""),
             output.toLatin1());
 
     output = captureNpackdCLOutput(
             "add -p active-directory-explorer -f \"C:\\Program Files\\ADE2\"");
     QVERIFY2(output.contains(
-            "is already installed in C:\\Program Files\\ADE"),
+            "is already installed in \"C:\\Program Files\\ADE\""),
             output.toLatin1());
 
     output = captureNpackdCLOutput("rm -p active-directory-explorer");
@@ -193,7 +193,7 @@ void App::updateToDir()
     QString output = captureNpackdCLOutput(
             "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
     QVERIFY2(output.contains(
-            "installed successfully in C:\\Program Files\\ArecaBackup"),
+            "installed successfully in \"C:\\Program Files\\ArecaBackup\""),
             output.toLatin1());
 
     output = captureNpackdCLOutput("update -p org.areca-backup.ArecaBackup -f \"C:\\Program Files\\ArecaBackupNew\"");
@@ -218,7 +218,7 @@ void App::updateKeepDirectories()
     QString output = captureNpackdCLOutput(
             "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
     QVERIFY2(output.contains(
-            "installed successfully in C:\\Program Files\\ArecaBackup"),
+            "installed successfully in \"C:\\Program Files\\ArecaBackup\""),
             output.toLatin1());
 
     output = captureNpackdCLOutput("update -p org.areca-backup.ArecaBackup -k");
@@ -266,7 +266,7 @@ void App::addVersions()
     QString output = captureNpackdCLOutput(
             "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
     QVERIFY2(output.contains(
-            "installed successfully in C:\\Program Files\\ArecaBackup"),
+            "installed successfully in \"C:\\Program Files\\ArecaBackup\""),
             output.toLatin1());
 
     output = captureNpackdCLOutput("add -p org.areca-backup.ArecaBackup -r [7.3,7.4)");
@@ -399,7 +399,7 @@ void App::installDir()
 
 void App::list()
 {
-    QVERIFY(captureNpackdCLOutput("list").contains("Windows Installer 5.0"));
+    QVERIFY(captureNpackdCLOutput("list").contains("Windows Installer"));
 
     QVERIFY(!captureNpackdCLOutput("list --bare-format").
             contains("Reading list of installed packages"));

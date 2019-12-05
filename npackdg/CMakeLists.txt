@@ -49,7 +49,7 @@ set(NPACKDG_SOURCES
     src/npackdg_plugin_import.cpp
     src/urlinfo.cpp
     src/asyncdownloader.cpp
-    src/eventlogmessagehandler.cpp
+    src/uimessagehandler.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -101,7 +101,7 @@ set(NPACKDG_HEADERS
     src/exportrepositoryframe.h
     src/urlinfo.h
     src/asyncdownloader.h
-    src/eventlogmessagehandler.h
+    src/uimessagehandler.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui

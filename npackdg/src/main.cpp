@@ -26,7 +26,7 @@
 #include "installoperation.h"
 #include "uiutils.h"
 #include "clprocessor.h"
-#include "eventlogmessagehandler.h"
+#include "uimessagehandler.h"
 
 // Modern and efficient C++ Thread Pool Library
 // https://github.com/vit-vit/CTPL
@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<Version>("Version");
     qRegisterMetaType<int64_t>("int64_t");
+    qRegisterMetaType<QMessageBox::Icon>("QMessageBox::Icon");
 
 #if !defined(__x86_64__) && !defined(_WIN64)
     if (WPMUtils::is64BitWindows()) {

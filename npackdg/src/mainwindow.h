@@ -284,6 +284,9 @@ protected:
      * @param programCloseType how the programs should be closed
      */
     void process(QList<InstallOperation*>& install, DWORD programCloseType);
+public slots:
+    void on_errorMessage(const QString& msg, const QString& details="",
+            bool autoHide=true, QMessageBox::Icon icon=QMessageBox::Critical);
 private slots:
     void processThreadFinished();
     void recognizeAndLoadRepositoriesThreadFinished();
@@ -321,6 +324,7 @@ private slots:
     void on_actionRun_triggered();
     void on_actionExport_triggered();
     void on_actionCheck_dependencies_triggered();
+
 };
 
 #endif // MAINWINDOW_H
