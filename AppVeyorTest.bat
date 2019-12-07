@@ -81,7 +81,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-..\install\ftests -v2
+ftests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
