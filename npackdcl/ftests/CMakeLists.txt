@@ -13,6 +13,8 @@ endif()
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
 
+file(COPY Rep.xml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 include(CheckCXXCompilerFlag)
 
 include(../../cmake/Common.cmake)

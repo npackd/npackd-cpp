@@ -605,10 +605,13 @@ void App::setInstallPath(Job* job)
             job->setErrorMessage(r);
     }
 
+    // intentionally no success output here
+    /*
     if (job->shouldProceed()) {
         qCInfo(npackdImportant()).noquote() << QString(
                 "The installation path was changed successfully to \"%1\"").arg(file);
     }
+    */
 
     job->complete();
 }
@@ -1742,7 +1745,7 @@ void App::add(Job* job)
 
                 if (pv->installed() && !WPMUtils::pathEquals(ip_, file)) {
                     job->setErrorMessage(QString(
-                            "The package version %1 is already installed in %2.").
+                            "The package version %1 is already installed in \"%2\"").
                             arg(pv->toString(), ip_));
                 }
             }
