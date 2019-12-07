@@ -202,7 +202,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+I</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>U&amp;ninstall</source>
@@ -214,7 +214,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+N</source>
-        <translation>Ctrl+D</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Open web site</source>
@@ -226,7 +226,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+G</source>
-        <translation>Ctrl+W</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Settings</source>
@@ -238,7 +238,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation>Ctrl+P</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Update</source>
@@ -250,7 +250,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+U</source>
-        <translation>Ctrl+M</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Test download site</source>
@@ -262,7 +262,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>About</source>
@@ -282,7 +282,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scan hard drives</source>
@@ -298,7 +298,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>F5</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Close tab</source>
