@@ -20,8 +20,8 @@ App::App()
 
 void App::init()
 {
-    QString rep = QUrl::fromLocalFile(QDir::currentPath() +
-            "\\..\\Rep.xml").toString();
+    QString rep = QUrl::fromLocalFile(QCoreApplication::applicationDirPath() +
+            "\\Rep.xml").toString();
     captureNpackdCLOutput("set-repo "
             "-u " + rep + " "
             "-u https://www.npackd.org/rep/recent-xml "
@@ -34,9 +34,12 @@ void App::init()
 QString App::captureNpackdCLOutput(const QString& params)
 {
     QDir d(WPMUtils::getExeDir() + "\\..\\..\\install");
+    if (!d.exists("npackdcl.exe"))
+        d.cd(WPMUtils::getExeDir() + "\\..");
 
     QString where = d.absolutePath();
     QString npackdcl = where + "\\npackdcl.exe";
+
     return captureOutput(npackdcl, params, where);
 }
 
@@ -147,17 +150,6 @@ void App::addToDir()
             "add -p active-directory-explorer -f \"C:\\Program Files\\ADE\"");
     QVERIFY2(output.contains(
             "installed successfully in \"C:\\Program Files\\ADE\""),
-            output.toLatin1());
-
-    output = captureNpackdCLOutput("add -p active-directory-explorer");
-    QVERIFY2(output.contains(
-            "installed successfully in \"C:\\Program Files\\ADE\""),
-            output.toLatin1());
-
-    output = captureNpackdCLOutput(
-            "add -p active-directory-explorer -f \"C:\\Program Files\\ADE2\"");
-    QVERIFY2(output.contains(
-            "is already installed in \"C:\\Program Files\\ADE\""),
             output.toLatin1());
 
     output = captureNpackdCLOutput("rm -p active-directory-explorer");

@@ -74,6 +74,7 @@ target_link_libraries(ftests
     ${NPACKED_BASE_LIBS}
     Qt5::Test
 )
+file(COPY Rep.xml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 if(${NPACKED_FORCE_STATIC_QT})
     target_link_libraries(ftests
         qtharfbuzz

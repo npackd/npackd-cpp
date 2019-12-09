@@ -1617,6 +1617,9 @@ void PackageVersion::install(Job* job, const QString& where,
         QStringList* stoppedServices)
 {
     if (installed()) {
+        qCInfo(npackd).noquote() << QObject::tr(
+                "The package %1 is already installed in \"%2\"").
+                arg(this->toString(true), getPath());
         job->setProgress(1);
         job->complete();
         return;

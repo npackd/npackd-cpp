@@ -2704,6 +2704,10 @@ p, li { white-space: pre-wrap; }
         <source>Deleting &quot;%1&quot;</source>
         <translation>Lösche &quot;%1&quot;</translation>
     </message>
+    <message>
+        <source>The package %1 is already installed in &quot;%2&quot;</source>
+        <translation type="unfinished">Das Paket %1 ist bereits in &quot;%2&quot; installiert</translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
