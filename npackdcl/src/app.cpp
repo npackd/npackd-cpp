@@ -246,7 +246,7 @@ int App::process()
             build(job);
         } else {
             job->setErrorMessage(QStringLiteral("Wrong command: ") + cmd +
-                    QStringLiteral(". Try \"ncl help\""));
+                    QStringLiteral(". Try \"npackdcl help\""));
         }
 
         err = job->getErrorMessage();
@@ -316,69 +316,69 @@ void App::usage(Job* job)
     my.normalize();
 
     WPMUtils::writeln(QString(
-            "ncl %1 - command line interface for the Npackd software package manager").
+            "npackdcl %1 - command line interface for the Npackd software package manager").
             arg(my.getVersionString()));
     const char* lines[] = {
-        "Usage: ncl <command> [global options] [options]",
+        "Usage: npackdcl <command> [global options] [options]",
         "",
         "Available commands in alphabetical order:",
-        "    ncl add (--package <package>",
+        "    npackdcl add (--package <package>",
         "            [--version <version> | --versions <versions>])+ ",
         "            [--file <installation directory>]",
         "            [--user <user name>] [--password <password>]",
         "            [--proxy-user <proxy user name>] [--proxy-password <proxy password>]",
         "        installs packages. The newest available version will be ",
         "        installed, if none is specified.",
-        "    ncl add-repo --url <repository>",
+        "    npackdcl add-repo --url <repository>",
         "        appends a repository to the system-wide list of package sources",
-        "    ncl build --package <package> [--version <version> | --versions <versions>])",
+        "    npackdcl build --package <package> [--version <version> | --versions <versions>])",
         "            --output-package <package>",
         "        build a package from another one (e.g. a binary from source code)",
-        "    ncl check",
+        "    npackdcl check",
         "        checks the installed packages for missing dependencies",
-        "    ncl detect [--user <user name>] [--password <password>]",
+        "    npackdcl detect [--user <user name>] [--password <password>]",
         "            [--proxy-user <proxy user name>] [--proxy-password <proxy password>]",
         "        download repositories and detect packages from the MSI ",
         "        database and software control panel",
-        "    ncl info --package <package> [--version <version>]",
+        "    npackdcl info --package <package> [--version <version>]",
         "            [--bare-format | --json]",
         "        shows information about the specified package or package version",
-        "    ncl install-dir [--bare-format | --json]",
+        "    npackdcl install-dir [--bare-format | --json]",
         "        prints the directory where packages will be installed",
-        "    ncl list [--bare-format | --json]",
+        "    npackdcl list [--bare-format | --json]",
         "        lists package versions sorted by package name and version.",
-        "    ncl list-repos [--bare-format | --json]",
+        "    npackdcl list-repos [--bare-format | --json]",
         "        prints the system-wide list of package sources (repositories)",
-        "    ncl help",
+        "    npackdcl help",
         "        prints this help",
-        "    ncl path (--package <package>",
+        "    npackdcl path (--package <package>",
         "            [--version <version> | --versions <versions>])+ ",
         "            [--cmd | --json]",
         "        searches for installed packages and prints their locations",
-        "    ncl place --package <package>",
+        "    npackdcl place --package <package>",
         "            --version <version> --file <directory>",
         "            [--bare-format | --json]",
         "        registers a package version installed without Npackd",
-        "    ncl remove|rm (--package <package> [--version <version>])+",
+        "    npackdcl remove|rm (--package <package> [--version <version>])+",
         "           [--end-process <types>]",
         "        removes packages. The version number may be omitted, ",
         "        if only one is installed.",
-        "    ncl remove-scp --title <title>",
+        "    npackdcl remove-scp --title <title>",
         "        remove a program for the Software Control Panel by title",
-        "    ncl remove-repo --url <repository>",
+        "    npackdcl remove-repo --url <repository>",
         "        removes a repository from the system-wide list of package sources",
-        "    ncl set-repo (--url <repository>)+",
+        "    npackdcl set-repo (--url <repository>)+",
         "        changes the system-wide list of package sources (repositories)",
-        "    ncl search [--query <search terms>] ",
+        "    npackdcl search [--query <search terms>] ",
         "            [--status installed | updateable | all]",
         "            [--bare-format | --json]",
         "        full text search. Lists found packages sorted by package name.",
         "        All packages are shown by default.",
-        "    ncl set-install-dir [--file <directory>]",
+        "    npackdcl set-install-dir [--file <directory>]",
         "        changes the directory where packages will be installed. The",
         "        default directory for program files is used if the --file",
         "        parameter is missing.",
-        "    ncl update (--package <package> [--versions <versions>])+",
+        "    npackdcl update (--package <package> [--versions <versions>])+",
         "            [--end-process <types>]",
         "            [--install] [--keep-directories]",
         "            [--file <installation directory>]",
@@ -386,9 +386,9 @@ void App::usage(Job* job)
         "            [--proxy-user <proxy user name>] [--proxy-password <proxy password>]",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
-        "    ncl where --file <relative path> [--bare-format | --json]",
+        "    npackdcl where --file <relative path> [--bare-format | --json]",
         "        finds all installed packages with the specified file or directory",
-        "    ncl which --file <file> [--bare-format | --json]",
+        "    npackdcl which --file <file> [--bare-format | --json]",
         "        finds the package that owns the specified file or directory",
     };
     for (int i = 0; i < static_cast<int>(sizeof(lines) / sizeof(lines[0])); i++) {
@@ -605,10 +605,13 @@ void App::setInstallPath(Job* job)
             job->setErrorMessage(r);
     }
 
+    // intentionally no success output here
+    /*
     if (job->shouldProceed()) {
         qCInfo(npackdImportant()).noquote() << QString(
                 "The installation path was changed successfully to \"%1\"").arg(file);
     }
+    */
 
     job->complete();
 }
@@ -731,7 +734,7 @@ void App::addRepo(Job* job)
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     qCInfo(npackdImportant()).noquote() <<
-                            "The repository was added successfully. Run \"ncl detect\" to update the local database.";
+                            "The repository was added successfully. Run \"npackdcl detect\" to update the local database.";
                 else
                     job->setErrorMessage(err);
             }
@@ -777,7 +780,7 @@ void App::setRepo(Job* job)
             AbstractRepository::setRepositoryURLs(urls, &err);
             if (err.isEmpty())
                 qCInfo(npackdImportant()).noquote() <<
-                        "The repositories were changed successfully. Run \"ncl detect\" to update the local database.";
+                        "The repositories were changed successfully. Run \"npackdcl detect\" to update the local database.";
             else
                 job->setErrorMessage(err);
         }
@@ -1016,7 +1019,7 @@ void App::removeRepo(Job* job)
                 AbstractRepository::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     qCInfo(npackdImportant()).noquote() <<
-                            "The repository was removed successfully. Run \"ncl detect\" to update the local database.";
+                            "The repository was removed successfully. Run \"npackdcl detect\" to update the local database.";
                 else
                     job->setErrorMessage(err);
             }
@@ -1742,7 +1745,7 @@ void App::add(Job* job)
 
                 if (pv->installed() && !WPMUtils::pathEquals(ip_, file)) {
                     job->setErrorMessage(QString(
-                            "The package version %1 is already installed in %2.").
+                            "The package version %1 is already installed in \"%2\"").
                             arg(pv->toString(), ip_));
                 }
             }
