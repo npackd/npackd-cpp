@@ -64,21 +64,20 @@ set(NPACKDCL_HEADERS
     src/app.h
 )
 
-configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc @ONLY)
-file(COPY ../npackdg/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND NPACKDCL_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.rc)
+list(APPEND NPACKDCL_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/app.rc)
 if(MSVC)
-    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackdcl.vcxproj.user @ONLY)
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/ncl.vcxproj.user @ONLY)
 endif() 
 
-add_executable(npackdcl
+add_executable(ncl
     ${NPACKDCL_SOURCES}
     ${NPACKDCL_HEADERS}
 )
+generateRC(ncl OFF)
 
-target_link_libraries(npackdcl ${NPACKED_BASE_LIBS})
+target_link_libraries(ncl ${NPACKED_BASE_LIBS})
 if(${NPACKED_FORCE_STATIC_QT})
-    target_link_libraries(npackdcl
+    target_link_libraries(ncl
         mingwex
         icuin
         icuuc
@@ -87,9 +86,9 @@ if(${NPACKED_FORCE_STATIC_QT})
     )
 endif()
 
-install(TARGETS npackdcl DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS ncl DESTINATION ${CMAKE_INSTALL_PREFIX})
 if(WIN32 AND NOT ${NPACKED_FORCE_STATIC_QT})
-  install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime --pdb \"${CMAKE_INSTALL_PREFIX}/npackdcl.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
+  install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime --pdb \"${CMAKE_INSTALL_PREFIX}/ncl.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
 endif()
 
 if(${NPACKD_BUILD_TESTS})

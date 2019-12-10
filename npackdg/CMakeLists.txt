@@ -120,14 +120,7 @@ set(NPACKDG_TRANSLATIONS
     src/npackdg_de.ts
 )
 
-file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-if(${NPACKD_ADMIN})
-  file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
-else()
-  configure_file(../npackdcl/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
-endif()
-list(APPEND NPACKDG_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc)
+list(APPEND NPACKDG_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/app.rc)
 if(MSVC)
     configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.vcxproj.user @ONLY)
 endif() 
@@ -139,6 +132,7 @@ add_executable(npackdg WIN32
     ${NPACKDG_HEADERS}
     ${NPACKDG_FORMS}
 )
+generateRC(npackdg ${NPACKD_ADMIN})
 QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 

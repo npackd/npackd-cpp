@@ -60,9 +60,7 @@ set(CLU_HEADERS
     ../npackdg/src/urlinfo.h
 )
 
-configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/clu.rc @ONLY)
-file(COPY ../npackdg/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND CLU_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/clu.rc)
+list(APPEND CLU_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/app.rc)
 if(MSVC)
     configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/clu.vcxproj.user @ONLY)
 endif() 
@@ -71,6 +69,7 @@ add_executable(clu
     ${CLU_SOURCES}
     ${CLU_HEADERS}
 )
+generateRC(clu OFF)
 
 target_link_libraries(clu ${NPACKED_BASE_LIBS})
 
