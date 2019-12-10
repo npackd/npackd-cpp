@@ -1,42 +1,13 @@
-cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 project(npackd-cpp)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" "$ENV{QTDIR}" "${QTDIR}" "$ENV{QTDIR}/lib/cmake" "${QTDIR}/lib/cmake") 
-
-LIST(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
+list(APPEND CMAKE_PREFIX_PATH "$ENV{QTDIR}\\qtbase\\lib\\cmake\\Qt5") 
  
-if(WIN32)
-  set(CMAKE_USE_RELATIVE_PATHS true)
-  set(CMAKE_SUPPRESS_REGENERATION true)
-endif()
-
-# CXX_STANDARD property is supported from cmake 3.1, we have to define -std with old cmake
-set(CMAKE_CXX_STANDARD 11)
-if(NOT MSVC)
-  if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-  endif()
-  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
-  SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
-endif()
-
-include(CheckTypeSize)
-CHECK_TYPE_SIZE("void*" OSMSCOUT_PTR_SIZE BUILTIN_TYPES_ONLY)
-if(OSMSCOUT_PTR_SIZE EQUAL 8)
-  set(NPACKD_PLATFORM_X64 TRUE)
-  set(BITS 64)
-else()
-  set(NPACKD_PLATFORM_X64 FALSE)
-  set(BITS 32)
-endif()
-
-include(CheckCXXCompilerFlag)
 include(cmake/Common.cmake)
-add_definitions(-DUNICODE -D_UNICODE)
-readVersion("appveyor.yml")
 
 option(NPACKD_ADMIN "Force admin right on program" TRUE)
 option(NPACKD_BUILD_TESTS "Build tests" TRUE)
@@ -121,4 +92,3 @@ endif()
 if(${NPACKED_BUILD_NPACKDG})
   add_subdirectory(npackdg)
 endif()
-

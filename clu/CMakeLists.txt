@@ -28,7 +28,7 @@ set(CLU_SOURCES
     ../npackdg/src/msithirdpartypm.cpp
     ../npackdg/src/mysqlquery.cpp
     ../npackdg/src/urlinfo.cpp
-        )
+)
 set(CLU_HEADERS
     src/app.h
     ../npackdg/src/clprogress.h
