@@ -122,6 +122,9 @@ bool Dependency::setVersions(const QString versions)
     return true;
 }
 
+#ifdef _MSC_VER
+#undef max
+#endif
 void Dependency::setUnboundedVersions()
 {
     this->minIncluded = true;

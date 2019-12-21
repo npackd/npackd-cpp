@@ -1440,7 +1440,7 @@ void WPMUtils::disconnectShareUsersFrom(const QString &dir)
                     //qCDebug(npackd) << "share found" << path;
                     QString netName;
                     netName.setUtf16((const ushort*) buf[i].shi502_netname,
-                            wcslen(buf[i].shi502_netname));
+                            (int)wcslen(buf[i].shi502_netname));
                     // NetShareDel(0, buf[i].shi502_netname, 0);
                     // buf[i].shi502_max_uses = 0;
                     //NetShareSetInfo(0, buf[i].shi502_netname, 502,
@@ -1472,7 +1472,7 @@ bool WPMUtils::isDirShared(const QString &dir)
             if ((buf[i].shi502_type & STYPE_MASK) == STYPE_DISKTREE) {
                 QString path;
                 path.setUtf16((const ushort*) buf[i].shi502_path,
-                        wcslen(buf[i].shi502_path));
+					(int)wcslen(buf[i].shi502_path));
                 path = normalizePath(path);
                 //qCDebug(npackd) << "share found" << path;
                 if (isUnderOrEquals(path, dirNormalized)) {
@@ -2006,7 +2006,7 @@ QMap<QString, QString> mapDevices2Drives() {
             WCHAR* drv = drives;
             while (*drv) {
                 QString logicalDrive;
-                logicalDrive.setUtf16((ushort*) drv, wcslen(drv));
+                logicalDrive.setUtf16((ushort*) drv, (int)wcslen(drv));
 
                 if (logicalDrive.length() >= 2) {
                     logicalDrive.chop(logicalDrive.length() - 2);
@@ -2021,7 +2021,7 @@ QMap<QString, QString> mapDevices2Drives() {
                         while (*device) {
                             QString logicalDevice;
                             logicalDevice.setUtf16((ushort*) device,
-                                    wcslen(device));
+								(int)wcslen(device));
                             devices2drives.insert(
                                     logicalDevice + '\\',
                                     logicalDrive + '\\');
@@ -2837,7 +2837,7 @@ QString WPMUtils::getExeFile()
     TCHAR path[MAX_PATH];
     GetModuleFileName(nullptr, path, sizeof(path) / sizeof(path[0]));
     QString r;
-    r.setUtf16((ushort*) path, wcslen(path));
+    r.setUtf16((ushort*) path, (int)wcslen(path));
 
     return r.replace('/', '\\');
 }
@@ -2847,7 +2847,7 @@ QString WPMUtils::getExeDir()
     TCHAR path[MAX_PATH];
     GetModuleFileName(nullptr, path, sizeof(path) / sizeof(path[0]));
     QString r;
-    r.setUtf16((ushort*) path, wcslen(path));
+    r.setUtf16((ushort*) path, (int)wcslen(path));
 
     QDir d(r);
     d.cdUp();
@@ -3444,7 +3444,7 @@ void WPMUtils::deleteShortcuts(const QString& dir, QDir& d)
                                     (WIN32_FIND_DATAW*) nullptr, 0);
                             if (SUCCEEDED(hres)) {
                                 QString targetPath;
-                                targetPath.setUtf16((ushort*) info, wcslen(info));
+                                targetPath.setUtf16((ushort*) info, (int)wcslen(info));
                                 // qCDebug(npackd) << "deleteShortcuts " << targetPath << " " <<
                                 //        instPath;
                                 if (WPMUtils::isUnder(targetPath,
@@ -3681,7 +3681,7 @@ QMap<QString, QString> WPMUtils::parseEnv(LPWCH env2)
     QMap<QString, QString> env_;
     LPWCH e = env2;
     while (true) {
-        int len = wcslen(e);
+        int len = (int)wcslen(e);
         if (!len)
             break;
 
