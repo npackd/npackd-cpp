@@ -37,7 +37,6 @@ BOOL WINAPI ctrlHandler(DWORD fdwCtrlType)
 
 int main(int argc, char *argv[])
 {
-
     oldMessageHandler = qInstallMessageHandler(eventLogMessageHandler);
 
     HMODULE m = LoadLibrary(L"exchndl.dll");

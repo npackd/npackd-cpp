@@ -75,6 +75,7 @@ set(CLU_SOURCES
     ../npackdg/src/msithirdpartypm.cpp
     ../npackdg/src/mysqlquery.cpp
     ../npackdg/src/urlinfo.cpp
+    ../npackdcl/src/commandlinemessagehandler.cpp
         )
 set(CLU_HEADERS
     src/app.h
@@ -105,6 +106,7 @@ set(CLU_HEADERS
     ../npackdg/src/msithirdpartypm.h
     ../npackdg/src/mysqlquery.h
     ../npackdg/src/urlinfo.h
+    ../npackdcl/src/commandlinemessagehandler.h
 )
 
 set(OUTPUT_FILE_NAME "clu.exe")
@@ -149,7 +151,7 @@ target_link_libraries(clu
     netapi32
     Ws2_32
 )
-target_include_directories(clu PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
+target_include_directories(clu PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src ${CMAKE_CURRENT_SOURCE_DIR}/../npackdcl/src)
 target_compile_definitions(clu PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS clu DESTINATION ${CMAKE_INSTALL_PREFIX})
