@@ -1,6 +1,7 @@
 #include <QStringList>
 #include <QList>
 #include <QTemporaryFile>
+#include <QDirIterator>
 
 #include <windows.h>
 #include <msi.h>
@@ -35,6 +36,31 @@ void App::unwrapDir(Job *job)
     if (job->shouldProceed()) {
         if (path.isNull()) {
             job->setErrorMessage("Missing option: --path");
+        }
+    }
+
+    if (job->shouldProceed()) {
+        if (path.contains('*') || path.contains('?')) {
+            path = WPMUtils::normalizePath(path, false);
+            QStringList nameFilters;
+            int p = path.lastIndexOf('\\');
+            if (p >= 0) {
+                path = path.left(p);
+                nameFilters.append(path.mid(p + 1));
+            } else {
+                nameFilters.append(path);
+                path.clear();
+            }
+
+            path = QDir(path).absolutePath();
+
+            QDirIterator it(path, nameFilters, QDir::Dirs);
+            if (it.hasNext()) {
+                path = it.next();
+            } else {
+                job->setErrorMessage(QString("No directory found for \"%0\" in \"%1\"").
+                        arg(nameFilters.at(0)).arg(path));
+            }
         }
     }
 
@@ -342,7 +368,8 @@ int App::help()
         "    clu get-product-code --file=<file>",
         "        prints the product code of an MSI file",
         "    clu unwrap-dir --path <path>",
-        "        move the content of a directory one level higher",
+        "        move the content of a directory one level higher.",
+        "        The last part of the path may contain * or ?.",
         "    clu wait --timeout=<milliseconds>",
         "        wait for the specified amount of time",
 //        "    clu remove|rm --title=<regular expression>",
