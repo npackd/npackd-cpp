@@ -696,7 +696,6 @@ Exit:
 DWORD AsyncDownloader::WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
 {
     DWORD Error = ERROR_SUCCESS;
-    DWORD BytesWritten = 0;
 
     BOOL Success = FALSE;
 
@@ -726,7 +725,7 @@ DWORD AsyncDownloader::WriteResponseData(PREQUEST_CONTEXT ReqContext, PBOOL Eof)
     if (ReqContext->DownloadFile)
     {
             // TODO: check the returned value. -1 means error
-        BytesWritten = ReqContext->DownloadFile->write(ReqContext->OutputBuffer,
+        DWORD BytesWritten = ReqContext->DownloadFile->write(ReqContext->OutputBuffer,
                         ReqContext->DownloadedBytes);
     }
 
