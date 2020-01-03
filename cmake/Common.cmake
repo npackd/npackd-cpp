@@ -76,6 +76,7 @@ endif()
 # Vista
 add_definitions(-D_WIN32_WINNT=0x0600)
 
+# GCC compiler flags
 if(MINGW)
   if(NOT NPACKD_PLATFORM_X64)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=i686")
@@ -83,6 +84,8 @@ if(MINGW)
 
   # -Wno-unused-variable is set to avoid many warnings in asyncdownloader.cpp
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-tree-slp-vectorize -Wno-error=cast-qual -Wno-unused-local-typedefs -Wno-unused-variable")
+
+  # -flto does not work (01.01.2020) probably because Qt is not compiled with LTO enabled
 endif()
 
 if((CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC) AND NOT MINGW)
