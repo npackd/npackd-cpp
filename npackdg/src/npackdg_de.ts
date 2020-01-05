@@ -2706,7 +2706,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The package %1 is already installed in &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Paket %1 ist bereits installiert in &quot;%2&quot;</translation>
     </message>
 </context>
 <context>

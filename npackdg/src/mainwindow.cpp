@@ -2401,9 +2401,9 @@ void MainWindow::on_actionExport_triggered()
 
 void MainWindow::on_actionCheck_dependencies_triggered()
 {
+    /*
     AsyncDownloader ad;
 
-    /*
     Job* job = new Job("TODO");
     Downloader::Request request(QUrl("https://www.microsoft.com"));
     QFile file("abc.htm");
