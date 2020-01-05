@@ -86,6 +86,8 @@ if(MINGW)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-tree-slp-vectorize -Wno-error=cast-qual -Wno-unused-local-typedefs -Wno-unused-variable")
 
   # -flto does not work (01.01.2020) probably because Qt is not compiled with LTO enabled
+
+  #  -fno-exceptions -fno-unwind-tables do not reduce the binary size at all (05.01.2020)
 endif()
 
 if((CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC) AND NOT MINGW)
