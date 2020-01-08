@@ -46,7 +46,6 @@ goto start
 
 :start
 cd npackdcl
-cd tests
 
 mkdir build
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -59,7 +58,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
+cmake ..\..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_ADMIN:BOOL=ON -DNPACKD_BUILD_CLU:BOOL=OFF -DNPACKD_BUILD_NCL:BOOL=ON -DNPACKD_BUILD_NPACKDG:BOOL=OFF -DNPACKD_BUILD_TESTS:BOOL=ON -DNPACKD_FORCE_STATIC_QT:BOOL=ON -DQUAZIP_STATIC:BOOL=ON
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe install
@@ -68,20 +67,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 ..\install\tests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-cd ..\..\ftests
-
-mkdir build
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-cd build
-
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-mingw32-make.exe install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-ftests -v2
+..\install\ftests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof

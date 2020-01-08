@@ -66,7 +66,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install
+cmake ..\..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_ADMIN:BOOL=ON -DNPACKD_BUILD_CLU:BOOL=OFF -DNPACKD_BUILD_NCL:BOOL=OFF -DNPACKD_BUILD_NPACKDG:BOOL=ON -DNPACKD_BUILD_TESTS:BOOL=OFF -DNPACKD_FORCE_STATIC_QT:BOOL=ON -DQUAZIP_STATIC:BOOL=ON
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe -j 2 install
@@ -172,7 +172,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install
+cmake ..\..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_ADMIN:BOOL=ON -DNPACKD_BUILD_CLU:BOOL=OFF -DNPACKD_BUILD_NCL:BOOL=ON -DNPACKD_BUILD_NPACKDG:BOOL=OFF -DNPACKD_BUILD_TESTS:BOOL=OFF -DNPACKD_FORCE_STATIC_QT:BOOL=ON -DQUAZIP_STATIC:BOOL=ON
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake -LAH
@@ -181,7 +181,7 @@ mingw32-make.exe -j 2 install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 
-"%EXEPROXY%\exeproxy.exe" exeproxy-copy ..\install\ncl.exe npackdcl.exe
+"%EXEPROXY%\exeproxy.exe" exeproxy-copy ..\install\ncl.exe ncl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 del ..\install\tests.exe
@@ -193,11 +193,11 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip ..\install\npackdcl.exe
+strip ..\install\ncl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd ..\install-debug
-copy ..\build\npackdcl.map .
+copy ..\build\ncl.map .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy "%DRMINGW%\bin\exchndl.dll" .
@@ -263,7 +263,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+cmake ..\..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%" -DNPACKD_ADMIN:BOOL=ON -DNPACKD_BUILD_CLU:BOOL=ON -DNPACKD_BUILD_NCL:BOOL=OFF -DNPACKD_BUILD_NPACKDG:BOOL=OFF -DNPACKD_BUILD_TESTS:BOOL=OFF -DNPACKD_FORCE_STATIC_QT:BOOL=ON -DQUAZIP_STATIC:BOOL=ON
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe -j 2 install
