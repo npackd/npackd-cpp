@@ -722,6 +722,7 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
             qDeleteAll(avoid);
             avoid.clear();
             err = pv->planInstallation(installed, ops, avoid);
+            delete pv;
             if (!err.isEmpty())
                 break;
         }
