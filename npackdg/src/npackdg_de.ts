@@ -554,7 +554,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Update automatically</source>
-        <translation>Automatisches Update</translation>
+        <translation type="vanished">Automatisches Update</translation>
     </message>
     <message>
         <source>Issue tracker:</source>

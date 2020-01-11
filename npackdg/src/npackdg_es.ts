@@ -537,10 +537,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Update automatically</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Issue tracker:</source>
         <translation type="unfinished"></translation>
     </message>

@@ -280,14 +280,16 @@ QString Repository::savePackageVersion(PackageVersion *p, bool replace)
         fp = p->clone();
         this->packageVersions.append(fp);
         this->package2versions.insert(p->package, fp);
-    } else if (replace) {
-        this->packageVersions.removeOne(fp);
-        this->package2versions.remove(p->package, fp);
-        delete fp;
+    } else {
+        if (replace) {
+            this->packageVersions.removeOne(fp);
+            this->package2versions.remove(p->package, fp);
+            delete fp;
 
-        fp = p->clone();
-        this->packageVersions.append(fp);
-        this->package2versions.insert(p->package, fp);
+            fp = p->clone();
+            this->packageVersions.append(fp);
+            this->package2versions.insert(p->package, fp);
+        }
     }
 
     return "";
