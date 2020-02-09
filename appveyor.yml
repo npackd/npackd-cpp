@@ -31,3 +31,8 @@ deploy:
   draft: true
   on:
     appveyor_repo_tag: true
+after_build:
+- ps: |
+    if ($env:APPVEYOR_REPO_BRANCH -eq 'master') {
+      $env:APPVEYOR_BAKE_IMAGE = 'my-image'
+    }
