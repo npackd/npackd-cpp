@@ -1689,6 +1689,8 @@ void DBRepository::clearCache()
     this->packageVersions.clear();
     this->packages.clear();
     this->mutex.unlock();
+
+    readCategories();
 }
 
 void DBRepository::load(Job* job, bool useCache, bool interactive,
