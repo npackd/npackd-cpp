@@ -1595,6 +1595,8 @@ void MainWindow::reloadTabs()
 
 void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 {
+    DBRepository::getDefault()->clearCache();
+
     QTableView* t = this->mainFrame->getTableWidget();
     QItemSelectionModel* sm = t->selectionModel();
     QList<Package*> sel = mainFrame->getSelectedPackagesInTable();
