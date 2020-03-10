@@ -286,7 +286,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scan hard drives</source>
-        <translation>Escanear discos locales</translation>
+        <translation type="vanished">Escanear discos locales</translation>
     </message>
     <message>
         <source>Reload repositories</source>

@@ -302,7 +302,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scan hard drives</source>
-        <translation>Laufwerke scannen</translation>
+        <translation type="vanished">Laufwerke scannen</translation>
     </message>
     <message>
         <source>Reload repositories</source>
