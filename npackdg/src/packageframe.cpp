@@ -188,7 +188,7 @@ void PackageFrame::fillForm(Package* p)
             QListWidgetItem* item = new QListWidgetItem(icon,
                     QString::number(i + 1));
             item->setData(Qt::UserRole,
-                    qVariantFromValue(screenshots.at(i)));
+                    QVariant::fromValue(screenshots.at(i)));
             c->addItem(item);
         }
     }
