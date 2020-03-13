@@ -274,11 +274,13 @@ p, li { white-space: pre-wrap; }
   <tabstop>plainTextEditReps</tabstop>
   <tabstop>comboBoxDir</tabstop>
   <tabstop>pushButton</tabstop>
+  <tabstop>checkBoxCheckForUpdates</tabstop>
   <tabstop>checkBoxCloseWindows</tabstop>
   <tabstop>checkBoxDeleteFileShares</tabstop>
   <tabstop>checkBoxKillProcesses</tabstop>
   <tabstop>checkBoxStopServices</tabstop>
   <tabstop>checkBoxCtrlC</tabstop>
+  <tabstop>pushButtonProxySettings</tabstop>
  </tabstops>
  <resources/>
  <connections/>

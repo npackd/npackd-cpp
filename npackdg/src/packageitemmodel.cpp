@@ -164,7 +164,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                         v = "";
                 }
 
-                r = qVariantFromValue(v);
+                r = QVariant::fromValue(v);
                 break;
             }
             case 7: {
@@ -184,7 +184,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::UserRole) {
         switch (index.column()) {
             case 0:
-                r = qVariantFromValue(cached->icon);
+                r = QVariant::fromValue(cached->icon);
                 break;
             default:
                 r = p;
@@ -194,9 +194,9 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
             case 0: {
                 MainWindow* mw = MainWindow::getInstance();
                 if (!cached->icon.isEmpty()) {
-                    r = qVariantFromValue(mw->downloadIcon(cached->icon));
+                    r = QVariant::fromValue(mw->downloadIcon(cached->icon));
                 } else {
-                    r = qVariantFromValue(MainWindow::genericAppIcon);
+                    r = QVariant::fromValue(MainWindow::genericAppIcon);
                 }
                 break;
             }
@@ -205,7 +205,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
         switch (index.column()) {
             case 4: {
                 if (!cached->up2date)
-                    r = qVariantFromValue(obsoleteBrush);
+                    r = QVariant::fromValue(obsoleteBrush);
                 break;
             }
             case 9: {
@@ -217,7 +217,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
 
                     int f = static_cast<int>(100.0 *
                         (1.0 + log(maxStars / cached->stars)));
-                    r = qVariantFromValue(QBrush(QColor(
+                    r = QVariant::fromValue(QBrush(QColor(
                             0xd4, 0xed, 0xda).lighter(f)));
                 }
                 break;

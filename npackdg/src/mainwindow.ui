@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>625</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -150,7 +150,7 @@
   </action>
   <action name="actionInstall">
    <property name="icon">
-    <iconset resource="npackdg.qrc">
+    <iconset resource="../../../../../../Builds/npackd-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/install.png</normaloff>:/images/install.png</iconset>
    </property>
    <property name="text">
@@ -165,7 +165,7 @@
   </action>
   <action name="actionUninstall">
    <property name="icon">
-    <iconset resource="npackdg.qrc">
+    <iconset resource="../../../../../../Builds/npackd-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/uninstall.png</normaloff>:/images/uninstall.png</iconset>
    </property>
    <property name="text">
@@ -180,7 +180,7 @@
   </action>
   <action name="actionGotoPackageURL">
    <property name="icon">
-    <iconset resource="npackdg.qrc">
+    <iconset resource="../../../../../../Builds/npackd-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/gotosite.png</normaloff>:/images/gotosite.png</iconset>
    </property>
    <property name="text">
@@ -206,7 +206,7 @@
   </action>
   <action name="actionUpdate">
    <property name="icon">
-    <iconset resource="npackdg.qrc">
+    <iconset resource="../../../../../../Builds/npackd-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/update.png</normaloff>:/images/update.png</iconset>
    </property>
    <property name="text">
@@ -252,14 +252,6 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionScan_Hard_Drives">
-   <property name="text">
-    <string>Scan hard drives</string>
-   </property>
-   <property name="toolTip">
-    <string>Scan hard drives</string>
-   </property>
-  </action>
   <action name="actionReload_Repositories">
    <property name="text">
     <string>Reload repositories</string>
@@ -284,7 +276,7 @@
   </action>
   <action name="actionFile_an_Issue">
    <property name="icon">
-    <iconset resource="npackdg.qrc">
+    <iconset resource="../../../../../../Builds/npackd-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/fileissue.png</normaloff>:/images/fileissue.png</iconset>
    </property>
    <property name="text">
@@ -299,7 +291,7 @@
   </action>
   <action name="actionAdd_package">
    <property name="icon">
-    <iconset resource="npackdg.qrc">
+    <iconset resource="../../../../../../Builds/npackd-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
    </property>
    <property name="text">
@@ -386,7 +378,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="npackdg.qrc"/>
+  <include location="../../../../../../Builds/npackd-minsizerel/npackdg/npackdg.qrc"/>
  </resources>
  <connections>
   <connection>

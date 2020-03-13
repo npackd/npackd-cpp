@@ -1590,12 +1590,7 @@ QString DBRepository::clear()
 {
     Job* job = new Job(QObject::tr("Clearing the repository database"));
 
-    this->mutex.lock();
-    this->categories.clear();
-    this->licenses.clear();
-    this->packageVersions.clear();
-    this->packages.clear();
-    this->mutex.unlock();
+    clearCache();
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.1,
@@ -1684,6 +1679,18 @@ QString DBRepository::clear()
     delete job;
 
     return QStringLiteral("");
+}
+
+void DBRepository::clearCache()
+{
+    this->mutex.lock();
+    this->categories.clear();
+    this->licenses.clear();
+    this->packageVersions.clear();
+    this->packages.clear();
+    this->mutex.unlock();
+
+    readCategories();
 }
 
 void DBRepository::load(Job* job, bool useCache, bool interactive,
@@ -1995,6 +2002,8 @@ void DBRepository::updateF5Runnable(Job *job, bool useCache)
     if (tempDatabaseOpen)
         tempdb.db.close();
 
+    // as this runs in a separate thread, we cannot use "this", instead
+    // we create another connection to the same default database
     DBRepository dbr;
 
     if (job->shouldProceed()) {

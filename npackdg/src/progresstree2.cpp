@@ -139,7 +139,7 @@ void ProgressTree2::fillItem(QTreeWidgetItem* item,
             SLOT(cancelClicked()));
     setItemWidget(item, 4, cancel);
 
-    item->setData(0, Qt::UserRole, qVariantFromValue(static_cast<void*>(job)));
+    item->setData(0, Qt::UserRole, QVariant::fromValue(static_cast<void*>(job)));
 }
 
 QTreeWidgetItem* ProgressTree2::addJob(Job* job)

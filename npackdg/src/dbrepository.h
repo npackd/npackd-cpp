@@ -314,6 +314,11 @@ public:
 
     QString clear();
 
+    /**
+     * @brief clears the cache
+     */
+    void clearCache();
+
     QList<Package*> findPackagesByShortName(const QString &name);
 
     /**
