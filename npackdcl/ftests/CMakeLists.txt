@@ -117,6 +117,8 @@ target_link_libraries(ftests
     icudt
     icutu
     qtharfbuzz
+    zstd
+    z
 
     userenv
     winmm

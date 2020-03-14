@@ -139,6 +139,10 @@ target_link_libraries(clu
     qsqlite
     Qt5::Sql Qt5::Xml Qt5::Core
     qtpcre2
+
+    zstd
+    z
+
     winmm
     ole32
     uuid

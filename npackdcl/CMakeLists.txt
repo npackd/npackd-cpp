@@ -130,6 +130,8 @@ target_link_libraries(npackdcl
     icuuc
     icudt
     icutu
+    zstd
+    z
 
     userenv
     winmm
