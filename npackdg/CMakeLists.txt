@@ -220,6 +220,8 @@ target_link_libraries(npackdg
     qtfreetype
     qtlibpng
     jpeg
+    zstd
+    z
 
     imm32
     winmm 

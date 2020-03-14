@@ -118,6 +118,8 @@ target_link_libraries(tests
     icuuc
     icudt
     icutu
+    zstd
+    z
 
     userenv
     winmm
