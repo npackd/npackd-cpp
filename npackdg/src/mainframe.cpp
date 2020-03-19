@@ -332,6 +332,7 @@ void MainFrame::on_tableWidget_doubleClicked(QModelIndex /*index*/)
 void MainFrame::on_lineEditText_textChanged(QString )
 {
     fillList();
+    selectSomething();
 }
 
 void MainFrame::tableWidget_selectionChanged()
@@ -360,25 +361,37 @@ void MainFrame::fillList()
     mw->fillListInBackground();
 }
 
+void MainFrame::selectSomething()
+{
+    QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
+    if (!sm->hasSelection()) {
+        this->ui->tableWidget->selectRow(0);
+    }
+}
+
 void MainFrame::on_radioButtonAll_toggled(bool /*checked*/)
 {
     fillList();
+    selectSomething();
 }
 
 void MainFrame::on_radioButtonInstalled_toggled(bool /*checked*/)
 {
     fillList();
+    selectSomething();
 }
 
 void MainFrame::on_radioButtonUpdateable_toggled(bool /*checked*/)
 {
     fillList();
+    selectSomething();
 }
 
 void MainFrame::on_comboBoxCategory0_currentIndexChanged(int /*index*/)
 {
     if (categoryCombosEvents) {
         fillList();
+        selectSomething();
     }
 }
 
@@ -386,5 +399,6 @@ void MainFrame::on_comboBoxCategory1_currentIndexChanged(int /*index*/)
 {
     if (categoryCombosEvents) {
         fillList();
+        selectSomething();
     }
 }

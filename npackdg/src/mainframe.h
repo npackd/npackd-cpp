@@ -112,6 +112,7 @@ public:
     void setStatusFilter(int status);
 private:
     Ui::MainFrame *ui;
+    void selectSomething();
 private slots:
     void on_tableWidget_doubleClicked(QModelIndex index);
     void on_lineEditText_textChanged(QString );
