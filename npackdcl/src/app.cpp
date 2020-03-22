@@ -1694,6 +1694,7 @@ void App::build(Job* job)
 
 void App::add(Job* job)
 {
+    CoInitialize(nullptr);
     job->setTitle("Installing packages");
 
     QStringList urls_ = cl.getAll("url");
@@ -1703,20 +1704,17 @@ void App::add(Job* job)
     QString proxyUser = cl.get("proxy-user");
     QString proxyPassword = cl.get("proxy-password");
 
-    DBRepository* dbr = 0;
+    DBRepository* dbr = DBRepository::getDefault();
     QTemporaryFile tempFile;
 
     if (job->shouldProceed()) {
         if (urls_.count() == 0) {
-            dbr = DBRepository::getDefault();
             QString err = dbr->openDefault();
             if (!err.isEmpty())
                 job->setErrorMessage(err);
             else
                 job->setProgress(0.1);
         } else {
-            dbr = new DBRepository();
-
             QList<QUrl*> urls;
 
             for (int i = 0; i < urls_.count(); i++) {
@@ -1752,9 +1750,7 @@ void App::add(Job* job)
             if (job->shouldProceed()) {
                 Job* sub = job->newSubJob(0.10,
                         QObject::tr("Updating the temporary database"), true, true);
-                CoInitialize(nullptr);
                 dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true);
-                CoUninitialize();
             }
 
             qDeleteAll(urls);
@@ -1854,10 +1850,8 @@ void App::add(Job* job)
     qDeleteAll(ops);
     qDeleteAll(toInstall);
 
-    if (urls_.count() != 0)
-        delete dbr;
-
     job->complete();
+    CoUninitialize();
 }
 
 bool App::confirm(const QList<InstallOperation*> install, QString* title,
