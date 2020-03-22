@@ -1,10 +1,8 @@
 #include <limits>
 
 #include "dependency.h"
-#include "repository.h"
 #include "packageversion.h"
 #include "package.h"
-#include "dbrepository.h"
 #include "installedpackages.h"
 #include "installedpackageversion.h"
 

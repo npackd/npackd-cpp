@@ -648,15 +648,13 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
     job->complete();
 }
 
-QString PackageVersion::planInstallation(InstalledPackages &installed,
+QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPackages &installed,
         QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
         const QString& where)
 {
     QString res;
 
     avoid.append(this->clone());
-
-    DBRepository* rep = DBRepository::getDefault();
 
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
@@ -709,7 +707,7 @@ QString PackageVersion::planInstallation(InstalledPackages &installed,
                     int opsCount = ops.count();
                     int avoidCount = avoid.count();
 
-                    res = pv->planInstallation(installed2, ops, avoid);
+                    res = pv->planInstallation(rep, installed2, ops, avoid);
                     if (!res.isEmpty()) {
                         // rollback
                         while (ops.count() > opsCount) {
@@ -886,120 +884,6 @@ QString PackageVersion::getPackageTitle(
     return pn;
 }
 
-QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const CommandLine& cl,
-        QString* err)
-{
-    QList<PackageVersion*> ret;
-    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
-
-    DBRepository* rep = DBRepository::getDefault();
-    InstalledPackages* ip = InstalledPackages::getDefault();
-
-    for (int i = 0; i < pos.size(); i++) {
-        if (!err->isEmpty())
-            break;
-
-        CommandLine::ParsedOption* po = pos.at(i);
-        if (po->opt->nameMathes("package")) {
-            CommandLine::ParsedOption* ponext = nullptr;
-            if (i + 1 < pos.size())
-                ponext = pos.at(i + 1);
-
-            QString package = po->value;
-            if (!Package::isValidName(package)) {
-                *err = QObject::tr("Invalid package name: %1").arg(package);
-            }
-
-            Package* p = nullptr;
-            if (err->isEmpty()) {
-                p = AbstractRepository::findOnePackage(package, err);
-                if (err->isEmpty()) {
-                    if (!p)
-                        *err = QObject::tr("Unknown package: %1").arg(package);
-                }
-            }
-
-            PackageVersion* pv = nullptr;
-            if (err->isEmpty()) {
-                QString version;
-                if (ponext != nullptr && ponext->opt->nameMathes("version"))
-                    version = ponext->value;
-
-                QString versions;
-                if (ponext != nullptr && ponext->opt->nameMathes("versions"))
-                    versions = ponext->value;
-
-                if (!versions.isNull()) {
-                    i++;
-                    Dependency v;
-                    v.package = p->name;
-                    if (!v.setVersions(versions)) {
-                        *err = QObject::tr("Cannot parse a version range: %1").
-                                arg(versions);
-                    } else {
-                        InstalledPackageVersion* ipv =
-                                ip->findHighestInstalledMatch(v);
-                        if (ipv) {
-                            pv = rep->findPackageVersion_(ipv->package,
-                                    ipv->version, err);
-                            if (err->isEmpty()) {
-                                if (!pv) {
-                                    *err = QObject::tr("Package version not found: %1 (%2) %3").
-                                            arg(p->title).arg(p->name).
-                                            arg(ipv->version.getVersionString());
-                                }
-                            }
-                            delete ipv;
-                        } else {
-                            pv = rep->findBestMatchToInstall(v,
-                                    QList<PackageVersion*>(), err);
-                            if (err->isEmpty()) {
-                                if (!pv) {
-                                    *err = QObject::tr("Package version not found: %1 (%2) %3").
-                                            arg(p->title).arg(p->name).
-                                            arg(versions);
-                                }
-                            }
-                        }
-                    }
-                } else if (version.isNull()) {
-                    pv = rep->findNewestInstallablePackageVersion_(
-                            p->name, err);
-                    if (err->isEmpty()) {
-                        if (!pv) {
-                            *err = QObject::tr("No installable version was found for the package %1 (%2)").
-                                    arg(p->title).arg(p->name);
-                        }
-                    }
-                } else {
-                    i++;
-                    Version v;
-                    if (!v.setVersion(version)) {
-                        *err = QObject::tr("Cannot parse version: %1").
-                                arg(version);
-                    } else {
-                        pv = rep->findPackageVersion_(p->name, v,
-                                err);
-                        if (err->isEmpty()) {
-                            if (!pv) {
-                                *err = QObject::tr("Package version not found: %1 (%2) %3").
-                                        arg(p->title).arg(p->name).arg(version);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (pv)
-                ret.append(pv);
-
-            delete p;
-        }
-    }
-
-    return ret;
-}
-
 QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const CommandLine& cl,
         QString* err)
 {
@@ -1025,7 +909,7 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
 
             Package* p = nullptr;
             if (err->isEmpty()) {
-                p = AbstractRepository::findOnePackage(package, err);
+                p = rep->findOnePackage(package, err);
                 if (err->isEmpty()) {
                     if (!p)
                         *err = QObject::tr("Unknown package: %1").arg(package);
@@ -1103,6 +987,7 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
     QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     InstalledPackages* ip = InstalledPackages::getDefault();
+    DBRepository* dbr = DBRepository::getDefault();
 
     for (int i = 0; i < pos.size(); i++) {
         if (!err->isEmpty())
@@ -1121,7 +1006,7 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
 
             Package* p = nullptr;
             if (err->isEmpty()) {
-                p = AbstractRepository::findOnePackage(package, err);
+                p = dbr->findOnePackage(package, err);
                 if (err->isEmpty()) {
                     if (!p)
                         *err = QObject::tr("Unknown package: %1").arg(package);

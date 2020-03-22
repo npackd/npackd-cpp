@@ -2036,6 +2036,8 @@ void MainWindow::on_actionFile_an_Issue_triggered()
 
 void MainWindow::on_actionInstall_triggered()
 {
+    DBRepository* dbr = DBRepository::getDefault();
+
     QString err;
 
     QList<PackageVersion*> pvs;
@@ -2047,12 +2049,11 @@ void MainWindow::on_actionInstall_triggered()
             selected = selection->getSelected("PackageVersion");
 
         if (selected.count() == 0) {
-            DBRepository* r = DBRepository::getDefault();
             if (selection)
                 selected = selection->getSelected("Package");
             for (int i = 0; i < selected.count(); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
-                PackageVersion* pv = r->findNewestInstallablePackageVersion_(
+                PackageVersion* pv = dbr->findNewestInstallablePackageVersion_(
                         p->name, &err);
                 if (!err.isEmpty())
                     break;
@@ -2072,7 +2073,7 @@ void MainWindow::on_actionInstall_triggered()
     QList<PackageVersion*> avoid;
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        err = dbr->planAddMissingDeps(installed, ops);
     }
 
     if (err.isEmpty()) {
@@ -2081,7 +2082,7 @@ void MainWindow::on_actionInstall_triggered()
 
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(installed, ops, avoid);
+            err = pv->planInstallation(dbr, installed, ops, avoid);
             if (!err.isEmpty())
                 break;
         }

@@ -14,9 +14,10 @@
 #include "windowsregistry.h"
 #include "job.h"
 #include "abstractthirdpartypm.h"
-#include "dbrepository.h"
 #include "dependency.h"
-#include "repository.h"
+
+class DBRepository;
+class Repository;
 
 /**
  * @brief information about installed packages

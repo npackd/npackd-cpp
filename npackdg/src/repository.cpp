@@ -93,7 +93,7 @@ License* Repository::findLicense(const QString& name)
     return nullptr;
 }
 
-Package* Repository::findPackage(const QString& name)
+Package* Repository::findPackage(const QString& name) const
 {
     for (int i = 0; i < this->packages.count(); i++) {
         if (this->packages.at(i)->name == name)
@@ -208,7 +208,7 @@ out:;
     return parts.join("/");
 }
 
-Package *Repository::findPackage_(const QString &name)
+Package *Repository::findPackage_(const QString &name) const
 {
     Package* p = findPackage(name);
     if (p)
@@ -331,7 +331,7 @@ QString Repository::clear()
     return "";
 }
 
-QList<Package*> Repository::findPackagesByShortName(const QString &name)
+QList<Package*> Repository::findPackagesByShortName(const QString &name) const
 {
     QString suffix = "." + name;
     QList<Package*> r;

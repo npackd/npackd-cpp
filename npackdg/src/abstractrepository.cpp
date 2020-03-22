@@ -246,7 +246,7 @@ QList<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
 
 PackageVersion *AbstractRepository::findBestMatchToInstall(
         const Dependency &dep, const QList<PackageVersion *> &avoid,
-        QString *err)
+        QString *err) const
 {
     PackageVersion* res = nullptr;
 
@@ -667,7 +667,7 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
         if (pv) {
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(installed, ops, avoid);
+            err = pv->planInstallation(this, installed, ops, avoid);
             delete pv;
             if (!err.isEmpty())
                 break;
@@ -829,7 +829,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     else if (keepDirectories)
                         where = b->getPath();
 
-                    err = newest.at(i)->planInstallation(installedCopy, ops2,
+                    err = newest.at(i)->planInstallation(this, installedCopy, ops2,
                             avoid, where);
 
                     qCDebug(npackd) << "planUpdates: 1st install and uninstall" <<
@@ -870,7 +870,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     where = a->getPath();
 
                 QList<PackageVersion*> avoid;
-                err = newest.at(i)->planInstallation(installedCopy, ops, avoid,
+                err = newest.at(i)->planInstallation(this, installedCopy, ops, avoid,
                         where);
                 if (!err.isEmpty())
                     break;
@@ -1095,7 +1095,7 @@ AbstractRepository::~AbstractRepository()
 {
 }
 
-QString AbstractRepository::getPackageTitleAndName(const QString &name)
+QString AbstractRepository::getPackageTitleAndName(const QString &name) const
 {
     QString res;
     Package* p = findPackage_(name);
@@ -1109,16 +1109,15 @@ QString AbstractRepository::getPackageTitleAndName(const QString &name)
 }
 
 Package* AbstractRepository::findOnePackage(
-        const QString& package, QString* err)
+        const QString& package, QString* err) const
 {
     *err = "";
 
-    DBRepository* rep = DBRepository::getDefault();
-    Package* p = rep->findPackage_(package);
+    Package* p = findPackage_(package);
 
     if (!p) {
         if (!package.contains('.')) {
-            QList<Package*> packages = rep->findPackagesByShortName(package);
+            QList<Package*> packages = findPackagesByShortName(package);
 
             if (packages.count() == 0) {
                 *err = QObject::tr("Unknown package: %1").arg(package);
@@ -1145,7 +1144,7 @@ Package* AbstractRepository::findOnePackage(
     return p;
 }
 
-QString AbstractRepository::checkInstallationDirectory(const QString &dir)
+QString AbstractRepository::checkInstallationDirectory(const QString &dir) const
 {
     QString err;
     if (err.isEmpty() && dir.isEmpty())
@@ -1158,10 +1157,9 @@ QString AbstractRepository::checkInstallationDirectory(const QString &dir)
         InstalledPackages* ip = InstalledPackages::getDefault();
         InstalledPackageVersion* ipv = ip->findOwner(dir);
         if (ipv) {
-            DBRepository* r = DBRepository::getDefault();
             err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").
                     arg(dir).
-                    arg(r->getPackageTitleAndName(ipv->package)).
+                    arg(getPackageTitleAndName(ipv->package)).
                     arg(ipv->version.getVersionString());
             delete ipv;
         }

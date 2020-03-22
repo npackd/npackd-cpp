@@ -52,6 +52,7 @@ set(FTESTS_SOURCES
     ../../npackdg/src/wpmutils.cpp
     ../../npackdg/src/clprogress.cpp
     ../../npackdg/src/urlinfo.cpp
+    ../../npackdg/src/packageutils.cpp
     src/main.cpp
 )
 set(FTESTS_HEADERS
@@ -83,6 +84,7 @@ set(FTESTS_HEADERS
     ../../npackdg/src/wpmutils.h
     ../../npackdg/src/clprogress.h
     ../../npackdg/src/urlinfo.h
+    ../../npackdg/src/packageutils.h
 )
 
 set(OUTPUT_FILE_NAME "ftests.exe")

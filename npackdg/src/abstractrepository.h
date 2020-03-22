@@ -6,7 +6,9 @@
 #include "packageversion.h"
 #include "package.h"
 #include "license.h"
-#include "installoperation.h"
+
+class InstallOperation;
+class InstalledPackages;
 
 /**
  * @brief basis for repositories
@@ -41,11 +43,18 @@ public:
     static void setRepositoryURLs(QList<QUrl*>& urls, QString *err);
 
     /**
+     * @brief creates a new instance
+     */
+    AbstractRepository();
+
+    virtual ~AbstractRepository();
+
+    /**
      * @brief checks a value for the installation directory
      * @param dir a directory
      * @return error message or ""
      */
-    static QString checkInstallationDirectory(const QString& dir);
+    QString checkInstallationDirectory(const QString& dir) const;
 
     /**
      * @param package full or short package name
@@ -53,14 +62,7 @@ public:
      * @return [ownership:caller] found package or 0. The returned value is
      *     only 0 if the error is not empty
      */
-    static Package *findOnePackage(const QString &package, QString *err);
-
-    /**
-     * @brief creates a new instance
-     */
-    AbstractRepository();
-
-    virtual ~AbstractRepository();
+    Package *findOnePackage(const QString &package, QString *err) const;
 
     /**
      * @brief inserts or updates an existing license
@@ -93,21 +95,21 @@ public:
      * @param name
      * @return package title and name. Example: "AbiWord (com.abiword.AbiWord)"
      */
-    QString getPackageTitleAndName(const QString& name);
+    QString getPackageTitleAndName(const QString& name) const;
 
     /**
      * @brief searches for a package with the given short name
      * @param name full package name
      * @return [ownership:caller] found packages.
      */
-    virtual QList<Package*> findPackagesByShortName(const QString& name) = 0;
+    virtual QList<Package*> findPackagesByShortName(const QString& name) const = 0;
 
     /**
      * @brief searches for a package with the given name
      * @param name full package name
      * @return [ownership:caller] found package or 0.
      */
-    virtual Package* findPackage_(const QString& name) = 0;
+    virtual Package* findPackage_(const QString& name) const = 0;
 
     /**
      * Finds all package versions.
@@ -287,7 +289,7 @@ public:
      */
     PackageVersion* findBestMatchToInstall(const Dependency& dep,
                                            const QList<PackageVersion*>& avoid,
-                                           QString *err);
+                                           QString *err) const;
 
     /**
      * @param dep a dependency

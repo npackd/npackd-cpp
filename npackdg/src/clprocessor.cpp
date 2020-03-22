@@ -18,6 +18,7 @@
 #include "commandline.h"
 #include "progresstree2.h"
 #include "mainwindow.h"
+#include "packageutils.h"
 
 // TODO: i18n
 
@@ -180,14 +181,15 @@ QString CLProcessor::add()
 {
     QString err;
 
-    err = DBRepository::getDefault()->openDefault();
+    DBRepository* dbr = DBRepository::getDefault();
+    err = dbr->openDefault();
 
     if (err.isEmpty()) {
         err = InstalledPackages::getDefault()->readRegistryDatabase();
     }
 
     QList<PackageVersion*> toInstall =
-            PackageVersion::getAddPackageVersionOptions(cl, &err);
+            PackageUtils::getAddPackageVersionOptions(*dbr, cl, &err);
 
     DWORD pct = WPMUtils::CLOSE_WINDOW;
     if (err.isEmpty()) {
@@ -200,14 +202,14 @@ QString CLProcessor::add()
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        err = dbr->planAddMissingDeps(installed, ops);
     }
 
     if (err.isEmpty()) {
         QList<PackageVersion*> avoid;
         for (int i = 0; i < toInstall.size(); i++) {
             PackageVersion* pv = toInstall.at(i);
-            err = pv->planInstallation(installed, ops, avoid);
+            err = pv->planInstallation(dbr, installed, ops, avoid);
             if (!err.isEmpty())
                 break;
         }
@@ -235,49 +237,62 @@ QString CLProcessor::checkForUpdates()
         err = InstalledPackages::getDefault()->readRegistryDatabase();
     }
 
-    Job job;
-    r->updateF5(&job, true, "", "", "", "", false);
-
-    QStringList packages = r->findPackages(Package::UPDATEABLE, Package::NOT_INSTALLED_NOT_AVAILABLE, "", -1, -1, &err);
-    int nupdates = packages.count();
-
-    if (job.getErrorMessage().isEmpty() && nupdates > 0) {
-        QApplication* app = (QApplication*) QApplication::instance();
-        app->setQuitOnLastWindowClosed(false);
-        NOTIFYICONDATAW nid;
-        memset(&nid, 0, sizeof(nid));
-        nid.cbSize = sizeof(nid);
-
-        MainWindow w;
-        //w.show();
-
-        nid.hWnd = (HWND) w.winId();
-        nid.uID = 0;
-        nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_INFO;
-        nid.uCallbackMessage = WM_ICONTRAY;
-        nid.hIcon = LoadIconW(GetModuleHandle(0),
-                        L"IDI_ICON1");
-        qDebug() << "main().1 icon" << nid.hIcon;
-        QString tip = QString("%1 update(s) found").arg(nupdates);
-        QString txt = QString("Npackd found %1 update(s). "
-                "Click here to review and install.").arg(nupdates);
-
-        wcsncpy(nid.szTip, (wchar_t*) tip.utf16(),
-                sizeof(nid.szTip) / sizeof(nid.szTip[0]) - 1);
-        wcsncpy(nid.szInfo, (wchar_t*) txt.utf16(),
-                sizeof(nid.szInfo) / sizeof(nid.szInfo[0]) - 1);
-        nid.uVersion = 3; // NOTIFYICON_VERSION
-        wcsncpy(nid.szInfoTitle, (wchar_t*) tip.utf16(),
-                sizeof(nid.szInfoTitle) / sizeof(nid.szInfoTitle[0]) - 1);
-        nid.dwInfoFlags = 1; // NIIF_INFO
-        nid.uTimeout = 30000;
-
-        if (!Shell_NotifyIconW(NIM_ADD, &nid))
-            qDebug() << "Shell_NotifyIconW failed";
-        app->exec();
-        if (!Shell_NotifyIconW(NIM_DELETE, &nid))
-            qDebug() << "Shell_NotifyIconW failed";
+    QList<QUrl*> urls;
+    if (err.isEmpty()) {
+        QString err;
+        urls = AbstractRepository::getRepositoryURLs(&err);
+        if (!err.isEmpty())
+            err = QObject::tr("Cannot load the list of repositories: %1").arg(err);
     }
+
+    Job job;
+    if (err.isEmpty()) {
+        r->clearAndDownloadRepositories(&job, urls, true, "", "", "", "", false);
+
+        QStringList packages = r->findPackages(Package::UPDATEABLE, Package::NOT_INSTALLED_NOT_AVAILABLE, "", -1, -1, &err);
+        int nupdates = packages.count();
+
+        if (job.getErrorMessage().isEmpty() && nupdates > 0) {
+            QApplication* app = (QApplication*) QApplication::instance();
+            app->setQuitOnLastWindowClosed(false);
+            NOTIFYICONDATAW nid;
+            memset(&nid, 0, sizeof(nid));
+            nid.cbSize = sizeof(nid);
+
+            MainWindow w;
+            //w.show();
+
+            nid.hWnd = (HWND) w.winId();
+            nid.uID = 0;
+            nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_INFO;
+            nid.uCallbackMessage = WM_ICONTRAY;
+            nid.hIcon = LoadIconW(GetModuleHandle(0),
+                            L"IDI_ICON1");
+            qDebug() << "main().1 icon" << nid.hIcon;
+            QString tip = QString("%1 update(s) found").arg(nupdates);
+            QString txt = QString("Npackd found %1 update(s). "
+                    "Click here to review and install.").arg(nupdates);
+
+            wcsncpy(nid.szTip, (wchar_t*) tip.utf16(),
+                    sizeof(nid.szTip) / sizeof(nid.szTip[0]) - 1);
+            wcsncpy(nid.szInfo, (wchar_t*) txt.utf16(),
+                    sizeof(nid.szInfo) / sizeof(nid.szInfo[0]) - 1);
+            nid.uVersion = 3; // NOTIFYICON_VERSION
+            wcsncpy(nid.szInfoTitle, (wchar_t*) tip.utf16(),
+                    sizeof(nid.szInfoTitle) / sizeof(nid.szInfoTitle[0]) - 1);
+            nid.dwInfoFlags = 1; // NIIF_INFO
+            nid.uTimeout = 30000;
+
+            if (!Shell_NotifyIconW(NIM_ADD, &nid))
+                qDebug() << "Shell_NotifyIconW failed";
+            app->exec();
+            if (!Shell_NotifyIconW(NIM_DELETE, &nid))
+                qDebug() << "Shell_NotifyIconW failed";
+        }
+    }
+
+    qDeleteAll(urls);
+    urls.clear();
 
     return err;
 }
@@ -331,7 +346,7 @@ QString CLProcessor::update()
         for (int i = 0; i < packages_.size(); i++) {
             QString package = packages_.at(i);
             QString err;
-            Package* p = AbstractRepository::findOnePackage(package, &err);
+            Package* p = rep->findOnePackage(package, &err);
             if (p)
                 toUpdate.append(p);
             else

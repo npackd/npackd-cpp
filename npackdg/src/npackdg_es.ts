@@ -3513,6 +3513,10 @@ p, li { white-space: pre-wrap; }
         <source>The package %1 is already installed in &quot;%2&quot;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot load the list of repositories: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

@@ -52,6 +52,7 @@ set(TESTS_SOURCES
     ../../npackdg/src/mysqlquery.cpp
     ../../npackdg/src/installedpackagesthirdpartypm.cpp
     ../../npackdg/src/urlinfo.cpp
+    ../../npackdg/src/packageutils.cpp
     )
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
@@ -83,6 +84,7 @@ set(TESTS_HEADERS
     ../../npackdg/src/mysqlquery.h
     ../../npackdg/src/installedpackagesthirdpartypm.h
     ../../npackdg/src/urlinfo.h
+    ../../npackdg/src/packageutils.h
 )
 
 set(OUTPUT_FILE_NAME "tests.exe")

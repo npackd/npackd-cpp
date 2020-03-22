@@ -79,6 +79,7 @@ set(NPACKDG_SOURCES
     src/urlinfo.cpp
     src/asyncdownloader.cpp
     src/uimessagehandler.cpp
+    src/packageutils.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -131,6 +132,7 @@ set(NPACKDG_HEADERS
     src/urlinfo.h
     src/asyncdownloader.h
     src/uimessagehandler.h
+    src/packageutils.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui

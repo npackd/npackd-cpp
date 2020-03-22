@@ -24,6 +24,7 @@
 // 30ed381d-59ea-4ca5-bd1d-5ee8ec97b2be
 DEFINE_GUID(UUID_ClientID,0x30ed381dL,0x59ea,0x4ca5,0xbd,0x1d,0x5e,0xe8,0xec,0x97,0xb2,0xbe);
 
+class AbstractRepository;
 class InstallOperation;
 class InstalledPackages;
 
@@ -157,15 +158,6 @@ public:
      */
     static bool contains(const QList<PackageVersion*>& list,
             PackageVersion* pv);
-
-    /**
-     * @brief parses the command line and returns the list of chosen package
-     *     versions
-     * @param cl command line
-     * @param err errors will be stored here
-     * @return [owner:caller] list of package versions
-     */
-    static QList<PackageVersion *> getAddPackageVersionOptions(const CommandLine &cl, QString *err);
 
     /**
      * @brief parses the command line and returns the list of chosen package
@@ -316,6 +308,7 @@ public:
     /**
      * Plans installation of this package and all the dependencies recursively.
      *
+     * @param rep repository
      * @param installed [ownership:caller] list of installed packages.
      *     This list should be
      *     consulted instead of .installed() and will be updated and contains
@@ -331,7 +324,7 @@ public:
      *     directory should be chosen automatically
      * @return error message or ""
      */
-    QString planInstallation(InstalledPackages& installed,
+    QString planInstallation(AbstractRepository *rep, InstalledPackages& installed,
             QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
             const QString &where="");
 

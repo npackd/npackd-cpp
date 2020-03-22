@@ -814,16 +814,6 @@ public:
     static bool hasAdminPrivileges();
 
     /**
-     * @brief parses the command line and returns the list of chosen package
-     *     versions
-     * @param cl command line
-     * @param err errors will be stored here
-     * @return [owner:caller] list of package versions ranges
-     */
-    static QList<Dependency *> getPackageVersionOptions(const CommandLine &cl,
-            QString *err);
-
-    /**
      * @brief returns the content of a QString as LPWSTR = WCHAR* for use in
      *     win32 API functions. The returned data should be considered
      *     read-only.

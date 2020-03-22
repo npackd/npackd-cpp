@@ -17,6 +17,7 @@
 #include "dbrepository.h"
 #include "hrtimer.h"
 #include "controlpanelthirdpartypm.h"
+#include "packageutils.h"
 
 static bool compareByPackageTitle(const QPair<PackageVersion*, QString>& e1,
         const QPair<PackageVersion*, QString>& e2) {
@@ -107,7 +108,7 @@ int App::process()
     cl.add("timeout", 't', "timeout in seconds",
             "seconds", false, "remove,rm,update,add");
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
-            "repository", false, "add-repo,remove-repo,set-repo");
+            "repository", false, "add-repo,remove-repo,set-repo,add,update");
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
             "version", false, "add,info,path,place,rm,remove");
 
@@ -285,11 +286,10 @@ void App::printJSON(const QJsonObject &obj)
     }
 }
 
-QString App::addNpackdCL()
+QString App::addNpackdCL(DBRepository* r)
 {
     QString err;
 
-    DBRepository* r = DBRepository::getDefault();
     Version myVersion;
     (void) myVersion.setVersion(NPACKD_VERSION);
     PackageVersion* pv = r->findPackageVersion_(
@@ -327,6 +327,7 @@ void App::usage(Job* job)
         "            [--file <installation directory>]",
         "            [--user <user name>] [--password <password>]",
         "            [--proxy-user <proxy user name>] [--proxy-password <proxy password>]",
+        "            (--url <repository>)*",
         "        installs packages. The newest available version will be ",
         "        installed, if none is specified.",
         "    ncl add-repo --url <repository>",
@@ -594,7 +595,7 @@ void App::setInstallPath(Job* job)
     }
 
     if (job->shouldProceed()) {
-        QString r = AbstractRepository::checkInstallationDirectory(file);
+        QString r = DBRepository::getDefault()->checkInstallationDirectory(file);
         if (!r.isEmpty())
             job->setErrorMessage(r);
     }
@@ -1347,7 +1348,7 @@ void App::update(Job* job)
             QString versions = versions_.at(i);
 
             QString err;
-            Package* p = AbstractRepository::findOnePackage(package, &err);
+            Package* p = rep->findOnePackage(package, &err);
             if (!p) {
                 qCDebug(npackd) << "did not found a package" << package;
 
@@ -1431,7 +1432,7 @@ void App::update(Job* job)
 
     if (job->shouldProceed() && !up2date) {
         Job* ijob = job->newSubJob(0.85, "Updating");
-        processInstallOperations(ijob, ops, programCloseType, interactive,
+        processInstallOperations(ijob, rep, ops, programCloseType, interactive,
                 user, password, proxyUser, proxyPassword);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
@@ -1456,12 +1457,11 @@ void App::update(Job* job)
 }
 
 void App::processInstallOperations(Job *job,
+        DBRepository* rep,
         const QList<InstallOperation *> &ops, DWORD programCloseType,
         bool interactive, const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
 {
-    DBRepository* rep = DBRepository::getDefault();
-
     if (rep->includesRemoveItself(ops)) {
         QString newExe;
 
@@ -1609,7 +1609,7 @@ void App::build(Job* job)
 
     if (job->shouldProceed()) {
         /* we ignore the returned error as it should also work for non-admins */
-        addNpackdCL();
+        addNpackdCL(rep);
     }
 
     InstalledPackages* ip = InstalledPackages::getDefault();
@@ -1628,7 +1628,7 @@ void App::build(Job* job)
     if (job->shouldProceed()) {
         QString err;
         QList<Dependency*> pvs =
-                WPMUtils::getPackageVersionOptions(cl, &err);
+                PackageUtils::getPackageVersionOptions(cl, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else if (pvs.size() != 1)
@@ -1696,15 +1696,75 @@ void App::add(Job* job)
 {
     job->setTitle("Installing packages");
 
+    QStringList urls_ = cl.getAll("url");
+    QString user = cl.get("user");
+    QString password = cl.get("password");
+
+    QString proxyUser = cl.get("proxy-user");
+    QString proxyPassword = cl.get("proxy-password");
+
+    DBRepository* dbr = 0;
+    QTemporaryFile tempFile;
+
     if (job->shouldProceed()) {
-        QString err = DBRepository::getDefault()->openDefault();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
+        if (urls_.count() == 0) {
+            dbr = DBRepository::getDefault();
+            QString err = dbr->openDefault();
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
+            else
+                job->setProgress(0.1);
+        } else {
+            dbr = new DBRepository();
+
+            QList<QUrl*> urls;
+
+            for (int i = 0; i < urls_.count(); i++) {
+                if (!job->shouldProceed())
+                    break;
+
+                QString url = urls_.at(i);
+                QUrl* url_ = new QUrl();
+                url_->setUrl(url, QUrl::TolerantMode);
+                if (!url_->isValid()) {
+                    job->setErrorMessage("Invalid URL: " + url);
+                } else {
+                    urls.append(url_);
+                }
+            }
+
+            if (job->shouldProceed()) {
+                if (!tempFile.open()) {
+                    job->setErrorMessage(QObject::tr("Error creating a temporary file"));
+                } else {
+                    tempFile.close();
+                }
+            }
+
+            if (job->shouldProceed()) {
+                QString err = dbr->open(QStringLiteral("tempdb"),
+                        tempFile.fileName());
+                if (!err.isEmpty()) {
+                    job->setErrorMessage(err);
+                }
+            }
+
+            if (job->shouldProceed()) {
+                Job* sub = job->newSubJob(0.10,
+                        QObject::tr("Updating the temporary database"), true, true);
+                CoInitialize(nullptr);
+                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true);
+                CoUninitialize();
+            }
+
+            qDeleteAll(urls);
+            urls.clear();
+        }
     }
 
     if (job->shouldProceed()) {
         /* we ignore the returned error as it should also work for non-admins */
-        addNpackdCL();
+        addNpackdCL(dbr);
     }
 
     InstalledPackages* ip = InstalledPackages::getDefault();
@@ -1718,17 +1778,14 @@ void App::add(Job* job)
         }
     }
 
-    QString err;
-    QList<PackageVersion*> toInstall =
-            PackageVersion::getAddPackageVersionOptions(cl, &err);
-    if (!err.isEmpty())
-        job->setErrorMessage(err);
+    QList<PackageVersion*> toInstall;
 
-    QString user = cl.get("user");
-    QString password = cl.get("password");
-
-    QString proxyUser = cl.get("proxy-user");
-    QString proxyPassword = cl.get("proxy-password");
+    if (job->shouldProceed()) {
+        QString err;
+        toInstall = PackageUtils::getAddPackageVersionOptions(*dbr, cl, &err);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+    }
 
     QString file = cl.get("file");
     if (job->shouldProceed()) {
@@ -1757,7 +1814,8 @@ void App::add(Job* job)
     InstalledPackages installed(*ip);
 
     if (job->shouldProceed()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        QString err;
+        err = dbr->planAddMissingDeps(installed, ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }
@@ -1769,18 +1827,20 @@ void App::add(Job* job)
         for (int i = 0; i < toInstall.size(); i++) {
             PackageVersion* pv = toInstall.at(i);
             if (job->shouldProceed())
-                err = pv->planInstallation(installed, ops, avoid, file);
+                err = pv->planInstallation(dbr, installed, ops, avoid, file);
             if (!err.isEmpty()) {
                 job->setErrorMessage(err);
             }
         }
     }
 
+    qCInfo(npackd) << "err" << job->getErrorMessage();
+
     // debug: WPMUtils::outputTextConsole(QString("%1\r\n").arg(ops.size()));
 
     if (job->shouldProceed() && ops.size() > 0) {
-        Job* ijob = job->newSubJob(0.9, "Installing");
-        processInstallOperations(ijob, ops, WPMUtils::CLOSE_WINDOW,
+        Job* ijob = job->newSubJob(0.8, "Installing");
+        processInstallOperations(ijob, dbr, ops, WPMUtils::CLOSE_WINDOW,
                 interactive, user, password, proxyUser, proxyPassword);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
@@ -1793,6 +1853,9 @@ void App::add(Job* job)
 
     qDeleteAll(ops);
     qDeleteAll(toInstall);
+
+    if (urls_.count() != 0)
+        delete dbr;
 
     job->complete();
 }
@@ -1914,15 +1977,17 @@ void App::remove(Job *job)
 {
     job->setTitle("Removing packages");
 
+    DBRepository* rep = DBRepository::getDefault();
+
     if (job->shouldProceed()) {
-        QString err = DBRepository::getDefault()->openDefault();
+        QString err = rep->openDefault();
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }
 
     if (job->shouldProceed()) {
         /* we ignore the returned error as it should also work for non-admins */
-        addNpackdCL();
+        addNpackdCL(rep);
     }
 
     if (job->shouldProceed()) {
@@ -1955,7 +2020,7 @@ void App::remove(Job *job)
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        err = rep->planAddMissingDeps(installed, ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }
@@ -1968,7 +2033,7 @@ void App::remove(Job *job)
         if (job->shouldProceed()) {
             for (int i = 0; i < toRemove.size(); i++) {
                 PackageVersion* pv = toRemove.at(i);
-                err = DBRepository::getDefault()->planUninstallation(installed,
+                err = rep->planUninstallation(installed,
                         pv->package, pv->version, ops);
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);
@@ -1994,7 +2059,7 @@ void App::remove(Job *job)
     if (job->shouldProceed()) {
         Job* removeJob = job->newSubJob(0.9,
                 "Removing");
-        processInstallOperations(removeJob, ops, programCloseType,
+        processInstallOperations(removeJob, rep, ops, programCloseType,
                 interactive, "", "", "", "");
         if (!removeJob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error removing: %1\r\n").
@@ -2051,7 +2116,7 @@ void App::info(Job* job)
     Package* p = nullptr;
     if (job->shouldProceed()) {
         QString r;
-        p = AbstractRepository::findOnePackage(package, &r);
+        p = rep->findOnePackage(package, &r);
         if (!r.isEmpty())
             job->setErrorMessage(r);
     }
@@ -2316,13 +2381,24 @@ void App::detect(Job* job)
             sub->completeWithProgress();
     }
 
+    QList<QUrl*> urls;
+    if (job->shouldProceed()) {
+        QString err;
+        urls = AbstractRepository::getRepositoryURLs(&err);
+        if (!err.isEmpty())
+            job->setErrorMessage(QObject::tr("Cannot load the list of repositories: %1").arg(err));
+    }
+
     DBRepository* rep = DBRepository::getDefault();
-    rep->updateF5(job, interactive, user, password, proxyUser, proxyPassword,
+    rep->clearAndDownloadRepositories(job, urls, interactive, user, password, proxyUser, proxyPassword,
             true);
     if (job->shouldProceed()) {
         qCInfo(npackdImportant()).noquote() <<
                 "Package detection completed successfully";
     }
+
+    qDeleteAll(urls);
+    urls.clear();
 
     job->complete();
 }

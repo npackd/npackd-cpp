@@ -75,6 +75,7 @@ set(CLU_SOURCES
     ../npackdg/src/msithirdpartypm.cpp
     ../npackdg/src/mysqlquery.cpp
     ../npackdg/src/urlinfo.cpp
+    ../npackdg/src/packageutils.cpp
     ../npackdcl/src/commandlinemessagehandler.cpp
         )
 set(CLU_HEADERS
@@ -106,6 +107,7 @@ set(CLU_HEADERS
     ../npackdg/src/msithirdpartypm.h
     ../npackdg/src/mysqlquery.h
     ../npackdg/src/urlinfo.h
+    ../npackdg/src/packageutils.h
     ../npackdcl/src/commandlinemessagehandler.h
 )
 

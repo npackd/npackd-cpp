@@ -52,6 +52,7 @@ set(NPACKDCL_SOURCES
     ../npackdg/src/mysqlquery.cpp
     ../npackdg/src/installedpackagesthirdpartypm.cpp
     ../npackdg/src/urlinfo.cpp
+    ../npackdg/src/packageutils.cpp
     src/commandlinemessagehandler.cpp
     src/main.cpp
     src/app.cpp
@@ -85,6 +86,7 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/mysqlquery.h
     ../npackdg/src/installedpackagesthirdpartypm.h
     ../npackdg/src/urlinfo.h
+    ../npackdg/src/packageutils.h
     src/commandlinemessagehandler.h
     src/app.h
 )

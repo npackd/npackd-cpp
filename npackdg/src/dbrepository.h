@@ -121,6 +121,7 @@ private:
      * about installation path after this method was called.
      *
      * @param job job for this method
+     * @param repositories URLs for the repositories
      * @param useCache true = cache will be used
      * @param interactive true = allow the interaction with the user
      * @param user user name for the HTTP authentication or ""
@@ -128,7 +129,7 @@ private:
      * @param user user name for the HTTP proxy authentication or ""
      * @param password password for the HTTP proxy authentication or ""
      */
-    void load(Job *job, bool useCache, bool interactive, const QString user,
+    void load(Job *job, const QList<QUrl *> repositories, bool useCache, bool interactive, const QString user,
             const QString password,
             const QString proxyUser, const QString proxyPassword);
 
@@ -146,7 +147,7 @@ private:
     void setRepositorySHA1(const QString &url, const QString &sha1, QString *err);
     QString clearRepository(int id);
     QString saveLinks(Package *p);
-    QString readLinks(Package *p);
+    QString readLinks(Package *p) const;
     QString deleteLinks(const QString &name);
     QString updateDatabase();
     void transferFrom(Job *job, const QString &databaseFilename);
@@ -154,7 +155,7 @@ private:
     QStringList tokenizeTitle(const QString &title);
     QString deleteTags(const QString &name);
     QString saveTags(Package *p);
-    QString readTags(Package *p);
+    QString readTags(Package *p) const;
     QString createQuery(Package::Status minStatus, Package::Status maxStatus,
             const QString &query, int cat0, int cat1, QList<QVariant> &params) const;
 public:
@@ -250,7 +251,7 @@ public:
      */
     QMap<QString, URLInfo*> findURLInfos(QString* err);
 
-    Package* findPackage_(const QString& name);
+    Package* findPackage_(const QString& name) const;
 
     QList<PackageVersion*> getPackageVersions_(const QString& package,
             QString *err) const;
@@ -287,7 +288,9 @@ public:
      * @brief loads does all the necessary updates when F5 is pressed. The
      *    repositories from the Internet are loaded and the MSI database and
      *    "Software" control panel data will be scanned.
+     *
      * @param job job
+     * @param repositories URLs for the repositories
      * @param interactive true = allow the interaction with the user
      * @param user user name for the HTTP authentication or ""
      * @param password password for the HTTP authentication or ""
@@ -295,7 +298,8 @@ public:
      * @param proxyPassword password for the HTTP proxy authentication or ""
      * @param useCache true = use the HTTP cache
      */
-    void updateF5(Job *job, bool interactive, const QString user,
+    void clearAndDownloadRepositories(Job *job,
+            const QList<QUrl*> repositories, bool interactive, const QString user,
             const QString password,
             const QString proxyUser, const QString proxyPassword,
             bool useCache);
@@ -319,7 +323,7 @@ public:
      */
     void clearCache();
 
-    QList<Package*> findPackagesByShortName(const QString &name);
+    QList<Package*> findPackagesByShortName(const QString &name) const;
 
     /**
      * @brief searches for packages that match the specified keywords. No filter

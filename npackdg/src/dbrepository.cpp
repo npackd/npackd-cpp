@@ -293,7 +293,7 @@ bool DBRepository::columnExists(QSqlDatabase* db,
     return e;
 }
 
-Package *DBRepository::findPackage_(const QString &name)
+Package *DBRepository::findPackage_(const QString &name) const
 {
     QMutexLocker ml(&this->mutex);
 
@@ -1383,7 +1383,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
     return err;
 }
 
-QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
+QList<Package*> DBRepository::findPackagesByShortName(const QString &name) const
 {
     QMutexLocker ml(&this->mutex);
 
@@ -1431,7 +1431,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name)
     return r;
 }
 
-QString DBRepository::readLinks(Package* p)
+QString DBRepository::readLinks(Package* p) const
 {
     QMutexLocker ml(&this->mutex);
 
@@ -1458,7 +1458,7 @@ QString DBRepository::readLinks(Package* p)
     return err;
 }
 
-QString DBRepository::readTags(Package* p)
+QString DBRepository::readTags(Package* p) const
 {
     QMutexLocker ml(&this->mutex);
 
@@ -1693,16 +1693,15 @@ void DBRepository::clearCache()
     readCategories();
 }
 
-void DBRepository::load(Job* job, bool useCache, bool interactive,
+void DBRepository::load(Job* job, const QList<QUrl*> repositories, bool useCache, bool interactive,
         const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
 {
     QString err;
-    QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
-    if (urls.count() > 0) {
+    if (repositories.count() > 0) {
         QStringList reps;
-        for (int i = 0; i < urls.size(); i++) {
-            reps.append(urls.at(i)->toString(QUrl::FullyEncoded));
+        for (int i = 0; i < repositories.size(); i++) {
+            reps.append(repositories.at(i)->toString(QUrl::FullyEncoded));
         }
 
         err = saveRepositories(reps);
@@ -1712,8 +1711,8 @@ void DBRepository::load(Job* job, bool useCache, bool interactive,
                     err));
 
         QList<QFuture<QTemporaryFile*> > files;
-        for (int i = 0; i < urls.count(); i++) {
-            QUrl* url = urls.at(i);
+        for (int i = 0; i < repositories.count(); i++) {
+            QUrl* url = repositories.at(i);
             Job* s = job->newSubJob(0.1,
                     QObject::tr("Downloading %1").
                     arg(url->toDisplayString()), false, true);
@@ -1730,33 +1729,33 @@ void DBRepository::load(Job* job, bool useCache, bool interactive,
             files.append(future);
         }
 
-        for (int i = 0; i < urls.count(); i++) {
+        for (int i = 0; i < repositories.count(); i++) {
             files[i].waitForFinished();
 
-            job->setProgress((i + 1.0) / urls.count() * 0.5);
+            job->setProgress((i + 1.0) / repositories.count() * 0.5);
         }
 
-        for (int i = 0; i < urls.count(); i++) {
+        for (int i = 0; i < repositories.count(); i++) {
             if (!job->shouldProceed())
                 break;
 
             QTemporaryFile* tf = files.at(i).result();
-            Job* s = job->newSubJob(0.49 / urls.count(), QString(
+            Job* s = job->newSubJob(0.49 / repositories.count(), QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
-                    arg(urls.count()));
+                    arg(repositories.count()));
             this->currentRepository = i;
             // this is currently unnecessary clearRepository(i);
-            loadOne(s, tf, *urls.at(i));
+            loadOne(s, tf, *repositories.at(i));
             if (!s->getErrorMessage().isEmpty()) {
                 job->setErrorMessage(QString(
                         QObject::tr("Error loading the repository %1: %2")).arg(
-                        urls.at(i)->toString()).arg(
+                        repositories.at(i)->toString()).arg(
                         s->getErrorMessage()));
                 break;
             }
         }
 
-        for (int i = 0; i < urls.count(); i++) {
+        for (int i = 0; i < repositories.count(); i++) {
             if (!job->shouldProceed())
                 break;
 
@@ -1769,9 +1768,6 @@ void DBRepository::load(Job* job, bool useCache, bool interactive,
     }
 
     // qCDebug(npackd) << "Repository::load.3";
-
-    qDeleteAll(urls);
-    urls.clear();
 
     job->complete();
 }
@@ -1830,7 +1826,9 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
     job->complete();
 }
 
-void DBRepository::updateF5(Job* job, bool interactive, const QString user,
+void DBRepository::clearAndDownloadRepositories(Job* job,
+        const QList<QUrl*> repositories,
+        bool interactive, const QString user,
         const QString password, const QString proxyUser,
         const QString proxyPassword, bool useCache)
 {
@@ -1860,7 +1858,7 @@ void DBRepository::updateF5(Job* job, bool interactive, const QString user,
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.27,
                 QObject::tr("Downloading the remote repositories and filling the local database (tempdb)"));
-        load(sub, useCache, interactive, user, password, proxyUser, proxyPassword);
+        load(sub, repositories, useCache, interactive, user, password, proxyUser, proxyPassword);
         if (!sub->getErrorMessage().isEmpty())
             job->setErrorMessage(sub->getErrorMessage());
     }
@@ -1991,11 +1989,19 @@ void DBRepository::updateF5Runnable(Job *job, bool useCache)
         }
     }
 
+    QList<QUrl*> urls;
+    if (job->shouldProceed()) {
+        QString err;
+        urls = AbstractRepository::getRepositoryURLs(&err);
+        if (!err.isEmpty())
+            job->setErrorMessage(QObject::tr("Cannot load the list of repositories: %1").arg(err));
+    }
+
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.77,
                 QObject::tr("Updating the temporary database"), true, true);
         CoInitialize(nullptr);
-        tempdb.updateF5(sub, true, "", "", "", "", useCache);
+        tempdb.clearAndDownloadRepositories(sub, urls, true, "", "", "", "", useCache);
         CoUninitialize();
     }
 
@@ -2026,6 +2032,9 @@ void DBRepository::updateF5Runnable(Job *job, bool useCache)
     if (job->shouldProceed()) {
         job->setProgress(1);
     }
+
+    qDeleteAll(urls);
+    urls.clear();
 
     job->complete();
 

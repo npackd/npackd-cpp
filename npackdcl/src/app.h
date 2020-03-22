@@ -10,6 +10,7 @@
 #include "commandline.h"
 #include "job.h"
 #include "clprogress.h"
+#include "dbrepository.h"
 
 /**
  * NpackdCL
@@ -29,9 +30,11 @@ private:
     /**
      * @brief defines the NPACKD_CL variable and adds the NpackdCL package to
      *     the local repository
+     *
+     * @param r DB repository
      * @return error message
      */
-    QString addNpackdCL();
+    QString addNpackdCL(DBRepository *r);
 
     void usage(Job *job);
     void path(Job* job);
@@ -59,7 +62,7 @@ private:
             QString *err);
     QString printDependencies(bool onlyInstalled,
             const QString parentPrefix, int level, PackageVersion *pv);
-    void processInstallOperations(Job *job,
+    void processInstallOperations(Job *job, DBRepository *rep,
             const QList<InstallOperation *> &ops, DWORD programCloseType,
             bool interactive, const QString user, const QString password,
             const QString proxyUser, const QString proxyPassword);

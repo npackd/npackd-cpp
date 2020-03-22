@@ -188,7 +188,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
         err = QObject::tr("No repositories defined");
 
     if (err.isEmpty()) {
-        err = AbstractRepository::checkInstallationDirectory(getInstallationDirectory());
+        err = DBRepository::getDefault()->checkInstallationDirectory(getInstallationDirectory());
     }
 
     QList<QUrl*> urls;
