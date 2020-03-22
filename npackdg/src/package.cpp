@@ -5,19 +5,6 @@
 #include "wpmutils.h"
 #include "installedpackages.h"
 
-int Package::indexOf(const QList<Package*> pvs, Package* f)
-{
-    int r = -1;
-    for (int i = 0; i < pvs.count(); i++) {
-        Package* pv = pvs.at(i);
-        if (pv->name == f->name) {
-            r = i;
-            break;
-        }
-    }
-    return r;
-}
-
 Package::Package(const QString& name, const QString& title): stars(0)
 {
     this->name = name;

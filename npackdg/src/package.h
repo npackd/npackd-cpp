@@ -24,15 +24,6 @@
 class Package
 {
 public:
-    /**
-     * @brief searches for the specified object in the specified list. Objects
-     *     will be compared only by package name.
-     * @param pvs list of packages
-     * @param f search for this object
-     * @return index of the found object or -1
-     */
-    static int indexOf(const QList<Package*> pvs, Package* f);
-
     /* status of a package. The order of these constants is important. */
     enum Status {NOT_INSTALLED, INSTALLED, UPDATEABLE,
             NOT_INSTALLED_NOT_AVAILABLE};
