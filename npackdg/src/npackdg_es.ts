@@ -2402,11 +2402,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Download failed: %1</source>
-        <translation>Descarga fallida: %1</translation>
+        <translation type="vanished">Descarga fallida: %1</translation>
     </message>
     <message>
         <source>Computing SHA1</source>
-        <translation>Calculando SHA1</translation>
+        <translation type="vanished">Calculando SHA1</translation>
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>

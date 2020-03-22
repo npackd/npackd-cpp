@@ -294,24 +294,6 @@ public:
     static QStringList getProcessFiles();
 
     /**
-     * Computes SHA1 hash for a file
-     *
-     * @param filename name of the file
-     * @return SHA1 or "" in case of an error or SHA1 in lower case
-     */
-    static QString sha1(const QString& filename);
-
-    /**
-     * Computes hash for a file
-     *
-     * @param filename name of the file
-     * @param alg hash sum algorithm
-     * @return hash sum in lower case or "" in case of an error
-     */
-    static QString hashSum(const QString &filename,
-            QCryptographicHash::Algorithm alg);
-
-    /**
      * Scans all files in a directory and deletes all links (.lnk) to files
      * in another directory.
      *

@@ -187,8 +187,8 @@ QString InstalledPackages::computeNpackdCLEnvVar_(QString *err) const
 
 QString InstalledPackages::updateNpackdCLEnvVar()
 {
+    QString err;
     if (PackageUtils::adminMode) {
-        QString err;
         QString v = computeNpackdCLEnvVar_(&err);
 
         if (err.isEmpty()) {

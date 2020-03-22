@@ -293,13 +293,6 @@ public:
     bool isDirectoryLocked();
 
     /**
-     * Downloads the package and computes its SHA1.
-     *
-     * @return SHA1
-     */
-    QString downloadAndComputeSHA1(Job* job);
-
-    /**
      * Returns the extension of the package file (quessing from the URL).
      *
      * @return e.g. ".exe" or ".zip". Never returns an empty string

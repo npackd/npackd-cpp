@@ -830,37 +830,6 @@ void PackageVersion::downloadTo(Job& job, const QString& filename, bool interact
     job.complete();
 }
 
-QString PackageVersion::downloadAndComputeSHA1(Job* job)
-{
-    if (!this->download.isValid()) {
-        job->setErrorMessage(QObject::tr("No download URL"));
-        job->complete();
-        return "";
-    }
-
-    QString r;
-
-    Job* djob = job->newSubJob(0.95, QObject::tr("Downloading"));
-    Downloader::Request request(this->download);
-    QTemporaryFile* f = Downloader::downloadToTemporary(djob, request);
-    if (!djob->getErrorMessage().isEmpty())
-        job->setErrorMessage(QString(QObject::tr("Download failed: %1")).
-                arg(djob->getErrorMessage()));
-
-    if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.05, QObject::tr("Computing SHA1"));
-        r = WPMUtils::sha1(f->fileName());
-        sub->completeWithProgress();
-    }
-
-    if (f)
-        delete f;
-
-    job->complete();
-
-    return r;
-}
-
 QString PackageVersion::getPackageTitle(
         bool includeFullPackageName) const
 {

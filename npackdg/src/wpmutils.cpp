@@ -49,7 +49,6 @@
 #include "wpmutils.h"
 #include "version.h"
 #include "windowsregistry.h"
-#include "abstractrepository.h"
 
 QAtomicInt WPMUtils::nextNamePipeId;
 
@@ -2560,42 +2559,6 @@ QString WPMUtils::getExeDir()
     QDir d(r);
     d.cdUp();
     return d.absolutePath().replace('/', '\\');
-}
-
-QString WPMUtils::sha1(const QString& filename)
-{
-    return WPMUtils::hashSum(filename, QCryptographicHash::Sha1);
-}
-
-QString WPMUtils::hashSum(const QString& filename,
-        QCryptographicHash::Algorithm alg)
-{
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly))
-         return "";
-
-    QCryptographicHash hash(alg);
-
-    const int SIZE = 512 * 1024;
-    char* buffer = new char[SIZE];
-
-    bool err = false;
-    while (!file.atEnd()) {
-        qint64 r = file.read(buffer, SIZE);
-        if (r < 0) {
-            err = true;
-            break;
-        }
-        hash.addData(buffer, r);
-    }
-    file.close();
-
-    delete[] buffer;
-
-    if (err)
-        return "";
-    else
-        return hash.result().toHex().toLower();
 }
 
 QString WPMUtils::getShellFileOperationErrorMessage(DWORD res)

@@ -2148,11 +2148,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Download failed: %1</source>
-        <translation>Erreur lors du téléchargement : %1</translation>
+        <translation type="vanished">Erreur lors du téléchargement : %1</translation>
     </message>
     <message>
         <source>Computing SHA1</source>
-        <translation>Calcul du SHA1</translation>
+        <translation type="vanished">Calcul du SHA1</translation>
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>

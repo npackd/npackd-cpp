@@ -1612,11 +1612,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Download failed: %1</source>
-        <translation>Herunterladen fehlgeschlagen: %1</translation>
+        <translation type="vanished">Herunterladen fehlgeschlagen: %1</translation>
     </message>
     <message>
         <source>Computing SHA1</source>
-        <translation>Berechne SHA1</translation>
+        <translation type="vanished">Berechne SHA1</translation>
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>

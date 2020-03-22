@@ -2362,11 +2362,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Download failed: %1</source>
-        <translation>Загрузка не удалась: %1</translation>
+        <translation type="vanished">Загрузка не удалась: %1</translation>
     </message>
     <message>
         <source>Computing SHA1</source>
-        <translation>Вычисление SHA1</translation>
+        <translation type="vanished">Вычисление SHA1</translation>
     </message>
     <message>
         <source>Wrong SHA1: %1 was expected, but %2 found</source>
