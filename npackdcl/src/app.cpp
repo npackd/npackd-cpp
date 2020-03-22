@@ -385,6 +385,7 @@ void App::usage(Job* job)
         "            [--file <installation directory>]",
         "            [--user <user name>] [--password <password>]",
         "            [--proxy-user <proxy user name>] [--proxy-password <proxy password>]",
+        "            (--url <repository>)*",
         "        updates packages by uninstalling the currently installed",
         "        and installing the newest version. ",
         "    ncl where --file <relative path> [--bare-format | --json]",
@@ -1251,6 +1252,7 @@ void App::place(Job* job)
 
 void App::update(Job* job)
 {
+    CoInitialize(nullptr);
     DBRepository* rep = DBRepository::getDefault();
     job->setTitle("Updating packages");
 
@@ -1269,6 +1271,7 @@ void App::update(Job* job)
         }
     }
 
+    QStringList urls_ = cl.getAll("url");
     QString user = cl.get("user");
     QString password = cl.get("password");
 
@@ -1281,6 +1284,60 @@ void App::update(Job* job)
         programCloseType = WPMUtils::getProgramCloseType(cl, &err);
         if (!err.isEmpty()) {
             job->setErrorMessage(err);
+        }
+    }
+
+    DBRepository* dbr = DBRepository::getDefault();
+    QTemporaryFile tempFile;
+
+    if (job->shouldProceed()) {
+        if (urls_.count() == 0) {
+            QString err = dbr->openDefault();
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
+            else
+                job->setProgress(0.1);
+        } else {
+            QList<QUrl*> urls;
+
+            for (int i = 0; i < urls_.count(); i++) {
+                if (!job->shouldProceed())
+                    break;
+
+                QString url = urls_.at(i);
+                QUrl* url_ = new QUrl();
+                url_->setUrl(url, QUrl::TolerantMode);
+                if (!url_->isValid()) {
+                    job->setErrorMessage("Invalid URL: " + url);
+                } else {
+                    urls.append(url_);
+                }
+            }
+
+            if (job->shouldProceed()) {
+                if (!tempFile.open()) {
+                    job->setErrorMessage(QObject::tr("Error creating a temporary file"));
+                } else {
+                    tempFile.close();
+                }
+            }
+
+            if (job->shouldProceed()) {
+                QString err = dbr->open(QStringLiteral("tempdb"),
+                        tempFile.fileName());
+                if (!err.isEmpty()) {
+                    job->setErrorMessage(err);
+                }
+            }
+
+            if (job->shouldProceed()) {
+                Job* sub = job->newSubJob(0.10,
+                        QObject::tr("Updating the temporary database"), true, true);
+                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true);
+            }
+
+            qDeleteAll(urls);
+            urls.clear();
         }
     }
 
@@ -1454,6 +1511,7 @@ void App::update(Job* job)
     qDeleteAll(toUpdate2);
 
     job->complete();
+    CoUninitialize();
 }
 
 void App::processInstallOperations(Job *job,
@@ -1830,7 +1888,7 @@ void App::add(Job* job)
         }
     }
 
-    qCInfo(npackd) << "err" << job->getErrorMessage();
+    //qCInfo(npackd) << "err" << job->getErrorMessage();
 
     // debug: WPMUtils::outputTextConsole(QString("%1\r\n").arg(ops.size()));
 
