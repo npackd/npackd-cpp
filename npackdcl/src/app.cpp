@@ -142,7 +142,7 @@ int App::process()
         this->debug = cl.isPresent("debug");
 
         if (cl.isPresent("local"))
-            WPMUtils::adminMode = false;
+            PackageUtils::adminMode = false;
 
         if (debug) {
             clp.setUpdateRate(0);
@@ -459,10 +459,10 @@ void App::getInstallPath(Job* job)
 
     if (json) {
         QJsonObject top;
-        top["installDir"] = WPMUtils::getInstallationDirectory();
+        top["installDir"] = PackageUtils::getInstallationDirectory();
         printJSON(top);
     } else {
-        WPMUtils::outputTextConsole(WPMUtils::getInstallationDirectory());
+        WPMUtils::outputTextConsole(PackageUtils::getInstallationDirectory());
     }
 
     job->complete();
@@ -602,7 +602,7 @@ void App::setInstallPath(Job* job)
     }
 
     if (job->shouldProceed()) {
-        QString r = WPMUtils::setInstallationDirectory(file);
+        QString r = PackageUtils::setInstallationDirectory(file);
         if (!r.isEmpty())
             job->setErrorMessage(r);
     }

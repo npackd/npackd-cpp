@@ -30,6 +30,7 @@
 #include "hrtimer.h"
 #include "installedpackagesthirdpartypm.h"
 #include "dbrepository.h"
+#include "packageutils.h"
 
 InstalledPackages InstalledPackages::def;
 
@@ -186,17 +187,19 @@ QString InstalledPackages::computeNpackdCLEnvVar_(QString *err) const
 
 QString InstalledPackages::updateNpackdCLEnvVar()
 {
-    QString err;
-    QString v = computeNpackdCLEnvVar_(&err);
+    if (PackageUtils::adminMode) {
+        QString err;
+        QString v = computeNpackdCLEnvVar_(&err);
 
-    if (err.isEmpty()) {
-        // ignore the error for the case NPACKD_CL does not yet exist
-        QString e;
-        QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &e);
+        if (err.isEmpty()) {
+            // ignore the error for the case NPACKD_CL does not yet exist
+            QString e;
+            QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &e);
 
-        if (v != cur) {
-            if (WPMUtils::setSystemEnvVar("NPACKD_CL", v).isEmpty()) {
-                /* this is slow WPMUtils::fireEnvChanged() */;
+            if (v != cur) {
+                if (WPMUtils::setSystemEnvVar("NPACKD_CL", v, false, true).isEmpty()) {
+                    /* this is slow WPMUtils::fireEnvChanged() */;
+                }
             }
         }
     }
@@ -835,7 +838,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         replace.append(false);
         prefixes.append("");
 
-        if (WPMUtils::adminMode) {
+        if (PackageUtils::adminMode) {
 			jobTitles.append(QObject::tr("Adding well-known packages"));
 			tpms.append(new WellKnownProgramsThirdPartyPM(
 				InstalledPackages::packageName));
@@ -1132,7 +1135,7 @@ QString InstalledPackages::readRegistryDatabase()
     WindowsRegistry packagesWR;
     LONG e;
     err = packagesWR.open(
-        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     QList<InstalledPackageVersion*> ipvs;
@@ -1240,7 +1243,7 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
     WindowsRegistry packagesWR;
     LONG e;
     err = packagesWR.open(
-        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
@@ -1307,7 +1310,7 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
 QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
 {
     WindowsRegistry machineWR(
-            WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 			false);
     QString r;
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";

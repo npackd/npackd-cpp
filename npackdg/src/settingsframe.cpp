@@ -12,6 +12,7 @@
 #include "mainwindow.h"
 #include "wpmutils.h"
 #include "installedpackages.h"
+#include "packageutils.h"
 
 SettingsFrame::SettingsFrame(QWidget *parent) :
     QFrame(parent),
@@ -21,7 +22,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
     WindowsRegistry wr;
     QString err = wr.open(
-        WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\InstallationDirs", false, KEY_READ);
     QStringList dirs;
     if (err.isEmpty()) {
@@ -30,8 +31,8 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 	dirs.append(WPMUtils::getShellDir(CSIDL_APPDATA) +
 		QStringLiteral("\\Npackd\\Installation"));
 
-    dirs.append(WPMUtils::getInstallationDirectory());
-    if (WPMUtils::adminMode) {
+    dirs.append(PackageUtils::getInstallationDirectory());
+    if (PackageUtils::adminMode) {
 		dirs.append(WPMUtils::getProgramFilesDir());
 		if (WPMUtils::is64BitWindows())
 			dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
@@ -126,7 +127,7 @@ void SettingsFrame::setRepositoryURLs(const QStringList &urls)
     QStringList comments;
     QString err;
     WindowsRegistry wr;
-    err = wr.open(WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+    err = wr.open(PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
     if (err.isEmpty())
         comments = wr.loadStringList(&err);
@@ -217,8 +218,8 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     }
 
     if (err.isEmpty()) {
-        WPMUtils::setInstallationDirectory(getInstallationDirectory());
-        WPMUtils::setCloseProcessType(getCloseProcessType());
+        PackageUtils::setInstallationDirectory(getInstallationDirectory());
+        PackageUtils::setCloseProcessType(getCloseProcessType());
     }
 
     bool repsChanged = false;
@@ -254,7 +255,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     if (err.isEmpty()) {
         WindowsRegistry m(
-                WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+                PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\InstallationDirs", &err,
@@ -273,7 +274,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     if (err.isEmpty()) {
         WindowsRegistry m(
-                WPMUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+                PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\UsedReps", &err,

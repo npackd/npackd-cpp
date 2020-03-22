@@ -51,8 +51,6 @@
 #include "windowsregistry.h"
 #include "abstractrepository.h"
 
-bool WPMUtils::adminMode = true;
-
 QAtomicInt WPMUtils::nextNamePipeId;
 
 HANDLE WPMUtils::hEventLog = nullptr;
@@ -1177,105 +1175,6 @@ void WPMUtils::formatMessage(DWORD err, QString* errMsg)
     }
 }
 
-QString WPMUtils::getInstallationDirectory()
-{
-    QString v;
-
-    WindowsRegistry npackd;
-	QString err = npackd.open(HKEY_LOCAL_MACHINE,
-		QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
-	if (err.isEmpty()) {
-		v = npackd.get(QStringLiteral("path"), &err);
-	}
-
-	if (v.isEmpty()) {
-		err = npackd.open(
-            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-			QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
-		if (err.isEmpty()) {
-			v = npackd.get(QStringLiteral("path"), &err);
-		}
-	}
-
-	if (v.isEmpty()) {
-        err = npackd.open(HKEY_LOCAL_MACHINE,
-                QStringLiteral("Software\\WPM\\Windows Package Manager"),
-                false,
-                KEY_READ);
-        if (err.isEmpty()) {
-            v = npackd.get(QStringLiteral("path"), &err);
-        }
-    }
-
-	if (v.isEmpty())
-	{
-        if (adminMode)
-			v = WPMUtils::getProgramFilesDir();
-		else
-		{
-			v = WPMUtils::getShellDir(CSIDL_APPDATA) +
-				QStringLiteral("\\Npackd\\Installation");
-			QDir dir(v);
-			if (!dir.exists()) dir.mkpath(v);
-		}
-	}
-
-    return v;
-}
-
-QString WPMUtils::setInstallationDirectory(const QString& dir)
-{
-    WindowsRegistry m(
-            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-			false, KEY_ALL_ACCESS);
-    QString err;
-    WindowsRegistry npackd = m.createSubKey(
-            QStringLiteral("Software\\Npackd\\Npackd"), &err,
-            KEY_ALL_ACCESS);
-    if (err.isEmpty()) {
-        npackd.set("path", dir);
-    }
-
-    return err;
-}
-
-void WPMUtils::setCloseProcessType(DWORD cpt)
-{
-    WindowsRegistry m(
-            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-			false, KEY_ALL_ACCESS);
-    QString err;
-    WindowsRegistry npackd = m.createSubKey(
-            QStringLiteral("Software\\Npackd\\Npackd"), &err,
-            KEY_ALL_ACCESS);
-    if (err.isEmpty()) {
-        npackd.setDWORD(QStringLiteral("closeProcessType"), cpt);
-    }
-}
-
-DWORD WPMUtils::getCloseProcessType()
-{
-    WindowsRegistry npackd;
-	QString err = npackd.open(
-            HKEY_LOCAL_MACHINE,
-            QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
-	if (err.isEmpty()) {
-		DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
-		if (err.isEmpty())
-			return v;
-	}
-	err = npackd.open(
-            adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-            QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
-	if (err.isEmpty()) {
-		DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
-		if (err.isEmpty())
-			return v;
-	}
-
-    return CLOSE_WINDOW;
-}
-
 BOOL CALLBACK myEnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
     QList<HWND>* p = (QList<HWND>*) lParam;
@@ -2297,120 +2196,6 @@ QString WPMUtils::getShellDir(int type)
     return QString::fromWCharArray(dir);
 }
 
-QString WPMUtils::validateFullPackageName(const QString& n)
-{
-    if (n.length() == 0) {
-        return QObject::tr("Empty ID");
-    } else {
-        int pos = n.indexOf(QStringLiteral(".."));
-        if (pos >= 0)
-            return QString(QObject::tr("Empty segment at position %1 in %2")).
-                    arg(pos + 1).arg(n);
-
-        pos = n.indexOf(QStringLiteral("--"));
-        if (pos >= 0)
-            return QString(QObject::tr("-- at position %1 in %2")).
-                    arg(pos + 1).arg(n);
-
-        QStringList parts = n.split('.', QString::SkipEmptyParts);
-        for (int j = 0; j < parts.count(); j++) {
-            QString part = parts.at(j);
-
-            int pos = part.indexOf(QStringLiteral("--"));
-            if (pos >= 0)
-                return QString(QObject::tr("-- at position %1 in %2")).
-                        arg(pos + 1).arg(part);
-
-            if (!part.isEmpty()) {
-                QChar c = part.at(0);
-                if (!((c >= '0' && c <= '9') ||
-                        (c >= 'A' && c <= 'Z') ||
-                        (c == '_') ||
-                        (c >= 'a' && c <= 'z') ||
-                        c.isLetter()))
-                    return QString(QObject::tr("Wrong character at position 1 in %1")).
-                            arg(part);
-            }
-
-            for (int i = 1; i < part.length() - 1; i++) {
-                QChar c = part.at(i);
-                if (!((c >= '0' && c <= '9') ||
-                        (c >= 'A' && c <= 'Z') ||
-                        (c == '_') ||
-                        (c == '-') ||
-                        (c >= 'a' && c <= 'z') ||
-                        c.isLetter()))
-                    return QString(QObject::tr("Wrong character at position %1 in %2")).
-                            arg(i + 1).arg(part);
-            }
-
-            if (!part.isEmpty()) {
-                QChar c = part.at(part.length() - 1);
-                if (!((c >= '0' && c <= '9') ||
-                        (c >= 'A' && c <= 'Z') ||
-                        (c == '_') ||
-                        (c >= 'a' && c <= 'z') ||
-                        c.isLetter()))
-                    return QString(QObject::tr("Wrong character at position %1 in %2")).
-                            arg(part.length()).arg(part);
-            }
-        }
-    }
-
-    return QStringLiteral("");
-}
-
-QString WPMUtils::makeValidFullPackageName(const QString& name)
-{
-    QString r(name);
-    QStringList parts = r.split('.', QString::SkipEmptyParts);
-    for (int j = 0; j < parts.count(); ) {
-        QString part = parts.at(j);
-
-        if (!part.isEmpty()) {
-            QChar c = part.at(0);
-            if (!((c >= '0' && c <= '9') ||
-                    (c >= 'A' && c <= 'Z') ||
-                    (c == '_') ||
-                    (c >= 'a' && c <= 'z') ||
-                    c.isLetter()))
-                part[0] = '_';
-        }
-
-        for (int i = 1; i < part.length() - 1; i++) {
-            QChar c = part.at(i);
-            if (!((c >= '0' && c <= '9') ||
-                    (c >= 'A' && c <= 'Z') ||
-                    (c == '_') ||
-                    (c == '-') ||
-                    (c >= 'a' && c <= 'z') ||
-                    c.isLetter()))
-                part[i] = '_';
-        }
-
-        if (!part.isEmpty()) {
-            QChar c = part.at(part.length() - 1);
-            if (!((c >= '0' && c <= '9') ||
-                    (c >= 'A' && c <= 'Z') ||
-                    (c == '_') ||
-                    (c >= 'a' && c <= 'z') ||
-                    c.isLetter()))
-                part[part.length() - 1] = '_';
-        }
-
-        if (part.isEmpty())
-            parts.removeAt(j);
-        else {
-            parts.replace(j, part);
-            j++;
-        }
-    }
-    r = parts.join(".");
-    if (r.isEmpty())
-        r = '_';
-    return r;
-}
-
 QString WPMUtils::validateSHA1(const QString& sha1)
 {
     if (sha1.length() != 40) {
@@ -2450,11 +2235,11 @@ QString WPMUtils::validateSHA256(const QString &sha256)
 }
 
 QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
-        bool expandVars)
+        bool expandVars, bool system)
 {
 	QString err;
     WindowsRegistry wr;
-    if (adminMode)
+    if (system)
 		err = wr.open(HKEY_LOCAL_MACHINE,
 			QStringLiteral("System\\CurrentControlSet\\Control\\Session Manager\\Environment"),
 			false);
@@ -2775,22 +2560,6 @@ QString WPMUtils::getExeDir()
     QDir d(r);
     d.cdUp();
     return d.absolutePath().replace('/', '\\');
-}
-
-QString WPMUtils::regQueryValue(HKEY hk, const QString &var)
-{
-    QString value_;
-    char value[255];
-    DWORD valueSize = sizeof(value);
-    if (RegQueryValueEx(hk, WPMUtils::toLPWSTR(var), nullptr, nullptr, (BYTE*) value,
-            &valueSize) == ERROR_SUCCESS) {
-        // the next line is important
-        // valueSize is sometimes == 0 and the expression (valueSize /2 - 1)
-        // below leads to an AV
-        if (valueSize != 0)
-            value_.setUtf16((ushort*) value, valueSize / 2 - 1);
-    }
-    return value_;
 }
 
 QString WPMUtils::sha1(const QString& filename)
@@ -3713,7 +3482,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     PROCESS_INFORMATION pinfo;
 
-    SECURITY_ATTRIBUTES saAttr = {0};
+    SECURITY_ATTRIBUTES saAttr = {};
     saAttr.nLength = sizeof(saAttr);
     saAttr.bInheritHandle = TRUE;
     saAttr.lpSecurityDescriptor = nullptr;
@@ -3854,7 +3623,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 
     // read the output
     if (job->shouldProceed() && wait) {
-        OVERLAPPED stOverlapped = {0};
+        OVERLAPPED stOverlapped = {};
         HANDLE hEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
         stOverlapped.hEvent = hEvent;
 

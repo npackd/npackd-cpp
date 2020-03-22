@@ -5,6 +5,7 @@
 #include "repository.h"
 #include "wpmutils.h"
 #include "packageversionfile.h"
+#include "packageutils.h"
 
 int RepositoryXMLHandler::findWhere()
 {
@@ -127,7 +128,7 @@ bool RepositoryXMLHandler::startElement(const QString &/*namespaceURI*/,
     if (where == TAG_VERSION) {
         pv = new PackageVersion();
         QString packageName = atts.value(QStringLiteral("package"));
-        error = WPMUtils::validateFullPackageName(packageName);
+        error = PackageUtils::validateFullPackageName(packageName);
         if (!error.isEmpty()) {
             error = QObject::tr("Error in the attribute 'package' in <version>: %1").
                     arg(error);
@@ -239,7 +240,7 @@ bool RepositoryXMLHandler::startElement(const QString &/*namespaceURI*/,
         QString name = atts.value(QStringLiteral("name"));
         p = new Package(name, name);
 
-        error = WPMUtils::validateFullPackageName(name);
+        error = PackageUtils::validateFullPackageName(name);
         if (!error.isEmpty()) {
             error.prepend(QObject::tr("Error in attribute 'name' in <package>: "));
         }
@@ -262,7 +263,7 @@ bool RepositoryXMLHandler::startElement(const QString &/*namespaceURI*/,
         QString name = atts.value(QStringLiteral("name"));
         lic = new License(name, name);
 
-        error = WPMUtils::validateFullPackageName(name);
+        error = PackageUtils::validateFullPackageName(name);
         if (!error.isEmpty()) {
             error.prepend(QObject::tr("Error in attribute 'name' in <package>: "));
         }
@@ -356,7 +357,7 @@ bool RepositoryXMLHandler::endElement(const QString &/*namespaceURI*/,
         }
     } else if (where == TAG_PACKAGE_TAG) {
         QString c = chars.trimmed();
-        QString err = WPMUtils::validateFullPackageName(c);
+        QString err = PackageUtils::validateFullPackageName(c);
         if (!err.isEmpty()) {
             error = QObject::tr("Error in <tag> for %1: %2").
                     arg(p->title).arg(err);

@@ -62,6 +62,7 @@
 #include "exportrepositoryframe.h"
 #include "asyncdownloader.h"
 #include "uimessagehandler.h"
+#include "packageutils.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -967,7 +968,7 @@ void MainWindow::process(QList<InstallOperation*> &install,
                 QtConcurrent::run(reinterpret_cast<AbstractRepository*>(rep),
                         &DBRepository::processWithCoInitializeAndFree,
                         job, install,
-                        WPMUtils::getCloseProcessType());
+                        PackageUtils::getCloseProcessType());
 
                 install.clear();
             }
@@ -1778,9 +1779,9 @@ void MainWindow::on_actionSettings_triggered()
         qDeleteAll(urls);
         urls.clear();
 
-        d->setInstallationDirectory(WPMUtils::getInstallationDirectory());
+        d->setInstallationDirectory(PackageUtils::getInstallationDirectory());
 
-        d->setCloseProcessType(WPMUtils::getCloseProcessType());
+        d->setCloseProcessType(PackageUtils::getCloseProcessType());
 
         this->ui->tabWidget->addTab(d, QObject::tr("Settings"));
         this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);
@@ -1841,7 +1842,7 @@ void MainWindow::on_actionUpdate_triggered()
 
     if (err.isEmpty()) {
         if (ops.count() > 0) {
-            process(ops, WPMUtils::getCloseProcessType());
+            process(ops, PackageUtils::getCloseProcessType());
         }
     } else
         addErrorMessage(err, err, true, QMessageBox::Critical);
@@ -2098,7 +2099,7 @@ void MainWindow::on_actionInstall_triggered()
     }
 
     if (err.isEmpty())
-        process(ops, WPMUtils::getCloseProcessType());
+        process(ops, PackageUtils::getCloseProcessType());
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
@@ -2160,7 +2161,7 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     if (err.isEmpty())
-        process(ops, WPMUtils::getCloseProcessType());
+        process(ops, PackageUtils::getCloseProcessType());
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 

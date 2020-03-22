@@ -17,7 +17,6 @@
 #include "commandline.h"
 #include "package.h"
 #include "hrtimer.h"
-#include "dependency.h"
 
 // Logging category for the whole application.
 Q_DECLARE_LOGGING_CATEGORY(npackd)
@@ -30,6 +29,8 @@ Q_DECLARE_LOGGING_CATEGORY(npackdImportant)
 /**
  * Some utility methods. This class is called WPMUtils because of the original
  * name of Npackd "Windows Package Manager".
+ *
+ * All package related utility methods should be placed in PackageUtils.
  */
 class WPMUtils
 {
@@ -86,9 +87,6 @@ private:
 
     static QString getTaskName();
 public:
-    /** true = install programs globally, false = locally */
-    static bool adminMode;
-
     /**
      * @brief how to close a process
      */
@@ -264,20 +262,6 @@ public:
     static QString validateSHA256(const QString& sha256);
 
     /**
-     * Validates a full package name.
-     *
-     * @param n a package name
-     * @return an error message or an empty string if n is a valid package name.
-     */
-    static QString validateFullPackageName(const QString& n);
-
-    /**
-     * @param name invalid full package name
-     * @return valid package name
-     */
-    static QString makeValidFullPackageName(const QString& name);
-
-    /**
      * Formats a Windows error message.
      *
      * @param err see GetLastError() or HRESULT
@@ -303,19 +287,6 @@ public:
      * @param dir the directory
      */
     static bool isUnder(const QString& file, const QString& dir);
-
-    /**
-     * @return directory where the packages will be installed. Typically
-     *     c:\program files\Npackd
-     */
-    static QString getInstallationDirectory();
-
-    /**
-     * see getInstallationDirectory()
-     *
-     * @return error message or ""
-     */
-    static QString setInstallationDirectory(const QString& dir);
 
     /**
      * @return full paths to files locked because of running processes
@@ -414,15 +385,6 @@ public:
      *     (e.g. C:\Program Files\Prog 1.0_2.txt)
      */
     static QString findNonExistingFile(const QString& start, const QString ext);
-
-    /**
-     * Reads a value from the registry.
-     *
-     * @param hk open key
-     * @param var name of the REG_SZ-Variable
-     * @return value or "" if an error has occured
-     */
-    static QString regQueryValue(HKEY hk, const QString& var);
 
     /**
      * @return directory with the .exe
@@ -524,10 +486,11 @@ public:
      * @param name name of the variable
      * @param value value of the variable
      * @param expandVars true if REG_EXPAND_SZ should be used instead of REG_SZ
+     * @param system true = system-wide, false = user environment
      * @return error message or ""
      */
     static QString setSystemEnvVar(const QString& name, const QString& value,
-            bool expandVars=false);
+            bool expandVars, bool system);
 
     /**
      * Reads a system environment variable.
@@ -606,17 +569,6 @@ public:
      *     or ""
      */
     static QString findFirstExeLockingDirectory(const QString& dir);
-
-    /**
-     * @brief changes how the programs should be closed
-     * @param cpt new value
-     */
-    static void setCloseProcessType(DWORD cpt);
-
-    /**
-     * @return how the programs should be closed
-     */
-    static DWORD getCloseProcessType();
 
     /**
      * @brief parses the command line and returns the chosen program close type

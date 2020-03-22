@@ -37,6 +37,7 @@
 #include "installedpackageversion.h"
 #include "dbrepository.h"
 #include "repositoryxmlhandler.h"
+#include "packageutils.h"
 
 QSemaphore PackageVersion::httpConnections(3);
 QSet<QString> PackageVersion::lockedPackageVersions;
@@ -395,7 +396,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d(WPMUtils::getShellDir(CSIDL_STARTMENU));
         WPMUtils::deleteShortcuts(dir, d);
 
-        if (WPMUtils::adminMode)
+        if (PackageUtils::adminMode)
 		{
 			QDir d2(WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU));
 			WPMUtils::deleteShortcuts(dir, d2);
@@ -408,7 +409,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d3(WPMUtils::getShellDir(CSIDL_DESKTOP));
         WPMUtils::deleteShortcuts(dir, d3);
 
-        if (WPMUtils::adminMode)
+        if (PackageUtils::adminMode)
 		{
 			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_DESKTOPDIRECTORY));
 			WPMUtils::deleteShortcuts(dir, d4);
@@ -422,7 +423,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d3(WPMUtils::getShellDir(CSIDL_APPDATA) + A);
         WPMUtils::deleteShortcuts(dir, d3);
 
-        if (WPMUtils::adminMode)
+        if (PackageUtils::adminMode)
 		{
 			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + A);
 			WPMUtils::deleteShortcuts(dir, d4);
@@ -1059,7 +1060,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
     if (this->cmdFiles.size() == 0)
         return true;
 
-    QString sourceBasePath = WPMUtils::adminMode
+    QString sourceBasePath = PackageUtils::adminMode
 		? WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd\\Commands\\"
 		: WPMUtils::getShellDir(CSIDL_APPDATA) + "\\Npackd\\Commands\\";
 
@@ -1185,7 +1186,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 
         simple = WPMUtils::makeValidFilename(simple, ' ') + ".lnk";
         withVersion = WPMUtils::makeValidFilename(withVersion, ' ');
-        QString commonStartMenu = WPMUtils::adminMode
+        QString commonStartMenu = PackageUtils::adminMode
 			? WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU)
 			: WPMUtils::getShellDir(CSIDL_STARTMENU);
         simple = commonStartMenu + "\\" + simple;
@@ -1230,7 +1231,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 QString PackageVersion::getIdealInstallationDirectory()
 {
     return WPMUtils::normalizePath(
-            WPMUtils::getInstallationDirectory() + "\\" +
+            PackageUtils::getInstallationDirectory() + "\\" +
             WPMUtils::makeValidFilename(this->getPackageTitle(), '_'),
             false);
 }
@@ -1238,7 +1239,7 @@ QString PackageVersion::getIdealInstallationDirectory()
 QString PackageVersion::getSecondaryInstallationDirectory()
 {
     return WPMUtils::normalizePath(
-            WPMUtils::getInstallationDirectory() + "\\" +
+            PackageUtils::getInstallationDirectory() + "\\" +
             WPMUtils::makeValidFilename(this->getPackageTitle(), '_') +
             "-" + this->version.getVersionString(),
             false);
@@ -1247,7 +1248,7 @@ QString PackageVersion::getSecondaryInstallationDirectory()
 QString PackageVersion::getPreferredInstallationDirectory()
 {
     QString name = WPMUtils::normalizePath(
-            WPMUtils::getInstallationDirectory() + "\\" +
+            PackageUtils::getInstallationDirectory() + "\\" +
             WPMUtils::makeValidFilename(this->getPackageTitle(), '_'),
             false);
     if (!QFileInfo(name).exists())

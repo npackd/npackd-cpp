@@ -462,7 +462,7 @@ QString CLProcessor::process(QList<InstallOperation*> &install,
                 QtConcurrent::run(static_cast<AbstractRepository*>(rep),
                         &AbstractRepository::processWithCoInitializeAndFree,
                         job, install,
-                        WPMUtils::getCloseProcessType());
+                        PackageUtils::getCloseProcessType());
 
                 monitorAndWaitFor(job);
                 err = job->getErrorMessage();

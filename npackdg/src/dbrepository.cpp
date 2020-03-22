@@ -29,6 +29,7 @@
 #include "mysqlquery.h"
 #include "repositoryxmlhandler.h"
 #include "downloader.h"
+#include "packageutils.h"
 
 // this is necessary in Qt 5.11 and earlier versions for the static build
 Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
@@ -2538,7 +2539,7 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 
 QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 {
-    QString dir = WPMUtils::getShellDir(WPMUtils::adminMode ?
+    QString dir = WPMUtils::getShellDir(PackageUtils::adminMode ?
             CSIDL_COMMON_APPDATA : CSIDL_APPDATA) +
             QStringLiteral("\\Npackd");
     QDir d;

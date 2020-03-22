@@ -1,6 +1,11 @@
 #include "packageutils.h"
 
+#include "shlobj.h"
+
 #include "installedpackages.h"
+#include "wpmutils.h"
+
+bool PackageUtils::adminMode = true;
 
 PackageUtils::PackageUtils()
 {
@@ -198,5 +203,223 @@ QList<Dependency *> PackageUtils::getPackageVersionOptions(const CommandLine &cl
 
     return ret;
 }
+
+QString PackageUtils::validateFullPackageName(const QString &n)
+{
+    if (n.length() == 0) {
+        return QObject::tr("Empty ID");
+    } else {
+        int pos = n.indexOf(QStringLiteral(".."));
+        if (pos >= 0)
+            return QString(QObject::tr("Empty segment at position %1 in %2")).
+                    arg(pos + 1).arg(n);
+
+        pos = n.indexOf(QStringLiteral("--"));
+        if (pos >= 0)
+            return QString(QObject::tr("-- at position %1 in %2")).
+                    arg(pos + 1).arg(n);
+
+        QStringList parts = n.split('.', QString::SkipEmptyParts);
+        for (int j = 0; j < parts.count(); j++) {
+            QString part = parts.at(j);
+
+            int pos = part.indexOf(QStringLiteral("--"));
+            if (pos >= 0)
+                return QString(QObject::tr("-- at position %1 in %2")).
+                        arg(pos + 1).arg(part);
+
+            if (!part.isEmpty()) {
+                QChar c = part.at(0);
+                if (!((c >= '0' && c <= '9') ||
+                        (c >= 'A' && c <= 'Z') ||
+                        (c == '_') ||
+                        (c >= 'a' && c <= 'z') ||
+                        c.isLetter()))
+                    return QString(QObject::tr("Wrong character at position 1 in %1")).
+                            arg(part);
+            }
+
+            for (int i = 1; i < part.length() - 1; i++) {
+                QChar c = part.at(i);
+                if (!((c >= '0' && c <= '9') ||
+                        (c >= 'A' && c <= 'Z') ||
+                        (c == '_') ||
+                        (c == '-') ||
+                        (c >= 'a' && c <= 'z') ||
+                        c.isLetter()))
+                    return QString(QObject::tr("Wrong character at position %1 in %2")).
+                            arg(i + 1).arg(part);
+            }
+
+            if (!part.isEmpty()) {
+                QChar c = part.at(part.length() - 1);
+                if (!((c >= '0' && c <= '9') ||
+                        (c >= 'A' && c <= 'Z') ||
+                        (c == '_') ||
+                        (c >= 'a' && c <= 'z') ||
+                        c.isLetter()))
+                    return QString(QObject::tr("Wrong character at position %1 in %2")).
+                            arg(part.length()).arg(part);
+            }
+        }
+    }
+
+    return QStringLiteral("");
+}
+
+QString PackageUtils::makeValidFullPackageName(const QString &name)
+{
+    QString r(name);
+    QStringList parts = r.split('.', QString::SkipEmptyParts);
+    for (int j = 0; j < parts.count(); ) {
+        QString part = parts.at(j);
+
+        if (!part.isEmpty()) {
+            QChar c = part.at(0);
+            if (!((c >= '0' && c <= '9') ||
+                    (c >= 'A' && c <= 'Z') ||
+                    (c == '_') ||
+                    (c >= 'a' && c <= 'z') ||
+                    c.isLetter()))
+                part[0] = '_';
+        }
+
+        for (int i = 1; i < part.length() - 1; i++) {
+            QChar c = part.at(i);
+            if (!((c >= '0' && c <= '9') ||
+                    (c >= 'A' && c <= 'Z') ||
+                    (c == '_') ||
+                    (c == '-') ||
+                    (c >= 'a' && c <= 'z') ||
+                    c.isLetter()))
+                part[i] = '_';
+        }
+
+        if (!part.isEmpty()) {
+            QChar c = part.at(part.length() - 1);
+            if (!((c >= '0' && c <= '9') ||
+                    (c >= 'A' && c <= 'Z') ||
+                    (c == '_') ||
+                    (c >= 'a' && c <= 'z') ||
+                    c.isLetter()))
+                part[part.length() - 1] = '_';
+        }
+
+        if (part.isEmpty())
+            parts.removeAt(j);
+        else {
+            parts.replace(j, part);
+            j++;
+        }
+    }
+    r = parts.join(".");
+    if (r.isEmpty())
+        r = '_';
+    return r;
+}
+
+QString PackageUtils::getInstallationDirectory()
+{
+    QString v;
+
+    WindowsRegistry npackd;
+    QString err = npackd.open(HKEY_LOCAL_MACHINE,
+        QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
+    if (err.isEmpty()) {
+        v = npackd.get(QStringLiteral("path"), &err);
+    }
+
+    if (v.isEmpty()) {
+        err = npackd.open(
+            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
+        if (err.isEmpty()) {
+            v = npackd.get(QStringLiteral("path"), &err);
+        }
+    }
+
+    if (v.isEmpty()) {
+        err = npackd.open(HKEY_LOCAL_MACHINE,
+                QStringLiteral("Software\\WPM\\Windows Package Manager"),
+                false,
+                KEY_READ);
+        if (err.isEmpty()) {
+            v = npackd.get(QStringLiteral("path"), &err);
+        }
+    }
+
+    if (v.isEmpty())
+    {
+        if (PackageUtils::adminMode)
+            v = WPMUtils::getProgramFilesDir();
+        else
+        {
+            v = WPMUtils::getShellDir(CSIDL_APPDATA) +
+                QStringLiteral("\\Npackd\\Installation");
+            QDir dir(v);
+            if (!dir.exists()) dir.mkpath(v);
+        }
+    }
+
+    return v;
+}
+
+QString PackageUtils::setInstallationDirectory(const QString &dir)
+{
+    WindowsRegistry m(
+            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            false, KEY_ALL_ACCESS);
+    QString err;
+    WindowsRegistry npackd = m.createSubKey(
+            QStringLiteral("Software\\Npackd\\Npackd"), &err,
+            KEY_ALL_ACCESS);
+    if (err.isEmpty()) {
+        npackd.set("path", dir);
+    }
+
+    return err;
+}
+
+DWORD PackageUtils::getCloseProcessType()
+{
+    WindowsRegistry npackd;
+    QString err = npackd.open(
+            HKEY_LOCAL_MACHINE,
+            QStringLiteral("SOFTWARE\\Policies\\Npackd"), false, KEY_READ);
+    if (err.isEmpty()) {
+        DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
+        if (err.isEmpty())
+            return v;
+    }
+    err = npackd.open(
+            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
+    if (err.isEmpty()) {
+        DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
+        if (err.isEmpty())
+            return v;
+    }
+
+    return WPMUtils::CLOSE_WINDOW;
+}
+
+void PackageUtils::setCloseProcessType(DWORD cpt)
+{
+    WindowsRegistry m(
+            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            false, KEY_ALL_ACCESS);
+    QString err;
+    WindowsRegistry npackd = m.createSubKey(
+            QStringLiteral("Software\\Npackd\\Npackd"), &err,
+            KEY_ALL_ACCESS);
+    if (err.isEmpty()) {
+        npackd.setDWORD(QStringLiteral("closeProcessType"), cpt);
+    }
+}
+
+
+
+
+
 
 

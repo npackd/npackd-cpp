@@ -3,6 +3,7 @@
 #include "controlpanelthirdpartypm.h"
 #include "windowsregistry.h"
 #include "wpmutils.h"
+#include "packageutils.h"
 
 ControlPanelThirdPartyPM::ControlPanelThirdPartyPM() : ignoreMSIEntries(true)
 {
@@ -89,7 +90,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     // find the package name
     QString package = keyName;
     package.replace('.', '_');
-    package = WPMUtils::makeValidFullPackageName(
+    package = PackageUtils::makeValidFullPackageName(
             "control-panel." + package);
 
     // find the version number
