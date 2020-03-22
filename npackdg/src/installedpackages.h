@@ -169,6 +169,36 @@ public:
             const Version& version) const;
 
     /**
+     * @param dep a dependency
+     * @return [ownership:caller] all package versions that match
+     *     this dependency and are installed
+     */
+    QList<InstalledPackageVersion*> findAllInstalledMatches(
+            const Dependency& dep) const;
+
+    /**
+     * @param dep a dependency
+     * @return [ownership:caller] the newest package version that matches this
+     *     dependency and are installed
+     */
+    InstalledPackageVersion* findHighestInstalledMatch(
+            const Dependency& dep) const;
+
+    /**
+     * @param err error message will be stored here
+     * @return new NPACKD_CL value
+     */
+    QString computeNpackdCLEnvVar_(QString *err) const;
+
+    /**
+     * Changes the value of the system-wide NPACKD_CL variable to point to the
+     * newest installed version of NpackdCL.
+     *
+     * @return error message
+     */
+    QString updateNpackdCLEnvVar();
+
+    /**
      * @brief searches for a dependency in the list of installed packages. This
      *     function uses the Windows registry directly and should be only used
      *     from "npackdcl path". It should be fast.

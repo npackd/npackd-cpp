@@ -142,20 +142,6 @@ public:
                                                          QString *err) const;
 
     /**
-     * @param err error message will be stored here
-     * @return new NPACKD_CL value
-     */
-    QString computeNpackdCLEnvVar_(QString *err) const;
-
-    /**
-     * Changes the value of the system-wide NPACKD_CL variable to point to the
-     * newest installed version of NpackdCL.
-     *
-     * @return error message
-     */
-    QString updateNpackdCLEnvVar();
-
-    /**
      * @brief processes the given operations
      * @param job job
      * @param install operations that should be performed
@@ -274,7 +260,7 @@ public:
      * @param programCloseType how to close running applications
      */
     void processWithCoInitializeAndFree(Job *job,
-                                        const QList<InstallOperation *> &install_, DWORD programCloseType);
+            const QList<InstallOperation *> &install_, DWORD programCloseType);
 
     /**
      * @param dep a dependency
@@ -288,7 +274,7 @@ public:
      *     first returned object has the highest version number.
      */
     QList<PackageVersion *> findAllMatchesToInstall(const Dependency& dep,
-                                                    const QList<PackageVersion *> &avoid, QString *err);
+            const QList<PackageVersion *> &avoid, QString *err);
 
     /**
      * @+^123param dep a dependency
@@ -302,22 +288,6 @@ public:
     PackageVersion* findBestMatchToInstall(const Dependency& dep,
                                            const QList<PackageVersion*>& avoid,
                                            QString *err);
-
-    /**
-     * @param dep a dependency
-     * @return [ownership:caller] the newest package version that matches this
-     *     dependency and are installed
-     */
-    InstalledPackageVersion* findHighestInstalledMatch(
-            const Dependency& dep) const;
-
-    /**
-     * @param dep a dependency
-     * @return [ownership:caller] all package versions that match
-     *     this dependency and are installed
-     */
-    QList<InstalledPackageVersion*> findAllInstalledMatches(
-            const Dependency& dep) const;
 
     /**
      * @param dep a dependency

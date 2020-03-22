@@ -566,7 +566,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
                 this->package == "com.googlecode.windows-package-manager.NpackdCL64") {
             job->setTitle(initialTitle + " / " +
                     QObject::tr("Updating NPACKD_CL"));
-            DBRepository::getDefault()->updateNpackdCLEnvVar();
+            InstalledPackages::getDefault()->updateNpackdCLEnvVar();
         }
         job->setProgress(1);
     }
@@ -893,6 +893,7 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
     QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     DBRepository* rep = DBRepository::getDefault();
+    InstalledPackages* ip = InstalledPackages::getDefault();
 
     for (int i = 0; i < pos.size(); i++) {
         if (!err->isEmpty())
@@ -937,7 +938,7 @@ QList<PackageVersion*> PackageVersion::getAddPackageVersionOptions(const Command
                                 arg(versions);
                     } else {
                         InstalledPackageVersion* ipv =
-                                rep->findHighestInstalledMatch(v);
+                                ip->findHighestInstalledMatch(v);
                         if (ipv) {
                             pv = rep->findPackageVersion_(ipv->package,
                                     ipv->version, err);
@@ -1103,8 +1104,6 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
 
     InstalledPackages* ip = InstalledPackages::getDefault();
 
-    DBRepository* rep = DBRepository::getDefault();
-
     for (int i = 0; i < pos.size(); i++) {
         if (!err->isEmpty())
             break;
@@ -1147,7 +1146,7 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
                         *err = QObject::tr("Cannot parse a version range: %1").
                                 arg(versions);
                     } else {
-                        ipv = rep->findHighestInstalledMatch(v);
+                        ipv = ip->findHighestInstalledMatch(v);
                     }
                 } else if (version.isNull()) {
                     ipv = ip->getNewestInstalled(p->name);
@@ -1625,6 +1624,8 @@ void PackageVersion::install(Job* job, const QString& where,
         return;
     }
 
+    InstalledPackages* ip = InstalledPackages::getDefault();
+
     QString initialTitle = job->getTitle();
 
     // qCDebug(npackd) << "install.2";
@@ -1694,7 +1695,7 @@ void PackageVersion::install(Job* job, const QString& where,
                 this->package == "com.googlecode.windows-package-manager.NpackdCL64") {
             job->setTitle(initialTitle + " / " +
                     QObject::tr("Updating NPACKD_CL"));
-            DBRepository::getDefault()->updateNpackdCLEnvVar();
+            ip->updateNpackdCLEnvVar();
         }
 
         job->setProgress(0.91);
@@ -1720,7 +1721,7 @@ void PackageVersion::install(Job* job, const QString& where,
 
     bool success = false;
     if (job->shouldProceed()) {
-        QString err = InstalledPackages::getDefault()->setPackageVersionPath(
+        QString err = ip->setPackageVersionPath(
                 this->package, this->version, where);
         //InstalledPackages::getDefault()->notifyInstalled(this->package,
         //        this->version); // integrate in setPackageVersionPath?
@@ -1771,7 +1772,7 @@ QString PackageVersion::addBasicVars(QStringList* env)
     env->append("NPACKD_PACKAGE_VERSION");
     env->append(this->version.getVersionString());
     env->append("NPACKD_CL");
-    env->append(DBRepository::getDefault()->
+    env->append(InstalledPackages::getDefault()->
             computeNpackdCLEnvVar_(&err));
 
     return err;
@@ -1779,12 +1780,12 @@ QString PackageVersion::addBasicVars(QStringList* env)
 
 void PackageVersion::addDependencyVars(QStringList* vars)
 {
-    DBRepository* rep = DBRepository::getDefault();
+    InstalledPackages* ip = InstalledPackages::getDefault();
     for (int i = 0; i < this->dependencies.count(); i++) {
         Dependency* d = this->dependencies.at(i);
         if (!d->var.isEmpty()) {
             vars->append(d->var);
-            InstalledPackageVersion* ipv = rep->findHighestInstalledMatch(*d);
+            InstalledPackageVersion* ipv = ip->findHighestInstalledMatch(*d);
             if (ipv) {
                 vars->append(ipv->getDirectory());
                 delete ipv;

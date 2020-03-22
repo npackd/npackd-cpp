@@ -304,7 +304,7 @@ QString App::addNpackdCL()
     delete pv;
     pv = nullptr;
 
-    err = r->updateNpackdCLEnvVar();
+    err = InstalledPackages::getDefault()->updateNpackdCLEnvVar();
 
     return err;
 }
@@ -1643,7 +1643,7 @@ void App::build(Job* job)
 
     std::unique_ptr<InstalledPackageVersion> source;
     if (job->shouldProceed()) {
-        source.reset(rep->findHighestInstalledMatch(*sourceDep));
+        source.reset(ip->findHighestInstalledMatch(*sourceDep));
         if (!source)
             job->setErrorMessage(
                     QObject::tr("The installed source package version was not found"));
@@ -2221,6 +2221,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 {
     QString err;
 
+    InstalledPackages* ip = InstalledPackages::getDefault();
     DBRepository* rep = DBRepository::getDefault();
     for (int i = 0; i < pv->dependencies.count(); ++i) {
         QString prefix;
@@ -2230,7 +2231,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
             prefix = QString() + QChar(0x251c) + QChar(0x2500);
 
         Dependency* d = pv->dependencies.at(i);
-        InstalledPackageVersion* ipv = rep->findHighestInstalledMatch(*d);
+        InstalledPackageVersion* ipv = ip->findHighestInstalledMatch(*d);
 
         PackageVersion* pvd = nullptr;
 

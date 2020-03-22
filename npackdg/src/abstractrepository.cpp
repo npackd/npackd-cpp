@@ -38,26 +38,6 @@ QStringList AbstractRepository::getRepositoryURLs(HKEY hk, const QString& path,
     return urls;
 }
 
-QString AbstractRepository::updateNpackdCLEnvVar()
-{
-    QString err;
-    QString v = computeNpackdCLEnvVar_(&err);
-
-    if (err.isEmpty()) {
-        // ignore the error for the case NPACKD_CL does not yet exist
-        QString e;
-        QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &e);
-
-        if (v != cur) {
-            if (WPMUtils::setSystemEnvVar("NPACKD_CL", v).isEmpty()) {
-                /* this is slow WPMUtils::fireEnvChanged() */;
-            }
-        }
-    }
-
-    return err;
-}
-
 bool AbstractRepository::includesRemoveItself(
         const QList<InstallOperation *> &install_)
 {
@@ -289,40 +269,6 @@ PackageVersion *AbstractRepository::findBestMatchToInstall(
     qDeleteAll(pvs);
 
     return res;
-}
-
-InstalledPackageVersion *AbstractRepository::findHighestInstalledMatch(
-        const Dependency &dep) const
-{
-    QList<InstalledPackageVersion*> list = findAllInstalledMatches(dep);
-    InstalledPackageVersion* res = nullptr;
-    for (int i = 0; i < list.count(); i++) {
-        InstalledPackageVersion* ipv = list.at(i);
-        if (res == nullptr || ipv->version.compare(res->version) > 0)
-            res = ipv;
-    }
-    if (res)
-        res = res->clone();
-    qDeleteAll(list);
-
-    return res;
-}
-
-QList<InstalledPackageVersion *> AbstractRepository::findAllInstalledMatches(
-        const Dependency &dep) const
-{
-    QList<InstalledPackageVersion*> r;
-    InstalledPackages* ip = InstalledPackages::getDefault();
-    QList<InstalledPackageVersion*> installed = ip->getAll();
-    for (int i = 0; i < installed.count(); i++) {
-        InstalledPackageVersion* ipv = installed.at(i);
-        if (ipv->package == dep.package &&
-                dep.test(ipv->version)) {
-            r.append(ipv->clone());
-        }
-    }
-    qDeleteAll(installed);
-    return r;
 }
 
 QString AbstractRepository::toString(const Dependency &dep,
@@ -819,7 +765,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 break;
             }
 
-            InstalledPackageVersion* ipv = findHighestInstalledMatch(*d);
+            InstalledPackageVersion* ipv = installed.findHighestInstalledMatch(*d);
             PackageVersion* b = nullptr;
             if (ipv) {
                 b = findPackageVersion_(ipv->package, ipv->version, &err);
@@ -1115,32 +1061,6 @@ PackageVersion* AbstractRepository::findNewestInstalledPackageVersion_(
     delete ipv;
 
     return r;
-}
-
-QString AbstractRepository::computeNpackdCLEnvVar_(QString* err) const
-{
-    *err = "";
-
-    QString v;
-    InstalledPackageVersion* ipv;
-    if (WPMUtils::is64BitWindows()) {
-        ipv = InstalledPackages::getDefault()->getNewestInstalled(
-                "com.googlecode.windows-package-manager.NpackdCL64");
-    } else
-        ipv = nullptr;
-
-    if (!ipv)
-        ipv = InstalledPackages::getDefault()->getNewestInstalled(
-            "com.googlecode.windows-package-manager.NpackdCL");
-
-    if (ipv)
-        v = ipv->getDirectory();
-
-    delete ipv;
-
-    // qCDebug(npackd) << "computed NPACKD_CL" << v;
-
-    return v;
 }
 
 PackageVersion* AbstractRepository::findNewestInstallablePackageVersion_(

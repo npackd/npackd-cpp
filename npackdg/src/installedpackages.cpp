@@ -127,6 +127,83 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
     return ipv;
 }
 
+QList<InstalledPackageVersion *> InstalledPackages::findAllInstalledMatches(const Dependency &dep) const
+{
+    QList<InstalledPackageVersion*> r;
+    QList<InstalledPackageVersion*> installed = getAll();
+    for (int i = 0; i < installed.count(); i++) {
+        InstalledPackageVersion* ipv = installed.at(i);
+        if (ipv->package == dep.package &&
+                dep.test(ipv->version)) {
+            r.append(ipv->clone());
+        }
+    }
+    qDeleteAll(installed);
+    return r;
+}
+
+InstalledPackageVersion *InstalledPackages::findHighestInstalledMatch(const Dependency &dep) const
+{
+    QList<InstalledPackageVersion*> list = findAllInstalledMatches(dep);
+    InstalledPackageVersion* res = nullptr;
+    for (int i = 0; i < list.count(); i++) {
+        InstalledPackageVersion* ipv = list.at(i);
+        if (res == nullptr || ipv->version.compare(res->version) > 0)
+            res = ipv;
+    }
+    if (res)
+        res = res->clone();
+    qDeleteAll(list);
+
+    return res;
+}
+
+QString InstalledPackages::computeNpackdCLEnvVar_(QString *err) const
+{
+    *err = "";
+
+    QString v;
+    InstalledPackageVersion* ipv;
+    if (WPMUtils::is64BitWindows()) {
+        ipv = getNewestInstalled(
+                "com.googlecode.windows-package-manager.NpackdCL64");
+    } else
+        ipv = nullptr;
+
+    if (!ipv)
+        ipv = getNewestInstalled(
+            "com.googlecode.windows-package-manager.NpackdCL");
+
+    if (ipv)
+        v = ipv->getDirectory();
+
+    delete ipv;
+
+    // qCDebug(npackd) << "computed NPACKD_CL" << v;
+
+    return v;
+}
+
+QString InstalledPackages::updateNpackdCLEnvVar()
+{
+    QString err;
+    QString v = computeNpackdCLEnvVar_(&err);
+
+    if (err.isEmpty()) {
+        // ignore the error for the case NPACKD_CL does not yet exist
+        QString e;
+        QString cur = WPMUtils::getSystemEnvVar("NPACKD_CL", &e);
+
+        if (v != cur) {
+            if (WPMUtils::setSystemEnvVar("NPACKD_CL", v).isEmpty()) {
+                /* this is slow WPMUtils::fireEnvChanged() */;
+            }
+        }
+    }
+
+    return err;
+}
+
 void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
         const QList<InstalledPackageVersion*>& installed,
         const QString& detectionInfoPrefix)
@@ -684,8 +761,7 @@ QString InstalledPackages::notifyInstalled(const QString &package,
     env.append("NPACKD_PACKAGE_VERSION");
     env.append(version.getVersionString());
     env.append("NPACKD_CL");
-    env.append(DBRepository::getDefault()->
-            computeNpackdCLEnvVar_(&err));
+    env.append(computeNpackdCLEnvVar_(&err));
     env.append("NPACKD_SUCCESS");
     env.append(success ? "1" : "0");
     err = ""; // ignore the error
@@ -845,7 +921,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.2,
                 QObject::tr("Setting the NPACKD_CL environment variable"));
-        QString err = rep->updateNpackdCLEnvVar();
+        QString err = updateNpackdCLEnvVar();
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
