@@ -171,14 +171,26 @@ DWORD SettingsFrame::getCloseProcessType()
 void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 {
     MainWindow* mw = MainWindow::getInstance();
+    DBRepository* dbr = DBRepository::getDefault();
 
     QString err;
-    PackageVersion* locked = PackageVersion::findLockedPackageVersion(&err);
-    if (locked) {
+
+    QString lockedPackage;
+    Version lockedVersion;
+    PackageVersion::findLockedPackageVersion(&lockedPackage, &lockedVersion);
+    if (!lockedPackage.isEmpty()) {
+        PackageVersion* locked = dbr->findPackageVersion_(lockedPackage, lockedVersion, &err);
+        QString name;
+        if (locked) {
+            name = locked->toString();
+            delete locked;
+        } else {
+            name = lockedPackage + " " + lockedVersion.getVersionString();
+        }
+
         QString msg = QObject::tr("Cannot change settings now. The package %1 is locked by a currently running installation/removal.").
-                arg(locked->toString());
+                arg(name);
         mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
-        delete locked;
         return;
     }
 
@@ -188,7 +200,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
         err = QObject::tr("No repositories defined");
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->checkInstallationDirectory(getInstallationDirectory());
+        err = dbr->checkInstallationDirectory(getInstallationDirectory());
     }
 
     QList<QUrl*> urls;

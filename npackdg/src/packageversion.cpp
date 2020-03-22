@@ -207,11 +207,9 @@ int PackageVersion::indexOf(const QList<PackageVersion*> pvs, PackageVersion* f)
     return r;
 }
 
-PackageVersion* PackageVersion::findLockedPackageVersion(QString *err)
+void PackageVersion::findLockedPackageVersion(QString* package, Version* version)
 {
-    *err = "";
-
-    PackageVersion* r = nullptr;
+    *package = "";
 
     lockedPackageVersionsMutex.lock();
     QSetIterator<QString> i(lockedPackageVersions);
@@ -224,15 +222,12 @@ PackageVersion* PackageVersion::findLockedPackageVersion(QString *err)
     if (!key.isEmpty()) {
         QStringList parts = key.split('/');
         if (parts.count() == 2) {
-            QString package = parts.at(0);
-            Version version;
-            if (version.setVersion(parts.at(1))) {
-                DBRepository* rep = DBRepository::getDefault();
-                r = rep->findPackageVersion_(package, version, err);
+            *package = parts.at(0);
+            if (!version->setVersion(parts.at(1))) {
+                package->clear();
             }
         }
     }
-    return r;
 }
 
 PackageVersion::PackageVersion(const QString& package)

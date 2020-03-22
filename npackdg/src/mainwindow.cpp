@@ -1999,15 +1999,24 @@ void MainWindow::addErrorMessage(const QString& msg, const QString& details,
 
 void MainWindow::on_actionReload_Repositories_triggered()
 {
-    QString err;
-    PackageVersion* locked = PackageVersion::findLockedPackageVersion(&err);
-    if (!err.isEmpty())
-        addErrorMessage(err, err, true, QMessageBox::Critical);
-    if (locked) {
+    QString lockedPackage;
+    Version lockedVersion;
+    PackageVersion::findLockedPackageVersion(&lockedPackage, &lockedVersion);
+
+    if (!lockedPackage.isEmpty()) {
+        QString err;
+        PackageVersion* locked = DBRepository::getDefault()->findPackageVersion_(lockedPackage, lockedVersion, &err);
+        QString name;
+        if (locked) {
+            name = locked->toString();
+            delete locked;
+        } else {
+            name = lockedPackage + " " + lockedVersion.getVersionString();
+        }
+
         QString msg = QObject::tr(
                 "Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.").
-                arg(locked->toString());
-        delete locked;
+                arg(name);
 
         this->addErrorMessage(msg, msg, true, QMessageBox::Critical);
     } else {

@@ -135,10 +135,10 @@ public:
     static int indexOf(const QList<PackageVersion*> pvs, PackageVersion* f);
 
     /**
-     * @param err error message will be stored here
-     * @return [ownership:caller] the first found locked PackageVersion or 0
+     * @param package package name will be stored here or "" if none
+     * @param version version number will be stored here
      */
-    static PackageVersion* findLockedPackageVersion(QString* err);
+    static void findLockedPackageVersion(QString* package, Version* version);
 
     /**
      * @param xml <version>
