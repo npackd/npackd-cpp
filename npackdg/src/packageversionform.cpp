@@ -40,7 +40,9 @@ QList<void*> PackageVersionForm::getSelected(const QString& type) const
 
 void PackageVersionForm::updateStatus()
 {
-    this->ui->lineEditStatus->setText(pv->getStatus());
+    DBRepository* dbr = DBRepository::getDefault();
+
+    this->ui->lineEditStatus->setText(pv->getStatus(dbr));
     this->ui->lineEditPath->setText(pv->getPath());
 
     InstalledPackages* ip = InstalledPackages::getDefault();

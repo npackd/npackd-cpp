@@ -24,6 +24,7 @@
 // 30ed381d-59ea-4ca5-bd1d-5ee8ec97b2be
 DEFINE_GUID(UUID_ClientID,0x30ed381dL,0x59ea,0x4ca5,0xbd,0x1d,0x5e,0xe8,0xec,0x97,0xb2,0xbe);
 
+class DBRepository;
 class AbstractRepository;
 class InstallOperation;
 class InstalledPackages;
@@ -422,9 +423,10 @@ public:
             QStringList *stoppedServices);
 
     /**
+     * @param r DB repository
      * @return status like "locked, installed"
      */
-    QString getStatus() const;
+    QString getStatus(DBRepository *r) const;
 
     /**
      * Stores this object as XML <version>.

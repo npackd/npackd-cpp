@@ -1708,11 +1708,10 @@ QString PackageVersion::saveFiles(const QDir& d)
     return res;
 }
 
-QString PackageVersion::getStatus() const
+QString PackageVersion::getStatus(DBRepository* r) const
 {
     QString status;
     bool installed = this->installed();
-    DBRepository* r = DBRepository::getDefault();
     QString err;
     PackageVersion* newest = r->findNewestInstallablePackageVersion_(
             this->package, &err);

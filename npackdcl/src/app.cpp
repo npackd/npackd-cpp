@@ -2176,7 +2176,7 @@ void App::info(Job* job)
                     p->name);
             if (pv) {
                 WPMUtils::writeln("Status: " +
-                        pv->getStatus());
+                        pv->getStatus(rep));
                 WPMUtils::writeln("Download URL: " +
                         pv->download.toString(QUrl::FullyEncoded));
             }
