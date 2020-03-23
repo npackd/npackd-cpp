@@ -188,7 +188,7 @@ QString InstalledPackages::computeNpackdCLEnvVar_(QString *err) const
 QString InstalledPackages::updateNpackdCLEnvVar()
 {
     QString err;
-    if (PackageUtils::adminMode) {
+    if (PackageUtils::globalMode) {
         QString v = computeNpackdCLEnvVar_(&err);
 
         if (err.isEmpty()) {
@@ -838,7 +838,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         replace.append(false);
         prefixes.append("");
 
-        if (PackageUtils::adminMode) {
+        if (PackageUtils::globalMode) {
 			jobTitles.append(QObject::tr("Adding well-known packages"));
 			tpms.append(new WellKnownProgramsThirdPartyPM(
 				InstalledPackages::packageName));
@@ -1135,7 +1135,7 @@ QString InstalledPackages::readRegistryDatabase()
     WindowsRegistry packagesWR;
     LONG e;
     err = packagesWR.open(
-        PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     QList<InstalledPackageVersion*> ipvs;
@@ -1243,7 +1243,7 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
     WindowsRegistry packagesWR;
     LONG e;
     err = packagesWR.open(
-        PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
     if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
@@ -1310,7 +1310,7 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
 QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
 {
     WindowsRegistry machineWR(
-            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 			false);
     QString r;
     QString keyName = "SOFTWARE\\Npackd\\Npackd\\Packages";

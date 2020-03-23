@@ -98,8 +98,8 @@ private:
      *         it does not already exist.
      * Note: a non-existing directory is handled as ""
      *
-     * @param job [ownership:caller] job
-     * @param r [ownership:caller] repository where all the data will be stored
+     * @param job job
+     * @param r repository where all the data will be stored
      * @param installed detected package versions
      * @param replace should the existing entries be replaced?
      * @param detectionInfoPrefix prefix for all detection info values
@@ -161,7 +161,7 @@ public:
      * @brief finds the specified installed package version
      * @param package full package name
      * @param version package version
-     * @return [owner:caller]
+     * @return [move]
      *     found information or 0 if the specified package version is not
      *     installed. The returned object may still represent a not installed
      *     package version. Please check InstalledPackageVersion::getDirectory()
@@ -171,7 +171,7 @@ public:
 
     /**
      * @param dep a dependency
-     * @return [ownership:caller] all package versions that match
+     * @return [move] all package versions that match
      *     this dependency and are installed
      */
     QList<InstalledPackageVersion*> findAllInstalledMatches(
@@ -179,7 +179,7 @@ public:
 
     /**
      * @param dep a dependency
-     * @return [ownership:caller] the newest package version that matches this
+     * @return [move] the newest package version that matches this
      *     dependency and are installed
      */
     InstalledPackageVersion* findHighestInstalledMatch(
@@ -220,20 +220,20 @@ public:
 
     /**
      * @param filePath full file or directory path
-     * @return [ownership:caller] installed package version that "owns" the
+     * @return [move] installed package version that "owns" the
      *     specified file or directory or 0
      */
     InstalledPackageVersion* findOwner(const QString& filePath) const;
 
     /**
-     * @return [ownership:caller] installed packages
+     * @return [move] installed packages
      */
     QList<InstalledPackageVersion*> getAll() const;
 
     /**
      * Searches for installed versions of a package.
      *
-     * @return [ownership:caller] installed packages
+     * @return [move] installed packages
      */
     QList<InstalledPackageVersion*> getByPackage(const QString& package) const;
 
@@ -312,7 +312,7 @@ public:
     QSet<QString> getPackages() const;
 
     /**
-     * @return [owner:caller] the first found package version with a missing
+     * @return [move] the first found package version with a missing
      *     dependency or 0
      */
     InstalledPackageVersion *findFirstWithMissingDependency() const;

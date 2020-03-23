@@ -18,7 +18,7 @@ public:
     PackageVersionFile(const QString& path, const QString& content);
 
     /**
-     * @return [ownership:caller] copy of this object
+     * @return [move] copy of this object
      */
     PackageVersionFile* clone() const;
 };

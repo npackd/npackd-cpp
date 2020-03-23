@@ -142,7 +142,7 @@ int App::process()
         this->debug = cl.isPresent("debug");
 
         if (cl.isPresent("local"))
-            PackageUtils::adminMode = false;
+            PackageUtils::globalMode = false;
 
         if (debug) {
             clp.setUpdateRate(0);

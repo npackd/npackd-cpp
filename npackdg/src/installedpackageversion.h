@@ -64,7 +64,7 @@ public:
     QString getDirectory() const;
 
     /**
-     * @return [ownership:caller] copy of this object
+     * @return [move] copy of this object
      */
     InstalledPackageVersion* clone() const;
 

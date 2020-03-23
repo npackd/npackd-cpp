@@ -396,7 +396,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d(WPMUtils::getShellDir(CSIDL_STARTMENU));
         WPMUtils::deleteShortcuts(dir, d);
 
-        if (PackageUtils::adminMode)
+        if (PackageUtils::globalMode)
 		{
 			QDir d2(WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU));
 			WPMUtils::deleteShortcuts(dir, d2);
@@ -409,7 +409,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d3(WPMUtils::getShellDir(CSIDL_DESKTOP));
         WPMUtils::deleteShortcuts(dir, d3);
 
-        if (PackageUtils::adminMode)
+        if (PackageUtils::globalMode)
 		{
 			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_DESKTOPDIRECTORY));
 			WPMUtils::deleteShortcuts(dir, d4);
@@ -423,7 +423,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
         QDir d3(WPMUtils::getShellDir(CSIDL_APPDATA) + A);
         WPMUtils::deleteShortcuts(dir, d3);
 
-        if (PackageUtils::adminMode)
+        if (PackageUtils::globalMode)
 		{
 			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + A);
 			WPMUtils::deleteShortcuts(dir, d4);
@@ -1029,7 +1029,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
     if (this->cmdFiles.size() == 0)
         return true;
 
-    QString sourceBasePath = PackageUtils::adminMode
+    QString sourceBasePath = PackageUtils::globalMode
 		? WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd\\Commands\\"
 		: WPMUtils::getShellDir(CSIDL_APPDATA) + "\\Npackd\\Commands\\";
 
@@ -1155,7 +1155,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 
         simple = WPMUtils::makeValidFilename(simple, ' ') + ".lnk";
         withVersion = WPMUtils::makeValidFilename(withVersion, ' ');
-        QString commonStartMenu = PackageUtils::adminMode
+        QString commonStartMenu = PackageUtils::globalMode
 			? WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU)
 			: WPMUtils::getShellDir(CSIDL_STARTMENU);
         simple = commonStartMenu + "\\" + simple;

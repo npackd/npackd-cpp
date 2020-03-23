@@ -5,7 +5,7 @@
 #include "installedpackages.h"
 #include "wpmutils.h"
 
-bool PackageUtils::adminMode = true;
+bool PackageUtils::globalMode = true;
 
 PackageUtils::PackageUtils()
 {
@@ -331,7 +331,7 @@ QString PackageUtils::getInstallationDirectory()
 
     if (v.isEmpty()) {
         err = npackd.open(
-            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
         if (err.isEmpty()) {
             v = npackd.get(QStringLiteral("path"), &err);
@@ -350,7 +350,7 @@ QString PackageUtils::getInstallationDirectory()
 
     if (v.isEmpty())
     {
-        if (PackageUtils::adminMode)
+        if (PackageUtils::globalMode)
             v = WPMUtils::getProgramFilesDir();
         else
         {
@@ -367,7 +367,7 @@ QString PackageUtils::getInstallationDirectory()
 QString PackageUtils::setInstallationDirectory(const QString &dir)
 {
     WindowsRegistry m(
-            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             false, KEY_ALL_ACCESS);
     QString err;
     WindowsRegistry npackd = m.createSubKey(
@@ -392,7 +392,7 @@ DWORD PackageUtils::getCloseProcessType()
             return v;
     }
     err = npackd.open(
-            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             QStringLiteral("Software\\Npackd\\Npackd"), false, KEY_READ);
     if (err.isEmpty()) {
         DWORD v = npackd.getDWORD(QStringLiteral("closeProcessType"), &err);
@@ -406,7 +406,7 @@ DWORD PackageUtils::getCloseProcessType()
 void PackageUtils::setCloseProcessType(DWORD cpt)
 {
     WindowsRegistry m(
-            PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             false, KEY_ALL_ACCESS);
     QString err;
     WindowsRegistry npackd = m.createSubKey(

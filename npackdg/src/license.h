@@ -32,7 +32,7 @@ public:
 
     /**
      * @brief creates a copy of this object
-     * @return [ownership:caller] copy
+     * @return [move] copy
      */
     License* clone() const;
 

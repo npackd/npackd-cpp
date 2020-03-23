@@ -75,7 +75,7 @@ public:
     QString versionsToString() const;
 
     /**
-     * @return [ownership:caller] copy of this object
+     * @return [move] copy of this object
      */
     Dependency* clone() const;
 };

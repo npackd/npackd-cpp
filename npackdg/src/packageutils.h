@@ -15,7 +15,7 @@ private:
     PackageUtils();
 public:
     /** true = install programs globally, false = locally */
-    static bool adminMode;
+    static bool globalMode;
 
     /**
      * @brief parses the command line and returns the list of chosen package
@@ -23,7 +23,7 @@ public:
      * @param dbr DB-Repository
      * @param cl command line
      * @param err errors will be stored here
-     * @return [owner:caller] list of package versions
+     * @return [move] list of package versions
      */
     static QList<PackageVersion *> getAddPackageVersionOptions(const DBRepository& dbr, const CommandLine &cl, QString *err);
 
@@ -32,7 +32,7 @@ public:
      *     versions
      * @param cl command line
      * @param err errors will be stored here
-     * @return [owner:caller] list of package versions ranges
+     * @return [move] list of package versions ranges
      */
     static QList<Dependency *> getPackageVersionOptions(const CommandLine &cl,
             QString *err);

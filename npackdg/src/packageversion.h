@@ -165,7 +165,7 @@ public:
      *     versions
      * @param cl command line
      * @param err errors will be stored here
-     * @return [owner:caller] list of package versions
+     * @return [move] list of package versions
      */
     static QList<PackageVersion *> getRemovePackageVersionOptions(
             const CommandLine &cl, QString *err);
@@ -175,7 +175,7 @@ public:
      *     versions
      * @param cl command line
      * @param err errors will be stored here
-     * @return [owner:caller] list of installed package versions
+     * @return [move] list of installed package versions
      */
     static QList<InstalledPackageVersion *> getPathPackageVersionOptions(
             const CommandLine &cl, QString *err);
@@ -303,14 +303,14 @@ public:
      * Plans installation of this package and all the dependencies recursively.
      *
      * @param rep repository
-     * @param installed [ownership:caller] list of installed packages.
+     * @param installed list of installed packages.
      *     This list should be
      *     consulted instead of .installed() and will be updated and contains
      *     all installed package versions after the process
-     * @param op [ownership:caller] necessary operations will be appended here.
+     * @param op necessary operations will be appended here.
      *     The existing
      *     elements will not be modified in any way.
-     * @param avoid [ownership:caller] list of package versions that cannot be
+     * @param avoid list of package versions that cannot be
      *     installed. The list
      *     will be changed by this method. Normally this is an empty list and
      *     objects will be added to it on different recursion levels.
@@ -455,14 +455,14 @@ public:
     /**
      * @brief searches for a definition of a text file
      * @param path file path (case-insensitive)
-     * @return [ownership:this] found file or 0
+     * @return found file or 0. The object will still be owned by this PackageVersion
      */
     PackageVersionFile *findFile(const QString &path) const;
 
     /**
      * @brief stops this package version if it is running. This either executes
      *     .Npackd\Stop.bat or closes the running applications otherwise.
-     * @param [ownership:caller] job
+     * @param job
      * @param programCloseType how to close running programs. Multiple flags
      *     may be combined here using OR.
      * @param printScriptOutput true = redirect the script output to the default

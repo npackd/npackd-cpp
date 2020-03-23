@@ -22,7 +22,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
     WindowsRegistry wr;
     QString err = wr.open(
-        PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+        PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\InstallationDirs", false, KEY_READ);
     QStringList dirs;
     if (err.isEmpty()) {
@@ -32,7 +32,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 		QStringLiteral("\\Npackd\\Installation"));
 
     dirs.append(PackageUtils::getInstallationDirectory());
-    if (PackageUtils::adminMode) {
+    if (PackageUtils::globalMode) {
 		dirs.append(WPMUtils::getProgramFilesDir());
 		if (WPMUtils::is64BitWindows())
 			dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
@@ -127,7 +127,7 @@ void SettingsFrame::setRepositoryURLs(const QStringList &urls)
     QStringList comments;
     QString err;
     WindowsRegistry wr;
-    err = wr.open(PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+    err = wr.open(PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
     if (err.isEmpty())
         comments = wr.loadStringList(&err);
@@ -255,7 +255,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     if (err.isEmpty()) {
         WindowsRegistry m(
-                PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+                PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\InstallationDirs", &err,
@@ -274,7 +274,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     if (err.isEmpty()) {
         WindowsRegistry m(
-                PackageUtils::adminMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+                PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 				false, KEY_ALL_ACCESS);
         WindowsRegistry wr = m.createSubKey(
                 "Software\\Npackd\\Npackd\\UsedReps", &err,

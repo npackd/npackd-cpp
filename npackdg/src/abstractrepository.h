@@ -59,7 +59,7 @@ public:
     /**
      * @param package full or short package name
      * @param err error message will be stored here
-     * @return [ownership:caller] found package or 0. The returned value is
+     * @return [move] found package or 0. The returned value is
      *     only 0 if the error is not empty
      */
     Package *findOnePackage(const QString &package, QString *err) const;
@@ -100,14 +100,14 @@ public:
     /**
      * @brief searches for a package with the given short name
      * @param name full package name
-     * @return [ownership:caller] found packages.
+     * @return [move] found packages.
      */
     virtual QList<Package*> findPackagesByShortName(const QString& name) const = 0;
 
     /**
      * @brief searches for a package with the given name
      * @param name full package name
-     * @return [ownership:caller] found package or 0.
+     * @return [move] found package or 0.
      */
     virtual Package* findPackage_(const QString& name) const = 0;
 
@@ -116,7 +116,7 @@ public:
      *
      * @param package full package name
      * @param err error message will be stored here
-     * @return [ownership:caller] the list of package versions.
+     * @return [move] the list of package versions.
      *     The first returned object has the highest version number.
      */
     virtual QList<PackageVersion*> getPackageVersions_(
@@ -127,7 +127,7 @@ public:
      *
      * @param name name of the package like "org.server.Word"
      * @param err error message will be stored here
-     * @return [ownership:caller] found package version or 0
+     * @return [move] found package version or 0
      */
     PackageVersion *findNewestInstalledPackageVersion_(
             const QString &name, QString* err) const;
@@ -166,7 +166,7 @@ public:
      * Finds all installed package versions.
      *
      * @param err error message will be stored here
-     * @return [ownership:caller] the list of installed package versions
+     * @return [move] the list of installed package versions
      */
     QList<PackageVersion*> getInstalled_(QString* err);
 
@@ -225,7 +225,7 @@ public:
      * @param package name of the package like "org.server.Word"
      * @param version package version
      * @param err error message will be stored here
-     * @return [ownership:caller] found package version or 0
+     * @return [move] found package version or 0
      */
     virtual PackageVersion* findPackageVersion_(const QString& package,
                                                 const Version& version, QString* err) const = 0;
@@ -235,7 +235,7 @@ public:
      *
      * @param name name of the license like "org.gnu.GPLv3"
      * @param err error message will be stored here
-     * @return [ownership:caller] found license or 0
+     * @return [move] found license or 0
      */
     virtual License* findLicense_(const QString& name, QString* err) = 0;
 
@@ -269,7 +269,7 @@ public:
      * @param avoid list of package versions that should be avoided and cannot
      *     be considered to be a match
      * @param err error message will be stored here
-     * @return [ownership:caller] all package versions that matches this
+     * @return [move] all package versions that matches this
      *     dependency by
      *     being installed. Returned objects should be destroyed later.
      *     The returned objects are sorted by the package version number. The
@@ -283,7 +283,7 @@ public:
      * @param avoid list of package versions that should be avoided and cannot
      *     be considered to be a match
      * @param err error message will be stored here
-     * @return [ownership:caller] the newest package version that matches this
+     * @return [move] the newest package version that matches this
      *     dependency by
      *     being installed. Returned object should be destroyed later.
      */
