@@ -20,7 +20,7 @@ public:
      *
      * @param size number of measuring points
      */
-    HRTimer(int size);
+    explicit HRTimer(int size);
 
     /**
      * @param point measuring point index (0, 1, 2, ..., size - 1)

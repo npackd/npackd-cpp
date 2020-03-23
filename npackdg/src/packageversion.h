@@ -133,7 +133,7 @@ public:
      * @param f search for this object
      * @return index of the found object or -1
      */
-    static int indexOf(const QList<PackageVersion*> pvs, PackageVersion* f);
+    static int indexOf(const QList<PackageVersion*>& pvs, PackageVersion* f);
 
     /**
      * @param package package name will be stored here or "" if none
@@ -232,7 +232,7 @@ public:
      *
      * @param package
      */
-    PackageVersion(const QString& package);
+    explicit PackageVersion(const QString& package);
 
     /**
      * -
@@ -397,9 +397,9 @@ public:
      *     type "zip"
      */
     QString download_(Job* job, const QString& where,
-            bool interactive, const QString user,
-            const QString password,
-            const QString proxyUser, const QString proxyPassword);
+            bool interactive, const QString& user,
+            const QString& password,
+            const QString& proxyUser, const QString& proxyPassword);
 
     /**
      * Uninstalls this package version.

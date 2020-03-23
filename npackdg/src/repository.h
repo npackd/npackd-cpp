@@ -120,7 +120,7 @@ public:
 
     virtual ~Repository();
 
-    Package* findPackage_(const QString& name) const;
+    Package* findPackage_(const QString& name) const override;
 
     /**
      * Writes this repository to an XML file.
@@ -138,22 +138,22 @@ public:
     void toXML(QXmlStreamWriter& w) const;
 
     QList<PackageVersion*> getPackageVersions_(const QString& package,
-            QString *err) const;
+            QString *err) const override;
 
-    QString savePackage(Package* p, bool replace);
+    QString savePackage(Package* p, bool replace) override;
 
-    QString savePackageVersion(PackageVersion* p, bool replace);
+    QString savePackageVersion(PackageVersion* p, bool replace) override;
 
-    QString saveLicense(License *p, bool replace);
+    QString saveLicense(License *p, bool replace) override;
 
     PackageVersion* findPackageVersion_(const QString& package,
-            const Version& version, QString* err) const;
+            const Version& version, QString* err) const override;
 
-    License* findLicense_(const QString& name, QString *err);
+    License* findLicense_(const QString& name, QString *err) override;
 
-    QString clear();
+    QString clear() override;
 
-    QList<Package*> findPackagesByShortName(const QString& name) const;
+    QList<Package*> findPackagesByShortName(const QString& name) const override;
 };
 
 #endif // REPOSITORY_H

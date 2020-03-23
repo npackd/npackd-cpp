@@ -81,7 +81,7 @@ DBRepository::~DBRepository()
     delete insertPackageVersionQuery;
 }
 
-QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> installed)
+QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> &installed)
 {
     QString err;
 
@@ -1694,9 +1694,9 @@ void DBRepository::clearCache()
     readCategories();
 }
 
-void DBRepository::load(Job* job, const QList<QUrl*> repositories, bool useCache, bool interactive,
-        const QString user, const QString password,
-        const QString proxyUser, const QString proxyPassword)
+void DBRepository::load(Job* job, const QList<QUrl *> &repositories, bool useCache, bool interactive,
+        const QString &user, const QString &password,
+        const QString &proxyUser, const QString &proxyPassword)
 {
     QString err;
     if (repositories.count() > 0) {
@@ -1718,7 +1718,7 @@ void DBRepository::load(Job* job, const QList<QUrl*> repositories, bool useCache
                     QObject::tr("Downloading %1").
                     arg(url->toDisplayString()), false, true);
 
-            Downloader::Request request = *url;
+            Downloader::Request request(*url);
             request.user = user;
             request.password = password;
             request.proxyUser = proxyUser;
@@ -1828,10 +1828,10 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
 }
 
 void DBRepository::clearAndDownloadRepositories(Job* job,
-        const QList<QUrl*> repositories,
-        bool interactive, const QString user,
-        const QString password, const QString proxyUser,
-        const QString proxyPassword, bool useCache)
+        const QList<QUrl *> &repositories,
+        bool interactive, const QString &user,
+        const QString &password, const QString &proxyUser,
+        const QString &proxyPassword, bool useCache)
 {
     bool transactionStarted = false;
     if (job->shouldProceed()) {

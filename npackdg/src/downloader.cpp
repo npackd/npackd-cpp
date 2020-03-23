@@ -91,7 +91,6 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     // Coverity
     HINTERNET hConnectHandle = nullptr;
     if (job->shouldProceed() && internet != nullptr) {
-        // TODO: support other port numbers
         INTERNET_PORT port = static_cast<INTERNET_PORT>(
                 url.port(url.scheme() == "https" ?
                 INTERNET_DEFAULT_HTTPS_PORT: INTERNET_DEFAULT_HTTP_PORT));
@@ -802,9 +801,12 @@ void Downloader::readDataFlat(Job* job, HINTERNET hResourceHandle, QFile* file,
             hash.addData(reinterpret_cast<char*>(buffer),
                     static_cast<int>(bufferLength));
 
-        if (file)
-            // TODO: check the returned value. -1 means error
-            file->write(reinterpret_cast<char*>(buffer), bufferLength);
+        if (file) {
+            if (file->write(reinterpret_cast<char*>(buffer), bufferLength) < 0) {
+                job->setErrorMessage(file->errorString());
+                break;
+            }
+        }
 
         alreadyRead += bufferLength;
         if (contentLength > 0) {

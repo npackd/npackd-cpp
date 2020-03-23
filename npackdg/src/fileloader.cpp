@@ -96,7 +96,7 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
         QFile f(fn);
         if (f.open(QFile::ReadWrite)) {
             Job* job = new Job();
-            Downloader::Request request = QUrl(url);
+            Downloader::Request request{QUrl(url)};
             request.file = &f;
             request.useCache = true;
             request.keepConnection = false;

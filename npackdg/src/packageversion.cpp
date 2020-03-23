@@ -195,7 +195,7 @@ bool isFileSafeOfficeAntiVirus(const QString& filename, QString* err)
 }
 */
 
-int PackageVersion::indexOf(const QList<PackageVersion*> pvs, PackageVersion* f)
+int PackageVersion::indexOf(const QList<PackageVersion *> &pvs, PackageVersion* f)
 {
     int r = -1;
     for (int i = 0; i < pvs.count(); i++) {
@@ -1228,8 +1228,8 @@ QString PackageVersion::getPreferredInstallationDirectory()
 }
 
 QString PackageVersion::download_(Job* job, const QString& where,
-        bool interactive, const QString user, const QString password,
-        const QString proxyUser, const QString proxyPassword)
+        bool interactive, const QString &user, const QString &password,
+        const QString &proxyUser, const QString &proxyPassword)
 {
     if (!this->download.isValid()) {
         job->setErrorMessage(QObject::tr("No download URL"));

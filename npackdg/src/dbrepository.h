@@ -129,9 +129,9 @@ private:
      * @param user user name for the HTTP proxy authentication or ""
      * @param password password for the HTTP proxy authentication or ""
      */
-    void load(Job *job, const QList<QUrl *> repositories, bool useCache, bool interactive, const QString user,
-            const QString password,
-            const QString proxyUser, const QString proxyPassword);
+    void load(Job *job, const QList<QUrl *>& repositories, bool useCache, bool interactive, const QString& user,
+            const QString& password,
+            const QString& proxyUser, const QString& proxyPassword);
 
     /**
      * @brief loadOne
@@ -183,7 +183,7 @@ public:
      * @param installed new list of installed versions
      * @return error message
      */
-    QString saveInstalled(const QList<InstalledPackageVersion*> installed);
+    QString saveInstalled(const QList<InstalledPackageVersion*>& installed);
 
     /**
      * @brief saves the download size for an URL
@@ -193,11 +193,11 @@ public:
      */
     QString saveURLSize(const QString& url, int64_t size);
 
-    QString saveLicense(License* p, bool replace);
+    QString saveLicense(License* p, bool replace) override;
 
-    QString savePackageVersion(PackageVersion *p, bool replace);
+    QString savePackageVersion(PackageVersion *p, bool replace) override;
 
-    QString savePackage(Package *p, bool replace);
+    QString savePackage(Package *p, bool replace) override;
 
     /**
      * @brief opens the default database
@@ -251,10 +251,10 @@ public:
      */
     QMap<QString, URLInfo*> findURLInfos(QString* err);
 
-    Package* findPackage_(const QString& name) const;
+    Package* findPackage_(const QString& name) const override;
 
     QList<PackageVersion*> getPackageVersions_(const QString& package,
-            QString *err) const;
+            QString *err) const override;
 
     /**
      * @brief returns all package versions with a <cmd-file> entry with the
@@ -299,9 +299,9 @@ public:
      * @param useCache true = use the HTTP cache
      */
     void clearAndDownloadRepositories(Job *job,
-            const QList<QUrl*> repositories, bool interactive, const QString user,
-            const QString password,
-            const QString proxyUser, const QString proxyPassword,
+            const QList<QUrl*>& repositories, bool interactive, const QString& user,
+            const QString& password,
+            const QString& proxyUser, const QString& proxyPassword,
             bool useCache);
 
     /**
@@ -312,18 +312,18 @@ public:
     void updateF5Runnable(Job* job, bool useCache);
 
     PackageVersion* findPackageVersion_(const QString& package,
-            const Version& version, QString *err) const;
+            const Version& version, QString *err) const override;
 
-    License* findLicense_(const QString& name, QString* err);
+    License* findLicense_(const QString& name, QString* err) override;
 
-    QString clear();
+    QString clear() override;
 
     /**
      * @brief clears the cache
      */
     void clearCache();
 
-    QList<Package*> findPackagesByShortName(const QString &name) const;
+    QList<Package*> findPackagesByShortName(const QString &name) const override;
 
     /**
      * @brief searches for packages that match the specified keywords. No filter

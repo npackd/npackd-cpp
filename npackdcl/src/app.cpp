@@ -108,19 +108,19 @@ int App::process()
     cl.add("timeout", 't', "timeout in seconds",
             "seconds", false, "remove,rm,update,add");
     cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
-            "repository", false, "add-repo,remove-repo,set-repo,add,update");
+            "repository", false, "add-repo,remove-repo,set-repo,add,update,search");
     cl.add("version", 'v', "version number (e.g. 1.5.12)",
             "version", false, "add,info,path,place,rm,remove");
 
     cl.add("user", 0, "user name for the HTTP authentication",
-            "user name", false, "add,update,detect");
+            "user name", false, "add,update,detect,search");
     cl.add("password", 0, "password for the HTTP authentication",
-            "password", false, "add,update,detect");
+            "password", false, "add,update,detect,search");
 
     cl.add("proxy-user", 0, "user name for the HTTP proxy authentication",
-            "user name", false, "add,update,detect");
+            "user name", false, "add,update,detect,search");
     cl.add("proxy-password", 0, "password for the HTTP proxy authentication",
-            "password", false, "add,update,detect");
+            "password", false, "add,update,detect,search");
 
     cl.add("title", 0, "package title or a regular expression in JavaScript syntax. Example: /PDF/i",
             "title", false, "remove-scp");
@@ -373,6 +373,7 @@ void App::usage(Job* job)
         "    ncl search [--query <search terms>] ",
         "            [--status installed | updateable | all]",
         "            [--bare-format | --json]",
+        "            (--url <repository>)*",
         "        full text search. Lists found packages sorted by package name.",
         "        All packages are shown by default.",
         "    ncl set-install-dir [--file <directory>]",
@@ -876,7 +877,11 @@ void App::search(Job* job)
 {
     bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
-
+    QStringList urls_ = cl.getAll("url");
+    QString user = cl.get("user");
+    QString password = cl.get("password");
+    QString proxyUser = cl.get("proxy-user");
+    QString proxyPassword = cl.get("proxy-password");
     QString query = cl.get("query");
 
     job->setTitle("Searching for packages");
@@ -907,7 +912,61 @@ void App::search(Job* job)
         }
     }
 
-    DBRepository* rep = DBRepository::getDefault();
+    DBRepository* dbr = DBRepository::getDefault();
+    QTemporaryFile tempFile;
+
+    if (job->shouldProceed()) {
+        if (urls_.count() == 0) {
+            QString err = dbr->openDefault();
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
+            else
+                job->setProgress(0.1);
+        } else {
+            QList<QUrl*> urls;
+
+            for (int i = 0; i < urls_.count(); i++) {
+                if (!job->shouldProceed())
+                    break;
+
+                QString url = urls_.at(i);
+                QUrl* url_ = new QUrl();
+                url_->setUrl(url, QUrl::TolerantMode);
+                if (!url_->isValid()) {
+                    job->setErrorMessage("Invalid URL: " + url);
+                } else {
+                    urls.append(url_);
+                }
+            }
+
+            if (job->shouldProceed()) {
+                if (!tempFile.open()) {
+                    job->setErrorMessage(QObject::tr("Error creating a temporary file"));
+                } else {
+                    tempFile.close();
+                }
+            }
+
+            if (job->shouldProceed()) {
+                QString err = dbr->open(QStringLiteral("tempdb"),
+                        tempFile.fileName());
+                if (!err.isEmpty()) {
+                    job->setErrorMessage(err);
+                }
+            }
+
+            InstalledPackages::getDefault()->readRegistryDatabase();
+
+            if (job->shouldProceed()) {
+                Job* sub = job->newSubJob(0.10,
+                        QObject::tr("Updating the temporary database"), true, true);
+                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true);
+            }
+
+            qDeleteAll(urls);
+            urls.clear();
+        }
+    }
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.96,
@@ -925,7 +984,7 @@ void App::search(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01, "Searching for packages");
         QString err;
-        packageNames = rep->findPackages(minStatus, maxStatus,
+        packageNames = dbr->findPackages(minStatus, maxStatus,
                 query, -1, -1, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -936,7 +995,7 @@ void App::search(Job* job)
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01, "Fetching packages");
         QString err;
-        list = rep->findPackages(packageNames);
+        list = dbr->findPackages(packageNames);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else
@@ -1758,7 +1817,6 @@ void App::add(Job* job)
     QStringList urls_ = cl.getAll("url");
     QString user = cl.get("user");
     QString password = cl.get("password");
-
     QString proxyUser = cl.get("proxy-user");
     QString proxyPassword = cl.get("proxy-password");
 
