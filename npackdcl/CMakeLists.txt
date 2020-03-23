@@ -53,6 +53,8 @@ set(NPACKDCL_SOURCES
     ../npackdg/src/installedpackagesthirdpartypm.cpp
     ../npackdg/src/urlinfo.cpp
     ../npackdg/src/packageutils.cpp
+    ../npackdg/src/wuathirdpartypm.cpp
+    ../npackdg/src/wuapi_i.c
     src/commandlinemessagehandler.cpp
     src/main.cpp
     src/app.cpp
@@ -87,6 +89,8 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/installedpackagesthirdpartypm.h
     ../npackdg/src/urlinfo.h
     ../npackdg/src/packageutils.h
+    ../npackdg/src/wuathirdpartypm.h
+    ../npackdg/src/wuapi.h
     src/commandlinemessagehandler.h
     src/app.h
 )

@@ -53,7 +53,9 @@ set(TESTS_SOURCES
     ../../npackdg/src/installedpackagesthirdpartypm.cpp
     ../../npackdg/src/urlinfo.cpp
     ../../npackdg/src/packageutils.cpp
-    )
+    ../../npackdg/src/wuathirdpartypm.cpp
+    ../../npackdg/src/wuapi_i.c
+)
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
     ../../npackdg/src/repository.h
@@ -85,6 +87,8 @@ set(TESTS_HEADERS
     ../../npackdg/src/installedpackagesthirdpartypm.h
     ../../npackdg/src/urlinfo.h
     ../../npackdg/src/packageutils.h
+    ../../npackdg/src/wuathirdpartypm.h
+    ../../npackdg/src/wuapi.h
 )
 
 set(OUTPUT_FILE_NAME "tests.exe")

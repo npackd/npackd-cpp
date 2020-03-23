@@ -347,6 +347,15 @@ void Job::checkOSCall(bool v)
     }
 }
 
+void Job::checkHResult(HRESULT v)
+{
+    if (FAILED(v)) {
+        QString err;
+        WPMUtils::formatMessage(v, &err);
+        setErrorMessage(err);
+    }
+}
+
 QString Job::getErrorMessage() const
 {
     QString errorMessage_;

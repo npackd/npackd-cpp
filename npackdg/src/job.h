@@ -1,6 +1,8 @@
 #ifndef JOB_H
 #define JOB_H
 
+#include <windows.h>
+
 #include <QString>
 #include <QObject>
 #include <QMetaType>
@@ -253,6 +255,15 @@ public:
      *     SetHandleInformation
      */
     void checkOSCall(bool v);
+
+    /**
+     * @brief checks the value returned by a Windows API function and sets
+     *     the error message if necessary. The error message will not be changed if it is
+     *     already non-empty.
+     * @param v the value returned by a Windows API function like
+     *     CoCreateInstance
+     */
+    void checkHResult(HRESULT v);
 
     /**
      * @return the approximate time necessary to complete the rest of this task

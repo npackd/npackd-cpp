@@ -76,8 +76,10 @@ set(CLU_SOURCES
     ../npackdg/src/mysqlquery.cpp
     ../npackdg/src/urlinfo.cpp
     ../npackdg/src/packageutils.cpp
+    ../npackdg/src/wuathirdpartypm.cpp
+    ../npackdg/src/wuapi_i.c
     ../npackdcl/src/commandlinemessagehandler.cpp
-        )
+)
 set(CLU_HEADERS
     src/app.h
     ../npackdg/src/clprogress.h
@@ -108,6 +110,8 @@ set(CLU_HEADERS
     ../npackdg/src/mysqlquery.h
     ../npackdg/src/urlinfo.h
     ../npackdg/src/packageutils.h
+    ../npackdg/src/wuathirdpartypm.h
+    ../npackdg/src/wuapi.h
     ../npackdcl/src/commandlinemessagehandler.h
 )
 

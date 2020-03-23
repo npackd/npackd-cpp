@@ -53,6 +53,8 @@ set(FTESTS_SOURCES
     ../../npackdg/src/clprogress.cpp
     ../../npackdg/src/urlinfo.cpp
     ../../npackdg/src/packageutils.cpp
+    ../../npackdg/src/wuathirdpartypm.cpp
+    ../../npackdg/src/wuapi_i.c
     src/main.cpp
 )
 set(FTESTS_HEADERS
@@ -85,6 +87,8 @@ set(FTESTS_HEADERS
     ../../npackdg/src/clprogress.h
     ../../npackdg/src/urlinfo.h
     ../../npackdg/src/packageutils.h
+    ../../npackdg/src/wuathirdpartypm.h
+    ../../npackdg/src/wuapi.h
 )
 
 set(OUTPUT_FILE_NAME "ftests.exe")

@@ -2712,6 +2712,10 @@ p, li { white-space: pre-wrap; }
         <source>Cannot load the list of repositories: %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Detecting Windows Update packages</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
