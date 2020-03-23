@@ -12,6 +12,36 @@ PackageUtils::PackageUtils()
 
 }
 
+QStringList PackageUtils::getRepositoryURLs(HKEY hk, const QString &path, QString *err, bool *keyExists)
+{
+    *keyExists = false;
+
+    WindowsRegistry wr;
+    *err = wr.open(hk, path, false, KEY_READ);
+    QStringList urls;
+    if (err->isEmpty()) {
+        *keyExists = true;
+        DWORD size = wr.getDWORD("size", err);
+        if (err->isEmpty()) {
+            for (int i = 1; i <= static_cast<int>(size); i++) {
+                WindowsRegistry er;
+                *err = er.open(wr, QString("%1").arg(i), KEY_READ);
+                if (err->isEmpty()) {
+                    QString url = er.get("repository", err);
+                    if (err->isEmpty())
+                        urls.append(url);
+                }
+            }
+
+            // ignore any errors while reading the entries
+            *err = "";
+        }
+    }
+
+    return urls;
+}
+
+
 QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
         const DBRepository& dbr, const CommandLine& cl,
         QString* err)
@@ -416,6 +446,86 @@ void PackageUtils::setCloseProcessType(DWORD cpt)
         npackd.setDWORD(QStringLiteral("closeProcessType"), cpt);
     }
 }
+
+QList<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
+{
+    *err = "";
+
+    // the most errors in this method are ignored so that we get the URLs even
+    // if something cannot be done
+    QString e;
+
+    bool keyExists;
+    QStringList urls = getRepositoryURLs(
+            HKEY_LOCAL_MACHINE,
+            "SOFTWARE\\Policies\\Npackd\\Reps", &e, &keyExists);
+
+    if (!keyExists) {
+        urls = getRepositoryURLs(
+            PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            "Software\\Npackd\\Npackd\\Reps", &e, &keyExists);
+    }
+
+    bool save = false;
+
+    // compatibility for Npackd < 1.17
+    if (!keyExists) {
+        urls = getRepositoryURLs(HKEY_CURRENT_USER,
+                "Software\\Npackd\\Npackd\\repositories", &e, &keyExists);
+        if (urls.isEmpty())
+            urls = getRepositoryURLs(HKEY_CURRENT_USER,
+                    "Software\\WPM\\Windows Package Manager\\repositories",
+                    &e, &keyExists);
+
+        if (urls.isEmpty()) {
+            urls.append(
+                    "https://www.npackd.org/rep/zip?tag=stable");
+            if (WPMUtils::is64BitWindows())
+                urls.append(
+                        "https://www.npackd.org/rep/zip?tag=stable64");
+        }
+        save = true;
+    }
+
+    QList<QUrl*> r;
+    for (int i = 0; i < urls.count(); i++) {
+        QUrl* url = new QUrl(urls.at(i));
+        if (url->scheme() == "file")
+            *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
+        r.append(url);
+    }
+
+    if (save)
+        setRepositoryURLs(r, &e);
+
+    return r;
+}
+
+void PackageUtils::setRepositoryURLs(QList<QUrl *> &urls, QString *err)
+{
+    WindowsRegistry wr;
+    *err = wr.open(
+            PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+            "", false, KEY_CREATE_SUB_KEY);
+    if (err->isEmpty()) {
+        WindowsRegistry wrr = wr.createSubKey(
+                "Software\\Npackd\\Npackd\\Reps", err,
+                KEY_ALL_ACCESS);
+        if (err->isEmpty()) {
+            wrr.setDWORD("size", static_cast<DWORD>(urls.count()));
+            for (int i = 0; i < urls.count(); i++) {
+                WindowsRegistry r = wrr.createSubKey(QString("%1").arg(i + 1),
+                        err, KEY_ALL_ACCESS);
+                if (err->isEmpty()) {
+                    r.set("repository", urls.at(i)->toString(
+                            QUrl::FullyEncoded));
+                }
+            }
+        }
+    }
+}
+
+
 
 
 

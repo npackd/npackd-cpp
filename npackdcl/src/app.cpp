@@ -425,7 +425,7 @@ void App::listRepos(Job* job)
 
     QString err;
 
-    QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
+    QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
     if (err.isEmpty()) {
         if (json) {
             QJsonObject top;
@@ -719,7 +719,7 @@ void App::addRepo(Job* job)
 
     if (job->shouldProceed()) {
         QString err;
-        QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
+        QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
         if (err.isEmpty()) {
             int found = -1;
             for (int i = 0; i < urls.size(); i++) {
@@ -734,7 +734,7 @@ void App::addRepo(Job* job)
             } else {
                 urls.append(url_);
                 url_ = nullptr;
-                AbstractRepository::setRepositoryURLs(urls, &err);
+                PackageUtils::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     qCInfo(npackdImportant()).noquote() <<
                             "The repository was added successfully. Run \"ncl detect\" to update the local database.";
@@ -780,7 +780,7 @@ void App::setRepo(Job* job)
 
         if (job->shouldProceed()) {
             QString err;
-            AbstractRepository::setRepositoryURLs(urls, &err);
+            PackageUtils::setRepositoryURLs(urls, &err);
             if (err.isEmpty())
                 qCInfo(npackdImportant()).noquote() <<
                         "The repositories were changed successfully. Run \"ncl detect\" to update the local database.";
@@ -1062,7 +1062,7 @@ void App::removeRepo(Job* job)
 
     if (job->shouldProceed()) {
         QString err;
-        QList<QUrl*> urls = AbstractRepository::getRepositoryURLs(&err);
+        QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
         if (err.isEmpty()) {
             int found = -1;
             for (int i = 0; i < urls.size(); i++) {
@@ -1077,7 +1077,7 @@ void App::removeRepo(Job* job)
                         url);
             } else {
                 delete urls.takeAt(found);
-                AbstractRepository::setRepositoryURLs(urls, &err);
+                PackageUtils::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     qCInfo(npackdImportant()).noquote() <<
                             "The repository was removed successfully. Run \"ncl detect\" to update the local database.";
@@ -2494,7 +2494,7 @@ void App::detect(Job* job)
     QList<QUrl*> urls;
     if (job->shouldProceed()) {
         QString err;
-        urls = AbstractRepository::getRepositoryURLs(&err);
+        urls = PackageUtils::getRepositoryURLs(&err);
         if (!err.isEmpty())
             job->setErrorMessage(QObject::tr("Cannot load the list of repositories: %1").arg(err));
     }

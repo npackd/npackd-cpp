@@ -240,7 +240,7 @@ QString CLProcessor::checkForUpdates()
     QList<QUrl*> urls;
     if (err.isEmpty()) {
         QString err;
-        urls = AbstractRepository::getRepositoryURLs(&err);
+        urls = PackageUtils::getRepositoryURLs(&err);
         if (!err.isEmpty())
             err = QObject::tr("Cannot load the list of repositories: %1").arg(err);
     }

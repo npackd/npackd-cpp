@@ -1993,7 +1993,7 @@ void DBRepository::updateF5Runnable(Job *job, bool useCache)
     QList<QUrl*> urls;
     if (job->shouldProceed()) {
         QString err;
-        urls = AbstractRepository::getRepositoryURLs(&err);
+        urls = PackageUtils::getRepositoryURLs(&err);
         if (!err.isEmpty())
             job->setErrorMessage(QObject::tr("Cannot load the list of repositories: %1").arg(err));
     }

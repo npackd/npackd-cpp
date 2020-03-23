@@ -1770,7 +1770,7 @@ void MainWindow::on_actionSettings_triggered()
         UIUtils::chooseAccelerators(d, UIUtils::extractAccelerators(titles));
 
         QString err;
-        QList<QUrl*> urls = Repository::getRepositoryURLs(&err);
+        QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
         QStringList list;
         for (int i = 0; i < urls.count(); i++) {
             list.append(urls.at(i)->toString());

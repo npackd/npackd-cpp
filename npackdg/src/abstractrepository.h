@@ -17,31 +17,7 @@ class AbstractRepository
 {
 private:
     static QSemaphore installationScripts;
-
-    /**
-     * @param hk root key
-     * @param path registry path
-     * @param err error message will be stored here
-     * @param keyExists true will be stored here if the registry key exists
-     * @return list of repositories in the specified registry key
-     */
-    static QStringList getRepositoryURLs(HKEY hk, const QString &path,
-                                         QString *err, bool* keyExists);
 public:
-    /**
-     * @param err error message will be stored here
-     * @return newly created list of repositories
-     */
-    static QList<QUrl*> getRepositoryURLs(QString *err);
-
-    /*
-     * Changes the default repository url.
-     *
-     * @param urls new URLs
-     * @param err error message will be stored here
-     */
-    static void setRepositoryURLs(QList<QUrl*>& urls, QString *err);
-
     /**
      * @brief creates a new instance
      */

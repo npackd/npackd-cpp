@@ -225,7 +225,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     bool repsChanged = false;
 
     if (err.isEmpty()) {
-        QList<QUrl*> oldList = Repository::getRepositoryURLs(&err);
+        QList<QUrl*> oldList = PackageUtils::getRepositoryURLs(&err);
         repsChanged = oldList.count() != urls.count();
         if (!repsChanged) {
             for (int i = 0; i < oldList.count(); i++) {
@@ -244,7 +244,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
             if (mw->reloadRepositoriesThreadRunning) {
                 err = QObject::tr("Cannot change settings now. The repositories download is running.");
             } else {
-                Repository::setRepositoryURLs(urls, &err);
+                PackageUtils::setRepositoryURLs(urls, &err);
                 if (err.isEmpty()) {
                     mw->closeDetailTabs();
                     mw->recognizeAndLoadRepositories(true);
