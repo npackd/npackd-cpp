@@ -78,6 +78,7 @@ set(CLU_SOURCES
     ../npackdg/src/packageutils.cpp
     ../npackdg/src/wuathirdpartypm.cpp
     ../npackdg/src/wuapi_i.c
+    ../npackdg/src/comobject.cpp
     ../npackdcl/src/commandlinemessagehandler.cpp
 )
 set(CLU_HEADERS
@@ -112,6 +113,7 @@ set(CLU_HEADERS
     ../npackdg/src/packageutils.h
     ../npackdg/src/wuathirdpartypm.h
     ../npackdg/src/wuapi.h
+    ../npackdg/src/comobject.h
     ../npackdcl/src/commandlinemessagehandler.h
 )
 

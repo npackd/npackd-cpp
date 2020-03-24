@@ -874,7 +874,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         for (int i = 0; i < tpms.count(); i++) {
             AbstractThirdPartyPM* tpm = tpms.at(i);
             Job* s = job->newSubJob(0.1,
-                    jobTitles.at(i), false, true);
+                    jobTitles.at(i), false, prefixes.at(i) != "wua:"); // Windows Updates are not important
 
             QFuture<void> future = QtConcurrent::run(
                     tpm,

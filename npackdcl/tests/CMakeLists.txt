@@ -55,6 +55,7 @@ set(TESTS_SOURCES
     ../../npackdg/src/packageutils.cpp
     ../../npackdg/src/wuathirdpartypm.cpp
     ../../npackdg/src/wuapi_i.c
+    ../../npackdg/src/comobject.cpp
 )
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
@@ -89,6 +90,7 @@ set(TESTS_HEADERS
     ../../npackdg/src/packageutils.h
     ../../npackdg/src/wuathirdpartypm.h
     ../../npackdg/src/wuapi.h
+    ../../npackdg/src/comobject.h
 )
 
 set(OUTPUT_FILE_NAME "tests.exe")

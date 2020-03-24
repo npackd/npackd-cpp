@@ -55,6 +55,7 @@ set(NPACKDCL_SOURCES
     ../npackdg/src/packageutils.cpp
     ../npackdg/src/wuathirdpartypm.cpp
     ../npackdg/src/wuapi_i.c
+    ../npackdg/src/comobject.cpp
     src/commandlinemessagehandler.cpp
     src/main.cpp
     src/app.cpp
@@ -91,6 +92,7 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/packageutils.h
     ../npackdg/src/wuathirdpartypm.h
     ../npackdg/src/wuapi.h
+    ../npackdg/src/comobject.h
     src/commandlinemessagehandler.h
     src/app.h
 )

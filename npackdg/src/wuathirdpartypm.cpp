@@ -4,6 +4,7 @@
 
 #include "wuapi.h"
 #include "wpmutils.h"
+#include "comobject.h"
 
 using namespace std;
 
@@ -22,11 +23,11 @@ void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed
     CoInitialize(NULL);
     HRESULT hr;
 
-    IUpdateSession* iUpdate = nullptr;
+    COMObject<IUpdateSession> iUpdate;
 
     BSTR criteria = SysAllocString(L"IsInstalled=1 or IsHidden=1 or IsPresent=1");
 
-    hr = CoCreateInstance(CLSID_UpdateSession, NULL, CLSCTX_INPROC_SERVER, IID_IUpdateSession, (LPVOID*)&iUpdate);
+    hr = CoCreateInstance(CLSID_UpdateSession, NULL, CLSCTX_INPROC_SERVER, IID_IUpdateSession, (LPVOID*)&iUpdate.ptr);
     job->checkHResult(hr);
 
     IUpdateSearcher* searcher = nullptr;
@@ -174,11 +175,6 @@ void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed
     if (searcher) {
         searcher->Release();
         searcher = nullptr;
-    }
-
-    if (iUpdate) {
-        iUpdate->Release();
-        iUpdate = nullptr;
     }
 
     CoUninitialize();
