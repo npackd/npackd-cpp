@@ -297,12 +297,13 @@ public:
      * @param proxyUser user name for the HTTP proxy authentication or ""
      * @param proxyPassword password for the HTTP proxy authentication or ""
      * @param useCache true = use the HTTP cache
+     * @param detect true = detect software
      */
     void clearAndDownloadRepositories(Job *job,
             const QList<QUrl*>& repositories, bool interactive, const QString& user,
             const QString& password,
             const QString& proxyUser, const QString& proxyPassword,
-            bool useCache);
+            bool useCache, bool detect=true);
 
     /**
      * @brief updateF5() that can be used with QtConcurrent::Run

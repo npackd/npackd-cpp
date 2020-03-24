@@ -886,12 +886,6 @@ void App::search(Job* job)
 
     job->setTitle("Searching for packages");
 
-    if (job->shouldProceed()) {
-        QString err = DBRepository::getDefault()->openDefault("default", true);
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-    }
-
     Package::Status minStatus = Package::INSTALLED;
     Package::Status maxStatus = Package::INSTALLED;
     if (job->shouldProceed()) {
@@ -960,7 +954,7 @@ void App::search(Job* job)
             if (job->shouldProceed()) {
                 Job* sub = job->newSubJob(0.10,
                         QObject::tr("Updating the temporary database"), true, true);
-                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true);
+                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true, false);
             }
 
             qDeleteAll(urls);
@@ -1392,7 +1386,7 @@ void App::update(Job* job)
             if (job->shouldProceed()) {
                 Job* sub = job->newSubJob(0.10,
                         QObject::tr("Updating the temporary database"), true, true);
-                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true);
+                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true, false);
             }
 
             qDeleteAll(urls);
@@ -1866,7 +1860,7 @@ void App::add(Job* job)
             if (job->shouldProceed()) {
                 Job* sub = job->newSubJob(0.10,
                         QObject::tr("Updating the temporary database"), true, true);
-                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true);
+                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true, false);
             }
 
             qDeleteAll(urls);

@@ -1831,7 +1831,7 @@ void DBRepository::clearAndDownloadRepositories(Job* job,
         const QList<QUrl *> &repositories,
         bool interactive, const QString &user,
         const QString &password, const QString &proxyUser,
-        const QString &proxyPassword, bool useCache)
+        const QString &proxyPassword, bool useCache, bool detect)
 {
     bool transactionStarted = false;
     if (job->shouldProceed()) {
@@ -1865,17 +1865,25 @@ void DBRepository::clearAndDownloadRepositories(Job* job,
     }
 
     if (job->shouldProceed()) {
-        Job* sub = job->newSubJob(0.4,
-                QObject::tr("Refreshing the installation status (tempdb)"));
         InstalledPackages* def = InstalledPackages::getDefault();
-        InstalledPackages ip;
-        ip.refresh(this, sub);
-        if (!sub->getErrorMessage().isEmpty())
-            job->setErrorMessage(sub->getErrorMessage());
+        if (detect) {
+            Job* sub = job->newSubJob(0.4,
+                    QObject::tr("Refreshing the installation status (tempdb)"));
+            InstalledPackages ip;
+            ip.refresh(this, sub);
+            if (!sub->getErrorMessage().isEmpty())
+                job->setErrorMessage(sub->getErrorMessage());
 
-        if (job->shouldProceed()) {
-            *def = ip;
-            job->setErrorMessage(def->save());
+            if (job->shouldProceed()) {
+                *def = ip;
+                job->setErrorMessage(def->save());
+            }
+        } else {
+            QString err = def->readRegistryDatabase();
+            if (!err.isEmpty())
+                job->setErrorMessage(err);
+            else
+                job->setProgress(job->getProgress() + 0.4);
         }
     }
 
