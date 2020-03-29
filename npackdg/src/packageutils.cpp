@@ -528,26 +528,40 @@ std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAnd
 
 void PackageUtils::setRepositoryURLs(QList<QUrl *> &urls, QString *err)
 {
+    QStringList reps;
+    QStringList comments;
+    for (int i = 0; i < urls.size(); i++) {
+        reps.append(urls.at(i)->toString(QUrl::FullyEncoded));
+        comments.append(QString());
+    }
+    *err = setRepositoryURLsAndComments(reps, comments);
+}
+
+QString PackageUtils::setRepositoryURLsAndComments(const QStringList &urls, const QStringList &comments)
+{
+    QString err;
+
     WindowsRegistry wr;
-    *err = wr.open(
+    err = wr.open(
             PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "", false, KEY_CREATE_SUB_KEY);
-    if (err->isEmpty()) {
+    if (err.isEmpty()) {
         WindowsRegistry wrr = wr.createSubKey(
-                "Software\\Npackd\\Npackd\\Reps", err,
-                KEY_ALL_ACCESS);
-        if (err->isEmpty()) {
+                "Software\\Npackd\\Npackd\\Reps", &err, KEY_ALL_ACCESS);
+        if (err.isEmpty()) {
             wrr.setDWORD("size", static_cast<DWORD>(urls.count()));
             for (int i = 0; i < urls.count(); i++) {
                 WindowsRegistry r = wrr.createSubKey(QString("%1").arg(i + 1),
-                        err, KEY_ALL_ACCESS);
-                if (err->isEmpty()) {
-                    r.set("repository", urls.at(i)->toString(
-                            QUrl::FullyEncoded));
+                        &err, KEY_ALL_ACCESS);
+                if (err.isEmpty()) {
+                    r.set("repository", urls.at(i));
+                    r.set("comment", comments.at(i));
                 }
             }
         }
     }
+
+    return err;
 }
 
 

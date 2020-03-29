@@ -107,6 +107,15 @@ public:
      * @param err error message will be stored here
      */
     static void setRepositoryURLs(QList<QUrl*>& urls, QString *err);
+
+    /*
+     * Changes the default repository url.
+     *
+     * @param urls new URLs
+     * @param comments corresponding comments
+     * @return error message
+     */
+    static QString setRepositoryURLsAndComments(const QStringList& urls, const QStringList& comments);
 };
 
 #endif // PACKAGEUTILS_H

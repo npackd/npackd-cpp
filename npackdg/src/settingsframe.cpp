@@ -108,22 +108,6 @@ SettingsFrame::~SettingsFrame()
     delete ui;
 }
 
-QStringList SettingsFrame::getRepositoryURLs()
-{
-    QTableView* t = this->ui->tableViewReps;
-    RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
-    QList<RepositoriesItemModel::Entry*> entries = m->getEntries();
-
-    QStringList sl;
-    for (int i = 0; i < entries.count(); i++) {
-        RepositoriesItemModel::Entry* e = entries.at(i);
-        if (e->enabled)
-            sl.append(e->url.trimmed());
-    }
-
-    return sl;
-}
-
 QString SettingsFrame::getInstallationDirectory()
 {
     return this->ui->comboBoxDir->currentText();
@@ -206,23 +190,33 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
         return;
     }
 
-    QStringList list = getRepositoryURLs();
+    QTableView* t = this->ui->tableViewReps;
+    RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+    QList<RepositoriesItemModel::Entry*> entries = m->getEntries();
 
-    if (err.isEmpty() && list.count() == 0)
+    QStringList uiReps;
+    QStringList uiComments;
+    for (int i = 0; i < entries.count(); i++) {
+        RepositoriesItemModel::Entry* e = entries.at(i);
+        if (e->enabled) {
+            uiReps.append(e->url.trimmed());
+            uiComments.append(e->comment.trimmed());
+        }
+    }
+
+    if (err.isEmpty() && uiReps.count() == 0)
         err = QObject::tr("No repositories defined");
 
     if (err.isEmpty()) {
         err = dbr->checkInstallationDirectory(getInstallationDirectory());
     }
 
-    QList<QUrl*> urls;
     if (err.isEmpty()) {
-        for (int i = 0; i < list.count(); i++) {
-            QUrl* url = new QUrl(list.at(i));
-            urls.append(url);
-            if (!url->isValid()) {
+        for (int i = 0; i < uiReps.count(); i++) {
+            QUrl url(uiReps.at(i));
+            if (!url.isValid()) {
                 err = QString(QObject::tr("%1 is not a valid repository address")).arg(
-                        list.at(i));
+                        uiReps.at(i));
                 break;
             }
         }
@@ -236,18 +230,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     bool repsChanged = false;
 
     if (err.isEmpty()) {
-        QList<QUrl*> oldList = PackageUtils::getRepositoryURLs(&err);
-        repsChanged = oldList.count() != urls.count();
-        if (!repsChanged) {
-            for (int i = 0; i < oldList.count(); i++) {
-                if ((*oldList.at(i)) != (*urls.at(i))) {
-                    repsChanged = true;
-                    break;
-                }
-            }
-        }
-        qDeleteAll(oldList);
-        oldList.clear();
+        QStringList reps, comments;
+        std::tie(reps, comments, err) = PackageUtils::getRepositoryURLsAndComments();
+        repsChanged = (reps != uiReps) || (comments != uiComments);
     }
 
     if (err.isEmpty()) {
@@ -255,7 +240,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
             if (mw->reloadRepositoriesThreadRunning) {
                 err = QObject::tr("Cannot change settings now. The repositories download is running.");
             } else {
-                PackageUtils::setRepositoryURLs(urls, &err);
+                err = PackageUtils::setRepositoryURLsAndComments(uiReps, uiComments);
                 if (err.isEmpty()) {
                     mw->closeDetailTabs();
                     mw->recognizeAndLoadRepositories(true);
@@ -291,9 +276,6 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     if (!err.isEmpty())
         mw->addErrorMessage(err, err, true, QMessageBox::Critical);
-
-    qDeleteAll(urls);
-    urls.clear();
 }
 
 void SettingsFrame::on_pushButton_clicked()

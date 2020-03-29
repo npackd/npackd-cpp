@@ -19,11 +19,6 @@ public:
     ~SettingsFrame();
 
     /**
-     * @return repository URLs
-     */
-    QStringList getRepositoryURLs();
-
-    /**
      * @param urls new repository URL
      * @param comments comments for URLs
      */
