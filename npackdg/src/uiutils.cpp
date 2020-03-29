@@ -483,10 +483,10 @@ void UIUtils::chooseAccelerators(QStringList* titles, const QString& ignore)
         }
 
         if (!title.contains('&')) {
-            QString s = title.toUpper();
+            QString s = title.toLower();
             int pos = -1;
             for (int j = 0; j < s.length(); j++) {
-                QChar c = s.at(j).toLower();
+                QChar c = s.at(j);
                 if (valid.contains(c) && !used.contains(c)) {
                     pos = j;
                     break;
