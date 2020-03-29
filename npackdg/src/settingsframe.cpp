@@ -15,6 +15,21 @@
 #include "packageutils.h"
 #include "repositoriesitemmodel.h"
 
+void SettingsFrame::updateActions()
+{
+    QTableView* t = this->ui->tableViewReps;
+    QModelIndexList sel = t->selectionModel()->selectedIndexes();
+    RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+
+    int row = -1;
+    if (sel.size() > 0)
+        row = sel.at(0).row();
+
+    this->ui->pushButtonRemoveRep->setEnabled(row >= 0);
+    this->ui->pushButtonMoveUp->setEnabled(row > 0);
+    this->ui->pushButtonMoveDown->setEnabled(row < m->rowCount(QModelIndex()) - 1);
+}
+
 SettingsFrame::SettingsFrame(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::SettingsFrame)
@@ -101,6 +116,11 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     t->setColumnWidth(0, 80);
     t->setColumnWidth(1, 350);
     t->setColumnWidth(2, 600);
+
+    connect(t->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this,
+            SLOT(tableViewReps_selectionChanged()));
 }
 
 SettingsFrame::~SettingsFrame()
@@ -146,6 +166,8 @@ void SettingsFrame::fillRepositories()
     }
 
     m->setURLs(entries);
+
+    updateActions();
 }
 
 void SettingsFrame::setCloseProcessType(DWORD v)
@@ -330,6 +352,7 @@ void SettingsFrame::on_pushButtonAddRep_clicked()
     QTableView* t = this->ui->tableViewReps;
     RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
     m->add();
+    updateActions();
 }
 
 void SettingsFrame::on_pushButtonRemoveRep_clicked()
@@ -339,5 +362,39 @@ void SettingsFrame::on_pushButtonRemoveRep_clicked()
     if (sel.size() > 0) {
         RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
         m->remove(sel.at(0).row());
+        updateActions();
     }
+}
+
+void SettingsFrame::on_pushButtonMoveUp_clicked()
+{
+    QTableView* t = this->ui->tableViewReps;
+    QModelIndexList sel = t->selectionModel()->selectedIndexes();
+    if (sel.size() > 0) {
+        RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+        int row = sel.at(0).row();
+        if (row > 0) {
+            m->moveRow(QModelIndex(), row, QModelIndex(), row - 1);
+            updateActions();
+        }
+    }
+}
+
+void SettingsFrame::on_pushButtonMoveDown_clicked()
+{
+    QTableView* t = this->ui->tableViewReps;
+    QModelIndexList sel = t->selectionModel()->selectedIndexes();
+    if (sel.size() > 0) {
+        RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+        int row = sel.at(0).row();
+        if (row < m->rowCount(QModelIndex()) - 1) {
+            m->moveRow(QModelIndex(), row, QModelIndex(), row + 2);
+            updateActions();
+        }
+    }
+}
+
+void SettingsFrame::tableViewReps_selectionChanged()
+{
+    updateActions();
 }

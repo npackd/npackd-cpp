@@ -13,7 +13,8 @@ namespace Ui {
 class SettingsFrame : public QFrame
 {
     Q_OBJECT
-
+private:
+    void updateActions();
 public:
     explicit SettingsFrame(QWidget *parent = nullptr);
     ~SettingsFrame();
@@ -51,6 +52,11 @@ private slots:
     void on_pushButtonAddRep_clicked();
     void on_pushButtonRemoveRep_clicked();
 
+    void on_pushButtonMoveUp_clicked();
+
+    void on_pushButtonMoveDown_clicked();
+
+    void tableViewReps_selectionChanged();
 private:
     Ui::SettingsFrame *ui;
 };

@@ -46,6 +46,9 @@
         <property name="text">
          <string>Repositories:</string>
         </property>
+        <property name="buddy">
+         <cstring>tableViewReps</cstring>
+        </property>
        </widget>
       </item>
       <item>
@@ -88,6 +91,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
           </widget>
          </item>
          <item>
@@ -122,6 +128,20 @@ p, li { white-space: pre-wrap; }
              <widget class="QPushButton" name="pushButtonRemoveRep">
               <property name="text">
                <string>Remove</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButtonMoveUp">
+              <property name="text">
+               <string>Move up</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButtonMoveDown">
+              <property name="text">
+               <string>Move down</string>
               </property>
              </widget>
             </item>

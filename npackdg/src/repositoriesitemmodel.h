@@ -55,6 +55,9 @@ public:
 
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
+    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
+                          const QModelIndex &destinationParent, int destinationChild);
+
     /**
      * @brief changes the list of URLs
      * @param urls [move] list of URLs

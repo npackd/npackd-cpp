@@ -143,6 +143,19 @@ bool RepositoriesItemModel::setData(const QModelIndex &index,
     return r;
 }
 
+bool RepositoriesItemModel::moveRows(const QModelIndex &sourceParent, int sourceRow,
+        int count, const QModelIndex &destinationParent, int destinationChild)
+{
+    beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild);
+    if (destinationChild > sourceRow) {
+        this->entries.move(sourceRow, destinationChild - 1); // only count = 1!
+    } else {
+        this->entries.move(sourceRow, destinationChild); // only count = 1!
+    }
+    endMoveRows();
+    return true;
+}
+
 void RepositoriesItemModel::setURLs(const QList<Entry*> &entries)
 {
     this->beginResetModel();
