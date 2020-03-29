@@ -1,6 +1,8 @@
 #ifndef PACKAGEUTILS_H
 #define PACKAGEUTILS_H
 
+#include <tuple>
+
 #include "QList"
 #include "QString"
 
@@ -18,11 +20,11 @@ private:
      * @param hk root key
      * @param path registry path
      * @param err error message will be stored here
-     * @param keyExists true will be stored here if the registry key exists
-     * @return list of repositories in the specified registry key
+     * @return list of repositories in the specified registry key, list of comments,
+     * error message, whether the registry key exists
      */
-    static QStringList getRepositoryURLs(HKEY hk, const QString &path,
-                                         QString *err, bool* keyExists);
+    static std::tuple<QStringList, QStringList, bool, QString> getRepositoryURLs(
+            HKEY hk, const QString &path);
 public:
     /** true = install programs globally, false = locally */
     static bool globalMode;
@@ -87,9 +89,16 @@ public:
 
     /**
      * @param err error message will be stored here
-     * @return newly created list of repositories
+     * @return [move] newly created list of repositories
      */
     static QList<QUrl*> getRepositoryURLs(QString *err);
+
+    /**
+     * @param err error message will be stored here
+     * @return repositories, comments and an error message.
+     * Repositories and comments list have the same length.
+     */
+    static std::tuple<QStringList, QStringList, QString> getRepositoryURLsAndComments();
 
     /*
      * Changes the default repository url.

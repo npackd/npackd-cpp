@@ -1,6 +1,7 @@
 ﻿#include <math.h>
 #include <stdint.h>
 #include <memory>
+#include <tuple>
 
 #include <qabstractitemview.h>
 #include <qmessagebox.h>
@@ -1770,14 +1771,9 @@ void MainWindow::on_actionSettings_triggered()
         UIUtils::chooseAccelerators(d, UIUtils::extractAccelerators(titles));
 
         QString err;
-        QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
-        QStringList list;
-        for (int i = 0; i < urls.count(); i++) {
-            list.append(urls.at(i)->toString());
-        }
-        d->setRepositoryURLs(list);
-        qDeleteAll(urls);
-        urls.clear();
+        QStringList urls, comments;
+        std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments();
+        d->setRepositoryURLs(urls, comments);
 
         d->setInstallationDirectory(PackageUtils::getInstallationDirectory());
 

@@ -134,16 +134,9 @@ void SettingsFrame::setInstallationDirectory(const QString& dir)
     this->ui->comboBoxDir->setEditText(dir);
 }
 
-void SettingsFrame::setRepositoryURLs(const QStringList &urls)
+void SettingsFrame::setRepositoryURLs(const QStringList &urls, const QStringList& comments)
 {
-    QStringList comments;
     QString err;
-    WindowsRegistry wr;
-    err = wr.open(PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-            "Software\\Npackd\\Npackd\\UsedReps", false, KEY_READ);
-    if (err.isEmpty())
-        comments = wr.loadStringList(&err);
-
     QTableView* t = this->ui->tableViewReps;
     RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
     QList<RepositoriesItemModel::Entry*> entries;
@@ -151,12 +144,7 @@ void SettingsFrame::setRepositoryURLs(const QStringList &urls)
         RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
         e->enabled = true;
         e->url = urls.at(i);
-        entries.append(e);
-    }
-    for (int i = 0; i < comments.size(); i++) {
-        RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
-        e->enabled = false;
-        e->url = comments.at(i);
+        e->comment = comments.at(i);
         entries.append(e);
     }
     m->setURLs(entries);

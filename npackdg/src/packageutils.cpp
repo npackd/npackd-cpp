@@ -12,35 +12,39 @@ PackageUtils::PackageUtils()
 
 }
 
-QStringList PackageUtils::getRepositoryURLs(HKEY hk, const QString &path, QString *err, bool *keyExists)
+std::tuple<QStringList, QStringList, bool, QString> PackageUtils::getRepositoryURLs(
+        HKEY hk, const QString &path)
 {
-    *keyExists = false;
+    QString err;
+    bool keyExists = false;
+    QStringList comments;
 
     WindowsRegistry wr;
-    *err = wr.open(hk, path, false, KEY_READ);
+    err = wr.open(hk, path, false, KEY_READ);
     QStringList urls;
-    if (err->isEmpty()) {
-        *keyExists = true;
-        DWORD size = wr.getDWORD("size", err);
-        if (err->isEmpty()) {
+    if (err.isEmpty()) {
+        keyExists = true;
+        DWORD size = wr.getDWORD("size", &err);
+        if (err.isEmpty()) {
             for (int i = 1; i <= static_cast<int>(size); i++) {
                 WindowsRegistry er;
-                *err = er.open(wr, QString("%1").arg(i), KEY_READ);
-                if (err->isEmpty()) {
-                    QString url = er.get("repository", err);
-                    if (err->isEmpty())
+                err = er.open(wr, QString("%1").arg(i), KEY_READ);
+                if (err.isEmpty()) {
+                    QString url = er.get("repository", &err);
+                    if (err.isEmpty()) {
                         urls.append(url);
+                        comments.append(er.get("comment", &err));
+                    }
                 }
             }
 
             // ignore any errors while reading the entries
-            *err = "";
+            err = "";
         }
     }
 
-    return urls;
+    return std::make_tuple(urls, comments, keyExists, err);
 }
-
 
 QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
         const DBRepository& dbr, const CommandLine& cl,
@@ -449,33 +453,51 @@ void PackageUtils::setCloseProcessType(DWORD cpt)
 
 QList<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
 {
-    *err = "";
+    QStringList reps, comments;
+    std::tie(reps, comments, *err) = getRepositoryURLsAndComments();
+
+    QList<QUrl*> r;
+    if (err->isEmpty()) {
+        for (int i = 0; i < reps.count(); i++) {
+            QUrl* url = new QUrl(reps.at(i));
+            if (url->scheme() == "file")
+                *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
+            r.append(url);
+        }
+    }
+
+    return r;
+}
+
+std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAndComments()
+{
+    QStringList comments;
+    QString err;
 
     // the most errors in this method are ignored so that we get the URLs even
     // if something cannot be done
     QString e;
 
     bool keyExists;
-    QStringList urls = getRepositoryURLs(
-            HKEY_LOCAL_MACHINE,
-            "SOFTWARE\\Policies\\Npackd\\Reps", &e, &keyExists);
+    QStringList urls;
+    std::tie(urls, comments, keyExists, e) = getRepositoryURLs(
+            HKEY_LOCAL_MACHINE, "SOFTWARE\\Policies\\Npackd\\Reps");
 
     if (!keyExists) {
-        urls = getRepositoryURLs(
+        std::tie(urls, comments, keyExists, e) = getRepositoryURLs(
             PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-            "Software\\Npackd\\Npackd\\Reps", &e, &keyExists);
+            "Software\\Npackd\\Npackd\\Reps");
     }
 
     bool save = false;
 
     // compatibility for Npackd < 1.17
     if (!keyExists) {
-        urls = getRepositoryURLs(HKEY_CURRENT_USER,
-                "Software\\Npackd\\Npackd\\repositories", &e, &keyExists);
+        std::tie(urls, comments, keyExists, e) = getRepositoryURLs(HKEY_CURRENT_USER,
+                "Software\\Npackd\\Npackd\\repositories");
         if (urls.isEmpty())
-            urls = getRepositoryURLs(HKEY_CURRENT_USER,
-                    "Software\\WPM\\Windows Package Manager\\repositories",
-                    &e, &keyExists);
+            std::tie(urls, comments, keyExists, e) = getRepositoryURLs(HKEY_CURRENT_USER,
+                    "Software\\WPM\\Windows Package Manager\\repositories");
 
         if (urls.isEmpty()) {
             urls.append(
@@ -498,7 +520,10 @@ QList<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
     if (save)
         setRepositoryURLs(r, &e);
 
-    return r;
+    qDeleteAll(r);
+    r.clear();
+
+    return std::make_tuple(urls, comments, err);
 }
 
 void PackageUtils::setRepositoryURLs(QList<QUrl *> &urls, QString *err)

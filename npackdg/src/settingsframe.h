@@ -25,8 +25,9 @@ public:
 
     /**
      * @param urls new repository URL
+     * @param comments comments for URLs
      */
-    void setRepositoryURLs(const QStringList& urls);
+    void setRepositoryURLs(const QStringList& urls, const QStringList &comments);
 
     /**
      * @return installation directory
