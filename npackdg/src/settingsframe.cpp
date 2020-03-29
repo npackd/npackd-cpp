@@ -13,6 +13,7 @@
 #include "wpmutils.h"
 #include "installedpackages.h"
 #include "packageutils.h"
+#include "repositoriesitemmodel.h"
 
 SettingsFrame::SettingsFrame(QWidget *parent) :
     QFrame(parent),
@@ -78,11 +79,28 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 	if (err.isEmpty()) {
 		DWORD repCount = wr.getDWORD("size", &err);
 		if (err.isEmpty() && repCount > 0) {
-			this->ui->plainTextEditReps->setEnabled(false);
+            this->ui->tableViewReps->setEnabled(false);
 		}
 	}
 
     ui->checkBoxCheckForUpdates->setChecked(WPMUtils::isTaskEnabled(&err));
+
+    // table with URLs
+    QTableView* t = this->ui->tableViewReps;
+    QItemSelectionModel *sm = t->selectionModel();
+    QAbstractItemModel* m = t->model();
+    t->setModel(new RepositoriesItemModel());
+    delete sm;
+    delete m;
+
+    t->setTabKeyNavigation(false);
+    t->setTextElideMode(Qt::ElideRight);
+    t->setSortingEnabled(false);
+    t->horizontalHeader()->setSectionsMovable(true);
+
+    t->setColumnWidth(0, 80);
+    t->setColumnWidth(1, 350);
+    t->setColumnWidth(2, 300);
 }
 
 SettingsFrame::~SettingsFrame()
@@ -92,17 +110,15 @@ SettingsFrame::~SettingsFrame()
 
 QStringList SettingsFrame::getRepositoryURLs()
 {
-    QString txt = this->ui->plainTextEditReps->toPlainText().trimmed();
-    QStringList sl = txt.split("\n", QString::SkipEmptyParts);
-    for (int i = 0; i < sl.count(); i++) {
-        sl[i] = sl.at(i).trimmed();
-    }
+    QTableView* t = this->ui->tableViewReps;
+    RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+    QList<RepositoriesItemModel::Entry*> entries = m->getEntries();
 
-    for (int i = 0; i < sl.size(); ) {
-        if (sl.at(i).trimmed().startsWith("#"))
-            sl.removeAt(i);
-        else
-            i++;
+    QStringList sl;
+    for (int i = 0; i < entries.count(); i++) {
+        RepositoriesItemModel::Entry* e = entries.at(i);
+        if (e->enabled)
+            sl.append(e->url.trimmed());
     }
 
     return sl;
@@ -120,10 +136,6 @@ void SettingsFrame::setInstallationDirectory(const QString& dir)
 
 void SettingsFrame::setRepositoryURLs(const QStringList &urls)
 {
-    QStringList texts;
-
-    texts = urls;
-
     QStringList comments;
     QString err;
     WindowsRegistry wr;
@@ -132,11 +144,22 @@ void SettingsFrame::setRepositoryURLs(const QStringList &urls)
     if (err.isEmpty())
         comments = wr.loadStringList(&err);
 
-    for (int i = 0; i < comments.size(); i++) {
-        texts.append("# " + comments.at(i));
+    QTableView* t = this->ui->tableViewReps;
+    RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+    QList<RepositoriesItemModel::Entry*> entries;
+    for (int i = 0; i < urls.size(); i++) {
+        RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
+        e->enabled = true;
+        e->url = urls.at(i);
+        entries.append(e);
     }
-
-    this->ui->plainTextEditReps->setPlainText(texts.join("\r\n"));
+    for (int i = 0; i < comments.size(); i++) {
+        RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
+        e->enabled = false;
+        e->url = comments.at(i);
+        entries.append(e);
+    }
+    m->setURLs(entries);
 }
 
 void SettingsFrame::setCloseProcessType(DWORD v)
@@ -272,32 +295,6 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
         err = "";
     }
 
-    if (err.isEmpty()) {
-        WindowsRegistry m(
-                PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-				false, KEY_ALL_ACCESS);
-        WindowsRegistry wr = m.createSubKey(
-                "Software\\Npackd\\Npackd\\UsedReps", &err,
-                KEY_ALL_ACCESS);
-
-        QStringList comments = this->ui->plainTextEditReps->toPlainText().
-                trimmed().split("\n", QString::SkipEmptyParts);
-        for (int i = 0; i < comments.size(); ) {
-            QString c = comments.at(i).trimmed();
-            if (!c.startsWith("#"))
-                comments.removeAt(i);
-            else {
-                comments[i] = c.mid(1);
-                i++;
-            }
-        }
-        wr.saveStringList(comments);
-
-        // it is not important, whether the list of used repositories
-        // is saved or not
-        err = "";
-    }
-
     // test: scheduling a task
     //CoInitialize(NULL);
     if (err.isEmpty()) {
@@ -332,4 +329,21 @@ void SettingsFrame::on_pushButtonProxySettings_clicked()
     if (!job->getErrorMessage().isEmpty())
         MainWindow::getInstance()->addErrorMessage(job->getErrorMessage());
     delete job;
+}
+
+void SettingsFrame::on_pushButtonAddRep_clicked()
+{
+    QTableView* t = this->ui->tableViewReps;
+    RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+    m->add();
+}
+
+void SettingsFrame::on_pushButtonRemoveRep_clicked()
+{
+    QTableView* t = this->ui->tableViewReps;
+    QModelIndexList sel = t->selectionModel()->selectedIndexes();
+    if (sel.size() > 0) {
+        RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
+        m->remove(sel.at(0).row());
+    }
 }

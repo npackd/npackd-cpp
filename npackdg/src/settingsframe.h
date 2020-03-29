@@ -53,6 +53,9 @@ private slots:
 
     void on_pushButtonProxySettings_clicked();
 
+    void on_pushButtonAddRep_clicked();
+    void on_pushButtonRemoveRep_clicked();
+
 private:
     Ui::SettingsFrame *ui;
 };

@@ -300,9 +300,6 @@
    <property name="toolTip">
     <string>Create a new package in one of the default repositories (Google account is required)</string>
    </property>
-   <property name="shortcut">
-    <string>F2</string>
-   </property>
   </action>
   <action name="actionOpen_folder">
    <property name="text">
