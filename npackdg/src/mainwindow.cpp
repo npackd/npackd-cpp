@@ -1770,10 +1770,7 @@ void MainWindow::on_actionSettings_triggered()
 
         UIUtils::chooseAccelerators(d, UIUtils::extractAccelerators(titles));
 
-        QString err;
-        QStringList urls, comments;
-        std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments();
-        d->setRepositoryURLs(urls, comments);
+        d->fillRepositories();
 
         d->setInstallationDirectory(PackageUtils::getInstallationDirectory());
 

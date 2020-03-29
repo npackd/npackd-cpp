@@ -95,10 +95,11 @@ public:
 
     /**
      * @param err error message will be stored here
+     * @param used true = used repositories, false = unused repositories
      * @return repositories, comments and an error message.
      * Repositories and comments list have the same length.
      */
-    static std::tuple<QStringList, QStringList, QString> getRepositoryURLsAndComments();
+    static std::tuple<QStringList, QStringList, QString> getRepositoryURLsAndComments(bool used=true);
 
     /*
      * Changes the default repository url.
@@ -115,7 +116,7 @@ public:
      * @param comments corresponding comments
      * @return error message
      */
-    static QString setRepositoryURLsAndComments(const QStringList& urls, const QStringList& comments);
+    static QString setRepositoryURLsAndComments(const QStringList& urls, const QStringList& comments, bool used=true);
 };
 
 #endif // PACKAGEUTILS_H

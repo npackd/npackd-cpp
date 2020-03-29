@@ -19,10 +19,9 @@ public:
     ~SettingsFrame();
 
     /**
-     * @param urls new repository URL
-     * @param comments comments for URLs
+     * @brief reads the repositories from the registry
      */
-    void setRepositoryURLs(const QStringList& urls, const QStringList &comments);
+    void fillRepositories();
 
     /**
      * @return installation directory

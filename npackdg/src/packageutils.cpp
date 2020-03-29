@@ -469,8 +469,10 @@ QList<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
     return r;
 }
 
-std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAndComments()
+std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAndComments(bool used)
 {
+    QString suffix = used ? "Reps" : "UnusedReps";
+
     QStringList comments;
     QString err;
 
@@ -481,18 +483,18 @@ std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAnd
     bool keyExists;
     QStringList urls;
     std::tie(urls, comments, keyExists, e) = getRepositoryURLs(
-            HKEY_LOCAL_MACHINE, "SOFTWARE\\Policies\\Npackd\\Reps");
+            HKEY_LOCAL_MACHINE, "SOFTWARE\\Policies\\Npackd\\" + suffix);
 
     if (!keyExists) {
         std::tie(urls, comments, keyExists, e) = getRepositoryURLs(
             PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-            "Software\\Npackd\\Npackd\\Reps");
+            "Software\\Npackd\\Npackd\\" + suffix);
     }
 
     bool save = false;
 
     // compatibility for Npackd < 1.17
-    if (!keyExists) {
+    if (!keyExists && used) {
         std::tie(urls, comments, keyExists, e) = getRepositoryURLs(HKEY_CURRENT_USER,
                 "Software\\Npackd\\Npackd\\repositories");
         if (urls.isEmpty())
@@ -537,8 +539,10 @@ void PackageUtils::setRepositoryURLs(QList<QUrl *> &urls, QString *err)
     *err = setRepositoryURLsAndComments(reps, comments);
 }
 
-QString PackageUtils::setRepositoryURLsAndComments(const QStringList &urls, const QStringList &comments)
+QString PackageUtils::setRepositoryURLsAndComments(const QStringList &urls, const QStringList &comments, bool used)
 {
+    QString suffix = used ? "Reps" : "UnusedReps";
+
     QString err;
 
     WindowsRegistry wr;
@@ -547,7 +551,7 @@ QString PackageUtils::setRepositoryURLsAndComments(const QStringList &urls, cons
             "", false, KEY_CREATE_SUB_KEY);
     if (err.isEmpty()) {
         WindowsRegistry wrr = wr.createSubKey(
-                "Software\\Npackd\\Npackd\\Reps", &err, KEY_ALL_ACCESS);
+                "Software\\Npackd\\Npackd\\" + suffix, &err, KEY_ALL_ACCESS);
         if (err.isEmpty()) {
             wrr.setDWORD("size", static_cast<DWORD>(urls.count()));
             for (int i = 0; i < urls.count(); i++) {

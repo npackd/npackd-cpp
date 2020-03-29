@@ -100,7 +100,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
 
     t->setColumnWidth(0, 80);
     t->setColumnWidth(1, 350);
-    t->setColumnWidth(2, 300);
+    t->setColumnWidth(2, 600);
 }
 
 SettingsFrame::~SettingsFrame()
@@ -118,12 +118,25 @@ void SettingsFrame::setInstallationDirectory(const QString& dir)
     this->ui->comboBoxDir->setEditText(dir);
 }
 
-void SettingsFrame::setRepositoryURLs(const QStringList &urls, const QStringList& comments)
+void SettingsFrame::fillRepositories()
 {
-    QString err;
     QTableView* t = this->ui->tableViewReps;
     RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
     QList<RepositoriesItemModel::Entry*> entries;
+
+    QString err;
+    QStringList urls, comments;
+
+    std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments(false);
+    for (int i = 0; i < urls.size(); i++) {
+        RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
+        e->enabled = false;
+        e->url = urls.at(i);
+        e->comment = comments.at(i);
+        entries.append(e);
+    }
+
+    std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments();
     for (int i = 0; i < urls.size(); i++) {
         RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
         e->enabled = true;
@@ -131,6 +144,7 @@ void SettingsFrame::setRepositoryURLs(const QStringList &urls, const QStringList
         e->comment = comments.at(i);
         entries.append(e);
     }
+
     m->setURLs(entries);
 }
 
@@ -196,11 +210,16 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     QStringList uiReps;
     QStringList uiComments;
+    QStringList uiUnusedReps;
+    QStringList uiUnusedComments;
     for (int i = 0; i < entries.count(); i++) {
         RepositoriesItemModel::Entry* e = entries.at(i);
         if (e->enabled) {
             uiReps.append(e->url.trimmed());
             uiComments.append(e->comment.trimmed());
+        } else {
+            uiUnusedReps.append(e->url.trimmed());
+            uiUnusedComments.append(e->comment.trimmed());
         }
     }
 
@@ -231,8 +250,11 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     if (err.isEmpty()) {
         QStringList reps, comments;
+        QStringList unusedReps, unusedComments;
         std::tie(reps, comments, err) = PackageUtils::getRepositoryURLsAndComments();
-        repsChanged = (reps != uiReps) || (comments != uiComments);
+        std::tie(unusedReps, unusedComments, err) = PackageUtils::getRepositoryURLsAndComments(false);
+        repsChanged = (reps != uiReps) || (comments != uiComments) ||
+                (unusedReps != uiUnusedReps) || (unusedComments != uiUnusedComments);
     }
 
     if (err.isEmpty()) {
@@ -241,6 +263,8 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
                 err = QObject::tr("Cannot change settings now. The repositories download is running.");
             } else {
                 err = PackageUtils::setRepositoryURLsAndComments(uiReps, uiComments);
+                if (err.isEmpty())
+                    err = PackageUtils::setRepositoryURLsAndComments(uiUnusedReps, uiUnusedComments, false);
                 if (err.isEmpty()) {
                     mw->closeDetailTabs();
                     mw->recognizeAndLoadRepositories(true);

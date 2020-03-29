@@ -41,6 +41,8 @@ public:
      */
     RepositoriesItemModel();
 
+    virtual ~RepositoriesItemModel();
+
     int rowCount(const QModelIndex &parent) const;
 
     int columnCount(const QModelIndex &parent) const;

@@ -5,6 +5,11 @@ RepositoriesItemModel::RepositoriesItemModel()
 
 }
 
+RepositoriesItemModel::~RepositoriesItemModel()
+{
+    qDeleteAll(entries);
+}
+
 int RepositoriesItemModel::rowCount(const QModelIndex &/*parent*/) const
 {
     return entries.size();
