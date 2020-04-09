@@ -8,6 +8,11 @@
 #include "msithirdpartypm.h"
 #include "wpmutils.h"
 
+MSIThirdPartyPM::MSIThirdPartyPM()
+{
+    detectionPrefix = "msi:";
+}
+
 void MSIThirdPartyPM::scan(Job* job,
         QList<InstalledPackageVersion *> *installed,
         Repository *rep) const

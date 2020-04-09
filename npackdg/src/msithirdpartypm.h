@@ -11,6 +11,11 @@
 class MSIThirdPartyPM: public AbstractThirdPartyPM
 {
 public:
+    /**
+     * @brief -
+     */
+    MSIThirdPartyPM();
+
     void scan(Job *job, QList<InstalledPackageVersion*>* installed,
             Repository* rep) const;
 };

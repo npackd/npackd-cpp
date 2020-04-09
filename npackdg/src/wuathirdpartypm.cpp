@@ -15,7 +15,7 @@ using namespace std;
 
 WUAThirdPartyPM::WUAThirdPartyPM()
 {
-
+    detectionPrefix = "wua:";
 }
 
 void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed, Repository *rep) const
@@ -90,6 +90,8 @@ void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed
 
             Package* p = new Package("package", title);
 
+            p->categories.append(QObject::tr("Windows update"));
+
             IUpdateIdentity* identity = nullptr;
 
             if (job->shouldProceed()) {
@@ -108,7 +110,11 @@ void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed
                 }
             }
 
-            p->name = "wua." + guid;
+            p->name = "wua.guid-" + guid;
+
+            /*
+            I have not found any information about the format of the version numbers
+            200, 208 are typical LONG values returned by get_RevisionNumber
 
             LONG ver = 0;
             if (job->shouldProceed()) {
@@ -116,8 +122,9 @@ void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed
                 job->checkHResult(hr);
             }
 
-            int hi = (ver & 0xffff0000) >> 16;
-            int lo = ver & 0xffff;
+            int hi = (ver & 0xff00) >> 8;
+            int lo = ver & 0xff;
+            */
 
             if (job->shouldProceed()) {
                 BSTR s;
@@ -144,7 +151,7 @@ void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed
             if (job->shouldProceed()) {
                 rep->savePackage(p, true);
 
-                InstalledPackageVersion* ipv = new InstalledPackageVersion(p->name, Version(hi, lo), "");
+                InstalledPackageVersion* ipv = new InstalledPackageVersion(p->name, Version(1, 0), "");
                 ipv->detectionInfo = "wua:" + guid;
                 installed->append(ipv);
             }

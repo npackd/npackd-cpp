@@ -114,7 +114,7 @@ private:
 
     QString findBetterPackageName(DBRepository *r, const QString &package);
 
-    void addPackages(Job *job, DBRepository *r, Repository *rep, const QList<InstalledPackageVersion *> &installed, bool replace, const QString &detectionInfoPrefix);
+    void addPackages(Job *job, DBRepository *r, Repository *rep, const QList<InstalledPackageVersion *> &installed, bool replace);
 
     void dump() const;
 

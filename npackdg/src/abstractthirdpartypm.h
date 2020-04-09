@@ -15,6 +15,12 @@ class AbstractThirdPartyPM
 {
 public:
     /**
+     * all InstalledPackageVersion.detectionInfo created by this package manager
+     * start with this prefix. The value can be empty.
+     */
+    QString detectionPrefix;
+
+    /**
      * @brief -
      */
     AbstractThirdPartyPM();

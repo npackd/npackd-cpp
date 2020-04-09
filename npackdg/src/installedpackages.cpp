@@ -214,6 +214,31 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 {
     // this method does not manipulate "data" directly => no locking
 
+    // if all installed package versions created by a third party
+    // package managers have a detection info with the same prefix,
+    // we can delete already existing installed package versions if
+    // they are not in the list of currently detected
+    if (job->shouldProceed()) {
+        if (!detectionInfoPrefix.isEmpty()) {
+            QSet<QString> foundDetectionInfos;
+            for (int i = 0; i < installed.count(); i++) {
+                InstalledPackageVersion* ipv = installed.at(i);
+                foundDetectionInfos.insert(ipv->detectionInfo);
+            }
+
+            QList<InstalledPackageVersion*> all = getAll();
+            for (int i = 0; i < all.size(); i++) {
+                InstalledPackageVersion* ipv = all.at(i);
+                if (ipv->detectionInfo.startsWith(detectionInfoPrefix)) {
+                    if (!foundDetectionInfos.contains(ipv->detectionInfo)) {
+                        this->setPackageVersionPath(ipv->package, ipv->version, QString());
+                    }
+                }
+            }
+            qDeleteAll(all);
+        }
+    }
+
     if (job->shouldProceed()) {
         for (int i = 0; i < installed.count(); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
@@ -230,7 +255,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 void InstalledPackages::addPackages(Job* job, DBRepository* r,
         Repository* rep,
         const QList<InstalledPackageVersion*>& installed,
-        bool replace, const QString& /*detectionInfoPrefix*/)
+        bool replace)
 {
     // this method does not manipulate "data" directly => no locking
 
@@ -321,9 +346,8 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
 
     QString d = ipv.directory;
 
-    // ?
-    if (ipv.package.startsWith("msi.") ||
-            ipv.package.startsWith("control-panel.")) {
+    // if we already have a package version detected, we just use the directory
+    if (!detectionInfoPrefix.isEmpty()) {
         InstalledPackageVersion* orig = InstalledPackages::getDefault()->
                 find(ipv.package, ipv.version);
         if (orig) {
@@ -424,7 +448,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
                 // "Software" have the same path
                 /* not yet ready
                  *
-                 * It make sense to only consider versions > 1.0 as "1.0" is
+                 * It makes sense to only consider versions > 1.0 as "1.0" is
                  * often used instead of an actual version number.
                  *
                  * if (WPMUtils::pathEquals(d, v->getDirectory()) &&
@@ -832,34 +856,28 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         QList<AbstractThirdPartyPM*> tpms;
         QList<bool> replace;
         QStringList jobTitles;
-        QStringList prefixes;
 
         jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
         tpms.append(new InstalledPackagesThirdPartyPM());
         replace.append(false);
-        prefixes.append("");
 
         if (PackageUtils::globalMode) {
 			jobTitles.append(QObject::tr("Adding well-known packages"));
 			tpms.append(new WellKnownProgramsThirdPartyPM(
 				InstalledPackages::packageName));
             replace.append(false);
-            prefixes.append("");
 
             jobTitles.append(QObject::tr("Detecting MSI packages"));
 			tpms.append(new MSIThirdPartyPM());
             replace.append(true);
-            prefixes.append("msi:");
 
 			jobTitles.append(QObject::tr("Detecting software control panel packages"));
 			tpms.append(new ControlPanelThirdPartyPM());
             replace.append(true);
-            prefixes.append("control-panel:");
 
             jobTitles.append(QObject::tr("Detecting Windows Update packages"));
             tpms.append(new WUAThirdPartyPM());
             replace.append(true);
-            prefixes.append("wua:");
         }
 
         QList<Repository*> repositories;
@@ -874,7 +892,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         for (int i = 0; i < tpms.count(); i++) {
             AbstractThirdPartyPM* tpm = tpms.at(i);
             Job* s = job->newSubJob(0.1,
-                    jobTitles.at(i), false, prefixes.at(i) != "wua:"); // Windows Updates are not important
+                    jobTitles.at(i), false, tpm->detectionPrefix != "wua:"); // Windows Updates are not important
 
             QFuture<void> future = QtConcurrent::run(
                     tpm,
@@ -893,8 +911,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
                     false, true);
             addPackages(sub, rep, repositories.at(i),
                     *installeds.at(i),
-                    replace.at(i),
-                    prefixes.at(i));
+                    replace.at(i));
 
             job->setProgress(0.2 + (i + 1.0) / futures.count() * 0.4);
         }
@@ -914,9 +931,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
                 remove("com.microsoft.Windows64");
             }
 
-            detect3rdParty(sub, rep,
-                    *installeds.at(i),
-                    prefixes.at(i));
+            detect3rdParty(sub, rep, *installeds.at(i), tpms.at(i)->detectionPrefix);
             qDeleteAll(*installeds.at(i));
 
             job->setProgress(0.6 + (i + 1.0) / futures.count() * 0.2);

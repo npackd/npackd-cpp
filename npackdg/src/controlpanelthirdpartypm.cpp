@@ -7,6 +7,7 @@
 
 ControlPanelThirdPartyPM::ControlPanelThirdPartyPM() : ignoreMSIEntries(true)
 {
+    detectionPrefix = "control-panel:";
 }
 
 void ControlPanelThirdPartyPM::scan(Job* job,
