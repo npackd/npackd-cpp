@@ -9,14 +9,19 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/")
 
 if(WIN32)
-  set(CMAKE_USE_RELATIVE_PATHS true)
-  set(CMAKE_SUPPRESS_REGENERATION true)
+    set(CMAKE_USE_RELATIVE_PATHS true)
+    set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
 #  -Wl,--major-os-version,6 -Wl,--minor-os-version,1
 if(NOT MSVC)
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
-  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc -g -Os -Wl,--subsystem,windows:6.1")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
+
+    if(${NPACKD_FORCE_STATIC})
+        SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc")
+    endif()
+
+    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g -Os -Wl,--subsystem,windows:6.1")
 endif()
 
 include(CheckCXXCompilerFlag)
@@ -195,64 +200,24 @@ QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations 
 qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
 # libraries listed here like 'icuin' are necessary in Qt 5.12 for static builds
-target_link_libraries(npackdg
-    ${QUAZIP_LIBRARIES}
-    ${ZLIB_LIBRARIES}
 
-    qsqlite
-    qicns
-    qico
-    qjpeg
-    qgif
-    qtga
-    qtiff
-    qwbmp
-    qwebp
-    Qt5::WinExtras qwindows Qt5VulkanSupport qwindowsvistastyle Qt5::Widgets Qt5FontDatabaseSupport
-    Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core
+SET(NPACKDG_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
-    mingwex
+if(${NPACKD_FORCE_STATIC})
+    SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} qsqlite qicns qico qjpeg qgif qtga qtiff qwbmp qwebp)
+endif()
 
-    Qt5ThemeSupport
-    Qt5EventDispatcherSupport
-    Qt5FontDatabaseSupport
-    Qt5PlatformCompositorSupport
-    Qt5WindowsUIAutomationSupport
-    qdirect2d
+SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} Qt5::WinExtras qwindows Qt5VulkanSupport qwindowsvistastyle Qt5::Widgets Qt5FontDatabaseSupport Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core)
 
-    jasper
-    icuin
-    icuuc
-    icudt
-    icutu
-    qtpcre2
-    qtharfbuzz
-    qtfreetype
-    qtlibpng
-    jpeg
-    zstd
-    z
+if(${NPACKD_FORCE_STATIC})
+    SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} qsqlite qicns qico qjpeg qgif qtga qtiff qwbmp qwebp)
+    SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} mingwex Qt5ThemeSupport Qt5EventDispatcherSupport Qt5FontDatabaseSupport Qt5PlatformCompositorSupport Qt5WindowsUIAutomationSupport qdirect2d)
+    SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} jasper icuin icuuc icudt icutu qtpcre2 qtharfbuzz qtfreetype qtlibpng jpeg zstd z)
+endif()
 
-    imm32
-    winmm 
-    glu32 
-    mpr
-    
-    userenv
-    wtsapi32
-    opengl32
-    ole32
-    uuid
-    wininet
-    psapi
-    version
-    shlwapi
-    msi
-    netapi32
-    Ws2_32
-    UxTheme
-    Dwmapi
-)
+SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} imm32 winmm glu32 mpr userenv wtsapi32 opengl32 ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 UxTheme Dwmapi)
+
+target_link_libraries(npackdg ${NPACKDG_LIBRARIES})
 target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
 target_compile_definitions(npackdg PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 if(${NPACKD_ADMIN})
@@ -262,6 +227,7 @@ else()
 endif()
 
 install(TARGETS npackdg DESTINATION ${CMAKE_INSTALL_PREFIX})
+
 if(MSVC)
     set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb ${_qt5Core_install_prefix}/bin/Qt5Widgetsd.dll ${_qt5Core_install_prefix}/bin/Qt5Widgetsd.pdb ${_qt5Core_install_prefix}/bin/Qt5Guid.dll ${_qt5Core_install_prefix}/bin/Qt5Guid.pdb)
     set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll ${_qt5Core_install_prefix}/bin/Qt5Widgets.dll ${_qt5Core_install_prefix}/bin/Qt5Gui.dll)

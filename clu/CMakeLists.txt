@@ -35,7 +35,15 @@ endif()
 
 add_definitions(-DUNICODE -D_UNICODE)
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
+if(NOT MSVC)
+  SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
+
+  if(${NPACKD_FORCE_STATIC})
+      SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc")
+  endif()
+
+  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g -Os")
+endif()
 
 include(CheckCXXCompilerFlag)
 
@@ -137,32 +145,25 @@ link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 link_directories("${Qt5_DIR}\\..\\..")
 
+SET(CLU_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
+
+if(${NPACKD_FORCE_STATIC})
+    SET(CLU_LIBRARIES ${CLU_LIBRARIES} qsqlite)
+endif()
+
+SET(CLU_LIBRARIES ${CLU_LIBRARIES} Qt5::Sql Qt5::Xml Qt5::Core)
+
+if(${NPACKD_FORCE_STATIC})
+    SET(CLU_LIBRARIES ${CLU_LIBRARIES} qtpcre2 zstd z)
+endif()
+
+SET(CLU_LIBRARIES ${CLU_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32)
+
 add_executable(clu
     ${CLU_SOURCES}
     ${CLU_HEADERS}
 )
-target_link_libraries(clu
-    ${QUAZIP_LIBRARIES}
-    ${ZLIB_LIBRARIES}
-    qsqlite
-    Qt5::Sql Qt5::Xml Qt5::Core
-    qtpcre2
-
-    zstd
-    z
-
-    winmm
-    ole32
-    uuid
-    wininet
-    psapi
-    version
-    userenv
-    shlwapi
-    msi
-    netapi32
-    Ws2_32
-)
+target_link_libraries(clu ${CLU_LIBRARIES})
 target_include_directories(clu PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src ${CMAKE_CURRENT_SOURCE_DIR}/../npackdcl/src)
 target_compile_definitions(clu PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 

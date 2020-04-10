@@ -11,7 +11,15 @@ if(WIN32)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -static -g -Os")
+if(NOT MSVC)
+  SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
+
+  if(${NPACKD_FORCE_STATIC})
+      SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc")
+  endif()
+
+  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g -Os")
+endif()
 
 include(CheckCXXCompilerFlag)
 
@@ -111,36 +119,26 @@ link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 link_directories("${Qt5_DIR}\\..\\..")
 
+# libraries listed here like 'icuin' are necessary for static builds
+SET(TESTS_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
+
+if(${NPACKD_FORCE_STATIC})
+    SET(TESTS_LIBRARIES ${TESTS_LIBRARIES} qsqlite)
+endif()
+
+SET(TESTS_LIBRARIES ${TESTS_LIBRARIES} Qt5::Sql Qt5::Test Qt5::Xml Qt5::Core)
+
+if(${NPACKD_FORCE_STATIC})
+    SET(TESTS_LIBRARIES ${TESTS_LIBRARIES} qtpcre2 icuin icuuc icudt icutu qtharfbuzz zstd z)
+endif()
+
+SET(TESTS_LIBRARIES ${TESTS_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32)
+
 add_executable(tests
     ${TESTS_SOURCES}
     ${TESTS_HEADERS}
 )
-target_link_libraries(tests
-    ${QUAZIP_LIBRARIES}
-    ${ZLIB_LIBRARIES}
-    qsqlite
-    Qt5::Sql Qt5::Test Qt5::Xml Qt5::Core
-    qtpcre2
-    qtharfbuzz
-    icuin
-    icuuc
-    icudt
-    icutu
-    zstd
-    z
-
-    userenv
-    winmm
-    ole32
-    uuid
-    wininet
-    psapi
-    version
-    shlwapi
-    msi
-    netapi32
-    Ws2_32
-)
+target_link_libraries(tests ${TESTS_LIBRARIES})
 target_include_directories(tests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../../npackdg/src)
 target_compile_definitions(tests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
