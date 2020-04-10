@@ -168,10 +168,10 @@ option(NPACKD_ADMIN "Force admin right on program" TRUE)
 set(OUTPUT_FILE_NAME "npackdg.exe")
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 if(${NPACKD_ADMIN})
-  file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
+    file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
 else()
-  configure_file(../npackdcl/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
+    configure_file(../npackdcl/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
 endif()
 list(APPEND NPACKDG_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc)
 
@@ -190,6 +190,12 @@ link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\styles")
 link_directories("${Qt5_DIR}\\..\\..")
+
+if(WIN32)
+    get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+    get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+endif()
 
 add_executable(npackdg WIN32
     ${NPACKDG_SOURCES}
@@ -239,3 +245,6 @@ install(FILES ../CrystalIcons_LICENSE.txt ../LICENSE.txt DESTINATION ${CMAKE_INS
 file(TO_CMAKE_PATH "$ENV{EXEPROXY}" EXEPROXY)
 install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
+if(WIN32 AND NOT ${NPACKD_FORCE_STATIC})
+    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime --pdb \"${CMAKE_INSTALL_PREFIX}/npackdg.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
+endif()
