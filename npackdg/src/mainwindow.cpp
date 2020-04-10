@@ -342,7 +342,14 @@ void MainWindow::updateIcon(const QString& url)
 {
     QTableView* t = this->mainFrame->getTableWidget();
     PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
-    m->iconUpdated(url);
+
+    for (int row = t->rowAt(0); row <= t->rowAt(t->height()); row++) {
+        QModelIndex index = m->index(row, 0);
+        QString v = m->data(index, Qt::UserRole).toString();
+        if (v == url) {
+            m->dataChanged(index, index);
+        }
+    }
 
     for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
