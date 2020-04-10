@@ -66,7 +66,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe -j 2 install
@@ -172,7 +172,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake -LAH
@@ -263,7 +263,7 @@ set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%"
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%" -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe -j 2 install

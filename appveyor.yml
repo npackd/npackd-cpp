@@ -4,14 +4,23 @@ environment:
   matrix:
   - bits: 32
     prg: npackdcl
+    static: ON
   - bits: 64
     prg: npackd
+    static: ON
   - bits: 64
     prg: npackdcl
+    static: ON
   - bits: 32
     prg: npackd
+    static: ON
   - bits: 32
     prg: clu
+    static: ON
+  # Profiling static builds does not work with Very Sleepy
+  - bits: 64
+    prg: npackd
+    static: OFF
   covtoken:
     secure: yPwsn7ojqxg5m7pxyjIf3LV1GwoHd4m3q5iQrKCDzZ4=
 init:
