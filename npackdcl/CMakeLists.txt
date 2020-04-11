@@ -123,7 +123,6 @@ link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 link_directories("${Qt5_DIR}\\..\\..")
 
-
 add_executable(npackdcl
     ${NPACKDCL_SOURCES}
     ${NPACKDCL_HEADERS}
