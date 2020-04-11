@@ -1,4 +1,3 @@
-
 echo on
 
 rem This script is used by AppVeyor automatic builds to install the necessary
@@ -41,7 +40,19 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 goto :eof
 
 :bits64
-C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-libtool  mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd
+
+if %static% equ ON goto staticbits64
+
+C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5 mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd mingw64/mingw-w64-x86_64-quazip
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+"%npackd_cl%\ncl" add -p drmingw64 -v 0.7.7
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+goto end
+
+:staticbits64
+C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" add -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw64 -v 0.7.7
