@@ -22,7 +22,6 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set EXEPROXY=%%x
 
 if %bits% equ 64 goto bits64
 
-set PACKAGE=com.googlecode.windows-package-manager.Npackd
 set mingw_libs=i686-w64-mingw32
 set mingw=C:\msys64\mingw32
 
@@ -36,7 +35,6 @@ goto start
 
 :bits64
 
-set PACKAGE=com.googlecode.windows-package-manager.Npackd64
 set mingw_libs=x86_64-w64-mingw32
 set mingw=C:\msys64\mingw64
 
@@ -59,9 +57,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdg\build
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
-set CMAKE_INCLUDE_PATH=%quazip%\include
-set CMAKE_LIBRARY_PATH=%quazip%\lib
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -137,9 +133,7 @@ if "%bits%" neq "64" goto :eof
 pushd npackdg\build
 
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
-set CMAKE_INCLUDE_PATH=%quazip%\include
-set CMAKE_LIBRARY_PATH=%quazip%\lib
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 mingw32-make.exe clean
 
 "..\..\cov-analysis\bin\cov-configure.exe"  --comptype gcc --compiler C:\PROGRA~2\MINGW-~1\bin\G__~1.EXE -- -std=gnu++11
@@ -163,9 +157,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdcl\build
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
-set CMAKE_INCLUDE_PATH=%quazip%\include
-set CMAKE_LIBRARY_PATH=%quazip%\lib
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -253,11 +245,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd clu\build
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
-set CMAKE_INCLUDE_PATH=%quazip%\include
-set CMAKE_LIBRARY_PATH=%quazip%\lib
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install "-DZLIB_ROOT:PATH=%zlib%" -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
+cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mingw32-make.exe -j 2 install
