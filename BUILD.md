@@ -94,9 +94,13 @@ ninja
 For performance profiling the programs should not be built statically, but with DLLs.
 GCC seems to have a bug where the debug information for statically built binaries is invalid.
 
+```bash
+pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5 mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd mingw64/mingw-w64-x86_64-quazip
+```
+
 ```bat
 set path=C:\msys64\mingw64\bin;C:\Program Files\CMake\bin
-set CMAKE_PREFIX_PATH=C:\msys64\mingw64\x86_64-w64-mingw32;C:\Builds\quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static
+set CMAKE_PREFIX_PATH=C:\msys64\mingw64\x86_64-w64-mingw32
 mkdir c:\builds\npackd-dyn-minsizerel
 cd c:\builds\npackd-dyn-minsizerel
 cmake C:\Users\IEUser\Documents\npackd-cpp -G "Ninja" -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=OFF

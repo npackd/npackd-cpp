@@ -151,23 +151,26 @@ int App::process()
         }
     }
 
-    QStringList fr = cl.getFreeArguments();
+    QList<CommandLine::ParsedOption*> options = cl.getParsedOptions();
+
+    QString cmd;
+    if (options.size() > 0 && options.at(0)->opt == nullptr) {
+        cmd = options.at(0)->value;
+    }
 
     if (!err.isEmpty()) {
         // nothing. The error will be processed later.
-    } else if (fr.count() == 0) {
+    } else if (options.size() == 0) {
         Job* job = new Job();
         usage(job);
         delete job;
-    } else if (fr.count() > 1) {
-        err = QStringLiteral("Unexpected argument: ") + fr.at(1);
+    } else if (cmd.isEmpty()) {
+        err = QStringLiteral("Missing command");
     } else {
-        const QString cmd = fr.at(0);
-
         QList<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
         for (int i = 0; i < parsed.count(); i++) {
             CommandLine::Option* opt = parsed.at(i)->opt;
-            if (opt->allowedCommands.count() > 0) {
+            if (opt && opt->allowedCommands.count() > 0) {
                 // qCDebug(npackd) << "1" << opt->allowedCommands.count();
                 if (!opt->allowedCommands.contains(cmd)) {
                     err = "The option --" + opt->name +
@@ -1400,20 +1403,20 @@ void App::update(Job* job)
     QList<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
     for (int i = 0; i < parsed.size(); ) {
         CommandLine::ParsedOption* po = parsed.at(i);
-        if (po->opt->name == "package") {
+        if (po->opt && po->opt->name == "package") {
             packages_.append(po->value);
             i++;
 
             QString versions;
             if (i < parsed.size()) {
                 po = parsed.at(i);
-                if (po->opt->name == "versions") {
+                if (po->opt && po->opt->name == "versions") {
                     versions = po->value;
                     i++;
                 }
             }
             versions_.append(versions);
-        } else if (po->opt->name == "versions") {
+        } else if (po->opt && po->opt->name == "versions") {
             job->setErrorMessage("Missing option: --versions without --package");
             break;
         } else {

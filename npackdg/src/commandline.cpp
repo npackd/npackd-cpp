@@ -4,7 +4,7 @@
 
 #include "commandline.h"
 
-bool CommandLine::Option::nameMathes(const QString& name)
+bool CommandLine::Option::nameMatches(const QString& name)
 {
     bool r;
     if (name.length() == 1 && name.at(0) == name2) {
@@ -113,7 +113,10 @@ QString CommandLine::processOneParam(QStringList* params)
                 }
             }
         } else {
-            this->freeArguments.append(p);
+            ParsedOption* po = new ParsedOption();
+            po->opt = nullptr;
+            this->parsedOptions.append(po);
+            po->value = params->at(0);
             params->removeAt(0);
         }
     }
@@ -126,7 +129,7 @@ CommandLine::Option* CommandLine::findOption(const QString& name)
     Option* r = nullptr;
     for (int i = 0; i < this->options.count(); i++) {
         Option* opt = this->options.at(i);
-        if (opt->nameMathes(name)) {
+        if (opt->nameMatches(name)) {
             r = opt;
             break;
         }
@@ -230,7 +233,7 @@ bool CommandLine::isPresent(const QString& name)
     bool r = false;
     for (int i = 0; i < this->parsedOptions.count(); i++) {
         ParsedOption* po = this->parsedOptions.at(i);
-        if (po->opt->nameMathes(name)) {
+        if (po->opt && po->opt->nameMatches(name)) {
             r = true;
             break;
         }
@@ -243,17 +246,12 @@ QString CommandLine::get(const QString& name) const
     QString r;
     for (int i = 0; i < this->parsedOptions.count(); i++) {
         ParsedOption* po = this->parsedOptions.at(i);
-        if (po->opt->nameMathes(name)) {
+        if (po->opt && po->opt->nameMatches(name)) {
             r = po->value;
             break;
         }
     }
     return r;
-}
-
-QStringList CommandLine::getFreeArguments()
-{
-    return this->freeArguments;
 }
 
 QList<CommandLine::ParsedOption *> CommandLine::getParsedOptions() const
@@ -263,7 +261,7 @@ QList<CommandLine::ParsedOption *> CommandLine::getParsedOptions() const
 
 bool CommandLine::argumentsAvailable() const
 {
-    return (this->freeArguments.count() + this->parsedOptions.size()) > 0;
+    return this->parsedOptions.size() > 0;
 }
 
 QStringList CommandLine::getAll(const QString& name) const
@@ -271,7 +269,7 @@ QStringList CommandLine::getAll(const QString& name) const
     QStringList r;
     for (int i = 0; i < this->parsedOptions.count(); i++) {
         ParsedOption* po = this->parsedOptions.at(i);
-        if (po->opt->nameMathes(name)) {
+        if (po->opt && po->opt->nameMatches(name)) {
             r.append(po->value);
         }
     }

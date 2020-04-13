@@ -46,7 +46,7 @@ public:
          * @param name short or long name for an option
          * @return true if this option matches the specified name
          */
-        bool nameMathes(const QString& name);
+        bool nameMatches(const QString& name);
     };
 
     /**
@@ -54,7 +54,7 @@ public:
      */
     class ParsedOption {
     public:
-        /** pointer to the found option */
+        /** pointer to the found option or 0 for "free arguments" */
         Option* opt;
 
         /** parsed option value */
@@ -63,7 +63,6 @@ public:
 private:
     QList<Option*> options;
     QList<ParsedOption*> parsedOptions;
-    QStringList freeArguments;
 
     Option* findOption(const QString& name);
     QString processOneParam(QStringList* params);
@@ -127,11 +126,6 @@ public:
      * @return values of the option or an empty list if not present
      */
     QStringList getAll(const QString& name) const;
-
-    /**
-     * @return "free" arguments (those without options)
-     */
-    QStringList getFreeArguments();
 
     /**
      * @return parsed options

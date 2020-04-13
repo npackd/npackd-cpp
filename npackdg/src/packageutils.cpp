@@ -60,7 +60,7 @@ QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
             break;
 
         CommandLine::ParsedOption* po = pos.at(i);
-        if (po->opt->nameMathes("package")) {
+        if (po->opt && po->opt->nameMatches("package")) {
             CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
@@ -82,11 +82,11 @@ QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
             PackageVersion* pv = nullptr;
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != nullptr && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("version"))
                     version = ponext->value;
 
                 QString versions;
-                if (ponext != nullptr && ponext->opt->nameMathes("versions"))
+                if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("versions"))
                     versions = ponext->value;
 
                 if (!versions.isNull()) {
@@ -172,7 +172,7 @@ QList<Dependency *> PackageUtils::getPackageVersionOptions(const CommandLine &cl
             break;
 
         CommandLine::ParsedOption* po = pos.at(i);
-        if (po->opt->nameMathes("package")) {
+        if (po->opt && po->opt->nameMatches("package")) {
             CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
@@ -193,11 +193,11 @@ QList<Dependency *> PackageUtils::getPackageVersionOptions(const CommandLine &cl
 
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != nullptr && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("version"))
                     version = ponext->value;
 
                 QString versions;
-                if (ponext != nullptr && ponext->opt->nameMathes("versions"))
+                if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("versions"))
                     versions = ponext->value;
 
                 Dependency* dep = nullptr;

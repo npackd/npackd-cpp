@@ -141,28 +141,30 @@ int App::process()
 
     int r = 0;
 
-    QStringList fr = cl.getFreeArguments();
+    QList<CommandLine::ParsedOption*> options = cl.getParsedOptions();
 
-    if (fr.count() == 0) {
+    QString cmd;
+    if (options.size() > 0 && options.at(0)->opt == nullptr) {
+        cmd = options.at(0)->value;
+    }
+
+    if (options.count() == 0) {
         help();
-    } else if (fr.count() > 1) {
-        WPMUtils::writeln("Unexpected argument: " + fr.at(1), false);
-        r = 1;
-    } else if (fr.at(0) == "help") {
+    } else if (cmd.isEmpty() || cmd == "help") {
         help();
-    } else if (fr.at(0) == "add-path") {
+    } else if (cmd == "add-path") {
         r = addPath();
-    } else if (fr.at(0) == "remove-path") {
+    } else if (cmd == "remove-path") {
         r = removePath();
-    } else if (fr.at(0) == "list-msi") {
+    } else if (cmd == "list-msi") {
         r = listMSI();
-    } else if (fr.at(0) == "get-product-code") {
+    } else if (cmd == "get-product-code") {
         r = getProductCode();
-    } else if (fr.at(0) == "wait") {
+    } else if (cmd == "wait") {
         r = wait();
 //    } else if (fr.at(0) == "remove" || fr.at(0) == "rm") {
 //        r = remove();
-    } else if (fr.at(0) == "unwrap-dir") {
+    } else if (cmd == "unwrap-dir") {
         Job* job = new Job();
         unwrapDir(job);
         if (!job->getErrorMessage().isEmpty()) {
@@ -170,9 +172,8 @@ int App::process()
             WPMUtils::writeln(job->getErrorMessage() + "\n", false);
         }
         delete job;
-
     } else {
-        WPMUtils::writeln("Wrong command: " + fr.at(0), false);
+        WPMUtils::writeln("Wrong command: " + cmd, false);
         r = 1;
     }
 

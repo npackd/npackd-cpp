@@ -620,22 +620,25 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
     }
     */
 
-    QStringList fr = cl.getFreeArguments();
+    QList<CommandLine::ParsedOption*> options = cl.getParsedOptions();
+
+    QString cmd;
+    if (options.size() > 0 && options.at(0)->opt == nullptr) {
+        cmd = options.at(0)->value;
+    }
 
     if (!commandLineParsingError.isEmpty()) {
         QString msg = QObject::tr("Error parsing the command line: %1").
                 arg(commandLineParsingError);
         QMessageBox::critical(nullptr, QObject::tr("Error"), msg);
         *errorCode = 1;
-    } else if (fr.count() == 0) {
+    } else if (options.count() == 0) {
         MainWindow w;
 
         w.prepare();
         w.show();
         *errorCode = QApplication::exec();
-    } else if (fr.count() == 1) {
-        QString cmd = fr.at(0);
-
+    } else if (!cmd.isEmpty()) {
         QString err;
         if (cmd == "help") {
             usage();
@@ -680,7 +683,7 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
         }
     } else {
         QString err = QObject::tr("Unexpected argument: %1").
-                arg(fr.at(1));
+                arg(options.at(0)->opt->name);
         QMessageBox::critical(nullptr, QObject::tr("Error"), err);
         *errorCode = 1;
     }

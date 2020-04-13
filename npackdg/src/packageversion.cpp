@@ -862,7 +862,7 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
             break;
 
         CommandLine::ParsedOption* po = pos.at(i);
-        if (po->opt->nameMathes("package")) {
+        if (po->opt && po->opt->nameMatches("package")) {
             CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
@@ -884,7 +884,7 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
             PackageVersion* pv = nullptr;
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != nullptr && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("version"))
                     version = ponext->value;
                 if (version.isNull()) {
                     QList<InstalledPackageVersion*> ipvs =
@@ -959,7 +959,7 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
             break;
 
         CommandLine::ParsedOption* po = pos.at(i);
-        if (po->opt->nameMathes("package")) {
+        if (po->opt && po->opt->nameMatches("package")) {
             CommandLine::ParsedOption* ponext = nullptr;
             if (i + 1 < pos.size())
                 ponext = pos.at(i + 1);
@@ -981,11 +981,11 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
             InstalledPackageVersion* ipv = nullptr;
             if (err->isEmpty()) {
                 QString version;
-                if (ponext != nullptr && ponext->opt->nameMathes("version"))
+                if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("version"))
                     version = ponext->value;
 
                 QString versions;
-                if (ponext != nullptr && ponext->opt->nameMathes("versions"))
+                if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("versions"))
                     versions = ponext->value;
 
                 if (!versions.isNull()) {
