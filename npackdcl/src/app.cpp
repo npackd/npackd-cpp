@@ -1313,12 +1313,6 @@ void App::update(Job* job)
     job->setTitle("Updating packages");
 
     if (job->shouldProceed()) {
-        QString err = DBRepository::getDefault()->openDefault();
-        if (!err.isEmpty())
-            job->setErrorMessage(err);
-    }
-
-    if (job->shouldProceed()) {
         QString err = InstalledPackages::getDefault()->readRegistryDatabase();
         if (!err.isEmpty()) {
             job->setErrorMessage(err);
@@ -1343,12 +1337,11 @@ void App::update(Job* job)
         }
     }
 
-    DBRepository* dbr = DBRepository::getDefault();
     QTemporaryFile tempFile;
 
     if (job->shouldProceed()) {
         if (urls_.count() == 0) {
-            QString err = dbr->openDefault();
+            QString err = rep->openDefault();
             if (!err.isEmpty())
                 job->setErrorMessage(err);
             else
@@ -1379,7 +1372,7 @@ void App::update(Job* job)
             }
 
             if (job->shouldProceed()) {
-                QString err = dbr->open(QStringLiteral("tempdb"),
+                QString err = rep->open(QStringLiteral("tempdb"),
                         tempFile.fileName());
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);
@@ -1389,7 +1382,7 @@ void App::update(Job* job)
             if (job->shouldProceed()) {
                 Job* sub = job->newSubJob(0.10,
                         QObject::tr("Updating the temporary database"), true, true);
-                dbr->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true, false);
+                rep->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true, false);
             }
 
             qDeleteAll(urls);
@@ -1421,6 +1414,43 @@ void App::update(Job* job)
             break;
         } else {
             i++;
+        }
+    }
+
+    // process regular expressions for --package
+    if (job->shouldProceed()) {
+        for (int i = 0; i < packages_.size(); i++) {
+            QString packageName = packages_.at(i);
+            if (packageName.startsWith('/')) {
+                packageName = packageName.mid(1);
+
+                Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+                if (packageName.endsWith('/')) {
+                    packageName = packageName.left(packageName.length() - 1);
+                    cs = Qt::CaseSensitive;
+                } else if (packageName.endsWith("/i")) {
+                    packageName = packageName.left(packageName.length() - 2);
+                    cs = Qt::CaseInsensitive;
+                } else {
+                    job->setErrorMessage("Invalid regular expression: " +
+                            packages_.at(i));
+                }
+
+                if (job->shouldProceed()) {
+                    qCDebug(npackd) << "regular expression" << packageName;
+
+                    packages_.removeAt(i);
+                    QString vs = versions_.takeAt(i);
+
+                    QRegExp re(packageName, cs);
+                    for (QString pn: InstalledPackages::getDefault()->getPackages()) {
+                        if (re.indexIn(pn) >= 0) {
+                            packages_.insert(i, pn);
+                            versions_.insert(i, vs);
+                        }
+                    }
+                }
+            }
         }
     }
 

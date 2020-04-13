@@ -1743,7 +1743,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>No installable version found for the package %1</source>
-        <translation>No se encontró una versión instalable para el paquete %1</translation>
+        <translation type="vanished">No se encontró una versión instalable para el paquete %1</translation>
     </message>
     <message>
         <source>Cannot find the newest installed version for %1: %2</source>

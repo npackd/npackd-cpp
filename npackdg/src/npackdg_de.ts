@@ -844,7 +844,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>No installable version found for the package %1</source>
-        <translation>Keine installierbare Version des Pakets %1 gefunden</translation>
+        <translation type="vanished">Keine installierbare Version des Pakets %1 gefunden</translation>
     </message>
     <message>
         <source>Cannot find the newest installed version for %1: %2</source>

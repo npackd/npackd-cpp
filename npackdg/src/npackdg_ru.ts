@@ -1775,7 +1775,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>No installable version found for the package %1</source>
-        <translation>Ниодной версии для установки не обнаружено для пакета %1</translation>
+        <translation type="vanished">Ниодной версии для установки не обнаружено для пакета %1</translation>
     </message>
     <message>
         <source>Cannot find the newest installed version for %1: %2</source>

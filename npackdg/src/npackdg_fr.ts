@@ -1695,7 +1695,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>No installable version found for the package %1</source>
-        <translation>Il ný a pas de version installable trouvée pour le paquet %1</translation>
+        <translation type="vanished">Il ný a pas de version installable trouvée pour le paquet %1</translation>
     </message>
     <message>
         <source>Cannot find the newest installed version for %1: %2</source>

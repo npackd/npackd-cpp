@@ -674,10 +674,9 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             if (!err.isEmpty())
                 break;
 
+            // packages that cannot be installed are ignored
             if (a == nullptr) {
-                err = QString(QObject::tr("No installable version found for the package %1")).
-                        arg(p->title);
-                break;
+                continue;
             }
 
             InstalledPackageVersion* ib = installed.getNewestInstalled(p->name);
@@ -730,10 +729,9 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             if (!err.isEmpty())
                 break;
 
+            // packages that cannot be installed are ignored
             if (a == nullptr) {
-                err = QString(QObject::tr("No installable version found for the package %1")).
-                        arg(p->title);
-                break;
+                continue;
             }
 
             InstalledPackageVersion* ipv = installed.findHighestInstalledMatch(*d);
