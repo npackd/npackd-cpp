@@ -5,7 +5,10 @@
 // need because it includes almost all "standard" wxWidgets headers)
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
+    #include "wx/aui/aui.h"
 #endif
+
+const wxWindowID NotebookID = wxID_HIGHEST + 1;
 
 // Define a new application type, each program should derive a class from wxApp
 class MyApp : public wxApp {
@@ -107,11 +110,37 @@ MyFrame::MyFrame(const wxString& title)
     // ... and attach this menu bar to the frame
     SetMenuBar(menuBar);
 
-#if wxUSE_STATUSBAR
     // create a status bar just for fun (by default with 1 pane only)
-    CreateStatusBar(2);
-    SetStatusText("Welcome to wxWidgets!");
-#endif // wxUSE_STATUSBAR
+    CreateStatusBar(1);
+
+    // Create a top-level panel to hold all the contents of the frame
+       wxPanel* panel = new wxPanel(this, wxID_ANY);
+
+   // Create the wxAuiNotebook widget
+   wxAuiNotebook* auiNotebook = new wxAuiNotebook(panel, NotebookID,
+       wxDefaultPosition, wxSize(150, 200));
+
+   // Add 2 pages to the wxNotebook widget
+   wxTextCtrl* textCtrl1 = new wxTextCtrl(auiNotebook, wxID_ANY, L"Tab 1 Contents");
+   auiNotebook->AddPage(textCtrl1, L"Tab 1");
+   wxTextCtrl* textCtrl2 = new wxTextCtrl(auiNotebook, wxID_ANY, L"Tab 2 Contents");
+   auiNotebook->AddPage(textCtrl2, L"Tab 2");
+
+   // Create the right-hand side panel, it's simply a textbox
+   wxTextCtrl* m_mainContents = new wxTextCtrl(panel, wxID_ANY, L"Main Contents Area");
+
+   // Set up the sizer for the panel
+   wxBoxSizer* panelSizer = new wxBoxSizer(wxHORIZONTAL);
+   panelSizer->Add(auiNotebook, 0, wxEXPAND);
+   panelSizer->Add(m_mainContents, 1, wxEXPAND);
+   panel->SetSizer(panelSizer);
+
+   // Set up the sizer for the frame and resize the frame
+   // according to its contents
+   wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
+   topSizer->SetMinSize(400, 200);
+   topSizer->Add(panel, 1, wxEXPAND);
+   SetSizerAndFit(topSizer);
 }
 
 
