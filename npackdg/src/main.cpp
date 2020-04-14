@@ -1,27 +1,5 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        minimal.cpp
-// Purpose:     Minimal wxWidgets sample
-// Author:      Julian Smart
-// Modified by:
-// Created:     04/01/98
-// Copyright:   (c) Julian Smart
-// Licence:     wxWindows licence
-/////////////////////////////////////////////////////////////////////////////
-
-// ============================================================================
-// declarations
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// headers
-// ----------------------------------------------------------------------------
-
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-    #pragma hdrstop
-#endif
 
 // for all others, include the necessary headers (this file is usually all you
 // need because it includes almost all "standard" wxWidgets headers)
@@ -29,23 +7,8 @@
     #include "wx/wx.h"
 #endif
 
-// ----------------------------------------------------------------------------
-// resources
-// ----------------------------------------------------------------------------
-
-// the application icon (under Windows it is in resources and even
-// though we could still include the XPM here it would be unused)
-#ifndef wxHAS_IMAGES_IN_RESOURCES
-    #include "../sample.xpm"
-#endif
-
-// ----------------------------------------------------------------------------
-// private classes
-// ----------------------------------------------------------------------------
-
 // Define a new application type, each program should derive a class from wxApp
-class MyApp : public wxApp
-{
+class MyApp : public wxApp {
 public:
     // override base class virtuals
     // ----------------------------
@@ -72,10 +35,6 @@ private:
     wxDECLARE_EVENT_TABLE();
 };
 
-// ----------------------------------------------------------------------------
-// constants
-// ----------------------------------------------------------------------------
-
 // IDs for the controls and the menu commands
 enum
 {
@@ -87,10 +46,6 @@ enum
     // (where it is special and put into the "Apple" menu)
     Minimal_About = wxID_ABOUT
 };
-
-// ----------------------------------------------------------------------------
-// event tables and other macros for wxWidgets
-// ----------------------------------------------------------------------------
 
 // the event tables connect the wxWidgets events with the functions (event
 // handlers) which process them. It can be also done at run-time, but for the
@@ -106,14 +61,6 @@ wxEND_EVENT_TABLE()
 // wxGetApp() which will return the reference of the right type (i.e. MyApp and
 // not wxApp)
 wxIMPLEMENT_APP(MyApp);
-
-// ============================================================================
-// implementation
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// the application class
-// ----------------------------------------------------------------------------
 
 // 'Main program' equivalent: the program execution "starts" here
 bool MyApp::OnInit()
@@ -136,10 +83,6 @@ bool MyApp::OnInit()
     return true;
 }
 
-// ----------------------------------------------------------------------------
-// main frame
-// ----------------------------------------------------------------------------
-
 // frame constructor
 MyFrame::MyFrame(const wxString& title)
        : wxFrame(NULL, wxID_ANY, title)
@@ -147,7 +90,6 @@ MyFrame::MyFrame(const wxString& title)
     // set the frame icon
     SetIcon(wxICON(sample));
 
-#if wxUSE_MENUS
     // create a menu bar
     wxMenu *fileMenu = new wxMenu;
 
@@ -164,14 +106,6 @@ MyFrame::MyFrame(const wxString& title)
 
     // ... and attach this menu bar to the frame
     SetMenuBar(menuBar);
-#else // !wxUSE_MENUS
-    // If menus are not available add a button to access the about box
-    wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    wxButton* aboutBtn = new wxButton(this, wxID_ANY, "About...");
-    aboutBtn->Bind(wxEVT_BUTTON, &MyFrame::OnAbout, this);
-    sizer->Add(aboutBtn, wxSizerFlags().Center());
-    SetSizer(sizer);
-#endif // wxUSE_MENUS/!wxUSE_MENUS
 
 #if wxUSE_STATUSBAR
     // create a status bar just for fun (by default with 1 pane only)

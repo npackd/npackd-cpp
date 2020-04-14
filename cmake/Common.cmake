@@ -131,9 +131,6 @@ if(NOT APPLE)
   set(CMAKE_DEBUG_POSTFIX "d")
 endif()
 
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTOUIC ON)
-#set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD
