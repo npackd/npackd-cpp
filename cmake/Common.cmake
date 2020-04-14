@@ -11,6 +11,10 @@ endif()
 # compiler warnings
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCC)
   set(NPACKD_WARNING_FLAGS "-Wall -Winit-self -Wwrite-strings -Wextra -Wno-long-long -Wno-overloaded-virtual -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unknown-pragmas -Wno-cast-function-type")
+
+  # wxWidgets generates too many warnings otherwise
+  set(NPACKD_WARNING_FLAGS "${NPACKD_WARNING_FLAGS} -Wno-deprecated-copy -Wno-ignored-qualifiers -Wno-deprecated-declarations")
+
   if(EMSCRIPTEN)
     set(NPACKD_WARNING_FLAGS "${NPACKD_WARNING_FLAGS} -Wno-warn-absolute-paths")
   elseif(NOT APPLE)
@@ -127,9 +131,9 @@ if(NOT APPLE)
   set(CMAKE_DEBUG_POSTFIX "d")
 endif()
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
+#set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTOUIC ON)
+#set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # build should fail when compiler don't support standard defined by CMAKE_CXX_STANDARD
