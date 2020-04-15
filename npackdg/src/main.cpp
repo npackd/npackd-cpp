@@ -6,6 +6,7 @@
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
     #include "wx/aui/aui.h"
+    #include "wx/grid.h"
 #endif
 
 const wxWindowID NotebookID = wxID_HIGHEST + 1;
@@ -36,6 +37,7 @@ public:
 private:
     // any class wishing to process wxWidgets events must use this macro
     wxDECLARE_EVENT_TABLE();
+    wxGrid *createGrid();
 };
 
 // IDs for the controls and the menu commands
@@ -114,37 +116,61 @@ MyFrame::MyFrame(const wxString& title)
     CreateStatusBar(1);
 
     // Create a top-level panel to hold all the contents of the frame
-       wxPanel* panel = new wxPanel(this, wxID_ANY);
+    wxPanel* content = new wxPanel(this, wxID_ANY);
 
-   // Create the wxAuiNotebook widget
-   wxAuiNotebook* auiNotebook = new wxAuiNotebook(panel, NotebookID,
-       wxDefaultPosition, wxSize(150, 200));
+    // Create the wxAuiNotebook widget
+    wxAuiNotebook* auiNotebook = new wxAuiNotebook(content, NotebookID,
+            wxDefaultPosition, wxSize(150, 200));
 
-   // Add 2 pages to the wxNotebook widget
-   wxTextCtrl* textCtrl1 = new wxTextCtrl(auiNotebook, wxID_ANY, L"Tab 1 Contents");
-   auiNotebook->AddPage(textCtrl1, L"Tab 1");
-   wxTextCtrl* textCtrl2 = new wxTextCtrl(auiNotebook, wxID_ANY, L"Tab 2 Contents");
-   auiNotebook->AddPage(textCtrl2, L"Tab 2");
+    // Add 2 pages to the wxNotebook widget
+    auiNotebook->AddPage(createGrid(), L"Tab 1");
+    wxTextCtrl* textCtrl2 = new wxTextCtrl(auiNotebook, wxID_ANY, L"Tab 2 Contents");
+    auiNotebook->AddPage(textCtrl2, L"Tab 2");
 
-   // Create the right-hand side panel, it's simply a textbox
-   wxTextCtrl* m_mainContents = new wxTextCtrl(panel, wxID_ANY, L"Main Contents Area");
+    // Set up the sizer for the panel
+    wxBoxSizer* panelSizer = new wxBoxSizer(wxHORIZONTAL);
+    panelSizer->Add(auiNotebook, 1, wxEXPAND);
+    content->SetSizer(panelSizer);
 
-   // Set up the sizer for the panel
-   wxBoxSizer* panelSizer = new wxBoxSizer(wxHORIZONTAL);
-   panelSizer->Add(auiNotebook, 0, wxEXPAND);
-   panelSizer->Add(m_mainContents, 1, wxEXPAND);
-   panel->SetSizer(panelSizer);
-
-   // Set up the sizer for the frame and resize the frame
-   // according to its contents
-   wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
-   topSizer->SetMinSize(400, 200);
-   topSizer->Add(panel, 1, wxEXPAND);
-   SetSizerAndFit(topSizer);
+    // Set up the sizer for the frame and resize the frame
+    // according to its contents
+    wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
+    topSizer->SetMinSize(400, 200);
+    topSizer->Add(content, 1, wxEXPAND);
+    SetSizerAndFit(topSizer);
 }
 
-
-// event handlers
+wxGrid* MyFrame::createGrid()
+{
+    // Create a wxGrid object
+    wxGrid* grid = new wxGrid( this,
+                        -1,
+                        wxPoint( 0, 0 ),
+                        wxSize( 400, 300 ) );
+    // Then we call CreateGrid to set the dimensions of the grid
+    // (100 rows and 10 columns in this example)
+    grid->CreateGrid( 100, 10 );
+    // We can set the sizes of individual rows and columns
+    // in pixels
+    grid->SetRowSize( 0, 60 );
+    grid->SetColSize( 0, 120 );
+    // And set grid cell contents as strings
+    grid->SetCellValue( 0, 0, "wxGrid is good" );
+    // We can specify that some cells are read->only
+    grid->SetCellValue( 0, 3, "This is read->only" );
+    grid->SetReadOnly( 0, 3 );
+    // Colours can be specified for grid cell contents
+    grid->SetCellValue(3, 3, "green on grey");
+    grid->SetCellTextColour(3, 3, *wxGREEN);
+    grid->SetCellBackgroundColour(3, 3, *wxLIGHT_GREY);
+    // We can specify the some cells will store numeric
+    // values rather than strings. Here we set grid column 5
+    // to hold floating point values displayed with width of 6
+    // and precision of 2
+    grid->SetColFormatFloat(5, 6, 2);
+    grid->SetCellValue(0, 6, "3.1415");
+    return grid;
+}
 
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {

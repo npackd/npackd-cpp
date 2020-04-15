@@ -188,6 +188,7 @@ target_include_directories(npackdg PRIVATE "C:/msys64/mingw64/lib/wx/include/msw
 
 target_link_libraries(npackdg
     wx_mswu_aui-3.0
+    wx_mswu_adv-3.0
     wx_mswu_core-3.0
     wx_baseu-3.0
     comctl32
