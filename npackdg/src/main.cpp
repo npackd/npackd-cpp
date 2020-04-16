@@ -7,6 +7,7 @@
     #include "wx/wx.h"
     #include "wx/aui/aui.h"
     #include "wx/grid.h"
+    #include "wx/intl.h"
 #endif
 
 const wxWindowID NotebookID = wxID_HIGHEST + 1;
@@ -35,9 +36,13 @@ public:
     void OnAbout(wxCommandEvent& event);
 
 private:
+    wxAuiNotebook* auiNotebook;
+
     // any class wishing to process wxWidgets events must use this macro
     wxDECLARE_EVENT_TABLE();
+
     wxGrid *createGrid();
+    void addTextTab(const wxString &title, const wxString &text);
 };
 
 // IDs for the controls and the menu commands
@@ -75,6 +80,63 @@ bool MyApp::OnInit()
     if ( !wxApp::OnInit() )
         return false;
 
+    // todo qInstallMessageHandler(eventLogMessageHandler);
+
+        HMODULE m = LoadLibrary(L"exchndl.dll");
+/* todo
+        QLoggingCategory::setFilterRules("npackd=true\nnpackd.debug=false");
+
+    #if NPACKD_ADMIN != 1
+        WPMUtils::hasAdminPrivileges();
+    #endif
+
+        QString packageName;
+    #if !defined(__x86_64__) && !defined(_WIN64)
+        packageName = "com.googlecode.windows-package-manager.Npackd";
+    #else
+        packageName = "com.googlecode.windows-package-manager.Npackd64";
+    #endif
+        InstalledPackages::packageName = packageName;
+
+        qRegisterMetaType<Version>("Version");
+        qRegisterMetaType<int64_t>("int64_t");
+        qRegisterMetaType<QMessageBox::Icon>("QMessageBox::Icon");
+
+    #if !defined(__x86_64__) && !defined(_WIN64)
+        if (WPMUtils::is64BitWindows()) {
+            QMessageBox::critical(0, "Error",
+                    QObject::tr("The 32 bit version of Npackd requires a 32 bit operating system.") + "\r\n" +
+                    QObject::tr("Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads"));
+            return 1;
+        }
+    #endif
+
+
+        // July, 25 2018:
+        // "bmp", "cur", "gif", "ico", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "xbm", "xpm"
+        // December, 25 2018:
+        // "bmp", "cur", "gif", "icns", "ico", "jp2", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "tga", "tif", "tiff", "wbmp", "webp", "xbm", "xpm"
+        // July, 27 2019:
+        // "bmp", "cur", "gif", "icns", "ico", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "tga", "tif", "tiff", "wbmp", "webp", "xbm", "xpm"
+        qCDebug(npackd) << QImageReader::supportedImageFormats();
+
+        // July, 25 2018: "windowsvista", "Windows", "Fusion"
+        qCDebug(npackd) << QStyleFactory::keys();
+
+        CLProcessor clp;
+
+        int errorCode;
+        clp.process(argc, argv, &errorCode);
+
+        //WPMUtils::timer.dump();
+
+        FreeLibrary(m);
+
+        return errorCode;
+    }
+
+     */
+
     // create the main application window
     MyFrame *frame = new MyFrame("Minimal wxWidgets App");
 
@@ -92,6 +154,8 @@ bool MyApp::OnInit()
 MyFrame::MyFrame(const wxString& title)
        : wxFrame(NULL, wxID_ANY, title)
 {
+    wxImage::AddHandler(new wxPNGHandler);
+
     // set the frame icon
     SetIcon(wxICON(IDI_ICON1));
 
@@ -118,14 +182,23 @@ MyFrame::MyFrame(const wxString& title)
     // Create a top-level panel to hold all the contents of the frame
     wxPanel* content = new wxPanel(this, wxID_ANY);
 
+    wxToolBar *toolbar = CreateToolBar(wxTB_FLAT | wxTB_DOCKABLE | wxTB_HORIZONTAL | wxTB_TEXT);
+
+    wxBitmap exit("UNINSTALL_PNG", wxBITMAP_TYPE_PNG_RESOURCE);
+
+    toolbar->AddTool(wxID_EXIT, _("Exit application"), exit);
+    toolbar->Realize();
+
     // Create the wxAuiNotebook widget
-    wxAuiNotebook* auiNotebook = new wxAuiNotebook(content, NotebookID,
-            wxDefaultPosition, wxSize(150, 200));
+    auiNotebook = new wxAuiNotebook(content, NotebookID,
+            wxDefaultPosition, wxSize(150, 200),
+            wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE |
+            wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_CLOSE_ON_ALL_TABS |
+            wxAUI_NB_MIDDLE_CLICK_CLOSE);
 
     // Add 2 pages to the wxNotebook widget
-    auiNotebook->AddPage(createGrid(), L"Tab 1");
-    wxTextCtrl* textCtrl2 = new wxTextCtrl(auiNotebook, wxID_ANY, L"Tab 2 Contents");
-    auiNotebook->AddPage(textCtrl2, L"Tab 2");
+    auiNotebook->AddPage(createGrid(), _("Packages"));
+    addTextTab(_("Jobs"), "Contents");
 
     // Set up the sizer for the panel
     wxBoxSizer* panelSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -138,6 +211,13 @@ MyFrame::MyFrame(const wxString& title)
     topSizer->SetMinSize(400, 200);
     topSizer->Add(content, 1, wxEXPAND);
     SetSizerAndFit(topSizer);
+}
+
+void MyFrame::addTextTab(const wxString& title, const wxString& text)
+{
+    wxTextCtrl* textCtrl2 = new wxTextCtrl(auiNotebook, wxID_ANY, text, wxDefaultPosition, wxDefaultSize,
+            wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH2 | wxTE_AUTO_URL);
+    auiNotebook->AddPage(textCtrl2, title, true);
 }
 
 wxGrid* MyFrame::createGrid()
@@ -172,14 +252,15 @@ wxGrid* MyFrame::createGrid()
     return grid;
 }
 
-void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+void MyFrame::OnQuit(wxCommandEvent& /* event */)
 {
     // true is to force the frame to close
     Close(true);
 }
 
-void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
+void MyFrame::OnAbout(wxCommandEvent& /* event */)
 {
+    /*
     wxMessageBox(wxString::Format
                  (
                     "Welcome to %s!\n"
@@ -192,4 +273,20 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
                  "About wxWidgets minimal sample",
                  wxOK | wxICON_INFORMATION,
                  this);
+                 */
+    addTextTab(_("About"), _("<html><body>Npackd %1 - "
+                   "software package manager for Windows (R)"
+                   "<ul>"
+                   "<li><a href='https://www.npackd.org/'>Home page (https://www.npackd.org)</a></li>"
+                   "<li><a href='https://github.com/tim-lebedkov/npackd/wiki/ChangeLog'>Changelog</a></li>"
+                   "<li><a href='https://github.com/tim-lebedkov/npackd/wiki'>Documentation</a></li>"
+                   "<li>Author: <a href='https://github.com/tim-lebedkov'>Tim Lebedkov</a></li>"
+                   "</ul>"
+                   "Contributors:"
+                   "<ul>"
+                   "<li><a href='https://github.com/OgreTransporter'>OgreTransporter</a>: Visual C++ support, CMake integration, group policy configuration, non-admin installations</li>"
+                   "</ul>"
+                   "</body></html>"));
+                    // TODO                   arg(NPACKD_VERSION)); + HTML
 }
+
