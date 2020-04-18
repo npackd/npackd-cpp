@@ -1,3 +1,5 @@
+#include <vector>
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
@@ -24,6 +26,24 @@ public:
     virtual bool OnInit() override;
 };
 
+/**
+ * @brief a GUI action
+ */
+class Action {
+public:
+    /** wxWidgets event ID */
+    int id;
+
+    /** title and accelerator separated by \t */
+    wxString title;
+
+    /** hint */
+    wxString hint;
+
+    Action(int id, const wxString& title, const wxString& hint) : id(id), title(title), hint(hint) {
+    }
+};
+
 // Define a new frame type: this is going to be our main frame
 class MyFrame : public wxFrame
 {
@@ -38,11 +58,16 @@ public:
 private:
     wxAuiNotebook* auiNotebook;
 
+    std::vector<Action> actions;
+
     // any class wishing to process wxWidgets events must use this macro
     wxDECLARE_EVENT_TABLE();
 
     wxGrid *createGrid();
+
     void addTextTab(const wxString &title, const wxString &text);
+
+
 };
 
 // IDs for the controls and the menu commands
@@ -54,13 +79,25 @@ enum
     // it is important for the id corresponding to the "About" command to have
     // this standard value as otherwise it won't be handled properly under Mac
     // (where it is special and put into the "Apple" menu)
-    Minimal_About = wxID_ABOUT
+    Minimal_About = wxID_ABOUT,
+
+    /** install packages */
+    ID_Install = wxID_HIGHEST + 1,
+
+    /** uninstall packages */
+    ID_Uninstall,
+
+    /** update packages */
+    ID_Update,
 };
 
 // the event tables connect the wxWidgets events with the functions (event
 // handlers) which process them. It can be also done at run-time, but for the
 // simple menu events like this the static method is much simpler.
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
+    EVT_MENU(ID_Install,  MyFrame::OnQuit)
+    EVT_MENU(ID_Uninstall,  MyFrame::OnQuit)
+    EVT_MENU(ID_Update,  MyFrame::OnQuit)
     EVT_MENU(Minimal_Quit,  MyFrame::OnQuit)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
 wxEND_EVENT_TABLE()
@@ -159,14 +196,23 @@ MyFrame::MyFrame(const wxString& title)
     // set the frame icon
     SetIcon(wxICON(IDI_ICON1));
 
+    actions.push_back(Action(Minimal_Quit, _("&Exit"), _("Exits the application")));
+    actions.push_back(Action(ID_Install, _("&Install\tCTRL+I"),
+            _("Installs the selected version of a package or the newest is none is selected")));
+    actions.push_back(Action(ID_Uninstall, _("U&ninstall\tCTRL+N"),
+            _("Uninstalls the currently selected version of a package or the newest if none is selected")));
+
     // create a menu bar
     wxMenu *fileMenu = new wxMenu;
+
+    fileMenu->Append(ID_Install, "Install", "Exits the application");
+    fileMenu->Append(ID_Uninstall, "Uninstall", "Exits the application");
+    fileMenu->Append(ID_Update, "Update", "Exits the application");
+    fileMenu->Append(Minimal_Quit, "&Exit", "Exits the application");
 
     // the "About" item should be in the help menu
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(Minimal_About, "About\tF1", "About the program");
-
-    fileMenu->Append(Minimal_Quit, "&Exit", "Exits the application");
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -184,9 +230,13 @@ MyFrame::MyFrame(const wxString& title)
 
     wxToolBar *toolbar = CreateToolBar(wxTB_FLAT | wxTB_DOCKABLE | wxTB_HORIZONTAL | wxTB_TEXT);
 
-    wxBitmap exit("UNINSTALL_PNG", wxBITMAP_TYPE_PNG_RESOURCE);
+    toolbar->AddTool(ID_Install, _("Install"),
+            wxBitmap("INSTALL_PNG", wxBITMAP_TYPE_PNG_RESOURCE));
+    toolbar->AddTool(ID_Uninstall, _("Uninstall"),
+            wxBitmap("UNINSTALL_PNG", wxBITMAP_TYPE_PNG_RESOURCE));
+    toolbar->AddTool(ID_Update, _("Update"),
+            wxBitmap("UPDATE_PNG", wxBITMAP_TYPE_PNG_RESOURCE));
 
-    toolbar->AddTool(wxID_EXIT, _("Exit application"), exit);
     toolbar->Realize();
 
     // Create the wxAuiNotebook widget
