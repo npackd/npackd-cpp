@@ -97,7 +97,7 @@ int App::process()
             "internal package name (e.g. com.example.Editor or just Editor)",
             "package", true, "add,info,path,place,remove,update,rm,build");
     cl.add("query", 'q', "search terms (e.g. editor)",
-            "search terms", false, "search");
+            "search terms", false, "search,update");
     cl.add("versions", 'r', "versions range (e.g. [1.5,2))",
             "range", true, "add,path,update");
 
@@ -384,6 +384,7 @@ void App::usage(Job* job)
         "        default directory for program files is used if the --file",
         "        parameter is missing.",
         "    ncl update (--package <package> [--versions <versions>])+",
+        "            [--query <search terms>]",
         "            [--end-process <types>]",
         "            [--install] [--keep-directories]",
         "            [--file <installation directory>]",
@@ -1324,9 +1325,9 @@ void App::update(Job* job)
     QStringList urls_ = cl.getAll("url");
     QString user = cl.get("user");
     QString password = cl.get("password");
-
     QString proxyUser = cl.get("proxy-user");
     QString proxyPassword = cl.get("proxy-password");
+    QString query = cl.get("query");
 
     DWORD programCloseType = WPMUtils::CLOSE_WINDOW;
     if (job->shouldProceed()) {
@@ -1417,39 +1418,15 @@ void App::update(Job* job)
         }
     }
 
-    // process regular expressions for --package
+    // process --query
     if (job->shouldProceed()) {
-        for (int i = 0; i < packages_.size(); i++) {
-            QString packageName = packages_.at(i);
-            if (packageName.startsWith('/')) {
-                packageName = packageName.mid(1);
-
-                Qt::CaseSensitivity cs = Qt::CaseInsensitive;
-                if (packageName.endsWith('/')) {
-                    packageName = packageName.left(packageName.length() - 1);
-                    cs = Qt::CaseSensitive;
-                } else if (packageName.endsWith("/i")) {
-                    packageName = packageName.left(packageName.length() - 2);
-                    cs = Qt::CaseInsensitive;
-                } else {
-                    job->setErrorMessage("Invalid regular expression: " +
-                            packages_.at(i));
-                }
-
-                if (job->shouldProceed()) {
-                    qCDebug(npackd) << "regular expression" << packageName;
-
-                    packages_.removeAt(i);
-                    QString vs = versions_.takeAt(i);
-
-                    QRegExp re(packageName, cs);
-                    for (QString pn: InstalledPackages::getDefault()->getPackages()) {
-                        if (re.indexIn(pn) >= 0) {
-                            packages_.insert(i, pn);
-                            versions_.insert(i, vs);
-                        }
-                    }
-                }
+        if (!query.isNull()) {
+            QString err;
+            QStringList list = rep->findPackages(Package::Status::UPDATEABLE,
+                    Package::Status::NOT_INSTALLED_NOT_AVAILABLE, query, -1, -1, &err);
+            packages_.append(list);
+            for (int i = 0; i < list.size(); i++) {
+                versions_.append(QString());
             }
         }
     }
