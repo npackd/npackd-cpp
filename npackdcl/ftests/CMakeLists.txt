@@ -64,6 +64,7 @@ set(FTESTS_SOURCES
     ../../npackdg/src/wuathirdpartypm.cpp
     ../../npackdg/src/wuapi_i.c
     ../../npackdg/src/comobject.cpp
+    ../../npackdg/src/dismthirdpartypm.cpp
     src/main.cpp
 )
 set(FTESTS_HEADERS
@@ -99,6 +100,7 @@ set(FTESTS_HEADERS
     ../../npackdg/src/wuathirdpartypm.h
     ../../npackdg/src/wuapi.h
     ../../npackdg/src/comobject.h
+    ../../npackdg/src/dismthirdpartypm.h
 )
 
 set(OUTPUT_FILE_NAME "ftests.exe")

@@ -89,6 +89,7 @@ set(NPACKDG_SOURCES
     src/wuapi_i.c
     src/comobject.cpp
     src/repositoriesitemmodel.cpp
+    src/dismthirdpartypm.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -146,6 +147,8 @@ set(NPACKDG_HEADERS
     src/wuapi.h
     src/comobject.h
     src/repositoriesitemmodel.h
+    src/dismapi.h
+    src/dismthirdpartypm.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui
