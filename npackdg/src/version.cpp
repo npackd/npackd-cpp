@@ -112,7 +112,7 @@ bool Version::setVersion(const QString& v)
 {
     bool result = false;
     if (!v.trimmed().isEmpty()) {
-        QStringList sl = v.split(".", QString::KeepEmptyParts);
+        QStringList sl = v.split(".", Qt::KeepEmptyParts);
 
         if (sl.count() > 0) {
             bool ok = true;

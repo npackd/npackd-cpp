@@ -253,7 +253,7 @@ QString PackageUtils::validateFullPackageName(const QString &n)
             return QString(QObject::tr("-- at position %1 in %2")).
                     arg(pos + 1).arg(n);
 
-        QStringList parts = n.split('.', QString::SkipEmptyParts);
+        QStringList parts = n.split('.', Qt::SkipEmptyParts);
         for (int j = 0; j < parts.count(); j++) {
             QString part = parts.at(j);
 
@@ -304,7 +304,7 @@ QString PackageUtils::validateFullPackageName(const QString &n)
 QString PackageUtils::makeValidFullPackageName(const QString &name)
 {
     QString r(name);
-    QStringList parts = r.split('.', QString::SkipEmptyParts);
+    QStringList parts = r.split('.', Qt::SkipEmptyParts);
     for (int j = 0; j < parts.count(); ) {
         QString part = parts.at(j);
 

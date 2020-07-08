@@ -673,7 +673,7 @@ QStringList DBRepository::tokenizeTitle(const QString& title)
     txt.replace('@', ' ');
     txt = txt.simplified();
 
-    QStringList keywords = txt.split(' ', QString::SkipEmptyParts);
+    QStringList keywords = txt.split(' ', Qt::SkipEmptyParts);
 
     // synonyms
     for (int i = 0; i < keywords.size(); i++) {
@@ -794,7 +794,7 @@ QString DBRepository::createQuery(Package::Status minStatus,
     // at the beginning or at the end
     QStringList keywords = query.toLower().simplified().split(
             QStringLiteral(" "),
-            QString::SkipEmptyParts);
+            Qt::SkipEmptyParts);
 
     for (int i = 0; i < keywords.count(); i++) {
         QString kw = keywords.at(i);

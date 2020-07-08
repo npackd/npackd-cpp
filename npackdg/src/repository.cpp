@@ -187,7 +187,7 @@ QString Repository::checkCategory(const QString &category, QString *err)
 
     QStringList parts;
     if (err->isEmpty()) {
-        parts = c.split('/', QString::KeepEmptyParts);
+        parts = c.split('/', Qt::KeepEmptyParts);
         if (parts.count() == 0) {
             *err = QObject::tr("Empty category tag");
         }
