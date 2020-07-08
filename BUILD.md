@@ -20,11 +20,11 @@ their 32 bit versions.
    "Audio", "Extended", check "Audio output"
 - resize the disk in VirtualBox to 100 GiB ("Tools", "Hard disks", "Properties")
 - Start the VM. Password for IEUser is Passw0rd!, 
+- (optional) Start netplwiz, enable and disable password on login. Enter new password.
 - (optional) Disable and enable bidirectional clipboard in VirtualBox under "Devices", "Common clipboard"
 - change the password: "net user ieuser newpassword" ad administrator
 - (optional) change the desktop resolution to 1280x960
 - (optional) Start "Region & language" settings, change the language, restart the VM
-- (optional) Start netplwiz, disable password on login.
 - (optional) start diskmgmt.msc, extend the hard disk partition
 
 ## Install necessary software
@@ -50,7 +50,9 @@ Set-ExecutionPolicy Unrestricted -Force
 	Click "Stop Edge/PDF takeover"
 	Click "Disable telemetry/tasks"
 	Click "Remove registry keys associated with Bloatware"
-- ncl add -p msys2_64 --file c:\msys64
+```bat
+ncl add -p msys2_64 --file c:\msys64
+```
 - Start c:\msys64\mingw64.exe
 ```bash
 pacman -Syu --noconfirm
@@ -87,7 +89,6 @@ ninja
     * "File"/"Open file or project"/"CMakeLists.txt"
     * "Projects"/"Import existing build" in Qt creator, choose "C:\builds\npackd-minsizerel"
     * Define the C++ compiler
-* (optional, if you want to profile Npackd with Very Sleepy)
 
 ## Performance profiling (optional)
 
