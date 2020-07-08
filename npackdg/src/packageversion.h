@@ -147,7 +147,7 @@ public:
      * @param validate true = perform all available validations
      * @return created object or 0
      */
-    static PackageVersion* parse(const QByteArray& xml, QString* err,
+    static PackageVersion* parse(QByteArray &xml, QString* err,
             bool validate=true);
 
     /**

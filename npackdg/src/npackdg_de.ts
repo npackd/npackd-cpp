@@ -2732,6 +2732,14 @@ p, li { white-space: pre-wrap; }
         <source>Windows update</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;root&gt; expected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;version&gt; expected</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

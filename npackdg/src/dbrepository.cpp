@@ -524,7 +524,8 @@ PackageVersion* DBRepository::findPackageVersion_(
     }
 
     if (err->isEmpty() && q.next()) {
-        r = PackageVersion::parse(q.value(2).toByteArray(), err);
+        QByteArray ba = q.value(2).toByteArray();
+        r = PackageVersion::parse(ba, err);
     }
 
     return r;
@@ -559,7 +560,8 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         }
 
         while (err->isEmpty() && q.next()) {
-            PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
+            QByteArray ba = q.value(0).toByteArray();
+            PackageVersion* pv = PackageVersion::parse(ba,
                     err, false);
             if (err->isEmpty())
                 r.append(pv);
@@ -607,7 +609,8 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
     }
 
     while (err->isEmpty() && q.next()) {
-        PackageVersion* pv = PackageVersion::parse(q.value(0).toByteArray(),
+        QByteArray ba = q.value(0).toByteArray();
+        PackageVersion* pv = PackageVersion::parse(ba,
                 err);
         if (err->isEmpty())
             r.append(pv);
@@ -1809,14 +1812,13 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
     }
 
     if (job->shouldProceed()) {
+        f->open(QFile::ReadOnly);
         Job* sub = job->newSubJob(0.9, QObject::tr("Parsing XML"));
-        RepositoryXMLHandler handler(this, url);
-        QXmlSimpleReader reader;
-        reader.setContentHandler(&handler);
-        reader.setErrorHandler(&handler);
-        QXmlInputSource inputSource(f);
-        if (!reader.parse(inputSource))
-            job->setErrorMessage(handler.errorString());
+        QXmlStreamReader reader(f);
+        RepositoryXMLHandler handler(this, url, &reader);
+        QString err = handler.parse();
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
         else {
             sub->completeWithProgress();
             job->setProgress(1);

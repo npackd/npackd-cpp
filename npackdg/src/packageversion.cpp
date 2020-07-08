@@ -19,6 +19,7 @@
 #include <QTemporaryDir>
 #include <QJsonArray>
 #include <QBuffer>
+#include <QDataStream>
 
 #include <zlib.h>
 
@@ -1849,22 +1850,19 @@ PackageVersion* PackageVersion::clone() const
     return r;
 }
 
-PackageVersion *PackageVersion::parse(const QByteArray &xml, QString *err,
+PackageVersion *PackageVersion::parse(QByteArray &xml, QString *err,
         bool /*validate*/)
 {
     PackageVersion* r = nullptr;
 
+    QBuffer buf(&xml);
+    buf.open(QIODevice::ReadOnly);
+
     Repository rep;
-    RepositoryXMLHandler handler(&rep, QUrl());
-    QXmlSimpleReader reader;
-    reader.setContentHandler(&handler);
-    reader.setErrorHandler(&handler);
-    QXmlInputSource inputSource;
-    inputSource.setData(xml);
-    handler.enter("root");
-    if (!reader.parse(inputSource))
-        *err = handler.errorString();
-    else {
+    QXmlStreamReader reader(&buf);
+    RepositoryXMLHandler handler(&rep, QUrl(), &reader);
+    *err = handler.parseTopLevelVersion();
+    if (err->isEmpty()) {
         if (rep.packageVersions.size() == 1) {
             r = rep.packageVersions.takeAt(0);
             *err = "";

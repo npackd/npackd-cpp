@@ -3068,10 +3068,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>XML parsing error at line %1, column %2: %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The package %1 will be uninstalled.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3417,6 +3413,18 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Windows update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;root&gt; expected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XML parsing error at line %1, column %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;version&gt; expected</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
