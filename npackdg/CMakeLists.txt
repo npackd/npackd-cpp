@@ -212,19 +212,15 @@ qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
 SET(NPACKDG_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
-if(${NPACKD_FORCE_STATIC})
-    SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} qsqlite qicns qico qjpeg qgif qtga qtiff qwbmp qwebp)
-endif()
-
-SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} Qt5::WinExtras qwindows Qt5VulkanSupport qwindowsvistastyle Qt5::Widgets Qt5FontDatabaseSupport Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core)
+SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} Qt5::WinExtras Qt5VulkanSupport Qt5::Widgets Qt5FontDatabaseSupport Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core)
 
 if(${NPACKD_FORCE_STATIC})
-    SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} qsqlite qicns qico qjpeg qgif qtga qtiff qwbmp qwebp)
+    SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} qsqlite qicns qico qjpeg qgif qtga qtiff qwbmp qwebp qwindows qwindowsvistastyle)
     SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} mingwex Qt5ThemeSupport Qt5EventDispatcherSupport Qt5FontDatabaseSupport Qt5PlatformCompositorSupport Qt5WindowsUIAutomationSupport qdirect2d)
     SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} jasper icuin icuuc icudt icutu qtpcre2 qtharfbuzz qtfreetype qtlibpng jpeg zstd z)
 endif()
 
-SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} imm32 winmm glu32 mpr userenv wtsapi32 opengl32 ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 UxTheme Dwmapi)
+SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} imm32 winmm glu32 mpr userenv wtsapi32 opengl32 ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 UxTheme Dwmapi taskschd)
 
 target_link_libraries(npackdg ${NPACKDG_LIBRARIES})
 target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
