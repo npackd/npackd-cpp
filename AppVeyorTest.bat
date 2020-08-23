@@ -81,6 +81,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+rem 10 minutes timeout for *all* tests
+set QTEST_FUNCTION_TIMEOUT=600000
 ftests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
