@@ -29,7 +29,7 @@ rem what is installed
 rem "%npackd_cl%\ncl" list --json
 
 rem the keyring was updated on 29.06.2020
-rmdir /S /Q c:\msys2
+rmdir /S /Q c:\msys64
 "%npackd_cl%\ncl" add -p msys2_64 --file c:\msys64
 
 rem update all packages to the newest versions
