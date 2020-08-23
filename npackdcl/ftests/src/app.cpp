@@ -128,7 +128,7 @@ void App::addRemoveShare()
             "share \"AD_addRemoveShare=C:\\Program Files\\AD_addRemoveShare\"",
             "C:\\Windows");
 
-    QProcess::execute("explorer.exe \\\\localhost\\AD_addRemoveShare");
+    QProcess::execute("explorer.exe", QStringList("\\\\localhost\\AD_addRemoveShare"));
 
     QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer -d -e sd").
             contains("removed successfully"));
@@ -308,7 +308,7 @@ void App::addRemoveRunning()
             contains("installed successfully"));
     QString dir = captureNpackdCLOutput("path -p active-directory-explorer").
             trimmed();
-    QProcess::startDetached(dir + "\\ADExplorer.exe");
+    QProcess::startDetached(dir + "\\ADExplorer.exe", QStringList());
     Sleep(5000);
     QVERIFY(captureNpackdCLOutput("rm -p active-directory-explorer").
             contains("removed successfully"));
