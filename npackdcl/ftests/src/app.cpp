@@ -180,23 +180,23 @@ void App::updateToDir()
     if (!admin)
         QSKIP("disabled");
 
-    captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    captureNpackdCLOutput("rm -p jpegview");
 
     QString output = captureNpackdCLOutput(
-            "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
+            "add -p jpegview -v 1.0.36 -f \"C:\\Program Files\\JPEGView\"");
     QVERIFY2(output.contains(
-            "installed successfully in \"C:\\Program Files\\ArecaBackup\""),
+            "installed successfully in \"C:\\Program Files\\JPEGView\""),
             output.toLatin1());
 
-    output = captureNpackdCLOutput("update -p org.areca-backup.ArecaBackup -f \"C:\\Program Files\\ArecaBackupNew\"");
+    output = captureNpackdCLOutput("update -p jpegview -f \"C:\\Program Files\\JPEGViewNew\"");
     QVERIFY2(output.contains(
             "The packages were updated successfully"),
             output.toLatin1());
 
-    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup").
-            trimmed() == "C:\\Program Files\\ArecaBackupNew");
+    QVERIFY(captureNpackdCLOutput("path -p jpegview").
+            trimmed() == "C:\\Program Files\\JPEGViewNew");
 
-    output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    output = captureNpackdCLOutput("rm -p jpegview");
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
@@ -205,23 +205,23 @@ void App::updateKeepDirectories()
     if (!admin)
         QSKIP("disabled");
 
-    captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    captureNpackdCLOutput("rm -p jpegview");
 
     QString output = captureNpackdCLOutput(
-            "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
+            "add -p jpegview -v 1.0.36 -f \"C:\\Program Files\\JPEGView\"");
     QVERIFY2(output.contains(
-            "installed successfully in \"C:\\Program Files\\ArecaBackup\""),
+            "installed successfully in \"C:\\Program Files\\JPEGView\""),
             output.toLatin1());
 
-    output = captureNpackdCLOutput("update -p org.areca-backup.ArecaBackup -k");
+    output = captureNpackdCLOutput("update -p jpegview -k");
     QVERIFY2(output.contains(
             "The packages were updated successfully"),
             output.toLatin1());
 
-    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup").
-            trimmed() == "C:\\Program Files\\ArecaBackup");
+    QVERIFY(captureNpackdCLOutput("path -p jpegview").
+            trimmed() == "C:\\Program Files\\JPEGView");
 
-    output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    output = captureNpackdCLOutput("rm -p jpegview");
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
@@ -253,23 +253,23 @@ void App::addVersions()
     if (!admin)
         QSKIP("disabled");
 
-    captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    captureNpackdCLOutput("rm -p jpegview");
 
     QString output = captureNpackdCLOutput(
-            "add -p org.areca-backup.ArecaBackup -v 7.3.5 -f \"C:\\Program Files\\ArecaBackup\"");
+            "add -p jpegview -v 1.0.36 -f \"C:\\Program Files\\JPEGView\"");
     QVERIFY2(output.contains(
-            "installed successfully in \"C:\\Program Files\\ArecaBackup\""),
+            "installed successfully in \"C:\\Program Files\\JPEGView\""),
             output.toLatin1());
 
-    output = captureNpackdCLOutput("add -p org.areca-backup.ArecaBackup -r [7.3,7.4)");
+    output = captureNpackdCLOutput("add -p jpegview -r [1,2)");
     QVERIFY2(output.contains(
             "installed successfully"),
             output.toLatin1());
 
-    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup").
-            trimmed() == "C:\\Program Files\\ArecaBackup");
+    QVERIFY(captureNpackdCLOutput("path -p jpegview").
+            trimmed() == "C:\\Program Files\\JPEGView");
 
-    output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    output = captureNpackdCLOutput("rm -p jpegview");
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
@@ -279,23 +279,23 @@ void App::updateInstall()
         QSKIP("disabled");
 
     captureNpackdCLOutput("set-install-dir -f \"C:\\Program Files\"");
-    captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    captureNpackdCLOutput("rm -p jpegview");
 
     QString output = captureNpackdCLOutput(
-            "update -p org.areca-backup.ArecaBackup");
+            "update -p jpegview");
     QVERIFY2(output.contains(
-            "No installed version found for the package Areca"),
+            "No installed version found for the package JPEGView"),
             output.toLatin1());
 
-    output = captureNpackdCLOutput("update -p org.areca-backup.ArecaBackup -i");
+    output = captureNpackdCLOutput("update -p jpegview -i");
     QVERIFY2(output.contains(
             "The packages were updated successfully"),
             output.toLatin1());
 
-    QVERIFY(captureNpackdCLOutput("path -p org.areca-backup.ArecaBackup").
-            trimmed() == "C:\\Program Files\\Areca");
+    QVERIFY(captureNpackdCLOutput("path -p jpegview").
+            trimmed() == "C:\\Program Files\\JPEGView");
 
-    output = captureNpackdCLOutput("rm -p org.areca-backup.ArecaBackup");
+    output = captureNpackdCLOutput("rm -p jpegview");
     QVERIFY2(output.contains("removed successfully"), output.toLatin1());
 }
 
