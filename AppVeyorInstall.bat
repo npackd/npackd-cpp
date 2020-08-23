@@ -38,7 +38,7 @@ C:\msys64\usr\bin\pacman -Syu --noconfirm
 
 if %bits% equ 64 goto bits64
 
-C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-i686-libtool mingw32/mingw-w64-i686-jasper mingw32/mingw-w64-i686-qt5-static mingw32/mingw-w64-i686-icu mingw32/mingw-w64-i686-zstd
+C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-i686-ninja mingw-w64-i686-libtool mingw32/mingw-w64-i686-jasper mingw32/mingw-w64-i686-qt5-static mingw32/mingw-w64-i686-icu mingw32/mingw-w64-i686-zstd
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" add -p quazip-dev-i686-w64_dw2_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw -v 0.7.7
@@ -50,7 +50,7 @@ goto :eof
 
 if %static% equ ON goto staticbits64
 
-C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5 mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd mingw64/mingw-w64-x86_64-quazip
+C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-ninja mingw-w64-x86_64-toolchain mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5 mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd mingw64/mingw-w64-x86_64-quazip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" add -p drmingw64 -v 0.7.7
@@ -59,7 +59,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 goto end
 
 :staticbits64
-C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd
+C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-ninja mingw-w64-x86_64-toolchain mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%npackd_cl%\ncl" add -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw64 -v 0.7.7
