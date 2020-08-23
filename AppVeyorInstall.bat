@@ -25,12 +25,15 @@ rem Python will be detected, but needs NpackdCL
 "%npackd_cl%\ncl" add -p com.googlecode.windows-package-manager.NpackdCL
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+"%npackd_cl%\ncl" list --json
+
 rem update the keyring according to https://www.msys2.org/news/#2020-06-29-new-packagers
 curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
 curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
 rem pacman-key is probably not installed
 rem C:\msys64\usr\bin\pacman-key --verify msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
 C:\msys64\usr\bin\pacman -U --noconfirm msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+C:\msys64\usr\bin\pacman -U --noconfirm --config <(echo) msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
 
 rem update all packages to the newest versions
 C:\msys64\usr\bin\pacman -Syu --noconfirm 
