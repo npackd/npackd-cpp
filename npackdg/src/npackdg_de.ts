@@ -2740,6 +2740,22 @@ p, li { white-space: pre-wrap; }
         <source>&lt;version&gt; expected</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Sending a WM_CLOSE event to &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sending Ctrl+C to &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Killing the process &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopping the service &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
