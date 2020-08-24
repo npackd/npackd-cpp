@@ -143,7 +143,7 @@ if(${NPACKD_FORCE_STATIC})
     SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} mingwex qtpcre2 icuin icuuc icudt icutu zstd z)
 endif()
 
-SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32)
+SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 taskschd)
 
 target_link_libraries(npackdcl ${NPACKDCL_LIBRARIES})
 target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)

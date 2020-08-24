@@ -133,7 +133,7 @@ if(${NPACKD_FORCE_STATIC})
     SET(FTESTS_LIBRARIES ${FTESTS_LIBRARIES} qtpcre2 icuin icuuc icudt icutu qtharfbuzz zstd z)
 endif()
 
-SET(FTESTS_LIBRARIES ${FTESTS_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32)
+SET(FTESTS_LIBRARIES ${FTESTS_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 taskschd)
 
 add_executable(ftests
         ${FTESTS_SOURCES}

@@ -155,7 +155,7 @@ if(${NPACKD_FORCE_STATIC})
     SET(CLU_LIBRARIES ${CLU_LIBRARIES} qtpcre2 zstd z)
 endif()
 
-SET(CLU_LIBRARIES ${CLU_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32)
+SET(CLU_LIBRARIES ${CLU_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 taskschd)
 
 add_executable(clu
     ${CLU_SOURCES}
