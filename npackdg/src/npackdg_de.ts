@@ -2708,6 +2708,22 @@ p, li { white-space: pre-wrap; }
         <source>The package %1 is already installed in &quot;%2&quot;</source>
         <translation>Das Paket %1 ist bereits installiert in &quot;%2&quot;</translation>
     </message>
+    <message>
+        <source>Sending Ctrl+C to &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Killing the process &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopping the service &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sending a WM_CLOSE event to &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

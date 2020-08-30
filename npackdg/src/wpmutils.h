@@ -54,7 +54,7 @@ private:
 
     /**
      * @brief searches for the processes that somehow lock the specified
-     *     directory
+     *     directory. This function enumerates the loaded modules (.dll, etc.)
      * @param dir a directory
      * @return list of handles with PROCESS_ALL_ACCESS permissions. These
      *     handles should be closed later using CloseHandle()
@@ -63,7 +63,7 @@ private:
 
     /**
      * @brief searches for the processes that somehow lock the specified
-     *     directory
+     *     directory. This function enumerates all files opened by the process.
      * @param dir a directory
      * @return list of handles with PROCESS_QUERY_LIMITED_INFORMATION
      *     permissions. These handles should be closed later using CloseHandle()
