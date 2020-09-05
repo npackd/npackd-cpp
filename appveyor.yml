@@ -16,7 +16,7 @@ environment:
     secure: yPwsn7ojqxg5m7pxyjIf3LV1GwoHd4m3q5iQrKCDzZ4=
 init:
 - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-http-proxy.ps1'))
-#- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
 - cmd.exe /C AppVeyorInstall.bat
 build_script:
