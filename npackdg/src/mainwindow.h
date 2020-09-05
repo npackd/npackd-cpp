@@ -69,6 +69,9 @@ private:
      */
     QMap<QString, int64_t> downloadSizes;
 
+    /** Icon on the tray or zeros */
+    NOTIFYICONDATAW nid;
+
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
             const Version& version) const;
@@ -171,6 +174,18 @@ public:
      *     if the image is not yet available.
      */
     QIcon downloadIcon(const QString& url);
+
+    /**
+     * @brief shows an icon in the system tray
+     *
+     * @param nupdates number of found package updates
+     */
+    void showIconInSystemTray(int nupdates);
+
+    /**
+     * @brief hides the system tray icon
+     */
+    void hideIconInSystemTray();
 
     /**
      * Fills the table with known package versions.
