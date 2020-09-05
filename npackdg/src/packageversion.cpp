@@ -507,7 +507,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
             this->executeFile2(sub, d.absolutePath(), usfn,
                     d.absolutePath() + "\\.Npackd\\Uninstall.log",
-                    env, printScriptOutput);
+                    env, printScriptOutput, false);
 
             if (ush != INVALID_HANDLE_VALUE) {
                 CloseHandle(ush);
@@ -1525,7 +1525,7 @@ void PackageVersion::install(Job* job, const QString& where,
             this->executeFile2(exec, d.absolutePath(),
                     d.absolutePath() + "\\" + installationScript,
                     d.absolutePath() + "\\.Npackd\\Install.log",
-                    env, printScriptOutput);
+                    env, printScriptOutput, false);
             if (exec->getErrorMessage().isEmpty()) {
                 QString path = d.absolutePath();
                 path.replace('/', '\\');
@@ -2047,7 +2047,7 @@ void PackageVersion::stop(Job* job, DWORD programCloseType,
         this->executeFile2(exec, d.absolutePath(),
                 d.absolutePath() + "\\.Npackd\\Stop.bat",
                 d.absolutePath() + "\\.Npackd\\Stop.log", env,
-                printScriptOutput);
+                printScriptOutput, false);
     } else {
         WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType,
                 stoppedServices);

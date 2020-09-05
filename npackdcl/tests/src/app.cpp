@@ -154,7 +154,7 @@ void App::testCopyDirectory()
 
     // lock the directory
     QProcess p;
-    p.start("cmd /K cd \"" + to + "\"");
+    p.start("cmd", QStringList() << "/K" << "cd" << "\"" + to + "\"");
 
     // wait till the "cd" command gets executed
     Sleep(5000);
