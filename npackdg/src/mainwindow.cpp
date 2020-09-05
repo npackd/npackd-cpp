@@ -153,6 +153,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->taskbarMessageId = 0;
 
+    memset(&nid, 0, sizeof(nid));
+
     this->pt = nullptr;
     this->jobsTab = nullptr;
     this->taskbarInterface = nullptr;
@@ -280,8 +282,10 @@ bool MainWindow::nativeEvent(const QByteArray & /*eventType*/, void * message,
                         setQuitOnLastWindowClosed(true);
                 this->showMaximized();
                 this->activateWindow();
+                this->hideIconInSystemTray();
                 break;
             case (LPARAM) NIN_BALLOONTIMEOUT:
+                this->hideIconInSystemTray();
                 ((QApplication*) QApplication::instance())->quit();
                 break;
         }
@@ -676,6 +680,41 @@ QIcon MainWindow::downloadIcon(const QString &url)
         }
     }
     return r;
+}
+
+void MainWindow::showIconInSystemTray(int nupdates)
+{
+    nid.cbSize = sizeof(nid);
+
+    nid.hWnd = (HWND) winId();
+    nid.uID = 0;
+    nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_INFO;
+    nid.uCallbackMessage = WM_ICONTRAY;
+    nid.hIcon = LoadIconW(GetModuleHandle(0),
+                    L"IDI_ICON1");
+    qDebug() << "main().1 icon" << nid.hIcon;
+    QString tip = QString("%1 update(s) found").arg(nupdates);
+    QString txt = QString("Npackd found %1 update(s). "
+            "Click here to review and install.").arg(nupdates);
+
+    wcsncpy(nid.szTip, (wchar_t*) tip.utf16(),
+            sizeof(nid.szTip) / sizeof(nid.szTip[0]) - 1);
+    wcsncpy(nid.szInfo, (wchar_t*) txt.utf16(),
+            sizeof(nid.szInfo) / sizeof(nid.szInfo[0]) - 1);
+    nid.uVersion = 3; // NOTIFYICON_VERSION
+    wcsncpy(nid.szInfoTitle, (wchar_t*) tip.utf16(),
+            sizeof(nid.szInfoTitle) / sizeof(nid.szInfoTitle[0]) - 1);
+    nid.dwInfoFlags = 1; // NIIF_INFO
+    nid.uTimeout = 30000;
+
+    if (!Shell_NotifyIconW(NIM_ADD, &nid))
+        qDebug() << "Shell_NotifyIconW failed";
+}
+
+void MainWindow::hideIconInSystemTray()
+{
+    if (!Shell_NotifyIconW(NIM_DELETE, &nid))
+        qDebug() << "Shell_NotifyIconW failed";
 }
 
 QIcon MainWindow::downloadScreenshot(const QString &url)
