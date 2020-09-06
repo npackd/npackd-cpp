@@ -123,7 +123,7 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
                     "yyyy.M.d.h.m.s"))) {
                 job->setErrorMessage("Internal error: unexpected version syntax");
             }
-            superv->type = 1;
+            superv->type = PackageVersion::Type::ONE_FILE;
             superv->download.setUrl("Rep.xml");
             for (int i = 0; i < pvs.size(); i++) {
                 PackageVersion* pv = pvs.at(i);

@@ -235,7 +235,7 @@ void PackageVersion::findLockedPackageVersion(QString* package, Version* version
 PackageVersion::PackageVersion(const QString& package)
 {
     this->package = package;
-    this->type = 0;
+    this->type = PackageVersion::Type::ZIP;
     this->hashSumType = QCryptographicHash::Sha1;
 }
 
@@ -243,14 +243,14 @@ PackageVersion::PackageVersion(const QString &package, const Version &version):
 version(version)
 {
     this->package = package;
-    this->type = 0;
+    this->type = PackageVersion::Type::ZIP;
     this->hashSumType = QCryptographicHash::Sha1;
 }
 
 PackageVersion::PackageVersion()
 {
     this->package = "unknown";
-    this->type = 0;
+    this->type = PackageVersion::Type::ZIP;
     this->hashSumType = QCryptographicHash::Sha1;
 }
 
@@ -461,7 +461,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     }
 
     // Inno Setup
-    if (job->shouldProceed() && this->type == 2) {
+    if (job->shouldProceed() && this->type == PackageVersion::Type::INNO_SETUP) {
         Job* exec = job->newSubJob(0.3,
                 QObject::tr("Running the Inno Setup removal (this may take some time)"),
                 true, true);
@@ -1449,7 +1449,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
 
     QString binary;
     if (job->shouldProceed()) {
-        if (this->type == 0) {
+        if (this->type == PackageVersion::Type::ZIP) {
             Job* djob = job->newSubJob(0.06, QObject::tr("Extracting files"));
             WPMUtils::unzip(djob, f->fileName(), d.absolutePath() + "\\");
             if (!djob->getErrorMessage().isEmpty())
@@ -1540,7 +1540,7 @@ void PackageVersion::install(Job* job, const QString& where,
     }
 
     // Inno Setup
-    if (job->shouldProceed() && this->type == 2) {
+    if (job->shouldProceed() && this->type == PackageVersion::Type::INNO_SETUP) {
         Job* exec = job->newSubJob(0.3,
                 QObject::tr("Running the Inno Setup installation (this may take some time)"),
                 true, true);
@@ -1925,9 +1925,9 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
     w->writeStartElement("version");
     w->writeAttribute("name", this->version.getVersionString());
     w->writeAttribute("package", this->package);
-    if (this->type == 1)
+    if (this->type == PackageVersion::Type::ONE_FILE)
         w->writeAttribute("type", "one-file");
-    else if (this->type == 2)
+    else if (this->type == PackageVersion::Type::INNO_SETUP)
         w->writeAttribute("type", "innosetup");
     for (int i = 0; i < this->importantFiles.count(); i++) {
         w->writeStartElement("important-file");
@@ -1980,9 +1980,9 @@ void PackageVersion::toJSON(QJsonObject& w) const
 {
     w["name"] = this->version.getVersionString();
     w["package"] = this->package;
-    if (this->type == 1)
+    if (this->type == PackageVersion::Type::ONE_FILE)
         w["type"] = "one-file";
-    else if (this->type == 2)
+    else if (this->type == PackageVersion::Type::INNO_SETUP)
         w["type"] = "innosetup";
 
     if (!importantFiles.isEmpty()) {

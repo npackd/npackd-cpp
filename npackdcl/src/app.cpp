@@ -2310,10 +2310,10 @@ void App::info(Job* job)
             if (pv) {
                 QString type;
                 switch (pv->type) {
-                    case 1:
+                    case PackageVersion::Type::ONE_FILE:
                         type = "one-file";
                         break;
-                    case 2:
+                    case PackageVersion::Type::INNO_SETUP:
                         type = "innosetup";
                         break;
                     default:

@@ -60,11 +60,11 @@ void RepositoryXMLHandler::parseVersion()
         if (type.isEmpty())
             type = QStringLiteral("zip");
         if (type == QStringLiteral("one-file"))
-            pv->type = 1;
+            pv->type = PackageVersion::Type::ONE_FILE;
         else if (type == QStringLiteral("innosetup"))
-            pv->type = 2;
+            pv->type = PackageVersion::Type::INNO_SETUP;
         else if (type.isEmpty() || type == QStringLiteral("zip"))
-            pv->type = 0;
+            pv->type = PackageVersion::Type::ZIP;
         else {
             error = QObject::tr("Wrong value for the attribute 'type' for %1: %3").
                     arg(pv->toString()).arg(type);

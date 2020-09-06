@@ -126,9 +126,9 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     this->ui->lineEditSHA1->setText(sha1);
 
     QString type;
-    if (pv->type == 1)
+    if (pv->type == PackageVersion::Type::ONE_FILE)
         type = "one-file";
-    else if (pv->type == 2)
+    else if (pv->type == PackageVersion::Type::INNO_SETUP)
         type = "innosetup";
     else
         type = "zip";

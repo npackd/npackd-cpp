@@ -116,6 +116,18 @@ private:
 
     void installWith(Job *job);
 public:
+    /** package version type */
+    enum Type {
+        /** .zip file */
+        ZIP,
+
+        /** any file */
+        ONE_FILE,
+
+        /** Inno Setup installer */
+        INNO_SETUP
+    };
+
     /**
      * @brief string ID for the specified package version
      * @param package full package name
@@ -204,7 +216,7 @@ public:
     QList<Dependency*> dependencies;
 
     /** 0 = zip file, 1 = one file, 2 = Inno Setup */
-    int type;
+    Type type;
 
     /**
      * SHA-1 or SHA-256 hash sum for the installation file or empty if not
