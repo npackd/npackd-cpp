@@ -1544,7 +1544,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The last lines of the output from the removal script:</source>
-        <translation>Die letzten Zeilen der Ausgabe von dem Skript zum Deinstallieren:</translation>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Deinstallieren:</translation>
     </message>
     <message>
         <source>Updating NPACKD_CL</source>
@@ -1756,7 +1756,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>%1. No output was generated</source>
-        <translation>%1. Keine Ausgabe wurde erzeugt</translation>
+        <translation type="vanished">%1. Keine Ausgabe wurde erzeugt</translation>
     </message>
     <message>
         <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
@@ -2754,6 +2754,18 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Stopping the service &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Running the Inno Setup installation (this may take some time)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The last lines of the output from the Inno Setup log file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The last lines of the output:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

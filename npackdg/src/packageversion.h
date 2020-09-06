@@ -62,14 +62,12 @@ private:
      * @param where directory where to start
      * @param path this is the name of the script like ".Npackd\Install.bat"
      *     relative to "where"
-     * @param outputFile output file
      * @param env additional environment variables
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
      * @param unicode true = UTF-16, false = 1 byte system encoding
      */
     void executeFile2(Job *job, const QString &where, const QString &path,
-            const QString &outputFile,
             const QStringList &env,
             bool printScriptOutput, bool unicode=true);
 
@@ -117,8 +115,6 @@ private:
     bool createExecutableShims(const QString &dir, QString *errMsg);
 
     void installWith(Job *job);
-
-    void readLog(Job* job, const QString outputFile, bool unicode);
 public:
     /**
      * @brief string ID for the specified package version

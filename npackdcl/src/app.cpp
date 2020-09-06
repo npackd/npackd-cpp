@@ -2312,8 +2312,10 @@ void App::info(Job* job)
                 switch (pv->type) {
                     case 1:
                         type = "one-file";
+                        break;
                     case 2:
                         type = "innosetup";
+                        break;
                     default:
                         type = "zip";
                 }
@@ -2655,7 +2657,7 @@ void App::removeSCP(Job *job)
             //WPMUtils::writeln(path + " " + where);
 
             WPMUtils::executeBatchFile(execJob, where,
-                    path, "", QStringList(), false);
+                    path, WPMUtils::getMessagesLog(), QStringList(), false);
         }
     }
 

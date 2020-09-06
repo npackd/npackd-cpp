@@ -43,6 +43,11 @@ private:
 
     WPMUtils();
 
+    /**
+     * @brief checks whether a process is still running
+     * @param process process handle
+     * @return true = the process is still running
+     */
     static bool isProcessRunning(HANDLE process);
 
     /**
@@ -103,6 +108,11 @@ public:
     static HRTimer timer;
 
     /**
+     * @return location of the Npackd log file
+     */
+    static QString getMessagesLog();
+
+    /**
      * Converts the value returned by SHFileOperation to an error message.
      *
      * @param res value returned by SHFileOperation
@@ -122,6 +132,13 @@ public:
      * @return true if this program is running on a 64-bit Windows
      */
     static bool is64BitWindows();
+
+    /**
+     * @brief read last lines from a text file
+     * @param filename text file
+     * @return (lines, error message)
+     */
+    static std::tuple<QString, QString> readLastLines(const QString filename);
 
     /**
      * Deletes a directory
@@ -588,6 +605,21 @@ public:
      */
     static QString fileCheckSum(Job *job, QFile *file,
             QCryptographicHash::Algorithm alg);
+
+    /**
+     * @brief appends the contents of one file to another
+     * @param from source file name
+     * @param to target file name
+     * @return error message or ""
+     */
+    static QString appendFile(const QString from, const QString to);
+
+    /**
+     * @brief creates an empty file in the temporary directory
+     * @param pattern e.g. "NpackdXXXXXX.log"
+     * @return full path to the created file
+     */
+    static QString createEmptyTempFile(const QString pattern);
 
     /**
      * @brief unzips a file

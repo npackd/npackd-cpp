@@ -2287,15 +2287,7 @@ p, li { white-space: pre-wrap; }
         <translation>%1 minute(s)</translation>
     </message>
     <message>
-        <source>The last lines of the output from the removal script:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Updating NPACKD_CL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1. No output was generated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3441,6 +3433,18 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Stopping the service &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Running the Inno Setup installation (this may take some time)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The last lines of the output from the Inno Setup log file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The last lines of the output:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -47,6 +47,7 @@
 #endif
 
 #include "wpmutils.h"
+#include "packageutils.h"
 #include "version.h"
 #include "windowsregistry.h"
 
@@ -161,6 +162,15 @@ typedef struct _OBJECT_TYPE_INFORMATION
 
 WPMUtils::WPMUtils()
 {
+}
+
+QString WPMUtils::getMessagesLog()
+{
+    static QString log = WPMUtils::getShellDir(PackageUtils::globalMode ?
+            CSIDL_COMMON_APPDATA : CSIDL_APPDATA) +
+            "\\Npackd\\Messages.log";
+
+    return log;
 }
 
 bool WPMUtils::isTaskEnabled(QString* err)
@@ -1031,7 +1041,7 @@ QString WPMUtils::extractIconURL(const QString& iconFile)
     return res;
 }
 #else
-QString WPMUtils::extractIconURL(const QString& iconFile)
+QString WPMUtils::extractIconURL(const QString& /*iconFile*/)
 {
     return "";
 }
@@ -2718,6 +2728,58 @@ bool WPMUtils::is64BitWindows()
 #endif
 }
 
+std::tuple<QString, QString> WPMUtils::readLastLines(const QString filename)
+{
+    QString text;
+    QString error;
+
+    bool unicode = false;
+
+    QFile f(filename);
+    if (f.open(QFile::ReadOnly)) {
+        qint64 sz = f.size();
+        qint64 p;
+
+        if (unicode) {
+            if (sz > 2048) {
+                // UTF-16: 2 bytes per character, 2040 to not get the BOM
+                p = sz - 2040 - sz % 1;
+            } else if (sz >= 2) {
+                // BOM
+                p = 2;
+            } else {
+                p = 0;
+            }
+        } else {
+            if (sz > 1024) {
+                p = sz - 1024;
+            } else {
+                p = 0;
+            }
+        }
+
+        f.seek(p);
+
+        QByteArray ba = f.read(sz - p);
+
+        if (unicode) {
+            text = QString::fromUtf16(
+                    reinterpret_cast<const ushort*>(ba.constData()),
+                    ba.length() / 2);
+        } else {
+            text = QString::fromLocal8Bit(
+                    ba.constData(),
+                    ba.length());
+        }
+
+        f.close();
+    } else {
+        error = f.errorString();
+    }
+
+    return std::make_tuple(text, error);
+}
+
 QString WPMUtils::createLink(LPCWSTR lpszPathObj, LPCWSTR lpszPathLink,
         LPCWSTR lpszDesc,
         LPCWSTR workingDir)
@@ -3212,6 +3274,60 @@ QString WPMUtils::fileCheckSum(Job* job,
     return sha1;
 }
 
+QString WPMUtils::appendFile(const QString from, const QString to)
+{
+    QString result;
+
+    QFile fromFile(from);
+    QFile toFile(to);
+
+    // ignore the errors here
+    if (fromFile.open(QIODevice::ReadOnly)) {
+        if (toFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+            char* buffer = new char[1024 * 1024];
+            while (true) {
+                qint64 n = fromFile.read(buffer, 1024 * 1024);
+
+                if (n < 0) {
+                    result = fromFile.errorString();
+                    break;
+                }
+
+                if (n == 0)
+                    break;
+
+                if (toFile.write(buffer, n) != n) {
+                    result = toFile.errorString();
+                    break;
+                }
+            }
+            delete[] buffer;
+        } else {
+            result = toFile.errorString();
+        }
+    } else {
+        result = fromFile.errorString();
+    }
+
+    return result;
+}
+
+QString WPMUtils::createEmptyTempFile(const QString pattern)
+{
+    QString result;
+
+    // QTemporaryFile::close() does not do anything on Windows
+    // Only QTemporaryFile::~QTemporaryFile() really closes the file.
+    QTemporaryFile of;
+    of.setFileTemplate(QDir::tempPath() + "\\" + pattern);
+    of.setAutoRemove(false);
+    if (of.open()) {
+        result = WPMUtils::normalizePath(of.fileName(), false);
+    }
+
+    return result;
+}
+
 void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 {
     QString initialTitle = job->getTitle();
@@ -3296,7 +3412,7 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
 
     executeFile(job, normalizePath(where), exe,
             params,
-            outputFile, env, true, printScriptOutput, unicode);
+            outputFile, env, unicode, printScriptOutput, unicode);
 }
 
 void WPMUtils::reportEvent(const QString &msg, WORD wType)
