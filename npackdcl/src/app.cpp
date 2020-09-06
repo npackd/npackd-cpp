@@ -2308,8 +2308,17 @@ void App::info(Job* job)
             }
 
             if (pv) {
-                WPMUtils::writeln(QString("Type: ") +
-                        (pv->type == 0 ? "zip" : "one-file"));
+                QString type;
+                switch (pv->type) {
+                    case 1:
+                        type = "one-file";
+                    case 2:
+                        type = "innosetup";
+                    default:
+                        type = "zip";
+                }
+
+                WPMUtils::writeln(QString("Type: ") + type);
 
                 WPMUtils::writeln(QString("Hash sum: ") +
                         (pv->hashSumType == QCryptographicHash::Sha1 ?

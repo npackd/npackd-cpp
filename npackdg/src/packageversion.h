@@ -117,6 +117,8 @@ private:
     bool createExecutableShims(const QString &dir, QString *errMsg);
 
     void installWith(Job *job);
+
+    void readLog(Job* job, const QString outputFile, bool unicode);
 public:
     /**
      * @brief string ID for the specified package version
@@ -205,7 +207,7 @@ public:
      */
     QList<Dependency*> dependencies;
 
-    /** 0 = zip file, 1 = one file */
+    /** 0 = zip file, 1 = one file, 2 = Inno Setup */
     int type;
 
     /**

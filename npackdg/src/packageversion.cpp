@@ -1482,19 +1482,6 @@ void PackageVersion::install(Job* job, const QString& where,
     // qCDebug(npackd) << "install.2";
     QDir d(where);
 
-    QString installationScript;
-    if (job->shouldProceed()) {
-        installationScript = ".Npackd\\Install.bat";
-        if (!QFile::exists(d.absolutePath() +
-                "\\" + installationScript)) {
-            installationScript = ".WPM\\Install.bat";
-            if (!QFile::exists(d.absolutePath() +
-                    "\\" + installationScript)) {
-                installationScript = "";
-            }
-        }
-    }
-
     if (job->shouldProceed() && this->dependencies.size() > 0) {
         Job* sjob = job->newSubJob(0.2,
                 QObject::tr("Running the installation hooks for dependencies"),
@@ -1504,9 +1491,57 @@ void PackageVersion::install(Job* job, const QString& where,
         job->setProgress(0.2);
     }
 
+    // Inno Setup
+    if (job->shouldProceed() && this->type == 2) {
+        Job* exec = job->newSubJob(0.6,
+                QObject::tr("Running the Inno Setup installation (this may take some time)"),
+                true, true);
+        if (!d.exists(".Npackd"))
+            d.mkdir(".Npackd");
+
+        QStringList env;
+        env.append("NPACKD_PACKAGE_BINARY");
+        env.append(WPMUtils::normalizePath(where, false) + "\\" + binary);
+
+        QString err = addBasicVars(&env);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+
+        addDependencyVars(&env);
+
+        // "%setup%" /SP- /VERYSILENT /SUPPRESSMSGBOXES /NOCANCEL /NORESTART /DIR="%CD%" /SAVEINF="%CD%\.Npackd\InnoSetupInfo.ini" /LOG="%CD%\.Npackd\InnoSetupInstall.log" && del /f /q "%setup%"
+        this->executeFile2(exec, d.absolutePath(),
+                d.absolutePath() + "\\" + "TODO.bat", // TODO
+                d.absolutePath() + "\\.Npackd\\Install.log",
+                env, printScriptOutput, false);
+        if (exec->getErrorMessage().isEmpty()) {
+            QString path = d.absolutePath();
+            path.replace('/', '\\');
+            QString err = setPath(path);
+            if (!err.isEmpty()) {
+                job->setErrorMessage(err);
+            }
+        }
+    } else {
+        job->setProgress(0.3);
+    }
+
     if (job->shouldProceed()) {
+        QString installationScript;
+        if (job->shouldProceed()) {
+            installationScript = ".Npackd\\Install.bat";
+            if (!QFile::exists(d.absolutePath() +
+                    "\\" + installationScript)) {
+                installationScript = ".WPM\\Install.bat";
+                if (!QFile::exists(d.absolutePath() +
+                        "\\" + installationScript)) {
+                    installationScript = "";
+                }
+            }
+        }
+
         if (!installationScript.isEmpty()) {
-            Job* exec = job->newSubJob(0.7,
+            Job* exec = job->newSubJob(0.6,
                     QObject::tr("Running the installation script (this may take some time)"),
                     true, true);
             if (!d.exists(".Npackd"))
@@ -1737,6 +1772,79 @@ void PackageVersion::build(Job* job, const QString& outputPackage,
     }
 }
 
+void PackageVersion::readLog(Job* job, const QString outputFile, bool unicode)
+{
+    if (QFile::exists(outputFile)) {
+        QString lastOutputLines;
+        QFile outf(outputFile);
+        if (outf.open(QFile::ReadOnly)) {
+            qint64 sz = outf.size();
+            qint64 p;
+
+            if (unicode) {
+                if (sz > 2048) {
+                    // UTF-16: 2 bytes per character, 2040 to not get the BOM
+                    p = sz - 2040 - sz % 1;
+                } else if (sz >= 2) {
+                    // BOM
+                    p = 2;
+                } else {
+                    p = 0;
+                }
+            } else {
+                if (sz > 1024) {
+                    p = sz - 1024;
+                } else {
+                    p = 0;
+                }
+            }
+
+            outf.seek(p);
+
+            QByteArray ba = outf.read(sz - p);
+
+            if (unicode) {
+                lastOutputLines = QString::fromUtf16(
+                        reinterpret_cast<const ushort*>(ba.constData()),
+                        ba.length() / 2);
+            } else {
+                lastOutputLines = QString::fromLocal8Bit(
+                        ba.constData(),
+                        ba.length());
+            }
+
+            outf.close();
+        }
+
+        QTemporaryFile of;
+        of.setFileTemplate(QDir::tempPath() + "\\NpackdXXXXXX.log");
+        of.setAutoRemove(false);
+        QString filename;
+        if (of.open()) {
+            filename = WPMUtils::normalizePath(of.fileName(), false);
+
+            // qCDebug(npackd) << "haha" << filename;
+
+            of.close();
+            if (of.remove()) {
+                // ignoring the error here
+                QFile::copy(outputFile, filename);
+            }
+        }
+
+        job->setErrorMessage((
+                QObject::tr("%1. Full output was saved in %2") +
+                "\r\n" +
+                QObject::tr("The last lines of the output from the removal script:") +
+                "\r\n...\r\n%3").arg(
+                job->getErrorMessage(), filename, lastOutputLines));
+    } else {
+        job->setErrorMessage(QString(
+                QObject::tr("%1. No output was generated")).arg(
+                job->getErrorMessage()));
+    }
+}
+
 void PackageVersion::executeFile2(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile,
@@ -1746,77 +1854,7 @@ void PackageVersion::executeFile2(Job* job, const QString& where,
             job, where, path, outputFile, env, printScriptOutput, unicode);
 
     if (!job->getErrorMessage().isEmpty()) {
-        QString out = outputFile;
-
-        if (QFile::exists(out)) {
-            QString lastOutputLines;
-            QFile outf(out);
-            if (outf.open(QFile::ReadOnly)) {
-                qint64 sz = outf.size();
-                qint64 p;
-
-                if (unicode) {
-                    if (sz > 2048) {
-                        // UTF-16: 2 bytes per character, 2040 to not get the BOM
-                        p = sz - 2040 - sz % 1;
-                    } else if (sz >= 2) {
-                        // BOM
-                        p = 2;
-                    } else {
-                        p = 0;
-                    }
-                } else {
-                    if (sz > 1024) {
-                        p = sz - 1024;
-                    } else {
-                        p = 0;
-                    }
-                }
-
-                outf.seek(p);
-
-                QByteArray ba = outf.read(sz - p);
-
-                if (unicode) {
-                    lastOutputLines = QString::fromUtf16(
-                            reinterpret_cast<const ushort*>(ba.constData()),
-                            ba.length() / 2);
-                } else {
-                    lastOutputLines = QString::fromLocal8Bit(
-                            ba.constData(),
-                            ba.length());
-                }
-
-                outf.close();
-            }
-
-            QTemporaryFile of;
-            of.setFileTemplate(QDir::tempPath() + "\\NpackdXXXXXX.log");
-            of.setAutoRemove(false);
-            QString filename;
-            if (of.open()) {
-                filename = WPMUtils::normalizePath(of.fileName(), false);
-
-                // qCDebug(npackd) << "haha" << filename;
-
-                of.close();
-                if (of.remove()) {
-                    // ignoring the error here
-                    QFile::copy(out, filename);
-                }
-            }
-
-            job->setErrorMessage((
-                    QObject::tr("%1. Full output was saved in %2") +
-                    "\r\n" +
-                    QObject::tr("The last lines of the output from the removal script:") +
-                    "\r\n...\r\n%3").arg(
-                    job->getErrorMessage(), filename, lastOutputLines));
-        } else {
-            job->setErrorMessage(QString(
-                    QObject::tr("%1. No output was generated")).arg(
-                    job->getErrorMessage()));
-        }
+        readLog(job, outputFile, unicode);
     }
 }
 
@@ -1886,6 +1924,8 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
     w->writeAttribute("package", this->package);
     if (this->type == 1)
         w->writeAttribute("type", "one-file");
+    else if (this->type == 2)
+        w->writeAttribute("type", "innosetup");
     for (int i = 0; i < this->importantFiles.count(); i++) {
         w->writeStartElement("important-file");
         w->writeAttribute("path", this->importantFiles.at(i));
@@ -1939,6 +1979,8 @@ void PackageVersion::toJSON(QJsonObject& w) const
     w["package"] = this->package;
     if (this->type == 1)
         w["type"] = "one-file";
+    else if (this->type == 2)
+        w["type"] = "innosetup";
 
     if (!importantFiles.isEmpty()) {
         QJsonArray a;

@@ -61,6 +61,8 @@ void RepositoryXMLHandler::parseVersion()
             type = QStringLiteral("zip");
         if (type == QStringLiteral("one-file"))
             pv->type = 1;
+        else if (type == QStringLiteral("innosetup"))
+            pv->type = 2;
         else if (type.isEmpty() || type == QStringLiteral("zip"))
             pv->type = 0;
         else {

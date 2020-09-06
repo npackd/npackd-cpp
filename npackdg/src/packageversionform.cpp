@@ -125,7 +125,14 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     }
     this->ui->lineEditSHA1->setText(sha1);
 
-    this->ui->lineEditType->setText(pv->type == 0 ? "zip" : "one-file");
+    QString type;
+    if (pv->type == 1)
+        type = "one-file";
+    else if (pv->type == 2)
+        type = "innosetup";
+    else
+        type = "zip";
+    this->ui->lineEditType->setText(type);
 
     QString details;
     for (int i = 0; i < pv->importantFiles.count(); i++) {
