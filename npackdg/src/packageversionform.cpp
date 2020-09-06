@@ -129,7 +129,9 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     if (pv->type == PackageVersion::Type::ONE_FILE)
         type = "one-file";
     else if (pv->type == PackageVersion::Type::INNO_SETUP)
-        type = "innosetup";
+        type = "inno-setup";
+    else if (pv->type == PackageVersion::Type::NSIS)
+        type = "nsis";
     else
         type = "zip";
     this->ui->lineEditType->setText(type);

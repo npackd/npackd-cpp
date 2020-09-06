@@ -3569,6 +3569,14 @@ p, li { white-space: pre-wrap; }
         <source>Running the Inno Setup removal (this may take some time)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Running the NSIS removal (this may take some time)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Running the NSIS installation (this may take some time)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

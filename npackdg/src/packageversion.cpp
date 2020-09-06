@@ -460,7 +460,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
                 d.absolutePath(), deleteShortcutsJob, true, false, false);
     }
 
-    // Inno Setup
+    // Inno Setup, NSIS
     if (job->shouldProceed() && this->type == PackageVersion::Type::INNO_SETUP) {
         Job* exec = job->newSubJob(0.3,
                 QObject::tr("Running the Inno Setup removal (this may take some time)"),
@@ -505,6 +505,33 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         }
 
         QFile::remove(innoSetupLog);
+    } else if (job->shouldProceed() && this->type == PackageVersion::Type::NSIS) {
+        Job* exec = job->newSubJob(0.3,
+                QObject::tr("Running the NSIS removal (this may take some time)"),
+                true, true);
+        if (!d.exists(".Npackd"))
+            d.mkdir(".Npackd");
+
+        QStringList env;
+
+        QString err = addBasicVars(&env);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+
+        addDependencyVars(&env);
+
+        // run the removal
+        QString dir = WPMUtils::normalizePath(d.absolutePath());
+        QString fullBinary = WPMUtils::normalizePath(where, false) + "\\uninstall.exe";
+        WPMUtils::executeFile(exec, dir,
+                fullBinary, "/S _?=" + dir,
+                QString(), env, false, printScriptOutput, false);
+
+        if (!job->getErrorMessage().isEmpty()) {
+            job->setErrorMessage((QObject::tr("%1. Full output was saved in %2") +
+                    "\r\n").arg(
+                    job->getErrorMessage(), WPMUtils::getMessagesLog()));
+        }
     } else {
         job->setProgress(0.3);
     }
@@ -1539,7 +1566,7 @@ void PackageVersion::install(Job* job, const QString& where,
         job->setProgress(0.2);
     }
 
-    // Inno Setup
+    // Inno Setup, NSIS
     if (job->shouldProceed() && this->type == PackageVersion::Type::INNO_SETUP) {
         Job* exec = job->newSubJob(0.3,
                 QObject::tr("Running the Inno Setup installation (this may take some time)"),
@@ -1592,6 +1619,40 @@ void PackageVersion::install(Job* job, const QString& where,
         }
 
         QFile::remove(innoSetupLog);
+    } else if (job->shouldProceed() && this->type == PackageVersion::Type::NSIS) {
+        Job* exec = job->newSubJob(0.3,
+                QObject::tr("Running the NSIS installation (this may take some time)"),
+                true, true);
+        if (!d.exists(".Npackd"))
+            d.mkdir(".Npackd");
+
+        QStringList env;
+        env.append("NPACKD_PACKAGE_BINARY");
+        env.append(WPMUtils::normalizePath(where, false) + "\\" + binary);
+
+        QString err = addBasicVars(&env);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+
+        addDependencyVars(&env);
+
+        // run the installation
+        QString dir = WPMUtils::normalizePath(d.absolutePath());
+        QString fullBinary = WPMUtils::normalizePath(where, false) + "\\" + binary;
+        WPMUtils::executeFile(exec, dir,
+                fullBinary, "/S /D=" + dir,
+                QString(), env, false, printScriptOutput, false);
+
+        if (job->shouldProceed()) {
+            // ignore the errors here
+            QFile::remove(fullBinary);
+        }
+
+        if (!job->getErrorMessage().isEmpty()) {
+            job->setErrorMessage((QObject::tr("%1. Full output was saved in %2") +
+                    "\r\n").arg(
+                    job->getErrorMessage(), WPMUtils::getMessagesLog()));
+        }
     } else {
         job->setProgress(0.3);
     }
@@ -1928,7 +1989,9 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
     if (this->type == PackageVersion::Type::ONE_FILE)
         w->writeAttribute("type", "one-file");
     else if (this->type == PackageVersion::Type::INNO_SETUP)
-        w->writeAttribute("type", "innosetup");
+        w->writeAttribute("type", "inno-setup");
+    else if (this->type == PackageVersion::Type::NSIS)
+        w->writeAttribute("type", "nsis");
     for (int i = 0; i < this->importantFiles.count(); i++) {
         w->writeStartElement("important-file");
         w->writeAttribute("path", this->importantFiles.at(i));
@@ -1983,7 +2046,9 @@ void PackageVersion::toJSON(QJsonObject& w) const
     if (this->type == PackageVersion::Type::ONE_FILE)
         w["type"] = "one-file";
     else if (this->type == PackageVersion::Type::INNO_SETUP)
-        w["type"] = "innosetup";
+        w["type"] = "inno-setup";
+    else if (this->type == PackageVersion::Type::NSIS)
+        w["type"] = "nsis";
 
     if (!importantFiles.isEmpty()) {
         QJsonArray a;

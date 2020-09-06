@@ -2314,7 +2314,10 @@ void App::info(Job* job)
                         type = "one-file";
                         break;
                     case PackageVersion::Type::INNO_SETUP:
-                        type = "innosetup";
+                        type = "inno-setup";
+                        break;
+                    case PackageVersion::Type::NSIS:
+                        type = "nsis";
                         break;
                     default:
                         type = "zip";

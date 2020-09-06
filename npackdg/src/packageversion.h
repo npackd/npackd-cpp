@@ -125,7 +125,10 @@ public:
         ONE_FILE,
 
         /** Inno Setup installer */
-        INNO_SETUP
+        INNO_SETUP,
+
+        /** NSIS installer */
+        NSIS
     };
 
     /**
