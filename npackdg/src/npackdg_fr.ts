@@ -3447,6 +3447,10 @@ p, li { white-space: pre-wrap; }
         <source>The last lines of the output:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Running the Inno Setup removal (this may take some time)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

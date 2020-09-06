@@ -460,6 +460,55 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
                 d.absolutePath(), deleteShortcutsJob, true, false, false);
     }
 
+    // Inno Setup
+    if (job->shouldProceed() && this->type == 2) {
+        Job* exec = job->newSubJob(0.3,
+                QObject::tr("Running the Inno Setup removal (this may take some time)"),
+                true, true);
+        if (!d.exists(".Npackd"))
+            d.mkdir(".Npackd");
+
+        QStringList env;
+
+        QString err = addBasicVars(&env);
+        if (!err.isEmpty())
+            job->setErrorMessage(err);
+
+        addDependencyVars(&env);
+
+        // Inno Setup log file
+        QString innoSetupLog = WPMUtils::createEmptyTempFile("NpackdXXXXXX.log");
+
+        // run the removal
+        QString dir = WPMUtils::normalizePath(d.absolutePath());
+        QString fullBinary = WPMUtils::normalizePath(where, false) + "\\unins000.exe";
+        WPMUtils::executeFile(exec, dir,
+                fullBinary,
+                "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=\"" + innoSetupLog + "\"",
+                QString(), env, false, printScriptOutput, false);
+
+        // copy the Inno Setup log
+        // ignore the errors. The log is not as important as the package removal.
+        WPMUtils::appendFile(innoSetupLog, WPMUtils::getMessagesLog());
+
+        if (!job->getErrorMessage().isEmpty()) {
+            QString text, error;
+            std::tie(text, error) = WPMUtils::readLastLines(innoSetupLog);
+
+            if (error.isEmpty()) {
+                job->setErrorMessage((QObject::tr("%1. Full output was saved in %2") +
+                        "\r\n" +
+                        QObject::tr("The last lines of the output from the Inno Setup log file:") +
+                        "\r\n...\r\n%3").arg(
+                        job->getErrorMessage(), WPMUtils::getMessagesLog(), text));
+            }
+        }
+
+        QFile::remove(innoSetupLog);
+    } else {
+        job->setProgress(0.3);
+    }
+
     QString uninstallationScript;
     if (job->shouldProceed()) {
         uninstallationScript = ".Npackd\\Uninstall.bat";
