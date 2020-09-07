@@ -33,8 +33,11 @@ rmdir /S /Q c:\msys64
 "%npackd_cl%\ncl" add -p msys2_64 --file c:\msys64
 
 rem update all packages to the newest versions
-C:\msys64\usr\bin\pacman -Syu --noconfirm 
-C:\msys64\usr\bin\pacman -Syu --noconfirm 
+rem C:\msys64\usr\bin\pacman -Syu --noconfirm 
+rem C:\msys64\usr\bin\pacman -Syu --noconfirm 
+
+bash "pacman -Syuu --noconfirm && ps -ef | grep 'dirmngr' | grep -v grep | awk '{print `$2}' | xargs -r kill -9 && ps -ef | grep 'gpg-agent' | grep -v grep | awk '{print `$2}' | xargs -r kill -9"
+bash "pacman -Syuu --noconfirm && ps -ef | grep 'gpg-agent' | grep -v grep | awk '{print `$2}' | xargs -r kill -9"
 
 if %bits% equ 64 goto bits64
 
