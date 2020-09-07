@@ -126,9 +126,9 @@ appveyor PushArtifact npackdg\build\Npackd%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem Coverity build is too slow
-goto :eof
+goto end
 
-if "%bits%" neq "64" goto :eof
+if "%bits%" neq "64" goto end
 
 pushd npackdg\build
 
@@ -149,7 +149,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 "C:\Program Files (x86)\Gow\bin\curl" --form token=%covtoken% --form email=tim.lebedkov@gmail.com -k --form file=@cov-int.zip --form version="Version" --form description="Description" https://scan.coverity.com/builds?project=Npackd
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-goto :eof
+goto end
 
 :npackdcl
 mkdir npackdcl\build
@@ -237,7 +237,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact npackdcl\build\NpackdCL%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-goto :eof
+goto end
 
 :clu
 mkdir clu\build
@@ -272,5 +272,8 @@ set path=%initial_path%
 appveyor PushArtifact clu\build\CLU%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-goto :eof
+goto end
+
+:end
+notepad
 
