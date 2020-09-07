@@ -33,11 +33,8 @@ rmdir /S /Q c:\msys64
 "%npackd_cl%\ncl" add -p msys2_64 --file c:\msys64
 
 rem update all packages to the newest versions
-rem C:\msys64\usr\bin\pacman -Syu --noconfirm 
-rem C:\msys64\usr\bin\pacman -Syu --noconfirm 
-
-bash "pacman -Syuu --noconfirm && ps -ef | grep 'dirmngr' | grep -v grep | awk '{print `$2}' | xargs -r kill -9 && ps -ef | grep 'gpg-agent' | grep -v grep | awk '{print `$2}' | xargs -r kill -9"
-bash "pacman -Syuu --noconfirm && ps -ef | grep 'gpg-agent' | grep -v grep | awk '{print `$2}' | xargs -r kill -9"
+C:\msys64\usr\bin\pacman -Syu --noconfirm 
+C:\msys64\usr\bin\pacman -Syu --noconfirm 
 
 if %bits% equ 64 goto bits64
 
@@ -47,7 +44,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 "%npackd_cl%\ncl" add -p quazip-dev-i686-w64_dw2_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-goto :eof
+goto end
 
 :bits64
 
@@ -82,3 +79,5 @@ ren "%name%" cov-analysis
 :end
 rem tree "C:\Program Files (x86)"
 
+Taskkill /IM gpg-agent.exe /F
+Taskkill /IM dirmngr.exe /F
