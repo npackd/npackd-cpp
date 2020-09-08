@@ -4,9 +4,6 @@ rem This script is used by AppVeyor to build the project.
 
 set initial_path=%path%
 
-where appveyor
-where cmake
-
 set version=%APPVEYOR_BUILD_VERSION:~0,-4%
 
 SET NPACKD_CL=C:\Program Files\NpackdCL
@@ -56,13 +53,13 @@ mkdir npackdg\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdg\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-mingw32-make.exe -j 2 install
+ninja.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
@@ -134,10 +131,10 @@ pushd npackdg\build
 
 set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
-mingw32-make.exe clean
+ninja.exe clean
 
 "..\..\cov-analysis\bin\cov-configure.exe"  --comptype gcc --compiler C:\PROGRA~2\MINGW-~1\bin\G__~1.EXE -- -std=gnu++11
-"..\..\cov-analysis\bin\cov-build.exe" --dir ..\..\cov-int mingw32-make.exe install
+"..\..\cov-analysis\bin\cov-build.exe" --dir ..\..\cov-int ninja.exe install
 
 rem type C:\projects\Npackd\cov-int\build-log.txt
 
@@ -166,7 +163,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake -LAH
 
-mingw32-make.exe -j 2 install
+ninja.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 
@@ -252,7 +249,7 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-mingw32-make.exe -j 2 install
+ninja.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 strip ..\install\clu.exe
