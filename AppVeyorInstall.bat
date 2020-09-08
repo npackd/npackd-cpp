@@ -81,3 +81,5 @@ rem tree "C:\Program Files (x86)"
 
 Taskkill /IM gpg-agent.exe /F
 Taskkill /IM dirmngr.exe /F
+verify
+
