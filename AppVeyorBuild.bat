@@ -160,7 +160,7 @@ set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
-C:\Windows\System32\notepad.exe
+rem C:\Windows\System32\notepad.exe
 
 if %errorlevel% neq 0 exit /b %errorlevel%
 
