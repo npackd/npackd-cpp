@@ -67,7 +67,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 ncl add -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3 -p drmingw64 -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if "%prg%" eq "npackd" (call :installcoverity)
+if "%prg%" equ "npackd" (call :installcoverity)
 
 exit /b
 
