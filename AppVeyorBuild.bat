@@ -59,7 +59,7 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-ninja.exe install
+mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
@@ -131,10 +131,10 @@ pushd npackdg\build
 
 set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
-ninja.exe clean
+mingw32-make.exe clean
 
 "..\..\cov-analysis\bin\cov-configure.exe"  --comptype gcc --compiler C:\PROGRA~2\MINGW-~1\bin\G__~1.EXE -- -std=gnu++11
-"..\..\cov-analysis\bin\cov-build.exe" --dir ..\..\cov-int ninja.exe install
+"..\..\cov-analysis\bin\cov-build.exe" --dir ..\..\cov-int mingw32-make.exe install
 
 rem type C:\projects\Npackd\cov-int\build-log.txt
 
@@ -163,7 +163,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake -LAH
 
-ninja.exe install
+mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 
@@ -249,7 +249,7 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-ninja.exe install
+mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 strip ..\install\clu.exe
