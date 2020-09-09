@@ -53,7 +53,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 cd build
 
-set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%
+set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
