@@ -137,7 +137,7 @@ if "%bits%" neq "64" goto :eof
 
 pushd npackdg\build
 
-set path=%mingw%\bin;ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
+set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
@@ -164,7 +164,7 @@ mkdir npackdcl\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdcl\build
-set path=%mingw%\bin;ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
+set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
