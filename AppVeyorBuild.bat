@@ -5,8 +5,6 @@ rem This script is used by AppVeyor to build the project.
 set initial_path=%path%
 
 where appveyor
-where cmake
-
 set version=%APPVEYOR_BUILD_VERSION:~0,-4%
 
 SET NPACKD_CL=C:\Program Files\NpackdCL
@@ -60,7 +58,7 @@ mkdir npackdg\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdg\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
@@ -139,7 +137,7 @@ if "%bits%" neq "64" goto :eof
 
 pushd npackdg\build
 
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set path=%mingw%\bin;ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
@@ -166,7 +164,7 @@ mkdir npackdcl\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdcl\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set path=%mingw%\bin;ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib
@@ -174,8 +172,6 @@ set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install
 if %errorlevel% neq 0 exit /b %errorlevel%
-
-cmake -LAH
 
 mingw32-make.exe -j 2 install
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -257,7 +253,7 @@ mkdir clu\build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd clu\build
-set path=%mingw%\bin;C:\Program Files (x86)\CMake\bin;%ai%\bin\x86;%sevenzip%
+set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set qtdir=%qt:\=/%
 set CMAKE_INCLUDE_PATH=%quazip%\include
 set CMAKE_LIBRARY_PATH=%quazip%\lib

@@ -37,6 +37,9 @@ rem update all packages to the newest versions
 C:\msys64\usr\bin\pacman -Syu --noconfirm 
 C:\msys64\usr\bin\pacman -Syu --noconfirm 
 
+pacman -S --noconfirm mingw64/mingw-w64-x86_64-cmake mingw64/mingw-w64-x86_64-ninja mingw64/mingw-w64-x86_64-wget
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 if %bits% equ 64 goto bits64
 
 C:\msys64\usr\bin\pacman -S --noconfirm mingw-w64-i686-ninja mingw-w64-i686-toolchain mingw-w64-i686-libtool mingw32/mingw-w64-i686-jasper mingw32/mingw-w64-i686-qt5-static mingw32/mingw-w64-i686-icu mingw32/mingw-w64-i686-zstd
