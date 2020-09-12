@@ -245,5 +245,6 @@ file(TO_CMAKE_PATH "$ENV{EXEPROXY}" EXEPROXY)
 install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 if(WIN32 AND NOT ${NPACKD_FORCE_STATIC})
-    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --no-compiler-runtime --pdb \"${CMAKE_INSTALL_PREFIX}/npackdg.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
+    # --no-compiler-runtime was here before
+    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --pdb \"${CMAKE_INSTALL_PREFIX}/npackdg.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
 endif()
