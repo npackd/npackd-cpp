@@ -875,9 +875,9 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 			tpms.append(new ControlPanelThirdPartyPM());
             replace.append(true);
 
-            //jobTitles.append(QObject::tr("Detecting Windows Update packages"));
-            //tpms.append(new WUAThirdPartyPM());
-            //replace.append(true);
+            jobTitles.append(QObject::tr("Detecting Windows Update packages"));
+            tpms.append(new WUAThirdPartyPM());
+            replace.append(true);
         }
 
         QList<Repository*> repositories;
