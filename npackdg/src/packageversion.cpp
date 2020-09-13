@@ -1125,6 +1125,9 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
         *errMsg = QObject::tr("Cannot find the EXE Proxy executable.");
     }
 
+    if (!d.exists(sourceBasePath))
+        d.mkpath(sourceBasePath);
+
     if (errMsg->isEmpty()) {
         for (int i = 0; i < this->cmdFiles.count(); i++) {
             QString cmdFilePath = this->cmdFiles.at(i);
