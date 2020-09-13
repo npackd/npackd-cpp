@@ -1201,6 +1201,9 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
     }
 
     if (errMsg->isEmpty()) {
+        if (!d.exists(sourceBasePath))
+            d.mkpath(sourceBasePath);
+
         for (int i = 0; i < this->cmdFiles.count(); i++) {
             QString cmdFilePath = this->cmdFiles.at(i);
             cmdFilePath.replace('/', '\\');
