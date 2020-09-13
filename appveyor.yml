@@ -1,4 +1,4 @@
-version: 1.26.6.{build}
+version: 1.26.7.{build}
 clone_folder: c:\projects\Npackd
 environment:
   matrix:
