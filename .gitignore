@@ -33,3 +33,4 @@ npackdstatic/
 /build-minsizerel/
 /npackdg/build-minsizerel/
 /build-32/
+/node_modules/
