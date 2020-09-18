@@ -1,5 +1,62 @@
 QT = "C:/msys64/mingw64/qt5-static";
 
+task("echo")
+
+    -- Set the run script
+    on_run(function ()
+
+        -- Import parameter option module
+        import("core.base.option")
+
+        -- Initialize color mode
+        local modes = ""
+        for _, mode in ipairs({"bright", "dim", "blink", "reverse"}) do
+            if option.get(mode) then
+                modes = modes .. " " .. mode
+            end
+        end
+
+        -- Get parameter content and display information
+        cprint("${%s%s}%s", option.get("color"), modes, table.concat(option.get("contents") or {}, " "))
+    end)
+
+    -- Set the command line options for the plugin. There are no parameter options here, just the plugin description.
+    set_menu {
+                -- Settings menu usage
+                usage = "xmake echo [options]"
+
+                -- Setup menu description
+            ,   description = "Echo the given info!"
+
+                -- Set menu options, if there are no options, you can set it to {}
+            ,   options =
+                {
+                    -- Set k mode as key-only bool parameter
+                    {'b', "bright", "k", nil, "Enable bright." }
+                ,   {'d', "dim", "k", nil, "Enable dim." }
+                ,   {'-', "blink", "k", nil, "Enable blink." }
+                ,   {'r', "reverse", "k", nil, "Reverse color." }
+
+                    -- When the menu is displayed, a blank line
+                ,   {}
+
+                    -- Set kv as the key-value parameter and set the default value: black
+                ,   {'c', "color", "kv", "black", "Set the output color."
+                                                     , " - red"
+                                                     , " - blue"
+                                                     , " - yellow"
+                                                     , " - green"
+                                                     , " - magenta"
+                                                     , " - cyan"
+                                                     , " - white" }
+
+                    -- Set `vs` as a value multivalued parameter and a `v` single value type
+                    -- generally placed last, used to get a list of variable parameters
+                ,   {}
+                ,   {nil, "contents", "vs", nil, "The info contents." }
+                }
+            }
+	
 target("npackdg")
     add_includedirs("C:/builds/quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static/include")
 	add_includedirs(QT .. "/include");
