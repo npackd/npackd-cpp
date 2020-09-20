@@ -1,3 +1,4 @@
+
 QT = "C:/msys64/mingw64/qt5-static";
 
 task("echo")
@@ -58,6 +59,14 @@ task("echo")
             }
 	
 target("npackdg")
+	on_load(function (target)
+        local appveyor = io.readfile("../appveyor.yml") 
+		local version = string.trim(appveyor:split("\n")[1]:split(":")[2]:split(".{")[1])
+		print("v:", version)
+		target:set("version", version)
+		target:add("defines", "NPACKD_VERSION=\"" .. version .. "\"")
+		local parts = version:split(".")
+    end)
     add_includedirs("C:/builds/quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static/include")
 	add_includedirs(QT .. "/include");
 	add_includedirs(QT .. "/include/QtSql");
@@ -73,9 +82,17 @@ target("npackdg")
     add_files("src/*.c")
     add_files("src/*.ui")
     add_files("src/*.h")
-    add_files("src/*.rc")
     add_files("src/*.qrc")
-	add_defines("UNICODE", "_UNICODE", "NPACKD_VERSION=\"1.27.0.0\"")
+	add_files("$(buildir)/app.rc")
+    set_configvar("NPACKD_VERSION_MAJOR", "1")
+    set_configvar("NPACKD_VERSION_MINOR", "27")
+    set_configvar("NPACKD_VERSION_PATCH", "0")
+    set_configvar("NPACKD_VERSION_TWEAK", "1")
+    set_configvar("OUTPUT_FILE_NAME", "npackdg.exe")
+    add_configfiles("src/app.rc.in")
+    add_configfiles("src/npackdg.manifest", {copyonly = true})
+    add_configfiles("src/app.ico", {copyonly = true})
+	add_defines("UNICODE", "_UNICODE")
 	add_defines("QT_CORE_LIB", "QT_NO_DEBUG", "QT_SQL_LIB", "QT_XML_LIB", "QUAZIP_STATIC=1", "_WIN32_WINNT=0x0600", "NDEBUG", "QT_LINK_STATIC");
 	add_cxflags("-static -static-libstdc++", "-static-libgcc", 
 			"-g", "-Os", "-Wall", "-Winit-self", "-Wwrite-strings", 

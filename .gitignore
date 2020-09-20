@@ -35,3 +35,5 @@ npackdstatic/
 /build-32/
 /node_modules/
 /npackdg/.xmake/
+/npackdg/waf3-*
+/npackdg/.lock-waf_win32_build
