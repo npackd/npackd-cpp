@@ -1,0 +1,78 @@
+# set path=c:\msys64\mingw64\qt5-static\bin;c:\msys64\mingw64\bin;c:\Program Files\Python_64_bit
+# set QT5_FORCE_STATIC=1
+
+APPNAME = 'npackdg'
+VERSION = '1.27.0.0'
+
+top = '.'
+out = 'build'
+
+def options(opt):
+    opt.load('compiler_c compiler_cxx qt5 winres')
+
+def configure(conf):
+    conf.load('compiler_c compiler_cxx qt5 winres')
+    if not conf.env.QT_LRELEASE:
+        # While qt5 detects most Qt tools, most of them are optional
+        conf.fatal('lrelease was not found')
+    conf.env.SHLIB_MARKER = ''
+
+def build(bld):
+    start_dir = bld.path.find_dir('src')
+    QT = "C:/msys64/mingw64/qt5-static"
+    
+    bld(rule='copy ${SRC} ${TGT}', source='src/app.rc.in', target='src/app.rc')
+    bld(rule='copy ${SRC} ${TGT}', source='src/npackdg.manifest', target='build/src/npackdg.manifest')
+
+    bld(
+        features = 'qt5 cxx cxxprogram',
+        # 'QT5CORE QT5GUI QT5SVG QT5WIDGETS',
+        use      = '',
+        source   = start_dir.ant_glob(['*.cpp', '*.c', '*.ui']) + ["src/app.rc"],
+        moc      = ("src/visiblejobs.h src/asyncdownloader.h src/clprogress.h src/downloader.h src/downloadsizefinder.h src/exportrepositoryframe.h src/fileloader.h " +
+            " src/installedpackages.h src/job.h src/licenseform.h src/mainframe.h src/mainwindow.h src/messageframe.h src/packageframe.h src/packageversionform.h src/progresstree2.h " +
+            " src/settingsframe.h src/urlinfo.h"),  
+        target   = 'npackdg',
+        cflags       = ["-static", "-static-libstdc++", "-static-libgcc", "-g", "-Os", "-Wall", "-Winit-self", "-Wwrite-strings", "-Wextra", "-Wno-long-long", "-Wno-overloaded-virtual", "-Wno-missing-field-initializers", "-Wno-unused-parameter", "-Wno-unknown-pragmas", "-Wno-cast-function-type", "-Wno-unused-but-set-parameter", "-Wno-error=cast-qual", "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11"],
+        cxxflags       = ["-static", "-static-libstdc++", "-static-libgcc", "-g", "-Os", "-Wall", "-Winit-self", "-Wwrite-strings", "-Wextra", "-Wno-long-long", "-Wno-overloaded-virtual", "-Wno-missing-field-initializers", "-Wno-unused-parameter", "-Wno-unknown-pragmas", "-Wno-cast-function-type", "-Wno-unused-but-set-parameter", "-Wno-error=cast-qual", "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11"],
+        linkflags = ["-static", "-static-libstdc++", "-static-libgcc", "-g", "-Os", "-Wl,--subsystem,windows:6.1", "-Wl,-Map,build/npackdg.map", "-mwindows", "-Wl,--major-image-version,0,--minor-image-version,0", "-Wl,-O2", "-Wl,-s"],
+        lib =[],
+        stlib          = [
+            "quazip", "qwindowsvistastyle", "Qt5widgets", "qwindows", "Qt5VulkanSupport", "Qt5Gui", "Qt5WinExtras", "Qt5FontDatabaseSupport", "qsqlite", "Qt5sql", "Qt5xml", "Qt5Core",
+            "qicns", "qico", "qjpeg", "qgif", "qtga", "qtiff", "qwbmp", "qwebp",
+            "mingwex", "Qt5ThemeSupport", "Qt5EventDispatcherSupport", "Qt5FontDatabaseSupport", "Qt5PlatformCompositorSupport", "Qt5WindowsUIAutomationSupport", "qdirect2d",
+            "jasper", "icuin", "icuuc", "icudt", "icutu", "qtpcre2", "qtharfbuzz", "qtfreetype", "qtlibpng", "jpeg", "zstd", "z",
+            "gdi32", 
+            "imm32", "winmm", "glu32", "mpr", "userenv", "wtsapi32", "opengl32", "ole32", "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "UxTheme", "Dwmapi", "taskschd", "oleaut32"            
+        ],
+        stlibpath = [
+            QT + "/share/qt5/plugins/platforms",
+            QT + "/share/qt5/plugins/imageformats",
+            QT + "/share/qt5/plugins/sqldrivers",
+            QT + "/share/qt5/plugins/styles",
+            QT + "/lib/",
+            "C:/builds/quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static/lib"
+        ],
+        includes     = [
+            "build/src",
+            "C:/builds/quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static/include",
+            QT + "/include",
+            QT + "/include/QtSql",
+            QT + "/include/QtCore",
+            QT + "/share/qt5/mkspecs/win32-g++",
+            QT + "/include/QtXml",
+            QT + "/include/QtWidgets",
+            QT + "/include/QtGui",
+            QT + "/include/QtWinExtras"
+        ],
+        defines = [
+            "UNICODE", "_UNICODE", "NPACKD_VERSION=\"1.27.0.0\"",
+            "QT_CORE_LIB", "QT_NO_DEBUG", "QT_SQL_LIB", "QT_XML_LIB", "QUAZIP_STATIC=1", "_WIN32_WINNT=0x0600", "NDEBUG", "QT_LINK_STATIC"
+        ],
+
+        lang     = bld.path.ant_glob('src/*.ts'),
+        langname = 'somefile', # include the .qm files from somefile.qrc
+    )
+
+def hello(ctx):
+    print('hello world')
