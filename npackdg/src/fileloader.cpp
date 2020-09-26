@@ -109,10 +109,7 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
             if (!job->getErrorMessage().isEmpty()) {
                 r.error = job->getErrorMessage();
             } else {
-                // supported extensions:
-                // "bmp", "cur", "dds", "gif", "icns", "ico", "jp2", "jpeg",
-                // "jpg", "mng", "pbm", "pgm", "png", "ppm", "tga", "tif",
-                // "tiff", "wbmp", "webp", "xbm", "xpm"
+                // see main.cpp for the supported extensions.
                 QString ext;
                 if (mime == "image/png")
                     ext = ".png";
@@ -124,6 +121,8 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
                     ext = ".gif";
                 else if (mime == "image/x-windows-bmp" || mime == "image/bmp")
                     ext = ".bmp";
+                else if (mime == "image/svg+xml")
+                    ext = ".svg";
                 else
                     ext = ".png";
 

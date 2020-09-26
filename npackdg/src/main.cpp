@@ -77,6 +77,8 @@ int main(int argc, char *argv[])
     // "bmp", "cur", "gif", "icns", "ico", "jp2", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "tga", "tif", "tiff", "wbmp", "webp", "xbm", "xpm"
     // July, 27 2019:
     // "bmp", "cur", "gif", "icns", "ico", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "tga", "tif", "tiff", "wbmp", "webp", "xbm", "xpm"
+    // September, 26 2020:
+    // "bmp", "cur", "gif", "icns", "ico", "jpeg", "jpg", "pbm", "pgm", "png", "ppm", "svg", "svgz", "tga", "tif", "tiff", "wbmp", "webp", "xbm", "xpm"
     qCDebug(npackd) << QImageReader::supportedImageFormats();
 
     // July, 25 2018: "windowsvista", "Windows", "Fusion"

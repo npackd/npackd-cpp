@@ -651,13 +651,10 @@ QIcon MainWindow::downloadIcon(const QString &url)
         if (!err.isEmpty()) {
             r = MainWindow::genericAppIcon;
         } else if (!file.isEmpty()) {
-            QPixmap pm(file);
+            //inCache = new QIcon(file);
+            //icons.insert(url, inCache);
 
-            /* gray
-            QStyleOption opt(0);
-            opt.palette = QApplication::palette();
-            pm = QApplication::style()->generatedIconPixmap(QIcon::Disabled, pm, &opt);
-            */
+            QPixmap pm(file);
 
             if (!pm.isNull()) {
                 pm = pm.scaled(32, 32, Qt::KeepAspectRatio,
