@@ -13,7 +13,6 @@ if(WIN32)
     set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
-#  -Wl,--major-os-version,6 -Wl,--minor-os-version,1
 if(NOT MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 

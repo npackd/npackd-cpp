@@ -73,8 +73,8 @@ if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DDLL_EXPORT -DUNICODE -D_UNICODE)
 endif()
 
-# Vista
-add_definitions(-D_WIN32_WINNT=0x0600)
+# Windows 7
+add_definitions(-D_WIN32_WINNT=0x0601)
 
 # GCC compiler flags
 if(MINGW)

@@ -1724,62 +1724,47 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 {
     QList<HANDLE> r;
 
-    OSVERSIONINFO osvi;
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    GetVersionEx(&osvi);
+    QVector<DWORD> aiPID = getProcessIDs();
 
-    // >= Windows Vista
-    if (osvi.dwMajorVersion >= 6) {
-        typedef BOOL (WINAPI *LPFQUERYFULLPROCESSIMAGENAME)(
-                HANDLE, DWORD, LPTSTR, PDWORD);
+    // How many processes are there?
+    int iNumProc = aiPID.size();
 
-        HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
-		LPFQUERYFULLPROCESSIMAGENAME lpfQueryFullProcessImageName =
-                (LPFQUERYFULLPROCESSIMAGENAME)
-                GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
+    // Get and match the name of each process
+    for (int i = 0; i < iNumProc; i++) {
+        // First, get a handle to the process
+        HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, aiPID[i]);
 
-        QVector<DWORD> aiPID = getProcessIDs();
-
-        // How many processes are there?
-        int iNumProc = aiPID.size();
-
-        // Get and match the name of each process
-        for (int i = 0; i < iNumProc; i++) {
-            // First, get a handle to the process
-            HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, aiPID[i]);
-
-            // Now, get the process name
-            if (hProc) {
-                HMODULE hMod;
-                DWORD iCbneeded;
-                if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
-                    if (iCbneeded != 0) {
-                        HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
-                        if (EnumProcessModules(hProc, modules, iCbneeded,
-                                &iCbneeded)) {
-                            DWORD len = MAX_PATH;
-                            WCHAR szName[MAX_PATH];
-                            if (lpfQueryFullProcessImageName(hProc, 0, szName,
-                                    &len)) {
-                                QString s = QString::fromUtf16(
-                                        reinterpret_cast<ushort*>(szName),
-                                        static_cast<int>(len));
-                                if (WPMUtils::pathEquals(s, dir) ||
-                                        WPMUtils::isUnder(s, dir)) {
-                                    r.append(hProc);
-                                    hProc = nullptr;
-                                }
+        // Now, get the process name
+        if (hProc) {
+            HMODULE hMod;
+            DWORD iCbneeded;
+            if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
+                if (iCbneeded != 0) {
+                    HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
+                    if (EnumProcessModules(hProc, modules, iCbneeded,
+                            &iCbneeded)) {
+                        DWORD len = MAX_PATH;
+                        WCHAR szName[MAX_PATH];
+                        if (QueryFullProcessImageName(hProc, 0, szName,
+                                &len)) {
+                            QString s = QString::fromUtf16(
+                                    reinterpret_cast<ushort*>(szName),
+                                    static_cast<int>(len));
+                            if (WPMUtils::pathEquals(s, dir) ||
+                                    WPMUtils::isUnder(s, dir)) {
+                                r.append(hProc);
+                                hProc = nullptr;
                             }
                         }
-                        delete[] modules;
                     }
+                    delete[] modules;
                 }
-                if (hProc)
-                    CloseHandle(hProc);
             }
+            if (hProc)
+                CloseHandle(hProc);
         }
-        FreeLibrary(hInstLib);
     }
+
     return r;
 }
 
@@ -2120,58 +2105,43 @@ QStringList WPMUtils::getProcessFiles()
 {
     QStringList r;
 
-    OSVERSIONINFO osvi;
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    GetVersionEx(&osvi);
+    QVector<DWORD> aiPID = getProcessIDs();
 
-    // >= Windows Vista
-    if (osvi.dwMajorVersion >= 6) {
-        typedef BOOL (WINAPI *LPFQUERYFULLPROCESSIMAGENAME)(
-                HANDLE, DWORD, LPTSTR, PDWORD);
+    // How many processes are there?
+    int iNumProc = aiPID.size();
 
-        HINSTANCE hInstLib = LoadLibraryA("KERNEL32.DLL");
-		LPFQUERYFULLPROCESSIMAGENAME lpfQueryFullProcessImageName =
-                (LPFQUERYFULLPROCESSIMAGENAME)
-                GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
+    // Get and match the name of each process
+    for (int i = 0; i < iNumProc; i++) {
+        // First, get a handle to the process
+        HANDLE hProc = OpenProcess(
+                PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
+                FALSE, aiPID[i]);
 
-        QVector<DWORD> aiPID = getProcessIDs();
-
-        // How many processes are there?
-        int iNumProc = aiPID.size();
-
-        // Get and match the name of each process
-        for (int i = 0; i < iNumProc; i++) {
-            // First, get a handle to the process
-            HANDLE hProc = OpenProcess(
-                    PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
-                    FALSE, aiPID[i]);
-
-            // Now, get the process name
-            if (hProc) {
-                HMODULE hMod;
-                DWORD iCbneeded;
-                if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
-                    if (iCbneeded != 0) {
-                        HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
-                        if (EnumProcessModules(hProc, modules, iCbneeded,
-                                &iCbneeded)) {
-                            DWORD len = MAX_PATH;
-                            WCHAR szName[MAX_PATH];
-                            if (lpfQueryFullProcessImageName(hProc, 0, szName,
-                                    &len)) {
-                                QString s;
-                                s.setUtf16((ushort*) szName, len);
-                                r.append(s);
-                            }
+        // Now, get the process name
+        if (hProc) {
+            HMODULE hMod;
+            DWORD iCbneeded;
+            if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
+                if (iCbneeded != 0) {
+                    HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
+                    if (EnumProcessModules(hProc, modules, iCbneeded,
+                            &iCbneeded)) {
+                        DWORD len = MAX_PATH;
+                        WCHAR szName[MAX_PATH];
+                        if (QueryFullProcessImageName(hProc, 0, szName,
+                                &len)) {
+                            QString s;
+                            s.setUtf16((ushort*) szName, len);
+                            r.append(s);
                         }
-                        delete[] modules;
                     }
+                    delete[] modules;
                 }
-                CloseHandle(hProc);
             }
+            CloseHandle(hProc);
         }
-        FreeLibrary(hInstLib);
     }
+
     return r;
 }
 
