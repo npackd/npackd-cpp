@@ -1736,32 +1736,55 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 
         // Now, get the process name
         if (hProc) {
-            HMODULE hMod;
-            DWORD iCbneeded;
-            if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
-                if (iCbneeded != 0) {
-                    HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
-                    if (EnumProcessModules(hProc, modules, iCbneeded,
-                            &iCbneeded)) {
-                        DWORD len = MAX_PATH;
-                        WCHAR szName[MAX_PATH];
-                        if (QueryFullProcessImageName(hProc, 0, szName,
-                                &len)) {
-                            QString s = QString::fromUtf16(
-                                    reinterpret_cast<ushort*>(szName),
-                                    static_cast<int>(len));
-                            if (WPMUtils::pathEquals(s, dir) ||
-                                    WPMUtils::isUnder(s, dir)) {
-                                r.append(hProc);
-                                hProc = nullptr;
-                            }
-                        }
-                    }
-                    delete[] modules;
+            bool found = false;
+
+            // .exe
+            DWORD len = MAX_PATH;
+            WCHAR szName[MAX_PATH];
+            if (QueryFullProcessImageName(hProc, 0, szName, &len)) {
+                QString s = QString::fromUtf16(
+                        reinterpret_cast<ushort*>(szName),
+                        static_cast<int>(len));
+                if (WPMUtils::pathEquals(s, dir) ||
+                        WPMUtils::isUnder(s, dir)) {
+                    found = true;
                 }
             }
-            if (hProc)
+
+            // .dll
+            if (!found) {
+                HMODULE hMod;
+                DWORD iCbneeded;
+                if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
+                    if (iCbneeded != 0) {
+                        HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
+                        if (EnumProcessModules(hProc, modules, iCbneeded,
+                                &iCbneeded)) {
+
+                            for (DWORD i = 0; i < iCbneeded / sizeof(HMODULE); i++) {
+                                if (GetModuleFileNameEx(hProc, modules[i], szName, len)) {
+                                    QString s = QString::fromUtf16(
+                                            reinterpret_cast<ushort*>(szName),
+                                            static_cast<int>(len));
+                                    if (WPMUtils::pathEquals(s, dir) ||
+                                            WPMUtils::isUnder(s, dir)) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        delete[] modules;
+                    }
+                }
+            }
+
+            if (found) {
+                r.append(hProc);
+                hProc = nullptr;
+            } else {
                 CloseHandle(hProc);
+            }
         }
     }
 
