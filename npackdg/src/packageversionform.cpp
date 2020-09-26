@@ -13,6 +13,7 @@
 #include "dbrepository.h"
 #include "installedpackages.h"
 #include "installedpackageversion.h"
+#include "uiutils.h"
 
 PackageVersionForm::PackageVersionForm(QWidget *parent) :
     QWidget(parent),
@@ -25,7 +26,7 @@ PackageVersionForm::PackageVersionForm(QWidget *parent) :
 void PackageVersionForm::updateIcons()
 {
     QIcon icon = MainWindow::getPackageIcon(this->pv->package);
-    QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
+    QPixmap pixmap = icon.pixmap(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE, QIcon::Normal, QIcon::On);
     this->ui->labelIcon->setPixmap(pixmap);
 }
 

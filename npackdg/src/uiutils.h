@@ -18,6 +18,9 @@ private:
 
     static QString createPackageVersionsHTML(const QStringList &names);
 public:
+    /** size of an icon in the UI */
+    static const int ICON_SIZE = 32;
+
     /**
      * @brief processes the specified operations by copying this executable to a
      *     temporary location, closing this instance of the UI, and starting

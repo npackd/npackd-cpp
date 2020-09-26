@@ -64,6 +64,7 @@
 #include "asyncdownloader.h"
 #include "uimessagehandler.h"
 #include "packageutils.h"
+#include "uiutils.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -657,7 +658,7 @@ QIcon MainWindow::downloadIcon(const QString &url)
             QPixmap pm(file);
 
             if (!pm.isNull()) {
-                pm = pm.scaled(32, 32, Qt::KeepAspectRatio,
+                pm = pm.scaled(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE, Qt::KeepAspectRatio,
                         Qt::SmoothTransformation);
 
                 inCache = new QIcon(pm);

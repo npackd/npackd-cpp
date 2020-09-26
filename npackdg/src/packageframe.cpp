@@ -17,6 +17,7 @@
 #include "licenseform.h"
 #include "packageversionform.h"
 #include "dbrepository.h"
+#include "uiutils.h"
 
 PackageFrame::PackageFrame(QWidget *parent) :
     QFrame(parent),
@@ -67,7 +68,7 @@ void PackageFrame::updateIcons(const QString& url)
 {
     if (p->getIcon() == url) {
         QIcon icon = MainWindow::getPackageIcon(p->name);
-        QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
+        QPixmap pixmap = icon.pixmap(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE, QIcon::Normal, QIcon::On);
         this->ui->labelIcon->setPixmap(pixmap);
     }
 
@@ -167,7 +168,7 @@ void PackageFrame::fillForm(Package* p)
     this->ui->labelIssues->setText(s);
 
     QIcon icon = MainWindow::getPackageIcon(p->name);
-    QPixmap pixmap = icon.pixmap(32, 32, QIcon::Normal, QIcon::On);
+    QPixmap pixmap = icon.pixmap(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE, QIcon::Normal, QIcon::On);
     this->ui->labelIcon->setPixmap(pixmap);
 
     MainWindow* mw = MainWindow::getInstance();

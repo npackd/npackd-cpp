@@ -15,6 +15,7 @@
 #include "packageitemmodel.h"
 #include "windowsregistry.h"
 #include "abstractrepository.h"
+#include "uiutils.h"
 
 MainFrame::MainFrame(QWidget *parent) :
     QFrame(parent), Selection(),
@@ -52,7 +53,7 @@ MainFrame::MainFrame(QWidget *parent) :
     t->horizontalHeader()->setSectionHidden(7, true);
     t->horizontalHeader()->setSectionHidden(8, true);
     t->horizontalHeader()->setSectionHidden(9, true);
-    t->setIconSize(QSize(32, 32));
+    t->setIconSize(QSize(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE));
 
     connect(t->selectionModel(),
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
