@@ -2100,51 +2100,6 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
     return result;
 }
 
-// see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx
-QStringList WPMUtils::getProcessFiles()
-{
-    QStringList r;
-
-    QVector<DWORD> aiPID = getProcessIDs();
-
-    // How many processes are there?
-    int iNumProc = aiPID.size();
-
-    // Get and match the name of each process
-    for (int i = 0; i < iNumProc; i++) {
-        // First, get a handle to the process
-        HANDLE hProc = OpenProcess(
-                PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
-                FALSE, aiPID[i]);
-
-        // Now, get the process name
-        if (hProc) {
-            HMODULE hMod;
-            DWORD iCbneeded;
-            if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
-                if (iCbneeded != 0) {
-                    HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
-                    if (EnumProcessModules(hProc, modules, iCbneeded,
-                            &iCbneeded)) {
-                        DWORD len = MAX_PATH;
-                        WCHAR szName[MAX_PATH];
-                        if (QueryFullProcessImageName(hProc, 0, szName,
-                                &len)) {
-                            QString s;
-                            s.setUtf16((ushort*) szName, len);
-                            r.append(s);
-                        }
-                    }
-                    delete[] modules;
-                }
-            }
-            CloseHandle(hProc);
-        }
-    }
-
-    return r;
-}
-
 QString WPMUtils::getShellDir(int type)
 {
     /* since Vista

@@ -306,11 +306,6 @@ public:
     static bool isUnder(const QString& file, const QString& dir);
 
     /**
-     * @return full paths to files locked because of running processes
-     */
-    static QStringList getProcessFiles();
-
-    /**
      * Scans all files in a directory and deletes all links (.lnk) to files
      * in another directory.
      *
