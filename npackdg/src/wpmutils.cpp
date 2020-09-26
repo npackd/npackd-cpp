@@ -1698,18 +1698,23 @@ QVector<DWORD> WPMUtils::getProcessIDs()
 {
     QVector<DWORD> r;
 
-    r.resize(100);
-    DWORD cb = r.size() * sizeof(DWORD);
-    DWORD cbneeded;
-    BOOL ok;
-    ok = EnumProcesses(r.data(), cb, &cbneeded);
-    if (!ok && cb < cbneeded) {
-        r.resize(cbneeded / sizeof(DWORD) + 1);
-        cb = r.size() * sizeof(DWORD);
-        ok = EnumProcesses(r.data(), cb, &cbneeded);
-    }
-    if (ok) {
-        r.resize(cbneeded / sizeof(DWORD));
+    int n = 200;
+
+    while (true) {
+        r.resize(n);
+        DWORD cb = r.size() * sizeof(DWORD);
+        DWORD cbneeded;
+        if (!EnumProcesses(r.data(), cb, &cbneeded)) {
+            r.resize(0);
+            break;
+        }
+
+        if (cbneeded < cb) {
+            r.resize(cbneeded / sizeof(DWORD));
+            break;
+        } else {
+            n *= 2;
+        }
     }
 
     return r;
@@ -1733,15 +1738,10 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
                 (LPFQUERYFULLPROCESSIMAGENAME)
                 GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
 
-        DWORD aiPID[1000], iCb = 1000;
-        DWORD iCbneeded;
-        if (!EnumProcesses(aiPID, iCb, &iCbneeded)) {
-            FreeLibrary(hInstLib);
-            return r;
-        }
+        QVector<DWORD> aiPID = getProcessIDs();
 
         // How many processes are there?
-        int iNumProc = iCbneeded / sizeof(DWORD);
+        int iNumProc = aiPID.size();
 
         // Get and match the name of each process
         for (int i = 0; i < iNumProc; i++) {
@@ -1751,6 +1751,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
             // Now, get the process name
             if (hProc) {
                 HMODULE hMod;
+                DWORD iCbneeded;
                 if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
                     if (iCbneeded != 0) {
                         HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
@@ -2133,15 +2134,10 @@ QStringList WPMUtils::getProcessFiles()
                 (LPFQUERYFULLPROCESSIMAGENAME)
                 GetProcAddress(hInstLib, "QueryFullProcessImageNameW");
 
-        DWORD aiPID[1000], iCb = 1000;
-        DWORD iCbneeded;
-        if (!EnumProcesses(aiPID, iCb, &iCbneeded)) {
-            FreeLibrary(hInstLib);
-            return r;
-        }
+        QVector<DWORD> aiPID = getProcessIDs();
 
         // How many processes are there?
-        int iNumProc = iCbneeded / sizeof(DWORD);
+        int iNumProc = aiPID.size();
 
         // Get and match the name of each process
         for (int i = 0; i < iNumProc; i++) {
@@ -2153,6 +2149,7 @@ QStringList WPMUtils::getProcessFiles()
             // Now, get the process name
             if (hProc) {
                 HMODULE hMod;
+                DWORD iCbneeded;
                 if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &iCbneeded)) {
                     if (iCbneeded != 0) {
                         HMODULE* modules = new HMODULE[iCbneeded / sizeof(HMODULE)];
