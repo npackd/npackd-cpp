@@ -20,9 +20,11 @@ their 32 bit versions.
    "Audio", "Extended", check "Audio output"
 - resize the disk in VirtualBox to 100 GiB ("Tools", "Hard disks", "Properties")
 - Start the VM. Password for IEUser is Passw0rd!, 
+- change the password: "net user ieuser newpassword" as administrator
+
+## Configure Windows (optional)
 - (optional) Start netplwiz, enable and disable password on login. Enter new password.
 - (optional) Disable and enable bidirectional clipboard in VirtualBox under "Devices", "Common clipboard"
-- change the password: "net user ieuser newpassword" ad administrator
 - (optional) change the desktop resolution to 1280x960
 - (optional) Start "Region & language" settings, change the language, restart the VM
 - (optional) start diskmgmt.msc, extend the hard disk partition
@@ -59,8 +61,7 @@ pacman -Syu --noconfirm
 pacman -Su --noconfirm
 pacman -S --noconfirm mingw-w64-x86_64-toolchain
 pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5-static mingw64/mingw-w64-x86_64-icu
-pacman -S --noconfirm mingw-w64-x86_64-ninja
-pacman -S --noconfirm mingw64/mingw-w64-x86_64-zstd
+pacman -S --noconfirm mingw-w64-x86_64-ninja mingw64/mingw-w64-x86_64-zstd
 ```
 - Start Git Extensions and configure "C:\Program Files\KDiff3_64_bit\kdiff3.exe" as diff and merge tool,
     tim.lebedkov@gmail.com as the email and tim-lebedkov as user name.
