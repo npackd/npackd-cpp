@@ -147,6 +147,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     instance = this;
 
+    fileLoader.init();
+
     ui->setupUi(this);
 
     this->setMenuAccelerators();

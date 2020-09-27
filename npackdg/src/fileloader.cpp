@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <shlobj.h>
 
 #include <QtGlobal>
 #if defined(_MSC_VER) && (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
@@ -20,9 +21,64 @@
 #include "job.h"
 #include "downloadsizefinder.h"
 #include "concurrent.h"
+#include "wpmutils.h"
+#include "sqlutils.h"
 
 FileLoader::FileLoader(): id(0)
 {
+}
+
+QString FileLoader::init()
+{
+    QString dir = WPMUtils::getShellDir(CSIDL_LOCAL_APPDATA) +
+            QStringLiteral("\\Npackd\\Cache");
+    QDir d;
+    if (!d.exists(dir))
+        d.mkpath(dir);
+
+    QString path = dir + QStringLiteral("\\Data.db");
+
+    path = QDir::toNativeSeparators(path);
+
+    const QString connectionName = "FileLoader";
+
+    QSqlDatabase::removeDatabase(connectionName);
+    db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+    db.setDatabaseName(path);
+
+    qCDebug(npackd) << "before opening the database";
+    db.open();
+    qCDebug(npackd) << "after opening the database";
+
+    QString err = SQLUtils::toString(db.lastError());
+
+    if (err.isEmpty())
+        err = exec(QStringLiteral("PRAGMA busy_timeout = 30000"));
+
+    if (err.isEmpty()) {
+        err = exec(QStringLiteral("PRAGMA journal_mode = DELETE"));
+    }
+
+    if (err.isEmpty()) {
+        err = exec(QStringLiteral("PRAGMA case_sensitive_like = on"));
+    }
+
+    if (err.isEmpty()) {
+        err = updateDatabase();
+    }
+
+    return err;
+}
+
+QString FileLoader::exec(const QString& sql)
+{
+    QMutexLocker ml(&this->mutex);
+
+    MySQLQuery q(db);
+    q.exec(sql);
+    QString err = SQLUtils::getErrorString(q);
+
+    return err;
 }
 
 QString FileLoader::downloadOrQueue(const QString &url, QString *err)
@@ -147,4 +203,28 @@ FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
     }
 
     return r;
+}
+
+QString FileLoader::updateDatabase()
+{
+    QString err;
+
+    bool e = false;
+
+    // URL. This table is new in Npackd 1.27.
+    if (err.isEmpty()) {
+        e = SQLUtils::tableExists(&db, "URL", &err);
+    }
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE TABLE URL("
+                    "ADDRESS TEXT NOT NULL PRIMARY KEY, "
+                    "SIZE INTEGER, "
+                    "SIZE_MODIFIED INTEGER, "
+                    "FILE TEXT)");
+            err = SQLUtils::toString(db.lastError());
+        }
+    }
+
+    return err;
 }

@@ -11,6 +11,9 @@
 #include <QMutex>
 #include <QTemporaryDir>
 #include <QMap>
+#include <QSqlError>
+
+#include "mysqlquery.h"
 
 /**
  * Loads files from the Internet.
@@ -38,17 +41,30 @@ class FileLoader: public QObject
 
     QTemporaryDir dir;
 
+    QSqlDatabase db;
+
     /**
      * @brief downloads a file
      * @param url this file should be downloaded
      * @return result
      */
     DownloadFile downloadRunnable(const QString &url);
+
+    QString exec(const QString &sql);
+    QString open(const QString &connectionName, const QString &file);
+    QString updateDatabase();
 public:
     /**
      * The thread is not started.
      */
     FileLoader();
+
+    /**
+     * @brief initialize the cache
+     *
+     * @return error message
+     */
+    QString init();
 
     virtual ~FileLoader() {}
 

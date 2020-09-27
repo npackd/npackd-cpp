@@ -38,12 +38,7 @@ private:
 
     static DBRepository def;
 
-    bool tableExists(QSqlDatabase* db,
-            const QString& table, QString* err);
-    bool columnExists(QSqlDatabase *db, const QString &table,
-            const QString &column, QString *err);
     static QString toString(const QSqlError& e);
-    static QString getErrorString(const MySQLQuery& q);
 
     mutable QMutex mutex;
 
