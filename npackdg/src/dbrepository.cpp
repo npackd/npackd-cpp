@@ -453,35 +453,36 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
     return ret;
 }
 
-QMap<QString, URLInfo*> DBRepository::findURLInfos(QString* err)
+std::tuple<URLInfo, QString> DBRepository::findURLInfo(const QString& url)
 {
     QMutexLocker ml(&this->mutex);
 
-    *err = "";
+    QString err = "";
+    URLInfo info(url);
 
-    QMap<QString, URLInfo*> ret;
-
-    QString sql("SELECT ADDRESS, SIZE, SIZE_MODIFIED FROM URL");
     MySQLQuery q(db);
-    if (!q.prepare(sql))
-        *err = getErrorString(q);
+    if (!q.prepare(QStringLiteral(
+            "SELECT SIZE, SIZE_MODIFIED FROM URL WHERE ADDRESS = :ADDRESS LIMIT 1")))
+        err = getErrorString(q);
 
-    if (err->isEmpty()) {
-        if (!q.exec())
-            *err = getErrorString(q);
+    if (npackd().isDebugEnabled()) {
+        qCDebug(npackd) << url;
     }
 
-    if (err->isEmpty()) {
-        while (q.next()) {
-            QString address = q.value(0).toString();
-            URLInfo* info = new URLInfo(address);
-            info->size = q.value(1).toLongLong();
-            info->sizeModified = q.value(2).toLongLong();
-            ret.insert(address, info);
+    if (err.isEmpty()) {
+        q.bindValue(QStringLiteral(":ADDRESS"), url);
+        if (!q.exec())
+            err = getErrorString(q);
+    }
+
+    if (err.isEmpty()) {
+        if (q.next()) {
+            info.size = q.value(0).toLongLong();
+            info.sizeModified = q.value(1).toLongLong();
         }
     }
 
-    return ret;
+    return std::tie(info, err);
 }
 
 QString DBRepository::findCategory(int cat) const

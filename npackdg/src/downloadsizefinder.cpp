@@ -105,10 +105,6 @@ URLInfo DownloadSizeFinder::downloadRunnable(
         dbr = new DBRepository();
         QString err = dbr->openDefault("defaultDownloadSizeFinder");
         qCDebug(npackd) << "DownloadSizeFinder::downloadRunnable.openDefault" << err;
-        if (err.isEmpty()) {
-            sizes = dbr->findURLInfos(&err);
-            qCDebug(npackd) << "DownloadSizeFinder::downloadRunnable.sizes" << err;
-        }
     }
     this->mutex.unlock();
 
@@ -116,6 +112,13 @@ URLInfo DownloadSizeFinder::downloadRunnable(
     URLInfo* v = this->sizes.value(url);
     if (v) {
         r = *v;
+    } else {
+        QString err;
+        std::tie(r, err) = dbr->findURLInfo(url);
+        if (err.isEmpty() && r.size >= 0) {
+            v = new URLInfo(r);
+            this->sizes.insert(r.address, v);
+        }
     }
     this->mutex.unlock();
 

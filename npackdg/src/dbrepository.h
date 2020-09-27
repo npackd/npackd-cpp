@@ -245,11 +245,11 @@ public:
     void updateStatusForInstalled(Job *job);
 
     /**
-     * @brief reads the download sizes for URLs
-     * @param err error message will be stored here
-     * @return URL -> info
+     * @brief reads the download size for an URL
+     * @param url URL
+     * @return (URL information, error message)
      */
-    QMap<QString, URLInfo*> findURLInfos(QString* err);
+    std::tuple<URLInfo, QString> findURLInfo(const QString& url);
 
     Package* findPackage_(const QString& name) const override;
 
