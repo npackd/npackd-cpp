@@ -28,8 +28,42 @@ extern HWND defaultPasswordWindow;
 QThreadPool FileLoader::threadPool;
 FileLoader::_init FileLoader::_initializer;
 
-FileLoader::FileLoader(): dbr(nullptr), id(0)
+FileLoader::FileLoader(): id(0)
 {
+    insertURLSizeQuery = nullptr;
+}
+
+QString FileLoader::saveURLSize(const QString& url, int64_t size)
+{
+    QMutexLocker ml(&this->mutex);
+
+    QString err;
+
+    if (!insertURLSizeQuery) {
+        insertURLSizeQuery = new MySQLQuery(db);
+
+        QString insertSQL("INSERT OR REPLACE INTO URL"
+                "(ADDRESS, SIZE, SIZE_MODIFIED) "
+                "VALUES(:ADDRESS, :SIZE, :SIZE_MODIFIED)");
+
+        if (!insertURLSizeQuery->prepare(insertSQL)) {
+            err = SQLUtils::getErrorString(*insertURLSizeQuery);
+            delete insertURLSizeQuery;
+        }
+    }
+
+    if (err.isEmpty()) {
+        insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
+        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
+        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
+                static_cast<qlonglong>(time(nullptr)));
+        if (!insertURLSizeQuery->exec())
+            err = SQLUtils::getErrorString(*insertURLSizeQuery);
+
+        insertURLSizeQuery->finish();
+    }
+
+    return err;
 }
 
 void FileLoader::watcherSizeFinished()
@@ -39,9 +73,7 @@ void FileLoader::watcherSizeFinished()
 
     URLInfo r = w->result();
 
-    this->mutex.lock();
-    dbr->saveURLSize(r.address, r.size);
-    this->mutex.unlock();
+    saveURLSize(r.address, r.size);
 
     this->mutex.lock();
     URLInfo* v = this->sizes.value(r.address);
@@ -82,7 +114,7 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
                 &FileLoader::downloadSizeRunnable, url);
         QFutureWatcher<URLInfo>* w =
                 new QFutureWatcher<URLInfo>(this);
-        connect(w, SIGNAL(finished()), this, SLOT(watcherFinished()));
+        connect(w, SIGNAL(finished()), this, SLOT(watcherSizeFinished()));
         w->setFuture(future);
         this->mutex.unlock();
     }
@@ -106,26 +138,22 @@ URLInfo FileLoader::downloadSizeRunnable(
     URLInfo r(url);
 
     this->mutex.lock();
-    if (!this->dbr) {
-        dbr = new DBRepository();
-        QString err = dbr->openDefault("defaultDownloadSizeFinder");
-        qCDebug(npackd) << "DownloadSizeFinder::downloadRunnable.openDefault" << err;
-    }
+    URLInfo* v = this->sizes.value(url);
     this->mutex.unlock();
 
-    this->mutex.lock();
-    URLInfo* v = this->sizes.value(url);
     if (v) {
         r = *v;
     } else {
         QString err;
-        std::tie(r, err) = dbr->findURLInfo(url);
+        std::tie(r, err) = findURLInfo(url);
         if (err.isEmpty() && r.size >= 0) {
             v = new URLInfo(r);
+
+            this->mutex.lock();
             this->sizes.insert(r.address, v);
+            this->mutex.unlock();
         }
     }
-    this->mutex.unlock();
 
     // if the value is older than 10 days, it is considered obsolete
     if (r.size >= 0 && time(nullptr) - r.sizeModified > 10 * 24 * 60 * 60) {
@@ -198,9 +226,41 @@ QString FileLoader::init()
 
 FileLoader::~FileLoader()
 {
+    delete insertURLSizeQuery;
     qDeleteAll(this->sizes);
     this->sizes.clear();
-    delete this->dbr;
+}
+
+std::tuple<URLInfo, QString> FileLoader::findURLInfo(const QString& url)
+{
+    QMutexLocker ml(&this->mutex);
+
+    QString err = "";
+    URLInfo info(url);
+
+    MySQLQuery q(db);
+    if (!q.prepare(QStringLiteral(
+            "SELECT SIZE, SIZE_MODIFIED FROM URL WHERE ADDRESS = :ADDRESS LIMIT 1")))
+        err = SQLUtils::getErrorString(q);
+
+    if (npackd().isDebugEnabled()) {
+        qCDebug(npackd) << url;
+    }
+
+    if (err.isEmpty()) {
+        q.bindValue(QStringLiteral(":ADDRESS"), url);
+        if (!q.exec())
+            err = SQLUtils::getErrorString(q);
+    }
+
+    if (err.isEmpty()) {
+        if (q.next()) {
+            info.size = q.value(0).toLongLong();
+            info.sizeModified = q.value(1).toLongLong();
+        }
+    }
+
+    return std::tie(info, err);
 }
 
 QString FileLoader::exec(const QString& sql)

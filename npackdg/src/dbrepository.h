@@ -21,7 +21,6 @@
 #include "abstractrepository.h"
 #include "mysqlquery.h"
 #include "installedpackageversion.h"
-#include "urlinfo.h"
 
 /**
  * @brief A repository stored in an SQLite database.
@@ -60,7 +59,6 @@ private:
     std::unique_ptr<MySQLQuery> deleteTagQuery;
     std::unique_ptr<MySQLQuery> deleteCmdFilesQuery;
     MySQLQuery* insertInstalledQuery;
-    MySQLQuery* insertURLSizeQuery;
 
     QStringList stopWords;
 
@@ -180,14 +178,6 @@ public:
      */
     QString saveInstalled(const QList<InstalledPackageVersion*>& installed);
 
-    /**
-     * @brief saves the download size for an URL
-     * @param url URL
-     * @param size size of the URL or -1 if unknown or -2 if an error occured
-     * @return error message
-     */
-    QString saveURLSize(const QString& url, int64_t size);
-
     QString saveLicense(License* p, bool replace) override;
 
     QString savePackageVersion(PackageVersion *p, bool replace) override;
@@ -238,13 +228,6 @@ public:
      * @param job job
      */
     void updateStatusForInstalled(Job *job);
-
-    /**
-     * @brief reads the download size for an URL
-     * @param url URL
-     * @return (URL information, error message)
-     */
-    std::tuple<URLInfo, QString> findURLInfo(const QString& url);
 
     Package* findPackage_(const QString& name) const override;
 

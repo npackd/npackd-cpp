@@ -56,7 +56,6 @@ DBRepository::DBRepository(): mutex(QMutex::Recursive)
     replacePackageQuery = nullptr;
     selectCategoryQuery = nullptr;
     insertInstalledQuery = nullptr;
-    insertURLSizeQuery = nullptr;
 
     // please note that words shorter than 3 characters are removed later anyway
     stopWords = QString("version build edition remove only "
@@ -68,7 +67,6 @@ DBRepository::DBRepository(): mutex(QMutex::Recursive)
 
 DBRepository::~DBRepository()
 {
-    delete insertURLSizeQuery;
     delete insertInstalledQuery;
     delete selectCategoryQuery;
     delete deleteLinkQuery;
@@ -124,39 +122,6 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> &inst
         }
 
         insertInstalledQuery->finish();
-    }
-
-    return err;
-}
-
-QString DBRepository::saveURLSize(const QString& url, int64_t size)
-{
-    QMutexLocker ml(&this->mutex);
-
-    QString err;
-
-    if (!insertURLSizeQuery) {
-        insertURLSizeQuery = new MySQLQuery(db);
-
-        QString insertSQL("INSERT OR REPLACE INTO URL"
-                "(ADDRESS, SIZE, SIZE_MODIFIED) "
-                "VALUES(:ADDRESS, :SIZE, :SIZE_MODIFIED)");
-
-        if (!insertURLSizeQuery->prepare(insertSQL)) {
-            err = SQLUtils::getErrorString(*insertURLSizeQuery);
-            delete insertURLSizeQuery;
-        }
-    }
-
-    if (err.isEmpty()) {
-        insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
-        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
-        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
-                static_cast<qlonglong>(time(nullptr)));
-        if (!insertURLSizeQuery->exec())
-            err = SQLUtils::getErrorString(*insertURLSizeQuery);
-
-        insertURLSizeQuery->finish();
     }
 
     return err;
@@ -399,38 +364,6 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
     }
 
     return ret;
-}
-
-std::tuple<URLInfo, QString> DBRepository::findURLInfo(const QString& url)
-{
-    QMutexLocker ml(&this->mutex);
-
-    QString err = "";
-    URLInfo info(url);
-
-    MySQLQuery q(db);
-    if (!q.prepare(QStringLiteral(
-            "SELECT SIZE, SIZE_MODIFIED FROM URL WHERE ADDRESS = :ADDRESS LIMIT 1")))
-        err = SQLUtils::getErrorString(q);
-
-    if (npackd().isDebugEnabled()) {
-        qCDebug(npackd) << url;
-    }
-
-    if (err.isEmpty()) {
-        q.bindValue(QStringLiteral(":ADDRESS"), url);
-        if (!q.exec())
-            err = SQLUtils::getErrorString(q);
-    }
-
-    if (err.isEmpty()) {
-        if (q.next()) {
-            info.size = q.value(0).toLongLong();
-            info.sizeModified = q.value(1).toLongLong();
-        }
-    }
-
-    return std::tie(info, err);
 }
 
 QString DBRepository::findCategory(int cat) const
@@ -2767,21 +2700,6 @@ QString DBRepository::updateDatabase()
         if (!e) {
             db.exec("CREATE INDEX CMD_FILE_PACKAGE_VERSION ON CMD_FILE("
                     "PACKAGE, VERSION)");
-            err = toString(db.lastError());
-        }
-    }
-
-    // URL. This table is new in Npackd 1.24.
-    if (err.isEmpty()) {
-        e = SQLUtils::tableExists(&db, "URL", &err);
-    }
-    if (err.isEmpty()) {
-        if (!e) {
-            db.exec("CREATE TABLE URL("
-                    "ADDRESS TEXT NOT NULL PRIMARY KEY, "
-                    "SIZE INTEGER, "
-                    "SIZE_MODIFIED INTEGER, "
-                    "CONTENT BLOB)");
             err = toString(db.lastError());
         }
     }

@@ -26,6 +26,8 @@ class FileLoader: public QObject
 {
     Q_OBJECT
 
+    MySQLQuery* insertURLSizeQuery;
+
     /**
      * @brief URL -> size as int64_t or -1 if unknown or -2 if an error occured
      *     The data in this field should be accessed under the mutex.
@@ -33,8 +35,6 @@ class FileLoader: public QObject
     QMap<QString, URLInfo*> sizes;
 
     QMutex mutex;
-
-    DBRepository* dbr;
 
     /**
      * @brief downloads a file
@@ -63,6 +63,13 @@ class FileLoader: public QObject
     QSqlDatabase db;
 
     /**
+     * @brief reads the download size for an URL
+     * @param url URL
+     * @return (URL information, error message)
+     */
+    std::tuple<URLInfo, QString> findURLInfo(const QString& url);
+
+    /**
      * @brief downloads a file
      * @param url this file should be downloaded
      * @return result
@@ -72,6 +79,14 @@ class FileLoader: public QObject
     QString exec(const QString &sql);
     QString open(const QString &connectionName, const QString &file);
     QString updateDatabase();
+
+    /**
+     * @brief saves the download size for an URL
+     * @param url URL
+     * @param size size of the URL or -1 if unknown or -2 if an error occured
+     * @return error message
+     */
+    QString saveURLSize(const QString& url, int64_t size);
 public:
     static QThreadPool threadPool;
 private:
