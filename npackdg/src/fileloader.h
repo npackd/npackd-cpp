@@ -16,7 +16,6 @@
 #include <QMutex>
 
 #include "mysqlquery.h"
-#include "urlinfo.h"
 #include "dbrepository.h"
 
 /**
@@ -26,13 +25,19 @@ class FileLoader: public QObject
 {
     Q_OBJECT
 
-    MySQLQuery* insertURLSizeQuery;
+    class DownloadFile
+    {
+    public:
+        QString url, file, error;
 
-    /**
-     * @brief URL -> size as int64_t or -1 if unknown or -2 if an error occured
-     *     The data in this field should be accessed under the mutex.
-     */
-    QMap<QString, URLInfo*> sizes;
+        /** download size or -1 if unknown or -2 if an error occured */
+        int64_t size;
+
+        /** date/time when the size was computed */
+        time_t sizeModified;
+    };
+
+    MySQLQuery* insertURLSizeQuery;
 
     QMutex mutex;
 
@@ -41,13 +46,7 @@ class FileLoader: public QObject
      * @param url this file should be downloaded
      * @return result
      */
-    URLInfo downloadSizeRunnable(const QString &url);
-
-    class DownloadFile
-    {
-    public:
-        QString url, file, error;
-    };
+    DownloadFile downloadSizeRunnable(const QString &url);
 
     /**
      * @brief URL -> local relative file name in the temporary directory or
@@ -67,7 +66,7 @@ class FileLoader: public QObject
      * @param url URL
      * @return (URL information, error message)
      */
-    std::tuple<URLInfo, QString> findURLInfo(const QString& url);
+    std::tuple<DownloadFile, QString> findURLInfo(const QString& url);
 
     /**
      * @brief downloads a file
@@ -98,6 +97,8 @@ private:
                 threadPool.setMaxThreadCount(10);
         }
     } _initializer;
+
+    FileLoader::DownloadFile getCurrentData(const QString &url);
 public:
     /**
      * The thread is not started.

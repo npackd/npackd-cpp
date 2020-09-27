@@ -59,7 +59,6 @@ set(TESTS_SOURCES
     ../../npackdg/src/repositoryxmlhandler.cpp
     ../../npackdg/src/mysqlquery.cpp
     ../../npackdg/src/installedpackagesthirdpartypm.cpp
-    ../../npackdg/src/urlinfo.cpp
     ../../npackdg/src/packageutils.cpp
     ../../npackdg/src/wuathirdpartypm.cpp
     ../../npackdg/src/wuapi_i.c
@@ -96,7 +95,6 @@ set(TESTS_HEADERS
     ../../npackdg/src/repositoryxmlhandler.h
     ../../npackdg/src/mysqlquery.h
     ../../npackdg/src/installedpackagesthirdpartypm.h
-    ../../npackdg/src/urlinfo.h
     ../../npackdg/src/packageutils.h
     ../../npackdg/src/wuathirdpartypm.h
     ../../npackdg/src/wuapi.h

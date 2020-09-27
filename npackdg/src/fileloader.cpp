@@ -68,52 +68,48 @@ QString FileLoader::saveURLSize(const QString& url, int64_t size)
 
 void FileLoader::watcherSizeFinished()
 {
-    QFutureWatcher<URLInfo>* w = static_cast<
-            QFutureWatcher<URLInfo>*>(sender());
+    QFutureWatcher<DownloadFile>* w = static_cast<
+            QFutureWatcher<DownloadFile>*>(sender());
 
-    URLInfo r = w->result();
+    DownloadFile r = w->result();
 
-    saveURLSize(r.address, r.size);
+    saveURLSize(r.url, r.size);
 
     this->mutex.lock();
-    URLInfo* v = this->sizes.value(r.address);
-    if (!v) {
-        v = new URLInfo(r.address);
-        this->sizes.insert(r.address, v);
-    }
-    v->size = r.size;
-    v->sizeModified = r.sizeModified;
+    DownloadFile v = this->files.value(r.url);
+
+    // QMap.value may return the default constructed value
+    // with empty "url"
+    v.url = r.url;
+
+    v.size = r.size;
+    v.sizeModified = r.sizeModified;
+    this->files.insert(r.url, v);
     this->mutex.unlock();
 
-    emit this->downloadSizeCompleted(r.address, r.size);
+    emit this->downloadSizeCompleted(r.url, r.size);
 
     w->deleteLater();
 }
 
 int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 {
-    int64_t r;
+    int64_t r = -1;
 
-    this->mutex.lock();
-    URLInfo* v = this->sizes.value(url);
-    if (v) {
-        r = v->size;
+    DownloadFile v = this->getCurrentData(url);
+    r = v.size;
 
-        // if the value is older than 10 days, it is considered obsolete
-        if (r >= 0 && time(nullptr) - v->sizeModified > 10 * 24 * 60 * 60) {
-            r = -1;
-        }
-    } else {
+    // if the value is older than 10 days, it is considered obsolete
+    if (time(nullptr) - v.sizeModified > 10 * 24 * 60 * 60) {
         r = -1;
     }
-    this->mutex.unlock();
 
     if (r == -1) {
         this->mutex.lock();
-        QFuture<URLInfo> future = run(&threadPool, this,
+        QFuture<DownloadFile> future = run(&threadPool, this,
                 &FileLoader::downloadSizeRunnable, url);
-        QFutureWatcher<URLInfo>* w =
-                new QFutureWatcher<URLInfo>(this);
+        QFutureWatcher<DownloadFile>* w =
+                new QFutureWatcher<DownloadFile>(this);
         connect(w, SIGNAL(finished()), this, SLOT(watcherSizeFinished()));
         w->setFuture(future);
         this->mutex.unlock();
@@ -122,7 +118,28 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
     return r;
 }
 
-URLInfo FileLoader::downloadSizeRunnable(
+FileLoader::DownloadFile FileLoader::getCurrentData(const QString& url)
+{
+    this->mutex.lock();
+    DownloadFile v = this->files.value(url);
+    this->mutex.unlock();
+
+    // read from the database
+    if (v.url.isEmpty()) {
+        QString err;
+        std::tie(v, err) = findURLInfo(url);
+
+        this->mutex.lock();
+        this->files.insert(url, v);
+        this->mutex.unlock();
+    }
+
+    v.url = url;
+
+    return v;
+}
+
+FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
         const QString& url)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
@@ -135,42 +152,16 @@ URLInfo FileLoader::downloadSizeRunnable(
 
     CoInitialize(nullptr);
 
-    URLInfo r(url);
+    Job* job = new Job();
+    DownloadFile v = getCurrentData(url);
+    v.size = Downloader::getContentLength(job, url, defaultPasswordWindow);
+    v.sizeModified = time(nullptr);
 
-    this->mutex.lock();
-    URLInfo* v = this->sizes.value(url);
-    this->mutex.unlock();
-
-    if (v) {
-        r = *v;
-    } else {
-        QString err;
-        std::tie(r, err) = findURLInfo(url);
-        if (err.isEmpty() && r.size >= 0) {
-            v = new URLInfo(r);
-
-            this->mutex.lock();
-            this->sizes.insert(r.address, v);
-            this->mutex.unlock();
-        }
+    if (!job->getErrorMessage().isEmpty() || v.size < 0) {
+        v.size = -2;
     }
 
-    // if the value is older than 10 days, it is considered obsolete
-    if (r.size >= 0 && time(nullptr) - r.sizeModified > 10 * 24 * 60 * 60) {
-        r.size = -1;
-    }
-
-    if (r.size < 0) {
-        Job* job = new Job();
-        r.size = Downloader::getContentLength(job, url, defaultPasswordWindow);
-        r.sizeModified = time(nullptr);
-
-        if (!job->getErrorMessage().isEmpty() || r.size < 0) {
-            r.size = -2;
-        }
-
-        delete job;
-    }
+    delete job;
 
     CoUninitialize();
 
@@ -179,7 +170,7 @@ URLInfo FileLoader::downloadSizeRunnable(
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
     */
 
-    return r;
+    return v;
 }
 
 QString FileLoader::init()
@@ -227,16 +218,16 @@ QString FileLoader::init()
 FileLoader::~FileLoader()
 {
     delete insertURLSizeQuery;
-    qDeleteAll(this->sizes);
-    this->sizes.clear();
 }
 
-std::tuple<URLInfo, QString> FileLoader::findURLInfo(const QString& url)
+std::tuple<FileLoader::DownloadFile, QString> FileLoader::findURLInfo(const QString& url)
 {
     QMutexLocker ml(&this->mutex);
 
     QString err = "";
-    URLInfo info(url);
+    DownloadFile info;
+    info.url = url;
+    info.size = -1;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral(
@@ -296,7 +287,7 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
         QFutureWatcher<DownloadFile>* w =
                 new QFutureWatcher<DownloadFile>(this);
         connect(w, SIGNAL(finished()), this,
-                SLOT(watcherFinished()));
+                SLOT(watcherFileFinished()));
         w->setFuture(future);
     }
 

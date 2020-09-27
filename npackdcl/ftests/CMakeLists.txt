@@ -59,7 +59,6 @@ set(FTESTS_SOURCES
     ../../npackdg/src/packageversion.cpp
     ../../npackdg/src/wpmutils.cpp
     ../../npackdg/src/clprogress.cpp
-    ../../npackdg/src/urlinfo.cpp
     ../../npackdg/src/packageutils.cpp
     ../../npackdg/src/wuathirdpartypm.cpp
     ../../npackdg/src/wuapi_i.c
@@ -96,7 +95,6 @@ set(FTESTS_HEADERS
     ../../npackdg/src/packageversion.h
     ../../npackdg/src/wpmutils.h
     ../../npackdg/src/clprogress.h
-    ../../npackdg/src/urlinfo.h
     ../../npackdg/src/packageutils.h
     ../../npackdg/src/wuathirdpartypm.h
     ../../npackdg/src/wuapi.h

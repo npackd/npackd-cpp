@@ -78,7 +78,6 @@ set(NPACKDG_SOURCES
     src/progresstree2.cpp
     src/clprocessor.cpp
     src/exportrepositoryframe.cpp
-    src/urlinfo.cpp
     src/asyncdownloader.cpp
     src/uimessagehandler.cpp
     src/packageutils.cpp
@@ -136,7 +135,6 @@ set(NPACKDG_HEADERS
     src/concurrent.h
     src/stable.h
     src/exportrepositoryframe.h
-    src/urlinfo.h
     src/asyncdownloader.h
     src/uimessagehandler.h
     src/packageutils.h
