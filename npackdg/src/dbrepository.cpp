@@ -31,11 +31,6 @@
 #include "downloader.h"
 #include "packageutils.h"
 
-// this is necessary in Qt 5.11 and earlier versions for the static build
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0) && QT_LINK_STATIC == 1
-    Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
-#endif
-
 static bool packageVersionLessThan3(const PackageVersion* a,
         const PackageVersion* b)
 {
