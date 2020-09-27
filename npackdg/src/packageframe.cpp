@@ -296,7 +296,7 @@ void PackageFrame::screenshotsItemActivated(QListWidgetItem *item)
     MainWindow* mw = MainWindow::getInstance();
     QString url = item->data(Qt::UserRole).toString();
     QString err;
-    QString filename = mw->fileLoader.downloadOrQueue(url, &err);
+    QString filename = mw->fileLoader.downloadFileOrQueue(url, &err);
     if (!err.isEmpty()) {
         QString msg = QObject::tr("Error downloading the file %1: %2").
                 arg(url).arg(err);

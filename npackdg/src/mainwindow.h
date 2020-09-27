@@ -25,7 +25,6 @@
 #include "selection.h"
 #include "mainframe.h"
 #include "progresstree2.h"
-#include "downloadsizefinder.h"
 
 namespace Ui {
     class MainWindow;
@@ -158,9 +157,6 @@ public:
 
     /** file loader thread */
     FileLoader fileLoader;
-
-    /** finds download sizes */
-    DownloadSizeFinder downloadSizeFinder;
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();

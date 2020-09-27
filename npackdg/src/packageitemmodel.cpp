@@ -151,7 +151,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
                 if (cached->newestDownloadURL.isEmpty()) {
                     v = "";
                 } else {
-                    int64_t sz = mw->downloadSizeFinder.downloadOrQueue(
+                    int64_t sz = mw->fileLoader.downloadSizeOrQueue(
                             cached->newestDownloadURL);
                     if (sz >= 0)
                         v = QString::number(

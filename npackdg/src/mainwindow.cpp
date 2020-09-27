@@ -190,12 +190,12 @@ MainWindow::MainWindow(QWidget *parent) :
     t->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
     t->horizontalHeader()->addAction(this->ui->actionChoose_columns);
 
-    connect(&this->fileLoader, SIGNAL(downloadCompleted(QString,QString,QString)), this,
+    connect(&this->fileLoader, SIGNAL(downloadFileCompleted(QString,QString,QString)), this,
             SLOT(downloadCompleted(QString,QString,QString)),
             Qt::QueuedConnection);
 
-    connect(&this->downloadSizeFinder,
-            SIGNAL(downloadCompleted(QString,int64_t)), this,
+    connect(&this->fileLoader,
+            SIGNAL(downloadSizeCompleted(QString,int64_t)), this,
             SLOT(downloadSizeCompleted(QString,qlonglong)),
             Qt::QueuedConnection);
 
@@ -636,8 +636,8 @@ MainWindow::~MainWindow()
 
     // if a timeout of 5 seconds is used here, there may an access
     // violation during program shutdown
-    DownloadSizeFinder::threadPool.clear();
-    DownloadSizeFinder::threadPool.waitForDone(-1);
+    FileLoader::threadPool.clear();
+    FileLoader::threadPool.waitForDone(-1);
 
     delete ui;
 }
@@ -650,7 +650,7 @@ QIcon MainWindow::downloadIcon(const QString &url)
         r = *inCache;
     } else {
         QString err;
-        QString file = fileLoader.downloadOrQueue(url, &err);
+        QString file = fileLoader.downloadFileOrQueue(url, &err);
         if (!err.isEmpty()) {
             r = MainWindow::genericAppIcon;
         } else if (!file.isEmpty()) {
@@ -724,7 +724,7 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
         r = screenshots[url];
     } else {
         QString err;
-        QString filename = fileLoader.downloadOrQueue(url, &err);
+        QString filename = fileLoader.downloadFileOrQueue(url, &err);
 
         if (!err.isEmpty()) {
             r = MainWindow::brokenIcon;

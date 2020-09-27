@@ -12,8 +12,12 @@
 #include <QTemporaryDir>
 #include <QMap>
 #include <QSqlError>
+#include <QThreadPool>
+#include <QMutex>
 
 #include "mysqlquery.h"
+#include "urlinfo.h"
+#include "dbrepository.h"
 
 /**
  * Loads files from the Internet.
@@ -21,6 +25,23 @@
 class FileLoader: public QObject
 {
     Q_OBJECT
+
+    /**
+     * @brief URL -> size as int64_t or -1 if unknown or -2 if an error occured
+     *     The data in this field should be accessed under the mutex.
+     */
+    QMap<QString, URLInfo*> sizes;
+
+    QMutex mutex;
+
+    DBRepository* dbr;
+
+    /**
+     * @brief downloads a file
+     * @param url this file should be downloaded
+     * @return result
+     */
+    URLInfo downloadSizeRunnable(const QString &url);
 
     class DownloadFile
     {
@@ -37,8 +58,6 @@ class FileLoader: public QObject
 
     QAtomicInt id;
 
-    QMutex mutex;
-
     QTemporaryDir dir;
 
     QSqlDatabase db;
@@ -48,11 +67,22 @@ class FileLoader: public QObject
      * @param url this file should be downloaded
      * @return result
      */
-    DownloadFile downloadRunnable(const QString &url);
+    DownloadFile downloadFileRunnable(const QString &url);
 
     QString exec(const QString &sql);
     QString open(const QString &connectionName, const QString &file);
     QString updateDatabase();
+public:
+    static QThreadPool threadPool;
+private:
+    static class _init
+    {
+    public:
+        _init() {
+            //if (threadPool.maxThreadCount() > 2)
+                threadPool.setMaxThreadCount(10);
+        }
+    } _initializer;
 public:
     /**
      * The thread is not started.
@@ -66,7 +96,7 @@ public:
      */
     QString init();
 
-    virtual ~FileLoader() {}
+    virtual ~FileLoader();
 
     /**
      * @brief download a file. This function does not block.
@@ -74,7 +104,14 @@ public:
      * @param err error message or ""
      * @return local file name or "" if file is being downloaded
      */
-    QString downloadOrQueue(const QString& url, QString* err);
+    QString downloadFileOrQueue(const QString& url, QString* err);
+
+    /**
+     * @brief download a file. This function does not block.
+     * @param url this file will be downloaded
+     * @return size or -2 if an error occured or -1 if the size is unknown
+     */
+    int64_t downloadSizeOrQueue(const QString& url);
 signals:
     /**
      * @brief a download was completed (with or without an error)
@@ -82,10 +119,18 @@ signals:
      * @param filename full file name for the downloaded file or ""
      * @param err the error message or ""
      */
-    void downloadCompleted(const QString& url, const QString& filename,
+    void downloadFileCompleted(const QString& url, const QString& filename,
             const QString& err);
+
+    /**
+     * @brief a download was completed (with or without an error)
+     * @param url the file from this URL was downloaded
+     * @param size size of the download or -1 if unknown or -2 for an error
+     */
+    void downloadSizeCompleted(const QString& url, int64_t size);
 private slots:
-    void watcherFinished();
+    void watcherFileFinished();
+    void watcherSizeFinished();
 };
 
 #endif // FILELOADER_H

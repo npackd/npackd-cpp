@@ -76,7 +76,6 @@ set(NPACKDG_SOURCES
     src/repositoryxmlhandler.cpp
     src/visiblejobs.cpp
     src/progresstree2.cpp
-    src/downloadsizefinder.cpp
     src/clprocessor.cpp
     src/exportrepositoryframe.cpp
     src/urlinfo.cpp
@@ -134,7 +133,6 @@ set(NPACKDG_HEADERS
     src/visiblejobs.h
     src/clprocessor.h
     src/progresstree2.h
-    src/downloadsizefinder.h
     src/concurrent.h
     src/stable.h
     src/exportrepositoryframe.h

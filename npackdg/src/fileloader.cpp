@@ -19,13 +19,139 @@
 #include "fileloader.h"
 #include "downloader.h"
 #include "job.h"
-#include "downloadsizefinder.h"
 #include "concurrent.h"
 #include "wpmutils.h"
 #include "sqlutils.h"
 
-FileLoader::FileLoader(): id(0)
+extern HWND defaultPasswordWindow;
+
+QThreadPool FileLoader::threadPool;
+FileLoader::_init FileLoader::_initializer;
+
+FileLoader::FileLoader(): dbr(nullptr), id(0)
 {
+}
+
+void FileLoader::watcherSizeFinished()
+{
+    QFutureWatcher<URLInfo>* w = static_cast<
+            QFutureWatcher<URLInfo>*>(sender());
+
+    URLInfo r = w->result();
+
+    this->mutex.lock();
+    dbr->saveURLSize(r.address, r.size);
+    this->mutex.unlock();
+
+    this->mutex.lock();
+    URLInfo* v = this->sizes.value(r.address);
+    if (!v) {
+        v = new URLInfo(r.address);
+        this->sizes.insert(r.address, v);
+    }
+    v->size = r.size;
+    v->sizeModified = r.sizeModified;
+    this->mutex.unlock();
+
+    emit this->downloadSizeCompleted(r.address, r.size);
+
+    w->deleteLater();
+}
+
+int64_t FileLoader::downloadSizeOrQueue(const QString &url)
+{
+    int64_t r;
+
+    this->mutex.lock();
+    URLInfo* v = this->sizes.value(url);
+    if (v) {
+        r = v->size;
+
+        // if the value is older than 10 days, it is considered obsolete
+        if (r >= 0 && time(nullptr) - v->sizeModified > 10 * 24 * 60 * 60) {
+            r = -1;
+        }
+    } else {
+        r = -1;
+    }
+    this->mutex.unlock();
+
+    if (r == -1) {
+        this->mutex.lock();
+        QFuture<URLInfo> future = run(&threadPool, this,
+                &FileLoader::downloadSizeRunnable, url);
+        QFutureWatcher<URLInfo>* w =
+                new QFutureWatcher<URLInfo>(this);
+        connect(w, SIGNAL(finished()), this, SLOT(watcherFinished()));
+        w->setFuture(future);
+        this->mutex.unlock();
+    }
+
+    return r;
+}
+
+URLInfo FileLoader::downloadSizeRunnable(
+        const QString& url)
+{
+    QThread::currentThread()->setPriority(QThread::LowestPriority);
+
+    /*
+    makes the process too slow
+    bool b = SetThreadPriority(GetCurrentThread(),
+            THREAD_MODE_BACKGROUND_BEGIN);
+    */
+
+    CoInitialize(nullptr);
+
+    URLInfo r(url);
+
+    this->mutex.lock();
+    if (!this->dbr) {
+        dbr = new DBRepository();
+        QString err = dbr->openDefault("defaultDownloadSizeFinder");
+        qCDebug(npackd) << "DownloadSizeFinder::downloadRunnable.openDefault" << err;
+    }
+    this->mutex.unlock();
+
+    this->mutex.lock();
+    URLInfo* v = this->sizes.value(url);
+    if (v) {
+        r = *v;
+    } else {
+        QString err;
+        std::tie(r, err) = dbr->findURLInfo(url);
+        if (err.isEmpty() && r.size >= 0) {
+            v = new URLInfo(r);
+            this->sizes.insert(r.address, v);
+        }
+    }
+    this->mutex.unlock();
+
+    // if the value is older than 10 days, it is considered obsolete
+    if (r.size >= 0 && time(nullptr) - r.sizeModified > 10 * 24 * 60 * 60) {
+        r.size = -1;
+    }
+
+    if (r.size < 0) {
+        Job* job = new Job();
+        r.size = Downloader::getContentLength(job, url, defaultPasswordWindow);
+        r.sizeModified = time(nullptr);
+
+        if (!job->getErrorMessage().isEmpty() || r.size < 0) {
+            r.size = -2;
+        }
+
+        delete job;
+    }
+
+    CoUninitialize();
+
+    /*
+    if (b)
+        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
+    */
+
+    return r;
 }
 
 QString FileLoader::init()
@@ -70,6 +196,13 @@ QString FileLoader::init()
     return err;
 }
 
+FileLoader::~FileLoader()
+{
+    qDeleteAll(this->sizes);
+    this->sizes.clear();
+    delete this->dbr;
+}
+
 QString FileLoader::exec(const QString& sql)
 {
     QMutexLocker ml(&this->mutex);
@@ -81,7 +214,7 @@ QString FileLoader::exec(const QString& sql)
     return err;
 }
 
-QString FileLoader::downloadOrQueue(const QString &url, QString *err)
+QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
 {
     QString r;
     *err = "";
@@ -98,8 +231,8 @@ QString FileLoader::downloadOrQueue(const QString &url, QString *err)
         this->mutex.unlock();
 
         QFuture<DownloadFile> future = run(
-                &DownloadSizeFinder::threadPool, this,
-                &FileLoader::downloadRunnable, url);
+                &FileLoader::threadPool, this,
+                &FileLoader::downloadFileRunnable, url);
         QFutureWatcher<DownloadFile>* w =
                 new QFutureWatcher<DownloadFile>(this);
         connect(w, SIGNAL(finished()), this,
@@ -110,7 +243,7 @@ QString FileLoader::downloadOrQueue(const QString &url, QString *err)
     return r;
 }
 
-void FileLoader::watcherFinished()
+void FileLoader::watcherFileFinished()
 {
     QFutureWatcher<DownloadFile>* w = static_cast<
             QFutureWatcher<DownloadFile>*>(sender());
@@ -121,13 +254,13 @@ void FileLoader::watcherFinished()
         if (!file.isEmpty())
             file = dir.path() + "\\" + file;
 
-        emit this->downloadCompleted(r.url, file, r.error);
+        emit this->downloadFileCompleted(r.url, file, r.error);
     }
 
     w->deleteLater();
 }
 
-FileLoader::DownloadFile FileLoader::downloadRunnable(const QString& url)
+FileLoader::DownloadFile FileLoader::downloadFileRunnable(const QString& url)
 {
     FileLoader::DownloadFile r;
     r.url = url;
