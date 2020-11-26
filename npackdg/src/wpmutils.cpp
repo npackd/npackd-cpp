@@ -1618,13 +1618,20 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         bool changed = false;
         for (int i = 0; i < ps.size(); i++) {
             HANDLE p = ps.at(i);
-            if (GetProcessId(p) != me && !pathEquals(explorer, getProcessFile(p))) {
-                QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
-                if (ws.size() > 0) {
-                    closeProcessWindows(p, ws);
-                    changed = true;
-                }
-            }
+
+            if (GetProcessId(p) == me)
+                continue;
+
+            QString processFile = getProcessFile(p);
+            if (processFile.isEmpty() || pathEquals(explorer, processFile))
+                continue;
+
+            QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
+            if (ws.size() == 0)
+                continue;
+
+            closeProcessWindows(p, ws);
+            changed = true;
         }
 
         if (changed) {
@@ -1641,17 +1648,26 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
             HANDLE hProc = ps.at(i);
             DWORD processId = GetProcessId(hProc);
 
-            if (processId != 0 && processId != me &&
-                    WPMUtils::isProcessRunning(hProc) &&
-                    !pathEquals(explorer, getProcessFile(hProc))) {
-                // 0 = GR_GDIOBJECTS, 1 = GR_USEROBJECTS
-                if (GetGuiResources(hProc, 0) == 0 &&
-                        GetGuiResources(hProc, 1) == 0) {
-                    qCInfo(npackd).noquote() << QObject::tr("Sending Ctrl+C to \"%1\"").
-                            arg(getProcessFile(hProc));
-                    if (GenerateConsoleCtrlEvent(CTRL_C_EVENT, processId)) {
-                        changed = true;
-                    }
+            if (processId == 0)
+                continue;
+
+            if (processId == me)
+                continue;
+
+            if (!WPMUtils::isProcessRunning(hProc))
+                continue;
+
+            QString processFile = getProcessFile(hProc);
+            if (processFile.isEmpty() || pathEquals(explorer, processFile))
+                continue;
+
+            // 0 = GR_GDIOBJECTS, 1 = GR_USEROBJECTS
+            if (GetGuiResources(hProc, 0) == 0 &&
+                    GetGuiResources(hProc, 1) == 0) {
+                qCInfo(npackd).noquote() << QObject::tr("Sending Ctrl+C to \"%1\"").
+                        arg(getProcessFile(hProc));
+                if (GenerateConsoleCtrlEvent(CTRL_C_EVENT, processId)) {
+                    changed = true;
                 }
             }
         }
@@ -1668,19 +1684,27 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
             HANDLE hProc = ps.at(i);
             DWORD processId = GetProcessId(hProc);
 
-            if (processId != 0 && processId != me &&
-                    WPMUtils::isProcessRunning(hProc) &&
-                    !pathEquals(explorer, getProcessFile(hProc))) {
+            if (processId == 0)
+                continue;
 
-                qCInfo(npackd).noquote() << QObject::tr("Killing the process \"%1\"").
-                        arg(getProcessFile(hProc));
+            if (processId == me)
+                continue;
 
-                // TerminateProcess is asynchronous
-                if (TerminateProcess(hProc, 1000))
-                    WaitForSingleObject(hProc, 30000);
+            if (!WPMUtils::isProcessRunning(hProc))
+                continue;
 
-                changed = true;
-            }
+            QString processFile = getProcessFile(hProc);
+            if (processFile.isEmpty() || pathEquals(explorer, processFile))
+                continue;
+
+            qCInfo(npackd).noquote() << QObject::tr("Killing the process \"%1\"").
+                    arg(getProcessFile(hProc));
+
+            // TerminateProcess is asynchronous
+            if (TerminateProcess(hProc, 1000))
+                WaitForSingleObject(hProc, 30000);
+
+            changed = true;
         }
 
         if (changed) {
@@ -1813,7 +1837,9 @@ void WPMUtils::closeProcessWindows(HANDLE process,
                     if ((GetWindowLong(w, GWL_STYLE) & WS_DISABLED) == 0) {
                         //qCDebug(npackd) << "WM_CLOSE to " <<
                         //        GetProcessId(process) << getClassName(w);
-                        qCInfo(npackd).noquote() << QObject::tr("Sending a WM_CLOSE event to \"%1\"").
+                        qCInfo(npackd).noquote() << QObject::tr("Sending a WM_CLOSE event to the window of "
+                                "the class \"%1\" from the process \"%2\"").
+                                arg(getClassName(w)).
                                 arg(getProcessFile(process));
                         PostMessage(w, WM_CLOSE, 0, 0);
                     }
@@ -1855,9 +1881,7 @@ QString WPMUtils::getProcessFile(HANDLE hProcess)
     res.resize(MAX_PATH + 1);
     DWORD r = GetModuleFileNameEx(hProcess, nullptr, (LPWSTR) res.data(),
             res.length());
-    if (r != 0) {
-        res.resize(r);
-    }
+    res.resize(r);
 
     return res;
 }

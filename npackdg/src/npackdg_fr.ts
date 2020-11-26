@@ -3412,7 +3412,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sending a WM_CLOSE event to &quot;%1&quot;</source>
+        <source>Sending a WM_CLOSE event to the window of the class &quot;%1&quot; from the process &quot;%2&quot;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
