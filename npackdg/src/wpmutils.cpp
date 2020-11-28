@@ -1752,7 +1752,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
         }
     }
 
-    // qCDebug(npackd) << "Processes killed";
+    // qCDebug(npackd) << "Processes killed"
 
     closeHandles(ps);
 }
