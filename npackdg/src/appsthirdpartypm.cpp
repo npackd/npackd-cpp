@@ -1,4 +1,6 @@
 #include <roapi.h>
+#include <winstring.h>
+#include <tchar.h>
 
 #include "appsthirdpartypm.h"
 
@@ -13,7 +15,7 @@ void AppsThirdPartyPM::scan(Job* job,
 {
     HRESULT hr = RoInitialize(RO_INIT_MULTITHREADED);
     if (!FAILED(hr)) {
-        LPCTSTR str = "Windows.Management.Deployment.PackageManager";
+        LPCTSTR str = L"Windows.Management.Deployment.PackageManager";
         HSTRING hstr;
         hr = WindowsCreateString(str, _tcslen(str), &hstr);
         IPackageManager* pIPackageManager;
