@@ -339,6 +339,7 @@ void SettingsFrame::on_pushButtonProxySettings_clicked()
     Job* job = new Job();
     QString d = WPMUtils::getWindowsDir();
 
+    // for Windows 10 "start ms-settings:network-proxy" shows the newer dialog
     WPMUtils::executeFile(job, d, d + "\\System32\\rundll32.exe",
             "inetcpl.cpl,LaunchConnectionDialog", nullptr,
             QStringList(), false, true, false);
