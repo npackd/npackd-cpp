@@ -1,6 +1,9 @@
 #ifndef FILELOADER_H
 #define FILELOADER_H
 
+#include <chrono>
+#include <random>
+
 #include "qmetatype.h"
 #include <QObject>
 #include <QQueue>
@@ -28,6 +31,9 @@ class FileLoader: public QObject
     class DownloadFile
     {
     public:
+        /** SQLite ROWID (field ID) for the table URL */
+        int64_t id;
+
         QString url, file, error;
 
         /** download size or -1 if unknown or -2 if an error occured */
@@ -37,7 +43,8 @@ class FileLoader: public QObject
         time_t sizeModified;
     };
 
-    MySQLQuery* insertURLSizeQuery;
+    MySQLQuery* insertURLInfosQuery = nullptr;
+    std::unique_ptr<MySQLQuery> updateURLQuery;
 
     QMutex mutex;
 
@@ -48,21 +55,12 @@ class FileLoader: public QObject
      */
     DownloadFile downloadSizeRunnable(const QString &url);
 
-    /**
-     * @brief URL -> local relative file name in the temporary directory or
-     *     an error message if it starts with an asterisk (*). The data
-     *     in this field should be accessed under the mutex.
-     */
-    QMap<QString, DownloadFile> files;
-
-    QAtomicInt id;
-
-    QTemporaryDir dir;
+    QString dir;
 
     QSqlDatabase db;
 
     /**
-     * @brief reads the download size for an URL
+     * @brief searches for the information about an URL
      * @param url URL
      * @return (URL information, error message)
      */
@@ -73,7 +71,7 @@ class FileLoader: public QObject
      * @param url this file should be downloaded
      * @return result
      */
-    DownloadFile downloadFileRunnable(const QString &url);
+    DownloadFile downloadFileRunnable(int64_t id, const QString &url);
 
     QString exec(const QString &sql);
     QString open(const QString &connectionName, const QString &file);
@@ -83,9 +81,11 @@ class FileLoader: public QObject
      * @brief saves the download size for an URL
      * @param url URL
      * @param size size of the URL or -1 if unknown or -2 if an error occured
-     * @return error message
+     * @param file file name in the cache without directory
+     * @return ROWID, error message
      */
-    QString saveURLSize(const QString& url, int64_t size);
+    std::tuple<int64_t, QString> saveURLInfos(
+            const QString& url, int64_t size, const QString& file);
 public:
     static QThreadPool threadPool;
 private:
@@ -98,7 +98,7 @@ private:
         }
     } _initializer;
 
-    FileLoader::DownloadFile getCurrentData(const QString &url);
+    QString getUnusedFilename();
 public:
     /**
      * The thread is not started.

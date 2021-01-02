@@ -28,42 +28,81 @@ extern HWND defaultPasswordWindow;
 QThreadPool FileLoader::threadPool;
 FileLoader::_init FileLoader::_initializer;
 
-FileLoader::FileLoader(): id(0)
+FileLoader::FileLoader()
 {
-    insertURLSizeQuery = nullptr;
 }
 
-QString FileLoader::saveURLSize(const QString& url, int64_t size)
+std::tuple<int64_t, QString> FileLoader::saveURLInfos(
+        const QString& url, int64_t size,
+        const QString& file)
 {
-    QMutexLocker ml(&this->mutex);
+    this->mutex.lock();
 
     QString err;
+    int64_t id = 0;
 
-    if (!insertURLSizeQuery) {
-        insertURLSizeQuery = new MySQLQuery(db);
+    if (!updateURLQuery) {
+        updateURLQuery.reset(new MySQLQuery(db));
 
-        QString insertSQL("INSERT OR REPLACE INTO URL"
-                "(ADDRESS, SIZE, SIZE_MODIFIED) "
-                "VALUES(:ADDRESS, :SIZE, :SIZE_MODIFIED)");
+        QString sql("UPDATE URL SET SIZE=:SIZE, SIZE_MODIFIED=:SIZE_MODIFIED, FILE=:FILE WHERE ADDRESS=:ADDRESS");
 
-        if (!insertURLSizeQuery->prepare(insertSQL)) {
-            err = SQLUtils::getErrorString(*insertURLSizeQuery);
-            delete insertURLSizeQuery;
+        if (!updateURLQuery->prepare(sql)) {
+            err = SQLUtils::getErrorString(*updateURLQuery);
+            updateURLQuery.reset(nullptr);
         }
     }
 
-    if (err.isEmpty()) {
-        insertURLSizeQuery->bindValue(QStringLiteral(":ADDRESS"), url);
-        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE"), size);
-        insertURLSizeQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
-                static_cast<qlonglong>(time(nullptr)));
-        if (!insertURLSizeQuery->exec())
-            err = SQLUtils::getErrorString(*insertURLSizeQuery);
+    bool insert = false;
 
-        insertURLSizeQuery->finish();
+    if (err.isEmpty()) {
+        updateURLQuery->bindValue(QStringLiteral(":ADDRESS"), url);
+        updateURLQuery->bindValue(QStringLiteral(":SIZE"), size);
+        updateURLQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
+                static_cast<qlonglong>(time(nullptr)));
+        updateURLQuery->bindValue(QStringLiteral(":FILE"), file);
+        if (!updateURLQuery->exec())
+            err = SQLUtils::getErrorString(*updateURLQuery);
+        if (updateURLQuery->numRowsAffected() == 0)
+            insert = true;
+        updateURLQuery->finish();
     }
 
-    return err;
+    if (err.isEmpty() && !insertURLInfosQuery) {
+        insertURLInfosQuery = new MySQLQuery(db);
+
+        QString insertSQL("INSERT INTO URL"
+                "(ADDRESS, SIZE, SIZE_MODIFIED, FILE) "
+                "VALUES(:ADDRESS, :SIZE, :SIZE_MODIFIED, :FILE)");
+
+        if (!insertURLInfosQuery->prepare(insertSQL)) {
+            err = SQLUtils::getErrorString(*insertURLInfosQuery);
+            delete insertURLInfosQuery;
+        }
+    }
+
+    if (err.isEmpty() && insert) {
+        insertURLInfosQuery->bindValue(QStringLiteral(":ADDRESS"), url);
+        insertURLInfosQuery->bindValue(QStringLiteral(":SIZE"), size);
+        insertURLInfosQuery->bindValue(QStringLiteral(":SIZE_MODIFIED"),
+                static_cast<qlonglong>(time(nullptr)));
+        insertURLInfosQuery->bindValue(QStringLiteral(":FILE"), file);
+        if (!insertURLInfosQuery->exec())
+            err = SQLUtils::getErrorString(*insertURLInfosQuery);
+
+        id = insertURLInfosQuery->lastInsertId().toLongLong();
+        insertURLInfosQuery->finish();
+    }
+
+    this->mutex.unlock();
+
+    if (err.isEmpty() && !insert) {
+        DownloadFile df;
+        QString err;
+        std::tie(df, err) = findURLInfo(url);
+        id = df.id;
+    }
+
+    return std::tie(id, err);
 }
 
 void FileLoader::watcherSizeFinished()
@@ -73,19 +112,7 @@ void FileLoader::watcherSizeFinished()
 
     DownloadFile r = w->result();
 
-    saveURLSize(r.url, r.size);
-
-    this->mutex.lock();
-    DownloadFile v = this->files.value(r.url);
-
-    // QMap.value may return the default constructed value
-    // with empty "url"
-    v.url = r.url;
-
-    v.size = r.size;
-    v.sizeModified = r.sizeModified;
-    this->files.insert(r.url, v);
-    this->mutex.unlock();
+    saveURLInfos(r.url, r.size, r.file);
 
     emit this->downloadSizeCompleted(r.url, r.size);
 
@@ -96,15 +123,14 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 {
     int64_t r = -1;
 
-    DownloadFile v = this->getCurrentData(url);
+    DownloadFile v;
+    QString err;
+    std::tie(v, err) = this->findURLInfo(url);
+
     r = v.size;
 
     // if the value is older than 10 days, it is considered obsolete
-    if (time(nullptr) - v.sizeModified > 10 * 24 * 60 * 60) {
-        r = -1;
-    }
-
-    if (r == -1) {
+    if (r == -1 || time(nullptr) - v.sizeModified > 10 * 24 * 60 * 60) {
         this->mutex.lock();
         QFuture<DownloadFile> future = run(&threadPool, this,
                 &FileLoader::downloadSizeRunnable, url);
@@ -118,42 +144,19 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
     return r;
 }
 
-FileLoader::DownloadFile FileLoader::getCurrentData(const QString& url)
-{
-    this->mutex.lock();
-    DownloadFile v = this->files.value(url);
-    this->mutex.unlock();
-
-    // read from the database
-    if (v.url.isEmpty()) {
-        QString err;
-        std::tie(v, err) = findURLInfo(url);
-
-        this->mutex.lock();
-        this->files.insert(url, v);
-        this->mutex.unlock();
-    }
-
-    v.url = url;
-
-    return v;
-}
-
 FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
         const QString& url)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
-    /*
-    makes the process too slow
     bool b = SetThreadPriority(GetCurrentThread(),
             THREAD_MODE_BACKGROUND_BEGIN);
-    */
 
     CoInitialize(nullptr);
 
     Job* job = new Job();
-    DownloadFile v = getCurrentData(url);
+    DownloadFile v;
+    v.url = url;
     v.size = Downloader::getContentLength(job, url, defaultPasswordWindow);
     v.sizeModified = time(nullptr);
 
@@ -165,21 +168,19 @@ FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
 
     CoUninitialize();
 
-    /*
     if (b)
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
-    */
 
     return v;
 }
 
 QString FileLoader::init()
 {
-    QString dir = WPMUtils::getShellDir(CSIDL_LOCAL_APPDATA) +
+    dir = WPMUtils::getShellDir(CSIDL_LOCAL_APPDATA) +
             QStringLiteral("\\Npackd\\Cache");
     QDir d;
-    if (!d.exists(dir))
-        d.mkpath(dir);
+    if (!d.exists(dir + "\\Files"))
+        d.mkpath(dir + "\\Files");
 
     QString path = dir + QStringLiteral("\\Data.db");
 
@@ -217,10 +218,11 @@ QString FileLoader::init()
 
 FileLoader::~FileLoader()
 {
-    delete insertURLSizeQuery;
+    delete insertURLInfosQuery;
 }
 
-std::tuple<FileLoader::DownloadFile, QString> FileLoader::findURLInfo(const QString& url)
+std::tuple<FileLoader::DownloadFile, QString>
+        FileLoader::findURLInfo(const QString& url)
 {
     QMutexLocker ml(&this->mutex);
 
@@ -231,7 +233,7 @@ std::tuple<FileLoader::DownloadFile, QString> FileLoader::findURLInfo(const QStr
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral(
-            "SELECT SIZE, SIZE_MODIFIED FROM URL WHERE ADDRESS = :ADDRESS LIMIT 1")))
+            "SELECT ID, SIZE, SIZE_MODIFIED, FILE FROM URL WHERE ADDRESS = :ADDRESS LIMIT 1")))
         err = SQLUtils::getErrorString(q);
 
     if (npackd().isDebugEnabled()) {
@@ -246,8 +248,12 @@ std::tuple<FileLoader::DownloadFile, QString> FileLoader::findURLInfo(const QStr
 
     if (err.isEmpty()) {
         if (q.next()) {
-            info.size = q.value(0).toLongLong();
-            info.sizeModified = q.value(1).toLongLong();
+            info.id = q.value(0).toLongLong();
+            info.size = q.value(1).toLongLong();
+            info.sizeModified = q.value(2).toLongLong();
+            info.file = q.value(3).toString();
+        } else {
+            err = "Not found";
         }
     }
 
@@ -270,20 +276,23 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
     QString r;
     *err = "";
 
-    this->mutex.lock();
-    if (this->files.contains(url)) {
-        DownloadFile file = this->files.value(url);
-        if (!file.error.isEmpty())
-            *err = file.error;
-        else if (!file.file.isEmpty())
-            r = dir.path() + "\\" + file.file;
-        this->mutex.unlock();
-    } else {
-        this->mutex.unlock();
+    DownloadFile df;
+    std::tie(df, *err) = this->findURLInfo(url);
 
-        QFuture<DownloadFile> future = run(
+    int64_t id;
+
+    if (err->isEmpty()) {
+        id = df.id;
+        if (!df.file.isEmpty())
+            r = dir + "\\Files\\" + df.file;
+    } else {
+        std::tie(id, *err) = saveURLInfos(url, -1, "");
+    }
+
+    if (r.isEmpty() && err->isEmpty()) {
+        QFuture<DownloadFile> future = QtConcurrent::run(
                 &FileLoader::threadPool, this,
-                &FileLoader::downloadFileRunnable, url);
+                &FileLoader::downloadFileRunnable, id, url);
         QFutureWatcher<DownloadFile>* w =
                 new QFutureWatcher<DownloadFile>(this);
         connect(w, SIGNAL(finished()), this,
@@ -301,9 +310,10 @@ void FileLoader::watcherFileFinished()
     DownloadFile r = w->result();
 
     if (!r.file.isEmpty() || !r.error.isEmpty()) {
+        saveURLInfos(r.url, r.size, r.file);
         QString file = r.file;
         if (!file.isEmpty())
-            file = dir.path() + "\\" + file;
+            file = dir + "\\Files\\" + file;
 
         emit this->downloadFileCompleted(r.url, file, r.error);
     }
@@ -311,80 +321,70 @@ void FileLoader::watcherFileFinished()
     w->deleteLater();
 }
 
-FileLoader::DownloadFile FileLoader::downloadFileRunnable(const QString& url)
+FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
+        const QString& url)
 {
     FileLoader::DownloadFile r;
     r.url = url;
 
-    this->mutex.lock();
-    if (this->files.contains(url)) {
-        r = this->files.value(url);
-        this->mutex.unlock();
-    } else {
-        this->files.insert(url, r);
-        this->mutex.unlock();
+    QThread::currentThread()->setPriority(QThread::LowestPriority);
 
-        QThread::currentThread()->setPriority(QThread::LowestPriority);
+    bool b = SetThreadPriority(GetCurrentThread(),
+            THREAD_MODE_BACKGROUND_BEGIN);
 
-        bool b = SetThreadPriority(GetCurrentThread(),
-                THREAD_MODE_BACKGROUND_BEGIN);
+    CoInitialize(nullptr);
 
-        CoInitialize(nullptr);
+    QString filename = QString::number(id);
+    QString fn = dir + "\\Files\\" + filename;
+    QFile f(fn);
 
-        QString filename = QString::number(id.fetchAndAddAcquire(1));
-        QString fn = dir.path() + "\\" + filename;
-        QFile f(fn);
-        if (f.open(QFile::ReadWrite)) {
-            Job* job = new Job();
-            Downloader::Request request{QUrl(url)};
-            request.file = &f;
-            request.useCache = true;
-            request.keepConnection = false;
-            request.timeout = 15;
+    if (f.open(QFile::ReadWrite)) {
+        Job* job = new Job();
+        Downloader::Request request{QUrl(url)};
+        request.file = &f;
+        request.useCache = true;
+        request.keepConnection = false;
+        request.timeout = 15;
 
-            Downloader::Response response = Downloader::download(job, request);
-            QString mime = response.mimeType;
-            f.close();
+        Downloader::Response response = Downloader::download(job, request);
+        QString mime = response.mimeType;
+        f.close();
 
-            if (!job->getErrorMessage().isEmpty()) {
-                r.error = job->getErrorMessage();
-            } else {
-                // see main.cpp for the supported extensions.
-                QString ext;
-                if (mime == "image/png")
-                    ext = ".png";
-                else if (mime == "image/x-icon" || mime == "image/vnd.microsoft.icon")
-                    ext = ".ico";
-                else if (mime == "image/jpeg")
-                    ext = ".jpg";
-                else if (mime == "image/gif")
-                    ext = ".gif";
-                else if (mime == "image/x-windows-bmp" || mime == "image/bmp")
-                    ext = ".bmp";
-                else if (mime == "image/svg+xml")
-                    ext = ".svg";
-                else
-                    ext = ".png";
-
-                // qCDebug(npackd) << ext;
-                f.close();
-                f.rename(fn + ext);
-                r.file = filename + ext;
-            }
-            delete job;
+        if (!job->getErrorMessage().isEmpty()) {
+            r.error = job->getErrorMessage();
         } else {
-            r.error = QObject::tr("Cannot open the file %1").arg(fn);
+            // see main.cpp for the supported extensions.
+            QString ext;
+            if (mime == "image/png")
+                ext = ".png";
+            else if (mime == "image/x-icon" || mime == "image/vnd.microsoft.icon")
+                ext = ".ico";
+            else if (mime == "image/jpeg")
+                ext = ".jpg";
+            else if (mime == "image/gif")
+                ext = ".gif";
+            else if (mime == "image/x-windows-bmp" || mime == "image/bmp")
+                ext = ".bmp";
+            else if (mime == "image/svg+xml")
+                ext = ".svg";
+            else
+                ext = ".png";
+
+            // qCDebug(npackd) << ext;
+            f.close();
+            f.rename(fn + ext);
+            r.file = filename + ext;
+            r.size = f.size();
         }
-
-        this->mutex.lock();
-        this->files.insert(r.url, r);
-        this->mutex.unlock();
-
-        CoUninitialize();
-
-        if (b)
-            SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
+        delete job;
+    } else {
+        r.error = QObject::tr("Cannot open the file %1").arg(fn);
     }
+
+    CoUninitialize();
+
+    if (b)
+        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 
     return r;
 }
@@ -402,13 +402,22 @@ QString FileLoader::updateDatabase()
     if (err.isEmpty()) {
         if (!e) {
             db.exec("CREATE TABLE URL("
-                    "ADDRESS TEXT NOT NULL PRIMARY KEY, "
+                    "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    "ADDRESS TEXT NOT NULL, "
                     "SIZE INTEGER, "
                     "SIZE_MODIFIED INTEGER, "
                     "FILE TEXT)");
             err = SQLUtils::toString(db.lastError());
+
         }
     }
 
+    if (err.isEmpty()) {
+        if (!e) {
+            db.exec("CREATE UNIQUE INDEX URL_ADDRESS ON URL("
+                    "ADDRESS)");
+            err = SQLUtils::toString(db.lastError());
+        }
+    }
     return err;
 }
