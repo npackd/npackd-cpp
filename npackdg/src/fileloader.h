@@ -77,6 +77,9 @@ class FileLoader: public QObject
     QString open(const QString &connectionName, const QString &file);
     QString updateDatabase();
 
+    QSet<QString> loading;
+    QSet<QString> loadingSize;
+
     /**
      * @brief saves the download size for an URL
      * @param url URL

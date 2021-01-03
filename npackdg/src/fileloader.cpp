@@ -129,8 +129,14 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 
     r = v.size;
 
+    bool alreadyLoading;
+    mutex.lock();
+    alreadyLoading = loadingSize.contains(url);
+    mutex.unlock();
+
     // if the value is older than 10 days, it is considered obsolete
-    if (r == -1 || time(nullptr) - v.sizeModified > 10 * 24 * 60 * 60) {
+    if (!alreadyLoading &&
+            (r == -1 || time(nullptr) - v.sizeModified > 10 * 24 * 60 * 60)) {
         this->mutex.lock();
         QFuture<DownloadFile> future = run(&threadPool, this,
                 &FileLoader::downloadSizeRunnable, url);
@@ -147,6 +153,10 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
         const QString& url)
 {
+    mutex.lock();
+    loadingSize << url;
+    mutex.unlock();
+
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
     bool b = SetThreadPriority(GetCurrentThread(),
@@ -170,6 +180,10 @@ FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
 
     if (b)
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
+
+    mutex.lock();
+    loadingSize.remove(url);
+    mutex.unlock();
 
     return v;
 }
@@ -289,7 +303,12 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
         std::tie(id, *err) = saveURLInfos(url, -1, "");
     }
 
-    if (r.isEmpty() && err->isEmpty()) {
+    bool alreadyLoading;
+    mutex.lock();
+    alreadyLoading = loading.contains(url);
+    mutex.unlock();
+
+    if (!alreadyLoading && r.isEmpty() && err->isEmpty()) {
         QFuture<DownloadFile> future = QtConcurrent::run(
                 &FileLoader::threadPool, this,
                 &FileLoader::downloadFileRunnable, id, url);
@@ -324,6 +343,10 @@ void FileLoader::watcherFileFinished()
 FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
         const QString& url)
 {
+    mutex.lock();
+    loading << url;
+    mutex.unlock();
+
     FileLoader::DownloadFile r;
     r.url = url;
 
@@ -371,7 +394,6 @@ FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
                 ext = ".png";
 
             // qCDebug(npackd) << ext;
-            f.close();
             f.rename(fn + ext);
             r.file = filename + ext;
             r.size = f.size();
@@ -385,6 +407,10 @@ FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
 
     if (b)
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
+
+    mutex.lock();
+    loading.remove(url);
+    mutex.unlock();
 
     return r;
 }
