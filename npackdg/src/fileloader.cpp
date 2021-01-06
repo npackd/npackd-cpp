@@ -112,7 +112,11 @@ void FileLoader::watcherSizeFinished()
 
     DownloadFile r = w->result();
 
-    saveURLInfos(r.url, r.size, r.file);
+    int64_t id;
+    QString err;
+    std::tie(id, err) = saveURLInfos(r.url, r.size, r.file);
+    if (!err.isEmpty())
+        qCWarning(npackd) << "Error saving a URL record" << err;
 
     emit this->downloadSizeCompleted(r.url, r.size);
 
@@ -127,7 +131,8 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
     QString err;
     std::tie(v, err) = this->findURLInfo(url);
 
-    r = v.size;
+    if (err.isEmpty())
+        r = v.size;
 
     bool alreadyLoading;
     mutex.lock();
@@ -137,14 +142,16 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
     // if the value is older than 10 days, it is considered obsolete
     if (!alreadyLoading &&
             (r == -1 || time(nullptr) - v.sizeModified > 10 * 24 * 60 * 60)) {
-        this->mutex.lock();
+        mutex.lock();
+        loadingSize << url;
+        this->mutex.unlock();
+
         QFuture<DownloadFile> future = run(&threadPool, this,
                 &FileLoader::downloadSizeRunnable, url);
         QFutureWatcher<DownloadFile>* w =
                 new QFutureWatcher<DownloadFile>(this);
         connect(w, SIGNAL(finished()), this, SLOT(watcherSizeFinished()));
         w->setFuture(future);
-        this->mutex.unlock();
     }
 
     return r;
@@ -153,14 +160,9 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
         const QString& url)
 {
-    mutex.lock();
-    loadingSize << url;
-    mutex.unlock();
-
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
-    bool b = SetThreadPriority(GetCurrentThread(),
-            THREAD_MODE_BACKGROUND_BEGIN);
+    bool b = SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
 
     CoInitialize(nullptr);
 
@@ -169,6 +171,11 @@ FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
     v.url = url;
     v.size = Downloader::getContentLength(job, url, defaultPasswordWindow);
     v.sizeModified = time(nullptr);
+
+    if (!job->getErrorMessage().isEmpty()) {
+        qCWarning(npackd) << "Error getting download size" <<
+                job->getErrorMessage();
+    }
 
     if (!job->getErrorMessage().isEmpty() || v.size < 0) {
         v.size = -2;
@@ -250,10 +257,6 @@ std::tuple<FileLoader::DownloadFile, QString>
             "SELECT ID, SIZE, SIZE_MODIFIED, FILE FROM URL WHERE ADDRESS = :ADDRESS LIMIT 1")))
         err = SQLUtils::getErrorString(q);
 
-    if (npackd().isDebugEnabled()) {
-        qCDebug(npackd) << url;
-    }
-
     if (err.isEmpty()) {
         q.bindValue(QStringLiteral(":ADDRESS"), url);
         if (!q.exec())
@@ -301,6 +304,9 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
             r = dir + "\\Files\\" + df.file;
     } else {
         std::tie(id, *err) = saveURLInfos(url, -1, "");
+        if (!err->isEmpty()) {
+            qCWarning(npackd) << "Error saving a URL record" << err;
+        }
     }
 
     bool alreadyLoading;
@@ -309,6 +315,10 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
     mutex.unlock();
 
     if (!alreadyLoading && r.isEmpty() && err->isEmpty()) {
+        mutex.lock();
+        loading << url;
+        mutex.unlock();
+
         QFuture<DownloadFile> future = QtConcurrent::run(
                 &FileLoader::threadPool, this,
                 &FileLoader::downloadFileRunnable, id, url);
@@ -329,7 +339,13 @@ void FileLoader::watcherFileFinished()
     DownloadFile r = w->result();
 
     if (!r.file.isEmpty() || !r.error.isEmpty()) {
-        saveURLInfos(r.url, r.size, r.file);
+        int64_t id;
+        QString err;
+        std::tie(id, err) = saveURLInfos(r.url, r.size, r.file);
+        if (!err.isEmpty()) {
+            qCWarning(npackd) << "Error saving a URL record" << err;
+        }
+
         QString file = r.file;
         if (!file.isEmpty())
             file = dir + "\\Files\\" + file;
@@ -343,17 +359,12 @@ void FileLoader::watcherFileFinished()
 FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
         const QString& url)
 {
-    mutex.lock();
-    loading << url;
-    mutex.unlock();
-
     FileLoader::DownloadFile r;
     r.url = url;
 
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
-    bool b = SetThreadPriority(GetCurrentThread(),
-            THREAD_MODE_BACKGROUND_BEGIN);
+    bool b = SetThreadPriority(GetCurrentThread(),THREAD_MODE_BACKGROUND_BEGIN);
 
     CoInitialize(nullptr);
 
