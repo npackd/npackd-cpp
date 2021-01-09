@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <memory>
+#include <unordered_map>
 
 #include <QMap>
 #include <QObject>
@@ -32,7 +33,7 @@ private:
     mutable QMutex mutex;
 
     /** please use the mutex to access the data */
-    QMap<QString, InstalledPackageVersion*> data;
+    std::unordered_map<QString, InstalledPackageVersion*> data;
 
     /**
      * @brief processOneInstalled3rdParty
@@ -42,6 +43,8 @@ private:
      */
     void processOneInstalled3rdParty(DBRepository *r,
             const InstalledPackageVersion *found, const QString &detectionInfoPrefix);
+
+    void clearData();
 
     /**
      * THIS METHOD IS NOT THREAD-SAFE
