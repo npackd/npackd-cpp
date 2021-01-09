@@ -518,7 +518,7 @@ public:
      * @brief running processes
      * @return the list of process identifiers.
      */
-    static QVector<DWORD> getProcessIDs();
+    static std::vector<DWORD> getProcessIDs();
 
     /**
      * @brief returns process executable

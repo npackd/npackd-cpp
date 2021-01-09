@@ -1694,9 +1694,9 @@ QString WPMUtils::getProcessFile(HANDLE hProcess)
 }
 
 // see also http://msdn.microsoft.com/en-us/library/ms683217(v=VS.85).aspx
-QVector<DWORD> WPMUtils::getProcessIDs()
+std::vector<DWORD> WPMUtils::getProcessIDs()
 {
-    QVector<DWORD> r;
+    std::vector<DWORD> r;
 
     int n = 200;
 
@@ -1724,7 +1724,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 {
     QList<HANDLE> r;
 
-    QVector<DWORD> aiPID = getProcessIDs();
+    std::vector<DWORD> aiPID = getProcessIDs();
 
     // How many processes are there?
     int iNumProc = aiPID.size();
