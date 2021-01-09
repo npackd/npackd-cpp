@@ -182,7 +182,7 @@ if(MSVC)
     configure_file(${CMAKE_SOURCE_DIR}/cmake/UserTemplate.user.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.vcxproj.user @ONLY)
 endif() 
 
-find_package(Qt5 COMPONENTS Gui xml sql widgets WinExtras LinguistTools REQUIRED)
+find_package(Qt5 COMPONENTS Gui xml sql Svg widgets WinExtras LinguistTools REQUIRED)
 
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\platforms")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
