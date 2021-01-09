@@ -836,7 +836,7 @@ void MainWindow::onShow()
 
 void MainWindow::selectPackages(QList<Package*> ps)
 {
-    QSet<QString> packageNames;
+    std::unordered_set<QString> packageNames;
     for (int i = 0; i < ps.count(); i++) {
         packageNames.insert(ps.at(i)->name);
     }
@@ -847,7 +847,7 @@ void MainWindow::selectPackages(QList<Package*> ps)
     for (int i = 0; i < m->rowCount(); i++) {
         const QVariant v = m->data(m->index(i, 1), Qt::UserRole);
         QString name = v.toString();
-        if (packageNames.contains(name)) {
+        if (packageNames.count(name) > 0) {
             QModelIndex topLeft = t->model()->index(i, 0);
 
             t->selectionModel()->select(topLeft, QItemSelectionModel::Rows |
@@ -924,7 +924,6 @@ void MainWindow::fillList()
 
     QString query = this->mainFrame->getFilterLineEdit()->text();
 
-    //QSet<QString> requestedIcons;
     int statusFilter = this->mainFrame->getStatusFilter();
     Package::Status minStatus, maxStatus;
     switch (statusFilter) {
@@ -1756,7 +1755,7 @@ void MainWindow::addTab(QWidget* w, const QIcon& icon, const QString& title)
 
 void MainWindow::on_actionGotoPackageURL_triggered()
 {
-    QSet<QUrl> urls;
+    std::unordered_set<QString> urls;
 
     Selection* selection = Selection::findCurrent();
     QList<void*> selected;
@@ -1767,7 +1766,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
                 Package* p = static_cast<Package*>(selected.at(i));
                 QUrl url(p->url);
                 if (url.isValid())
-                    urls.insert(url);
+                    urls.insert(p->url);
             }
         } else {
             DBRepository* r = DBRepository::getDefault();
@@ -1779,15 +1778,14 @@ void MainWindow::on_actionGotoPackageURL_triggered()
                 if (p) {
                     QUrl url(p->url);
                     if (url.isValid())
-                        urls.insert(url);
+                        urls.insert(p->url);
                 }
             }
         }
     }
 
-    for (QSet<QUrl>::const_iterator it = urls.begin();
-            it != urls.end(); ++it) {
-        openURL(*it);
+    for (auto&& it: urls) {
+        openURL(QUrl(it));
     }
 }
 
@@ -1844,12 +1842,12 @@ void MainWindow::on_actionUpdate_triggered()
         if (selected.count() > 0) {
             // multiple versions of the same package could be selected in the table,
             // but only one should be updated
-            QSet<QString> used;
+            std::unordered_set<QString> used;
 
             for (int i = 0; i < selected.count(); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
-                if (!used.contains(pv->package)) {
+                if (used.count(pv->package) == 0) {
                     Package* p = r->findPackage_(pv->package);
 
                     if (p != nullptr) {
@@ -1896,7 +1894,7 @@ void MainWindow::on_actionTest_Download_Site_triggered()
     QString err;
     Selection* sel = Selection::findCurrent();
     if (sel) {
-        QSet<QString> urls;
+        std::unordered_set<QString> urls;
 
         QList<void*> selected = sel->getSelected("PackageVersion");
         if (selected.count() > 0) {
@@ -1922,9 +1920,8 @@ void MainWindow::on_actionTest_Download_Site_triggered()
         }
 
         if (err.isEmpty()) {
-            for (QSet<QString>::const_iterator it = urls.begin();
-                    it != urls.end(); ++it) {
-                QString s = "http://www.urlvoid.com/scan/" + *it;
+            for (auto&& it: urls) {
+                QString s = "http://www.urlvoid.com/scan/" + it;
                 QUrl url(s);
                 if (url.isValid())
                     openURL(url);
@@ -2276,7 +2273,7 @@ void MainWindow::on_actionChoose_columns_triggered()
 
 void MainWindow::on_actionShow_changelog_triggered()
 {
-    QSet<QUrl> urls;
+    std::unordered_set<QString> urls;
 
     Selection* selection = Selection::findCurrent();
     QList<void*> selected;
@@ -2287,7 +2284,7 @@ void MainWindow::on_actionShow_changelog_triggered()
                 Package* p = static_cast<Package*>(selected.at(i));
                 QUrl url(p->getChangeLog());
                 if (url.isValid())
-                    urls.insert(url);
+                    urls.insert(p->getChangeLog());
             }
         } else {
             DBRepository* r = DBRepository::getDefault();
@@ -2299,15 +2296,14 @@ void MainWindow::on_actionShow_changelog_triggered()
                 if (p) {
                     QUrl url(p->getChangeLog());
                     if (url.isValid())
-                        urls.insert(url);
+                        urls.insert(p->getChangeLog());
                 }
             }
         }
     }
 
-    for (QSet<QUrl>::const_iterator it = urls.begin();
-            it != urls.end(); ++it) {
-        openURL(*it);
+    for (auto&& it: urls) {
+        openURL(QUrl(it));
     }
 }
 
