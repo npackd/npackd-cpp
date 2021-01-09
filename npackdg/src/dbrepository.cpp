@@ -2,6 +2,7 @@
 
 #include <shlobj.h>
 #include <ctime>
+#include <unordered_set>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -1967,7 +1968,7 @@ void DBRepository::updateStatusForInstalled(Job* job)
 {
     QString initialTitle = job->getTitle();
 
-    QSet<QString> packages;
+    std::unordered_set<QString> packages;
     if (job->shouldProceed()) {
         packages = InstalledPackages::getDefault()->getPackages();
         job->setProgress(0.1);
@@ -1976,15 +1977,15 @@ void DBRepository::updateStatusForInstalled(Job* job)
     if (job->shouldProceed()) {
         job->setTitle(initialTitle + QStringLiteral(" / ") +
                 QObject::tr("Updating statuses"));
-        QList<QString> packages_ = packages.values();
-        for (int i = 0; i < packages_.count(); i++) {
-            QString package = packages_.at(i);
-            updateStatus(package);
+        int i = 0;
+        for (auto&& it: packages) {
+            updateStatus(it);
 
             if (!job->shouldProceed())
                 break;
 
-            job->setProgress(0.1 + 0.9 * (i + 1) / packages_.count());
+            i++;
+            job->setProgress(0.1 + 0.9 * i / packages.size());
         }
     }
 

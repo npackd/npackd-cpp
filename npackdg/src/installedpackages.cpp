@@ -735,11 +735,11 @@ bool InstalledPackages::isInstalled(const Dependency& dep) const
     return res;
 }
 
-QSet<QString> InstalledPackages::getPackages() const
+std::unordered_set<QString> InstalledPackages::getPackages() const
 {
     this->mutex.lock();
 
-    QSet<QString> r;
+    std::unordered_set<QString> r;
     for (auto&& it: data) {
         InstalledPackageVersion* ipv = it.second;
         if (ipv->installed())

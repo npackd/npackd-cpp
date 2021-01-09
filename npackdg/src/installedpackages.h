@@ -311,7 +311,7 @@ public:
      * @brief returns the packages with at least one version installed
      * @return the package names
      */
-    QSet<QString> getPackages() const;
+    std::unordered_set<QString> getPackages() const;
 
     /**
      * @return [move] the first found package version with a missing
