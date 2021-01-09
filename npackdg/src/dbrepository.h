@@ -8,7 +8,6 @@
 #include <QSqlError>
 #include <QSqlDatabase>
 #include <QSharedPointer>
-#include <QMap>
 #include <QWeakPointer>
 #include <QMultiMap>
 #include <QCache>

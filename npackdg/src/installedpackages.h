@@ -5,7 +5,6 @@
 #include <memory>
 #include <unordered_map>
 
-#include <QMap>
 #include <QObject>
 #include <QSet>
 #include <QString>

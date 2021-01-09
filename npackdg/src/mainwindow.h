@@ -8,7 +8,6 @@
 #include <QMainWindow>
 #include <QProgressDialog>
 #include <QTimer>
-#include <QMap>
 #include <QModelIndex>
 #include <QFrame>
 #include <QScrollArea>
