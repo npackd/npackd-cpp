@@ -1805,8 +1805,8 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 // "\Device\LanmanRedirector\ComputerName\C$\Boot.ini"      -> "\\ComputerName\C$\Boot.ini"
 // "\Device\LanmanRedirector\ComputerName\Shares\Dance.m3u" -> "\\ComputerName\Shares\Dance.m3u"
 // returns an error for any other device type
-QMap<QString, QString> mapDevices2Drives() {
-    QMap<QString, QString> devices2drives;
+std::unordered_map<QString, QString> mapDevices2Drives() {
+    std::unordered_map<QString, QString> devices2drives;
 
     //DWORD u32_Error;
 
@@ -1878,8 +1878,8 @@ QMap<QString, QString> mapDevices2Drives() {
                             logicalDevice.setUtf16((ushort*) device,
 								(int)wcslen(device));
                             devices2drives.insert(
-                                    logicalDevice + '\\',
-                                    logicalDrive + '\\');
+                                    {logicalDevice + '\\',
+                                    logicalDrive + '\\'});
 
                             device += wcslen(device) + 1;
                         }
@@ -1951,7 +1951,7 @@ void MyThread::run()
 
 
 QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
-    QMap<QString, QString> devices2drives = mapDevices2Drives();
+    std::unordered_map<QString, QString> devices2drives = mapDevices2Drives();
 
     QList<HANDLE> result;
 
@@ -2090,11 +2090,9 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
         }
 
         if (ok) {
-            QMapIterator<QString, QString> i(devices2drives);
-            while (i.hasNext()) {
-                i.next();
-                if (name.startsWith(i.key())) {
-                    name = i.value() + name.mid(i.key().length());
+            for (auto i = devices2drives.begin(); i != devices2drives.end(); ++i) {
+                if (name.startsWith(i->first)) {
+                    name = i->second + name.mid(i->first.length());
 
                     qCDebug(npackd) << "File object converted" << name;
 
