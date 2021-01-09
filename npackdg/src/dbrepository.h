@@ -2,6 +2,7 @@
 #define DBREPOSITORY_H
 
 #include <memory>
+#include <unordered_map>
 
 #include <QString>
 #include <QSqlError>
@@ -45,7 +46,7 @@ private:
     mutable QCache<QString, PackageVersionList> packageVersions;
     mutable QCache<QString, Package> packages;
 
-    QMap<int, QString> categories;
+    std::unordered_map<int, QString> categories;
 
     MySQLQuery* replacePackageVersionQuery;
     MySQLQuery* insertPackageVersionQuery;

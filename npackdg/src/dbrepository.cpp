@@ -370,7 +370,11 @@ QString DBRepository::findCategory(int cat) const
 {
     QMutexLocker ml(&this->mutex);
 
-    QString r = categories.value(cat);
+    auto it = categories.find(cat);
+    QString r;
+    if (it != categories.end()) {
+        r = it->second;
+    }
 
     return r;
 }
@@ -2063,8 +2067,8 @@ QString DBRepository::readCategories()
             err = SQLUtils::getErrorString(q);
         else {
             while (q.next()) {
-                categories.insert(q.value(0).toInt(),
-                        q.value(1).toString());
+                categories.insert({q.value(0).toInt(),
+                        q.value(1).toString()});
             }
         }
     }

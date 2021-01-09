@@ -13,7 +13,6 @@
 #include <QAtomicInt>
 #include <QMutex>
 #include <QTemporaryDir>
-#include <QMap>
 #include <QSqlError>
 #include <QThreadPool>
 #include <QMutex>
