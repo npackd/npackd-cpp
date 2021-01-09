@@ -175,10 +175,9 @@ void Package::toJSON(QJsonObject& w) const
         w["links"] = link;
 
     QJsonArray installed;
-    QList<InstalledPackageVersion*> ipvs = InstalledPackages::getDefault()->
+    std::vector<InstalledPackageVersion*> ipvs = InstalledPackages::getDefault()->
             getByPackage(this->name);
-    for (int i = 0; i < ipvs.size(); i++) {
-        InstalledPackageVersion* ipv = ipvs.at(i);
+    for (auto ipv: ipvs) {
         QJsonObject obj;
         obj["version"] = ipv->version.getVersionString();
         obj["where"] = ipv->directory;

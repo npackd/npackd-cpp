@@ -237,7 +237,8 @@ public:
      *
      * @return [move] installed packages
      */
-    QList<InstalledPackageVersion*> getByPackage(const QString& package) const;
+    std::vector<InstalledPackageVersion *> getByPackage(
+            const QString& package) const;
 
     /**
      * @brief paths to all installed package versions

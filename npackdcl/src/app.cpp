@@ -2371,11 +2371,11 @@ void App::info(Job* job)
 
             if (!pv) {
                 InstalledPackages* ip = InstalledPackages::getDefault();
-                QList<InstalledPackageVersion*> ipvs = ip->getByPackage(p->name);
-                if (ipvs.count() > 0) {
+                std::vector<InstalledPackageVersion*> ipvs = ip->getByPackage(p->name);
+                if (ipvs.size() > 0) {
                     WPMUtils::writeln(QString("%1 versions are installed:").
-                            arg(ipvs.count()));
-                    for (int i = 0; i < ipvs.count(); ++i) {
+                            arg(ipvs.size()));
+                    for (int i = 0; i < ipvs.size(); ++i) {
                         InstalledPackageVersion* ipv = ipvs.at(i);
                         if (!ipv->getDirectory().isEmpty())
                             WPMUtils::writeln("    " +

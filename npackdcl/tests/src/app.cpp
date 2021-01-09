@@ -101,13 +101,13 @@ void App::testInstalledPackages()
     QVERIFY(packages.size() == 1);
     qDeleteAll(packages);
 
-    packages = ip->getByPackage("test");
-    QVERIFY(packages.size() == 1);
-    qDeleteAll(packages);
+    auto packages_ = ip->getByPackage("test");
+    QVERIFY(packages_.size() == 1);
+    qDeleteAll(packages_);
 
-    packages = ip->getByPackage("test2");
-    QVERIFY(packages.size() == 0);
-    qDeleteAll(packages);
+    packages_ = ip->getByPackage("test2");
+    QVERIFY(packages_.size() == 0);
+    qDeleteAll(packages_);
 
     QStringList paths = ip->getAllInstalledPackagePaths();
     QVERIFY(paths.size() == 1);

@@ -963,16 +963,15 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
                 if (ponext != nullptr && ponext->opt && ponext->opt->nameMatches("version"))
                     version = ponext->value;
                 if (version.isNull()) {
-                    QList<InstalledPackageVersion*> ipvs =
+                    std::vector<InstalledPackageVersion*> ipvs =
                             InstalledPackages::getDefault()->getByPackage(p->name);
-                    if (ipvs.count() == 0) {
+                    if (ipvs.size() == 0) {
                         *err = QObject::tr(
                                 "Package %1 (%2) is not installed").
                                 arg(p->title).arg(p->name);
-                    } else if (ipvs.count() > 1) {
+                    } else if (ipvs.size() > 1) {
                         QString vns;
-                        for (int i = 0; i < ipvs.count(); i++) {
-                            InstalledPackageVersion* ipv = ipvs.at(i);
+                        for (auto ipv: ipvs) {
                             if (!vns.isEmpty())
                                 vns.append(", ");
                             vns.append(ipv->version.getVersionString());

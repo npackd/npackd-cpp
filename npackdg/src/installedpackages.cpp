@@ -663,16 +663,16 @@ QList<InstalledPackageVersion*> InstalledPackages::getAll() const
     return r;
 }
 
-QList<InstalledPackageVersion *> InstalledPackages::getByPackage(
+std::vector<InstalledPackageVersion *> InstalledPackages::getByPackage(
         const QString &package) const
 {
     this->mutex.lock();
 
-    QList<InstalledPackageVersion*> r;
+    std::vector<InstalledPackageVersion*> r;
     for (auto it = data.begin(); it != data.end(); ++it) {
         InstalledPackageVersion* ipv = it->second;
         if (ipv->installed() && ipv->package == package)
-            r.append(ipv->clone());
+            r.push_back(ipv->clone());
     }
 
     this->mutex.unlock();
