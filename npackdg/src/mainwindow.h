@@ -112,9 +112,6 @@ private:
     _SearchResult search(Package::Status minStatus, Package::Status maxStatus,
                          const QString &query, int cat0, int cat1, QString *err);
 public:
-    /** URL -> full path to the file or "" in case of an error */
-    QMap<QString, QString> downloadCache;
-
     /**
      * Adds an entry in the "Progress" tab and monitors a task. The thread
      * itself should be started after the call to this method.

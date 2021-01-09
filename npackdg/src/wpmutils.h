@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <time.h>
 #include <taskschd.h>
+#include <unordered_map>
 
 #include <QString>
 #include <QDir>
@@ -705,14 +706,14 @@ public:
      * @param env2 the environment as returned by GetEnvironmentStrings()
      * @return name=value pairs
      */
-    static QMap<QString, QString> parseEnv(LPWCH env2);
+    static std::unordered_map<QString, QString> parseEnv(LPWCH env2);
 
     /**
      * @brief serializes the specified environment
      * @param env name=value pairs
      * @return serialized environment, e.g. for CreateProcess
      */
-    static QByteArray serializeEnv(const QMap<QString, QString> &env);
+    static QByteArray serializeEnv(const std::unordered_map<QString, QString> &env);
 
     /**
      * Checks whether the specified value is a valid URL. The URL cannot be

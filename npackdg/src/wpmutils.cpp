@@ -3407,9 +3407,9 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     }
 }
 
-QMap<QString, QString> WPMUtils::parseEnv(LPWCH env2)
+std::unordered_map<QString, QString> WPMUtils::parseEnv(LPWCH env2)
 {
-    QMap<QString, QString> env_;
+    std::unordered_map<QString, QString> env_;
     LPWCH e = env2;
     while (true) {
         int len = (int)wcslen(e);
@@ -3427,7 +3427,7 @@ QMap<QString, QString> WPMUtils::parseEnv(LPWCH env2)
         } else {
             name = s;
         }
-        env_.insert(name, value);
+        env_[name] = value;
 
         e += len + 1;
 
@@ -3437,14 +3437,13 @@ QMap<QString, QString> WPMUtils::parseEnv(LPWCH env2)
     return env_;
 }
 
-QByteArray WPMUtils::serializeEnv(const QMap<QString, QString>& env)
+QByteArray WPMUtils::serializeEnv(const std::unordered_map<QString, QString>& env)
 {
     QByteArray ba;
-    QMapIterator<QString, QString> i(env);
-    while (i.hasNext()) {
-        i.next();
-        QString name = i.key();
-        QString value = i.value();
+
+    for (auto i = env.begin(); i != env.end(); ++i) {
+        QString name = i->first;
+        QString value = i->second;
         ba.append((char*) name.utf16(), name.length() * 2);
         ba.append('=');
         ba.append('\0');
@@ -3506,11 +3505,11 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     time_t start = time(nullptr);
 
     LPWCH env2 = GetEnvironmentStrings();
-    QMap<QString, QString> env_ = parseEnv(env2);
+    std::unordered_map<QString, QString> env_ = parseEnv(env2);
     FreeEnvironmentStrings(env2);
 
     for (int i = 0; i + 1 < env.size(); i += 2) {
-        env_.insert(env.at(i), env.at(i + 1));
+        env_[env.at(i)] = env.at(i + 1);
     }
 
     QByteArray ba = serializeEnv(env_);
