@@ -7,7 +7,6 @@
 #include <QObject>
 #include <QMetaType>
 #include <QMutex>
-#include <QQueue>
 #include <QTime>
 #include <QList>
 

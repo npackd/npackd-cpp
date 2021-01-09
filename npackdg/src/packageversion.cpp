@@ -41,7 +41,7 @@
 #include "packageutils.h"
 
 QSemaphore PackageVersion::httpConnections(3);
-QSet<QString> PackageVersion::lockedPackageVersions;
+std::unordered_set<QString> PackageVersion::lockedPackageVersions;
 QMutex PackageVersion::lockedPackageVersionsMutex(QMutex::Recursive);
 
 /**
@@ -214,10 +214,10 @@ void PackageVersion::findLockedPackageVersion(QString* package, Version* version
     *package = "";
 
     lockedPackageVersionsMutex.lock();
-    QSetIterator<QString> i(lockedPackageVersions);
+    auto i = lockedPackageVersions.begin();
     QString key;
-    if (i.hasNext()) {
-        key = i.next();
+    if (i != lockedPackageVersions.end()) {
+        key = *i;
     }
     lockedPackageVersionsMutex.unlock();
 
@@ -266,7 +266,7 @@ void PackageVersion::lock()
 
     bool changed = false;
     lockedPackageVersionsMutex.lock();
-    if (!lockedPackageVersions.contains(key)) {
+    if (lockedPackageVersions.count(key) == 0) {
         lockedPackageVersions.insert(key);
         changed = true;
     }
@@ -282,8 +282,8 @@ void PackageVersion::unlock()
 
     bool changed = false;
     lockedPackageVersionsMutex.lock();
-    if (lockedPackageVersions.contains(key)) {
-        lockedPackageVersions.remove(key);
+    if (lockedPackageVersions.count(key) > 0) {
+        lockedPackageVersions.erase(key);
         changed = true;
     }
     lockedPackageVersionsMutex.unlock();
@@ -301,7 +301,7 @@ bool PackageVersion::isLocked(const QString& package, const Version& version)
 {
     bool r;
     lockedPackageVersionsMutex.lock();
-    r = lockedPackageVersions.contains(getStringId(package, version));
+    r = lockedPackageVersions.count(getStringId(package, version)) > 0;
     lockedPackageVersionsMutex.unlock();
     return r;
 }

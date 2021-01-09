@@ -10,7 +10,6 @@
 #include "qtemporaryfile.h"
 #include "qdom.h"
 #include <QMutex>
-#include <QMultiMap>
 
 #include "package.h"
 #include "packageversion.h"

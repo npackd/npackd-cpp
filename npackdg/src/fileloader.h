@@ -6,7 +6,6 @@
 
 #include "qmetatype.h"
 #include <QObject>
-#include <QQueue>
 #include <QUrl>
 #include <QTemporaryFile>
 #include <QThread>

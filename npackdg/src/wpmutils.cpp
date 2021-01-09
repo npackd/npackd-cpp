@@ -19,6 +19,7 @@
 #include <taskschd.h>
 #include <comdef.h>
 #include <sddl.h>
+#include <unordered_set>
 
 //#define CCH_RM_MAX_APP_NAME 255
 //#define CCH_RM_MAX_SVC_NAME 63
@@ -1990,7 +1991,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
         handleInfo->HandleCount = 0;
     }
 
-    QSet<ULONG> usedProcessIds;
+    std::unordered_set<ULONG> usedProcessIds;
     for (i = 0; i < handleInfo->HandleCount; i++) {
         bool ok = true;
 
@@ -2000,7 +2001,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
 
         HANDLE processHandle = INVALID_HANDLE_VALUE;
 
-        if (usedProcessIds.contains(handle.ProcessId)) {
+        if (usedProcessIds.count(handle.ProcessId) > 0) {
             ok = false;
         }
 

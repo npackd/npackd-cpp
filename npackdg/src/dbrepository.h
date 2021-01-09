@@ -9,7 +9,6 @@
 #include <QSqlDatabase>
 #include <QSharedPointer>
 #include <QWeakPointer>
-#include <QMultiMap>
 #include <QCache>
 #include <QList>
 #include <QMutex>

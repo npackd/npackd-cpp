@@ -3,6 +3,7 @@
 
 #include <guiddef.h>
 #include <windows.h>
+#include <unordered_set>
 
 #include <QString>
 #include <QMetaType>
@@ -49,7 +50,7 @@ private:
      * Access to this data should be only done under the
      * lockedPackageVersionsMutex
      */
-    static QSet<QString> lockedPackageVersions;
+    static std::unordered_set<QString> lockedPackageVersions;
 
     /** mutex for lockedPackageVersions */
     static QMutex lockedPackageVersionsMutex;

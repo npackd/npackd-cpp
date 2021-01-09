@@ -1,7 +1,6 @@
 #include <limits>
 #include <math.h>
 
-#include <QMultiMap>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
