@@ -95,11 +95,18 @@ InstalledPackages &InstalledPackages::operator=(const InstalledPackages &other)
     return *this;
 }
 
+void InstalledPackages::clearData()
+{
+    for (auto it = this->data.begin(); it != this->data.end(); ++it) {
+        delete it->second;
+    }
+    this->data.clear();
+}
+
 InstalledPackages::~InstalledPackages()
 {
     this->mutex.lock();
-    qDeleteAll(this->data);
-    this->data.clear();
+    clearData();
     this->mutex.unlock();
 }
 
@@ -108,8 +115,13 @@ InstalledPackageVersion* InstalledPackages::findNoCopy(const QString& package,
 {
     // internal method, mutex is not used
 
-    InstalledPackageVersion* ipv = this->data.value(
+    auto it = this->data.find(
             PackageVersion::getStringId(package, version));
+    InstalledPackageVersion* ipv;
+    if (it != data.end())
+        ipv = it->second;
+    else
+        ipv = nullptr;
 
     return ipv;
 }
@@ -119,10 +131,13 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
 {
     this->mutex.lock();
 
-    InstalledPackageVersion* ipv = this->data.value(
+    auto it = this->data.find(
             PackageVersion::getStringId(package, version));
-    if (ipv)
-        ipv = ipv->clone();
+    InstalledPackageVersion* ipv;
+    if (it != data.end())
+        ipv = it->second->clone();
+    else
+        ipv = nullptr;
 
     this->mutex.unlock();
 
@@ -564,10 +579,13 @@ InstalledPackageVersion* InstalledPackages::findOrCreate(const QString& package,
     *err = "";
 
     QString key = PackageVersion::getStringId(package, version);
-    InstalledPackageVersion* r = this->data.value(key);
-    if (!r) {
+    auto it = this->data.find(key);
+    InstalledPackageVersion* r;
+    if (it == data.end()) {
         r = new InstalledPackageVersion(package, version, "");
-        this->data.insert(key, r);
+        this->data.insert({key, r});
+    } else {
+        r = it->second;
     }
 
     return r;
@@ -586,7 +604,7 @@ QString InstalledPackages::setPackageVersionPath(const QString& package,
     InstalledPackageVersion* ipv = this->findNoCopy(package, version);
     if (!ipv) {
         ipv = new InstalledPackageVersion(package, version, directory);
-        this->data.insert(package + "/" + version.getVersionString(), ipv);
+        this->data.insert({package + "/" + version.getVersionString(), ipv});
         changed = true;
     } else {
         if (ipv->getDirectory() != directory) {
@@ -611,9 +629,8 @@ InstalledPackageVersion *InstalledPackages::findOwner(
     this->mutex.lock();
 
     InstalledPackageVersion* f = nullptr;
-    QList<InstalledPackageVersion*> ipvs = this->data.values();
-    for (int i = 0; i < ipvs.count(); ++i) {
-        InstalledPackageVersion* ipv = ipvs.at(i);
+    for (auto i = data.begin(); i != data.end(); ++i) {
+        InstalledPackageVersion* ipv = i->second;
         QString dir = ipv->getDirectory();
         if (!dir.isEmpty() && (WPMUtils::pathEquals(filePath, dir) ||
                 WPMUtils::isUnder(filePath, dir))) {
@@ -634,10 +651,9 @@ QList<InstalledPackageVersion*> InstalledPackages::getAll() const
 {
     this->mutex.lock();
 
-    QList<InstalledPackageVersion*> all = this->data.values();
     QList<InstalledPackageVersion*> r;
-    for (int i = 0; i < all.count(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
+    for (auto it = data.begin(); it != data.end(); ++it) {
+        InstalledPackageVersion* ipv = it->second;
         if (ipv->installed())
             r.append(ipv->clone());
     }
@@ -652,10 +668,9 @@ QList<InstalledPackageVersion *> InstalledPackages::getByPackage(
 {
     this->mutex.lock();
 
-    QList<InstalledPackageVersion*> all = this->data.values();
     QList<InstalledPackageVersion*> r;
-    for (int i = 0; i < all.count(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
+    for (auto it = data.begin(); it != data.end(); ++it) {
+        InstalledPackageVersion* ipv = it->second;
         if (ipv->installed() && ipv->package == package)
             r.append(ipv->clone());
     }
@@ -669,14 +684,15 @@ void InstalledPackages::remove(const QString &package)
 {
     this->mutex.lock();
 
-    QList<InstalledPackageVersion*> all = this->data.values();
-    for (int i = 0; i < all.count(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
-        if (ipv->package == package) {
-            data.remove(PackageVersion::getStringId(package, ipv->version));
-            delete ipv;
+    std::vector<QString> needsRemoving;
+    for (auto it = data.begin(); it != data.end(); ++it) {
+        if (it->second->package == package) {
+            needsRemoving.push_back(it->first);
+            delete it->second;
         }
     }
+    for(auto&& key: needsRemoving)
+        data.erase(key);
 
     this->mutex.unlock();
 }
@@ -686,10 +702,9 @@ InstalledPackageVersion* InstalledPackages::getNewestInstalled(
 {
     this->mutex.lock();
 
-    QList<InstalledPackageVersion*> all = this->data.values();
     InstalledPackageVersion* r = nullptr;
-    for (int i = 0; i < all.count(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
+    for (auto&& it: data) {
+        InstalledPackageVersion* ipv = it.second;
         if (ipv->package == package && ipv->installed()) {
             if (!r || r->version < ipv->version)
                 r = ipv;
@@ -724,10 +739,9 @@ QSet<QString> InstalledPackages::getPackages() const
 {
     this->mutex.lock();
 
-    QList<InstalledPackageVersion*> all = this->data.values();
     QSet<QString> r;
-    for (int i = 0; i < all.count(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
+    for (auto&& it: data) {
+        InstalledPackageVersion* ipv = it.second;
         if (ipv->installed())
             r.insert(ipv->package);
     }
@@ -745,9 +759,8 @@ InstalledPackageVersion*
     this->mutex.lock();
 
     DBRepository* dbr = DBRepository::getDefault();
-    QList<InstalledPackageVersion*> all = this->data.values();
-    for (int i = 0; i < all.count(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
+    for (auto&& it: data) {
+        InstalledPackageVersion* ipv = it.second;
         if (ipv->installed()) {
             QString err;
             std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion_(
@@ -822,9 +835,8 @@ QStringList InstalledPackages::getAllInstalledPackagePaths() const
     this->mutex.lock();
 
     QStringList r;
-    QList<InstalledPackageVersion*> ipvs = this->data.values();
-    for (int i = 0; i < ipvs.count(); i++) {
-        InstalledPackageVersion* ipv = ipvs.at(i);
+    for (auto&& it: data) {
+        InstalledPackageVersion* ipv = it.second;
         if (ipv->installed())
             r.append(ipv->getDirectory());
     }
@@ -1160,12 +1172,11 @@ QString InstalledPackages::readRegistryDatabase()
     }
 
     this->mutex.lock();
-    qDeleteAll(this->data);
-    this->data.clear();
+    clearData();
     for (int i = 0; i < ipvs.count(); i++) {
         InstalledPackageVersion* ipv = ipvs.at(i);
-        this->data.insert(PackageVersion::getStringId(ipv->package,
-                ipv->version), ipv->clone());
+        this->data.insert({PackageVersion::getStringId(ipv->package,
+                ipv->version), ipv->clone()});
     }
     this->mutex.unlock();
 
@@ -1183,8 +1194,7 @@ QString InstalledPackages::readRegistryDatabase()
 void InstalledPackages::clear()
 {
     this->mutex.lock();
-    qDeleteAll(this->data);
-    this->data.clear();
+    clearData();
     this->mutex.unlock();
 }
 
