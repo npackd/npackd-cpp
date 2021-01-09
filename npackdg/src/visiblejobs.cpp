@@ -13,9 +13,9 @@ VisibleJobs *VisibleJobs::getDefault()
 
 void VisibleJobs::unregisterJob(Job *job)
 {
-    int index = runningJobs.indexOf(job);
-    if (index >= 0) {
-        runningJobs.removeAt(index);
+    auto it = std::find(runningJobs.begin(), runningJobs.end(), job);
+    if (it != runningJobs.end()) {
+        runningJobs.erase(it);
     }
 
     emit changed();

@@ -509,7 +509,7 @@ void MainWindow::loadUISettings()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    int n = VisibleJobs::getDefault()->runningJobs.count();
+    int n = VisibleJobs::getDefault()->runningJobs.size();
 
     if (n == 0) {
         this->saveUISettings();
@@ -581,7 +581,7 @@ void MainWindow::prepare()
 
 void MainWindow::updateProgressTabTitle()
 {
-    int n = VisibleJobs::getDefault()->runningJobs.count();
+    int n = VisibleJobs::getDefault()->runningJobs.size();
     time_t max = -1;
     double maxProgress = 0;
     for (int i = 0; i < n; i++) {
@@ -803,7 +803,7 @@ void MainWindow::monitor(Job* job)
             SLOT(monitoredJobCompleted()),
             Qt::QueuedConnection);
 
-    VisibleJobs::getDefault()->runningJobs.append(job);
+    VisibleJobs::getDefault()->runningJobs.push_back(job);
 
     updateProgressTabTitle();
 
@@ -1072,7 +1072,7 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_actionExit_triggered()
 {
-    int n = VisibleJobs::getDefault()->runningJobs.count();
+    int n = VisibleJobs::getDefault()->runningJobs.size();
 
     if (n > 0) {
         QString msg = QObject::tr("Cannot exit while jobs are running");

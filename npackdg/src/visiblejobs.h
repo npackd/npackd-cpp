@@ -20,7 +20,7 @@ private:
     VisibleJobs();
 public:
     time_t monitoredJobLastChanged;
-    QList<Job*> runningJobs;
+    std::vector<Job*> runningJobs;
 
     /**
      * @return default instance
