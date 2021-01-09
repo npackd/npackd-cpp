@@ -61,12 +61,7 @@ private:
     UINT taskbarMessageId;
     ITaskbarList3* taskbarInterface;
 
-    QMap<QString, QIcon> screenshots;
-
-    /**
-     * @brief URL -> download size
-     */
-    QMap<QString, int64_t> downloadSizes;
+    std::unordered_map<QString, QIcon> screenshots;
 
     /** Icon on the tray or zeros */
     NOTIFYICONDATAW nid;

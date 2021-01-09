@@ -720,8 +720,10 @@ void MainWindow::hideIconInSystemTray()
 QIcon MainWindow::downloadScreenshot(const QString &url)
 {
     QIcon r;
-    if (screenshots.contains(url)) {
-        r = screenshots[url];
+
+    auto it = screenshots.find(url);
+    if (it != screenshots.end()) {
+        r = it->second;
     } else {
         QString err;
         QString filename = fileLoader.downloadFileOrQueue(url, &err);
@@ -744,10 +746,10 @@ QIcon MainWindow::downloadScreenshot(const QString &url)
                 r.addPixmap(pm);
                 r.detach();
 
-                screenshots.insert(url, r);
+                screenshots.insert({url, r});
             } else {
                 r = MainWindow::brokenIcon;
-                screenshots.insert(url, r);
+                screenshots.insert({url, r});
             }
         } else {
             r = MainWindow::waitAppIcon;
