@@ -136,14 +136,14 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 
     bool alreadyLoading;
     mutex.lock();
-    alreadyLoading = loadingSize.contains(url);
+    alreadyLoading = loadingSize.count(url) > 0;
     mutex.unlock();
 
     // if the value is older than 10 days, it is considered obsolete
     if (!alreadyLoading &&
             (r == -1 || time(nullptr) - v.sizeModified > 10 * 24 * 60 * 60)) {
         mutex.lock();
-        loadingSize << url;
+        loadingSize.insert(url);
         this->mutex.unlock();
 
         QFuture<DownloadFile> future = run(&threadPool, this,
@@ -189,7 +189,7 @@ FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 
     mutex.lock();
-    loadingSize.remove(url);
+    loadingSize.erase(url);
     mutex.unlock();
 
     return v;
@@ -311,12 +311,12 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
 
     bool alreadyLoading;
     mutex.lock();
-    alreadyLoading = loading.contains(url);
+    alreadyLoading = loading.count(url) > 0;
     mutex.unlock();
 
     if (!alreadyLoading && r.isEmpty() && err->isEmpty()) {
         mutex.lock();
-        loading << url;
+        loading.insert(url);
         mutex.unlock();
 
         QFuture<DownloadFile> future = QtConcurrent::run(
@@ -420,7 +420,7 @@ FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
         SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
 
     mutex.lock();
-    loading.remove(url);
+    loading.erase(url);
     mutex.unlock();
 
     return r;
