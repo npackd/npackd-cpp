@@ -65,15 +65,15 @@ void ProgressTree2::timerTimeout()
 
 QTreeWidgetItem* ProgressTree2::findItem(Job* job, bool create)
 {
-    QList<Job*> path;
+    std::vector<Job*> path;
     Job* v = job;
     while (v) {
-        path.insert(0, v);
+        path.insert(path.begin(), v);
         v = v->parentJob;
     }
 
     QTreeWidgetItem* c = nullptr;
-    for (int i = 0; i < path.count(); i++) {
+    for (int i = 0; i < static_cast<int>(path.size()); i++) {
         Job* toFind = path.at(i);
         QTreeWidgetItem* found = nullptr;
         if (i == 0) {
