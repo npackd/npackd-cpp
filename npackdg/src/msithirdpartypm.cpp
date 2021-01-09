@@ -2,6 +2,8 @@
 
 #include <windows.h>
 #include <msi.h>
+#include <map>
+
 #include <QBuffer>
 #include <QByteArray>
 
@@ -22,7 +24,7 @@ void MSIThirdPartyPM::scan(Job* job,
     QStringList all = WPMUtils::findInstalledMSIProducts();
 
     QStringList components = WPMUtils::findInstalledMSIComponents();
-    QMultiMap<QString, QString> p2c =
+    std::unordered_multimap<QString, QString> p2c =
             WPMUtils::mapMSIComponentsToProducts(components);
 
     QString windowsDir = WPMUtils::normalizePath(WPMUtils::getWindowsDir());
@@ -151,9 +153,9 @@ void MSIThirdPartyPM::scan(Job* job,
 
         if (dir.isEmpty()) {
             // it would be better to search for a common ancestor here
-            QList<QString> cmps = p2c.values(guid);
-            for (int i = 0; i < cmps.size(); i++) {
-                dir = WPMUtils::getMSIComponentPath(guid, cmps.at(i), &err);
+            auto cmps = p2c.equal_range(guid);
+            for (auto i = cmps.first; i != cmps.second; ++i) {
+                dir = WPMUtils::getMSIComponentPath(guid, i->second, &err);
                 if (err.isEmpty() && !dir.isEmpty()) {
                     if (!dir.at(0).isDigit()) {
                         QFileInfo fi(dir);

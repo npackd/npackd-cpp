@@ -50,7 +50,7 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
             }
             PackageVersion* pv = new PackageVersion(ipv->package, ipv->version);
             rep->packageVersions.append(pv);
-            rep->package2versions.insert(ipv->package, pv);
+            rep->package2versions.insert({ipv->package, pv});
 
             if (ipv->installed() && !ipv->package.startsWith("msi.") &&
                     !ipv->package.startsWith("control-panel.")) {

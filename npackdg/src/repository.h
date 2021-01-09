@@ -2,6 +2,7 @@
 #define REPOSITORY_H
 
 #include <windows.h>
+#include <unordered_map>
 
 #include "qfile.h"
 #include "qlist.h"
@@ -72,7 +73,7 @@ private:
             const Version& version) const;
 public:
     /** full package name -> all defined package versions */
-    QMultiMap<QString, PackageVersion*> package2versions;
+    std::unordered_multimap<QString, PackageVersion*> package2versions;
 
     /**
      * @brief any operation (reading or writing) on repositories, packages,

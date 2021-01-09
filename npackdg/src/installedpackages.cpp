@@ -290,7 +290,7 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
             Package* p = rep->packages.at(i);
             if (!packages.contains(p->name)) {
                 rep->packages.removeAt(i);
-                rep->package2versions.remove(p->name);
+                rep->package2versions.erase(p->name);
                 delete p;
             } else
                 i++;

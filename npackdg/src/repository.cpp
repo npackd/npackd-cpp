@@ -38,8 +38,12 @@ static bool packageVersionLessThan2(const PackageVersion* a,
 QList<PackageVersion*> Repository::getPackageVersions(const QString& package)
         const
 {
-    QList<PackageVersion*> ret = this->package2versions.values(package);
+    auto it = this->package2versions.equal_range(package);
 
+    QList<PackageVersion*> ret;
+    for (auto i = it.first; i != it.second; ++i) {
+        ret.append(i->second);
+    }
     std::sort(ret.begin(), ret.end(), packageVersionLessThan2);
 
     return ret;
@@ -50,8 +54,12 @@ QList<PackageVersion*> Repository::getPackageVersions_(const QString& package,
 {
     *err = "";
 
-    QList<PackageVersion*> ret = this->package2versions.values(package);
+    auto it = this->package2versions.equal_range(package);
 
+    QList<PackageVersion*> ret;
+    for (auto i = it.first; i != it.second; ++i) {
+        ret.append(i->second);
+    }
     std::sort(ret.begin(), ret.end(), packageVersionLessThan2);
 
     for (int i = 0; i < ret.count(); i++) {
@@ -279,16 +287,24 @@ QString Repository::savePackageVersion(PackageVersion *p, bool replace)
     if (!fp) {
         fp = p->clone();
         this->packageVersions.append(fp);
-        this->package2versions.insert(p->package, fp);
+        this->package2versions.insert({p->package, fp});
     } else {
         if (replace) {
+            auto it = this->package2versions.equal_range(p->package);
+            for (auto i = it.first; i != it.second; ++i) {
+                if (i->second == fp) {
+                    delete i->second;
+                    auto next = ++i;
+                    this->package2versions.erase(i, next);
+                    break;
+                }
+            }
+
             this->packageVersions.removeOne(fp);
-            this->package2versions.remove(p->package, fp);
-            delete fp;
 
             fp = p->clone();
             this->packageVersions.append(fp);
-            this->package2versions.insert(p->package, fp);
+            this->package2versions.insert({p->package, fp});
         }
     }
 

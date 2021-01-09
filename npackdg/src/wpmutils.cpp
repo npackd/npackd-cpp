@@ -2441,17 +2441,17 @@ QStringList WPMUtils::findInstalledMSIComponents()
     return result;
 }
 
-QMultiMap<QString, QString> WPMUtils::mapMSIComponentsToProducts(
+std::unordered_multimap<QString, QString> WPMUtils::mapMSIComponentsToProducts(
         const QStringList& components)
 {
-    QMultiMap<QString, QString> map;
+    std::unordered_multimap<QString, QString> map;
     WCHAR buf[39];
     for (int i = 0; i < components.count(); i++) {
         QString c = components.at(i);
         if (MsiGetProductCode(WPMUtils::toLPWSTR(c), buf) == ERROR_SUCCESS) {
             QString v;
             v.setUtf16((ushort*) buf, 38);
-            map.insert(v.toLower(), c);
+            map.insert({v.toLower(), c});
         }
     }
     return map;

@@ -5,6 +5,7 @@
 #include <time.h>
 #include <taskschd.h>
 #include <unordered_map>
+#include <map>
 
 #include <QString>
 #include <QDir>
@@ -569,7 +570,7 @@ public:
      * @param components MSI GUIDs of the components in lower case
      * @return Product GUID -> Component GUID. All GUIDs are in lower case
      */
-    static QMultiMap<QString, QString> mapMSIComponentsToProducts(
+    static std::unordered_multimap<QString, QString> mapMSIComponentsToProducts(
             const QStringList &components);
 
     /**
