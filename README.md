@@ -1,4 +1,4 @@
-﻿[![Build artifacts](https://ci.appveyor.com/api/projects/status/github/tim-lebedkov/npackd-cpp)](https://ci.appveyor.com/project/tim-lebedkov/npackd-cpp)
+[![Build artifacts](https://ci.appveyor.com/api/projects/status/github/npackd/npackd-cpp)](https://ci.appveyor.com/project/tim-lebedkov/npackd-cpp)
 [![Coverity](https://scan.coverity.com/projects/4151/badge.svg?flat=1)](https://scan.coverity.com/projects/4151?tab=overview)
 [![License](http://img.shields.io/badge/license-GPL%203.0-blue.svg?style=flat)](http://choosealicense.com/licenses/gpl-3.0/)
 
@@ -10,7 +10,7 @@ _(pronounced "unpacked") is an application store/package manager/marketplace for
 
 ![Npackd](http://www.npackd.org/Npackd.png)
 
-It helps you to find and install software, keep your system up-to-date and uninstall it if no longer necessary. You can watch [this short video](https://www.youtube.com/watch?v=ZLJ8sv6siKQ) to better understand how it works. The process of installing and uninstalling applications is completely automated (silent or unattended installation and un-installation). There is also a [command line](https://github.com/tim-lebedkov/npackd/wiki/CommandLine) based version of Npackd which you can [install](https://github.com/tim-lebedkov/npackd/wiki/CommandLineInstallation) from the command line: 
+It helps you to find and install software, keep your system up-to-date and uninstall it if no longer necessary. You can watch [this short video](https://www.youtube.com/watch?v=ZLJ8sv6siKQ) to better understand how it works. The process of installing and uninstalling applications is completely automated (silent or unattended installation and un-installation). There is also a [command line](https://github.com/npackd/npackd/wiki/CommandLine) based version of Npackd which you can [install](https://github.com/npackd/npackd/wiki/CommandLineInstallation) from the command line: 
 
 Easy installation of the graphical user interface from the command line (64 bit):
 
@@ -18,13 +18,13 @@ Easy installation of the graphical user interface from the command line (64 bit)
 C:\> msiexec.exe /qb- /i https://bit.ly/npackd64-1_25
 ```
 
-There is also a [command line](https://github.com/tim-lebedkov/npackd/wiki/CommandLine) based version of Npackd which you can [install](https://github.com/tim-lebedkov/npackd/wiki/CommandLineInstallation) from the command line: 
+There is also a [command line](https://github.com/npackd/npackd/wiki/CommandLine) based version of Npackd which you can [install](https://github.com/npackd/npackd/wiki/CommandLineInstallation) from the command line: 
 
 ```Batchfile
 C:\> msiexec.exe /qb- /i https://bit.ly/npackdcl32-1_25
 ```
 
-see [What is new in Npackd](https://github.com/tim-lebedkov/npackd/wiki/ChangeLog)
+see [What is new in Npackd](https://github.com/npackd/npackd/wiki/ChangeLog)
 
 ## News
 You can follow the news on [Twitter](http://twitter.com/Npackd) or via the [Forum](https://groups.google.com/forum/#!forum/npackd)
@@ -44,7 +44,7 @@ You can follow the news on [Twitter](http://twitter.com/Npackd) or via the [Foru
 ## Statistics
 [![Project Stats](https://www.openhub.net/p/windows-package-manager/widgets/project_thin_badge.gif)](https://www.openhub.net/p/windows-package-manager)
 
-Download statistics: http://www.somsubhra.com/github-release-stats/?username=tim-lebedkov&repository=npackd-cpp
+Download statistics: http://www.somsubhra.com/github-release-stats/?username=npackd&repository=npackd-cpp
 
 Windows is a registered trademark of Microsoft Corporation in the United States and other countries.
 
