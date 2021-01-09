@@ -661,9 +661,6 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
     QList<PackageVersion*> newest, newesti;
     QList<bool> used;
 
-    // get the list of installed packages
-    QSet<QString> before;
-
     // packages first
     if (err.isEmpty()) {
         for (int i = 0; i < packages.count(); i++) {

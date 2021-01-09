@@ -23,7 +23,7 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
     if (job->shouldProceed()) {
         QList<InstalledPackageVersion*> ipvs = ip->getAll();
 
-        QSet<QString> used;
+        std::unordered_set<QString> used;
         QDir d;
         for (int i = 0; i < ipvs.count(); ++i) {
             InstalledPackageVersion* ipv = ipvs.at(i);
@@ -33,7 +33,7 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
             if (!d.exists(ipv->getDirectory()))
                 continue;
 
-            if (!used.contains(ipv->package)) {
+            if (used.count(ipv->package) == 0) {
                 QString title = ipv->package;
                 int pos = title.lastIndexOf('.');
                 if (pos > 1)
