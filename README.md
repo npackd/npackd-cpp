@@ -44,7 +44,7 @@ You can follow the news on [Twitter](http://twitter.com/Npackd) or via the [Foru
 ## Statistics
 [![Project Stats](https://www.openhub.net/p/windows-package-manager/widgets/project_thin_badge.gif)](https://www.openhub.net/p/windows-package-manager)
 
-Download statistics: http://www.somsubhra.com/github-release-stats/?username=npackd&repository=npackd-cpp
+Download statistics: https://tooomm.github.io/github-release-stats/?username=npackd&repository=npackd-cpp
 
 Windows is a registered trademark of Microsoft Corporation in the United States and other countries.
 
