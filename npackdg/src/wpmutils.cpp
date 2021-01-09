@@ -2409,39 +2409,6 @@ QString WPMUtils::getMSIProductName(const QString& guid, QString* err)
     return getMSIProductAttribute(guid, INSTALLPROPERTY_PRODUCTNAME, err);
 }
 
-QString WPMUtils::format(const QString& txt, const QMap<QString, QString>& vars)
-{
-    QString res;
-
-    int from = 0;
-    while (true) {
-        int p = txt.indexOf(QStringLiteral("${{"), from);
-        if (p >= 0) {
-            res.append(txt.mid(from, p - from));
-
-            int p2 = txt.indexOf(QStringLiteral("}}"), p + 3);
-            if (p2 < 0) {
-                res.append(txt.mid(p));
-                break;
-            }
-            QString var = txt.mid(p + 3, p2 - p - 3).trimmed();
-            if (var.isEmpty()) {
-                res.append(txt.mid(p, p2 + 2 - p));
-            } else {
-                if (vars.contains(var)) {
-                    res.append(vars[var]);
-                }
-            }
-            from = p2 + 2;
-        } else {
-            res.append(txt.mid(from));
-            break;
-        }
-    }
-
-    return res;
-}
-
 QStringList WPMUtils::findInstalledMSIProducts()
 {
     QStringList result;

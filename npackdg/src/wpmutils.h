@@ -447,15 +447,6 @@ public:
     static QString getMSIProductName(const QString& guid, QString* err);
 
     /**
-     * Replaces the variable references ${{Var}} in the given text.
-     *
-     * @param txt text
-     * @param vars variables and their values
-     */
-    static QString format(const QString& txt,
-            const QMap<QString, QString>& vars);
-
-    /**
      * Compares 2 file paths.
      *
      * @param patha absolute file path
