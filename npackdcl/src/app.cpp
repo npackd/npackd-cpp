@@ -2298,12 +2298,12 @@ void App::info(Job* job)
             WPMUtils::writeln("Categories: " +
                     p->categories.join(", "));
             WPMUtils::writeln("Icon: " + p->getIcon());
-            QList<QString> screenshots = p->getLinks("screenshot");
+            std::vector<QString> screenshots = p->getLinks("screenshot");
             WPMUtils::writeln("Screen shots: " +
-                    (screenshots.count() > 0 ? screenshots.at(0) : "n/a")
+                    (screenshots.size() > 0 ? screenshots.at(0) : "n/a")
                     );
-            for (int i = 1; i < screenshots.count(); i++) {
-                WPMUtils::writeln("    " + screenshots.at(i));
+            for (auto&& i: screenshots) {
+                WPMUtils::writeln("    " + i);
             }
 
             if (pv) {

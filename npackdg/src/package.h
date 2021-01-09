@@ -69,7 +69,7 @@ public:
      * @param rel type, e.g. "screenshot"
      * @return links
      */
-    QList<QString> getLinks(const QString& rel) const;
+    std::vector<QString> getLinks(const QString& rel) const;
 
     /**
      * @brief getIcon

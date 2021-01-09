@@ -11,12 +11,12 @@ Package::Package(const QString& name, const QString& title): stars(0)
     this->title = title;
 }
 
-QList<QString> Package::getLinks(const QString &rel) const
+std::vector<QString> Package::getLinks(const QString &rel) const
 {
     auto it = links.equal_range(rel);
-    QList<QString> r;
-    for (auto i = it.first; i != it.second; ++i) {
-        r.append(i->second);
+    std::vector<QString> r;
+    for (auto it2 = it.first; it2 != it.second; ++it2) {
+        r.push_back(it2->second);
     }
     return r;
 }
@@ -24,18 +24,18 @@ QList<QString> Package::getLinks(const QString &rel) const
 QString Package::getIcon() const
 {
     QString r;
-    QList<QString> values = getLinks("icon");
-    if (!values.isEmpty())
-        r = values.last();
+    std::vector<QString> values = getLinks("icon");
+    if (values.size() > 0)
+        r = values.back();
     return r;
 }
 
 QString Package::getChangeLog() const
 {
     QString r;
-    QList<QString> values = getLinks("changelog");
-    if (!values.isEmpty())
-        r = values.last();
+    std::vector<QString> values = getLinks("changelog");
+    if (values.size() > 0)
+        r = values.back();
     return r;
 }
 
@@ -49,9 +49,9 @@ void Package::setChangeLog(const QString &changelog)
 QString Package::getIssueTracker() const
 {
     QString r;
-    QList<QString> values = getLinks("issues");
-    if (!values.isEmpty())
-        r = values.last();
+    std::vector<QString> values = getLinks("issues");
+    if (values.size() > 0)
+        r = values.back();
     return r;
 }
 
