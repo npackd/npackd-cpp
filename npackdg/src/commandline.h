@@ -62,7 +62,7 @@ public:
     };
 private:
     QList<Option*> options;
-    QList<ParsedOption*> parsedOptions;
+    std::vector<ParsedOption*> parsedOptions;
 
     Option* findOption(const QString& name);
     QString processOneParam(QStringList* params);
@@ -130,7 +130,7 @@ public:
     /**
      * @return parsed options
      */
-    QList<ParsedOption*> getParsedOptions() const;
+    std::vector<ParsedOption *> getParsedOptions() const;
 
     /**
      * @return true if any arguments were entered

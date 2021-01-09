@@ -96,7 +96,7 @@ QString CommandLine::processOneParam(QStringList* params)
                 } else {
                     ParsedOption* po = new ParsedOption();
                     po->opt = opt;
-                    this->parsedOptions.append(po);
+                    this->parsedOptions.push_back(po);
                     if (valueFound)
                         po->value = value;
                     else {
@@ -115,7 +115,7 @@ QString CommandLine::processOneParam(QStringList* params)
         } else {
             ParsedOption* po = new ParsedOption();
             po->opt = nullptr;
-            this->parsedOptions.append(po);
+            this->parsedOptions.push_back(po);
             po->value = params->at(0);
             params->removeAt(0);
         }
@@ -231,8 +231,7 @@ QString CommandLine::parse()
 bool CommandLine::isPresent(const QString& name)
 {
     bool r = false;
-    for (int i = 0; i < this->parsedOptions.count(); i++) {
-        ParsedOption* po = this->parsedOptions.at(i);
+    for (auto po: this->parsedOptions) {
         if (po->opt && po->opt->nameMatches(name)) {
             r = true;
             break;
@@ -244,8 +243,7 @@ bool CommandLine::isPresent(const QString& name)
 QString CommandLine::get(const QString& name) const
 {
     QString r;
-    for (int i = 0; i < this->parsedOptions.count(); i++) {
-        ParsedOption* po = this->parsedOptions.at(i);
+    for (auto po: this->parsedOptions) {
         if (po->opt && po->opt->nameMatches(name)) {
             r = po->value;
             break;
@@ -254,7 +252,7 @@ QString CommandLine::get(const QString& name) const
     return r;
 }
 
-QList<CommandLine::ParsedOption *> CommandLine::getParsedOptions() const
+std::vector<CommandLine::ParsedOption *> CommandLine::getParsedOptions() const
 {
     return this->parsedOptions;
 }
@@ -267,8 +265,7 @@ bool CommandLine::argumentsAvailable() const
 QStringList CommandLine::getAll(const QString& name) const
 {
     QStringList r;
-    for (int i = 0; i < this->parsedOptions.count(); i++) {
-        ParsedOption* po = this->parsedOptions.at(i);
+    for (auto po: this->parsedOptions) {
         if (po->opt && po->opt->nameMatches(name)) {
             r.append(po->value);
         }

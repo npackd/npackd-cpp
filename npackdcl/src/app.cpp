@@ -150,7 +150,7 @@ int App::process()
         }
     }
 
-    QList<CommandLine::ParsedOption*> options = cl.getParsedOptions();
+    std::vector<CommandLine::ParsedOption*> options = cl.getParsedOptions();
 
     QString cmd;
     if (options.size() > 0 && options.at(0)->opt == nullptr) {
@@ -166,9 +166,9 @@ int App::process()
     } else if (cmd.isEmpty()) {
         err = QStringLiteral("Missing command");
     } else {
-        QList<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
-        for (int i = 0; i < parsed.count(); i++) {
-            CommandLine::Option* opt = parsed.at(i)->opt;
+        std::vector<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
+        for (auto p: parsed) {
+            CommandLine::Option* opt = p->opt;
             if (opt && opt->allowedCommands.count() > 0) {
                 // qCDebug(npackd) << "1" << opt->allowedCommands.count();
                 if (!opt->allowedCommands.contains(cmd)) {
@@ -1393,15 +1393,15 @@ void App::update(Job* job)
     QStringList packages_;
     QStringList versions_;
 
-    QList<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
-    for (int i = 0; i < parsed.size(); ) {
+    std::vector<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
+    for (int i = 0; i < static_cast<int>(parsed.size()); ) {
         CommandLine::ParsedOption* po = parsed.at(i);
         if (po->opt && po->opt->name == "package") {
             packages_.append(po->value);
             i++;
 
             QString versions;
-            if (i < parsed.size()) {
+            if (i < static_cast<int>(parsed.size())) {
                 po = parsed.at(i);
                 if (po->opt && po->opt->name == "versions") {
                     versions = po->value;

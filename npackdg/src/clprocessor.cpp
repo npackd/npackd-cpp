@@ -591,7 +591,7 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
     }
     */
 
-    QList<CommandLine::ParsedOption*> options = cl.getParsedOptions();
+    std::vector<CommandLine::ParsedOption*> options = cl.getParsedOptions();
 
     QString cmd;
     if (options.size() > 0 && options.at(0)->opt == nullptr) {
@@ -603,7 +603,7 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
                 arg(commandLineParsingError);
         QMessageBox::critical(nullptr, QObject::tr("Error"), msg);
         *errorCode = 1;
-    } else if (options.count() == 0) {
+    } else if (options.size() == 0) {
         MainWindow w;
 
         w.prepare();

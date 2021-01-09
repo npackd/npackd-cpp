@@ -141,14 +141,14 @@ int App::process()
 
     int r = 0;
 
-    QList<CommandLine::ParsedOption*> options = cl.getParsedOptions();
+    std::vector<CommandLine::ParsedOption*> options = cl.getParsedOptions();
 
     QString cmd;
     if (options.size() > 0 && options.at(0)->opt == nullptr) {
         cmd = options.at(0)->value;
     }
 
-    if (options.count() == 0) {
+    if (options.size() == 0) {
         help();
     } else if (cmd.isEmpty() || cmd == "help") {
         help();

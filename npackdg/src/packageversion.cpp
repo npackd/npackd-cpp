@@ -929,18 +929,18 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
         QString* err)
 {
     QList<PackageVersion*> ret;
-    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
+    std::vector<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     DBRepository* rep = DBRepository::getDefault();
 
-    for (int i = 0; i < pos.size(); i++) {
+    for (int i = 0; i < static_cast<int>(pos.size()); i++) {
         if (!err->isEmpty())
             break;
 
         CommandLine::ParsedOption* po = pos.at(i);
         if (po->opt && po->opt->nameMatches("package")) {
             CommandLine::ParsedOption* ponext = nullptr;
-            if (i + 1 < pos.size())
+            if (i + 1 < static_cast<int>(pos.size()))
                 ponext = pos.at(i + 1);
 
             QString package = po->value;
@@ -1024,19 +1024,19 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
         QString* err)
 {
     QList<InstalledPackageVersion*> ret;
-    QList<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
+    std::vector<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     InstalledPackages* ip = InstalledPackages::getDefault();
     DBRepository* dbr = DBRepository::getDefault();
 
-    for (int i = 0; i < pos.size(); i++) {
+    for (int i = 0; i < static_cast<int>(pos.size()); i++) {
         if (!err->isEmpty())
             break;
 
         CommandLine::ParsedOption* po = pos.at(i);
         if (po->opt && po->opt->nameMatches("package")) {
             CommandLine::ParsedOption* ponext = nullptr;
-            if (i + 1 < pos.size())
+            if (i + 1 < static_cast<int>(pos.size()))
                 ponext = pos.at(i + 1);
 
             QString package = po->value;
