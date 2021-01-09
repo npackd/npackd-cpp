@@ -12,7 +12,7 @@ InstalledPackagesThirdPartyPM::InstalledPackagesThirdPartyPM()
 }
 
 void InstalledPackagesThirdPartyPM::scan(Job* job,
-        QList<InstalledPackageVersion *> *installed, Repository *rep) const
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     std::unique_ptr<InstalledPackages> ip(new InstalledPackages());
     QString err = ip->readRegistryDatabase();
@@ -59,9 +59,9 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
                 if (ipv->package == "com.microsoft.Windows64" ||
                         ipv->package == "com.microsoft.Windows32" ||
                         ipv->package == "com.microsoft.Windows") {
-                    installed->prepend(ipv->clone());
+                    installed->insert(installed->begin(), ipv->clone());
                 } else {
-                    installed->append(ipv->clone());
+                    installed->push_back(ipv->clone());
                 }
             }
         }

@@ -17,12 +17,12 @@
  */
 class ControlPanelThirdPartyPM: public AbstractThirdPartyPM
 {
-    void detectOneControlPanelProgram(QList<InstalledPackageVersion*>* installed,
+    void detectOneControlPanelProgram(std::vector<InstalledPackageVersion*>* installed,
             Repository* rep,
             const QString &registryPath,
             WindowsRegistry &k, const QString &keyName) const;
     void detectControlPanelProgramsFrom(
-            QList<InstalledPackageVersion*>* installed,
+            std::vector<InstalledPackageVersion*>* installed,
             Repository* rep,
             HKEY root, const QString &path,
             bool useWoWNode) const;
@@ -44,7 +44,7 @@ public:
      */
     ControlPanelThirdPartyPM();
 
-    void scan(Job *job, QList<InstalledPackageVersion*>* installed,
+    void scan(Job *job, std::vector<InstalledPackageVersion*>* installed,
             Repository* rep) const;
 };
 

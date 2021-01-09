@@ -10,7 +10,8 @@ AbstractThirdPartyPM::~AbstractThirdPartyPM()
 {
 }
 
-void AbstractThirdPartyPM::scanRunnable(Job *job, QList<InstalledPackageVersion *> *installed, Repository *rep)
+void AbstractThirdPartyPM::scanRunnable(Job *job,
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
     CoInitialize(nullptr);

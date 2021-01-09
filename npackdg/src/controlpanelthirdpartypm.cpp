@@ -11,7 +11,7 @@ ControlPanelThirdPartyPM::ControlPanelThirdPartyPM() : ignoreMSIEntries(true)
 }
 
 void ControlPanelThirdPartyPM::scan(Job* job,
-        QList<InstalledPackageVersion*>* installed,
+        std::vector<InstalledPackageVersion *> *installed,
         Repository *rep) const
 {
     detectControlPanelProgramsFrom(installed, rep, HKEY_LOCAL_MACHINE,
@@ -40,7 +40,8 @@ void ControlPanelThirdPartyPM::scan(Job* job,
 }
 
 void ControlPanelThirdPartyPM::
-        detectControlPanelProgramsFrom(QList<InstalledPackageVersion*>* installed,
+        detectControlPanelProgramsFrom(
+        std::vector<InstalledPackageVersion*>* installed,
         Repository* rep, HKEY root,
         const QString& path, bool useWoWNode) const {
     WindowsRegistry wr;
@@ -80,7 +81,7 @@ void ControlPanelThirdPartyPM::
 }
 
 void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
-        QList<InstalledPackageVersion*>* installed,
+        std::vector<InstalledPackageVersion *> *installed,
         Repository *rep,
         const QString& registryPath,
         WindowsRegistry& k,
@@ -269,7 +270,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);
         ipv->detectionInfo = "control-panel:" + registryPath;
-        installed->append(ipv);
+        installed->push_back(ipv);
 
         std::unique_ptr<PackageVersion> pv(new PackageVersion(package));
         pv->version = version;

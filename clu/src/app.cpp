@@ -194,7 +194,7 @@ int App::remove()
     }
 
     Repository rep;
-    QList<InstalledPackageVersion*> installed;
+    std::vector<InstalledPackageVersion*> installed;
     if (job->shouldProceed()) {
         ControlPanelThirdPartyPM cppm;
         Job* scanJob = job->newSubJob(0.1, "Scanning for packages", true, true);
@@ -218,8 +218,7 @@ int App::remove()
 
     PackageVersion* pv = nullptr;
     if (job->shouldProceed()) {
-        for (int i = 0; i < installed.size(); i++) {
-            InstalledPackageVersion* ipv = installed.at(i);
+        for (auto ipv: installed) {
             if (ipv->package == found->name && ipv->installed()) {
                 QString err;
                 pv = rep.findPackageVersion_(

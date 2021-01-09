@@ -18,7 +18,8 @@ WUAThirdPartyPM::WUAThirdPartyPM()
     detectionPrefix = "wua:";
 }
 
-void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed, Repository *rep) const
+void WUAThirdPartyPM::scan(Job *job,
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     CoInitialize(NULL);
     HRESULT hr;
@@ -153,7 +154,7 @@ void WUAThirdPartyPM::scan(Job *job, QList<InstalledPackageVersion *> *installed
 
                 InstalledPackageVersion* ipv = new InstalledPackageVersion(p->name, Version(1, 0), "");
                 ipv->detectionInfo = "wua:" + guid;
-                installed->append(ipv);
+                installed->push_back(ipv);
             }
 
             delete p;

@@ -224,7 +224,7 @@ QString InstalledPackages::updateNpackdCLEnvVar()
 }
 
 void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
-        const QList<InstalledPackageVersion*>& installed,
+        const std::vector<InstalledPackageVersion*>& installed,
         const QString& detectionInfoPrefix)
 {
     // this method does not manipulate "data" directly => no locking
@@ -236,8 +236,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
     if (job->shouldProceed()) {
         if (!detectionInfoPrefix.isEmpty()) {
             std::unordered_set<QString> foundDetectionInfos;
-            for (int i = 0; i < installed.count(); i++) {
-                InstalledPackageVersion* ipv = installed.at(i);
+            for (auto ipv: installed) {
                 foundDetectionInfos.insert(ipv->detectionInfo);
             }
 
@@ -255,7 +254,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
     }
 
     if (job->shouldProceed()) {
-        for (int i = 0; i < installed.count(); i++) {
+        for (int i = 0; i < static_cast<int>(installed.size()); i++) {
             InstalledPackageVersion* ipv = installed.at(i);
 
             processOneInstalled3rdParty(r, ipv, detectionInfoPrefix);
@@ -269,7 +268,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
 
 void InstalledPackages::addPackages(Job* job, DBRepository* r,
         Repository* rep,
-        const QList<InstalledPackageVersion*>& installed,
+        const std::vector<InstalledPackageVersion*>& installed,
         bool replace)
 {
     // this method does not manipulate "data" directly => no locking
@@ -281,8 +280,7 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
     // or package version objects for another
     if (job->shouldProceed()) {
         std::unordered_set<QString> packages;
-        for (int i = 0; i < installed.size();i++) {
-            InstalledPackageVersion* ipv = installed.at(i);
+        for (auto ipv: installed) {
             packages.insert(ipv->package);
         }
 
@@ -893,10 +891,10 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         }
 
         QList<Repository*> repositories;
-        QList<QList<InstalledPackageVersion*>* > installeds;
+        QList<std::vector<InstalledPackageVersion*>* > installeds;
         for (int i = 0; i < tpms.count(); i++) {
             repositories.append(new Repository());
-            installeds.append(new QList<InstalledPackageVersion*>());
+            installeds.append(new std::vector<InstalledPackageVersion*>());
         }
 
         // detect everything in threads

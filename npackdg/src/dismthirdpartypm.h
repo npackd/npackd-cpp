@@ -17,7 +17,7 @@ class DISMThirdPartyPM: AbstractThirdPartyPM
 public:
     DISMThirdPartyPM();
 
-    void scan(Job* job, QList<InstalledPackageVersion*>* installed,
+    void scan(Job* job, std::vector<InstalledPackageVersion*>* installed,
             Repository* rep) const;
 };
 

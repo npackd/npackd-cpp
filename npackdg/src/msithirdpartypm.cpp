@@ -16,7 +16,7 @@ MSIThirdPartyPM::MSIThirdPartyPM()
 }
 
 void MSIThirdPartyPM::scan(Job* job,
-        QList<InstalledPackageVersion *> *installed,
+        std::vector<InstalledPackageVersion *> *installed,
         Repository *rep) const
 {
     // qCDebug(npackd) << "MSIThirdPartyPM::scan 0";
@@ -203,7 +203,7 @@ void MSIThirdPartyPM::scan(Job* job,
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package,
                 version, dir);
         ipv->detectionInfo = "msi:" + guid;
-        installed->append(ipv);
+        installed->push_back(ipv);
     }
 
     // qCDebug(npackd) << "MSIThirdPartyPM::scan 2";

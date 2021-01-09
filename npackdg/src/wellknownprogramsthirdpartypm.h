@@ -15,10 +15,10 @@ class WellKnownProgramsThirdPartyPM: public AbstractThirdPartyPM
 {
     QString packageName;
 
-    void scanDotNet(QList<InstalledPackageVersion*>* installed,
+    void scanDotNet(std::vector<InstalledPackageVersion*>* installed,
             Repository* rep) const;
     void detectOneDotNet(
-            QList<InstalledPackageVersion *> *installed,
+            std::vector<InstalledPackageVersion *> *installed,
             Repository *rep,
             const WindowsRegistry& wr,
             const QString& keyName) const;
@@ -29,17 +29,17 @@ class WellKnownProgramsThirdPartyPM: public AbstractThirdPartyPM
      * @param rep information about packages and versions will be stored here
      * @return error message
      */
-    QString detectMSXML(QList<InstalledPackageVersion *> *installed,
+    QString detectMSXML(std::vector<InstalledPackageVersion *> *installed,
             Repository *rep) const;
 
-    void detectWindows(QList<InstalledPackageVersion *> *installed,
+    void detectWindows(std::vector<InstalledPackageVersion *> *installed,
             Repository *rep) const;
-    void detectJRE(QList<InstalledPackageVersion *> *installed,
+    void detectJRE(std::vector<InstalledPackageVersion *> *installed,
             Repository *rep, bool w64bit) const;
-    void detectJDK(QList<InstalledPackageVersion *> *installed,
+    void detectJDK(std::vector<InstalledPackageVersion *> *installed,
             Repository *rep, bool w64bit) const;
 
-    void detectPython(QList<InstalledPackageVersion *> *installed,
+    void detectPython(std::vector<InstalledPackageVersion *> *installed,
             Repository *rep, bool w64bit) const;
 
     /**
@@ -48,12 +48,12 @@ class WellKnownProgramsThirdPartyPM: public AbstractThirdPartyPM
      * @param rep information about packages and versions will be stored here
      * @return error message
      */
-    QString detectMicrosoftInstaller(QList<InstalledPackageVersion *> *installed,
+    QString detectMicrosoftInstaller(std::vector<InstalledPackageVersion *> *installed,
             Repository *rep) const;
 public:
     WellKnownProgramsThirdPartyPM(const QString& packageName);
 
-    void scan(Job *job, QList<InstalledPackageVersion*>* installed,
+    void scan(Job *job, std::vector<InstalledPackageVersion*>* installed,
               Repository* rep) const;
 };
 

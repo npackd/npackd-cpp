@@ -2375,8 +2375,7 @@ void App::info(Job* job)
                 if (ipvs.size() > 0) {
                     WPMUtils::writeln(QString("%1 versions are installed:").
                             arg(ipvs.size()));
-                    for (int i = 0; i < ipvs.size(); ++i) {
-                        InstalledPackageVersion* ipv = ipvs.at(i);
+                    for (auto ipv: ipvs) {
                         if (!ipv->getDirectory().isEmpty())
                             WPMUtils::writeln("    " +
                                     ipv->version.getVersionString() +
@@ -2543,7 +2542,7 @@ void App::removeSCP(Job *job)
     }
 
     Repository rep;
-    QList<InstalledPackageVersion*> installed;
+    std::vector<InstalledPackageVersion*> installed;
     if (job->shouldProceed()) {
         ControlPanelThirdPartyPM cppm;
         cppm.ignoreMSIEntries = false;
@@ -2600,8 +2599,7 @@ void App::removeSCP(Job *job)
     if (job->shouldProceed()) {
         qCDebug(npackd) << "found package" << found->name;
 
-        for (int i = 0; i < installed.size(); i++) {
-            InstalledPackageVersion* ipv = installed.at(i);
+        for (auto ipv: installed) {
             qCDebug(npackd) << "installed" << ipv->package <<
                     ipv->version.getVersionString();
 

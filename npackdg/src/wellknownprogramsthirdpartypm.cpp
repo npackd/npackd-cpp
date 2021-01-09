@@ -3,7 +3,7 @@
 #include "wpmutils.h"
 
 void WellKnownProgramsThirdPartyPM::scanDotNet(
-        QList<InstalledPackageVersion *> *installed, Repository *rep) const
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     // http://stackoverflow.com/questions/199080/how-to-detect-what-net-framework-versions-and-service-packs-are-installed
 
@@ -41,7 +41,7 @@ void WellKnownProgramsThirdPartyPM::scanDotNet(
 }
 
 void WellKnownProgramsThirdPartyPM::detectOneDotNet(
-        QList<InstalledPackageVersion *> *installed, Repository *rep,
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep,
         const WindowsRegistry& wr,
         const QString& keyName) const
 {
@@ -87,12 +87,12 @@ void WellKnownProgramsThirdPartyPM::detectOneDotNet(
 
         InstalledPackageVersion* ipv = new InstalledPackageVersion(package, v,
                 "");
-        installed->append(ipv);
+        installed->push_back(ipv);
     }
 }
 
 QString WellKnownProgramsThirdPartyPM::detectMSXML(
-        QList<InstalledPackageVersion *> *installed, Repository *rep) const
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     QString err;
 
@@ -112,7 +112,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.get(), true);
-            installed->append(new InstalledPackageVersion(p->name, v, ""));
+            installed->push_back(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -121,7 +121,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.get(), true);
-            installed->append(new InstalledPackageVersion(p->name, v, ""));
+            installed->push_back(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -131,7 +131,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
             v.prepend(3);
             std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.get(), true);
-            installed->append(new InstalledPackageVersion(p->name, v, ""));
+            installed->push_back(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -140,7 +140,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.get(), true);
-            installed->append(new InstalledPackageVersion(p->name, v, ""));
+            installed->push_back(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -149,7 +149,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.get(), true);
-            installed->append(new InstalledPackageVersion(p->name, v, ""));
+            installed->push_back(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -158,7 +158,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
         if (v.compare(nullNull) > 0) {
             std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.get(), true);
-            installed->append(new InstalledPackageVersion(p->name, v, ""));
+            installed->push_back(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -166,7 +166,7 @@ QString WellKnownProgramsThirdPartyPM::detectMSXML(
 }
 
 void WellKnownProgramsThirdPartyPM::detectWindows(
-        QList<InstalledPackageVersion *> *installed, Repository *rep) const
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     OSVERSIONINFO osvi;
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -185,7 +185,7 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
         std::unique_ptr<PackageVersion> pv32(new PackageVersion(p32->name, v));
         rep->savePackage(p32.get(), true);
         rep->savePackageVersion(pv32.get(), true);
-        installed->append(new InstalledPackageVersion(p32->name, v,
+        installed->push_back(new InstalledPackageVersion(p32->name, v,
                 WPMUtils::getWindowsDir()));
     } else {
         std::unique_ptr<Package> p64(new Package("com.microsoft.Windows64",
@@ -195,7 +195,7 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
         std::unique_ptr<PackageVersion> pv64(new PackageVersion(p64->name, v));
         rep->savePackage(p64.get(), true);
         rep->savePackageVersion(pv64.get(), true);
-        installed->append(new InstalledPackageVersion(p64->name, v,
+        installed->push_back(new InstalledPackageVersion(p64->name, v,
                 WPMUtils::getWindowsDir()));
     }
 
@@ -211,11 +211,11 @@ void WellKnownProgramsThirdPartyPM::detectWindows(
     // multiple package versions to be installed in the same directory
     // in this case these would be com.microsoft.Windows and
     // com.microsoft.Windows64
-    installed->append(new InstalledPackageVersion(p->name, v, ""));
+    installed->push_back(new InstalledPackageVersion(p->name, v, ""));
 }
 
 void WellKnownProgramsThirdPartyPM::detectJRE(
-        QList<InstalledPackageVersion *> *installed, Repository *rep,
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep,
         bool w64bit) const
 {
     if (w64bit && !WPMUtils::is64BitWindows())
@@ -262,13 +262,12 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
             std::unique_ptr<PackageVersion> pv(new PackageVersion(package, v));
             rep->savePackageVersion(pv.get(), true);
 
-            installed->append(new InstalledPackageVersion(package, v, path));
+            installed->push_back(new InstalledPackageVersion(package, v, path));
         }
     }
 }
 
-void WellKnownProgramsThirdPartyPM::detectPython(
-        QList<InstalledPackageVersion *> *installed, Repository *rep,
+void WellKnownProgramsThirdPartyPM::detectPython(std::vector<InstalledPackageVersion *> *installed, Repository *rep,
         bool w64bit) const
 {
     if (w64bit && !WPMUtils::is64BitWindows())
@@ -323,13 +322,12 @@ void WellKnownProgramsThirdPartyPM::detectPython(
 
             // qCDebug(npackd) << package << v_ << path;
 
-            installed->append(new InstalledPackageVersion(package, v, path));
+            installed->push_back(new InstalledPackageVersion(package, v, path));
         }
     }
 }
 
-void WellKnownProgramsThirdPartyPM::detectJDK(
-        QList<InstalledPackageVersion *> *installed, Repository *rep,
+void WellKnownProgramsThirdPartyPM::detectJDK(std::vector<InstalledPackageVersion *> *installed, Repository *rep,
         bool w64bit) const
 {
     QString package = w64bit ? "com.oracle.JDK64" : "com.oracle.JDK";
@@ -378,14 +376,13 @@ void WellKnownProgramsThirdPartyPM::detectJDK(
                         new PackageVersion(package, v));
                 rep->savePackageVersion(pv.get(), true);
 
-                installed->append(new InstalledPackageVersion(package, v, path));
+                installed->push_back(new InstalledPackageVersion(package, v, path));
             }
         }
     }
 }
 
-QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
-        QList<InstalledPackageVersion *> *installed, Repository *rep) const
+QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     QString err;
 
@@ -404,7 +401,7 @@ QString WellKnownProgramsThirdPartyPM::detectMicrosoftInstaller(
             std::unique_ptr<PackageVersion> pv(new PackageVersion(p->name, v));
             err = rep->savePackageVersion(pv.get(), true);
 
-            installed->append(new InstalledPackageVersion(p->name, v, ""));
+            installed->push_back(new InstalledPackageVersion(p->name, v, ""));
         }
     }
 
@@ -418,7 +415,7 @@ WellKnownProgramsThirdPartyPM::WellKnownProgramsThirdPartyPM(
 }
 
 void WellKnownProgramsThirdPartyPM::scan(Job* job,
-        QList<InstalledPackageVersion *> *installed, Repository *rep) const
+        std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
 {
     // the newly detected versions are placed in front in the list
     // as Windows directory is very important and also the detection

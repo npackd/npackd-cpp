@@ -30,7 +30,7 @@ public:
     /**
      * @brief suitable for QRunnable::run. Calls scan()
      */
-    void scanRunnable(Job* job, QList<InstalledPackageVersion*>* installed,
+    void scanRunnable(Job* job, std::vector<InstalledPackageVersion*>* installed,
             Repository* rep);
 
     /**
@@ -52,7 +52,8 @@ public:
      *     will be stored here. Package versions with a file named
      *     ".Npackd\Uninstall.bat" will be used to define uninstallers
      */
-    virtual void scan(Job* job, QList<InstalledPackageVersion*>* installed,
+    virtual void scan(Job* job,
+            std::vector<InstalledPackageVersion*>* installed,
             Repository* rep) const = 0;
 };
 

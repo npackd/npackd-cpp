@@ -112,11 +112,12 @@ private:
      *     be not installed anymore.
      */
     void detect3rdParty(Job* job, DBRepository* r,
-            const QList<InstalledPackageVersion*>& installed, const QString& detectionInfoPrefix);
+            const std::vector<InstalledPackageVersion *> &installed, const QString& detectionInfoPrefix);
 
     QString findBetterPackageName(DBRepository *r, const QString &package);
 
-    void addPackages(Job *job, DBRepository *r, Repository *rep, const QList<InstalledPackageVersion *> &installed, bool replace);
+    void addPackages(Job *job, DBRepository *r, Repository *rep,
+            const std::vector<InstalledPackageVersion *> &installed, bool replace);
 
     void dump() const;
 
