@@ -63,7 +63,7 @@
 
  void FlowLayout::addItem(QLayoutItem *item)
  {
-     itemList.append(item);
+     itemList.push_back(item);
  }
 
  int FlowLayout::horizontalSpacing() const
@@ -91,14 +91,17 @@
 
  QLayoutItem *FlowLayout::itemAt(int index) const
  {
-     return itemList.value(index);
+     return itemList.at(index);
  }
 
  QLayoutItem *FlowLayout::takeAt(int index)
  {
-     if (index >= 0 && index < itemList.size())
-         return itemList.takeAt(index);
-     else
+     if (index >= 0 && index < static_cast<int>(itemList.size())) {
+         auto it = itemList.begin() + index;
+         QLayoutItem* item = *it;
+         itemList.erase(it);
+         return item;
+     } else
          return nullptr;
  }
 
