@@ -235,7 +235,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
     // they are not in the list of currently detected
     if (job->shouldProceed()) {
         if (!detectionInfoPrefix.isEmpty()) {
-            QSet<QString> foundDetectionInfos;
+            std::unordered_set<QString> foundDetectionInfos;
             for (int i = 0; i < installed.count(); i++) {
                 InstalledPackageVersion* ipv = installed.at(i);
                 foundDetectionInfos.insert(ipv->detectionInfo);
@@ -245,7 +245,7 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
             for (int i = 0; i < all.size(); i++) {
                 InstalledPackageVersion* ipv = all.at(i);
                 if (ipv->detectionInfo.startsWith(detectionInfoPrefix)) {
-                    if (!foundDetectionInfos.contains(ipv->detectionInfo)) {
+                    if (foundDetectionInfos.count(ipv->detectionInfo) == 0) {
                         this->setPackageVersionPath(ipv->package, ipv->version, QString());
                     }
                 }
@@ -280,7 +280,7 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
     // we assume that one 3rd party package manager does not create package
     // or package version objects for another
     if (job->shouldProceed()) {
-        QSet<QString> packages;
+        std::unordered_set<QString> packages;
         for (int i = 0; i < installed.size();i++) {
             InstalledPackageVersion* ipv = installed.at(i);
             packages.insert(ipv->package);
@@ -288,7 +288,7 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
 
         for (int i = 0; i < rep->packages.size(); ) {
             Package* p = rep->packages.at(i);
-            if (!packages.contains(p->name)) {
+            if (packages.count(p->name) == 0) {
                 rep->packages.removeAt(i);
                 rep->package2versions.erase(p->name);
                 delete p;
@@ -298,7 +298,7 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
 
         for (int i = 0; i < rep->packageVersions.size(); ) {
             PackageVersion* pv = rep->packageVersions.at(i);
-            if (!packages.contains(pv->package)) {
+            if (packages.count(pv->package) == 0) {
                 rep->packageVersions.removeAt(i);
                 delete pv;
             } else
