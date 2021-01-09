@@ -1,6 +1,8 @@
 #ifndef PACKAGE_H
 #define PACKAGE_H
 
+#include <map>
+
 #include <QString>
 #include <QStringList>
 #include <QStringList>
@@ -50,11 +52,11 @@ public:
     QStringList tags;
 
     /**
-     * <link> rel->href. The order of the values in QMultiMap is from
+     * <link> rel->href. The order of the values is from
      * most recently to least recently inserted, but the appearance in XML is
      * in the other order.
      */
-    QMultiMap<QString, QString> links;
+    std::multimap<QString, QString> links;
 
     /** number of users that starred this package */
     int stars;
@@ -62,6 +64,13 @@ public:
     Package(const Package& p) = default;
 
     Package(const QString& name, const QString& title);
+
+    /**
+     * @brief returns links of the specified type
+     * @param rel type, e.g. "screenshot"
+     * @return links
+     */
+    QList<QString> getLinks(const QString& rel) const;
 
     /**
      * @brief getIcon

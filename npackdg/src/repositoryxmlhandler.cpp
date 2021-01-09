@@ -284,7 +284,7 @@ void RepositoryXMLHandler::parsePackage()
             }
 
             if (error.isEmpty())
-                p->links.insert(rel, href);
+                p->links.insert({rel, href});
 
             if (error.isEmpty())
                 reader->skipCurrentElement();

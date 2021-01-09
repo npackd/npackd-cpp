@@ -2299,7 +2299,7 @@ void App::info(Job* job)
             WPMUtils::writeln("Categories: " +
                     p->categories.join(", "));
             WPMUtils::writeln("Icon: " + p->getIcon());
-            QList<QString> screenshots = p->links.values("screenshot");
+            QList<QString> screenshots = p->getLinks("screenshot");
             WPMUtils::writeln("Screen shots: " +
                     (screenshots.count() > 0 ? screenshots.at(0) : "n/a")
                     );

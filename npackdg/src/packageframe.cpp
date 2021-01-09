@@ -76,7 +76,7 @@ void PackageFrame::updateIcons(const QString& url)
     MainWindow* mw = MainWindow::getInstance();
 
     QListWidget* c = this->ui->listWidgetScreenshots;
-    QList<QString> screenshots = p->links.values("screenshot");
+    QList<QString> screenshots = p->getLinks("screenshot");
 
     bool updated = false;
     for (int i = 0; i < c->count(); i++) {
@@ -176,7 +176,7 @@ void PackageFrame::fillForm(Package* p)
     QListWidget* c = this->ui->listWidgetScreenshots;
     c->clear();
 
-    QList<QString> screenshots = p->links.values("screenshot");
+    QList<QString> screenshots = p->getLinks("screenshot");
     int n = screenshots.count();
 
     // qCDebug(npackd) << n << "screen shots";

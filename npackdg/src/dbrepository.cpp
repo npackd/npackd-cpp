@@ -1022,30 +1022,20 @@ QString DBRepository::saveLinks(Package* p)
     }
 
     if (err.isEmpty()) {
-        QList<QString> rels = p->links.uniqueKeys();
         int index = 1;
-        for (int i = 0; i < rels.size(); i++) {
+        for (auto&& i: p->links) {
             if (!err.isEmpty())
                 break;
 
-            QString rel = rels.at(i);
-            QList<QString> hrefs = p->links.values(rel);
-            for (int j = 0; j < hrefs.size(); j++) {
-                if (!err.isEmpty())
-                    break;
+            if (!i.first.isEmpty() && !i.second.isEmpty()) {
+                insertLinkQuery->bindValue(QStringLiteral(":PACKAGE"), p->name);
+                insertLinkQuery->bindValue(QStringLiteral(":INDEX_"), index);
+                insertLinkQuery->bindValue(QStringLiteral(":REL"), i.first);
+                insertLinkQuery->bindValue(QStringLiteral(":HREF"), i.second);
+                if (!insertLinkQuery->exec())
+                    err = SQLUtils::getErrorString(*insertLinkQuery);
 
-                QString href = hrefs.at(j);
-
-                if (!rel.isEmpty() && !href.isEmpty()) {
-                    insertLinkQuery->bindValue(QStringLiteral(":PACKAGE"), p->name);
-                    insertLinkQuery->bindValue(QStringLiteral(":INDEX_"), index);
-                    insertLinkQuery->bindValue(QStringLiteral(":REL"), rel);
-                    insertLinkQuery->bindValue(QStringLiteral(":HREF"), href);
-                    if (!insertLinkQuery->exec())
-                        err = SQLUtils::getErrorString(*insertLinkQuery);
-
-                    index++;
-                }
+                index++;
             }
         }
         insertLinkQuery->finish();
@@ -1339,7 +1329,7 @@ QString DBRepository::readLinks(Package* p) const
     }
 
     while (err.isEmpty() && q.next()) {
-        p->links.insert(q.value(0).toString(), q.value(1).toString());
+        p->links.insert({q.value(0).toString(), q.value(1).toString()});
     }
 
     return err;

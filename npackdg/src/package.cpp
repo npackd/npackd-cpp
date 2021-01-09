@@ -11,10 +11,20 @@ Package::Package(const QString& name, const QString& title): stars(0)
     this->title = title;
 }
 
+QList<QString> Package::getLinks(const QString &rel) const
+{
+    auto it = links.equal_range(rel);
+    QList<QString> r;
+    for (auto i = it.first; i != it.second; ++i) {
+        r.append(i->second);
+    }
+    return r;
+}
+
 QString Package::getIcon() const
 {
     QString r;
-    QList<QString> values = links.values("icon");
+    QList<QString> values = getLinks("icon");
     if (!values.isEmpty())
         r = values.last();
     return r;
@@ -23,7 +33,7 @@ QString Package::getIcon() const
 QString Package::getChangeLog() const
 {
     QString r;
-    QList<QString> values = links.values("changelog");
+    QList<QString> values = getLinks("changelog");
     if (!values.isEmpty())
         r = values.last();
     return r;
@@ -31,16 +41,15 @@ QString Package::getChangeLog() const
 
 void Package::setChangeLog(const QString &changelog)
 {
-    if (changelog.isEmpty())
-        links.remove("changelog");
-    else
-        links.replace("changelog", changelog);
+    links.erase("changelog");
+    if (!changelog.isEmpty())
+        links.insert({"changelog", changelog});
 }
 
 QString Package::getIssueTracker() const
 {
     QString r;
-    QList<QString> values = links.values("issues");
+    QList<QString> values = getLinks("issues");
     if (!values.isEmpty())
         r = values.last();
     return r;
@@ -48,18 +57,16 @@ QString Package::getIssueTracker() const
 
 void Package::setIssueTracker(const QString &v)
 {
-    if (v.isEmpty())
-        links.remove("issues");
-    else
-        links.replace("issues", v);
+    links.erase("issues");
+    if (!v.isEmpty())
+        links.insert({"issues", v});
 }
 
 void Package::setIcon(const QString &icon)
 {
-    if (icon.isEmpty())
-        links.remove("icon");
-    else
-        links.replace("icon", icon);
+    links.erase("icon");
+    if (!icon.isEmpty())
+        links.insert({"icon", icon});
 }
 
 QString Package::getShortName() const
@@ -114,16 +121,11 @@ void Package::toXML(QXmlStreamWriter *w) const
     }
 
     // <link>
-    QList<QString> rels = links.uniqueKeys();
-    for (int i = 0; i < rels.size(); i++) {
-        QString rel = rels.at(i);
-        QList<QString> hrefs = links.values(rel);
-        for (int j = hrefs.size() - 1; j >= 0; j--) {
-            w->writeStartElement("link");
-            w->writeAttribute("rel", rel);
-            w->writeAttribute("href", hrefs.at(j));
-            w->writeEndElement();
-        }
+    for (auto&& it: links) {
+        w->writeStartElement("link");
+        w->writeAttribute("rel", it.first);
+        w->writeAttribute("href", it.second);
+        w->writeEndElement();
     }
 
     w->writeEndElement();
@@ -163,16 +165,11 @@ void Package::toJSON(QJsonObject& w) const
     }
 
     QJsonArray link;
-    QList<QString> rels = links.uniqueKeys();
-    for (int i = 0; i < rels.size(); i++) {
-        QString rel = rels.at(i);
-        QList<QString> hrefs = links.values(rel);
-        for (int j = hrefs.size() - 1; j >= 0; j--) {
-            QJsonObject obj;
-            obj["rel"] = rel;
-            obj["href"] = hrefs.at(j);
-            link.append(obj);
-        }
+    for (auto&& it: links) {
+        QJsonObject obj;
+        obj["rel"] = it.first;
+        obj["href"] = it.second;
+        link.append(obj);
     }
     if (!link.isEmpty())
         w["links"] = link;
