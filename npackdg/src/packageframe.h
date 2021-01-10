@@ -53,7 +53,7 @@ public:
      */
     void updateStatus();
 
-    QList<void*> getSelected(const QString& type) const;
+    std::vector<void*> getSelected(const QString& type) const;
 protected:
     void changeEvent(QEvent *e);
 private slots:

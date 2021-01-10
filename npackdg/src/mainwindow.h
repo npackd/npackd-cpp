@@ -258,7 +258,7 @@ public:
      */
     void openLicense(const QString& name, bool select);
 
-    QList<void*> getSelected(const QString& type) const;
+    std::vector<void *> getSelected(const QString& type) const;
 
     void openURL(const QUrl &url);
     static QString createPackageVersionsHTML(const QStringList &names);

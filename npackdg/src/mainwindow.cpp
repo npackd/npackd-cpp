@@ -302,9 +302,9 @@ void MainWindow::showDetails()
 {
     Selection* sel = Selection::findCurrent();
     if (sel) {
-        QList<void*> selected = sel->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = sel->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
 
@@ -312,7 +312,7 @@ void MainWindow::showDetails()
             }
         } else {
             selected = sel->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 int index = this->findPackageTab(p->name);
@@ -331,7 +331,7 @@ void MainWindow::showDetails()
                     }
                 }
 
-                if (i == selected.count() - 1)
+                if (i == static_cast<int>(selected.size()) - 1)
                     this->ui->tabWidget->setCurrentIndex(index);
             }
         }
@@ -1131,10 +1131,10 @@ void MainWindow::updateInstallAction()
     Selection* selection = Selection::findCurrent();
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1149,8 +1149,8 @@ void MainWindow::updateInstallAction()
         } else {
             DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("Package");
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1177,10 +1177,10 @@ void MainWindow::updateExportAction()
     Selection* selection = Selection::findCurrent();
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1194,8 +1194,8 @@ void MainWindow::updateExportAction()
         } else {
             DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("Package");
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1224,10 +1224,10 @@ void MainWindow::updateShowFolderAction()
 
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1240,9 +1240,9 @@ void MainWindow::updateShowFolderAction()
             }
             // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
-            QList<void*> selected = selection->getSelected("Package");
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+            std::vector<void*> selected = selection->getSelected("Package");
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1272,10 +1272,10 @@ void MainWindow::updateUninstallAction()
 
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1288,9 +1288,9 @@ void MainWindow::updateUninstallAction()
             }
             // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
-            QList<void*> selected = selection->getSelected("Package");
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+            std::vector<void*> selected = selection->getSelected("Package");
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1317,10 +1317,10 @@ void MainWindow::updateUpdateAction()
 
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("Package");
-        if (selected.count() > 0) {
+        std::vector<void*> selected = selection->getSelected("Package");
+        if (selected.size() > 0) {
             enabled = true;
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1330,8 +1330,8 @@ void MainWindow::updateUpdateAction()
             }
         } else {
             selected = selection->getSelected("PackageVersion");
-            enabled = selected.count() >= 1;
-            for (int i = 0; i < selected.count(); i++) {
+            enabled = selected.size() >= 1;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1363,11 +1363,11 @@ void MainWindow::updateActionShowDetailsAction()
     Selection* selection = Selection::findCurrent();
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() == 0)
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() == 0)
             selected = selection->getSelected("Package");
 
-        enabled = selected.count() > 0;
+        enabled = selected.size() > 0;
     }
 
     this->ui->actionShow_Details->setEnabled(enabled);
@@ -1379,9 +1379,9 @@ void MainWindow::updateTestDownloadSiteAction()
 
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
                 if (pv->download.isValid()) {
@@ -1392,7 +1392,7 @@ void MainWindow::updateTestDownloadSiteAction()
         } else {
             DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
                 QString err;
                 PackageVersion* pv = r->findNewestInstallablePackageVersion_(
@@ -1415,10 +1415,10 @@ void MainWindow::updateShowChangelogAction()
     Selection* selection = Selection::findCurrent();
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
             DBRepository* r = DBRepository::getDefault();
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
 
@@ -1435,7 +1435,7 @@ void MainWindow::updateShowChangelogAction()
             }
         } else {
             selected = selection->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 if (p) {
@@ -1458,10 +1458,10 @@ void MainWindow::updateRunAction()
 
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1476,9 +1476,9 @@ void MainWindow::updateRunAction()
             // qCDebug(npackd) << "MainWindow::updateUninstallAction 2:" << selected.count();
         } else {
             DBRepository* r = DBRepository::getDefault();
-            QList<void*> selected = selection->getSelected("Package");
-            enabled = selected.count() > 0;
-            for (int i = 0; i < selected.count(); i++) {
+            std::vector<void*> selected = selection->getSelected("Package");
+            enabled = selected.size() > 0;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 if (!enabled)
                     break;
 
@@ -1510,10 +1510,10 @@ void MainWindow::updateGotoPackageURLAction()
     Selection* selection = Selection::findCurrent();
     bool enabled = false;
     if (selection) {
-        QList<void*> selected = selection->getSelected("PackageVersion");
-        if (selected.count() > 0) {
+        std::vector<void*> selected = selection->getSelected("PackageVersion");
+        if (selected.size() > 0) {
             DBRepository* r = DBRepository::getDefault();
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
 
@@ -1530,7 +1530,7 @@ void MainWindow::updateGotoPackageURLAction()
             }
         } else {
             selected = selection->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 if (p) {
@@ -1668,10 +1668,10 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
     updateActions();
 }
 
-QList<void*> MainWindow::getSelected(const QString& type) const
+std::vector<void*> MainWindow::getSelected(const QString& type) const
 {
     QWidget* w = this->ui->tabWidget->currentWidget();
-    QList<void*> r;
+    std::vector<void*> r;
     if (w) {
         Selection* sel = dynamic_cast<Selection*>(w);
         if (sel)
@@ -1758,11 +1758,11 @@ void MainWindow::on_actionGotoPackageURL_triggered()
     std::unordered_set<QString> urls;
 
     Selection* selection = Selection::findCurrent();
-    QList<void*> selected;
+    std::vector<void*> selected;
     if (selection) {
         selected = selection->getSelected("Package");
-        if (selected.count() != 0) {
-            for (int i = 0; i < selected.count(); i++) {
+        if (selected.size() != 0) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
                 QUrl url(p->url);
                 if (url.isValid())
@@ -1771,7 +1771,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
         } else {
             DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("PackageVersion");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
                 std::unique_ptr<Package> p(r->findPackage_(pv->package));
@@ -1835,16 +1835,16 @@ void MainWindow::on_actionUpdate_triggered()
     DBRepository* r = DBRepository::getDefault();
     if (err.isEmpty()) {
         Selection* sel = Selection::findCurrent();
-        QList<void*> selected;
+        std::vector<void*> selected;
         if (sel)
             selected = sel->getSelected("PackageVersion");
 
-        if (selected.count() > 0) {
+        if (selected.size() > 0) {
             // multiple versions of the same package could be selected in the table,
             // but only one should be updated
             std::unordered_set<QString> used;
 
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
                 if (used.count(pv->package) == 0) {
@@ -1859,7 +1859,7 @@ void MainWindow::on_actionUpdate_triggered()
         } else {
             if (sel) {
                 selected = sel->getSelected("Package");
-                for (int i = 0; i < selected.count(); i++) {
+                for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                     Package* p = static_cast<Package*>(selected.at(i));
                     packages.append(new Package(*p));
                 }
@@ -1896,9 +1896,9 @@ void MainWindow::on_actionTest_Download_Site_triggered()
     if (sel) {
         std::unordered_set<QString> urls;
 
-        QList<void*> selected = sel->getSelected("PackageVersion");
-        if (selected.count() > 0) {
-            for (int i = 0; i < selected.count(); i++) {
+        std::vector<void*> selected = sel->getSelected("PackageVersion");
+        if (selected.size() > 0) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
                 urls.insert(pv->download.host());
@@ -1906,7 +1906,7 @@ void MainWindow::on_actionTest_Download_Site_triggered()
         } else {
             DBRepository* r = DBRepository::getDefault();
             selected = sel->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
                 std::unique_ptr<PackageVersion> pv(
                         r->findNewestInstallablePackageVersion_(p->name,
@@ -2092,14 +2092,14 @@ void MainWindow::on_actionInstall_triggered()
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
-        QList<void*> selected;
+        std::vector<void*> selected;
         if (selection)
             selected = selection->getSelected("PackageVersion");
 
-        if (selected.count() == 0) {
+        if (selected.size() == 0) {
             if (selection)
                 selected = selection->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
                 PackageVersion* pv = dbr->findNewestInstallablePackageVersion_(
                         p->name, &err);
@@ -2110,7 +2110,7 @@ void MainWindow::on_actionInstall_triggered()
                     pvs.append(pv);
             }
         } else {
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
             }
         }
@@ -2153,15 +2153,15 @@ void MainWindow::on_actionUninstall_triggered()
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
-        QList<void*> selected;
+        std::vector<void*> selected;
         if (selection)
             selected = selection->getSelected("PackageVersion");
 
-        if (selected.count() == 0) {
+        if (selected.size() == 0) {
             DBRepository* r = DBRepository::getDefault();
             if (selection)
                 selected = selection->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
@@ -2174,7 +2174,7 @@ void MainWindow::on_actionUninstall_triggered()
                 }
             }
         } else {
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 pvs.append(static_cast<PackageVersion*>(selected.at(i))->
                         clone());
             }
@@ -2223,16 +2223,16 @@ void MainWindow::openURL(const QUrl& url) {
 void MainWindow::on_actionOpen_folder_triggered()
 {
     Selection* selection = Selection::findCurrent();
-    QList<void*> selected;
+    std::vector<void*> selected;
     if (selection)
         selected = selection->getSelected("PackageVersion");
 
     QList<PackageVersion*> pvs;
-    if (selected.count() == 0) {
+    if (selected.size() == 0) {
         DBRepository* r = DBRepository::getDefault();
         if (selection)
             selected = selection->getSelected("Package");
-        for (int i = 0; i < selected.count(); i++) {
+        for (int i = 0; i < static_cast<int>(selected.size()); i++) {
             Package* p = static_cast<Package*>(selected.at(i));
 
             QString err;
@@ -2245,7 +2245,7 @@ void MainWindow::on_actionOpen_folder_triggered()
             }
         }
     } else {
-        for (int i = 0; i < selected.count(); i++) {
+        for (int i = 0; i < static_cast<int>(selected.size()); i++) {
             pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
         }
     }
@@ -2276,11 +2276,11 @@ void MainWindow::on_actionShow_changelog_triggered()
     std::unordered_set<QString> urls;
 
     Selection* selection = Selection::findCurrent();
-    QList<void*> selected;
+    std::vector<void*> selected;
     if (selection) {
         selected = selection->getSelected("Package");
-        if (selected.count() != 0) {
-            for (int i = 0; i < selected.count(); i++) {
+        if (selected.size() != 0) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
                 QUrl url(p->getChangeLog());
                 if (url.isValid())
@@ -2289,7 +2289,7 @@ void MainWindow::on_actionShow_changelog_triggered()
         } else {
             DBRepository* r = DBRepository::getDefault();
             selected = selection->getSelected("PackageVersion");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
                 std::unique_ptr<Package> p(r->findPackage_(pv->package));
@@ -2325,15 +2325,15 @@ void MainWindow::on_actionRun_triggered()
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
-        QList<void*> selected;
+        std::vector<void*> selected;
         if (selection)
             selected = selection->getSelected("PackageVersion");
 
-        if (selected.count() == 0) {
+        if (selected.size() == 0) {
             DBRepository* r = DBRepository::getDefault();
             if (selection)
                 selected = selection->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
@@ -2346,7 +2346,7 @@ void MainWindow::on_actionRun_triggered()
                 }
             }
         } else {
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 pvs.append(static_cast<PackageVersion*>(selected.at(i))->
                         clone());
             }
@@ -2381,15 +2381,15 @@ void MainWindow::on_actionExport_triggered()
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
-        QList<void*> selected;
+        std::vector<void*> selected;
         if (selection)
             selected = selection->getSelected("PackageVersion");
 
-        if (selected.count() == 0) {
+        if (selected.size() == 0) {
             DBRepository* r = DBRepository::getDefault();
             if (selection)
                 selected = selection->getSelected("Package");
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
                 PackageVersion* pv = r->findNewestInstallablePackageVersion_(
                         p->name, &err);
@@ -2400,7 +2400,7 @@ void MainWindow::on_actionExport_triggered()
                     pvs.append(pv);
             }
         } else {
-            for (int i = 0; i < selected.count(); i++) {
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
             }
         }

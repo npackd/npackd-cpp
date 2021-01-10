@@ -305,13 +305,13 @@ void MainFrame::setStatusFilter(int status)
         this->ui->radioButtonAll->setChecked(true);
 }
 
-QList<void*> MainFrame::getSelected(const QString& type) const
+std::vector<void*> MainFrame::getSelected(const QString& type) const
 {
-    QList<void*> res;
+    std::vector<void*> res;
     if (type == "Package") {
         QList<Package*> ps = this->getSelectedPackagesInTable();
         for (int i = 0; i < ps.count(); i++) {
-            res.append(ps.at(i));
+            res.push_back(ps.at(i));
         }
     }
     return res;

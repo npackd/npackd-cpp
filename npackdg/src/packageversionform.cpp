@@ -30,11 +30,11 @@ void PackageVersionForm::updateIcons()
     this->ui->labelIcon->setPixmap(pixmap);
 }
 
-QList<void*> PackageVersionForm::getSelected(const QString& type) const
+std::vector<void*> PackageVersionForm::getSelected(const QString& type) const
 {
-    QList<void*> res;
+    std::vector<void*> res;
     if (type == "PackageVersion" && this->pv) {
-        res.append(this->pv);
+        res.push_back(this->pv);
     }
     return res;
 }

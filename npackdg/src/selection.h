@@ -15,7 +15,7 @@ public:
      * @param type type of the requested objects. Example: "Package"
      * @return list of selected objects
      */
-    virtual QList<void*> getSelected(const QString& type) const = 0;
+    virtual std::vector<void*> getSelected(const QString& type) const = 0;
 
     /**
      * @return current selected QWidget* or 0

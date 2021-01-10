@@ -260,11 +260,11 @@ void PackageFrame::showDetails()
     }
 }
 
-QList<void*> PackageFrame::getSelected(const QString& type) const
+std::vector<void*> PackageFrame::getSelected(const QString& type) const
 {
-    QList<void*> res;
+    std::vector<void*> res;
     if (type == "Package" && this->p) {
-        res.append(this->p);
+        res.push_back(this->p);
     } else if (type == "PackageVersion") {
         if (this->ui->tableWidgetVersions->hasFocus()) {
             QList<QTableWidgetItem*> sel =
@@ -273,7 +273,7 @@ QList<void*> PackageFrame::getSelected(const QString& type) const
                 QTableWidgetItem* item = sel.at(i);
                 if (item->column() == 0) {
                     PackageVersion* pv = this->pvs.at(item->row());
-                    res.append(pv);
+                    res.push_back(pv);
                 }
             }
         }

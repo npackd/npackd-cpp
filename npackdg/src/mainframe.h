@@ -36,7 +36,7 @@ public:
     explicit MainFrame(QWidget *parent = nullptr);
     ~MainFrame();
 
-    QList<void*> getSelected(const QString& type) const;
+    std::vector<void*> getSelected(const QString& type) const;
 
     /**
      * This method returns all selected Package* items
