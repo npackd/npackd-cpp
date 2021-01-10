@@ -603,10 +603,9 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
     *err = "";
 
     QList<PackageVersion*> ret;
-    QList<InstalledPackageVersion*> ipvs =
+    std::vector<InstalledPackageVersion*> ipvs =
             InstalledPackages::getDefault()->getAll();
-    for (int i = 0; i < ipvs.count(); i++) {
-        InstalledPackageVersion* ipv = ipvs.at(i);
+    for (auto ipv: ipvs) {
         PackageVersion* pv = this->findPackageVersion_(ipv->package,
                 ipv->version, err);
         if (!err->isEmpty())
@@ -626,10 +625,8 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
     QString err;
 
     QList<PackageVersion*> avoid;
-    QList<InstalledPackageVersion*> all = installed.getAll();
-    for (int i = 0; i < all.size(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
-
+    std::vector<InstalledPackageVersion*> all = installed.getAll();
+    for (auto ipv: all) {
         PackageVersion* pv = this->findPackageVersion_(ipv->package,
                 ipv->version, &err);
         if (!err.isEmpty())

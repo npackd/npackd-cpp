@@ -78,7 +78,7 @@ DBRepository::~DBRepository()
     delete insertPackageVersionQuery;
 }
 
-QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> &installed)
+QString DBRepository::saveInstalled(const std::vector<InstalledPackageVersion *> &installed)
 {
     QString err;
 
@@ -99,11 +99,10 @@ QString DBRepository::saveInstalled(const QList<InstalledPackageVersion *> &inst
 
     //qCDebug(npackd) << "saveInstalled";
     if (err.isEmpty()) {
-        for (int i = 0; i < installed.size(); i++) {
+        for (auto ipv: installed) {
             if (!err.isEmpty())
                 break;
 
-            InstalledPackageVersion* ipv = installed.at(i);
             //qCDebug(npackd) << "saveInstalled" << ipv->package << ipv->version.getVersionString();
             if (ipv->installed()) {
                 insertInstalledQuery->bindValue(QStringLiteral(":PACKAGE"),
@@ -1785,7 +1784,7 @@ void DBRepository::clearAndDownloadRepositories(Job* job,
     }
 
     if (job->shouldProceed()) {
-        QList<InstalledPackageVersion*> installed =
+        std::vector<InstalledPackageVersion*> installed =
                 InstalledPackages::getDefault()->getAll();
         QString err = saveInstalled(installed);
         if (!err.isEmpty())

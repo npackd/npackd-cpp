@@ -59,9 +59,8 @@ InstalledPackages &InstalledPackages::operator=(const InstalledPackages &other)
 
     other.dump();
 
-    QList<InstalledPackageVersion*> myInfos = getAll();
-    for (int i = 0; i < myInfos.size(); i++) {
-        InstalledPackageVersion* myIpv = myInfos.at(i);
+    std::vector<InstalledPackageVersion*> myInfos = getAll();
+    for (auto myIpv: myInfos) {
         InstalledPackageVersion* otherIpv = other.find(
                 myIpv->package, myIpv->version);
 
@@ -77,9 +76,8 @@ InstalledPackages &InstalledPackages::operator=(const InstalledPackages &other)
     qDeleteAll(myInfos);
     myInfos.clear();
 
-    QList<InstalledPackageVersion*> otherInfos = other.getAll();
-    for (int i = 0; i < otherInfos.size(); i++) {
-        InstalledPackageVersion* otherIpv = otherInfos.at(i);
+    std::vector<InstalledPackageVersion*> otherInfos = other.getAll();
+    for (auto otherIpv: otherInfos) {
         InstalledPackageVersion* myIpv = find(
                 otherIpv->package, otherIpv->version);
 
@@ -147,9 +145,8 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
 QList<InstalledPackageVersion *> InstalledPackages::findAllInstalledMatches(const Dependency &dep) const
 {
     QList<InstalledPackageVersion*> r;
-    QList<InstalledPackageVersion*> installed = getAll();
-    for (int i = 0; i < installed.count(); i++) {
-        InstalledPackageVersion* ipv = installed.at(i);
+    std::vector<InstalledPackageVersion*> installed = getAll();
+    for (auto ipv: installed) {
         if (ipv->package == dep.package &&
                 dep.test(ipv->version)) {
             r.append(ipv->clone());
@@ -240,9 +237,8 @@ void InstalledPackages::detect3rdParty(Job* job, DBRepository* r,
                 foundDetectionInfos.insert(ipv->detectionInfo);
             }
 
-            QList<InstalledPackageVersion*> all = getAll();
-            for (int i = 0; i < all.size(); i++) {
-                InstalledPackageVersion* ipv = all.at(i);
+            std::vector<InstalledPackageVersion*> all = getAll();
+            for (auto ipv: all) {
                 if (ipv->detectionInfo.startsWith(detectionInfoPrefix)) {
                     if (foundDetectionInfos.count(ipv->detectionInfo) == 0) {
                         this->setPackageVersionPath(ipv->package, ipv->version, QString());
@@ -452,11 +448,9 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     // we cannot handle nested directories
     if (err.isEmpty()) {
         if (!d.isEmpty()) {
-            QList<InstalledPackageVersion*> all = this->getAll();
+            std::vector<InstalledPackageVersion*> all = this->getAll();
 
-            for (int i = 0; i < all.size(); i++) {
-                InstalledPackageVersion* v = all.at(i);
-
+            for (auto v: all) {
                 // e.g. an MSI package and a package from the Control Panel
                 // "Software" have the same path
                 /* not yet ready
@@ -645,15 +639,15 @@ InstalledPackageVersion *InstalledPackages::findOwner(
     return f;
 }
 
-QList<InstalledPackageVersion*> InstalledPackages::getAll() const
+std::vector<InstalledPackageVersion*> InstalledPackages::getAll() const
 {
     this->mutex.lock();
 
-    QList<InstalledPackageVersion*> r;
-    for (auto it = data.begin(); it != data.end(); ++it) {
-        InstalledPackageVersion* ipv = it->second;
+    std::vector<InstalledPackageVersion*> r;
+    for (auto&& it: data) {
+        InstalledPackageVersion* ipv = it.second;
         if (ipv->installed())
-            r.append(ipv->clone());
+            r.push_back(ipv->clone());
     }
 
     this->mutex.unlock();
@@ -719,10 +713,9 @@ InstalledPackageVersion* InstalledPackages::getNewestInstalled(
 
 bool InstalledPackages::isInstalled(const Dependency& dep) const
 {
-    QList<InstalledPackageVersion*> installed = getAll();
+    std::vector<InstalledPackageVersion*> installed = getAll();
     bool res = false;
-    for (int i = 0; i < installed.count(); i++) {
-        InstalledPackageVersion* ipv = installed.at(i);
+    for (auto ipv: installed) {
         if (ipv->package == dep.package &&
                 dep.test(ipv->version)) {
             res = true;
@@ -968,9 +961,8 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 void InstalledPackages::dump() const
 {
     qCDebug(npackd) << "Installed packages:";
-    QList<InstalledPackageVersion*> myInfos = getAll();
-    for (int i = 0; i < myInfos.size(); i++) {
-        InstalledPackageVersion* myIpv = myInfos.at(i);
+    std::vector<InstalledPackageVersion*> myInfos = getAll();
+    for (auto myIpv: myInfos) {
         qCDebug(npackd) << myIpv->package << myIpv->version.getVersionString() <<
                 myIpv->directory;
     }
@@ -991,9 +983,8 @@ QString InstalledPackages::save()
         other.dump();
 
         // save entries that are not yet in the Windows registry
-        QList<InstalledPackageVersion*> myInfos = getAll();
-        for (int i = 0; i < myInfos.size(); i++) {
-            InstalledPackageVersion* myIpv = myInfos.at(i);
+        std::vector<InstalledPackageVersion*> myInfos = getAll();
+        for (auto myIpv: myInfos) {
             InstalledPackageVersion* otherIpv = other.find(
                     myIpv->package, myIpv->version);
 
@@ -1010,9 +1001,8 @@ QString InstalledPackages::save()
         myInfos.clear();
 
         // remove unnecessary entries from the Windows registry
-        QList<InstalledPackageVersion*> otherInfos = other.getAll();
-        for (int i = 0; i < otherInfos.size(); i++) {
-            InstalledPackageVersion* otherIpv = otherInfos.at(i);
+        std::vector<InstalledPackageVersion*> otherInfos = other.getAll();
+        for (auto otherIpv: otherInfos) {
             InstalledPackageVersion* myIpv = find(
                     otherIpv->package, otherIpv->version);
 

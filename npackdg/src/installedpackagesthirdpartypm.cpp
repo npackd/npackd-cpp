@@ -21,13 +21,11 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
     }
 
     if (job->shouldProceed()) {
-        QList<InstalledPackageVersion*> ipvs = ip->getAll();
+        std::vector<InstalledPackageVersion*> ipvs = ip->getAll();
 
         std::unordered_set<QString> used;
         QDir d;
-        for (int i = 0; i < ipvs.count(); ++i) {
-            InstalledPackageVersion* ipv = ipvs.at(i);
-
+        for (auto ipv: ipvs) {
             // this is different from all the other third party package managers.
             // We *know* that this was uninstalled.
             if (!d.exists(ipv->getDirectory()))

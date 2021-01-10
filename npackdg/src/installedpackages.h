@@ -231,7 +231,7 @@ public:
     /**
      * @return [move] installed packages
      */
-    QList<InstalledPackageVersion*> getAll() const;
+    std::vector<InstalledPackageVersion *> getAll() const;
 
     /**
      * Searches for installed versions of a package.

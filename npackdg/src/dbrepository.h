@@ -175,7 +175,7 @@ public:
      * @param installed new list of installed versions
      * @return error message
      */
-    QString saveInstalled(const QList<InstalledPackageVersion*>& installed);
+    QString saveInstalled(const std::vector<InstalledPackageVersion *> &installed);
 
     QString saveLicense(License* p, bool replace) override;
 

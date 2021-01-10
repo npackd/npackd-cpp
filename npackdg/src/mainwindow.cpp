@@ -2471,10 +2471,9 @@ void MainWindow::on_actionCheck_dependencies_triggered()
     InstalledPackages* ip = InstalledPackages::getDefault();
     DBRepository* dbr = DBRepository::getDefault();
 
-    QList<InstalledPackageVersion*> all = ip->getAll();
+    std::vector<InstalledPackageVersion*> all = ip->getAll();
     int n = 0;
-    for (int i = 0; i < all.size(); i++) {
-        InstalledPackageVersion* ipv = all.at(i);
+    for (auto ipv: all) {
         if (ipv->installed()) {
             std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion_(
                     ipv->package, ipv->version, &err));
