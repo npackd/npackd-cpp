@@ -85,13 +85,13 @@ QString CLProcessor::remove()
     if (err.isEmpty())
         programCloseType = WPMUtils::getProgramCloseType(cl, &err);
 
-    QList<PackageVersion*> toRemove;
+    std::vector<PackageVersion*> toRemove;
     if (err.isEmpty()) {
         toRemove =
                 PackageVersion::getRemovePackageVersionOptions(cl, &err);
     }
 
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
@@ -99,7 +99,7 @@ QString CLProcessor::remove()
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < toRemove.count(); i++) {
+        for (int i = 0; i < static_cast<int>(toRemove.size()); i++) {
             PackageVersion* pv = toRemove.at(i);
             err = DBRepository::getDefault()->planUninstallation(installed,
                     pv->package, pv->version, ops);
@@ -188,7 +188,7 @@ QString CLProcessor::add()
         err = InstalledPackages::getDefault()->readRegistryDatabase();
     }
 
-    QList<PackageVersion*> toInstall =
+    std::vector<PackageVersion*> toInstall =
             PackageUtils::getAddPackageVersionOptions(*dbr, cl, &err);
 
     DWORD pct = WPMUtils::CLOSE_WINDOW;
@@ -197,7 +197,7 @@ QString CLProcessor::add()
     }
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
 
     InstalledPackages installed(*InstalledPackages::getDefault());
 
@@ -206,8 +206,8 @@ QString CLProcessor::add()
     }
 
     if (err.isEmpty()) {
-        QList<PackageVersion*> avoid;
-        for (int i = 0; i < toInstall.size(); i++) {
+        std::vector<PackageVersion*> avoid;
+        for (int i = 0; i < static_cast<int>(toInstall.size()); i++) {
             PackageVersion* pv = toInstall.at(i);
             err = pv->planInstallation(dbr, installed, ops, avoid);
             if (!err.isEmpty())
@@ -237,7 +237,7 @@ QString CLProcessor::checkForUpdates()
         err = InstalledPackages::getDefault()->readRegistryDatabase();
     }
 
-    QList<QUrl*> urls;
+    std::vector<QUrl*> urls;
     if (err.isEmpty()) {
         QString err;
         urls = PackageUtils::getRepositoryURLs(&err);
@@ -311,7 +311,7 @@ QString CLProcessor::update()
         }
     }
 
-    QList<Package*> toUpdate;
+    std::vector<Package*> toUpdate;
 
     if (job->shouldProceed()) {
         for (int i = 0; i < packages_.size(); i++) {
@@ -319,7 +319,7 @@ QString CLProcessor::update()
             QString err;
             Package* p = rep->findOnePackage(package, &err);
             if (p)
-                toUpdate.append(p);
+                toUpdate.push_back(p);
             else
                 job->setErrorMessage(err);
 
@@ -328,7 +328,7 @@ QString CLProcessor::update()
         }
     }
 
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
@@ -341,7 +341,7 @@ QString CLProcessor::update()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.12, QObject::tr("Planning"));
         QString err = rep->planUpdates(installed,
-                toUpdate, QList<Dependency*>(), ops);
+                toUpdate, std::vector<Dependency*>(), ops);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {
@@ -404,7 +404,7 @@ QString CLProcessor::update()
     return ret;
 }
 
-QString CLProcessor::process(QList<InstallOperation*> &install,
+QString CLProcessor::process(std::vector<InstallOperation*> &install,
         DWORD programCloseType)
 {
     QString err;

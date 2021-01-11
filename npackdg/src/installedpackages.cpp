@@ -282,20 +282,20 @@ void InstalledPackages::addPackages(Job* job, DBRepository* r,
             packages.insert(ipv->package);
         }
 
-        for (int i = 0; i < rep->packages.size(); ) {
+        for (int i = 0; i < static_cast<int>(rep->packages.size()); ) {
             Package* p = rep->packages.at(i);
             if (packages.count(p->name) == 0) {
-                rep->packages.removeAt(i);
+                rep->packages.erase(rep->packages.begin() + i);
                 rep->package2versions.erase(p->name);
                 delete p;
             } else
                 i++;
         }
 
-        for (int i = 0; i < rep->packageVersions.size(); ) {
+        for (int i = 0; i < static_cast<int>(rep->packageVersions.size()); ) {
             PackageVersion* pv = rep->packageVersions.at(i);
             if (packages.count(pv->package) == 0) {
-                rep->packageVersions.removeAt(i);
+                rep->packageVersions.erase(rep->packageVersions.begin() + i);
                 delete pv;
             } else
                 i++;
@@ -327,7 +327,7 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
             QStringList found = r->findBetterPackages(p->title, &err);
 
             if (err.isEmpty() && found.size() == 1) {
-                QList<Package*> replacements = r->findPackages(found);
+                std::vector<Package*> replacements = r->findPackages(found);
                 result = replacements.at(0)->name;
                 qDeleteAll(replacements);
             }
@@ -512,7 +512,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
                 "echo no removal procedure for this package is available"
                 "\r\n"
                 "exit 1"  "\r\n");
-        pv->files.append(u);
+        pv->files.push_back(u);
     }
 
     // create a directory under "NpackdDetected", if the installation
@@ -764,7 +764,7 @@ InstalledPackageVersion*
             //}
 
             if (err.isEmpty() && pv.get()) {
-                for (int j = 0; j < pv->dependencies.size(); j++) {
+                for (int j = 0; j < static_cast<int>(pv->dependencies.size()); j++) {
                     if (!isInstalled(*pv->dependencies.at(j))) {
                         r = ipv->clone();
                         break;
@@ -858,43 +858,43 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     // MSI package detection should happen before the detection for
     // control panel programs
     if (job->shouldProceed()) {
-        QList<AbstractThirdPartyPM*> tpms;
-        QList<bool> replace;
+        std::vector<AbstractThirdPartyPM*> tpms;
+        std::vector<bool> replace;
         QStringList jobTitles;
 
         jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
-        tpms.append(new InstalledPackagesThirdPartyPM());
-        replace.append(false);
+        tpms.push_back(new InstalledPackagesThirdPartyPM());
+        replace.push_back(false);
 
         if (PackageUtils::globalMode) {
 			jobTitles.append(QObject::tr("Adding well-known packages"));
-			tpms.append(new WellKnownProgramsThirdPartyPM(
+            tpms.push_back(new WellKnownProgramsThirdPartyPM(
 				InstalledPackages::packageName));
-            replace.append(false);
+            replace.push_back(false);
 
             jobTitles.append(QObject::tr("Detecting MSI packages"));
-			tpms.append(new MSIThirdPartyPM());
-            replace.append(true);
+            tpms.push_back(new MSIThirdPartyPM());
+            replace.push_back(true);
 
 			jobTitles.append(QObject::tr("Detecting software control panel packages"));
-			tpms.append(new ControlPanelThirdPartyPM());
-            replace.append(true);
+            tpms.push_back(new ControlPanelThirdPartyPM());
+            replace.push_back(true);
 
             jobTitles.append(QObject::tr("Detecting Windows Update packages"));
-            tpms.append(new WUAThirdPartyPM());
-            replace.append(true);
+            tpms.push_back(new WUAThirdPartyPM());
+            replace.push_back(true);
         }
 
-        QList<Repository*> repositories;
-        QList<std::vector<InstalledPackageVersion*>* > installeds;
-        for (int i = 0; i < tpms.count(); i++) {
-            repositories.append(new Repository());
-            installeds.append(new std::vector<InstalledPackageVersion*>());
+        std::vector<Repository*> repositories;
+        std::vector<std::vector<InstalledPackageVersion*>* > installeds;
+        for (int i = 0; i < static_cast<int>(tpms.size()); i++) {
+            repositories.push_back(new Repository());
+            installeds.push_back(new std::vector<InstalledPackageVersion*>());
         }
 
         // detect everything in threads
-        QList<QFuture<void> > futures;
-        for (int i = 0; i < tpms.count(); i++) {
+        std::vector<QFuture<void> > futures;
+        for (int i = 0; i < static_cast<int>(tpms.size()); i++) {
             AbstractThirdPartyPM* tpm = tpms.at(i);
             Job* s = job->newSubJob(0.1,
                     jobTitles.at(i), false, tpm->detectionPrefix != "wua:"); // Windows Updates are not important
@@ -903,12 +903,12 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
                     tpm,
                     &AbstractThirdPartyPM::scan, s,
                     installeds.at(i), repositories.at(i));
-            futures.append(future);
+            futures.push_back(future);
         }
 
         // waiting for threads to end and store the detected
         // packages, versions and licenses
-        for (int i = 0; i < futures.count(); i++) {
+        for (int i = 0; i < static_cast<int>(futures.size()); i++) {
             futures[i].waitForFinished();
 
             Job* sub = job->newSubJob(0.1,
@@ -918,10 +918,10 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
                     *installeds.at(i),
                     replace.at(i));
 
-            job->setProgress(0.2 + (i + 1.0) / futures.count() * 0.4);
+            job->setProgress(0.2 + (i + 1.0) / futures.size() * 0.4);
         }
 
-        for (int i = 0; i < futures.count(); i++) {
+        for (int i = 0; i < static_cast<int>(futures.size()); i++) {
             Job* sub = job->newSubJob(0.1,
                     QObject::tr("Adding detected versions %1").arg(i),
                     false, true);
@@ -939,7 +939,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             detect3rdParty(sub, rep, *installeds.at(i), tpms.at(i)->detectionPrefix);
             qDeleteAll(*installeds.at(i));
 
-            job->setProgress(0.6 + (i + 1.0) / futures.count() * 0.2);
+            job->setProgress(0.6 + (i + 1.0) / futures.size() * 0.2);
         }
 
         qDeleteAll(repositories);
@@ -1093,7 +1093,7 @@ QString InstalledPackages::readRegistryDatabase()
         PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "SOFTWARE\\Npackd\\Npackd\\Packages", false, KEY_READ, &e);
 
-    QList<InstalledPackageVersion*> ipvs;
+    std::vector<InstalledPackageVersion*> ipvs;
     if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
         err = "";
     } else if (err.isEmpty()) {
@@ -1153,7 +1153,7 @@ QString InstalledPackages::readRegistryDatabase()
                     qCDebug(npackd) << "adding " << ipv->package <<
                             ipv->version.getVersionString() << "in" <<
                             ipv->directory;*/
-                    ipvs.append(ipv);
+                    ipvs.push_back(ipv);
                 } else {
                     delete ipv;
                 }
@@ -1163,14 +1163,14 @@ QString InstalledPackages::readRegistryDatabase()
 
     this->mutex.lock();
     clearData();
-    for (int i = 0; i < ipvs.count(); i++) {
+    for (int i = 0; i < static_cast<int>(ipvs.size()); i++) {
         InstalledPackageVersion* ipv = ipvs.at(i);
         this->data.insert({PackageVersion::getStringId(ipv->package,
                 ipv->version), ipv->clone()});
     }
     this->mutex.unlock();
 
-    for (int i = 0; i < ipvs.count(); i++) {
+    for (int i = 0; i < static_cast<int>(ipvs.size()); i++) {
         InstalledPackageVersion* ipv = ipvs.at(i);
         fireStatusChanged(ipv->package, ipv->version);
     }

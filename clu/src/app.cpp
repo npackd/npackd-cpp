@@ -204,7 +204,7 @@ int App::remove()
     Package* found = nullptr;
     if (job->shouldProceed()) {
         QRegExp re(title, Qt::CaseInsensitive);
-        for (int i = 0; i < rep.packages.size(); i++) {
+        for (int i = 0; i < static_cast<int>(rep.packages.size()); i++) {
             Package* p = rep.packages.at(i);
             if (re.indexIn(p->title) >= 0) {
                 found = p;
@@ -235,7 +235,7 @@ int App::remove()
 
     PackageVersionFile* pvf = nullptr;
     if (job->shouldProceed()) {
-        for (int j = 0; j < pv->files.size(); j++) {
+        for (int j = 0; j < static_cast<int>(pv->files.size()); j++) {
             if (pv->files.at(j)->path.compare(
                     ".Npackd\\Uninstall.bat",
                     Qt::CaseInsensitive) == 0) {

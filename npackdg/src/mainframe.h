@@ -27,9 +27,9 @@ private:
     bool categoryCombosEvents;
 
     /** ID, COUNT, NAME */
-    QList<QStringList> categories0, categories1;
+    std::vector<QStringList> categories0, categories1;
 
-    QList<Package*> selectedPackages;
+    std::vector<Package*> selectedPackages;
 
     void fillList();
 public:
@@ -43,7 +43,7 @@ public:
      *
      * @return selected packages
      */
-    QList<Package*> getSelectedPackagesInTable() const;
+    std::vector<Package *> getSelectedPackagesInTable() const;
 
     /**
      * @return table with packages
@@ -77,7 +77,7 @@ public:
      * @param level category level (0, 1, ...)
      * @param cats new categories: ID, COUNT, NAME
      */
-    void setCategories(int level, const QList<QStringList> &cats);
+    void setCategories(int level, const std::vector<QStringList> &cats);
 
     /**
      * @brief returns selected category

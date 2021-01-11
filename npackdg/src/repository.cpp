@@ -35,34 +35,34 @@ static bool packageVersionLessThan2(const PackageVersion* a,
     return r < 0;
 }
 
-QList<PackageVersion*> Repository::getPackageVersions(const QString& package)
+std::vector<PackageVersion*> Repository::getPackageVersions(const QString& package)
         const
 {
     auto it = this->package2versions.equal_range(package);
 
-    QList<PackageVersion*> ret;
+    std::vector<PackageVersion*> ret;
     for (auto i = it.first; i != it.second; ++i) {
-        ret.append(i->second);
+        ret.push_back(i->second);
     }
     std::sort(ret.begin(), ret.end(), packageVersionLessThan2);
 
     return ret;
 }
 
-QList<PackageVersion*> Repository::getPackageVersions_(const QString& package,
+std::vector<PackageVersion*> Repository::getPackageVersions_(const QString& package,
         QString *err) const
 {
     *err = "";
 
     auto it = this->package2versions.equal_range(package);
 
-    QList<PackageVersion*> ret;
+    std::vector<PackageVersion*> ret;
     for (auto i = it.first; i != it.second; ++i) {
-        ret.append(i->second);
+        ret.push_back(i->second);
     }
     std::sort(ret.begin(), ret.end(), packageVersionLessThan2);
 
-    for (int i = 0; i < ret.count(); i++) {
+    for (int i = 0; i < static_cast<int>(ret.size()); i++) {
         ret[i] = ret.at(i)->clone();
     }
 
@@ -81,8 +81,8 @@ PackageVersion* Repository::findNewestInstallablePackageVersion(
 {
     PackageVersion* r = nullptr;
 
-    QList<PackageVersion*> pvs = this->getPackageVersions(package);
-    for (int i = 0; i < pvs.count(); i++) {
+    std::vector<PackageVersion*> pvs = this->getPackageVersions(package);
+    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
         PackageVersion* p = pvs.at(i);
         if (r == nullptr || p->version.compare(r->version) > 0) {
             if (p->download.isValid())
@@ -94,7 +94,7 @@ PackageVersion* Repository::findNewestInstallablePackageVersion(
 
 License* Repository::findLicense(const QString& name)
 {
-    for (int i = 0; i < this->licenses.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->licenses.size()); i++) {
         if (this->licenses.at(i)->name == name)
             return this->licenses.at(i);
     }
@@ -103,7 +103,7 @@ License* Repository::findLicense(const QString& name)
 
 Package* Repository::findPackage(const QString& name) const
 {
-    for (int i = 0; i < this->packages.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
         if (this->packages.at(i)->name == name)
             return this->packages.at(i);
     }
@@ -152,8 +152,8 @@ PackageVersion* Repository::findPackageVersion(const QString& package,
 {
     PackageVersion* r = nullptr;
 
-    QList<PackageVersion*> pvs = this->getPackageVersions(package);
-    for (int i = 0; i < pvs.count(); i++) {
+    std::vector<PackageVersion*> pvs = this->getPackageVersions(package);
+    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
         PackageVersion* pv = pvs.at(i);
         if (pv->version.compare(version) == 0) {
             r = pv;
@@ -228,17 +228,17 @@ void Repository::toXML(QXmlStreamWriter &w) const
 {
     w.writeStartElement("repository");
 
-    for (int i = 0; i < this->licenses.size(); i++) {
+    for (int i = 0; i < static_cast<int>(this->licenses.size()); i++) {
         License* lic = this->licenses.at(i);
         lic->toXML(w);
     }
 
-    for (int i = 0; i < this->packages.size(); i++) {
+    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
         Package* p = this->packages.at(i);
         p->toXML(&w);
     }
 
-    for (int i = 0; i < this->packageVersions.size(); i++) {
+    for (int i = 0; i < static_cast<int>(this->packageVersions.size()); i++) {
         PackageVersion* pv = this->packageVersions.at(i);
         pv->toXML(&w);
     }
@@ -252,7 +252,7 @@ QString Repository::saveLicense(License *p, bool replace)
     if (!fp || replace) {
         if (!fp) {
             fp = new License(p->name, p->title);
-            this->licenses.append(fp);
+            this->licenses.push_back(fp);
         }
         fp->title = p->title;
         fp->url = p->url;
@@ -268,7 +268,7 @@ QString Repository::savePackage(Package *p, bool replace)
     if (!fp || replace) {
         if (!fp) {
             fp = new Package(p->name, p->title);
-            this->packages.append(fp);
+            this->packages.push_back(fp);
         }
         fp->title = p->title;
         fp->url = p->url;
@@ -286,7 +286,7 @@ QString Repository::savePackageVersion(PackageVersion *p, bool replace)
     PackageVersion* fp = findPackageVersion(p->package, p->version);
     if (!fp) {
         fp = p->clone();
-        this->packageVersions.append(fp);
+        this->packageVersions.push_back(fp);
         this->package2versions.insert({p->package, fp});
     } else {
         if (replace) {
@@ -300,10 +300,12 @@ QString Repository::savePackageVersion(PackageVersion *p, bool replace)
                 }
             }
 
-            this->packageVersions.removeOne(fp);
+            auto f = std::find(this->packageVersions.begin(), this->packageVersions.end(), fp);
+            if (f != this->packageVersions.end())
+                this->packageVersions.erase(f);
 
             fp = p->clone();
-            this->packageVersions.append(fp);
+            this->packageVersions.push_back(fp);
             this->package2versions.insert({p->package, fp});
         }
     }
@@ -347,14 +349,14 @@ QString Repository::clear()
     return "";
 }
 
-QList<Package*> Repository::findPackagesByShortName(const QString &name) const
+std::vector<Package*> Repository::findPackagesByShortName(const QString &name) const
 {
     QString suffix = "." + name;
-    QList<Package*> r;
-    for (int i = 0; i < this->packages.count(); i++) {
+    std::vector<Package*> r;
+    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
         QString n = this->packages.at(i)->name;
         if (n.endsWith(suffix) || n == name) {
-            r.append(new Package(*this->packages.at(i)));
+            r.push_back(new Package(*this->packages.at(i)));
         }
     }
 

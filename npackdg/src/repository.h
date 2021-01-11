@@ -35,7 +35,7 @@ private:
      *     be freed) sorted by the version number. The first returned object
      *     has the highest version number.
      */
-    QList<PackageVersion*> getPackageVersions(const QString& package) const;
+    std::vector<PackageVersion*> getPackageVersions(const QString& package) const;
 
     /**
      * Find the newest installable package version.
@@ -101,17 +101,17 @@ public:
     /**
      * Package versions. All version numbers should be normalized.
      */
-    QList<PackageVersion*> packageVersions;
+    std::vector<PackageVersion*> packageVersions;
 
     /**
      * Packages.
      */
-    QList<Package*> packages;
+    std::vector<Package*> packages;
 
     /**
      * Licenses.
      */
-    QList<License*> licenses;
+    std::vector<License*> licenses;
 
     /**
      * Creates an empty repository.
@@ -137,7 +137,7 @@ public:
      */
     void toXML(QXmlStreamWriter& w) const;
 
-    QList<PackageVersion*> getPackageVersions_(const QString& package,
+    std::vector<PackageVersion*> getPackageVersions_(const QString& package,
             QString *err) const override;
 
     QString savePackage(Package* p, bool replace) override;
@@ -153,7 +153,7 @@ public:
 
     QString clear() override;
 
-    QList<Package*> findPackagesByShortName(const QString& name) const override;
+    std::vector<Package*> findPackagesByShortName(const QString& name) const override;
 };
 
 #endif // REPOSITORY_H

@@ -41,11 +41,11 @@ PackageItemModel::Info* PackageItemModel::createInfo(
 
     // error is ignored here
     QString err;
-    QList<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &err);
+    std::vector<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &err);
 
     PackageVersion* newestInstallable = nullptr;
     PackageVersion* newestInstalled = nullptr;
-    for (int j = 0; j < pvs.count(); j++) {
+    for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
         PackageVersion* pv = pvs.at(j);
         if (pv->installed()) {
             if (!r->installed.isEmpty())

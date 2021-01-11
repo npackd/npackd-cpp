@@ -217,7 +217,7 @@ void PackageFrame::fillForm(Package* p)
     //        pvs.at(0)->version.getVersionString();
 
     t->setRowCount(pvs.size());
-    for (int i = pvs.count() - 1; i >= 0; i--) {
+    for (int i = static_cast<int>(pvs.size()) - 1; i >= 0; i--) {
         PackageVersion* pv = pvs.at(i);
 
         newItem = new QTableWidgetItem(pv->version.getVersionString());

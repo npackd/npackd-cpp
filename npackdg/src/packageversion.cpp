@@ -196,10 +196,10 @@ bool isFileSafeOfficeAntiVirus(const QString& filename, QString* err)
 }
 */
 
-int PackageVersion::indexOf(const QList<PackageVersion *> &pvs, PackageVersion* f)
+int PackageVersion::indexOf(const std::vector<PackageVersion *> &pvs, PackageVersion* f)
 {
     int r = -1;
-    for (int i = 0; i < pvs.count(); i++) {
+    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
         PackageVersion* pv = pvs.at(i);
         if (pv->package == f->package && pv->version == f->version) {
             r = i;
@@ -721,14 +721,14 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
 }
 
 QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPackages &installed,
-        QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
+        std::vector<InstallOperation*>& ops, std::vector<PackageVersion*>& avoid,
         const QString& where)
 {
     QString res;
 
-    avoid.append(this->clone());
+    avoid.push_back(this->clone());
 
-    for (int i = 0; i < this->dependencies.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
         Dependency* d = this->dependencies.at(i);
         bool depok = installed.isInstalled(*d);
         if (!depok) {
@@ -759,7 +759,7 @@ QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPacka
             */
 
             QString err;
-            QList<PackageVersion*> pvs = rep->findAllMatchesToInstall(
+            std::vector<PackageVersion*> pvs = rep->findAllMatchesToInstall(
                     *d, avoid, &err);
             if (!err.isEmpty()) {
                 res = QString(QObject::tr("Error searching for the dependency matches: %1")).
@@ -767,26 +767,28 @@ QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPacka
                 qDeleteAll(pvs);
                 break;
             }
-            if (pvs.count() == 0) {
+            if (pvs.size() == 0) {
                 res = QString(QObject::tr("Unsatisfied dependency: %1")).
                            arg(rep->toString(*d));
                 break;
             } else {
                 bool found = false;
-                for (int j = 0; j < pvs.count(); j++) {
+                for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
                     PackageVersion* pv = pvs.at(j);
                     InstalledPackages installed2(installed);
-                    int opsCount = ops.count();
-                    int avoidCount = avoid.count();
+                    int opsCount = ops.size();
+                    int avoidCount = avoid.size();
 
                     res = pv->planInstallation(rep, installed2, ops, avoid);
                     if (!res.isEmpty()) {
                         // rollback
-                        while (ops.count() > opsCount) {
-                            delete ops.takeLast();
+                        while (static_cast<int>(ops.size()) > opsCount) {
+                            delete ops.back();
+                            ops.pop_back();
                         }
-                        while (avoid.count() > avoidCount) {
-                            delete avoid.takeLast();
+                        while (static_cast<int>(avoid.size()) > avoidCount) {
+                            delete avoid.back();
+                            avoid.pop_back();
                         }
                     } else {
                         found = true;
@@ -810,7 +812,7 @@ QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPacka
             io->package = this->package;
             io->version = this->version;
             io->where = where;
-            ops.append(io);
+            ops.push_back(io);
 
             QString where2 = where;
             if (where2.isEmpty()) {
@@ -925,10 +927,10 @@ QString PackageVersion::getPackageTitle(
     return pn;
 }
 
-QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const CommandLine& cl,
+std::vector<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const CommandLine& cl,
         QString* err)
 {
-    QList<PackageVersion*> ret;
+    std::vector<PackageVersion*> ret;
     std::vector<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     DBRepository* rep = DBRepository::getDefault();
@@ -1011,7 +1013,7 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
             }
 
             if (pv)
-                ret.append(pv);
+                ret.push_back(pv);
 
             delete p;
         }
@@ -1020,10 +1022,10 @@ QList<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(const Comm
     return ret;
 }
 
-QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(const CommandLine& cl,
+std::vector<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(const CommandLine& cl,
         QString* err)
 {
-    QList<InstalledPackageVersion*> ret;
+    std::vector<InstalledPackageVersion*> ret;
     std::vector<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     InstalledPackages* ip = InstalledPackages::getDefault();
@@ -1088,7 +1090,7 @@ QList<InstalledPackageVersion*> PackageVersion::getPathPackageVersionOptions(con
             }
 
             if (ipv)
-                ret.append(ipv);
+                ret.push_back(ipv);
 
             delete p;
         }
@@ -1138,7 +1140,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
             QString cmdFileName = getCmdFileName(i);
             QString cmdFileNameLC = cmdFileName.toLower();
 
-            QList<PackageVersion*> pvs = dbr->findPackageVersionsWithCmdFile(
+            std::vector<PackageVersion*> pvs = dbr->findPackageVersionsWithCmdFile(
                     cmdFileName, errMsg);
             if (pvs.size() > 0) {
                 PackageVersion* last = nullptr;
@@ -1802,7 +1804,7 @@ QString PackageVersion::addBasicVars(QStringList* env)
 void PackageVersion::addDependencyVars(QStringList* vars)
 {
     InstalledPackages* ip = InstalledPackages::getDefault();
-    for (int i = 0; i < this->dependencies.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
         Dependency* d = this->dependencies.at(i);
         if (!d->var.isEmpty()) {
             vars->append(d->var);
@@ -1824,7 +1826,7 @@ void PackageVersion::addDependencyVars(QStringList* vars)
 QString PackageVersion::saveFiles(const QDir& d)
 {
     QString res;
-    for (int i = 0; i < this->files.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
         PackageVersionFile* f = this->files.at(i);
         QString fullPath = d.absolutePath() + "\\" + f->path;
         QString fullDir = WPMUtils::parentDirectory(fullPath);
@@ -1940,13 +1942,13 @@ PackageVersion* PackageVersion::clone() const
     r->importantFiles = this->importantFiles;
     r->importantFilesTitles = this->importantFilesTitles;
     r->cmdFiles = this->cmdFiles;
-    for (int i = 0; i < this->files.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
         PackageVersionFile* f = this->files.at(i);
-        r->files.append(f->clone());
+        r->files.push_back(f->clone());
     }
-    for (int i = 0; i < dependencies.count(); i++) {
+    for (int i = 0; i < static_cast<int>(dependencies.size()); i++) {
         Dependency* d = this->dependencies.at(i);
-        r->dependencies.append(d->clone());
+        r->dependencies.push_back(d->clone());
     }
 
     r->type = this->type;
@@ -1971,7 +1973,8 @@ PackageVersion *PackageVersion::parse(QByteArray &xml, QString *err,
     *err = handler.parseTopLevelVersion();
     if (err->isEmpty()) {
         if (rep.packageVersions.size() == 1) {
-            r = rep.packageVersions.takeAt(0);
+            r = rep.packageVersions.at(0);
+            rep.packageVersions.erase(rep.packageVersions.begin());
             *err = "";
         } else {
             *err = QObject::tr("Expected one package version");
@@ -1980,7 +1983,7 @@ PackageVersion *PackageVersion::parse(QByteArray &xml, QString *err,
     return r;
 }
 
-bool PackageVersion::contains(const QList<PackageVersion *> &list,
+bool PackageVersion::contains(const std::vector<PackageVersion *> &list,
         PackageVersion *pv)
 {
     return indexOf(list, pv) >= 0;
@@ -2010,7 +2013,7 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeAttribute("path", this->cmdFiles.at(i));
         w->writeEndElement();
     }
-    for (int i = 0; i < this->files.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
         w->writeStartElement("file");
         w->writeAttribute("path", this->files.at(i)->path);
         w->writeCharacters(files.at(i)->content);
@@ -2026,7 +2029,7 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         else
             w->writeTextElement("hash-sum", this->sha1);
     }
-    for (int i = 0; i < this->dependencies.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
         Dependency* d = this->dependencies.at(i);
         w->writeStartElement("dependency");
         w->writeAttribute("package", d->package);
@@ -2076,9 +2079,9 @@ void PackageVersion::toJSON(QJsonObject& w) const
         w["cmdFiles"] = a;
     }
 
-    if (!files.isEmpty()) {
+    if (files.size() > 0) {
         QJsonArray path;
-        for (int i = 0; i < this->files.count(); i++) {
+        for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
             QJsonObject obj;
             obj["path"] = this->files.at(i)->path;
             obj["content"] = files.at(i)->content;
@@ -2097,9 +2100,9 @@ void PackageVersion::toJSON(QJsonObject& w) const
             w["hashSum"] = this->sha1;
     }
 
-    if (dependencies.count() > 0) {
+    if (dependencies.size() > 0) {
         QJsonArray dependency;
-        for (int i = 0; i < this->dependencies.count(); i++) {
+        for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
             Dependency* d = this->dependencies.at(i);
             QJsonObject obj;
             obj["package"] = d->package;
@@ -2120,7 +2123,7 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
 {
     PackageVersionFile* r = nullptr;
     QString lowerPath = path.toLower();
-    for (int i = 0; i < this->files.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
         PackageVersionFile* pvf = this->files.at(i);
         if (pvf->path.toLower() == lowerPath) {
             r = pvf;

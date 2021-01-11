@@ -58,7 +58,7 @@ public:
      * @param ops a list of operations. The list will be modified and
      *     unnecessary operations removed and the objects destroyed.
      */
-    static void simplify(QList<InstallOperation*> ops);
+    static void simplify(std::vector<InstallOperation *> ops);
 };
 
 #endif // INSTALLOPERATION_H

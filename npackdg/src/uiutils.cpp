@@ -46,12 +46,12 @@ QString UIUtils::createPackageVersionsHTML(const QStringList& names)
 }
 
 bool UIUtils::confirmInstallOperations(QWidget* parent,
-        QList<InstallOperation*> &install, QString* title, QString* err)
+        std::vector<InstallOperation*> &install, QString* title, QString* err)
 {
-    QList<PackageVersion*> pvs;
+    std::vector<PackageVersion*> pvs;
 
     // fetch package versions
-    for (int j = 0; j < install.size(); j++) {
+    for (int j = 0; j < static_cast<int>(install.size()); j++) {
         InstallOperation* op = install.at(j);
         PackageVersion* pv = op->findPackageVersion(err);
         if (!err->isEmpty()) {
@@ -59,12 +59,12 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                     pv->toString()).arg(*err);
             break;
         }
-        pvs.append(pv);
+        pvs.push_back(pv);
     }
 
     // check for locked package versions
     if (err->isEmpty()) {
-        for (int j = 0; j < pvs.size(); j++) {
+        for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
             PackageVersion* pv = pvs.at(j);
             if (pv->isLocked()) {
                 *err = QObject::tr("The package %1 is locked by a currently running installation/removal.").
@@ -75,22 +75,22 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
     }
 
     // list of used package versions
-    QList<bool> used;
-    used.reserve(install.count());
-    for (int i = 0; i < install.count(); i++) {
-        used.append(false);
+    std::vector<bool> used;
+    used.reserve(install.size());
+    for (int i = 0; i < static_cast<int>(install.size()); i++) {
+        used.push_back(false);
     }
 
     // find updates
     QStringList updateNames;
     if (err->isEmpty()) {
-        for (int i = 0; i < install.count(); i++) {
+        for (int i = 0; i < static_cast<int>(install.size()); i++) {
             if (used[i])
                 continue;
 
             InstallOperation* op = install.at(i);
             if (!op->install) {
-                for (int j = 0; j < install.count(); j++) {
+                for (int j = 0; j < static_cast<int>(install.size()); j++) {
                     if (used[j] || j == i)
                         continue;
 
@@ -111,7 +111,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
     // find uninstalls
     QStringList uninstallNames;
     if (err->isEmpty()) {
-        for (int i = 0; i < install.count(); i++) {
+        for (int i = 0; i < static_cast<int>(install.size()); i++) {
             if (used[i])
                 continue;
 
@@ -126,7 +126,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
     // find installs
     QStringList installNames;
     if (err->isEmpty()) {
-        for (int i = 0; i < install.count(); i++) {
+        for (int i = 0; i < static_cast<int>(install.size()); i++) {
             if (used[i])
                 continue;
 
@@ -312,7 +312,7 @@ bool UIUtils::confirm(QWidget* parent, QString title, QString text,
 }
 
 void UIUtils::processWithSelfUpdate(Job* job,
-        QList<InstallOperation*> &ops, DWORD programCloseType)
+        std::vector<InstallOperation*> &ops, DWORD programCloseType)
 {
     QString newExe;
 
@@ -351,7 +351,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
         QString pct = WPMUtils::programCloseType2String(programCloseType);
         QStringList batch;
-        for (int i = 0; i < ops.count(); i++) {
+        for (int i = 0; i < static_cast<int>(ops.size()); i++) {
             InstallOperation* op = ops.at(i);
             QString oneCmd = "\"" + newExe + "\" ";
 
@@ -508,21 +508,21 @@ void UIUtils::chooseAccelerators(QWidget *w, const QString& ignore)
 {
     QList<QWidget*> widgets = w->findChildren<QWidget*>();
 
-    QList<QWidget*> used;
+    std::vector<QWidget*> used;
     QStringList usedTexts;
     for (int i = 0; i < widgets.count(); i++) {
         QWidget* w = widgets.at(i);
 
         QLabel *label = dynamic_cast<QLabel*>(w);
         if (label) {
-            used.append(label);
+            used.push_back(label);
             usedTexts.append(label->text());
             continue;
         }
 
         QAbstractButton *button= dynamic_cast<QAbstractButton*>(w);
         if (button) {
-            used.append(button);
+            used.push_back(button);
             usedTexts.append(button->text());
             continue;
         }
@@ -530,7 +530,7 @@ void UIUtils::chooseAccelerators(QWidget *w, const QString& ignore)
 
     chooseAccelerators(&usedTexts, ignore);
 
-    for (int i = 0; i < used.count(); i++) {
+    for (int i = 0; i < static_cast<int>(used.size()); i++) {
         QWidget* w = used.at(i);
 
         QLabel *label = dynamic_cast<QLabel*>(w);

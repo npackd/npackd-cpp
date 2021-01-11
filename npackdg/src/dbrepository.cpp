@@ -281,11 +281,11 @@ Package *DBRepository::findPackage_(const QString &name) const
     return r;
 }
 
-QList<Package*> DBRepository::findPackages(const QStringList& names)
+std::vector<Package*> DBRepository::findPackages(const QStringList& names)
 {
     QMutexLocker ml(&this->mutex);
 
-    QList<Package*> ret;
+    std::vector<Package*> ret;
     QString err;
 
     int start = 0;
@@ -319,7 +319,7 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
         if (!err.isEmpty())
             break;
 
-        QList<Package*> list;
+        std::vector<Package*> list;
         while (q.next()) {
             QString name = q.value(0).toString();
             Package* r = new Package(name, name);
@@ -340,16 +340,16 @@ QList<Package*> DBRepository::findPackages(const QStringList& names)
             if (!err.isEmpty())
                 break;
 
-            list.append(r);
+            list.push_back(r);
         }
 
         for (int i = start; i < std::min<int>(start + block, c); i++) {
             QString find = names.at(i);
-            for (int j = 0; j < list.count(); j++) {
+            for (int j = 0; j < static_cast<int>(list.size()); j++) {
                 Package* p = list.at(j);
                 if (p->name == find) {
-                    list.removeAt(j);
-                    ret.append(p);
+                    list.erase(list.begin() + j);
+                    ret.push_back(p);
                     break;
                 }
             }
@@ -412,20 +412,20 @@ PackageVersion* DBRepository::findPackageVersion_(
     return r;
 }
 
-QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
+std::vector<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         QString *err) const
 {
     QMutexLocker ml(&this->mutex);
 
     *err = "";
 
-    QList<PackageVersion*> r;
+    std::vector<PackageVersion*> r;
 
     PackageVersionList* pvl = packageVersions.object(package);
     if (pvl) {
         r.reserve(pvl->data.size());
-        for (int i = 0; i < pvl->data.size(); i++) {
-            r.append(pvl->data.at(i)->clone());
+        for (int i = 0; i < static_cast<int>(pvl->data.size()); i++) {
+            r.push_back(pvl->data.at(i)->clone());
         }
     } else {
         MySQLQuery q(db);
@@ -445,7 +445,7 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
             PackageVersion* pv = PackageVersion::parse(ba,
                     err, false);
             if (err->isEmpty())
-                r.append(pv);
+                r.push_back(pv);
         }
 
         // qCDebug(npackd) << vs.count();
@@ -455,8 +455,8 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         if (err->isEmpty()) {
             pvl = new PackageVersionList();
             pvl->data.reserve(r.size());
-            for (int i = 0; i < r.size(); i++) {
-                pvl->data.append(r.at(i)->clone());
+            for (int i = 0; i < static_cast<int>(r.size()); i++) {
+                pvl->data.push_back(r.at(i)->clone());
             }
             this->packageVersions.insert(package, pvl);
         }
@@ -465,14 +465,14 @@ QList<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
     return r;
 }
 
-QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
+std::vector<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
         const QString &name, QString *err) const
 {
     QMutexLocker ml(&this->mutex);
 
     *err = "";
 
-    QList<PackageVersion*> r;
+    std::vector<PackageVersion*> r;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral("SELECT CONTENT FROM PACKAGE_VERSION PV "
@@ -494,7 +494,7 @@ QList<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
         PackageVersion* pv = PackageVersion::parse(ba,
                 err);
         if (err->isEmpty())
-            r.append(pv);
+            r.push_back(pv);
     }
 
     // qCDebug(npackd) << vs.count();
@@ -632,7 +632,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
         QString where = QStringLiteral("select name from package "
                 "where name not like 'msi.%' "
                 "and name not like 'control-panel.%'");
-        QList<QVariant> params;
+        std::vector<QVariant> params;
 
         for (int i = 0; i < keywords.count(); i++) {
             QString kw = keywords.at(i);
@@ -641,7 +641,7 @@ QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
                     where += QStringLiteral(" AND ");
                 where += QStringLiteral("TITLE_FULLTEXT LIKE :TITLE_FULLTEXT") +
                         QString::number(i);
-                params.append(QStringLiteral("% ") + kw +
+                params.push_back(QStringLiteral("% ") + kw +
                         QStringLiteral(" %"));
             }
         }
@@ -670,7 +670,7 @@ int DBRepository::getMaxStars(QString* err)
 
 QString DBRepository::createQuery(Package::Status minStatus,
       Package::Status maxStatus,
-      const QString& query, int cat0, int cat1, QList<QVariant>& params) const
+      const QString& query, int cat0, int cat1, std::vector<QVariant>& params) const
 {
     QString where;
 
@@ -699,7 +699,7 @@ QString DBRepository::createQuery(Package::Status minStatus,
             where += QStringLiteral("FULLTEXT LIKE :FULLTEXT") +
                     QString::number(i);
         }
-        params.append(QStringLiteral("%") + kw.toLower() +
+        params.push_back(QStringLiteral("%") + kw.toLower() +
                 QStringLiteral("%"));
     }
     if (minStatus < maxStatus) {
@@ -708,8 +708,8 @@ QString DBRepository::createQuery(Package::Status minStatus,
 
         where += QStringLiteral("STATUS >= :MINSTATUS AND STATUS < :MAXSTATUS");
 
-        params.append(QVariant(static_cast<int>(minStatus)));
-        params.append(QVariant(static_cast<int>(maxStatus)));
+        params.push_back(QVariant(static_cast<int>(minStatus)));
+        params.push_back(QVariant(static_cast<int>(maxStatus)));
     }
 
     if (cat0 == 0) {
@@ -720,7 +720,7 @@ QString DBRepository::createQuery(Package::Status minStatus,
         if (!where.isEmpty())
             where += QStringLiteral(" AND ");
         where += QStringLiteral("CATEGORY0 = :CATEGORY0");
-        params.append(QVariant(cat0));
+        params.push_back(QVariant(cat0));
     }
 
     if (cat1 == 0) {
@@ -731,7 +731,7 @@ QString DBRepository::createQuery(Package::Status minStatus,
         if (!where.isEmpty())
             where += QStringLiteral(" AND ");
         where += QStringLiteral("CATEGORY1 = :CATEGORY1");
-        params.append(QVariant(cat1));
+        params.push_back(QVariant(cat1));
     }
 
     return where;
@@ -743,7 +743,7 @@ QStringList DBRepository::findPackages(Package::Status minStatus,
 {
     // qCDebug(npackd) << "DBRepository::findPackages.0";
 
-    QList<QVariant> params;
+    std::vector<QVariant> params;
     QString where = createQuery(minStatus, maxStatus, query, cat0, cat1, params);
 
     if (!where.isEmpty())
@@ -783,13 +783,13 @@ QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
     return r;
 }
 
-QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
+std::vector<QStringList> DBRepository::findCategories(Package::Status minStatus,
         Package::Status maxStatus,
         const QString& query, int level, int cat0, int cat1, QString *err) const
 {
     // qCDebug(npackd) << "DBRepository::findPackages.0";
 
-    QList<QVariant> params;
+    std::vector<QVariant> params;
     QString where = createQuery(minStatus, maxStatus, query, cat0, cat1, params);
 
     if (!where.isEmpty())
@@ -811,12 +811,12 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
         *err = SQLUtils::getErrorString(q);
 
     if (err->isEmpty()) {
-        for (int i = 0; i < params.count(); i++) {
+        for (int i = 0; i < static_cast<int>(params.size()); i++) {
             q.bindValue(i, params.at(i));
         }
     }
 
-    QList<QStringList> r;
+    std::vector<QStringList> r;
     if (err->isEmpty()) {
         if (!q.exec())
             *err = SQLUtils::getErrorString(q);
@@ -826,7 +826,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
             sl.append(q.value(0).toString());
             sl.append(q.value(1).toString());
             sl.append(q.value(2).toString());
-            r.append(sl);
+            r.push_back(sl);
         }
     }
 
@@ -834,7 +834,7 @@ QList<QStringList> DBRepository::findCategories(Package::Status minStatus,
 }
 
 QStringList DBRepository::findPackagesWhere(const QString& sql,
-        const QList<QVariant>& params,
+        const std::vector<QVariant>& params,
         QString *err) const
 {
     QMutexLocker ml(&this->mutex);
@@ -848,7 +848,7 @@ QStringList DBRepository::findPackagesWhere(const QString& sql,
         *err = SQLUtils::getErrorString(q);
 
     if (err->isEmpty()) {
-        for (int i = 0; i < params.count(); i++) {
+        for (int i = 0; i < static_cast<int>(params.size()); i++) {
             q.bindValue(i, params.at(i));
         }
     }
@@ -1260,13 +1260,13 @@ QString DBRepository::savePackage(Package *p, bool replace)
     return err;
 }
 
-QList<Package*> DBRepository::findPackagesByShortName(const QString &name) const
+std::vector<Package*> DBRepository::findPackagesByShortName(const QString &name) const
 {
     QMutexLocker ml(&this->mutex);
 
     QString err;
 
-    QList<Package*> r;
+    std::vector<Package*> r;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral("SELECT NAME, TITLE, URL, ICON, "
@@ -1302,7 +1302,7 @@ QList<Package*> DBRepository::findPackagesByShortName(const QString &name) const
         if (err.isEmpty())
             err = readLinks(p);
 
-        r.append(p);
+        r.push_back(p);
     }
 
     return r;
@@ -1314,7 +1314,7 @@ QString DBRepository::readLinks(Package* p) const
 
     QString err;
 
-    QList<Package*> r;
+    std::vector<Package*> r;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral("SELECT REL, HREF "
@@ -1341,7 +1341,7 @@ QString DBRepository::readTags(Package* p) const
 
     QString err;
 
-    QList<Package*> r;
+    std::vector<Package*> r;
 
     MySQLQuery q(db);
     if (!q.prepare(QStringLiteral("SELECT VALUE "
@@ -1570,14 +1570,14 @@ void DBRepository::clearCache()
     readCategories();
 }
 
-void DBRepository::load(Job* job, const QList<QUrl *> &repositories, bool useCache, bool interactive,
+void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool useCache, bool interactive,
         const QString &user, const QString &password,
         const QString &proxyUser, const QString &proxyPassword)
 {
     QString err;
-    if (repositories.count() > 0) {
+    if (repositories.size() > 0) {
         QStringList reps;
-        for (int i = 0; i < repositories.size(); i++) {
+        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
             reps.append(repositories.at(i)->toString(QUrl::FullyEncoded));
         }
 
@@ -1587,8 +1587,8 @@ void DBRepository::load(Job* job, const QList<QUrl *> &repositories, bool useCac
                     QObject::tr("Error saving the list of repositories in the database: %1").arg(
                     err));
 
-        QList<QFuture<QTemporaryFile*> > files;
-        for (int i = 0; i < repositories.count(); i++) {
+        std::vector<QFuture<QTemporaryFile*> > files;
+        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
             QUrl* url = repositories.at(i);
             Job* s = job->newSubJob(0.1,
                     QObject::tr("Downloading %1").
@@ -1603,23 +1603,23 @@ void DBRepository::load(Job* job, const QList<QUrl *> &repositories, bool useCac
             request.interactive = interactive;
             QFuture<QTemporaryFile*> future = QtConcurrent::run(
                     Downloader::downloadToTemporary, s, request);
-            files.append(future);
+            files.push_back(future);
         }
 
-        for (int i = 0; i < repositories.count(); i++) {
+        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
             files[i].waitForFinished();
 
-            job->setProgress((i + 1.0) / repositories.count() * 0.5);
+            job->setProgress((i + 1.0) / repositories.size() * 0.5);
         }
 
-        for (int i = 0; i < repositories.count(); i++) {
+        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
             if (!job->shouldProceed())
                 break;
 
             QTemporaryFile* tf = files.at(i).result();
-            Job* s = job->newSubJob(0.49 / repositories.count(), QString(
+            Job* s = job->newSubJob(0.49 / repositories.size(), QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
-                    arg(repositories.count()));
+                    arg(repositories.size()));
             this->currentRepository = i;
             // this is currently unnecessary clearRepository(i);
             loadOne(s, tf, *repositories.at(i));
@@ -1632,7 +1632,7 @@ void DBRepository::load(Job* job, const QList<QUrl *> &repositories, bool useCac
             }
         }
 
-        for (int i = 0; i < repositories.count(); i++) {
+        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
             if (!job->shouldProceed())
                 break;
 
@@ -1703,7 +1703,7 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
 }
 
 void DBRepository::clearAndDownloadRepositories(Job* job,
-        const QList<QUrl *> &repositories,
+        const std::vector<QUrl *> &repositories,
         bool interactive, const QString &user,
         const QString &password, const QString &proxyUser,
         const QString &proxyPassword, bool useCache, bool detect)
@@ -1873,7 +1873,7 @@ void DBRepository::updateF5Runnable(Job *job, bool useCache)
         }
     }
 
-    QList<QUrl*> urls;
+    std::vector<QUrl*> urls;
     if (job->shouldProceed()) {
         QString err;
         urls = PackageUtils::getRepositoryURLs(&err);
@@ -1996,7 +1996,7 @@ void DBRepository::updateStatusForInstalled(Job* job)
 QString DBRepository::savePackages(Repository* r, bool replace)
 {
     QString err;
-    for (int i = 0; i < r->packages.count(); i++) {
+    for (int i = 0; i < static_cast<int>(r->packages.size()); i++) {
         Package* p = r->packages.at(i);
         err = savePackage(p, replace);
         if (!err.isEmpty())
@@ -2009,7 +2009,7 @@ QString DBRepository::savePackages(Repository* r, bool replace)
 QString DBRepository::saveLicenses(Repository* r, bool replace)
 {
     QString err;
-    for (int i = 0; i < r->licenses.count(); i++) {
+    for (int i = 0; i < static_cast<int>(r->licenses.size()); i++) {
         License* p = r->licenses.at(i);
         err = saveLicense(p, replace);
         if (!err.isEmpty())
@@ -2022,7 +2022,7 @@ QString DBRepository::saveLicenses(Repository* r, bool replace)
 QString DBRepository::savePackageVersions(Repository* r, bool replace)
 {
     QString err;
-    for (int i = 0; i < r->packageVersions.count(); i++) {
+    for (int i = 0; i < static_cast<int>(r->packageVersions.size()); i++) {
         PackageVersion* p = r->packageVersions.at(i);
         err = savePackageVersion(p, replace);
         if (!err.isEmpty())
@@ -2201,11 +2201,11 @@ QString DBRepository::updateStatus(const QString& package)
 
     QString err;
 
-    QList<PackageVersion*> pvs = getPackageVersions_(package, &err);
+    std::vector<PackageVersion*> pvs = getPackageVersions_(package, &err);
     PackageVersion* newestInstallable = nullptr;
     PackageVersion* newestInstalled = nullptr;
     if (err.isEmpty()) {
-        for (int j = 0; j < pvs.count(); j++) {
+        for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
             PackageVersion* pv = pvs.at(j);
             if (pv->installed()) {
                 if (!newestInstalled ||

@@ -147,7 +147,7 @@ public:
      * @param f search for this object
      * @return index of the found object or -1
      */
-    static int indexOf(const QList<PackageVersion*>& pvs, PackageVersion* f);
+    static int indexOf(const std::vector<PackageVersion*>& pvs, PackageVersion* f);
 
     /**
      * @param package package name will be stored here or "" if none
@@ -171,7 +171,7 @@ public:
      * @param pv searching for this package version
      * @return true if the list contains the specified package version
      */
-    static bool contains(const QList<PackageVersion*>& list,
+    static bool contains(const std::vector<PackageVersion*>& list,
             PackageVersion* pv);
 
     /**
@@ -181,7 +181,7 @@ public:
      * @param err errors will be stored here
      * @return [move] list of package versions
      */
-    static QList<PackageVersion *> getRemovePackageVersionOptions(
+    static std::vector<PackageVersion *> getRemovePackageVersionOptions(
             const CommandLine &cl, QString *err);
 
     /**
@@ -191,7 +191,7 @@ public:
      * @param err errors will be stored here
      * @return [move] list of installed package versions
      */
-    static QList<InstalledPackageVersion *> getPathPackageVersionOptions(
+    static std::vector<InstalledPackageVersion *> getPathPackageVersionOptions(
             const CommandLine &cl, QString *err);
 
     /** package version */
@@ -212,12 +212,12 @@ public:
     /**
      * Text files.
      */
-    QList<PackageVersionFile*> files;
+    std::vector<PackageVersionFile*> files;
 
     /**
      * Dependencies.
      */
-    QList<Dependency*> dependencies;
+    std::vector<Dependency*> dependencies;
 
     /** 0 = zip file, 1 = one file, 2 = Inno Setup */
     Type type;
@@ -333,7 +333,7 @@ public:
      * @return error message or ""
      */
     QString planInstallation(AbstractRepository *rep, InstalledPackages& installed,
-            QList<InstallOperation*>& ops, QList<PackageVersion*>& avoid,
+            std::vector<InstallOperation*>& ops, std::vector<PackageVersion*>& avoid,
             const QString &where="");
 
     /**

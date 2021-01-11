@@ -147,16 +147,14 @@ bool RepositoriesItemModel::moveRows(const QModelIndex &sourceParent, int source
         int count, const QModelIndex &destinationParent, int destinationChild)
 {
     beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild);
-    if (destinationChild > sourceRow) {
-        this->entries.move(sourceRow, destinationChild - 1); // only count = 1!
-    } else {
-        this->entries.move(sourceRow, destinationChild); // only count = 1!
-    }
+    auto v = this->entries.at(sourceRow);
+    this->entries.erase(this->entries.begin() + sourceRow);
+    this->entries.insert(this->entries.begin() + destinationChild, v);
     endMoveRows();
     return true;
 }
 
-void RepositoriesItemModel::setURLs(const QList<Entry*> &entries)
+void RepositoriesItemModel::setURLs(const std::vector<Entry*> &entries)
 {
     this->beginResetModel();
     qDeleteAll(this->entries);
@@ -170,19 +168,20 @@ void RepositoriesItemModel::add()
     this->beginInsertRows(QModelIndex(), 0, 0);
     Entry* e = new Entry();
     e->enabled = true;
-    this->entries.insert(0, e);
+    this->entries.insert(this->entries.begin(), e);
     this->endInsertRows();
 }
 
 void RepositoriesItemModel::remove(int row)
 {
     this->beginRemoveRows(QModelIndex(), row, row);
-    Entry* e = this->entries.takeAt(row);
+    Entry* e = this->entries.at(row);
     delete e;
+    this->entries.erase(this->entries.begin() + row);
     this->endRemoveRows();
 }
 
-QList<RepositoriesItemModel::Entry *> RepositoriesItemModel::getEntries()
+std::vector<RepositoriesItemModel::Entry *> RepositoriesItemModel::getEntries()
 {
     return entries;
 }

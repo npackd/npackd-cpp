@@ -46,11 +46,11 @@ std::tuple<QStringList, QStringList, bool, QString> PackageUtils::getRepositoryU
     return std::make_tuple(urls, comments, keyExists, err);
 }
 
-QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
+std::vector<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
         const DBRepository& dbr, const CommandLine& cl,
         QString* err)
 {
-    QList<PackageVersion*> ret;
+    std::vector<PackageVersion*> ret;
     std::vector<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     InstalledPackages* ip = InstalledPackages::getDefault();
@@ -112,7 +112,7 @@ QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
                             delete ipv;
                         } else {
                             pv = dbr.findBestMatchToInstall(v,
-                                    QList<PackageVersion*>(), err);
+                                    std::vector<PackageVersion*>(), err);
                             if (err->isEmpty()) {
                                 if (!pv) {
                                     *err = QObject::tr("Package version not found: %1 (%2) %3").
@@ -151,7 +151,7 @@ QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
             }
 
             if (pv)
-                ret.append(pv);
+                ret.push_back(pv);
 
             delete p;
         }
@@ -160,11 +160,11 @@ QList<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
     return ret;
 }
 
-QList<Dependency *> PackageUtils::getPackageVersionOptions(const CommandLine &cl, QString *err)
+std::vector<Dependency *> PackageUtils::getPackageVersionOptions(const CommandLine &cl, QString *err)
 {
     DBRepository* dbr = DBRepository::getDefault();
 
-    QList<Dependency*> ret;
+    std::vector<Dependency*> ret;
     std::vector<CommandLine::ParsedOption *> pos = cl.getParsedOptions();
 
     for (int i = 0; i < static_cast<int>(pos.size()); i++) {
@@ -228,7 +228,7 @@ QList<Dependency *> PackageUtils::getPackageVersionOptions(const CommandLine &cl
                     }
                 }
                 if (dep)
-                    ret.append(dep);
+                    ret.push_back(dep);
             }
 
             delete p;
@@ -451,18 +451,18 @@ void PackageUtils::setCloseProcessType(DWORD cpt)
     }
 }
 
-QList<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
+std::vector<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
 {
     QStringList reps, comments;
     std::tie(reps, comments, *err) = getRepositoryURLsAndComments();
 
-    QList<QUrl*> r;
+    std::vector<QUrl*> r;
     if (err->isEmpty()) {
         for (int i = 0; i < reps.count(); i++) {
             QUrl* url = new QUrl(reps.at(i));
             if (url->scheme() == "file")
                 *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
-            r.append(url);
+            r.push_back(url);
         }
     }
 
@@ -511,12 +511,12 @@ std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAnd
         save = true;
     }
 
-    QList<QUrl*> r;
+    std::vector<QUrl*> r;
     for (int i = 0; i < urls.count(); i++) {
         QUrl* url = new QUrl(urls.at(i));
         if (url->scheme() == "file")
             *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
-        r.append(url);
+        r.push_back(url);
     }
 
     if (save)
@@ -528,11 +528,11 @@ std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAnd
     return std::make_tuple(urls, comments, err);
 }
 
-void PackageUtils::setRepositoryURLs(QList<QUrl *> &urls, QString *err)
+void PackageUtils::setRepositoryURLs(std::vector<QUrl *> &urls, QString *err)
 {
     QStringList reps;
     QStringList comments;
-    for (int i = 0; i < urls.size(); i++) {
+    for (int i = 0; i < static_cast<int>(urls.size()); i++) {
         reps.append(urls.at(i)->toString(QUrl::FullyEncoded));
         comments.append(QString());
     }

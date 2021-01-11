@@ -1199,16 +1199,16 @@ std::vector<HWND> WPMUtils::findTopWindows()
     return r;
 }
 
-QList<HWND> WPMUtils::findProcessTopWindows(DWORD processID)
+std::vector<HWND> WPMUtils::findProcessTopWindows(DWORD processID)
 {
-    QList<HWND> r;
+    std::vector<HWND> r;
 
     std::vector<HWND> tws = findTopWindows();
 
     for (int i = 0; i < static_cast<int>(tws.size()); i++) {
         DWORD pid;
         if (GetWindowThreadProcessId(tws[i], &pid) && pid == processID) {
-            r.append(tws.at(i));
+            r.push_back(tws.at(i));
         }
     }
 
@@ -1388,22 +1388,22 @@ QString WPMUtils::findService(DWORD processId, QString* err)
     return r;
 }
 
-QList<HANDLE> WPMUtils::getAllProcessHandlesLockingDirectory(const QString& dir)
+std::vector<HANDLE> WPMUtils::getAllProcessHandlesLockingDirectory(const QString& dir)
 {
-    QList<HANDLE> ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
+    std::vector<HANDLE> ps0 = WPMUtils::getProcessHandlesLockingDirectory(dir);
 
     //qCDebug(npackd) << "getProcessHandlesLockingDirectory";
 
-    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
+    std::vector<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory2(dir);
 
-    ps.append(ps0);
+    ps.insert(ps.end(), ps0.begin(), ps0.end());
 
     return ps;
 }
 
-void WPMUtils::closeHandles(const QList<HANDLE> handles)
+void WPMUtils::closeHandles(const std::vector<HANDLE> handles)
 {
-    for (int i = 0; i < handles.size(); i++) {
+    for (int i = 0; i < static_cast<int>(handles.size()); i++) {
         CloseHandle(handles[i]);
     }
 }
@@ -1433,7 +1433,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     //QString f = dir + "\\abc.txt";
     //test((PCWSTR) f.utf16());
 
-    QList<HANDLE> ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
+    std::vector<HANDLE> ps = WPMUtils::getAllProcessHandlesLockingDirectory(dir);
 
     qCDebug(npackd) << "Closing processes locking " <<
             dir << " with " << cpt << ": " << ps.size() << " processes";
@@ -1448,10 +1448,10 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     if (cpt & CLOSE_WINDOW) {
         bool changed = false;
-        for (int i = 0; i < ps.size(); i++) {
+        for (int i = 0; i < static_cast<int>(ps.size()); i++) {
             HANDLE p = ps.at(i);
             if (GetProcessId(p) != me && !pathEquals(explorer, getProcessFile(p))) {
-                QList<HWND> ws = findProcessTopWindows(GetProcessId(p));
+                std::vector<HWND> ws = findProcessTopWindows(GetProcessId(p));
                 if (ws.size() > 0) {
                     closeProcessWindows(p, ws);
                     changed = true;
@@ -1469,7 +1469,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     if (cpt & CTRL_C) {
         bool changed = false;
-        for (int i = 0; i < ps.size(); i++) {
+        for (int i = 0; i < static_cast<int>(ps.size()); i++) {
             HANDLE hProc = ps.at(i);
             DWORD processId = GetProcessId(hProc);
 
@@ -1496,7 +1496,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
 
     if (cpt & KILL_PROCESS) {
         bool changed = false;
-        for (int i = 0; i < ps.size(); i++) {
+        for (int i = 0; i < static_cast<int>(ps.size()); i++) {
             HANDLE hProc = ps.at(i);
             DWORD processId = GetProcessId(hProc);
 
@@ -1541,7 +1541,7 @@ void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
     }
 
     if (cpt & STOP_SERVICES) {
-        for (int i = 0; i < ps.size(); i++) {
+        for (int i = 0; i < static_cast<int>(ps.size()); i++) {
             HANDLE hProc = ps.at(i);
             DWORD processId = GetProcessId(hProc);
 
@@ -1569,15 +1569,15 @@ QString WPMUtils::findFirstExeLockingDirectory(const QString &dir)
 {
     QString r;
 
-    QList<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
+    std::vector<HANDLE> ps = WPMUtils::getProcessHandlesLockingDirectory(dir);
 
-    for (int i = 0; i < ps.size(); i++) {
+    for (int i = 0; i < static_cast<int>(ps.size()); i++) {
         r = WPMUtils::getProcessFile(ps.at(i));
         if (!r.isEmpty())
             break;
     }
 
-    for (int i = 0; i < ps.size(); i++) {
+    for (int i = 0; i < static_cast<int>(ps.size()); i++) {
         CloseHandle(ps[i]);
     }
 
@@ -1609,10 +1609,10 @@ QString WPMUtils::getHostName()
 #endif
 
 void WPMUtils::closeProcessWindows(HANDLE process,
-        const QList<HWND>& processWindows)
+        const std::vector<HWND>& processWindows)
 {
     // start flashing
-    for (int i = 0; i < processWindows.size(); i++) {
+    for (int i = 0; i < static_cast<int>(processWindows.size()); i++) {
         HWND w = processWindows.at(i);
         if (w != nullptr && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
@@ -1628,11 +1628,11 @@ void WPMUtils::closeProcessWindows(HANDLE process,
         }
     }
 
-    QList<HWND> ws = processWindows;
+    std::vector<HWND> ws = processWindows;
     int old = ws.size();
     while (true) {
         int c = 0;
-        for (int i = 0; i < ws.size(); i++) {
+        for (int i = 0; i < static_cast<int>(ws.size()); i++) {
             HWND w = ws.at(i);
             if (w) {
                 if (!IsWindow(w) ||
@@ -1664,7 +1664,7 @@ void WPMUtils::closeProcessWindows(HANDLE process,
     }
 
     // stop flashing
-    for (int i = 0; i < processWindows.size(); i++) {
+    for (int i = 0; i < static_cast<int>(processWindows.size()); i++) {
         HWND w = processWindows.at(i);
         if (w != nullptr && IsWindow(w) &&
                 GetAncestor(w, GA_PARENT) == GetDesktopWindow() &&
@@ -1721,9 +1721,9 @@ std::vector<DWORD> WPMUtils::getProcessIDs()
     return r;
 }
 
-QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
+std::vector<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
 {
-    QList<HANDLE> r;
+    std::vector<HANDLE> r;
 
     std::vector<DWORD> aiPID = getProcessIDs();
 
@@ -1781,7 +1781,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory(const QString& dir)
             }
 
             if (found) {
-                r.append(hProc);
+                r.push_back(hProc);
                 hProc = nullptr;
             } else {
                 CloseHandle(hProc);
@@ -1951,10 +1951,10 @@ void MyThread::run()
 }
 
 
-QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
+std::vector<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
     std::unordered_map<QString, QString> devices2drives = mapDevices2Drives();
 
-    QList<HANDLE> result;
+    std::vector<HANDLE> result;
 
     HMODULE module = GetModuleHandleA("ntdll.dll");
     if (module == nullptr) {
@@ -2099,7 +2099,7 @@ QList<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
 
                     if (QFileInfo(name).exists() &&
                             WPMUtils::isUnderOrEquals(name, dir)) {
-                        result.append(processHandle);
+                        result.push_back(processHandle);
                         processHandle = INVALID_HANDLE_VALUE;
                         usedProcessIds.insert(handle.ProcessId);
                     }

@@ -9,8 +9,8 @@ DISMThirdPartyPM::DISMThirdPartyPM()
 {
 }
 
-void DISMThirdPartyPM::scan(Job *job,
-        std::vector<InstalledPackageVersion *> *installed, Repository *rep) const
+void DISMThirdPartyPM::scan(Job * /*job*/,
+        std::vector<InstalledPackageVersion *> * /*installed*/, Repository * /*rep*/) const
 {
     if (initializationStatus == 0) {
         HMODULE dismapi = LoadLibraryA("DismApi.dll");

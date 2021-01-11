@@ -30,7 +30,7 @@ public:
      * @param programCloseType how to close processes
      */
     static void processWithSelfUpdate(Job *job,
-            QList<InstallOperation *> &install, DWORD programCloseType);
+            std::vector<InstallOperation *> &install, DWORD programCloseType);
 
     /**
      * Shows a confirmation dialog.
@@ -53,7 +53,7 @@ public:
      * @return true = confirmed
      */
     static bool confirmInstallOperations(QWidget *parent,
-            QList<InstallOperation *> &install, QString *title, QString *err);
+            std::vector<InstallOperation *> &install, QString *title, QString *err);
 
     /**
      * @brief choose the accelerators automatically

@@ -61,7 +61,7 @@ private:
      * @param programCloseType how the programs should be closed
      * @return error message or ""
      */
-    QString process(QList<InstallOperation*>& install, DWORD programCloseType);
+    QString process(std::vector<InstallOperation *> &install, DWORD programCloseType);
 
     /**
      * @brief waits for a job

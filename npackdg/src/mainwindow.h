@@ -37,7 +37,7 @@ const UINT WM_ICONTRAY = WM_USER + 1;
 class _SearchResult {
 public:
     QStringList found;
-    QList<QStringList> cats, cats1;
+    std::vector<QStringList> cats, cats1;
 };
 
 /**
@@ -94,7 +94,7 @@ private:
     /**
      * @param ps selected packages
      */
-    void selectPackages(QList<Package*> ps);
+    void selectPackages(std::vector<Package *> ps);
 
     void updateStatusInDetailTabs();
     void updateProgressTabTitle();
@@ -285,7 +285,7 @@ protected:
      * @param install the objects will be destroyed
      * @param programCloseType how the programs should be closed
      */
-    void process(QList<InstallOperation*>& install, DWORD programCloseType);
+    void process(std::vector<InstallOperation *> &install, DWORD programCloseType);
 public slots:
     void on_errorMessage(const QString& msg, const QString& details="",
             bool autoHide=true, QMessageBox::Icon icon=QMessageBox::Critical);

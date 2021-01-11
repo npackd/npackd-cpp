@@ -37,7 +37,7 @@ public:
      * @param err errors will be stored here
      * @return [move] list of package versions
      */
-    static QList<PackageVersion *> getAddPackageVersionOptions(const DBRepository& dbr, const CommandLine &cl, QString *err);
+    static std::vector<PackageVersion *> getAddPackageVersionOptions(const DBRepository& dbr, const CommandLine &cl, QString *err);
 
     /**
      * @brief parses the command line and returns the list of chosen package
@@ -46,7 +46,7 @@ public:
      * @param err errors will be stored here
      * @return [move] list of package versions ranges
      */
-    static QList<Dependency *> getPackageVersionOptions(const CommandLine &cl,
+    static std::vector<Dependency *> getPackageVersionOptions(const CommandLine &cl,
             QString *err);
 
     /**
@@ -91,7 +91,7 @@ public:
      * @param err error message will be stored here
      * @return [move] newly created list of repositories
      */
-    static QList<QUrl*> getRepositoryURLs(QString *err);
+    static std::vector<QUrl*> getRepositoryURLs(QString *err);
 
     /**
      * @param err error message will be stored here
@@ -107,7 +107,7 @@ public:
      * @param urls new URLs
      * @param err error message will be stored here
      */
-    static void setRepositoryURLs(QList<QUrl*>& urls, QString *err);
+    static void setRepositoryURLs(std::vector<QUrl *> &urls, QString *err);
 
     /*
      * Changes the default repository url.

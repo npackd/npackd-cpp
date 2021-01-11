@@ -76,13 +76,13 @@ void MSIThirdPartyPM::scan(Job* job,
                             "rem 1605=unknown product" + "\r\n" +
                             "if %err% equ 1605 exit 0" + "\r\n" +
                             "if %err% neq 0 exit %err%" + "\r\n");
-        pv->files.append(pvf);
+        pv->files.push_back(pvf);
 
 
         pvf = new PackageVersionFile(
                 ".Npackd\\Stop.bat",
                 "rem the program should be stopped by the uninstaller\r\n");
-        pv->files.append(pvf);
+        pv->files.push_back(pvf);
 
         rep->savePackageVersion(pv.get(), true);
 

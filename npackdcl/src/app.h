@@ -58,16 +58,16 @@ private:
     void removeSCP(Job *job);
     void build(Job *job);
 
-    bool confirm(const QList<InstallOperation *> ops, QString *title,
+    bool confirm(const std::vector<InstallOperation *> ops, QString *title,
             QString *err);
     QString printDependencies(bool onlyInstalled,
             const QString parentPrefix, int level, PackageVersion *pv);
     void processInstallOperations(Job *job, DBRepository *rep,
-            const QList<InstallOperation *> &ops, DWORD programCloseType,
+            const std::vector<InstallOperation *> &ops, DWORD programCloseType,
             bool interactive, const QString user, const QString password,
             const QString proxyUser, const QString proxyPassword);
     QStringList sortPackageVersionsByPackageTitle(
-            QList<PackageVersion *> *list);
+            std::vector<PackageVersion *> *list);
 public:
     App();
     Job* currentJob;

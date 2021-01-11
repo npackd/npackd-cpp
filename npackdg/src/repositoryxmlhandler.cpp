@@ -152,7 +152,7 @@ void RepositoryXMLHandler::parseVersion()
         } else if (reader->name() == "file") {
             QString path = reader->attributes().value(QStringLiteral("path")).toString();
             PackageVersionFile* pvf = new PackageVersionFile(path, QStringLiteral(""));
-            pv->files.append(pvf);
+            pv->files.push_back(pvf);
 
             pvf->content = reader->readElementText();
         } else if (reader->name() == "hash-sum") {
@@ -177,7 +177,7 @@ void RepositoryXMLHandler::parseVersion()
             QString package = reader->attributes().value(QStringLiteral("package")).toString();
             QString versions = reader->attributes().value(QStringLiteral("versions")).toString();
             Dependency* dep = new Dependency();
-            pv->dependencies.append(dep);
+            pv->dependencies.push_back(dep);
             dep->package = package;
             if (!dep->setVersions(versions))
                 error = QObject::tr("Error in attribute 'versions' in <dependency> in %1").

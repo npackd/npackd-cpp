@@ -78,7 +78,7 @@ public:
      * @param name full package name
      * @return [move] found packages.
      */
-    virtual QList<Package*> findPackagesByShortName(const QString& name) const = 0;
+    virtual std::vector<Package*> findPackagesByShortName(const QString& name) const = 0;
 
     /**
      * @brief searches for a package with the given name
@@ -95,7 +95,7 @@ public:
      * @return [move] the list of package versions.
      *     The first returned object has the highest version number.
      */
-    virtual QList<PackageVersion*> getPackageVersions_(
+    virtual std::vector<PackageVersion*> getPackageVersions_(
             const QString& package, QString* err) const = 0;
 
     /**
@@ -132,7 +132,7 @@ public:
      * @param proxyUser user name for the HTTP proxy authentication
      * @param proxyPassword password for the HTTP proxy authentication
      */
-    void process(Job* job, const QList<InstallOperation*> &install,
+    void process(Job* job, const std::vector<InstallOperation *> &install,
                  DWORD programCloseType, bool printScriptOutput,
                  bool interactive,
                  const QString user, const QString password,
@@ -144,7 +144,7 @@ public:
      * @param err error message will be stored here
      * @return [move] the list of installed package versions
      */
-    QList<PackageVersion*> getInstalled_(QString* err);
+    std::vector<PackageVersion *> getInstalled_(QString* err);
 
     /**
      * Plans updates for the given packages.
@@ -171,9 +171,9 @@ public:
      *     "Notepad"
      * @return error message or ""
      */
-    QString planUpdates(InstalledPackages &installed, const QList<Package*> packages,
-                        QList<Dependency *> ranges,
-                        QList<InstallOperation*>& ops, bool keepDirectories=false,
+    QString planUpdates(InstalledPackages &installed, const std::vector<Package *> packages,
+                        std::vector<Dependency *> ranges,
+                        std::vector<InstallOperation *> &ops, bool keepDirectories=false,
                         bool install=false, const QString& where_="",
                         bool exactLocation=true);
 
@@ -193,7 +193,7 @@ public:
      */
     QString planUninstallation(InstalledPackages& installed,
             const QString& package, const Version& version,
-            QList<InstallOperation*>& ops);
+            std::vector<InstallOperation *> &ops);
 
     /**
      * Find the newest available package version.
@@ -228,7 +228,7 @@ public:
      * @return true = the operation for removing the current running Npackd
      *     or NpackdCL instance is included
      */
-    bool includesRemoveItself(const QList<InstallOperation *> &install_);
+    bool includesRemoveItself(const std::vector<InstallOperation *> &install_);
 
     /**
      * @brief processes the given operations. Calls CoInitialize/CoUninitialize.
@@ -238,7 +238,7 @@ public:
      * @param programCloseType how to close running applications
      */
     void processWithCoInitializeAndFree(Job *job,
-            const QList<InstallOperation *> &install_, DWORD programCloseType);
+            const std::vector<InstallOperation *> &install_, DWORD programCloseType);
 
     /**
      * @param dep a dependency
@@ -251,8 +251,8 @@ public:
      *     The returned objects are sorted by the package version number. The
      *     first returned object has the highest version number.
      */
-    QList<PackageVersion *> findAllMatchesToInstall(const Dependency& dep,
-            const QList<PackageVersion *> &avoid, QString *err);
+    std::vector<PackageVersion *> findAllMatchesToInstall(const Dependency& dep,
+            const std::vector<PackageVersion *> &avoid, QString *err);
 
     /**
      * @+^123param dep a dependency
@@ -264,7 +264,7 @@ public:
      *     being installed. Returned object should be destroyed later.
      */
     PackageVersion* findBestMatchToInstall(const Dependency& dep,
-                                           const QList<PackageVersion*>& avoid,
+                                           const std::vector<PackageVersion *> &avoid,
                                            QString *err) const;
 
     /**
@@ -282,7 +282,7 @@ public:
      * @param def what should be exported: 0..3
      */
     void exportPackagesCoInitializeAndFree(Job *job,
-            const QList<PackageVersion *> &pvs, const QString &where, int def);
+            const std::vector<PackageVersion *> &pvs, const QString &where, int def);
 
     /**
      * @brief plans adding missing dependencies
@@ -293,7 +293,7 @@ public:
      * @return error message or ""
      */
     QString planAddMissingDeps(InstalledPackages &installed,
-            QList<InstallOperation *> &ops);
+            std::vector<InstallOperation *> &ops);
 };
 
 #endif // ABSTRACTREPOSITORY_H

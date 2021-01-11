@@ -277,12 +277,12 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
 
         PackageVersionFile* pvf = new PackageVersionFile(
                 ".Npackd\\Uninstall.bat", uninstall + "\r\n");
-        pv->files.append(pvf);
+        pv->files.push_back(pvf);
 
         pvf = new PackageVersionFile(
                 ".Npackd\\Stop.bat",
                 "rem the program should be stopped by the uninstaller\r\n");
-        pv->files.append(pvf);
+        pv->files.push_back(pvf);
 
         rep->savePackageVersion(pv.get(), true);
     }

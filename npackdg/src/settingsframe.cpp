@@ -142,7 +142,7 @@ void SettingsFrame::fillRepositories()
 {
     QTableView* t = this->ui->tableViewReps;
     RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
-    QList<RepositoriesItemModel::Entry*> entries;
+    std::vector<RepositoriesItemModel::Entry*> entries;
 
     QString err;
     QStringList urls, comments;
@@ -153,7 +153,7 @@ void SettingsFrame::fillRepositories()
         e->enabled = false;
         e->url = urls.at(i);
         e->comment = comments.at(i);
-        entries.append(e);
+        entries.push_back(e);
     }
 
     std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments();
@@ -162,7 +162,7 @@ void SettingsFrame::fillRepositories()
         e->enabled = true;
         e->url = urls.at(i);
         e->comment = comments.at(i);
-        entries.append(e);
+        entries.push_back(e);
     }
 
     m->setURLs(entries);
@@ -228,13 +228,13 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
 
     QTableView* t = this->ui->tableViewReps;
     RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
-    QList<RepositoriesItemModel::Entry*> entries = m->getEntries();
+    std::vector<RepositoriesItemModel::Entry*> entries = m->getEntries();
 
     QStringList uiReps;
     QStringList uiComments;
     QStringList uiUnusedReps;
     QStringList uiUnusedComments;
-    for (int i = 0; i < entries.count(); i++) {
+    for (int i = 0; i < static_cast<int>(entries.size()); i++) {
         RepositoriesItemModel::Entry* e = entries.at(i);
         if (e->enabled) {
             uiReps.append(e->url.trimmed());

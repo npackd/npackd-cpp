@@ -58,7 +58,7 @@ private:
      * @param processWindows all top windows that belong to the same process
      */
     static void closeProcessWindows(HANDLE process,
-            const QList<HWND> &processWindows);
+            const std::vector<HWND> &processWindows);
 
     /**
      * @brief searches for the processes that somehow lock the specified
@@ -67,7 +67,7 @@ private:
      * @return list of handles with PROCESS_ALL_ACCESS permissions. These
      *     handles should be closed later using CloseHandle()
      */
-    static QList<HANDLE> getProcessHandlesLockingDirectory(const QString &dir);
+    static std::vector<HANDLE> getProcessHandlesLockingDirectory(const QString &dir);
 
     /**
      * @brief searches for the processes that somehow lock the specified
@@ -76,9 +76,9 @@ private:
      * @return list of handles with PROCESS_QUERY_LIMITED_INFORMATION
      *     permissions. These handles should be closed later using CloseHandle()
      */
-    static QList<HANDLE> getProcessHandlesLockingDirectory2(const QString &dir);
+    static std::vector<HANDLE> getProcessHandlesLockingDirectory2(const QString &dir);
 
-    static QList<HWND> findProcessTopWindows(DWORD processID);
+    static std::vector<HWND> findProcessTopWindows(DWORD processID);
 
     static QString disconnectFrom(LPWSTR netname);
     static QString StopDependentServices(SC_HANDLE schSCManager, SC_HANDLE schService,
@@ -88,9 +88,9 @@ private:
     static QString waitForServiceStatus(SC_HANDLE schService,
             const QString &operation, DWORD status);
 
-    static QList<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
+    static std::vector<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
 
-    static void closeHandles(const QList<HANDLE> handles);
+    static void closeHandles(const std::vector<HANDLE> handles);
 
     static QString getTaskName();
 public:

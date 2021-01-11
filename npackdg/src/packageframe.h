@@ -20,7 +20,7 @@ class PackageFrame : public QFrame, public Selection
     Q_OBJECT
 
 private:
-    QList<PackageVersion*> pvs;
+    std::vector<PackageVersion*> pvs;
     void showDetails();
 public:
     /** package associated with this form or 0 */

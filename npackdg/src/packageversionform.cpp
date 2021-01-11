@@ -157,7 +157,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     while ((child = this->ui->frameDependencies->layout()->takeAt(0)) != nullptr) {
         delete child;
     }
-    for (int i = 0; i < pv->dependencies.count(); i++) {
+    for (int i = 0; i < static_cast<int>(pv->dependencies.size()); i++) {
         Dependency* d = pv->dependencies.at(i);
 
         QString txt = "<a href=\"" + QString::number(i) + "\">" +
@@ -169,7 +169,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
             txt += "resolved to " + ipv->version.getVersionString();
             delete ipv;
         } else {
-            QList<PackageVersion*> avoid;
+            std::vector<PackageVersion*> avoid;
             PackageVersion* pv = d->findBestMatchToInstall(avoid, &err);
             if (pv) {
                 txt += "resolved to " + pv->version.getVersionString();
@@ -196,7 +196,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     updateIcons();
 
     this->ui->tabWidgetTextFiles->clear();
-    for (int i = 0; i < pv->files.count(); i++) {
+    for (int i = 0; i < static_cast<int>(pv->files.size()); i++) {
         QTextEdit* w = new QTextEdit(this->ui->tabWidgetTextFiles);
         w->setText(pv->files.at(i)->content);
         w->setReadOnly(true);
@@ -250,7 +250,7 @@ void PackageVersionForm::dependencyLinkActivated(const QString &link)
 
     bool ok;
     int index = link.toInt(&ok);
-    if (ok && index < this->pv->dependencies.count()) {
+    if (ok && index < static_cast<int>(this->pv->dependencies.size())) {
         Dependency* d = pv->dependencies.at(index);
         MainWindow::getInstance()->openPackage(d->package, true);
     } else {

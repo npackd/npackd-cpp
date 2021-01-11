@@ -26,13 +26,13 @@ QString InstallOperation::toString() const
             (install ? "install" : "uninstall");
 }
 
-void InstallOperation::simplify(QList<InstallOperation*> ops)
+void InstallOperation::simplify(std::vector<InstallOperation*> ops)
 {
-    for (int i = 0; i < ops.size(); ) {
+    for (int i = 0; i < static_cast<int>(ops.size()); ) {
         InstallOperation* op = ops.at(i);
 
         int found = -1;
-        for (int j = i + 1; j < ops.size(); j++) {
+        for (int j = i + 1; j < static_cast<int>(ops.size()); j++) {
             InstallOperation* op2 = ops.at(j);
             if (op->package == op2->package &&
                     op->version == op2->version &&
@@ -43,8 +43,10 @@ void InstallOperation::simplify(QList<InstallOperation*> ops)
         }
 
         if (found >= 0) {
-            delete ops.takeAt(i);
-            delete ops.takeAt(found);
+            delete ops.at(i);
+            ops.erase(ops.begin() + i);
+            delete ops.at(found);
+            ops.erase(ops.begin() + found);
         } else {
             i++;
         }

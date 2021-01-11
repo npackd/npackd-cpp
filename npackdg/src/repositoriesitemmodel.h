@@ -34,7 +34,7 @@ public:
         Entry();
     };
 private:
-    QList<Entry*> entries;
+    std::vector<Entry*> entries;
 public:
     /**
      * @brief -
@@ -62,7 +62,7 @@ public:
      * @brief changes the list of URLs
      * @param urls [move] list of URLs
      */
-    void setURLs(const QList<Entry *> &entries);
+    void setURLs(const std::vector<Entry *> &entries);
 
     /**
      * @brief adds a new repository
@@ -79,7 +79,7 @@ public:
      * @brief returns the list of repository entries
      * @return the entries
      */
-    QList<Entry*> getEntries();
+    std::vector<Entry*> getEntries();
 };
 
 #endif // REPOSITORIESITEMMODEL_H

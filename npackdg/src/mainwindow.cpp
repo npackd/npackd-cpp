@@ -74,7 +74,7 @@ MainWindow* MainWindow::instance = nullptr;
 
 /* creating a tag cloud
 QString err;
-QList<Package*> ps = DBRepository::getDefault()->findPackages(
+std::vector<Package*> ps = DBRepository::getDefault()->findPackages(
         Package::INSTALLED, false, "", &err);
 words.clear();
 QRegExp re("\\W+", Qt::CaseInsensitive);
@@ -106,8 +106,8 @@ QScrollArea* jobsScrollArea = new QScrollArea(this->ui->tabWidget);
 jobsScrollArea->setFrameStyle(0);
 
 ScanHardDrivesThread* it = (ScanHardDrivesThread*) this->sender();
-QList<QPair<QString, int> > entries;
-QList<QString> words = it->words.keys();
+std::vector<QPair<QString, int> > entries;
+std::vector<QString> words = it->words.keys();
 for (int i = 0; i < words.count(); i++) {
     QString w = words.at(i);
     entries.append(QPair<QString, int>(w, it->words.value(w)));
@@ -834,10 +834,10 @@ void MainWindow::onShow()
         this->addErrorMessage(err, err, true, QMessageBox::Critical);
 }
 
-void MainWindow::selectPackages(QList<Package*> ps)
+void MainWindow::selectPackages(std::vector<Package*> ps)
 {
     std::unordered_set<QString> packageNames;
-    for (int i = 0; i < ps.count(); i++) {
+    for (int i = 0; i < static_cast<int>(ps.size()); i++) {
         packageNames.insert(ps.at(i)->name);
     }
 
@@ -981,7 +981,7 @@ QString MainWindow::createPackageVersionsHTML(const QStringList& names)
     return allNames.join("<br>");
 }
 
-void MainWindow::process(QList<InstallOperation*> &install,
+void MainWindow::process(std::vector<InstallOperation*> &install,
         DWORD programCloseType)
 {
     QString err;
@@ -1041,8 +1041,8 @@ void MainWindow::processThreadFinished()
 {
     QTableView* t = this->mainFrame->getTableWidget();
     QItemSelectionModel* sm = t->selectionModel();
-    QList<Package*> sel = mainFrame->getSelectedPackagesInTable();
-    for (int i = 0; i < sel.count(); i++) {
+    std::vector<Package*> sel = mainFrame->getSelectedPackagesInTable();
+    for (int i = 0; i < static_cast<int>(sel.size()); i++) {
         sel[i] = new Package(*sel[i]);
     }
     QModelIndex index = sm->currentIndex();
@@ -1648,8 +1648,8 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 
     QTableView* t = this->mainFrame->getTableWidget();
     QItemSelectionModel* sm = t->selectionModel();
-    QList<Package*> sel = mainFrame->getSelectedPackagesInTable();
-    for (int i = 0; i < sel.count(); i++) {
+    std::vector<Package*> sel = mainFrame->getSelectedPackagesInTable();
+    for (int i = 0; i < static_cast<int>(sel.size()); i++) {
         sel[i] = new Package(*sel[i]);
     }
     QModelIndex index = sm->currentIndex();
@@ -1831,7 +1831,7 @@ void MainWindow::on_actionUpdate_triggered()
 {
     QString err;
 
-    QList<Package*> packages;
+    std::vector<Package*> packages;
     DBRepository* r = DBRepository::getDefault();
     if (err.isEmpty()) {
         Selection* sel = Selection::findCurrent();
@@ -1851,7 +1851,7 @@ void MainWindow::on_actionUpdate_triggered()
                     Package* p = r->findPackage_(pv->package);
 
                     if (p != nullptr) {
-                        packages.append(p);
+                        packages.push_back(p);
                         used.insert(pv->package);
                     }
                 }
@@ -1861,26 +1861,26 @@ void MainWindow::on_actionUpdate_triggered()
                 selected = sel->getSelected("Package");
                 for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                     Package* p = static_cast<Package*>(selected.at(i));
-                    packages.append(new Package(*p));
+                    packages.push_back(new Package(*p));
                 }
             }
         }
     }
 
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
         err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
     }
 
-    if (err.isEmpty() && packages.count() > 0) {
-        err = r->planUpdates(installed, packages, QList<Dependency*>(), ops,
+    if (err.isEmpty() && packages.size() > 0) {
+        err = r->planUpdates(installed, packages, std::vector<Dependency*>(), ops,
                 true, false, "", false);
     }
 
     if (err.isEmpty()) {
-        if (ops.count() > 0) {
+        if (ops.size() > 0) {
             process(ops, PackageUtils::getCloseProcessType());
         }
     } else
@@ -2088,7 +2088,7 @@ void MainWindow::on_actionInstall_triggered()
 
     QString err;
 
-    QList<PackageVersion*> pvs;
+    std::vector<PackageVersion*> pvs;
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
@@ -2107,25 +2107,25 @@ void MainWindow::on_actionInstall_triggered()
                     break;
 
                 if (pv)
-                    pvs.append(pv);
+                    pvs.push_back(pv);
             }
         } else {
             for (int i = 0; i < static_cast<int>(selected.size()); i++) {
-                pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
+                pvs.push_back(static_cast<PackageVersion*>(selected.at(i))->clone());
             }
         }
     }
 
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*InstalledPackages::getDefault());
-    QList<PackageVersion*> avoid;
+    std::vector<PackageVersion*> avoid;
 
     if (err.isEmpty()) {
         err = dbr->planAddMissingDeps(installed, ops);
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < pvs.count(); i++) {
+        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
             PackageVersion* pv = pvs.at(i);
 
             qDeleteAll(avoid);
@@ -2149,7 +2149,7 @@ void MainWindow::on_actionUninstall_triggered()
 {
     QString err;
 
-    QList<PackageVersion*> pvs;
+    std::vector<PackageVersion*> pvs;
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
@@ -2170,18 +2170,18 @@ void MainWindow::on_actionUninstall_triggered()
                 if (!err.isEmpty())
                     addErrorMessage(err, err, true, QMessageBox::Critical);
                 if (pv) {
-                    pvs.append(pv);
+                    pvs.push_back(pv);
                 }
             }
         } else {
             for (int i = 0; i < static_cast<int>(selected.size()); i++) {
-                pvs.append(static_cast<PackageVersion*>(selected.at(i))->
+                pvs.push_back(static_cast<PackageVersion*>(selected.at(i))->
                         clone());
             }
         }
     }
 
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
@@ -2189,7 +2189,7 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < pvs.count(); i++) {
+        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
             PackageVersion* pv = pvs.at(i);
             err = DBRepository::getDefault()->planUninstallation(installed,
                     pv->package, pv->version, ops);
@@ -2227,7 +2227,7 @@ void MainWindow::on_actionOpen_folder_triggered()
     if (selection)
         selected = selection->getSelected("PackageVersion");
 
-    QList<PackageVersion*> pvs;
+    std::vector<PackageVersion*> pvs;
     if (selected.size() == 0) {
         DBRepository* r = DBRepository::getDefault();
         if (selection)
@@ -2241,16 +2241,16 @@ void MainWindow::on_actionOpen_folder_triggered()
             if (!err.isEmpty())
                 addErrorMessage(err, err, true, QMessageBox::Critical);
             if (pv) {
-                pvs.append(pv);
+                pvs.push_back(pv);
             }
         }
     } else {
         for (int i = 0; i < static_cast<int>(selected.size()); i++) {
-            pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
+            pvs.push_back(static_cast<PackageVersion*>(selected.at(i))->clone());
         }
     }
 
-    for (int i = 0; i < pvs.count(); i++) {
+    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
         PackageVersion* pv = pvs.at(i);
 
         QString p = pv->getPath();
@@ -2321,7 +2321,7 @@ void MainWindow::on_actionRun_triggered()
 {
     QString err;
 
-    QList<PackageVersion*> pvs;
+    std::vector<PackageVersion*> pvs;
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
@@ -2342,19 +2342,19 @@ void MainWindow::on_actionRun_triggered()
                 if (!err.isEmpty())
                     addErrorMessage(err, err, true, QMessageBox::Critical);
                 if (pv) {
-                    pvs.append(pv);
+                    pvs.push_back(pv);
                 }
             }
         } else {
             for (int i = 0; i < static_cast<int>(selected.size()); i++) {
-                pvs.append(static_cast<PackageVersion*>(selected.at(i))->
+                pvs.push_back(static_cast<PackageVersion*>(selected.at(i))->
                         clone());
             }
         }
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < pvs.count(); i++) {
+        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
             PackageVersion* pv = pvs.at(i);
             if (pv->importantFiles.size() == 1) {
                 QString impf = pv->importantFiles.at(0);
@@ -2377,7 +2377,7 @@ void MainWindow::on_actionExport_triggered()
 {
     QString err;
 
-    QList<PackageVersion*> pvs;
+    std::vector<PackageVersion*> pvs;
 
     if (err.isEmpty()) {
         Selection* selection = Selection::findCurrent();
@@ -2397,11 +2397,11 @@ void MainWindow::on_actionExport_triggered()
                     break;
 
                 if (pv)
-                    pvs.append(pv);
+                    pvs.push_back(pv);
             }
         } else {
             for (int i = 0; i < static_cast<int>(selected.size()); i++) {
-                pvs.append(static_cast<PackageVersion*>(selected.at(i))->clone());
+                pvs.push_back(static_cast<PackageVersion*>(selected.at(i))->clone());
             }
         }
     }
@@ -2480,7 +2480,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
             if (!err.isEmpty())
                 break;
 
-            for (int j = 0; j < pv->dependencies.count(); j++) {
+            for (int j = 0; j < static_cast<int>(pv->dependencies.size()); j++) {
                 Dependency* d = pv->dependencies.at(j);
                 if (!ip->isInstalled(*d)) {
                     msg += "\r\n" + QString(

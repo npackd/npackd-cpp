@@ -29,7 +29,7 @@ class DBRepository: public AbstractRepository
 private:
     class PackageVersionList {
     public:
-        QList<PackageVersion*> data;
+        std::vector<PackageVersion*> data;
 
         virtual ~PackageVersionList();
     };
@@ -77,7 +77,7 @@ private:
      * @return
      */
     QStringList findPackagesWhere(const QString &sql,
-            const QList<QVariant> &params, QString *err) const;
+            const std::vector<QVariant> &params, QString *err) const;
 
     /**
      * @brief inserts or updates existing packages
@@ -121,7 +121,7 @@ private:
      * @param user user name for the HTTP proxy authentication or ""
      * @param password password for the HTTP proxy authentication or ""
      */
-    void load(Job *job, const QList<QUrl *>& repositories, bool useCache, bool interactive, const QString& user,
+    void load(Job *job, const std::vector<QUrl *> &repositories, bool useCache, bool interactive, const QString& user,
             const QString& password,
             const QString& proxyUser, const QString& proxyPassword);
 
@@ -149,7 +149,7 @@ private:
     QString saveTags(Package *p);
     QString readTags(Package *p) const;
     QString createQuery(Package::Status minStatus, Package::Status maxStatus,
-            const QString &query, int cat0, int cat1, QList<QVariant> &params) const;
+            const QString &query, int cat0, int cat1, std::vector<QVariant> &params) const;
 public:
     /** index of the current repository used for saving the packages */
     int currentRepository;
@@ -230,7 +230,7 @@ public:
 
     Package* findPackage_(const QString& name) const override;
 
-    QList<PackageVersion*> getPackageVersions_(const QString& package,
+    std::vector<PackageVersion *> getPackageVersions_(const QString& package,
             QString *err) const override;
 
     /**
@@ -241,7 +241,7 @@ public:
      * @return [move] list of package versions sorted by full package
      *     name and version
      */
-    QList<PackageVersion*> findPackageVersionsWithCmdFile(const QString& name,
+    std::vector<PackageVersion *> findPackageVersionsWithCmdFile(const QString& name,
             QString *err) const;
 
     /**
@@ -277,7 +277,7 @@ public:
      * @param detect true = detect software
      */
     void clearAndDownloadRepositories(Job *job,
-            const QList<QUrl*>& repositories, bool interactive, const QString& user,
+            const std::vector<QUrl *> &repositories, bool interactive, const QString& user,
             const QString& password,
             const QString& proxyUser, const QString& proxyPassword,
             bool useCache, bool detect=true);
@@ -301,7 +301,7 @@ public:
      */
     void clearCache();
 
-    QList<Package*> findPackagesByShortName(const QString &name) const override;
+    std::vector<Package *> findPackagesByShortName(const QString &name) const override;
 
     /**
      * @brief searches for packages that match the specified keywords. No filter
@@ -318,7 +318,7 @@ public:
      * @return categories for found packages: ID, COUNT, NAME. One category may
      *     have all values empty showing all un-categorized packages.
      */
-    QList<QStringList> findCategories(Package::Status minStatus,
+    std::vector<QStringList> findCategories(Package::Status minStatus,
             Package::Status maxStatus, const QString &query,
             int level, int cat0, int cat1, QString *err) const;
 
@@ -351,7 +351,7 @@ public:
      * @return list of found packages. The order of returned packages does *NOT*
      *     correspond the order in names.
      */
-    QList<Package*> findPackages(const QStringList &names);
+    std::vector<Package*> findPackages(const QStringList &names);
 
     /**
      * @brief searches for better packages for detection

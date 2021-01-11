@@ -129,13 +129,13 @@ void MainFrame::loadColumns() const
     }
 }
 
-void MainFrame::setCategories(int level, const QList<QStringList> &cats)
+void MainFrame::setCategories(int level, const std::vector<QStringList> &cats)
 {
     this->categoryCombosEvents = false;
 
     QStringList labels;
     int count = 0;
-    for (int i = 0; i < cats.count(); i++) {
+    for (int i = 0; i < static_cast<int>(cats.size()); i++) {
         QString n;
         n = cats.at(i).at(2);
         if (n.isEmpty()) {
@@ -205,7 +205,7 @@ void MainFrame::setCategoryFilter(int level, int v)
         if (v == -1)
             newCurrentIndex = 0;
         else {
-            for (int i = 0; i < this->categories0.count(); i++) {
+            for (int i = 0; i < static_cast<int>(this->categories0.size()); i++) {
                 int c = this->categories0.at(i).at(0).toInt();
                 if (c == v) {
                     newCurrentIndex = i + 1;
@@ -222,7 +222,7 @@ void MainFrame::setCategoryFilter(int level, int v)
         if (v == -1)
             newCurrentIndex = 0;
         else {
-            for (int i = 0; i < this->categories1.count(); i++) {
+            for (int i = 0; i < static_cast<int>(this->categories1.size()); i++) {
                 int c = this->categories1.at(i).at(0).toInt();
                 if (c == v) {
                     newCurrentIndex = i + 1;
@@ -309,15 +309,15 @@ std::vector<void*> MainFrame::getSelected(const QString& type) const
 {
     std::vector<void*> res;
     if (type == "Package") {
-        QList<Package*> ps = this->getSelectedPackagesInTable();
-        for (int i = 0; i < ps.count(); i++) {
+        std::vector<Package*> ps = this->getSelectedPackagesInTable();
+        for (int i = 0; i < static_cast<int>(ps.size()); i++) {
             res.push_back(ps.at(i));
         }
     }
     return res;
 }
 
-QList<Package*> MainFrame::getSelectedPackagesInTable() const
+std::vector<Package*> MainFrame::getSelectedPackagesInTable() const
 {
     return this->selectedPackages;
 }
@@ -350,7 +350,7 @@ void MainFrame::tableWidget_selectionChanged()
         const QVariant v = index.data(Qt::UserRole);
         QString name = v.toString();
         Package* p = r->findPackage_(name);
-        this->selectedPackages.append(p);
+        this->selectedPackages.push_back(p);
     }
 
     MainWindow::getInstance()->updateActions();

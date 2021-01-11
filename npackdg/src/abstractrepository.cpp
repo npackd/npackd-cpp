@@ -10,12 +10,12 @@
 QSemaphore AbstractRepository::installationScripts(1);
 
 bool AbstractRepository::includesRemoveItself(
-        const QList<InstallOperation *> &install_)
+        const std::vector<InstallOperation *> &install_)
 {
     bool res = false;
 
     QString exeDir = WPMUtils::getExeDir();
-    for (int i = 0; i < install_.count(); i++) {
+    for (int i = 0; i < static_cast<int>(install_.size()); i++) {
         InstallOperation* op = install_.at(i);
         if (!op->install) {
             QString err;
@@ -38,7 +38,7 @@ bool AbstractRepository::includesRemoveItself(
 }
 
 void AbstractRepository::processWithCoInitializeAndFree(Job *job,
-        const QList<InstallOperation *> &install_, DWORD programCloseType)
+        const std::vector<InstallOperation *> &install_, DWORD programCloseType)
 {
     QThread::currentThread()->setPriority(QThread::LowestPriority);
 
@@ -61,7 +61,7 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
 }
 
 void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
-        const QList<PackageVersion *> &pvs, const QString& where,
+        const std::vector<PackageVersion *> &pvs, const QString& where,
         int def)
 {
     QDir d;
@@ -80,7 +80,7 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
     }
 
     if (def == 3) {
-        for (int i = 0; i < pvs.size(); i++) {
+        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
             if (!job->shouldProceed())
                 break;
 
@@ -125,18 +125,18 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
             }
             superv->type = PackageVersion::Type::ONE_FILE;
             superv->download.setUrl("Rep.xml");
-            for (int i = 0; i < pvs.size(); i++) {
+            for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
                 PackageVersion* pv = pvs.at(i);
                 Dependency* d = new Dependency();
                 d->package = pv->package;
                 d->setVersions("[0,2000000000)");
-                superv.get()->dependencies.append(d);
+                superv.get()->dependencies.push_back(d);
             }
             rep->savePackageVersion(superv.get(), true);
         }
 
         if (def == 1 || def == 2 || def == 3) {
-            for (int i = 0; i < pvs.size(); i++) {
+            for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
                 if (!job->shouldProceed())
                     break;
 
@@ -193,20 +193,20 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
     qDeleteAll(pvs);
 }
 
-QList<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
-        const Dependency &dep, const QList<PackageVersion *> &avoid,
+std::vector<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
+        const Dependency &dep, const std::vector<PackageVersion *> &avoid,
         QString *err)
 {
-    QList<PackageVersion*> res;
+    std::vector<PackageVersion*> res;
 
-    QList<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
+    std::vector<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
     if (err->isEmpty()) {
-        for (int i = 0; i < pvs.count(); i++) {
+        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
             PackageVersion* pv = pvs.at(i);
             if (dep.test(pv->version) &&
                     pv->download.isValid() &&
                     PackageVersion::indexOf(avoid, pv) < 0) {
-                res.append(pv->clone());
+                res.push_back(pv->clone());
             }
         }
     }
@@ -216,14 +216,14 @@ QList<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
 }
 
 PackageVersion *AbstractRepository::findBestMatchToInstall(
-        const Dependency &dep, const QList<PackageVersion *> &avoid,
+        const Dependency &dep, const std::vector<PackageVersion *> &avoid,
         QString *err) const
 {
     PackageVersion* res = nullptr;
 
-    QList<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
+    std::vector<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
     if (err->isEmpty()) {
-        for (int i = 0; i < pvs.count(); i++) {
+        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
             PackageVersion* pv = pvs.at(i);
             if (dep.test(pv->version) &&
                     pv->download.isValid() &&
@@ -280,7 +280,7 @@ QString AbstractRepository::toString(const Dependency &dep,
 }
 
 void AbstractRepository::process(Job *job,
-        const QList<InstallOperation *> &install_, DWORD programCloseType,
+        const std::vector<InstallOperation *> &install_, DWORD programCloseType,
         bool printScriptOutput, bool interactive,
         const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
@@ -290,7 +290,7 @@ void AbstractRepository::process(Job *job,
     if (npackd().isDebugEnabled()) {
         qCDebug(npackd) << "AbstractRepository::process: " <<
                 install_.size() << " operations";
-        for (int i = 0; i < install_.size(); i++) {
+        for (int i = 0; i < static_cast<int>(install_.size()); i++) {
             InstallOperation* op = install_.at(i);
             qCDebug(npackd) << op->package << ": " <<
                     op->version.getVersionString() <<
@@ -300,7 +300,7 @@ void AbstractRepository::process(Job *job,
 
     QDir d;
 
-    QList<InstallOperation *> install = install_;
+    std::vector<InstallOperation *> install = install_;
 
     // reoder the operations if a package is updated. In this case it is better
     // to uninstall the old first and then install the new one.
@@ -309,14 +309,14 @@ void AbstractRepository::process(Job *job,
         InstallOperation* second = install.at(1);
         if (first->package == second->package &&
                 first->install && !second->install) {
-            install.insert(0, second);
-            install.removeAt(2);
+            install.insert(install.begin(), second);
+            install.erase(install.begin() + 2);
         }
     }
 
     // search for PackageVersion objects
-    QList<PackageVersion*> pvs;
-    for (int i = 0; i < install.size(); i++) {
+    std::vector<PackageVersion*> pvs;
+    for (int i = 0; i < static_cast<int>(install.size()); i++) {
         InstallOperation* op = install.at(i);
 
         QString err;
@@ -336,17 +336,17 @@ void AbstractRepository::process(Job *job,
                     arg(op->version.getVersionString()));
             break;
         }
-        pvs.append(pv);
+        pvs.push_back(pv);
     }
 
     if (job->shouldProceed()) {
-        for (int j = 0; j < pvs.size(); j++) {
+        for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
             PackageVersion* pv = pvs.at(j);
             pv->lock();
         }
     }
 
-    int n = install.count();
+    int n = install.size();
 
     // where the binary was downloaded
     QStringList dirs;
@@ -357,7 +357,7 @@ void AbstractRepository::process(Job *job,
     // 70% for downloading the binaries
     if (job->shouldProceed()) {
         // downloading packages
-        for (int i = 0; i < install.count(); i++) {
+        for (int i = 0; i < static_cast<int>(install.size()); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             if (op->install) {
@@ -427,7 +427,7 @@ void AbstractRepository::process(Job *job,
 
     // 10% for stopping the packages
     if (job->shouldProceed()) {
-        for (int i = 0; i < install.count(); i++) {
+        for (int i = 0; i < static_cast<int>(install.size()); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             if (!op->install) {
@@ -451,7 +451,7 @@ void AbstractRepository::process(Job *job,
     // 19% for removing/installing the packages
     if (job->shouldProceed()) {
         // installing/removing packages
-        for (int i = 0; i < install.count(); i++) {
+        for (int i = 0; i < static_cast<int>(install.size()); i++) {
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             QString txt;
@@ -553,7 +553,7 @@ void AbstractRepository::process(Job *job,
         }
     }
 
-    for (int j = 0; j < pvs.size(); j++) {
+    for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
         PackageVersion* pv = pvs.at(j);
         pv->unlock();
     }
@@ -598,11 +598,11 @@ void AbstractRepository::process(Job *job,
     job->complete();
 }
 
-QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
+std::vector<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 {
     *err = "";
 
-    QList<PackageVersion*> ret;
+    std::vector<PackageVersion*> ret;
     std::vector<InstalledPackageVersion*> ipvs =
             InstalledPackages::getDefault()->getAll();
     for (auto ipv: ipvs) {
@@ -611,7 +611,7 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
         if (!err->isEmpty())
             break;
         if (pv) {
-            ret.append(pv);
+            ret.push_back(pv);
         }
     }
     qDeleteAll(ipvs);
@@ -620,11 +620,11 @@ QList<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 }
 
 QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
-        QList<InstallOperation*>& ops)
+        std::vector<InstallOperation*>& ops)
 {
     QString err;
 
-    QList<PackageVersion*> avoid;
+    std::vector<PackageVersion*> avoid;
     std::vector<InstalledPackageVersion*> all = installed.getAll();
     for (auto ipv: all) {
         PackageVersion* pv = this->findPackageVersion_(ipv->package,
@@ -648,19 +648,19 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
 }
 
 QString AbstractRepository::planUpdates(InstalledPackages& installed,
-        const QList<Package*> packages,
-        QList<Dependency*> ranges,
-        QList<InstallOperation*>& ops, bool keepDirectories,
+        const std::vector<Package*> packages,
+        std::vector<Dependency*> ranges,
+        std::vector<InstallOperation*>& ops, bool keepDirectories,
         bool install, const QString &where_, bool exactLocation)
 {
     QString err;
 
-    QList<PackageVersion*> newest, newesti;
-    QList<bool> used;
+    std::vector<PackageVersion*> newest, newesti;
+    std::vector<bool> used;
 
     // packages first
     if (err.isEmpty()) {
-        for (int i = 0; i < packages.count(); i++) {
+        for (int i = 0; i < static_cast<int>(packages.size()); i++) {
             Package* p = packages.at(i);
 
             PackageVersion* a = findNewestInstallablePackageVersion_(p->name,
@@ -700,16 +700,16 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     a->version.getVersionString();
 
             if (b == nullptr || a->version.compare(b->version) > 0) {
-                newest.append(a);
-                newesti.append(b);
-                used.append(false);
+                newest.push_back(a);
+                newesti.push_back(b);
+                used.push_back(false);
             }
         }
     }
 
     // version ranges second
     if (err.isEmpty()) {
-        for (int i = 0; i < ranges.count(); i++) {
+        for (int i = 0; i < static_cast<int>(ranges.size()); i++) {
             Dependency* d = ranges.at(i);
             std::unique_ptr<Package> p(findPackage_(d->package));
             if (!p.get()) {
@@ -719,7 +719,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             }
 
             PackageVersion* a = findBestMatchToInstall(*d,
-                    QList<PackageVersion*>(), &err);
+                    std::vector<PackageVersion*>(), &err);
             if (!err.isEmpty())
                 break;
 
@@ -753,9 +753,9 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     a->version.getVersionString();
 
             if (b == nullptr || a->version.compare(b->version) > 0) {
-                newest.append(a);
-                newesti.append(b);
-                used.append(false);
+                newest.push_back(a);
+                newesti.push_back(b);
+                used.push_back(false);
             }
         }
     }
@@ -771,9 +771,9 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
         // the new version installed. This is the reversed order for an update.
         // If this is possible and does not affect other packages, we do this
         // first.
-        for (int i = 0; i < newest.count(); i++) {
-            QList<PackageVersion*> avoid;
-            QList<InstallOperation*> ops2;
+        for (int i = 0; i < static_cast<int>(newest.size()); i++) {
+            std::vector<PackageVersion*> avoid;
+            std::vector<InstallOperation*> ops2;
             InstalledPackages installedCopy(installed);
 
             PackageVersion* b = newesti.at(i);
@@ -782,7 +782,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                         installedCopy, b->package, b->version, ops2);
 
                 qCDebug(npackd) << "planUpdates: 1st uninstall" <<
-                        b->package << "resulted in" << ops2.count() <<
+                        b->package << "resulted in" << ops2.size() <<
                         "operations with result:" << err;
 
                 if (err.isEmpty()) {
@@ -796,15 +796,15 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                             avoid, where);
 
                     qCDebug(npackd) << "planUpdates: 1st install and uninstall" <<
-                            b->package << "resulted in" << ops2.count() <<
+                            b->package << "resulted in" << ops2.size() <<
                             "operations with result:" << err;
 
                     if (err.isEmpty()) {
-                        if (ops2.count() == 2) {
+                        if (ops2.size() == 2) {
                             used[i] = true;
                             installed = installedCopy;
-                            ops.append(ops2[0]);
-                            ops.append(ops2[1]);
+                            ops.push_back(ops2[0]);
+                            ops.push_back(ops2[1]);
                             ops2.clear();
                         }
                     }
@@ -816,9 +816,9 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
     }
 
     if (err.isEmpty()) {
-        qCDebug(npackd) << "planUpdates:" << newest.count() << "packages";
+        qCDebug(npackd) << "planUpdates:" << newest.size() << "packages";
 
-        for (int i = 0; i < newest.count(); i++) {
+        for (int i = 0; i < static_cast<int>(newest.size()); i++) {
             if (!used[i]) {
                 bool undo = false;
 
@@ -832,7 +832,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 if (keepDirectories && a)
                     where = a->getPath();
 
-                QList<PackageVersion*> avoid;
+                std::vector<PackageVersion*> avoid;
                 err = newest.at(i)->planInstallation(this, installedCopy, ops, avoid,
                         where);
                 if (!err.isEmpty())
@@ -844,7 +844,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                             b->version, ops);
 
                     qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
-                            b->package << "resulted in" << ops.count() <<
+                            b->package << "resulted in" << ops.size() <<
                             "operations with result:" << err;
 
                     if (!err.isEmpty())
@@ -852,8 +852,10 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 }
 
                 if (undo) {
-                    while (ops.size() > oldSize)
-                        delete ops.takeLast();
+                    while (static_cast<int>(ops.size()) > oldSize) {
+                        delete ops.back();
+                        ops.pop_back();
+                    }
                 } else {
                     installed = installedCopy;
                 }
@@ -862,21 +864,21 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
     }
 
     if (err.isEmpty()) {
-        qCDebug(npackd) << "planUpdates: simplifying" << ops.count() <<
+        qCDebug(npackd) << "planUpdates: simplifying" << ops.size() <<
                 "operations";
 
         InstallOperation::simplify(ops);
     }
 
-    for (int i = 0; i < ops.count(); i++) {
+    for (int i = 0; i < static_cast<int>(ops.size()); i++) {
         InstallOperation* op = ops.at(i);
         if (op->install && !op->where.isEmpty())
             op->exactLocation = exactLocation;
     }
 
-    qCDebug(npackd) << "planUpdates: results in" << ops.count() <<
+    qCDebug(npackd) << "planUpdates: results in" << ops.size() <<
             "operations with result" << err;
-    for (int i = 0; i < ops.count(); i++) {
+    for (int i = 0; i < static_cast<int>(ops.size()); i++) {
         qCDebug(npackd) << "planUpdates:" << i << ops.at(i)->toString();
     }
 
@@ -888,7 +890,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
 QString AbstractRepository::planUninstallation(InstalledPackages &installed,
         const QString &package, const Version &version,
-        QList<InstallOperation *> &ops)
+        std::vector<InstallOperation *> &ops)
 {
     // qCDebug(npackd) << "PackageVersion::planUninstallation()" << this->toString();
     QString res;
@@ -923,7 +925,7 @@ QString AbstractRepository::planUninstallation(InstalledPackages &installed,
         op->install = false;
         op->package = package;
         op->version = version;
-        ops.append(op);
+        ops.push_back(op);
     }
 
     return res;
@@ -953,9 +955,9 @@ PackageVersion* AbstractRepository::findNewestInstallablePackageVersion_(
 {
     PackageVersion* r = nullptr;
 
-    QList<PackageVersion*> pvs = this->getPackageVersions_(package, err);
+    std::vector<PackageVersion*> pvs = this->getPackageVersions_(package, err);
     if (err->isEmpty()) {
-        for (int i = 0; i < pvs.count(); i++) {
+        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
             PackageVersion* p = pvs.at(i);
             if (r == nullptr || p->version.compare(r->version) > 0) {
                 if (p->download.isValid())
@@ -1002,13 +1004,13 @@ Package* AbstractRepository::findOnePackage(
 
     if (!p) {
         if (!package.contains('.')) {
-            QList<Package*> packages = findPackagesByShortName(package);
+            std::vector<Package*> packages = findPackagesByShortName(package);
 
-            if (packages.count() == 0) {
+            if (packages.size() == 0) {
                 *err = QObject::tr("Unknown package: %1").arg(package);
-            } else if (packages.count() > 1) {
+            } else if (packages.size() > 1) {
                 QString names;
-                for (int i = 0; i < packages.count(); ++i) {
+                for (int i = 0; i < static_cast<int>(packages.size()); ++i) {
                     if (i != 0)
                         names.append(", ");
                     Package* pi = packages.at(i);

@@ -43,23 +43,23 @@ App::App() : currentJob(nullptr)
 }
 
 QStringList App::sortPackageVersionsByPackageTitle(
-        QList<PackageVersion*> *list) {
-    QList<QPair<PackageVersion*, QString> > items;
+        std::vector<PackageVersion*> *list) {
+    std::vector<QPair<PackageVersion*, QString> > items;
 
-    for (int i = 0; i < list->count(); i++) {
+    for (int i = 0; i < static_cast<int>(list->size()); i++) {
         PackageVersion* pv = list->at(i);
         QString s = pv->getPackageTitle();
 
         QPair<PackageVersion*, QString> pair;
         pair.first = pv;
         pair.second = s;
-        items.append(pair);
+        items.push_back(pair);
     }
 
     std::sort(items.begin(), items.end(), compareByPackageTitle);
 
     QStringList titles;
-    for (int i = 0; i < list->count(); i++) {
+    for (int i = 0; i < static_cast<int>(list->size()); i++) {
         (*list)[i] = items.at(i).first;
         titles.append(items.at(i).second);
     }
@@ -428,12 +428,12 @@ void App::listRepos(Job* job)
 
     QString err;
 
-    QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
+    std::vector<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
     if (err.isEmpty()) {
         if (json) {
             QJsonObject top;
             QJsonArray repos;
-            for (int i = 0; i < urls.size(); i++) {
+            for (int i = 0; i < static_cast<int>(urls.size()); i++) {
                 repos.append(urls.at(i)->toString(QUrl::FullyEncoded));
             }
             top["repositories"] = repos;
@@ -445,7 +445,7 @@ void App::listRepos(Job* job)
                         arg(urls.size()));
                 WPMUtils::writeln("");
             }
-            for (int i = 0; i < urls.size(); i++) {
+            for (int i = 0; i < static_cast<int>(urls.size()); i++) {
                 WPMUtils::writeln(urls.at(i)->toString(QUrl::FullyEncoded));
             }
         }
@@ -660,7 +660,7 @@ void App::check(Job* job)
 
     DBRepository* rep = DBRepository::getDefault();
     InstalledPackages* ip = InstalledPackages::getDefault();
-    QList<PackageVersion*> list;
+    std::vector<PackageVersion*> list;
 
     if (job->shouldProceed()) {
         QString err;
@@ -677,9 +677,9 @@ void App::check(Job* job)
         job->setProgress(1);
 
         int n = 0;
-        for (int i = 0; i < list.count(); i++) {
+        for (int i = 0; i < static_cast<int>(list.size()); i++) {
             PackageVersion* pv = list.at(i);
-            for (int j = 0; j < pv->dependencies.count(); j++) {
+            for (int j = 0; j < static_cast<int>(pv->dependencies.size()); j++) {
                 Dependency* d = pv->dependencies.at(j);
                 if (!ip->isInstalled(*d)) {
                     WPMUtils::writeln(QString(
@@ -722,10 +722,10 @@ void App::addRepo(Job* job)
 
     if (job->shouldProceed()) {
         QString err;
-        QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
+        std::vector<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
         if (err.isEmpty()) {
             int found = -1;
-            for (int i = 0; i < urls.size(); i++) {
+            for (int i = 0; i < static_cast<int>(urls.size()); i++) {
                 if (urls.at(i)->toString() == url_->toString()) {
                     found = i;
                     break;
@@ -735,7 +735,7 @@ void App::addRepo(Job* job)
                 WPMUtils::writeln(
                         "This repository is already registered: " + url);
             } else {
-                urls.append(url_);
+                urls.push_back(url_);
                 url_ = nullptr;
                 PackageUtils::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
@@ -766,7 +766,7 @@ void App::setRepo(Job* job)
     }
 
     if (job->shouldProceed()) {
-        QList<QUrl*> urls;
+        std::vector<QUrl*> urls;
         for (int i = 0; i < urls_.count(); i++) {
             if (!job->shouldProceed())
                 break;
@@ -777,7 +777,7 @@ void App::setRepo(Job* job)
             if (!url_->isValid()) {
                 job->setErrorMessage("Invalid URL: " + url);
             } else {
-                urls.append(url_);
+                urls.push_back(url_);
             }
         }
 
@@ -821,7 +821,7 @@ void App::list(Job* job)
             sub->completeWithProgress();
     }
 
-    QList<PackageVersion*> list;
+    std::vector<PackageVersion*> list;
     QStringList titles;
 
     if (job->shouldProceed()) {
@@ -844,7 +844,7 @@ void App::list(Job* job)
         if (json) {
             QJsonObject top;
             QJsonArray pvs;
-            for (int i = 0; i < list.count(); i++) {
+            for (int i = 0; i < static_cast<int>(list.size()); i++) {
                 QJsonObject pv_;
                 PackageVersion* pv = list.at(i);
                 pv->toJSON(pv_);
@@ -856,9 +856,9 @@ void App::list(Job* job)
         } else {
             if (!bare)
                 WPMUtils::writeln(QString("%1 package versions found:\r\n").
-                        arg(list.count()));
+                        arg(list.size()));
 
-            for (int i = 0; i < list.count(); i++) {
+            for (int i = 0; i < static_cast<int>(list.size()); i++) {
                 PackageVersion* pv = list.at(i);
                 if (!bare)
                     WPMUtils::writeln(pv->toString() +
@@ -920,7 +920,7 @@ void App::search(Job* job)
             else
                 job->setProgress(0.1);
         } else {
-            QList<QUrl*> urls;
+            std::vector<QUrl*> urls;
 
             for (int i = 0; i < urls_.count(); i++) {
                 if (!job->shouldProceed())
@@ -932,7 +932,7 @@ void App::search(Job* job)
                 if (!url_->isValid()) {
                     job->setErrorMessage("Invalid URL: " + url);
                 } else {
-                    urls.append(url_);
+                    urls.push_back(url_);
                 }
             }
 
@@ -977,7 +977,7 @@ void App::search(Job* job)
     }
 
     QStringList packageNames;
-    QList<Package*> list;
+    std::vector<Package*> list;
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01, "Searching for packages");
         QString err;
@@ -1006,7 +1006,7 @@ void App::search(Job* job)
             QJsonObject top;
 
             QJsonArray ps;
-            for (int i = 0; i < list.count(); i++) {
+            for (int i = 0; i < static_cast<int>(list.size()); i++) {
                 Package* p = list.at(i);
                 QJsonObject p_;
                 p->toJSON(p_);
@@ -1018,9 +1018,9 @@ void App::search(Job* job)
         } else {
             if (!bare)
                 WPMUtils::writeln(QString("%1 packages found:\r\n").
-                        arg(list.count()));
+                        arg(list.size()));
 
-            for (int i = 0; i < list.count(); i++) {
+            for (int i = 0; i < static_cast<int>(list.size()); i++) {
                 Package* p = list.at(i);
                 if (!bare)
                     WPMUtils::writeln(p->title +
@@ -1059,10 +1059,10 @@ void App::removeRepo(Job* job)
 
     if (job->shouldProceed()) {
         QString err;
-        QList<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
+        std::vector<QUrl*> urls = PackageUtils::getRepositoryURLs(&err);
         if (err.isEmpty()) {
             int found = -1;
-            for (int i = 0; i < urls.size(); i++) {
+            for (int i = 0; i < static_cast<int>(urls.size()); i++) {
                 if (urls.at(i)->toString() == url_->toString()) {
                     found = i;
                     break;
@@ -1073,7 +1073,8 @@ void App::removeRepo(Job* job)
                         "The repository was not in the list: " +
                         url);
             } else {
-                delete urls.takeAt(found);
+                delete urls.at(found);
+                urls.erase(urls.begin() + found);
                 PackageUtils::setRepositoryURLs(urls, &err);
                 if (err.isEmpty())
                     qCInfo(npackdImportant()).noquote() <<
@@ -1116,7 +1117,7 @@ void App::path(Job* job)
     }
 
     QString err;
-    QList<InstalledPackageVersion*> ipvs =
+    std::vector<InstalledPackageVersion*> ipvs =
             PackageVersion::getPathPackageVersionOptions(cl, &err);
     if (!err.isEmpty())
         job->setErrorMessage(err);
@@ -1152,7 +1153,7 @@ void App::path(Job* job)
 
     if (err.isEmpty()) {
         QStringList paths;
-        for (int i = 0; i < ipvs.size(); i++) {
+        for (int i = 0; i < static_cast<int>(ipvs.size()); i++) {
             paths.append(ipvs.at(i)->getDirectory().replace('/', '\\'));
         }
 
@@ -1347,7 +1348,7 @@ void App::update(Job* job)
             else
                 job->setProgress(0.1);
         } else {
-            QList<QUrl*> urls;
+            std::vector<QUrl*> urls;
 
             for (int i = 0; i < urls_.count(); i++) {
                 if (!job->shouldProceed())
@@ -1359,7 +1360,7 @@ void App::update(Job* job)
                 if (!url_->isValid()) {
                     job->setErrorMessage("Invalid URL: " + url);
                 } else {
-                    urls.append(url_);
+                    urls.push_back(url_);
                 }
             }
 
@@ -1458,8 +1459,8 @@ void App::update(Job* job)
         }
     }
 
-    QList<Package*> toUpdate;
-    QList<Dependency*> toUpdate2;
+    std::vector<Package*> toUpdate;
+    std::vector<Dependency*> toUpdate2;
 
     if (job->shouldProceed()) {
         for (int i = 0; i < packages_.size(); i++) {
@@ -1478,7 +1479,7 @@ void App::update(Job* job)
                 if (versions.isEmpty()) {
                     qCDebug(npackd) << "using the package" << p->name;
 
-                    toUpdate.append(p);
+                    toUpdate.push_back(p);
                 } else {
                     qCDebug(npackd) << "using version range" << versions;
 
@@ -1491,7 +1492,7 @@ void App::update(Job* job)
                         // the command line if the short package name is used
                         d->package = p->name;
 
-                        toUpdate2.append(d);
+                        toUpdate2.push_back(d);
 
                         // WPMUtils::writeln(d->toString());
                     }
@@ -1508,7 +1509,7 @@ void App::update(Job* job)
     bool keepDirectories = cl.isPresent("keep-directories");
     bool install = cl.isPresent("install");
 
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
@@ -1578,7 +1579,7 @@ void App::update(Job* job)
 
 void App::processInstallOperations(Job *job,
         DBRepository* rep,
-        const QList<InstallOperation *> &ops, DWORD programCloseType,
+        const std::vector<InstallOperation *> &ops, DWORD programCloseType,
         bool interactive, const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
 {
@@ -1617,7 +1618,7 @@ void App::processInstallOperations(Job *job,
         if (job->shouldProceed()) {
             QString pct = WPMUtils::programCloseType2String(programCloseType);
             QStringList batch;
-            for (int i = 0; i < ops.count(); i++) {
+            for (int i = 0; i < static_cast<int>(ops.size()); i++) {
                 InstallOperation* op = ops.at(i);
                 QString oneCmd = "\"" + newExe + "\" ";
 
@@ -1747,7 +1748,7 @@ void App::build(Job* job)
 
     if (job->shouldProceed()) {
         QString err;
-        QList<Dependency*> pvs =
+        std::vector<Dependency*> pvs =
                 PackageUtils::getPackageVersionOptions(cl, &err);
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -1755,7 +1756,8 @@ void App::build(Job* job)
             job->setErrorMessage(
                     QObject::tr("Exactly one source package version should be specified"));
         else {
-            sourceDep.reset(pvs.takeAt(0));
+            sourceDep.reset(pvs.at(0));
+            pvs.erase(pvs.begin());
         }
 
         qDeleteAll(pvs);
@@ -1834,7 +1836,7 @@ void App::add(Job* job)
             else
                 job->setProgress(0.1);
         } else {
-            QList<QUrl*> urls;
+            std::vector<QUrl*> urls;
 
             for (int i = 0; i < urls_.count(); i++) {
                 if (!job->shouldProceed())
@@ -1846,7 +1848,7 @@ void App::add(Job* job)
                 if (!url_->isValid()) {
                     job->setErrorMessage("Invalid URL: " + url);
                 } else {
-                    urls.append(url_);
+                    urls.push_back(url_);
                 }
             }
 
@@ -1893,7 +1895,7 @@ void App::add(Job* job)
         }
     }
 
-    QList<PackageVersion*> toInstall;
+    std::vector<PackageVersion*> toInstall;
 
     if (job->shouldProceed()) {
         QString err;
@@ -1925,7 +1927,7 @@ void App::add(Job* job)
     }
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*ip);
 
     if (job->shouldProceed()) {
@@ -1938,8 +1940,8 @@ void App::add(Job* job)
     if (job->shouldProceed()) {
         QString err;
 
-        QList<PackageVersion*> avoid;
-        for (int i = 0; i < toInstall.size(); i++) {
+        std::vector<PackageVersion*> avoid;
+        for (int i = 0; i < static_cast<int>(toInstall.size()); i++) {
             PackageVersion* pv = toInstall.at(i);
             if (job->shouldProceed())
                 err = pv->planInstallation(dbr, installed, ops, avoid, file);
@@ -1973,13 +1975,13 @@ void App::add(Job* job)
     CoUninitialize();
 }
 
-bool App::confirm(const QList<InstallOperation*> install, QString* title,
+bool App::confirm(const std::vector<InstallOperation*> install, QString* title,
         QString* err)
 {
     *err = "";
 
     QString names;
-    for (int i = 0; i < install.count(); i++) {
+    for (int i = 0; i < static_cast<int>(install.size()); i++) {
         InstallOperation* op = install.at(i);
         if (!op->install) {
             std::unique_ptr<PackageVersion> pv(op->findPackageVersion(err));
@@ -1998,7 +2000,7 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
 
     QString installNames;
     if (err->isEmpty()) {
-        for (int i = 0; i < install.count(); i++) {
+        for (int i = 0; i < static_cast<int>(install.size()); i++) {
             InstallOperation* op = install.at(i);
             if (op->install) {
                 std::unique_ptr<PackageVersion> pv(op->findPackageVersion(err));
@@ -2017,7 +2019,7 @@ bool App::confirm(const QList<InstallOperation*> install, QString* title,
     }
 
     int installCount = 0, uninstallCount = 0;
-    for (int i = 0; i < install.count(); i++) {
+    for (int i = 0; i < static_cast<int>(install.size()); i++) {
         InstallOperation* op = install.at(i);
         if (op->install)
             installCount++;
@@ -2124,12 +2126,12 @@ void App::remove(Job *job)
     }
 
     QString err;
-    QList<PackageVersion*> toRemove =
+    std::vector<PackageVersion*> toRemove =
             PackageVersion::getRemovePackageVersionOptions(cl, &err);
     if (!err.isEmpty())
         job->setErrorMessage(err);
 
-    QList<InstallOperation*> ops;
+    std::vector<InstallOperation*> ops;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
@@ -2144,7 +2146,7 @@ void App::remove(Job *job)
             job->setErrorMessage(err);
 
         if (job->shouldProceed()) {
-            for (int i = 0; i < toRemove.size(); i++) {
+            for (int i = 0; i < static_cast<int>(toRemove.size()); i++) {
                 PackageVersion* pv = toRemove.at(i);
                 err = rep->planUninstallation(installed,
                         pv->package, pv->version, ops);
@@ -2343,7 +2345,7 @@ void App::info(Job* job)
 
             if (pv) {
                 QString details;
-                for (int i = 0; i < pv->files.count(); i++) {
+                for (int i = 0; i < static_cast<int>(pv->files.size()); i++) {
                     if (i != 0)
                         details.append("; ");
                     details.append(pv->files.at(i)->path);
@@ -2353,10 +2355,10 @@ void App::info(Job* job)
 
             if (!pv) {
                 QString versions, r;
-                QList<PackageVersion*> pvs = rep->getPackageVersions_(
+                std::vector<PackageVersion*> pvs = rep->getPackageVersions_(
                         p->name, &r);
                 if (r.isEmpty()) {
-                    for (int i = 0; i < pvs.count(); i++) {
+                    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
                         PackageVersion* opv = pvs.at(i);
                         if (i != 0)
                             versions.append(", ");
@@ -2414,9 +2416,9 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 
     InstalledPackages* ip = InstalledPackages::getDefault();
     DBRepository* rep = DBRepository::getDefault();
-    for (int i = 0; i < pv->dependencies.count(); ++i) {
+    for (int i = 0; i < static_cast<int>(pv->dependencies.size()); ++i) {
         QString prefix;
-        if (i == pv->dependencies.count() - 1)
+        if (i == static_cast<int>(pv->dependencies.size()) - 1)
             prefix = QString() + QChar(0x2514) + QChar(0x2500);
         else
             prefix = QString() + QChar(0x251c) + QChar(0x2500);
@@ -2432,7 +2434,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
                     findPackageVersion_(ipv->package, ipv->version, &err);
         } else {
             pvd = rep->findBestMatchToInstall(*d,
-                    QList<PackageVersion*>(), &err);
+                    std::vector<PackageVersion*>(), &err);
         }
         delete ipv;
 
@@ -2453,7 +2455,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
             if (!pvd->installed())
                 s += " (not yet installed)";
 
-            if (pvd->dependencies.count() > 0)
+            if (pvd->dependencies.size() > 0)
                 // middle dot (Unicode)
                 before = QChar(0xb7);
             else
@@ -2464,7 +2466,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
 
         if (pvd) {
             QString nestedPrefix;
-            if (i == pv->dependencies.count() - 1)
+            if (i == static_cast<int>(pv->dependencies.size()) - 1)
                 nestedPrefix = parentPrefix + "  ";
             else
                 nestedPrefix = parentPrefix + QChar(0x2502) + " ";
@@ -2507,7 +2509,7 @@ void App::detect(Job* job)
             sub->completeWithProgress();
     }
 
-    QList<QUrl*> urls;
+    std::vector<QUrl*> urls;
     if (job->shouldProceed()) {
         QString err;
         urls = PackageUtils::getRepositoryURLs(&err);
@@ -2572,7 +2574,7 @@ void App::removeSCP(Job *job)
                 qCDebug(npackd) << "regular expression" << title;
 
                 QRegExp re(title, cs);
-                for (int i = 0; i < rep.packages.size(); i++) {
+                for (int i = 0; i < static_cast<int>(rep.packages.size()); i++) {
                     Package* p = rep.packages.at(i);
                     qCDebug(npackd) << p->title;
                     if (re.indexIn(p->title) >= 0) {
@@ -2582,7 +2584,7 @@ void App::removeSCP(Job *job)
                 }
             }
         } else {
-            for (int i = 0; i < rep.packages.size(); i++) {
+            for (int i = 0; i < static_cast<int>(rep.packages.size()); i++) {
                 Package* p = rep.packages.at(i);
                 if (p->title == title) {
                     found = p;
@@ -2621,7 +2623,7 @@ void App::removeSCP(Job *job)
 
     PackageVersionFile* pvf = nullptr;
     if (job->shouldProceed()) {
-        for (int j = 0; j < pv->files.size(); j++) {
+        for (int j = 0; j < static_cast<int>(pv->files.size()); j++) {
             if (pv->files.at(j)->path.compare(
                     ".Npackd\\Uninstall.bat",
                     Qt::CaseInsensitive) == 0) {
