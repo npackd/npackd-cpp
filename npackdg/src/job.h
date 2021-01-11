@@ -50,7 +50,7 @@ private:
     /** timeout in seconds or 0 or "unlimited" */
     int timeout = 0;
 
-    QList<Job*> childJobs;
+    std::vector<Job*> childJobs;
 
     /** progress 0...1 */
     double progress;

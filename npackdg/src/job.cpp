@@ -70,7 +70,7 @@ void Job::waitFor()
 void Job::waitForChildren()
 {
     this->mutex.lock();
-    for (int i = 0; i < this->childJobs.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->childJobs.size()); i++) {
         Job* ch = this->childJobs.at(i);
         if (!ch->isCompleted()) {
             ch->waitFor();
@@ -127,7 +127,7 @@ void Job::cancel()
         fireChange();
 
         this->mutex.lock();
-        for (int i = 0; i < this->childJobs.size(); i++) {
+        for (int i = 0; i < static_cast<int>(this->childJobs.size()); i++) {
             this->childJobs.at(i)->cancel();
         }
         this->mutex.unlock();
@@ -155,7 +155,7 @@ Job* Job::newSubJob(double part, const QString &title,
             r, SLOT(parentJobChanged(Job*)),
             Qt::DirectConnection);
 
-    this->childJobs.append(r);
+    this->childJobs.push_back(r);
 
     //qCDebug(npackd) << "subJobCreated" << r->title;
 
@@ -411,7 +411,7 @@ void Job::setErrorMessage(const QString &errorMessage)
         fireChange();
 
         this->mutex.lock();
-        for (int i = 0; i < childJobs.count(); i++) {
+        for (int i = 0; i < static_cast<int>(childJobs.size()); i++) {
             childJobs.at(i)->cancel();
         }
         this->mutex.unlock();
