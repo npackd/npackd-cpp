@@ -142,25 +142,27 @@ InstalledPackageVersion* InstalledPackages::find(const QString& package,
     return ipv;
 }
 
-QList<InstalledPackageVersion *> InstalledPackages::findAllInstalledMatches(const Dependency &dep) const
+std::vector<InstalledPackageVersion *> InstalledPackages::findAllInstalledMatches(
+        const Dependency &dep) const
 {
-    QList<InstalledPackageVersion*> r;
+    std::vector<InstalledPackageVersion*> r;
     std::vector<InstalledPackageVersion*> installed = getAll();
     for (auto ipv: installed) {
         if (ipv->package == dep.package &&
                 dep.test(ipv->version)) {
-            r.append(ipv->clone());
+            r.push_back(ipv->clone());
         }
     }
     qDeleteAll(installed);
     return r;
 }
 
-InstalledPackageVersion *InstalledPackages::findHighestInstalledMatch(const Dependency &dep) const
+InstalledPackageVersion *InstalledPackages::findHighestInstalledMatch(
+        const Dependency &dep) const
 {
-    QList<InstalledPackageVersion*> list = findAllInstalledMatches(dep);
+    std::vector<InstalledPackageVersion*> list = findAllInstalledMatches(dep);
     InstalledPackageVersion* res = nullptr;
-    for (int i = 0; i < list.count(); i++) {
+    for (int i = 0; i < static_cast<int>(list.size()); i++) {
         InstalledPackageVersion* ipv = list.at(i);
         if (res == nullptr || ipv->version.compare(res->version) > 0)
             res = ipv;

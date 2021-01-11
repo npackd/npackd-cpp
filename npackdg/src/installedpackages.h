@@ -177,7 +177,7 @@ public:
      * @return [move] all package versions that match
      *     this dependency and are installed
      */
-    QList<InstalledPackageVersion*> findAllInstalledMatches(
+    std::vector<InstalledPackageVersion*> findAllInstalledMatches(
             const Dependency& dep) const;
 
     /**
