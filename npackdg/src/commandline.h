@@ -61,7 +61,7 @@ public:
         QString value;
     };
 private:
-    QList<Option*> options;
+    std::vector<Option*> options;
     std::vector<ParsedOption*> parsedOptions;
 
     Option* findOption(const QString& name);

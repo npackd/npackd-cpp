@@ -127,7 +127,7 @@ QString CommandLine::processOneParam(QStringList* params)
 CommandLine::Option* CommandLine::findOption(const QString& name)
 {
     Option* r = nullptr;
-    for (int i = 0; i < this->options.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
         if (opt->nameMatches(name)) {
             r = opt;
@@ -152,14 +152,14 @@ void CommandLine::add(QString name, char name2, QString description,
         opt->allowedCommands.clear();
     }
 
-    this->options.append(opt);
+    this->options.push_back(opt);
 }
 
 QStringList CommandLine::printOptions() const
 {
     QStringList names;
     int len = 0;
-    for (int i = 0; i < this->options.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
         QString s("    ");
         if (opt->name2 != 0) {
@@ -178,7 +178,7 @@ QStringList CommandLine::printOptions() const
     QStringList result;
 
     result.append("Global options:");
-    for (int i = 0; i < this->options.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
         if (opt->allowedCommands.isEmpty()) {
             QString s = names.at(i);
@@ -189,7 +189,7 @@ QStringList CommandLine::printOptions() const
     }
 
     result.append("Options:");
-    for (int i = 0; i < this->options.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
         if (!opt->allowedCommands.isEmpty()) {
             QString s = names.at(i);
