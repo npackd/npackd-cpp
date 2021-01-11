@@ -1187,14 +1187,14 @@ void WPMUtils::formatMessage(DWORD err, QString* errMsg)
 
 BOOL CALLBACK myEnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
-    QList<HWND>* p = (QList<HWND>*) lParam;
-    p->append(hwnd);
+    std::vector<HWND>* p = (std::vector<HWND>*) lParam;
+    p->push_back(hwnd);
     return TRUE;
 }
 
-QList<HWND> WPMUtils::findTopWindows()
+std::vector<HWND> WPMUtils::findTopWindows()
 {
-    QList<HWND> r;
+    std::vector<HWND> r;
     EnumWindows(myEnumWindowsProc, (LPARAM) &r);
     return r;
 }
@@ -1203,9 +1203,9 @@ QList<HWND> WPMUtils::findProcessTopWindows(DWORD processID)
 {
     QList<HWND> r;
 
-    QList<HWND> tws = findTopWindows();
+    std::vector<HWND> tws = findTopWindows();
 
-    for (int i = 0; i < tws.size(); i++) {
+    for (int i = 0; i < static_cast<int>(tws.size()); i++) {
         DWORD pid;
         if (GetWindowThreadProcessId(tws[i], &pid) && pid == processID) {
             r.append(tws.at(i));

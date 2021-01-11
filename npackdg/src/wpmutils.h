@@ -531,7 +531,7 @@ public:
     /**
      * @return handles for the top level windows on the desktop
      */
-    static QList<HWND> findTopWindows();
+    static std::vector<HWND> findTopWindows();
 
     /**
      * @brief closes all processes that lock the specified directory. This
