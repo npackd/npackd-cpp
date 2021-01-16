@@ -13,7 +13,6 @@
 #include <QIODevice>
 #include <QMutex>
 #include <QThreadPool>
-#include <QtConcurrent/QtConcurrentRun>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QTemporaryDir>

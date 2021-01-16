@@ -15,8 +15,6 @@
 #include <QXmlStreamWriter>
 #include <QSqlRecord>
 #include <QTemporaryDir>
-#include <QtConcurrent/QtConcurrentRun>
-#include <QFuture>
 #include <QSqlResult>
 #include <QtPlugin>
 #include <QMutexLocker>
@@ -1587,7 +1585,7 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
                     QObject::tr("Error saving the list of repositories in the database: %1").arg(
                     err));
 
-        std::vector<QFuture<QTemporaryFile*> > files;
+        std::vector<std::future<QTemporaryFile*> > files;
         for (auto url: repositories) {
             Job* s = job->newSubJob(0.1,
                     QObject::tr("Downloading %1").
@@ -1600,13 +1598,16 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
             request.proxyPassword = proxyPassword;
             request.useCache = useCache;
             request.interactive = interactive;
-            QFuture<QTemporaryFile*> future = QtConcurrent::run(
-                    Downloader::downloadToTemporary, s, request);
-            files.push_back(future);
+            std::future<QTemporaryFile*> future = std::async(
+                std::launch::async,
+                [s, request](){
+                    return Downloader::downloadToTemporary(s, request);
+                });
+            files.push_back(std::move(future));
         }
 
         for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
-            files[i].waitForFinished();
+            files[i].wait();
 
             job->setProgress((i + 1.0) / repositories.size() * 0.5);
         }
@@ -1615,13 +1616,15 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
             if (!job->shouldProceed())
                 break;
 
-            QTemporaryFile* tf = files.at(i).result();
+            QTemporaryFile* tf = files.at(i).get();
             Job* s = job->newSubJob(0.49 / repositories.size(), QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
                     arg(repositories.size()));
             this->currentRepository = i;
             // this is currently unnecessary clearRepository(i);
             loadOne(s, tf, *repositories.at(i));
+            delete tf;
+
             if (!s->getErrorMessage().isEmpty()) {
                 job->setErrorMessage(QString(
                         QObject::tr("Error loading the repository %1: %2")).arg(
@@ -1629,14 +1632,6 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
                         s->getErrorMessage()));
                 break;
             }
-        }
-
-        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
-            if (!job->shouldProceed())
-                break;
-
-            QTemporaryFile* tf = files.at(i).result();
-            delete tf;
         }
     } else {
         job->setErrorMessage(QObject::tr("No repositories defined"));
