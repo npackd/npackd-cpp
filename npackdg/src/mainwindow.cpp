@@ -1013,10 +1013,11 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 
                 monitor(job);
 
-                QtConcurrent::run(reinterpret_cast<AbstractRepository*>(rep),
-                        &DBRepository::processWithCoInitializeAndFree,
-                        job, install,
-                        PackageUtils::getCloseProcessType());
+                std::thread thr([rep, job, install](){
+                    rep->processWithCoInitializeAndFree(job, install,
+                            PackageUtils::getCloseProcessType());
+                });
+                thr.detach();
 
                 install.clear();
             }
