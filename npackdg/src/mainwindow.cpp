@@ -35,7 +35,6 @@
 #include <QLabel>
 #include <QDockWidget>
 #include <QTreeWidget>
-#include <QtConcurrent/QtConcurrentRun>
 #include <QDialogButtonBox>
 #include <QHeaderView>
 
@@ -1577,9 +1576,10 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
 
     monitor(job);
 
-    QtConcurrent::run(DBRepository::getDefault(),
-            &DBRepository::updateF5Runnable,
-            job, useCache);
+    std::thread thr([job, useCache](){
+        DBRepository::getDefault()->updateF5Runnable(job, useCache);
+    });
+    thr.detach();
 }
 
 void MainWindow::setMenuAccelerators(){
@@ -2426,11 +2426,17 @@ void MainWindow::on_actionExport_triggered()
 
                 monitor(job);
 
-                DBRepository* rep = DBRepository::getDefault();
-                QtConcurrent::run(reinterpret_cast<AbstractRepository*>(rep),
-                        &AbstractRepository::exportPackagesCoInitializeAndFree,
-                        job, pvs, list->getDirectory(),
-                        list->getExportDefinitions());
+                QString dir = list->getDirectory();
+                int ed = list->getExportDefinitions();
+
+                // we move the pointers in "pvs" into the thread and call
+                // pvs.clear() later so that all PackageVersion* objects should
+                // be deleted by another thread
+                std::thread thr([job, pvs, dir, ed](){
+                    DBRepository::getDefault()->exportPackagesCoInitializeAndFree(
+                            job, pvs, dir, ed);
+                });
+                thr.detach();
 
                 pvs.clear();
             } else {

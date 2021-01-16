@@ -1616,6 +1616,8 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
             if (!job->shouldProceed())
                 break;
 
+            // TODO: if the job is cancelled, not all temporary files are
+            // deleted
             QTemporaryFile* tf = files.at(i).get();
             Job* s = job->newSubJob(0.49 / repositories.size(), QString(
                     QObject::tr("Repository %1 of %2")).arg(i + 1).
