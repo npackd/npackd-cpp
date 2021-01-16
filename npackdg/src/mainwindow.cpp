@@ -837,8 +837,8 @@ void MainWindow::onShow()
 void MainWindow::selectPackages(std::vector<Package*> ps)
 {
     std::unordered_set<QString> packageNames;
-    for (int i = 0; i < static_cast<int>(ps.size()); i++) {
-        packageNames.insert(ps.at(i)->name);
+    for (auto p: ps) {
+        packageNames.insert(p->name);
     }
 
     QTableView* t = this->mainFrame->getTableWidget();
@@ -2125,9 +2125,7 @@ void MainWindow::on_actionInstall_triggered()
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-            PackageVersion* pv = pvs.at(i);
-
+        for (auto pv: pvs) {
             qDeleteAll(avoid);
             avoid.clear();
             err = pv->planInstallation(dbr, installed, ops, avoid);
@@ -2189,8 +2187,7 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-            PackageVersion* pv = pvs.at(i);
+        for (auto pv: pvs) {
             err = DBRepository::getDefault()->planUninstallation(installed,
                     pv->package, pv->version, ops);
             if (!err.isEmpty())
@@ -2250,9 +2247,7 @@ void MainWindow::on_actionOpen_folder_triggered()
         }
     }
 
-    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-        PackageVersion* pv = pvs.at(i);
-
+    for (auto pv: pvs) {
         QString p = pv->getPath();
         if (!p.isEmpty())
             openURL(QUrl("file:///" + p));
@@ -2354,8 +2349,7 @@ void MainWindow::on_actionRun_triggered()
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-            PackageVersion* pv = pvs.at(i);
+        for (auto pv: pvs) {
             if (pv->importantFiles.size() == 1) {
                 QString impf = pv->importantFiles.at(0);
 
@@ -2480,8 +2474,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
             if (!err.isEmpty())
                 break;
 
-            for (int j = 0; j < static_cast<int>(pv->dependencies.size()); j++) {
-                Dependency* d = pv->dependencies.at(j);
+            for (auto d: pv->dependencies) {
                 if (!ip->isInstalled(*d)) {
                     msg += "\r\n" + QString(
                             "%1 depends on %2, which is not installed").

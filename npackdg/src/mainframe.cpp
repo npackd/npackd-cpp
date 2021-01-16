@@ -310,8 +310,8 @@ std::vector<void*> MainFrame::getSelected(const QString& type) const
     std::vector<void*> res;
     if (type == "Package") {
         std::vector<Package*> ps = this->getSelectedPackagesInTable();
-        for (int i = 0; i < static_cast<int>(ps.size()); i++) {
-            res.push_back(ps.at(i));
+        for (auto p: ps) {
+            res.push_back(p);
         }
     }
     return res;

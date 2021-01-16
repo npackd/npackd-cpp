@@ -15,8 +15,7 @@ bool AbstractRepository::includesRemoveItself(
     bool res = false;
 
     QString exeDir = WPMUtils::getExeDir();
-    for (int i = 0; i < static_cast<int>(install_.size()); i++) {
-        InstallOperation* op = install_.at(i);
+    for (auto op: install_) {
         if (!op->install) {
             QString err;
             PackageVersion* pv = this->findPackageVersion_(
@@ -80,11 +79,9 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
     }
 
     if (def == 3) {
-        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
+        for (auto pv: pvs) {
             if (!job->shouldProceed())
                 break;
-
-            PackageVersion* pv = pvs.at(i);
 
             Job* djob = job->newSubJob(0.9 / pvs.size(),
                     QObject::tr("Downloading & computing hash sum for %1").
@@ -125,8 +122,7 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
             }
             superv->type = PackageVersion::Type::ONE_FILE;
             superv->download.setUrl("Rep.xml");
-            for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-                PackageVersion* pv = pvs.at(i);
+            for (auto pv: pvs) {
                 Dependency* d = new Dependency();
                 d->package = pv->package;
                 d->setVersions("[0,2000000000)");
@@ -136,11 +132,10 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
         }
 
         if (def == 1 || def == 2 || def == 3) {
-            for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
+            for (auto pv: pvs) {
                 if (!job->shouldProceed())
                     break;
 
-                PackageVersion* pv = pvs.at(i);
                 QString err = rep->savePackageVersion(pv, true);
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);
@@ -201,8 +196,7 @@ std::vector<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
 
     std::vector<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
     if (err->isEmpty()) {
-        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-            PackageVersion* pv = pvs.at(i);
+        for (auto pv: pvs) {
             if (dep.test(pv->version) &&
                     pv->download.isValid() &&
                     PackageVersion::indexOf(avoid, pv) < 0) {
@@ -223,8 +217,7 @@ PackageVersion *AbstractRepository::findBestMatchToInstall(
 
     std::vector<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
     if (err->isEmpty()) {
-        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-            PackageVersion* pv = pvs.at(i);
+        for (auto pv: pvs) {
             if (dep.test(pv->version) &&
                     pv->download.isValid() &&
                     PackageVersion::indexOf(avoid, pv) < 0) {
@@ -290,8 +283,7 @@ void AbstractRepository::process(Job *job,
     if (npackd().isDebugEnabled()) {
         qCDebug(npackd) << "AbstractRepository::process: " <<
                 install_.size() << " operations";
-        for (int i = 0; i < static_cast<int>(install_.size()); i++) {
-            InstallOperation* op = install_.at(i);
+        for (auto op: install_) {
             qCDebug(npackd) << op->package << ": " <<
                     op->version.getVersionString() <<
                     op->install << " in " << op->where;
@@ -316,9 +308,7 @@ void AbstractRepository::process(Job *job,
 
     // search for PackageVersion objects
     std::vector<PackageVersion*> pvs;
-    for (int i = 0; i < static_cast<int>(install.size()); i++) {
-        InstallOperation* op = install.at(i);
-
+    for (auto op: install) {
         QString err;
         PackageVersion* pv = op->findPackageVersion(&err);
         if (!err.isEmpty()) {
@@ -340,8 +330,7 @@ void AbstractRepository::process(Job *job,
     }
 
     if (job->shouldProceed()) {
-        for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
-            PackageVersion* pv = pvs.at(j);
+        for (auto pv: pvs) {
             pv->lock();
         }
     }
@@ -553,8 +542,7 @@ void AbstractRepository::process(Job *job,
         }
     }
 
-    for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
-        PackageVersion* pv = pvs.at(j);
+    for (auto pv: pvs) {
         pv->unlock();
     }
 
@@ -660,9 +648,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
     // packages first
     if (err.isEmpty()) {
-        for (int i = 0; i < static_cast<int>(packages.size()); i++) {
-            Package* p = packages.at(i);
-
+        for (auto p: packages) {
             PackageVersion* a = findNewestInstallablePackageVersion_(p->name,
                     &err);
             if (!err.isEmpty())
@@ -709,8 +695,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
     // version ranges second
     if (err.isEmpty()) {
-        for (int i = 0; i < static_cast<int>(ranges.size()); i++) {
-            Dependency* d = ranges.at(i);
+        for (auto d: ranges) {
             std::unique_ptr<Package> p(findPackage_(d->package));
             if (!p.get()) {
                 err = QString(QObject::tr("Cannot find the package %1")).
@@ -870,8 +855,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
         InstallOperation::simplify(ops);
     }
 
-    for (int i = 0; i < static_cast<int>(ops.size()); i++) {
-        InstallOperation* op = ops.at(i);
+    for (auto op: ops) {
         if (op->install && !op->where.isEmpty())
             op->exactLocation = exactLocation;
     }
@@ -957,8 +941,7 @@ PackageVersion* AbstractRepository::findNewestInstallablePackageVersion_(
 
     std::vector<PackageVersion*> pvs = this->getPackageVersions_(package, err);
     if (err->isEmpty()) {
-        for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-            PackageVersion* p = pvs.at(i);
+        for (auto p: pvs) {
             if (r == nullptr || p->version.compare(r->version) > 0) {
                 if (p->download.isValid())
                     r = p;
@@ -1010,10 +993,9 @@ Package* AbstractRepository::findOnePackage(
                 *err = QObject::tr("Unknown package: %1").arg(package);
             } else if (packages.size() > 1) {
                 QString names;
-                for (int i = 0; i < static_cast<int>(packages.size()); ++i) {
-                    if (i != 0)
+                for (auto pi: packages) {
+                    if (!names.isEmpty())
                         names.append(", ");
-                    Package* pi = packages.at(i);
                     names.append(pi->title).append(" (").append(pi->name).
                             append(")");
                 }

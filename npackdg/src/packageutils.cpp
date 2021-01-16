@@ -532,8 +532,8 @@ void PackageUtils::setRepositoryURLs(std::vector<QUrl *> &urls, QString *err)
 {
     QStringList reps;
     QStringList comments;
-    for (int i = 0; i < static_cast<int>(urls.size()); i++) {
-        reps.append(urls.at(i)->toString(QUrl::FullyEncoded));
+    for (auto& url: urls) {
+        reps.append(url->toString(QUrl::FullyEncoded));
         comments.append(QString());
     }
     *err = setRepositoryURLsAndComments(reps, comments);

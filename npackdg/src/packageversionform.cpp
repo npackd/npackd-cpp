@@ -196,11 +196,11 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     updateIcons();
 
     this->ui->tabWidgetTextFiles->clear();
-    for (int i = 0; i < static_cast<int>(pv->files.size()); i++) {
+    for (auto f: pv->files) {
         QTextEdit* w = new QTextEdit(this->ui->tabWidgetTextFiles);
-        w->setText(pv->files.at(i)->content);
+        w->setText(f->content);
         w->setReadOnly(true);
-        this->ui->tabWidgetTextFiles->addTab(w, pv->files.at(i)->path);
+        this->ui->tabWidgetTextFiles->addTab(w, f->path);
     }
 
     delete p;

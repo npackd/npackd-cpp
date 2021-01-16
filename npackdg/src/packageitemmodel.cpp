@@ -45,8 +45,7 @@ PackageItemModel::Info* PackageItemModel::createInfo(
 
     PackageVersion* newestInstallable = nullptr;
     PackageVersion* newestInstalled = nullptr;
-    for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
-        PackageVersion* pv = pvs.at(j);
+    for (auto pv: pvs) {
         if (pv->installed()) {
             if (!r->installed.isEmpty())
                 r->installed.append(", ");

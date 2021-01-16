@@ -728,8 +728,7 @@ QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPacka
 
     avoid.push_back(this->clone());
 
-    for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
-        Dependency* d = this->dependencies.at(i);
+    for (auto d: this->dependencies) {
         bool depok = installed.isInstalled(*d);
         if (!depok) {
             // we cannot just use Dependency->findBestMatchToInstall here as
@@ -773,8 +772,7 @@ QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPacka
                 break;
             } else {
                 bool found = false;
-                for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
-                    PackageVersion* pv = pvs.at(j);
+                for (auto pv: pvs) {
                     InstalledPackages installed2(installed);
                     int opsCount = ops.size();
                     int avoidCount = avoid.size();
@@ -1804,8 +1802,7 @@ QString PackageVersion::addBasicVars(QStringList* env)
 void PackageVersion::addDependencyVars(QStringList* vars)
 {
     InstalledPackages* ip = InstalledPackages::getDefault();
-    for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
-        Dependency* d = this->dependencies.at(i);
+    for (auto d: this->dependencies) {
         if (!d->var.isEmpty()) {
             vars->append(d->var);
             InstalledPackageVersion* ipv = ip->findHighestInstalledMatch(*d);
@@ -1826,8 +1823,7 @@ void PackageVersion::addDependencyVars(QStringList* vars)
 QString PackageVersion::saveFiles(const QDir& d)
 {
     QString res;
-    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
-        PackageVersionFile* f = this->files.at(i);
+    for (auto f: this->files) {
         QString fullPath = d.absolutePath() + "\\" + f->path;
         QString fullDir = WPMUtils::parentDirectory(fullPath);
         if (d.mkpath(fullDir)) {
@@ -1942,12 +1938,10 @@ PackageVersion* PackageVersion::clone() const
     r->importantFiles = this->importantFiles;
     r->importantFilesTitles = this->importantFilesTitles;
     r->cmdFiles = this->cmdFiles;
-    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
-        PackageVersionFile* f = this->files.at(i);
+    for (auto f: this->files) {
         r->files.push_back(f->clone());
     }
-    for (int i = 0; i < static_cast<int>(dependencies.size()); i++) {
-        Dependency* d = this->dependencies.at(i);
+    for (auto d: this->dependencies) {
         r->dependencies.push_back(d->clone());
     }
 
@@ -2013,10 +2007,10 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeAttribute("path", this->cmdFiles.at(i));
         w->writeEndElement();
     }
-    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
+    for (auto f: this->files) {
         w->writeStartElement("file");
-        w->writeAttribute("path", this->files.at(i)->path);
-        w->writeCharacters(files.at(i)->content);
+        w->writeAttribute("path", f->path);
+        w->writeCharacters(f->content);
         w->writeEndElement();
     }
     if (this->download.isValid()) {
@@ -2029,8 +2023,7 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         else
             w->writeTextElement("hash-sum", this->sha1);
     }
-    for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
-        Dependency* d = this->dependencies.at(i);
+    for (auto d: this->dependencies) {
         w->writeStartElement("dependency");
         w->writeAttribute("package", d->package);
         w->writeAttribute("versions", d->versionsToString());
@@ -2081,10 +2074,10 @@ void PackageVersion::toJSON(QJsonObject& w) const
 
     if (files.size() > 0) {
         QJsonArray path;
-        for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
+        for (auto f: this->files) {
             QJsonObject obj;
-            obj["path"] = this->files.at(i)->path;
-            obj["content"] = files.at(i)->content;
+            obj["path"] = f->path;
+            obj["content"] = f->content;
             path.append(obj);
         }
         w["files"] = path;
@@ -2102,8 +2095,7 @@ void PackageVersion::toJSON(QJsonObject& w) const
 
     if (dependencies.size() > 0) {
         QJsonArray dependency;
-        for (int i = 0; i < static_cast<int>(this->dependencies.size()); i++) {
-            Dependency* d = this->dependencies.at(i);
+        for (auto d: this->dependencies) {
             QJsonObject obj;
             obj["package"] = d->package;
             obj["versions"] = d->versionsToString();
@@ -2123,8 +2115,7 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
 {
     PackageVersionFile* r = nullptr;
     QString lowerPath = path.toLower();
-    for (int i = 0; i < static_cast<int>(this->files.size()); i++) {
-        PackageVersionFile* pvf = this->files.at(i);
+    for (auto pvf: this->files) {
         if (pvf->path.toLower() == lowerPath) {
             r = pvf;
             break;

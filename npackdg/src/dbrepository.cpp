@@ -424,8 +424,8 @@ std::vector<PackageVersion*> DBRepository::getPackageVersions_(const QString& pa
     PackageVersionList* pvl = packageVersions.object(package);
     if (pvl) {
         r.reserve(pvl->data.size());
-        for (int i = 0; i < static_cast<int>(pvl->data.size()); i++) {
-            r.push_back(pvl->data.at(i)->clone());
+        for (auto pv: pvl->data) {
+            r.push_back(pv->clone());
         }
     } else {
         MySQLQuery q(db);
@@ -1577,8 +1577,8 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
     QString err;
     if (repositories.size() > 0) {
         QStringList reps;
-        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
-            reps.append(repositories.at(i)->toString(QUrl::FullyEncoded));
+        for (auto r: repositories) {
+            reps.append(r->toString(QUrl::FullyEncoded));
         }
 
         err = saveRepositories(reps);
@@ -1588,8 +1588,7 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
                     err));
 
         std::vector<QFuture<QTemporaryFile*> > files;
-        for (int i = 0; i < static_cast<int>(repositories.size()); i++) {
-            QUrl* url = repositories.at(i);
+        for (auto url: repositories) {
             Job* s = job->newSubJob(0.1,
                     QObject::tr("Downloading %1").
                     arg(url->toDisplayString()), false, true);
@@ -1996,8 +1995,7 @@ void DBRepository::updateStatusForInstalled(Job* job)
 QString DBRepository::savePackages(Repository* r, bool replace)
 {
     QString err;
-    for (int i = 0; i < static_cast<int>(r->packages.size()); i++) {
-        Package* p = r->packages.at(i);
+    for (auto p: r->packages) {
         err = savePackage(p, replace);
         if (!err.isEmpty())
             break;
@@ -2009,8 +2007,7 @@ QString DBRepository::savePackages(Repository* r, bool replace)
 QString DBRepository::saveLicenses(Repository* r, bool replace)
 {
     QString err;
-    for (int i = 0; i < static_cast<int>(r->licenses.size()); i++) {
-        License* p = r->licenses.at(i);
+    for (auto p: r->licenses) {
         err = saveLicense(p, replace);
         if (!err.isEmpty())
             break;
@@ -2022,8 +2019,7 @@ QString DBRepository::saveLicenses(Repository* r, bool replace)
 QString DBRepository::savePackageVersions(Repository* r, bool replace)
 {
     QString err;
-    for (int i = 0; i < static_cast<int>(r->packageVersions.size()); i++) {
-        PackageVersion* p = r->packageVersions.at(i);
+    for (auto p: r->packageVersions) {
         err = savePackageVersion(p, replace);
         if (!err.isEmpty())
             break;
@@ -2205,8 +2201,7 @@ QString DBRepository::updateStatus(const QString& package)
     PackageVersion* newestInstallable = nullptr;
     PackageVersion* newestInstalled = nullptr;
     if (err.isEmpty()) {
-        for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
-            PackageVersion* pv = pvs.at(j);
+        for (auto pv: pvs) {
             if (pv->installed()) {
                 if (!newestInstalled ||
                         newestInstalled->version.compare(pv->version) < 0)

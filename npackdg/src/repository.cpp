@@ -82,8 +82,7 @@ PackageVersion* Repository::findNewestInstallablePackageVersion(
     PackageVersion* r = nullptr;
 
     std::vector<PackageVersion*> pvs = this->getPackageVersions(package);
-    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-        PackageVersion* p = pvs.at(i);
+    for (auto p: pvs) {
         if (r == nullptr || p->version.compare(r->version) > 0) {
             if (p->download.isValid())
                 r = p;
@@ -94,18 +93,18 @@ PackageVersion* Repository::findNewestInstallablePackageVersion(
 
 License* Repository::findLicense(const QString& name)
 {
-    for (int i = 0; i < static_cast<int>(this->licenses.size()); i++) {
-        if (this->licenses.at(i)->name == name)
-            return this->licenses.at(i);
+    for (auto license: licenses) {
+        if (license->name == name)
+            return license;
     }
     return nullptr;
 }
 
 Package* Repository::findPackage(const QString& name) const
 {
-    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
-        if (this->packages.at(i)->name == name)
-            return this->packages.at(i);
+    for (auto p: this->packages) {
+        if (p->name == name)
+            return p;
     }
     return nullptr;
 }
@@ -153,8 +152,7 @@ PackageVersion* Repository::findPackageVersion(const QString& package,
     PackageVersion* r = nullptr;
 
     std::vector<PackageVersion*> pvs = this->getPackageVersions(package);
-    for (int i = 0; i < static_cast<int>(pvs.size()); i++) {
-        PackageVersion* pv = pvs.at(i);
+    for (auto pv: pvs) {
         if (pv->version.compare(version) == 0) {
             r = pv;
             break;
@@ -228,18 +226,15 @@ void Repository::toXML(QXmlStreamWriter &w) const
 {
     w.writeStartElement("repository");
 
-    for (int i = 0; i < static_cast<int>(this->licenses.size()); i++) {
-        License* lic = this->licenses.at(i);
+    for (auto lic: this->licenses) {
         lic->toXML(w);
     }
 
-    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
-        Package* p = this->packages.at(i);
+    for (auto p: this->packages) {
         p->toXML(&w);
     }
 
-    for (int i = 0; i < static_cast<int>(this->packageVersions.size()); i++) {
-        PackageVersion* pv = this->packageVersions.at(i);
+    for (auto pv: this->packageVersions) {
         pv->toXML(&w);
     }
 
@@ -353,10 +348,10 @@ std::vector<Package*> Repository::findPackagesByShortName(const QString &name) c
 {
     QString suffix = "." + name;
     std::vector<Package*> r;
-    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
-        QString n = this->packages.at(i)->name;
+    for (auto p: packages) {
+        QString n = p->name;
         if (n.endsWith(suffix) || n == name) {
-            r.push_back(new Package(*this->packages.at(i)));
+            r.push_back(new Package(*p));
         }
     }
 

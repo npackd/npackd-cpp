@@ -162,8 +162,7 @@ InstalledPackageVersion *InstalledPackages::findHighestInstalledMatch(
 {
     std::vector<InstalledPackageVersion*> list = findAllInstalledMatches(dep);
     InstalledPackageVersion* res = nullptr;
-    for (int i = 0; i < static_cast<int>(list.size()); i++) {
-        InstalledPackageVersion* ipv = list.at(i);
+    for (auto ipv: list) {
         if (res == nullptr || ipv->version.compare(res->version) > 0)
             res = ipv;
     }
@@ -764,8 +763,8 @@ InstalledPackageVersion*
             //}
 
             if (err.isEmpty() && pv.get()) {
-                for (int j = 0; j < static_cast<int>(pv->dependencies.size()); j++) {
-                    if (!isInstalled(*pv->dependencies.at(j))) {
+                for (auto d: pv->dependencies) {
+                    if (!isInstalled(*d)) {
                         r = ipv->clone();
                         break;
                     }
@@ -887,7 +886,7 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
 
         std::vector<Repository*> repositories;
         std::vector<std::vector<InstalledPackageVersion*>* > installeds;
-        for (int i = 0; i < static_cast<int>(tpms.size()); i++) {
+        for (auto tpm: tpms) {
             repositories.push_back(new Repository());
             installeds.push_back(new std::vector<InstalledPackageVersion*>());
         }
@@ -1163,15 +1162,13 @@ QString InstalledPackages::readRegistryDatabase()
 
     this->mutex.lock();
     clearData();
-    for (int i = 0; i < static_cast<int>(ipvs.size()); i++) {
-        InstalledPackageVersion* ipv = ipvs.at(i);
+    for (auto ipv: ipvs) {
         this->data.insert({PackageVersion::getStringId(ipv->package,
                 ipv->version), ipv->clone()});
     }
     this->mutex.unlock();
 
-    for (int i = 0; i < static_cast<int>(ipvs.size()); i++) {
-        InstalledPackageVersion* ipv = ipvs.at(i);
+    for (auto ipv: ipvs) {
         fireStatusChanged(ipv->package, ipv->version);
     }
     qDeleteAll(ipvs);

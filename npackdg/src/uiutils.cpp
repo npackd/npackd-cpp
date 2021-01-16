@@ -51,8 +51,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
     std::vector<PackageVersion*> pvs;
 
     // fetch package versions
-    for (int j = 0; j < static_cast<int>(install.size()); j++) {
-        InstallOperation* op = install.at(j);
+    for (auto op: install) {
         PackageVersion* pv = op->findPackageVersion(err);
         if (!err->isEmpty()) {
             *err = QObject::tr("Cannot find the package version %1: %2").arg(
@@ -64,8 +63,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
 
     // check for locked package versions
     if (err->isEmpty()) {
-        for (int j = 0; j < static_cast<int>(pvs.size()); j++) {
-            PackageVersion* pv = pvs.at(j);
+        for (auto pv: pvs) {
             if (pv->isLocked()) {
                 *err = QObject::tr("The package %1 is locked by a currently running installation/removal.").
                         arg(pv->toString());
@@ -351,8 +349,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
         QString pct = WPMUtils::programCloseType2String(programCloseType);
         QStringList batch;
-        for (int i = 0; i < static_cast<int>(ops.size()); i++) {
-            InstallOperation* op = ops.at(i);
+        for (auto op: ops) {
             QString oneCmd = "\"" + newExe + "\" ";
 
             // ping 1.1.1.1 always fails so we use || instead of &&

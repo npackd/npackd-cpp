@@ -234,8 +234,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     QStringList uiComments;
     QStringList uiUnusedReps;
     QStringList uiUnusedComments;
-    for (int i = 0; i < static_cast<int>(entries.size()); i++) {
-        RepositoriesItemModel::Entry* e = entries.at(i);
+    for (auto e: entries) {
         if (e->enabled) {
             uiReps.append(e->url.trimmed());
             uiComments.append(e->comment.trimmed());

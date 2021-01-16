@@ -204,8 +204,7 @@ int App::remove()
     Package* found = nullptr;
     if (job->shouldProceed()) {
         QRegExp re(title, Qt::CaseInsensitive);
-        for (int i = 0; i < static_cast<int>(rep.packages.size()); i++) {
-            Package* p = rep.packages.at(i);
+        for (auto p: rep.packages) {
             if (re.indexIn(p->title) >= 0) {
                 found = p;
                 break;
@@ -235,11 +234,10 @@ int App::remove()
 
     PackageVersionFile* pvf = nullptr;
     if (job->shouldProceed()) {
-        for (int j = 0; j < static_cast<int>(pv->files.size()); j++) {
-            if (pv->files.at(j)->path.compare(
-                    ".Npackd\\Uninstall.bat",
+        for (auto f: pv->files) {
+            if (f->path.compare(".Npackd\\Uninstall.bat",
                     Qt::CaseInsensitive) == 0) {
-                pvf = pv->files.at(j);
+                pvf = f;
             }
         }
         if (job->shouldProceed() && !pvf)
@@ -377,8 +375,8 @@ int App::help()
 //        "        removes one installed program from the Software control panel",
         "Options:",
     };
-    for (int i = 0; i < static_cast<int>(sizeof(lines) / sizeof(lines[0])); i++) {
-        WPMUtils::writeln(QString(lines[i]));
+    for (auto line: lines) {
+        WPMUtils::writeln(QString(line));
     }
     QStringList txt = this->cl.printOptions();
     for (int i = 0; i < txt.count(); i++) {
@@ -389,8 +387,8 @@ int App::help()
         "The process exits with the code unequal to 0 if an error occcures.",
         "If the output is redirected, the texts will be encoded as UTF-8.",
     };
-    for (int i = 0; i < static_cast<int>(sizeof(lines2) / sizeof(lines2[0])); i++) {
-        WPMUtils::writeln(QString(lines2[i]));
+    for (auto line: lines2) {
+        WPMUtils::writeln(QString(line));
     }
 
     return 0;

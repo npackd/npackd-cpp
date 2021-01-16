@@ -127,8 +127,7 @@ QString CommandLine::processOneParam(QStringList* params)
 CommandLine::Option* CommandLine::findOption(const QString& name)
 {
     Option* r = nullptr;
-    for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
-        Option* opt = this->options.at(i);
+    for (auto opt: this->options) {
         if (opt->nameMatches(name)) {
             r = opt;
             break;
@@ -159,8 +158,7 @@ QStringList CommandLine::printOptions() const
 {
     QStringList names;
     int len = 0;
-    for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
-        Option* opt = this->options.at(i);
+    for (auto opt: this->options) {
         QString s("    ");
         if (opt->name2 != 0) {
             s.append("-").append(opt->name2).append(", ");

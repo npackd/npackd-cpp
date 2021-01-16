@@ -99,8 +99,7 @@ QString CLProcessor::remove()
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < static_cast<int>(toRemove.size()); i++) {
-            PackageVersion* pv = toRemove.at(i);
+        for (auto pv: toRemove) {
             err = DBRepository::getDefault()->planUninstallation(installed,
                     pv->package, pv->version, ops);
             if (!err.isEmpty())
@@ -207,8 +206,7 @@ QString CLProcessor::add()
 
     if (err.isEmpty()) {
         std::vector<PackageVersion*> avoid;
-        for (int i = 0; i < static_cast<int>(toInstall.size()); i++) {
-            PackageVersion* pv = toInstall.at(i);
+        for (auto pv: toInstall) {
             err = pv->planInstallation(dbr, installed, ops, avoid);
             if (!err.isEmpty())
                 break;
@@ -513,8 +511,8 @@ void CLProcessor::usage()
         "Options:",
     };
     QStringList sl;
-    for (int i = 0; i < static_cast<int>(sizeof(lines) / sizeof(lines[0])); i++) {
-        sl.append(QString(lines[i]));
+    for (auto line: lines) {
+        sl.append(QString(line));
     }
 
     QStringList opts = this->cl.printOptions();
@@ -526,8 +524,8 @@ void CLProcessor::usage()
         //"",
         // "See https://github.com/tim-lebedkov/npackd/wiki/CommandLine for more details.",
     };
-    for (int i = 0; i < static_cast<int>(sizeof(lines2) / sizeof(lines2[0])); i++) {
-        sl.append(QString(lines2[i]));
+    for (auto line: lines2) {
+        sl.append(QString(line));
     }
 
     QMessageBox mb(nullptr);

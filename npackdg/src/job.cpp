@@ -70,8 +70,7 @@ void Job::waitFor()
 void Job::waitForChildren()
 {
     this->mutex.lock();
-    for (int i = 0; i < static_cast<int>(this->childJobs.size()); i++) {
-        Job* ch = this->childJobs.at(i);
+    for (auto ch: this->childJobs) {
         if (!ch->isCompleted()) {
             ch->waitFor();
         }
@@ -127,8 +126,8 @@ void Job::cancel()
         fireChange();
 
         this->mutex.lock();
-        for (int i = 0; i < static_cast<int>(this->childJobs.size()); i++) {
-            this->childJobs.at(i)->cancel();
+        for (auto ch: this->childJobs) {
+            ch->cancel();
         }
         this->mutex.unlock();
     }
@@ -411,8 +410,8 @@ void Job::setErrorMessage(const QString &errorMessage)
         fireChange();
 
         this->mutex.lock();
-        for (int i = 0; i < static_cast<int>(childJobs.size()); i++) {
-            childJobs.at(i)->cancel();
+        for (auto ch: childJobs) {
+            ch->cancel();
         }
         this->mutex.unlock();
     }
