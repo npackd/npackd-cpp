@@ -451,13 +451,15 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
     QDir d(getPath());
 
-    QFuture<void> deleteShortcutsFuture;
+    std::future<void> deleteShortcutsFuture;
     if (job->getErrorMessage().isEmpty()) {
         Job* deleteShortcutsJob = job->newSubJob(0,
                 QObject::tr("Deleting shortcuts"), false);
-        deleteShortcutsFuture = QtConcurrent::run(this,
-                &PackageVersion::deleteShortcutsRunnable,
-                d.absolutePath(), deleteShortcutsJob, true, false, false);
+        deleteShortcutsFuture = std::async(std::launch::async,
+            [this, d, deleteShortcutsJob](){
+                this->deleteShortcutsRunnable(
+                    d.absolutePath(), deleteShortcutsJob, true, false, false);
+            });
     }
 
     // Inno Setup, NSIS
@@ -644,7 +646,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
     }
     job->setTitle(initialTitle);
 
-    deleteShortcutsFuture.waitForFinished();
+    deleteShortcutsFuture.wait();
 
     if (success)
         qCInfo(npackd).noquote() << QObject::tr(
