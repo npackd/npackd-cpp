@@ -76,6 +76,9 @@ endif()
 # Windows 7
 add_definitions(-D_WIN32_WINNT=0x0601)
 
+# C++11 compatibility for transwarp
+add_definitions(-DTRANSWARP_CPP11=1)
+
 # GCC compiler flags
 if(MINGW)
   if(NOT NPACKD_PLATFORM_X64)

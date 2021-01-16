@@ -17,7 +17,6 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QAbstractButton>
-#include <QtConcurrent/QtConcurrent>
 
 #include "uiutils.h"
 #include "packageversion.h"

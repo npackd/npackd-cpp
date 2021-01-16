@@ -283,7 +283,7 @@ public:
             bool useCache, bool detect=true);
 
     /**
-     * @brief updateF5() that can be used with QtConcurrent::Run
+     * @brief reload repositories
      * @param job job
      * @param useCache true = cache will be used
      */

@@ -132,7 +132,6 @@ set(NPACKDG_HEADERS
     src/visiblejobs.h
     src/clprocessor.h
     src/progresstree2.h
-    src/concurrent.h
     src/stable.h
     src/exportrepositoryframe.h
     src/asyncdownloader.h
@@ -145,6 +144,7 @@ set(NPACKDG_HEADERS
     src/dismapi.h
     src/dismthirdpartypm.h
     src/sqlutils.h
+    src/transwarp.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui

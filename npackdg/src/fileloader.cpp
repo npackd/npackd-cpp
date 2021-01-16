@@ -15,11 +15,11 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QtConcurrent/QtConcurrent>
 
 #include "fileloader.h"
 #include "downloader.h"
 #include "job.h"
-#include "concurrent.h"
 #include "wpmutils.h"
 #include "sqlutils.h"
 
@@ -146,7 +146,7 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
         loadingSize.insert(url);
         this->mutex.unlock();
 
-        QFuture<DownloadFile> future = run(&threadPool, this,
+        QFuture<DownloadFile> future = QtConcurrent::run(&threadPool, this,
                 &FileLoader::downloadSizeRunnable, url);
         QFutureWatcher<DownloadFile>* w =
                 new QFutureWatcher<DownloadFile>(this);
