@@ -7,7 +7,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QString>
-#include <QtConcurrent/QtConcurrent>
+#include <QTranslator>
 
 #include "installedpackages.h"
 #include "wpmutils.h"
@@ -428,10 +428,11 @@ QString CLProcessor::process(std::vector<InstallOperation*> &install,
             } else {
                 Job* job = new Job(title);
 
-                QtConcurrent::run(static_cast<AbstractRepository*>(rep),
-                        &AbstractRepository::processWithCoInitializeAndFree,
-                        job, install,
-                        PackageUtils::getCloseProcessType());
+                std::thread thr([rep, job, install](){
+                    rep->processWithCoInitializeAndFree(job, install,
+                            PackageUtils::getCloseProcessType());
+                });
+                thr.detach();
 
                 monitorAndWaitFor(job);
                 err = job->getErrorMessage();
