@@ -15,7 +15,6 @@
 #endif
 #endif
 
-#include <QtConcurrent/QtConcurrent>
 #include <QLoggingCategory>
 
 #include "windowsregistry.h"
@@ -892,23 +891,27 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
         }
 
         // detect everything in threads
-        std::vector<QFuture<void> > futures;
+        std::vector<std::future<void> > futures;
         for (int i = 0; i < static_cast<int>(tpms.size()); i++) {
             AbstractThirdPartyPM* tpm = tpms.at(i);
             Job* s = job->newSubJob(0.1,
                     jobTitles.at(i), false, tpm->detectionPrefix != "wua:"); // Windows Updates are not important
 
-            QFuture<void> future = QtConcurrent::run(
-                    tpm,
-                    &AbstractThirdPartyPM::scan, s,
-                    installeds.at(i), repositories.at(i));
-            futures.push_back(future);
+            std::vector<InstalledPackageVersion*>* installedsi = installeds.at(i);
+            Repository* r = repositories.at(i);
+
+            std::future<void> future = std::async(
+                std::launch::async,
+                [tpm, s, installedsi, r](){
+                    tpm->scan(s, installedsi, r);
+                });
+            futures.push_back(std::move(future));
         }
 
         // waiting for threads to end and store the detected
         // packages, versions and licenses
         for (int i = 0; i < static_cast<int>(futures.size()); i++) {
-            futures[i].waitForFinished();
+            futures[i].wait();
 
             Job* sub = job->newSubJob(0.1,
                     QObject::tr("Saving detected packages %1").arg(i),
