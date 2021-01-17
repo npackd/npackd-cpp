@@ -25,11 +25,12 @@
 
 extern HWND defaultPasswordWindow;
 
-QThreadPool FileLoader::threadPool;
-FileLoader::_init FileLoader::_initializer;
+transwarp::parallel FileLoader::threadPool{10};
 
 FileLoader::FileLoader()
 {
+    downloadFileListener = std::make_shared<DownloadFileListener>(*this);
+    downloadSizeListener = std::make_shared<DownloadSizeListener>(*this);
 }
 
 std::tuple<int64_t, QString> FileLoader::saveURLInfos(
@@ -105,13 +106,8 @@ std::tuple<int64_t, QString> FileLoader::saveURLInfos(
     return std::tie(id, err);
 }
 
-void FileLoader::watcherSizeFinished()
+void FileLoader::watcherSizeFinished(const DownloadFile& r)
 {
-    QFutureWatcher<DownloadFile>* w = static_cast<
-            QFutureWatcher<DownloadFile>*>(sender());
-
-    DownloadFile r = w->result();
-
     int64_t id;
     QString err;
     std::tie(id, err) = saveURLInfos(r.url, r.size, r.file);
@@ -119,8 +115,6 @@ void FileLoader::watcherSizeFinished()
         qCWarning(npackd) << "Error saving a URL record" << err;
 
     emit this->downloadSizeCompleted(r.url, r.size);
-
-    w->deleteLater();
 }
 
 int64_t FileLoader::downloadSizeOrQueue(const QString &url)
@@ -146,12 +140,14 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
         loadingSize.insert(url);
         this->mutex.unlock();
 
-        QFuture<DownloadFile> future = QtConcurrent::run(&threadPool, this,
-                &FileLoader::downloadSizeRunnable, url);
-        QFutureWatcher<DownloadFile>* w =
-                new QFutureWatcher<DownloadFile>(this);
-        connect(w, SIGNAL(finished()), this, SLOT(watcherSizeFinished()));
-        w->setFuture(future);
+        auto t = transwarp::make_task(transwarp::root,
+            [this, url] {
+                return this->downloadSizeRunnable(url);
+            });
+        t->add_listener(transwarp::event_type::after_finished,
+                downloadSizeListener);
+
+        t->schedule_all(threadPool);
     }
 
     return r;
@@ -160,7 +156,7 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
         const QString& url)
 {
-    QThread::currentThread()->setPriority(QThread::LowestPriority);
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
 
     bool b = SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
 
@@ -319,25 +315,22 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
         loading.insert(url);
         mutex.unlock();
 
-        QFuture<DownloadFile> future = QtConcurrent::run(
-                &FileLoader::threadPool, this,
-                &FileLoader::downloadFileRunnable, id, url);
-        QFutureWatcher<DownloadFile>* w =
-                new QFutureWatcher<DownloadFile>(this);
-        connect(w, SIGNAL(finished()), this,
-                SLOT(watcherFileFinished()));
-        w->setFuture(future);
+        auto t = transwarp::make_task(transwarp::root,
+            [this, id, url] {
+                qCWarning(npackdImportant) << "downloadFileRunnable";
+                return this->downloadFileRunnable(id, url);
+            });
+        t->add_listener(transwarp::event_type::after_finished,
+                downloadFileListener);
+
+        t->schedule(threadPool);
     }
 
     return r;
 }
 
-void FileLoader::watcherFileFinished()
+void FileLoader::watcherFileFinished(const DownloadFile &r)
 {
-    QFutureWatcher<DownloadFile>* w = static_cast<
-            QFutureWatcher<DownloadFile>*>(sender());
-    DownloadFile r = w->result();
-
     if (!r.file.isEmpty() || !r.error.isEmpty()) {
         int64_t id;
         QString err;
@@ -352,8 +345,6 @@ void FileLoader::watcherFileFinished()
 
         emit this->downloadFileCompleted(r.url, file, r.error);
     }
-
-    w->deleteLater();
 }
 
 FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
@@ -362,7 +353,7 @@ FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
     FileLoader::DownloadFile r;
     r.url = url;
 
-    QThread::currentThread()->setPriority(QThread::LowestPriority);
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
 
     bool b = SetThreadPriority(GetCurrentThread(),THREAD_MODE_BACKGROUND_BEGIN);
 
@@ -457,4 +448,29 @@ QString FileLoader::updateDatabase()
         }
     }
     return err;
+}
+
+FileLoader::DownloadSizeListener::DownloadSizeListener(
+        FileLoader &fileLoader): fileLoader(fileLoader)
+{
+}
+
+void FileLoader::DownloadSizeListener::handle_event(
+        transwarp::event_type /*event*/, transwarp::itask &task)
+{
+    auto& t = reinterpret_cast<transwarp::task<DownloadFile>&>(task);
+    DownloadFile r = t.future().get();
+    fileLoader.watcherSizeFinished(r);
+}
+
+FileLoader::DownloadFileListener::DownloadFileListener(FileLoader &fileLoader):
+        fileLoader(fileLoader)
+{
+}
+
+void FileLoader::DownloadFileListener::handle_event(transwarp::event_type, transwarp::itask &task)
+{
+    auto& t = reinterpret_cast<transwarp::task<DownloadFile>&>(task);
+    DownloadFile r = t.future().get();
+    fileLoader.watcherFileFinished(r);
 }

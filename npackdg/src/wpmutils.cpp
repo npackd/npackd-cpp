@@ -38,6 +38,7 @@
 #include <QUrl>
 #include <QLoggingCategory>
 #include <QDirIterator>
+#include <QThread>
 
 #include <quazip.h>
 #include <quazipfile.h>

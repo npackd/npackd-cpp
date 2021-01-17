@@ -8,7 +8,6 @@
 #include <qvariant.h>
 #include <qprogressdialog.h>
 #include <qwaitcondition.h>
-#include <qthread.h>
 #include <windows.h>
 #include <shlobj.h>
 #include <shobjidl.h>
@@ -630,14 +629,6 @@ void MainWindow::updateProgressTabTitle()
 
 MainWindow::~MainWindow()
 {
-    QThreadPool::globalInstance()->clear();
-    QThreadPool::globalInstance()->waitForDone(-1);
-
-    // if a timeout of 5 seconds is used here, there may an access
-    // violation during program shutdown
-    FileLoader::threadPool.clear();
-    FileLoader::threadPool.waitForDone(-1);
-
     delete ui;
 }
 

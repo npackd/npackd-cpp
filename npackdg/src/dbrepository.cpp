@@ -3,6 +3,7 @@
 #include <shlobj.h>
 #include <ctime>
 #include <unordered_set>
+#include <future>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -1837,7 +1838,7 @@ void DBRepository::clearAndDownloadRepositories(Job* job,
 
 void DBRepository::updateF5Runnable(Job *job, bool useCache)
 {
-    QThread::currentThread()->setPriority(QThread::LowestPriority);
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
 
     /*
     makes the process too slow

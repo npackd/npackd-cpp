@@ -2,7 +2,6 @@
 #define CLPROCESSOR_H
 
 #include <QString>
-#include <QThread>
 #include <QList>
 #include <QApplication>
 

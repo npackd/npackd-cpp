@@ -4,6 +4,7 @@
 #include <msi.h>
 #include <memory>
 #include <shlobj.h>
+#include <future>
 
 #include <QtGlobal>
 #if defined(_MSC_VER) && (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))

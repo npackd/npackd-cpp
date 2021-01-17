@@ -5,7 +5,6 @@
 
 #include <QTreeWidget>
 #include <QTimer>
-#include <QThread>
 #include <QString>
 #include <QWidget>
 #include <QString>

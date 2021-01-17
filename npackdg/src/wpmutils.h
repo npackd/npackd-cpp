@@ -11,7 +11,6 @@
 #include <QDir>
 #include <QTime>
 #include <QCryptographicHash>
-#include <QThreadPool>
 #include <QLoggingCategory>
 
 #include "job.h"

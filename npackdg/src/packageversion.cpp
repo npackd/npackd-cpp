@@ -8,11 +8,11 @@
 #include <time.h>
 #include <ole2.h>
 #include <comcat.h>
+#include <future>
 
 #include <QUrl>
 #include <QIODevice>
 #include <QMutex>
-#include <QThreadPool>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QTemporaryDir>
@@ -376,9 +376,8 @@ bool PackageVersion::installed() const
 void PackageVersion::deleteShortcutsRunnable(const QString& dir, Job* job,
         bool menu, bool desktop, bool quickLaunch)
 {
-    QThread::currentThread()->setPriority(QThread::IdlePriority);
     bool b = SetThreadPriority(GetCurrentThread(),
-            THREAD_MODE_BACKGROUND_BEGIN);
+            THREAD_MODE_BACKGROUND_BEGIN | THREAD_PRIORITY_IDLE);
 
     CoInitialize(nullptr);
     deleteShortcuts(dir, job, menu, desktop, quickLaunch);

@@ -8,13 +8,13 @@
 #include <QObject>
 #include <QUrl>
 #include <QTemporaryFile>
-#include <QThread>
 #include <QAtomicInt>
 #include <QMutex>
 #include <QTemporaryDir>
 #include <QSqlError>
-#include <QThreadPool>
 #include <QMutex>
+
+#include "transwarp.h"
 
 #include "mysqlquery.h"
 #include "dbrepository.h"
@@ -39,6 +39,20 @@ class FileLoader: public QObject
 
         /** date/time when the size was computed */
         time_t sizeModified;
+    };
+
+    class DownloadSizeListener: public transwarp::listener {
+        FileLoader& fileLoader;
+    public:
+        DownloadSizeListener(FileLoader& fileLoader);
+        void handle_event(transwarp::event_type, transwarp::itask& task);
+    };
+
+    class DownloadFileListener: public transwarp::listener {
+        FileLoader& fileLoader;
+    public:
+        DownloadFileListener(FileLoader& fileLoader);
+        void handle_event(transwarp::event_type, transwarp::itask& task);
     };
 
     MySQLQuery* insertURLInfosQuery = nullptr;
@@ -78,6 +92,9 @@ class FileLoader: public QObject
     std::unordered_set<QString> loading;
     std::unordered_set<QString> loadingSize;
 
+    std::shared_ptr<DownloadSizeListener> downloadSizeListener;
+    std::shared_ptr<DownloadFileListener> downloadFileListener;
+
     /**
      * @brief saves the download size for an URL
      * @param url URL
@@ -87,18 +104,12 @@ class FileLoader: public QObject
      */
     std::tuple<int64_t, QString> saveURLInfos(
             const QString& url, int64_t size, const QString& file);
-public:
-    static QThreadPool threadPool;
-private:
-    static class _init
-    {
-    public:
-        _init() {
-            //if (threadPool.maxThreadCount() > 2)
-                threadPool.setMaxThreadCount(10);
-        }
-    } _initializer;
 
+    void watcherSizeFinished(const DownloadFile &r);
+    void watcherFileFinished(const DownloadFile &r);
+public:
+    static transwarp::parallel threadPool;
+private:
     QString getUnusedFilename();
 public:
     /**
@@ -145,9 +156,6 @@ signals:
      * @param size size of the download or -1 if unknown or -2 for an error
      */
     void downloadSizeCompleted(const QString& url, int64_t size);
-private slots:
-    void watcherFileFinished();
-    void watcherSizeFinished();
 };
 
 #endif // FILELOADER_H

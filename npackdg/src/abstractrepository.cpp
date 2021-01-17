@@ -39,7 +39,7 @@ bool AbstractRepository::includesRemoveItself(
 void AbstractRepository::processWithCoInitializeAndFree(Job *job,
         const std::vector<InstallOperation *> &install_, DWORD programCloseType)
 {
-    QThread::currentThread()->setPriority(QThread::LowestPriority);
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
 
     /*
     makes the process too slow
@@ -65,7 +65,7 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
 {
     QDir d;
 
-    QThread::currentThread()->setPriority(QThread::LowestPriority);
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
 
     CoInitialize(nullptr);
 
