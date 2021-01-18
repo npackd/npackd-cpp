@@ -1894,23 +1894,30 @@ std::unordered_map<QString, QString> mapDevices2Drives() {
     return devices2drives;
 }
 
-class MyThread {
+class GetObjectNameThread {
     // this should be initialized before std::thread
     HANDLE h;
-public:
-    QString name;
+
     std::thread thr;
 
-    // after done is set to true, we do not touch "name" anymore
-    std::atomic_bool done{false};
+    // access under mutex_
+    QString name;
 
-    MyThread(HANDLE h): h(h), thr(&MyThread::run, this) {
+    // access under mutex_
+    bool done{false};
+
+    std::mutex mutex_;
+    std::condition_variable cv;
+public:
+    GetObjectNameThread(HANDLE h): h(h), thr(&GetObjectNameThread::run, this) {
     }
 
     void run();
+
+    QString getName();
 };
 
-void MyThread::run()
+void GetObjectNameThread::run()
 {
     HMODULE module = GetModuleHandleA("ntdll.dll");
     _NtQueryObject NtQueryObject;
@@ -1937,17 +1944,46 @@ void MyThread::run()
 
         /* Print the information! */
         if (objectName.Length) {
-            name.setUtf16((const ushort*) objectName.Buffer,
-                    objectName.Length / 2);
-            done = true;
+            {
+                std::lock_guard<std::mutex> lck(mutex_);
+                name.setUtf16((const ushort*) objectName.Buffer,
+                        objectName.Length / 2);
+                done = true;
+            }
         } else {
             ok = false;
         }
     }
 
     free(objectNameInfo);
+
+    cv.notify_one();
 }
 
+QString GetObjectNameThread::getName() {
+    bool d;
+    QString r;
+    {
+        std::unique_lock<std::mutex> lck(mutex_);
+        cv.wait_for(lck, std::chrono::seconds(1),
+                [this]{ return done; });
+        d = done;
+        r = name;
+    }
+
+    if (d) {
+        // Finished
+        thr.join();
+    } else {
+        thr.detach();
+
+        // Not finished
+        TerminateThread(reinterpret_cast<HANDLE>(
+                thr.native_handle()), 255);
+    }
+
+    return r;
+}
 
 std::vector<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &dir) {
     std::unordered_map<QString, QString> devices2drives = mapDevices2Drives();
@@ -2072,37 +2108,9 @@ std::vector<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &
                     */
 
             // retrieving the name of a handle may hang for pipes
-            MyThread t(dupHandle);
-
-            // Wait for 1 second. Busy waiting is used here to loop over all
-            // handles as quick as possible.
-            std::chrono::steady_clock::time_point begin =
-                    std::chrono::steady_clock::now();
-            while (true) {
-                if (t.done)
-                    break;
-
-                std::chrono::steady_clock::time_point end =
-                        std::chrono::steady_clock::now();
-                auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                        end - begin).count();
-                if (ms > 1000)
-                    break;
-            }
-
-            if (t.done) {
-                // Finished
-                t.thr.join();
-                name = t.name;
-                qCDebug(npackd) << "File object" << name;
-            } else {
-                t.thr.detach();
-
-                // Not finished
-                TerminateThread(reinterpret_cast<HANDLE>(
-                        t.thr.native_handle()), 255);
-                ok = false;
-            }
+            GetObjectNameThread t(dupHandle);
+            name = t.getName();
+            ok = !name.isEmpty();
 
             // qCDebug(npackd) << "NtQueryObject end";
         }
