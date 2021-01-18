@@ -1894,15 +1894,17 @@ std::unordered_map<QString, QString> mapDevices2Drives() {
     return devices2drives;
 }
 
-class MyThread : public QThread {
-public:
+class MyThread {
+    // this should be initialized before std::thread
     HANDLE h;
+public:
     QString name;
-    bool ok;
+    std::thread thr;
 
-    MyThread(HANDLE h) {
-        this->h = h;
-        ok = false;
+    // after done is set to true, we do not touch "name" anymore
+    std::atomic_bool done{false};
+
+    MyThread(HANDLE h): h(h), thr(&MyThread::run, this) {
     }
 
     void run();
@@ -1918,7 +1920,7 @@ void MyThread::run()
     ULONG returnLength = 0;
 
     objectNameInfo = malloc(0x1000);
-    ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
+    bool ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
             objectNameInfo, 0x1000, &returnLength));
     if (!ok) {
         /* Reallocate the buffer and try again. */
@@ -1937,6 +1939,7 @@ void MyThread::run()
         if (objectName.Length) {
             name.setUtf16((const ushort*) objectName.Buffer,
                     objectName.Length / 2);
+            done = true;
         } else {
             ok = false;
         }
@@ -2070,15 +2073,34 @@ std::vector<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &
 
             // retrieving the name of a handle may hang for pipes
             MyThread t(dupHandle);
-            t.start();
-            if (t.wait(1000) ) {
+
+            // Wait for 1 second. Busy waiting is used here to loop over all
+            // handles as quick as possible.
+            std::chrono::steady_clock::time_point begin =
+                    std::chrono::steady_clock::now();
+            while (true) {
+                if (t.done)
+                    break;
+
+                std::chrono::steady_clock::time_point end =
+                        std::chrono::steady_clock::now();
+                auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        end - begin).count();
+                if (ms > 1000)
+                    break;
+            }
+
+            if (t.done) {
                 // Finished
-                ok = t.ok;
+                t.thr.join();
                 name = t.name;
                 qCDebug(npackd) << "File object" << name;
             } else {
+                t.thr.detach();
+
                 // Not finished
-                t.terminate();
+                TerminateThread(reinterpret_cast<HANDLE>(
+                        t.thr.native_handle()), 255);
                 ok = false;
             }
 
