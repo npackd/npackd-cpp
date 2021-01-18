@@ -25,13 +25,10 @@
 
 extern HWND defaultPasswordWindow;
 
-transwarp::parallel FileLoader::threadPool{10};
-
-FileLoader::FileLoader()
-{
-    downloadFileListener = std::make_shared<DownloadFileListener>(*this);
-    downloadSizeListener = std::make_shared<DownloadSizeListener>(*this);
-}
+transwarp::detail::thread_pool FileLoader::threadPool{10, [](size_t){
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+    SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
+}};
 
 std::tuple<int64_t, QString> FileLoader::saveURLInfos(
         const QString& url, int64_t size,
@@ -106,17 +103,6 @@ std::tuple<int64_t, QString> FileLoader::saveURLInfos(
     return std::tie(id, err);
 }
 
-void FileLoader::watcherSizeFinished(const DownloadFile& r)
-{
-    int64_t id;
-    QString err;
-    std::tie(id, err) = saveURLInfos(r.url, r.size, r.file);
-    if (!err.isEmpty())
-        qCWarning(npackd) << "Error saving a URL record" << err;
-
-    emit this->downloadSizeCompleted(r.url, r.size);
-}
-
 int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 {
     int64_t r = -1;
@@ -140,26 +126,17 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
         loadingSize.insert(url);
         this->mutex.unlock();
 
-        auto t = transwarp::make_task(transwarp::root,
-            [this, url] {
-                return this->downloadSizeRunnable(url);
-            });
-        t->add_listener(transwarp::event_type::after_finished,
-                downloadSizeListener);
-
-        t->schedule_all(threadPool);
+        threadPool.push([this, url] {
+            this->downloadSizeRunnable(url);
+        });
     }
 
     return r;
 }
 
-FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
+void FileLoader::downloadSizeRunnable(
         const QString& url)
 {
-    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
-
-    bool b = SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
-
     CoInitialize(nullptr);
 
     Job* job = new Job();
@@ -181,14 +158,17 @@ FileLoader::DownloadFile FileLoader::downloadSizeRunnable(
 
     CoUninitialize();
 
-    if (b)
-        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
-
     mutex.lock();
     loadingSize.erase(url);
     mutex.unlock();
 
-    return v;
+    int64_t id;
+    QString err;
+    std::tie(id, err) = saveURLInfos(v.url, v.size, v.file);
+    if (!err.isEmpty())
+        qCWarning(npackd) << "Error saving a URL record" << err;
+
+    emit this->downloadSizeCompleted(v.url, v.size);
 }
 
 QString FileLoader::init()
@@ -315,47 +295,18 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
         loading.insert(url);
         mutex.unlock();
 
-        auto t = transwarp::make_task(transwarp::root,
-            [this, id, url] {
-                qCWarning(npackdImportant) << "downloadFileRunnable";
-                return this->downloadFileRunnable(id, url);
-            });
-        t->add_listener(transwarp::event_type::after_finished,
-                downloadFileListener);
-
-        t->schedule(threadPool);
+        threadPool.push([this, id, url] {
+            this->downloadFileRunnable(id, url);
+        });
     }
 
     return r;
 }
 
-void FileLoader::watcherFileFinished(const DownloadFile &r)
-{
-    if (!r.file.isEmpty() || !r.error.isEmpty()) {
-        int64_t id;
-        QString err;
-        std::tie(id, err) = saveURLInfos(r.url, r.size, r.file);
-        if (!err.isEmpty()) {
-            qCWarning(npackd) << "Error saving a URL record" << err;
-        }
-
-        QString file = r.file;
-        if (!file.isEmpty())
-            file = dir + "\\Files\\" + file;
-
-        emit this->downloadFileCompleted(r.url, file, r.error);
-    }
-}
-
-FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
-        const QString& url)
+void FileLoader::downloadFileRunnable(int64_t id, const QString& url)
 {
     FileLoader::DownloadFile r;
     r.url = url;
-
-    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
-
-    bool b = SetThreadPriority(GetCurrentThread(),THREAD_MODE_BACKGROUND_BEGIN);
 
     CoInitialize(nullptr);
 
@@ -407,14 +358,24 @@ FileLoader::DownloadFile FileLoader::downloadFileRunnable(int64_t id,
 
     CoUninitialize();
 
-    if (b)
-        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
-
     mutex.lock();
     loading.erase(url);
     mutex.unlock();
 
-    return r;
+    if (!r.file.isEmpty() || !r.error.isEmpty()) {
+        int64_t id;
+        QString err;
+        std::tie(id, err) = saveURLInfos(r.url, r.size, r.file);
+        if (!err.isEmpty()) {
+            qCWarning(npackd) << "Error saving a URL record" << err;
+        }
+
+        QString file = r.file;
+        if (!file.isEmpty())
+            file = dir + "\\Files\\" + file;
+
+        emit this->downloadFileCompleted(r.url, file, r.error);
+    }
 }
 
 QString FileLoader::updateDatabase()
@@ -448,29 +409,4 @@ QString FileLoader::updateDatabase()
         }
     }
     return err;
-}
-
-FileLoader::DownloadSizeListener::DownloadSizeListener(
-        FileLoader &fileLoader): fileLoader(fileLoader)
-{
-}
-
-void FileLoader::DownloadSizeListener::handle_event(
-        transwarp::event_type /*event*/, transwarp::itask &task)
-{
-    auto& t = reinterpret_cast<transwarp::task<DownloadFile>&>(task);
-    DownloadFile r = t.future().get();
-    fileLoader.watcherSizeFinished(r);
-}
-
-FileLoader::DownloadFileListener::DownloadFileListener(FileLoader &fileLoader):
-        fileLoader(fileLoader)
-{
-}
-
-void FileLoader::DownloadFileListener::handle_event(transwarp::event_type, transwarp::itask &task)
-{
-    auto& t = reinterpret_cast<transwarp::task<DownloadFile>&>(task);
-    DownloadFile r = t.future().get();
-    fileLoader.watcherFileFinished(r);
 }

@@ -41,20 +41,6 @@ class FileLoader: public QObject
         time_t sizeModified;
     };
 
-    class DownloadSizeListener: public transwarp::listener {
-        FileLoader& fileLoader;
-    public:
-        DownloadSizeListener(FileLoader& fileLoader);
-        void handle_event(transwarp::event_type, transwarp::itask& task);
-    };
-
-    class DownloadFileListener: public transwarp::listener {
-        FileLoader& fileLoader;
-    public:
-        DownloadFileListener(FileLoader& fileLoader);
-        void handle_event(transwarp::event_type, transwarp::itask& task);
-    };
-
     MySQLQuery* insertURLInfosQuery = nullptr;
     std::unique_ptr<MySQLQuery> updateURLQuery;
 
@@ -64,8 +50,9 @@ class FileLoader: public QObject
      * @brief downloads a file
      * @param url this file should be downloaded
      * @return result
+     * @threadsafe
      */
-    DownloadFile downloadSizeRunnable(const QString &url);
+    void downloadSizeRunnable(const QString &url);
 
     QString dir;
 
@@ -75,6 +62,7 @@ class FileLoader: public QObject
      * @brief searches for the information about an URL
      * @param url URL
      * @return (URL information, error message)
+     * @threadsafe
      */
     std::tuple<DownloadFile, QString> findURLInfo(const QString& url);
 
@@ -83,17 +71,21 @@ class FileLoader: public QObject
      * @param url this file should be downloaded
      * @return result
      */
-    DownloadFile downloadFileRunnable(int64_t id, const QString &url);
+    void downloadFileRunnable(int64_t id, const QString &url);
 
+    /**
+     * @brief exec
+     * @param sql
+     * @return
+     * @threadsafe
+     */
     QString exec(const QString &sql);
+
     QString open(const QString &connectionName, const QString &file);
     QString updateDatabase();
 
     std::unordered_set<QString> loading;
     std::unordered_set<QString> loadingSize;
-
-    std::shared_ptr<DownloadSizeListener> downloadSizeListener;
-    std::shared_ptr<DownloadFileListener> downloadFileListener;
 
     /**
      * @brief saves the download size for an URL
@@ -101,6 +93,7 @@ class FileLoader: public QObject
      * @param size size of the URL or -1 if unknown or -2 if an error occured
      * @param file file name in the cache without directory
      * @return ROWID, error message
+     * @threadsafe
      */
     std::tuple<int64_t, QString> saveURLInfos(
             const QString& url, int64_t size, const QString& file);
@@ -108,15 +101,10 @@ class FileLoader: public QObject
     void watcherSizeFinished(const DownloadFile &r);
     void watcherFileFinished(const DownloadFile &r);
 public:
-    static transwarp::parallel threadPool;
+    static transwarp::detail::thread_pool threadPool;
 private:
     QString getUnusedFilename();
 public:
-    /**
-     * The thread is not started.
-     */
-    FileLoader();
-
     /**
      * @brief initialize the cache
      *
@@ -131,6 +119,7 @@ public:
      * @param url this file will be downloaded
      * @param err error message or ""
      * @return local file name or "" if file is being downloaded
+     * @threadsafe
      */
     QString downloadFileOrQueue(const QString& url, QString* err);
 
@@ -138,6 +127,7 @@ public:
      * @brief download a file. This function does not block.
      * @param url this file will be downloaded
      * @return size or -2 if an error occured or -1 if the size is unknown
+     * @threadsafe
      */
     int64_t downloadSizeOrQueue(const QString& url);
 signals:
