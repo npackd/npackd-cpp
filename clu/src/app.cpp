@@ -397,9 +397,9 @@ int App::help()
     for (auto line: lines) {
         WPMUtils::writeln(QString(line));
     }
-    QStringList txt = this->cl.printOptions();
-    for (int i = 0; i < txt.count(); i++) {
-        WPMUtils::writeln(txt[i]);
+    std::vector<QString> txt = this->cl.printOptions();
+    for (auto& t: txt) {
+        WPMUtils::writeln(t);
     }
     const char* lines2[] = {
         "",

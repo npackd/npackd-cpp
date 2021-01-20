@@ -154,9 +154,9 @@ void CommandLine::add(QString name, char name2, QString description,
     this->options.push_back(opt);
 }
 
-QStringList CommandLine::printOptions() const
+std::vector<QString> CommandLine::printOptions() const
 {
-    QStringList names;
+    std::vector<QString> names;
     int len = 0;
     for (auto opt: this->options) {
         QString s("    ");
@@ -168,32 +168,32 @@ QStringList CommandLine::printOptions() const
         if (!opt->name.isEmpty()) {
             s.append("--").append(opt->name);
         }
-        names.append(s);
+        names.push_back(s);
         if (s.length() > len)
             len = s.length();
     }
 
-    QStringList result;
+    std::vector<QString> result;
 
-    result.append("Global options:");
+    result.push_back("Global options:");
     for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
         if (opt->allowedCommands.isEmpty()) {
             QString s = names.at(i);
             s += QString().fill(' ', len + 4 - s.length());
             s.append(opt->description);
-            result.append(s);
+            result.push_back(s);
         }
     }
 
-    result.append("Options:");
+    result.push_back("Options:");
     for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
         if (!opt->allowedCommands.isEmpty()) {
             QString s = names.at(i);
             s += QString().fill(' ', len + 4 - s.length());
             s.append(opt->description);
-            result.append(s);
+            result.push_back(s);
         }
     }
 

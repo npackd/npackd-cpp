@@ -456,6 +456,15 @@ public:
     static bool pathEquals(const QString& patha, const QString& pathb);
 
     /**
+     * @brief joins strings together
+     * @param items list items
+     * @param delimiter delimiter between items
+     * @return joined string
+     */
+    static QString join(const std::vector<QString>& items,
+            const QString& delimiter);
+
+    /**
      * @param path .DLL file path
      * @return version number or 0.0 it it cannot be determined
      */

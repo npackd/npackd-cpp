@@ -511,13 +511,14 @@ void CLProcessor::usage()
         */
         "Options:",
     };
-    QStringList sl;
+
+    std::vector<QString> sl;
     for (auto line: lines) {
-        sl.append(QString(line));
+        sl.push_back(QString(line));
     }
 
-    QStringList opts = this->cl.printOptions();
-    sl.append(opts);
+    std::vector<QString> opts = this->cl.printOptions();
+    sl.insert(sl.end(), opts.begin(), opts.end());
 
     const char* lines2[] = {
         "",
@@ -526,7 +527,7 @@ void CLProcessor::usage()
         // "See https://github.com/tim-lebedkov/npackd/wiki/CommandLine for more details.",
     };
     for (auto line: lines2) {
-        sl.append(QString(line));
+        sl.push_back(QString(line));
     }
 
     QMessageBox mb(nullptr);
@@ -537,7 +538,7 @@ void CLProcessor::usage()
     mb.setIcon(QMessageBox::Information);
     mb.setStandardButtons(QMessageBox::Ok);
     mb.setDefaultButton(QMessageBox::Ok);
-    mb.setDetailedText(sl.join("\r\n"));
+    mb.setDetailedText(WPMUtils::join(sl, "\r\n"));
     mb.exec();
 }
 

@@ -2382,6 +2382,13 @@ bool WPMUtils::pathEquals(const QString& patha, const QString& pathb)
     return QString::compare(a, b, Qt::CaseInsensitive) == 0;
 }
 
+QString WPMUtils::join(const std::vector<QString> &items,
+        const QString &delimiter)
+{
+    QStringList list(items.begin(), items.end());
+    return list.join(delimiter);
+}
+
 QString WPMUtils::getMSIProductName(const QString& guid, QString* err)
 {
     return getMSIProductAttribute(guid, INSTALLPROPERTY_PRODUCTNAME, err);

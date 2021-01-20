@@ -400,9 +400,9 @@ void App::usage(Job* job)
         WPMUtils::writeln(QString(line));
     }
 
-    QStringList opts = this->cl.printOptions();
-    for (int i = 0; i < opts.count(); i++) {
-        WPMUtils::writeln(opts.at(i));
+    std::vector<QString> opts = this->cl.printOptions();
+    for (auto& opt: opts) {
+        WPMUtils::writeln(opt);
     }
 
     const char* lines2[] = {
