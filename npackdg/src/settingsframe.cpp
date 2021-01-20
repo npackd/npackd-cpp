@@ -341,7 +341,7 @@ void SettingsFrame::on_pushButtonProxySettings_clicked()
     // for Windows 10 "start ms-settings:network-proxy" shows the newer dialog
     WPMUtils::executeFile(job, d, d + "\\System32\\rundll32.exe",
             "inetcpl.cpl,LaunchConnectionDialog", nullptr,
-            QStringList(), false, true, false);
+            std::vector<QString>(), false, true, false);
     if (!job->getErrorMessage().isEmpty())
         MainWindow::getInstance()->addErrorMessage(job->getErrorMessage());
     delete job;

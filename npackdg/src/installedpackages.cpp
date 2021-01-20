@@ -788,15 +788,15 @@ QString InstalledPackages::notifyInstalled(const QString &package,
 
     QStringList paths = getAllInstalledPackagePaths();
 
-    QStringList env;
-    env.append("NPACKD_PACKAGE_NAME");
-    env.append(package);
-    env.append("NPACKD_PACKAGE_VERSION");
-    env.append(version.getVersionString());
-    env.append("NPACKD_CL");
-    env.append(computeNpackdCLEnvVar_(&err));
-    env.append("NPACKD_SUCCESS");
-    env.append(success ? "1" : "0");
+    std::vector<QString> env;
+    env.push_back("NPACKD_PACKAGE_NAME");
+    env.push_back(package);
+    env.push_back("NPACKD_PACKAGE_VERSION");
+    env.push_back(version.getVersionString());
+    env.push_back("NPACKD_CL");
+    env.push_back(computeNpackdCLEnvVar_(&err));
+    env.push_back("NPACKD_SUCCESS");
+    env.push_back(success ? "1" : "0");
     err = ""; // ignore the error
 
     // searching for a file in all installed package versions may take up to 5

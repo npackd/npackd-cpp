@@ -3297,7 +3297,7 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
 
 void WPMUtils::executeBatchFile(Job* job, const QString& where,
         const QString& path,
-        const QString& outputFile, const QStringList& env,
+        const QString& outputFile, const std::vector<QString>& env,
         bool printScriptOutput, bool unicode)
 {
     QString exe = WPMUtils::findCmdExe();
@@ -3331,7 +3331,7 @@ void WPMUtils::reportEvent(const QString &msg, WORD wType)
 
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
-        const QString& outputFile, const QStringList& env,
+        const QString& outputFile, const std::vector<QString>& env,
         bool writeUTF16LEBOM, bool printScriptOutput, bool unicode)
 {
     if (!outputFile.isEmpty()) {
@@ -3446,7 +3446,7 @@ QString WPMUtils::checkURL(const QUrl &base, QString *url, bool allowEmpty)
 
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
-        QIODevice* outputFile, const QStringList& env,
+        QIODevice* outputFile, const std::vector<QString>& env,
         bool printScriptOutput, bool unicode, bool wait)
 
 {
@@ -3460,7 +3460,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
     std::unordered_map<QString, QString> env_ = parseEnv(env2);
     FreeEnvironmentStrings(env2);
 
-    for (int i = 0; i + 1 < env.size(); i += 2) {
+    for (int i = 0; i + 1 < static_cast<int>(env.size()); i += 2) {
         env_[env.at(i)] = env.at(i + 1);
     }
 

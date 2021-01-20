@@ -636,7 +636,7 @@ public:
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             QIODevice *outputFile,
-            const QStringList& env,
+            const std::vector<QString> &env,
             bool printScriptOutput=false, bool unicode=true, bool wait=true);
 
     /**
@@ -657,7 +657,7 @@ public:
     static void executeFile(Job* job, const QString& where,
             const QString& path, const QString &nativeArguments,
             const QString& outputFile,
-            const QStringList& env, bool writeUTF16LEBOM=true,
+            const std::vector<QString> &env, bool writeUTF16LEBOM=true,
             bool printScriptOutput=false, bool unicode=true);
 
     /**
@@ -673,7 +673,7 @@ public:
      */
     static void executeBatchFile(Job* job, const QString& where,
             const QString& path, const QString& outputFile,
-            const QStringList& env, bool printScriptOutput, bool unicode=true);
+            const std::vector<QString> &env, bool printScriptOutput, bool unicode=true);
 
     /**
      * @brief reports an event using the Windows Log API

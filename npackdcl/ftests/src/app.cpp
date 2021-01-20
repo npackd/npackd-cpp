@@ -48,7 +48,7 @@ QString App::captureOutput(const QString& program, const QString& params,
 {
     qCDebug(npackd) << program << params;
 
-    QStringList env;
+    std::vector<QString> env;
     Job* job = new Job();
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);

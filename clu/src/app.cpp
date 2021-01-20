@@ -288,7 +288,7 @@ int App::remove()
             //WPMUtils::writeln(path + " " + where);
 
             WPMUtils::executeBatchFile(execJob, where,
-                    path, "", QStringList(), false);
+                    path, "", std::vector<QString>(), false);
         }
     }
 

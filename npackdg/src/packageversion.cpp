@@ -468,7 +468,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         if (!d.exists(".Npackd"))
             d.mkdir(".Npackd");
 
-        QStringList env;
+        std::vector<QString> env;
 
         QString err = addBasicVars(&env);
         if (!err.isEmpty())
@@ -512,7 +512,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         if (!d.exists(".Npackd"))
             d.mkdir(".Npackd");
 
-        QStringList env;
+        std::vector<QString> env;
 
         QString err = addBasicVars(&env);
         if (!err.isEmpty())
@@ -559,7 +559,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
             // prepare the environment variables
 
-            QStringList env;
+            std::vector<QString> env;
             QString err = addBasicVars(&env);
             if (!err.isEmpty())
                 job->setErrorMessage(err);
@@ -1180,7 +1180,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
                             "exeproxy-copy \"" + sourcePath + "\" \"" +
                             targetPath + "\"",
                             nullptr,
-                            QStringList());
+                            std::vector<QString>());
                 }
             }
             qDeleteAll(pvs);
@@ -1579,9 +1579,9 @@ void PackageVersion::install(Job* job, const QString& where,
         if (!d.exists(".Npackd"))
             d.mkdir(".Npackd");
 
-        QStringList env;
-        env.append("NPACKD_PACKAGE_BINARY");
-        env.append(WPMUtils::normalizePath(where, false) + "\\" + binary);
+        std::vector<QString> env;
+        env.push_back("NPACKD_PACKAGE_BINARY");
+        env.push_back(WPMUtils::normalizePath(where, false) + "\\" + binary);
 
         QString err = addBasicVars(&env);
         if (!err.isEmpty())
@@ -1631,9 +1631,9 @@ void PackageVersion::install(Job* job, const QString& where,
         if (!d.exists(".Npackd"))
             d.mkdir(".Npackd");
 
-        QStringList env;
-        env.append("NPACKD_PACKAGE_BINARY");
-        env.append(WPMUtils::normalizePath(where, false) + "\\" + binary);
+        std::vector<QString> env;
+        env.push_back("NPACKD_PACKAGE_BINARY");
+        env.push_back(WPMUtils::normalizePath(where, false) + "\\" + binary);
 
         QString err = addBasicVars(&env);
         if (!err.isEmpty())
@@ -1683,9 +1683,9 @@ void PackageVersion::install(Job* job, const QString& where,
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
 
-            QStringList env;
-            env.append("NPACKD_PACKAGE_BINARY");
-            env.append(WPMUtils::normalizePath(where, false) + "\\" + binary);
+            std::vector<QString> env;
+            env.push_back("NPACKD_PACKAGE_BINARY");
+            env.push_back(WPMUtils::normalizePath(where, false) + "\\" + binary);
 
             QString err = addBasicVars(&env);
             if (!err.isEmpty())
@@ -1785,35 +1785,35 @@ void PackageVersion::install(Job* job, const QString& where,
     job->complete();
 }
 
-QString PackageVersion::addBasicVars(QStringList* env)
+QString PackageVersion::addBasicVars(std::vector<QString>* env)
 {
     QString err;
-    env->append("NPACKD_PACKAGE_NAME");
-    env->append(this->package);
-    env->append("NPACKD_PACKAGE_VERSION");
-    env->append(this->version.getVersionString());
-    env->append("NPACKD_CL");
-    env->append(InstalledPackages::getDefault()->
+    env->push_back("NPACKD_PACKAGE_NAME");
+    env->push_back(this->package);
+    env->push_back("NPACKD_PACKAGE_VERSION");
+    env->push_back(this->version.getVersionString());
+    env->push_back("NPACKD_CL");
+    env->push_back(InstalledPackages::getDefault()->
             computeNpackdCLEnvVar_(&err));
 
     return err;
 }
 
-void PackageVersion::addDependencyVars(QStringList* vars)
+void PackageVersion::addDependencyVars(std::vector<QString>* vars)
 {
     InstalledPackages* ip = InstalledPackages::getDefault();
     for (auto d: this->dependencies) {
         if (!d->var.isEmpty()) {
-            vars->append(d->var);
+            vars->push_back(d->var);
             InstalledPackageVersion* ipv = ip->findHighestInstalledMatch(*d);
             if (ipv) {
-                vars->append(ipv->getDirectory());
+                vars->push_back(ipv->getDirectory());
                 delete ipv;
             } else {
                 // this could happen if a package was un-installed manually
                 // without Npackd or the repository has changed after this
                 // package was installed
-                vars->append("");
+                vars->push_back("");
             }
         }
     }
@@ -1882,14 +1882,14 @@ void PackageVersion::build(Job* job, const QString& outputPackage,
     bool printScriptOutput)
 {
     // prepare the environment variables
-    QStringList env;
+    std::vector<QString> env;
     QString err = addBasicVars(&env);
     if (!err.isEmpty())
         job->setErrorMessage(err);
-    env.append("NPACKD_PACKAGE_DIR");
-    env.append(this->getPath());
-    env.append("NPACKD_OUTPUT_PACKAGE");
-    env.append(outputPackage);
+    env.push_back("NPACKD_PACKAGE_DIR");
+    env.push_back(this->getPath());
+    env.push_back("NPACKD_OUTPUT_PACKAGE");
+    env.push_back(outputPackage);
     addDependencyVars(&env);
 
     QString filename = ".Npackd\\Build.bat";
@@ -1906,7 +1906,7 @@ void PackageVersion::build(Job* job, const QString& outputPackage,
 
 void PackageVersion::executeFile2(Job* job, const QString& where,
         const QString& path,
-        const QStringList& env, bool printScriptOutput, bool unicode)
+        const std::vector<QString>& env, bool printScriptOutput, bool unicode)
 {
     QString outputFile = WPMUtils::getMessagesLog();
     WPMUtils::executeBatchFile(
@@ -2146,7 +2146,7 @@ void PackageVersion::stop(Job* job, DWORD programCloseType,
         if (!d.exists(".Npackd"))
             d.mkdir(".Npackd");
 
-        QStringList env;
+        std::vector<QString> env;
         QString err = addBasicVars(&env);
         if (!err.isEmpty())
             job->setErrorMessage(err);
