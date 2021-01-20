@@ -6,7 +6,6 @@
 #include <windows.h>
 
 #if defined __cplusplus
-#include <QList>
 #include <QString>
 #endif
 

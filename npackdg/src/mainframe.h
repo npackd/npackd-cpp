@@ -3,7 +3,6 @@
 
 #include <QFrame>
 #include <QFrame>
-#include <QList>
 #include <QString>
 #include <QTableWidget>
 #include <QComboBox>

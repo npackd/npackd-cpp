@@ -15,7 +15,6 @@
 #include <QStringList>
 #include <QString>
 #include <QCache>
-#include <QList>
 
 #include "packageversion.h"
 #include "package.h"

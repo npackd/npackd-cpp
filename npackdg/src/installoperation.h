@@ -1,8 +1,6 @@
 #ifndef INSTALLOPERATION_H
 #define INSTALLOPERATION_H
 
-#include "qlist.h"
-
 #include "packageversion.h"
 
 /**

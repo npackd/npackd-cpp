@@ -1,8 +1,6 @@
 #ifndef INSTALLEDPACKAGESTHIRDPARTYPM_H
 #define INSTALLEDPACKAGESTHIRDPARTYPM_H
 
-#include <QList>
-
 #include "abstractthirdpartypm.h"
 #include "installedpackageversion.h"
 #include "repository.h"

@@ -3,7 +3,6 @@
 
 #include <tuple>
 
-#include "QList"
 #include "QString"
 
 #include "packageversion.h"

@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 #include "qfile.h"
-#include "qlist.h"
 #include "qurl.h"
 #include "qtemporaryfile.h"
 #include "qdom.h"

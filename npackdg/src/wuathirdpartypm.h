@@ -1,8 +1,6 @@
 #ifndef WUATHIRDPARTYPM_H
 #define WUATHIRDPARTYPM_H
 
-#include <QList>
-
 #include "job.h"
 #include "installedpackageversion.h"
 #include "repository.h"

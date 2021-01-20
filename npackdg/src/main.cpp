@@ -6,7 +6,6 @@
 #include <QApplication>
 #include <QMetaType>
 #include <QTranslator>
-#include <QList>
 #include <QVBoxLayout>
 #include <QImageReader>
 #include <QtPlugin>

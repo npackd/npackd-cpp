@@ -10,7 +10,6 @@
 #include <QSharedPointer>
 #include <QWeakPointer>
 #include <QCache>
-#include <QList>
 #include <QMutex>
 
 #include "package.h"

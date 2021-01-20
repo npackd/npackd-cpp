@@ -1,5 +1,4 @@
 #include <QStringList>
-#include <QList>
 #include <QTemporaryFile>
 #include <QDirIterator>
 

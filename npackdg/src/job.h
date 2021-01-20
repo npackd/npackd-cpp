@@ -8,7 +8,6 @@
 #include <QMetaType>
 #include <QMutex>
 #include <QTime>
-#include <QList>
 
 class Job;
 

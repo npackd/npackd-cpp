@@ -1,6 +1,5 @@
 #include <memory>
 
-#include <QList>
 #include <QSet>
 #include <QString>
 

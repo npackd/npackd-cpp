@@ -4,7 +4,6 @@
 #include <time.h>
 
 #include <QObject>
-#include <QList>
 
 #include "job.h"
 

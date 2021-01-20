@@ -3,7 +3,6 @@
 
 #include "qstring.h"
 #include "qstringlist.h"
-#include "qlist.h"
 
 /**
  * Parses a command line with options. The option names are case-sensitive.

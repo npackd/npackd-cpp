@@ -1,7 +1,9 @@
 #ifndef SELECTION_H
 #define SELECTION_H
 
-#include <QList>
+#include <vector>
+
+#include "QString"
 
 /**
  * QWidgets may implement this interface to provide context to actions.

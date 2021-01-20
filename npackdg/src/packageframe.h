@@ -4,7 +4,6 @@
 #include <QFrame>
 #include <QModelIndex>
 #include <QSharedPointer>
-#include <QList>
 #include <QListWidgetItem>
 
 #include "package.h"

@@ -1,6 +1,5 @@
 #include <math.h>
 
-#include <QList>
 #include <QTreeWidgetItem>
 #include <QStringList>
 #include <QString>

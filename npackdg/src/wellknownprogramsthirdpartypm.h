@@ -1,8 +1,6 @@
 #ifndef WELLKNOWNPROGRAMSTHIRDPARTYPM_H
 #define WELLKNOWNPROGRAMSTHIRDPARTYPM_H
 
-#include <QList>
-
 #include "abstractthirdpartypm.h"
 #include "installedpackageversion.h"
 #include "repository.h"
