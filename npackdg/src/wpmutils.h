@@ -409,7 +409,7 @@ public:
     /**
      * @return GUIDs for installed products (MSI) in lower case
      */
-    static QStringList findInstalledMSIProducts();
+    static std::vector<QString> findInstalledMSIProducts();
 
     /**
      * @return GUIDs for installed components (MSI) in lower case
@@ -458,7 +458,7 @@ public:
     /**
      * @return Names and GUIDs for installed products (MSI)
      */
-    static QStringList findInstalledMSIProductNames();
+    static std::vector<QString> findInstalledMSIProductNames();
 
     /**
      * @param path .DLL file path

@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <QStringList>
 #include <QTemporaryFile>
 #include <QDirIterator>
@@ -19,11 +21,11 @@ App::App()
 
 int App::listMSI()
 {
-    QStringList sl = WPMUtils::findInstalledMSIProductNames();
+    std::vector<QString> sl = WPMUtils::findInstalledMSIProductNames();
 
     WPMUtils::writeln("Installed MSI Products");
-    for (int i = 0; i < sl.count(); i++) {
-        WPMUtils::writeln(sl.at(i));
+    for (auto& s: sl) {
+        WPMUtils::writeln(s);
     }
 
     return 0;

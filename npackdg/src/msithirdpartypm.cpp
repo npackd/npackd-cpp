@@ -21,7 +21,7 @@ void MSIThirdPartyPM::scan(Job* job,
 {
     // qCDebug(npackd) << "MSIThirdPartyPM::scan 0";
 
-    QStringList all = WPMUtils::findInstalledMSIProducts();
+    std::vector<QString> all = WPMUtils::findInstalledMSIProducts();
 
     QStringList components = WPMUtils::findInstalledMSIComponents();
     std::unordered_multimap<QString, QString> p2c =
@@ -33,9 +33,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
     // qCDebug(npackd) << "MSIThirdPartyPM::scan 1";
 
-    for (int i = 0; i < all.count(); i++) {
-        QString guid = all.at(i);
-
+    for (auto& guid: all) {
         // qCDebug(npackd) << "MSIThirdPartyPM::scan " << i << "of" << all.count();
         // qCDebug(npackd) << guid;
 

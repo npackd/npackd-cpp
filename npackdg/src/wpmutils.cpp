@@ -2323,9 +2323,9 @@ Version WPMUtils::getDLLVersion(const QString &path)
     return res;
 }
 
-QStringList WPMUtils::findInstalledMSIProductNames()
+std::vector<QString> WPMUtils::findInstalledMSIProductNames()
 {
-    QStringList result;
+    std::vector<QString> result;
     WCHAR buf[39];
     int index = 0;
     while (true) {
@@ -2354,15 +2354,15 @@ QStringList WPMUtils::findInstalledMSIProductNames()
             version.setUtf16((ushort*) value, len);
         }
 
-        result.append(title + " " + version);
-        result.append("    " + uuid);
+        result.push_back(title + " " + version);
+        result.push_back("    " + uuid);
 
         QString err;
         QString path = WPMUtils::getMSIProductLocation(uuid, &err);
         if (!err.isEmpty())
-            result.append("    err" + err);
+            result.push_back("    err" + err);
         else
-            result.append("    " + path);
+            result.push_back("    " + path);
 
         index++;
     }
@@ -2433,9 +2433,9 @@ QString WPMUtils::getMSIProductName(const QString& guid, QString* err)
     return getMSIProductAttribute(guid, INSTALLPROPERTY_PRODUCTNAME, err);
 }
 
-QStringList WPMUtils::findInstalledMSIProducts()
+std::vector<QString> WPMUtils::findInstalledMSIProducts()
 {
-    QStringList result;
+    std::vector<QString> result;
     WCHAR buf[39];
     int index = 0;
     while (true) {
@@ -2444,7 +2444,7 @@ QStringList WPMUtils::findInstalledMSIProducts()
             break;
         QString v;
         v.setUtf16((ushort*) buf, 38);
-        result.append(v.toLower());
+        result.push_back(v.toLower());
         index++;
     }
     return result;
