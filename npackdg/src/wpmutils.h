@@ -456,11 +456,6 @@ public:
     static bool pathEquals(const QString& patha, const QString& pathb);
 
     /**
-     * @return Names and GUIDs for installed products (MSI)
-     */
-    static std::vector<QString> findInstalledMSIProductNames();
-
-    /**
      * @param path .DLL file path
      * @return version number or 0.0 it it cannot be determined
      */

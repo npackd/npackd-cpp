@@ -2323,52 +2323,6 @@ Version WPMUtils::getDLLVersion(const QString &path)
     return res;
 }
 
-std::vector<QString> WPMUtils::findInstalledMSIProductNames()
-{
-    std::vector<QString> result;
-    WCHAR buf[39];
-    int index = 0;
-    while (true) {
-        UINT r = MsiEnumProducts(index, buf);
-        if (r != ERROR_SUCCESS)
-            break;
-        QString uuid;
-        uuid.setUtf16((ushort*) buf, 38);
-
-        WCHAR value[64];
-        DWORD len;
-
-        len = sizeof(value) / sizeof(value[0]);
-        r = MsiGetProductInfo(buf, INSTALLPROPERTY_INSTALLEDPRODUCTNAME,
-                value, &len);
-        QString title;
-        if (r == ERROR_SUCCESS) {
-            title.setUtf16((ushort*) value, len);
-        }
-
-        len = sizeof(value) / sizeof(value[0]);
-        r = MsiGetProductInfo(buf, INSTALLPROPERTY_VERSIONSTRING,
-                value, &len);
-        QString version;
-        if (r == ERROR_SUCCESS) {
-            version.setUtf16((ushort*) value, len);
-        }
-
-        result.push_back(title + " " + version);
-        result.push_back("    " + uuid);
-
-        QString err;
-        QString path = WPMUtils::getMSIProductLocation(uuid, &err);
-        if (!err.isEmpty())
-            result.push_back("    err" + err);
-        else
-            result.push_back("    " + path);
-
-        index++;
-    }
-    return result;
-}
-
 QString WPMUtils::getMSIProductLocation(const QString& guid, QString* err)
 {
     return getMSIProductAttribute(guid, INSTALLPROPERTY_INSTALLLOCATION, err);

@@ -21,11 +21,29 @@ App::App()
 
 int App::listMSI()
 {
-    std::vector<QString> sl = WPMUtils::findInstalledMSIProductNames();
+    std::vector<QString> sl = WPMUtils::findInstalledMSIProducts();
 
     WPMUtils::writeln("Installed MSI Products");
-    for (auto& s: sl) {
-        WPMUtils::writeln(s);
+    for (auto& guid: sl) {
+        QString err;
+
+        QString title = WPMUtils::getMSIProductAttribute(guid,
+                INSTALLPROPERTY_INSTALLEDPRODUCTNAME, &err);
+        if (!err.isEmpty())
+            title.clear();
+
+        QString version = WPMUtils::getMSIProductAttribute(guid,
+                INSTALLPROPERTY_VERSIONSTRING, &err);
+        if (!err.isEmpty())
+            title.clear();
+
+        QString path = WPMUtils::getMSIProductLocation(guid, &err);
+        if (!err.isEmpty())
+            path.clear();
+
+        WPMUtils::writeln(title + " " + version);
+        WPMUtils::writeln("    " + guid);
+        WPMUtils::writeln("    " + path);
     }
 
     return 0;
