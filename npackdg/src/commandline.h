@@ -64,7 +64,7 @@ private:
     std::vector<ParsedOption*> parsedOptions;
 
     Option* findOption(const QString& name);
-    QString processOneParam(QStringList* params);
+    QString processOneParam(std::vector<QString> *params);
 public:
     /**
      * -

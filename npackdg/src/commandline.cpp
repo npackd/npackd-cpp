@@ -28,7 +28,7 @@ CommandLine::~CommandLine()
     qDeleteAll(this->parsedOptions);
 }
 
-QString CommandLine::processOneParam(QStringList* params)
+QString CommandLine::processOneParam(std::vector<QString>* params)
 {
     QString err;
 
@@ -49,11 +49,11 @@ QString CommandLine::processOneParam(QStringList* params)
             value = p.right(p.length() - pos - 1);
             nameFound = true;
             valueFound = true;
-            params->removeAt(0);
+            params->erase(params->begin());
         } else {
             name = p.right(p.length() - 2);
             nameFound = true;
-            params->removeAt(0);
+            params->erase(params->begin());
         }
     } else if (p.startsWith("-")) {
         int pos = p.indexOf("=");
@@ -68,7 +68,7 @@ QString CommandLine::processOneParam(QStringList* params)
             value = p.right(p.length() - 3);
             nameFound = true;
             valueFound = true;
-            params->removeAt(0);
+            params->erase(params->begin());
         } else {
             if (p.length() > 2) {
                 err = QString(QObject::tr("Only one-letter options can start with a minus sign: %1")).
@@ -76,7 +76,7 @@ QString CommandLine::processOneParam(QStringList* params)
             } else {
                 name = p.mid(1, 1);
                 nameFound = true;
-                params->removeAt(0);
+                params->erase(params->begin());
             }
         }
     }
@@ -101,12 +101,12 @@ QString CommandLine::processOneParam(QStringList* params)
                         po->value = value;
                     else {
                         if (!opt->valueDescription.isEmpty()) {
-                            if (params->count() == 0) {
+                            if (params->size() == 0) {
                                 err = QString(QObject::tr("Missing value for the option %1")).
                                         arg(name);
                             } else {
                                 po->value = params->at(0);
-                                params->removeAt(0);
+                                params->erase(params->begin());
                             }
                         }
                     }
@@ -117,7 +117,7 @@ QString CommandLine::processOneParam(QStringList* params)
             po->opt = nullptr;
             this->parsedOptions.push_back(po);
             po->value = params->at(0);
-            params->removeAt(0);
+            params->erase(params->begin());
         }
     }
 
@@ -203,7 +203,7 @@ std::vector<QString> CommandLine::printOptions() const
 QString CommandLine::parse()
 {
     QString err;
-    QStringList params;
+    std::vector<QString> params;
 
     int nArgs;
     LPWSTR* szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
@@ -212,11 +212,11 @@ QString CommandLine::parse()
     } else {
         for(int i = 1; i < nArgs; i++) {
             QString s = QString::fromWCharArray(szArglist[i]);
-            params.append(s);
+            params.push_back(s);
         }
         LocalFree(szArglist);
 
-        while (params.count() > 0) {
+        while (params.size() > 0) {
             err = processOneParam(&params);
             if (!err.isEmpty())
                 break;
