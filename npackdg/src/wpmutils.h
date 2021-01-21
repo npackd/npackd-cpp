@@ -414,7 +414,7 @@ public:
     /**
      * @return GUIDs for installed components (MSI) in lower case
      */
-    static QStringList findInstalledMSIComponents();
+    static std::vector<QString> findInstalledMSIComponents();
 
     /**
      * Finds location of an installed MSI product.
@@ -594,7 +594,7 @@ public:
      * @return Product GUID -> Component GUID. All GUIDs are in lower case
      */
     static std::unordered_multimap<QString, QString> mapMSIComponentsToProducts(
-            const QStringList &components);
+            const std::vector<QString> &components);
 
     /**
      * @brief determines the location of an installed MSI component on disk

@@ -23,7 +23,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
     std::vector<QString> all = WPMUtils::findInstalledMSIProducts();
 
-    QStringList components = WPMUtils::findInstalledMSIComponents();
+    std::vector<QString> components = WPMUtils::findInstalledMSIComponents();
     std::unordered_multimap<QString, QString> p2c =
             WPMUtils::mapMSIComponentsToProducts(components);
 

@@ -191,16 +191,16 @@ QString Repository::checkCategory(const QString &category, QString *err)
         *err = QObject::tr("Empty category tag");
     }
 
-    QStringList parts;
+    std::vector<QString> parts;
     if (err->isEmpty()) {
-        parts = c.split('/', Qt::KeepEmptyParts);
-        if (parts.count() == 0) {
+        parts = WPMUtils::split(c, '/', Qt::KeepEmptyParts);
+        if (parts.size() == 0) {
             *err = QObject::tr("Empty category tag");
         }
     }
 
     if (err->isEmpty()) {
-        for (int j = 0; j < parts.count(); j++) {
+        for (int j = 0; j < static_cast<int>(parts.size()); j++) {
             QString part = parts.at(j).trimmed();
             if (part.isEmpty()) {
                 *err = QObject::tr("Empty sub-category");
@@ -211,7 +211,7 @@ QString Repository::checkCategory(const QString &category, QString *err)
 out:;
     }
 
-    return parts.join("/");
+    return WPMUtils::join(parts, "/");
 }
 
 Package *Repository::findPackage_(const QString &name) const

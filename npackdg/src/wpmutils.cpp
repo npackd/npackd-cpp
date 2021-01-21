@@ -2411,9 +2411,9 @@ std::vector<QString> WPMUtils::findInstalledMSIProducts()
     return result;
 }
 
-QStringList WPMUtils::findInstalledMSIComponents()
+std::vector<QString> WPMUtils::findInstalledMSIComponents()
 {
-    QStringList result;
+    std::vector<QString> result;
     WCHAR buf[39];
     int index = 0;
     while (true) {
@@ -2422,19 +2422,18 @@ QStringList WPMUtils::findInstalledMSIComponents()
             break;
         QString v;
         v.setUtf16((ushort*) buf, 38);
-        result.append(v.toLower());
+        result.push_back(v.toLower());
         index++;
     }
     return result;
 }
 
 std::unordered_multimap<QString, QString> WPMUtils::mapMSIComponentsToProducts(
-        const QStringList& components)
+        const std::vector<QString>& components)
 {
     std::unordered_multimap<QString, QString> map;
     WCHAR buf[39];
-    for (int i = 0; i < components.count(); i++) {
-        QString c = components.at(i);
+    for (auto& c: components) {
         if (MsiGetProductCode(WPMUtils::toLPWSTR(c), buf) == ERROR_SUCCESS) {
             QString v;
             v.setUtf16((ushort*) buf, 38);

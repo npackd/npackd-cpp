@@ -6,7 +6,6 @@
 #include <QAbstractTableModel>
 #include <QCache>
 #include <QBrush>
-#include <QStringList>
 
 #include "package.h"
 #include "version.h"

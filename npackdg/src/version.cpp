@@ -1,5 +1,3 @@
-#include "qstringlist.h"
-
 #include "wpmutils.h"
 #include "version.h"
 
