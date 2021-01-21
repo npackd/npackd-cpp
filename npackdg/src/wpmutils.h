@@ -218,7 +218,7 @@ public:
      * @param err error message will be stored here or ""
      * @return parts of the command line
      */
-    static QStringList parseCommandLine(const QString& commandLine,
+    static std::vector<QString> parseCommandLine(const QString& commandLine,
         QString* err);
 
     /**

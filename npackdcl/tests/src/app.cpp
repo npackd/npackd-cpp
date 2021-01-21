@@ -131,12 +131,12 @@ void App::testInstalledPackages()
 void App::testCommandLine()
 {
     QString err;
-    QStringList params = WPMUtils::parseCommandLine(
+    std::vector<QString> params = WPMUtils::parseCommandLine(
             "\"C:\\Program Files (x86)\\InstallShield Installation Information\\{96D0B6C6-5A72-4B47-8583-A87E55F5FE81}\\setup.exe\" -runfromtemp -l0x0007 -removeonly",
             &err);
 
     QVERIFY(err.isEmpty());
-    QVERIFY(params.count() == 4);
+    QVERIFY(params.size() == 4);
     QVERIFY2(params.at(0) == "C:\\Program Files (x86)\\InstallShield Installation Information\\{96D0B6C6-5A72-4B47-8583-A87E55F5FE81}\\setup.exe",
              qPrintable(params.at(0)));
 }

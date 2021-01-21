@@ -839,11 +839,11 @@ void WPMUtils::normalizePath2(QString* path, bool lowerCase)
         path->chop(1);
 }
 
-QStringList WPMUtils::parseCommandLine(const QString& commandLine,
+std::vector<QString> WPMUtils::parseCommandLine(const QString& commandLine,
     QString* err) {
     *err = "";
 
-    QStringList params;
+    std::vector<QString> params;
 
     int nArgs;
     LPWSTR* szArglist = CommandLineToArgvW(WPMUtils::toLPWSTR(commandLine), &nArgs);
@@ -851,7 +851,7 @@ QStringList WPMUtils::parseCommandLine(const QString& commandLine,
         *err = QObject::tr("CommandLineToArgvW failed");
     } else {
         for(int i = 0; i < nArgs; i++) {
-            params.append(QString::fromUtf16(reinterpret_cast<ushort*>(szArglist[i])));
+            params.push_back(QString::fromUtf16(reinterpret_cast<ushort*>(szArglist[i])));
         }
         LocalFree(szArglist);
     }
