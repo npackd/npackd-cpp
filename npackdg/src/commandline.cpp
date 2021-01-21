@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 
+#include "wpmutils.h"
 #include "commandline.h"
 
 bool CommandLine::Option::nameMatches(const QString& name)
@@ -145,8 +146,8 @@ void CommandLine::add(QString name, char name2, QString description,
     opt->description = description;
     opt->valueDescription = valueDescription;
     opt->multiple = multiple;
-    opt->allowedCommands = allowedCommands.split(',');
-    if (opt->allowedCommands.count() == 1 &&
+    opt->allowedCommands = WPMUtils::split(allowedCommands, ',');
+    if (opt->allowedCommands.size() == 1 &&
             opt->allowedCommands.at(0).isEmpty()) {
         opt->allowedCommands.clear();
     }
@@ -178,7 +179,7 @@ std::vector<QString> CommandLine::printOptions() const
     result.push_back("Global options:");
     for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
-        if (opt->allowedCommands.isEmpty()) {
+        if (opt->allowedCommands.size() == 0) {
             QString s = names.at(i);
             s += QString().fill(' ', len + 4 - s.length());
             s.append(opt->description);
@@ -189,7 +190,7 @@ std::vector<QString> CommandLine::printOptions() const
     result.push_back("Options:");
     for (int i = 0; i < static_cast<int>(this->options.size()); i++) {
         Option* opt = this->options.at(i);
-        if (!opt->allowedCommands.isEmpty()) {
+        if (opt->allowedCommands.size() != 0) {
             QString s = names.at(i);
             s += QString().fill(' ', len + 4 - s.length());
             s.append(opt->description);

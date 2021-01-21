@@ -168,12 +168,12 @@ int App::process()
         std::vector<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
         for (auto p: parsed) {
             CommandLine::Option* opt = p->opt;
-            if (opt && opt->allowedCommands.count() > 0) {
+            if (opt && opt->allowedCommands.size() > 0) {
                 // qCDebug(npackd) << "1" << opt->allowedCommands.count();
-                if (!opt->allowedCommands.contains(cmd)) {
+                if (std::find(opt->allowedCommands.begin(), opt->allowedCommands.end(), cmd) == opt->allowedCommands.end()) {
                     err = "The option --" + opt->name +
                             " is not allowed for the command \"" + cmd + "\". Allowed commands: " +
-                            opt->allowedCommands.join(',');
+                            WPMUtils::join(opt->allowedCommands, ",");
                     break;
                 }
             }

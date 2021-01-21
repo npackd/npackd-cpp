@@ -2,7 +2,6 @@
 #define COMMANDLINE_H
 
 #include "qstring.h"
-#include "qstringlist.h"
 
 /**
  * Parses a command line with options. The option names are case-sensitive.
@@ -37,7 +36,7 @@ public:
          * the list of allowed commands for this option or an empty list if this
          * option is "global" and should be available in all options
          */
-        QStringList allowedCommands;
+        std::vector<QString> allowedCommands;
 
         /**
          * does this option matches the specified name
