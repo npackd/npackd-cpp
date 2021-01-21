@@ -2,7 +2,6 @@
 #define EVENTLOGMESSAGEHANDLER_H
 
 #include "QString"
-#include "QStringList"
 #include "QMutex"
 
 extern QtMessageHandler oldMessageHandler;
@@ -14,6 +13,7 @@ extern QMutex logMutex;
  * @param context context
  * @param message message
  */
-void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message);
+void eventLogMessageHandler(QtMsgType type,
+        const QMessageLogContext& context, const QString& message);
 
 #endif // EVENTLOGMESSAGEHANDLER_H

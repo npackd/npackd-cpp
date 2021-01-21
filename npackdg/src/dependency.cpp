@@ -1,5 +1,6 @@
 #include <limits>
 
+#include "wpmutils.h"
 #include "dependency.h"
 #include "packageversion.h"
 #include "package.h"
@@ -104,8 +105,8 @@ bool Dependency::setVersions(const QString versions)
 
     // qCDebug(npackd) << "Repository::createDependency.2";
 
-    QStringList parts = versions_.split(',');
-    if (parts.count() != 2)
+    std::vector<QString> parts = WPMUtils::split(versions_, ',');
+    if (parts.size() != 2)
         return false;
 
     Version min_, max_;

@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <qstringlist.h>
 #include <qstring.h>
 #include <QTimer>
 #include <QLoggingCategory>

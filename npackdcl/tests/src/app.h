@@ -6,7 +6,6 @@
 #include <QtTest/QtTest>
 #include <QtCore/QCoreApplication>
 #include <qdebug.h>
-#include <qstringlist.h>
 #include <qstring.h>
 
 #include "repository.h"

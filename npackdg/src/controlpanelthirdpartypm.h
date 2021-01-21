@@ -3,7 +3,6 @@
 
 #include <windows.h>
 
-#include <QStringList>
 #include <QString>
 
 #include "repository.h"

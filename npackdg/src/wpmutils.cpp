@@ -3454,6 +3454,16 @@ std::vector<QString> WPMUtils::split(const QString& s, const QString &sep,
     return r;
 }
 
+std::vector<QString> WPMUtils::split(const QString& s, const QChar sep,
+    Qt::SplitBehavior behavior)
+{
+    QStringList sl = s.split(sep, behavior);
+    std::vector<QString> r;
+    r.reserve(sl.size());
+    r.insert(r.begin(), sl.begin(), sl.end());
+    return r;
+}
+
 void WPMUtils::executeFile(Job* job, const QString& where,
         const QString& path, const QString& nativeArguments,
         QIODevice* outputFile, const std::vector<QString>& env,
