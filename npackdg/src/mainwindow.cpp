@@ -956,21 +956,6 @@ void MainWindow::fillList()
     this->mainFrame->setDuration(static_cast<int>(dur));
 }
 
-QString MainWindow::createPackageVersionsHTML(const QStringList& names)
-{
-    QStringList allNames;
-    if (names.count() > 10) {
-        allNames = names.mid(0, 10);
-        allNames.append("...");
-    } else {
-        allNames = names;
-    }
-    for (int i = 0; i < allNames.count(); i++) {
-        allNames[i] = allNames[i].toHtmlEscaped();
-    }
-    return allNames.join("<br>");
-}
-
 void MainWindow::process(std::vector<InstallOperation*> &install,
         DWORD programCloseType)
 {

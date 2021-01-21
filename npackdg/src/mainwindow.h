@@ -12,7 +12,6 @@
 #include <QFrame>
 #include <QScrollArea>
 #include <QMessageBox>
-#include <QStringList>
 #include <QString>
 #include <QCache>
 
@@ -260,7 +259,6 @@ public:
     std::vector<void *> getSelected(const QString& type) const;
 
     void openURL(const QUrl &url);
-    static QString createPackageVersionsHTML(const QStringList &names);
 
     /**
      * @brief This functions returns the image downloaded from the specified

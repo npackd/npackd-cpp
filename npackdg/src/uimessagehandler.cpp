@@ -12,7 +12,7 @@
 #include "mainwindow.h"
 
 QtMessageHandler oldMessageHandler = nullptr;
-QStringList logMessages;
+std::vector<QString> logMessages;
 QMutex logMutex;
 
 void clearLogMessages()
@@ -21,16 +21,6 @@ void clearLogMessages()
     QMutexLocker lock(&mutex);
 
     logMessages.clear();
-}
-
-QStringList getLogMessages()
-{
-    static QMutex mutex;
-    QMutexLocker lock(&mutex);
-
-    QStringList copy;
-    copy.append(logMessages);
-    return copy;
 }
 
 void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message) {
@@ -70,7 +60,7 @@ void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, c
     QString s = time.toString("hh:mm:ss.zzz ");
     s.append(message);
 
-    logMessages.append(s);
+    logMessages.push_back(s);
     if (logMessages.size() > 1000) {
         int n = logMessages.size() - 1000;
         logMessages.erase(logMessages.begin(), logMessages.begin() + n);
