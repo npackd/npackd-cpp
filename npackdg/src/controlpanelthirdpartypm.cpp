@@ -138,9 +138,9 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     if (!versionFound) {
         QString displayName = k.get("DisplayName", &err);
         if (err.isEmpty()) {
-            QStringList parts = displayName.split(' ');
-            if (parts.count() > 1 && parts.last().contains('.')) {
-                version.setVersion(parts.last());
+            std::vector<QString> parts = WPMUtils::split(displayName, ' ');
+            if (parts.size() > 1 && parts.back().contains('.')) {
+                version.setVersion(parts.back());
                 version.normalize();
             }
         }

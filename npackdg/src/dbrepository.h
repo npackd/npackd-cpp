@@ -317,7 +317,7 @@ public:
      * @return categories for found packages: ID, COUNT, NAME. One category may
      *     have all values empty showing all un-categorized packages.
      */
-    std::vector<QStringList> findCategories(Package::Status minStatus,
+    std::vector<std::vector<QString> > findCategories(Package::Status minStatus,
             Package::Status maxStatus, const QString &query,
             int level, int cat0, int cat1, QString *err) const;
 

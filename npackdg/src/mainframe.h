@@ -26,7 +26,7 @@ private:
     bool categoryCombosEvents;
 
     /** ID, COUNT, NAME */
-    std::vector<QStringList> categories0, categories1;
+    std::vector<std::vector<QString>> categories0, categories1;
 
     std::vector<Package*> selectedPackages;
 
@@ -76,7 +76,7 @@ public:
      * @param level category level (0, 1, ...)
      * @param cats new categories: ID, COUNT, NAME
      */
-    void setCategories(int level, const std::vector<QStringList> &cats);
+    void setCategories(int level, const std::vector<std::vector<QString> > &cats);
 
     /**
      * @brief returns selected category

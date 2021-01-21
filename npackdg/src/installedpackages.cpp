@@ -858,27 +858,27 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
     if (job->shouldProceed()) {
         std::vector<AbstractThirdPartyPM*> tpms;
         std::vector<bool> replace;
-        QStringList jobTitles;
+        std::vector<QString> jobTitles;
 
-        jobTitles.append(QObject::tr("Reading the list of packages installed by Npackd"));
+        jobTitles.push_back(QObject::tr("Reading the list of packages installed by Npackd"));
         tpms.push_back(new InstalledPackagesThirdPartyPM());
         replace.push_back(false);
 
         if (PackageUtils::globalMode) {
-			jobTitles.append(QObject::tr("Adding well-known packages"));
+            jobTitles.push_back(QObject::tr("Adding well-known packages"));
             tpms.push_back(new WellKnownProgramsThirdPartyPM(
 				InstalledPackages::packageName));
             replace.push_back(false);
 
-            jobTitles.append(QObject::tr("Detecting MSI packages"));
+            jobTitles.push_back(QObject::tr("Detecting MSI packages"));
             tpms.push_back(new MSIThirdPartyPM());
             replace.push_back(true);
 
-			jobTitles.append(QObject::tr("Detecting software control panel packages"));
+            jobTitles.push_back(QObject::tr("Detecting software control panel packages"));
             tpms.push_back(new ControlPanelThirdPartyPM());
             replace.push_back(true);
 
-            jobTitles.append(QObject::tr("Detecting Windows Update packages"));
+            jobTitles.push_back(QObject::tr("Detecting Windows Update packages"));
             tpms.push_back(new WUAThirdPartyPM());
             replace.push_back(true);
         }

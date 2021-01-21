@@ -40,22 +40,22 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     QString err = wr.open(
         PackageUtils::globalMode ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
             "Software\\Npackd\\Npackd\\InstallationDirs", false, KEY_READ);
-    QStringList dirs;
+    std::vector<QString> dirs;
     if (err.isEmpty()) {
         dirs = wr.loadStringList(&err);
     }
-	dirs.append(WPMUtils::getShellDir(CSIDL_APPDATA) +
+    dirs.push_back(WPMUtils::getShellDir(CSIDL_APPDATA) +
 		QStringLiteral("\\Npackd\\Installation"));
 
-    dirs.append(PackageUtils::getInstallationDirectory());
+    dirs.push_back(PackageUtils::getInstallationDirectory());
     if (PackageUtils::globalMode) {
-		dirs.append(WPMUtils::getProgramFilesDir());
+        dirs.push_back(WPMUtils::getProgramFilesDir());
 		if (WPMUtils::is64BitWindows())
-			dirs.append(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
+            dirs.push_back(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
 	}
 
     // remove duplicates
-    for (int i = 0; i < dirs.size(); ) {
+    for (int i = 0; i < static_cast<int>(dirs.size()); ) {
         bool f = false;
         QString dirsi = WPMUtils::normalizePath(dirs.at(i));
         for (int j = 0; j < i; j++) {
@@ -67,12 +67,16 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
         }
 
         if (f)
-            dirs.removeAt(i);
+            dirs.erase(dirs.begin() + i);
         else
             i++;
     }
 
-    this->ui->comboBoxDir->addItems(dirs);
+    QStringList dirs_;
+    for (auto& dir: dirs)
+        dirs_.append(dir);
+
+    this->ui->comboBoxDir->addItems(dirs_);
 
     wr.close();
 

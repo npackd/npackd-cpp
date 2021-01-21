@@ -53,9 +53,9 @@ WindowsRegistry& WindowsRegistry::operator=(const WindowsRegistry& wr)
     return *this;
 }
 
-QStringList WindowsRegistry::loadStringList(QString* err) const
+std::vector<QString> WindowsRegistry::loadStringList(QString* err) const
 {
-    QStringList r;
+    std::vector<QString> r;
 
     *err = "";
     int n = getDWORD("", err);
@@ -64,7 +64,7 @@ QStringList WindowsRegistry::loadStringList(QString* err) const
             QString v = get(QString::number(i), err);
             if (!err->isEmpty())
                 break;
-            r.append(v);
+            r.push_back(v);
         }
     }
 

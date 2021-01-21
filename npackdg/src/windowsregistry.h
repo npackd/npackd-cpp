@@ -204,7 +204,7 @@ public:
      * @param err error message
      * @return data from the registry
      */
-    QStringList loadStringList(QString *err) const;
+    std::vector<QString> loadStringList(QString *err) const;
 
     /**
      * Delete a sub-key recursively.

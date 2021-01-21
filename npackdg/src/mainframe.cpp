@@ -108,7 +108,7 @@ void MainFrame::loadColumns() const
                 "Software\\Npackd\\Npackd\\TableColumns", false,
                 KEY_READ);
 
-        QStringList v;
+        std::vector<QString> v;
         if (err.isEmpty()) {
             v = wr.loadStringList(&err);
         }
@@ -116,7 +116,7 @@ void MainFrame::loadColumns() const
         if (err.isEmpty()) {
             QTableView* t = this->ui->tableWidget;
             for (int i = 0; i < std::min<int>(t->model()->columnCount(),
-                    v.count()); i++) {
+                    v.size()); i++) {
                 bool ok;
                 int w = v.at(i).toInt(&ok);
                 if (!ok)
@@ -128,7 +128,7 @@ void MainFrame::loadColumns() const
     }
 }
 
-void MainFrame::setCategories(int level, const std::vector<QStringList> &cats)
+void MainFrame::setCategories(int level, const std::vector<std::vector<QString>> &cats)
 {
     this->categoryCombosEvents = false;
 

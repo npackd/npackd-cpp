@@ -782,7 +782,7 @@ QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
     return r;
 }
 
-std::vector<QStringList> DBRepository::findCategories(Package::Status minStatus,
+std::vector<std::vector<QString>> DBRepository::findCategories(Package::Status minStatus,
         Package::Status maxStatus,
         const QString& query, int level, int cat0, int cat1, QString *err) const
 {
@@ -815,16 +815,16 @@ std::vector<QStringList> DBRepository::findCategories(Package::Status minStatus,
         }
     }
 
-    std::vector<QStringList> r;
+    std::vector<std::vector<QString>> r;
     if (err->isEmpty()) {
         if (!q.exec())
             *err = SQLUtils::getErrorString(q);
 
         while (q.next()) {
-            QStringList sl;
-            sl.append(q.value(0).toString());
-            sl.append(q.value(1).toString());
-            sl.append(q.value(2).toString());
+            std::vector<QString> sl;
+            sl.push_back(q.value(0).toString());
+            sl.push_back(q.value(1).toString());
+            sl.push_back(q.value(2).toString());
             r.push_back(sl);
         }
     }
