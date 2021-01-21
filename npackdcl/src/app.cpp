@@ -754,21 +754,20 @@ void App::addRepo(Job* job)
 
 void App::setRepo(Job* job)
 {
-    QStringList urls_ = cl.getAll("url");
+    std::vector<QString> urls_ = cl.getAll("url");
 
     if (job->shouldProceed()) {
-        if (urls_.count() == 0) {
+        if (urls_.size() == 0) {
             job->setErrorMessage("Missing option: --url");
         }
     }
 
     if (job->shouldProceed()) {
         std::vector<QUrl*> urls;
-        for (int i = 0; i < urls_.count(); i++) {
+        for (auto& url: urls_) {
             if (!job->shouldProceed())
                 break;
 
-            QString url = urls_.at(i);
             QUrl* url_ = new QUrl();
             url_->setUrl(url, QUrl::TolerantMode);
             if (!url_->isValid()) {
@@ -876,7 +875,7 @@ void App::search(Job* job)
 {
     bool bare = cl.isPresent("bare-format");
     bool json = cl.isPresent("json");
-    QStringList urls_ = cl.getAll("url");
+    std::vector<QString> urls_ = cl.getAll("url");
     QString user = cl.get("user");
     QString password = cl.get("password");
     QString proxyUser = cl.get("proxy-user");
@@ -909,7 +908,7 @@ void App::search(Job* job)
     QTemporaryFile tempFile;
 
     if (job->shouldProceed()) {
-        if (urls_.count() == 0) {
+        if (urls_.size() == 0) {
             QString err = dbr->openDefault();
             if (!err.isEmpty())
                 job->setErrorMessage(err);
@@ -918,11 +917,10 @@ void App::search(Job* job)
         } else {
             std::vector<QUrl*> urls;
 
-            for (int i = 0; i < urls_.count(); i++) {
+            for (auto& url: urls_) {
                 if (!job->shouldProceed())
                     break;
 
-                QString url = urls_.at(i);
                 QUrl* url_ = new QUrl();
                 url_->setUrl(url, QUrl::TolerantMode);
                 if (!url_->isValid()) {
@@ -1316,7 +1314,7 @@ void App::update(Job* job)
         }
     }
 
-    QStringList urls_ = cl.getAll("url");
+    std::vector<QString> urls_ = cl.getAll("url");
     QString user = cl.get("user");
     QString password = cl.get("password");
     QString proxyUser = cl.get("proxy-user");
@@ -1335,7 +1333,7 @@ void App::update(Job* job)
     QTemporaryFile tempFile;
 
     if (job->shouldProceed()) {
-        if (urls_.count() == 0) {
+        if (urls_.size() == 0) {
             QString err = rep->openDefault();
             if (!err.isEmpty())
                 job->setErrorMessage(err);
@@ -1344,11 +1342,10 @@ void App::update(Job* job)
         } else {
             std::vector<QUrl*> urls;
 
-            for (int i = 0; i < urls_.count(); i++) {
+            for (auto& url: urls_) {
                 if (!job->shouldProceed())
                     break;
 
-                QString url = urls_.at(i);
                 QUrl* url_ = new QUrl();
                 url_->setUrl(url, QUrl::TolerantMode);
                 if (!url_->isValid()) {
@@ -1456,7 +1453,7 @@ void App::update(Job* job)
     std::vector<Dependency*> toUpdate2;
 
     if (job->shouldProceed()) {
-        for (int i = 0; i < packages_.size(); i++) {
+        for (int i = 0; i < static_cast<int>(packages_.size()); i++) {
             QString package = packages_.at(i);
             QString versions = versions_.at(i);
 
@@ -1811,7 +1808,7 @@ void App::add(Job* job)
     CoInitialize(nullptr);
     job->setTitle("Installing packages");
 
-    QStringList urls_ = cl.getAll("url");
+    std::vector<QString> urls_ = cl.getAll("url");
     QString user = cl.get("user");
     QString password = cl.get("password");
     QString proxyUser = cl.get("proxy-user");
@@ -1821,7 +1818,7 @@ void App::add(Job* job)
     QTemporaryFile tempFile;
 
     if (job->shouldProceed()) {
-        if (urls_.count() == 0) {
+        if (urls_.size() == 0) {
             QString err = dbr->openDefault();
             if (!err.isEmpty())
                 job->setErrorMessage(err);
@@ -1830,11 +1827,10 @@ void App::add(Job* job)
         } else {
             std::vector<QUrl*> urls;
 
-            for (int i = 0; i < urls_.count(); i++) {
+            for (auto& url: urls_) {
                 if (!job->shouldProceed())
                     break;
 
-                QString url = urls_.at(i);
                 QUrl* url_ = new QUrl();
                 url_->setUrl(url, QUrl::TolerantMode);
                 if (!url_->isValid()) {

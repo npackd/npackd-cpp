@@ -124,7 +124,7 @@ public:
      * @param name name of the option
      * @return values of the option or an empty list if not present
      */
-    QStringList getAll(const QString& name) const;
+    std::vector<QString> getAll(const QString& name) const;
 
     /**
      * @return parsed options

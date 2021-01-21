@@ -292,7 +292,7 @@ QString CLProcessor::update()
         }
     }
 
-    QStringList packages_ = cl.getAll("package");
+    std::vector<QString> packages_ = cl.getAll("package");
 
     if (job->shouldProceed()) {
         if (packages_.size() == 0) {
@@ -301,8 +301,7 @@ QString CLProcessor::update()
     }
 
     if (job->shouldProceed()) {
-        for (int i = 0; i < packages_.size(); i++) {
-            QString package = packages_.at(i);
+        for (auto& package: packages_) {
             if (!Package::isValidName(package)) {
                 job->setErrorMessage(QObject::tr("Invalid package name: %1").
                         arg(package));
@@ -313,8 +312,7 @@ QString CLProcessor::update()
     std::vector<Package*> toUpdate;
 
     if (job->shouldProceed()) {
-        for (int i = 0; i < packages_.size(); i++) {
-            QString package = packages_.at(i);
+        for (auto& package: packages_) {
             QString err;
             Package* p = rep->findOnePackage(package, &err);
             if (p)

@@ -260,12 +260,12 @@ bool CommandLine::argumentsAvailable() const
     return this->parsedOptions.size() > 0;
 }
 
-QStringList CommandLine::getAll(const QString& name) const
+std::vector<QString> CommandLine::getAll(const QString& name) const
 {
-    QStringList r;
+    std::vector<QString> r;
     for (auto po: this->parsedOptions) {
         if (po->opt && po->opt->nameMatches(name)) {
-            r.append(po->value);
+            r.push_back(po->value);
         }
     }
     return r;
