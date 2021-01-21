@@ -3449,7 +3449,7 @@ std::vector<QString> WPMUtils::split(const QString& s, const QString &sep,
     QStringList sl = s.split(sep, behavior);
     std::vector<QString> r;
     r.reserve(sl.size());
-    r.insert(r.begin(), sl.begin(), sl.end());
+    r.insert(r.end(), sl.begin(), sl.end());
     return r;
 }
 
@@ -3459,7 +3459,7 @@ std::vector<QString> WPMUtils::split(const QString& s, const QChar sep,
     QStringList sl = s.split(sep, behavior);
     std::vector<QString> r;
     r.reserve(sl.size());
-    r.insert(r.begin(), sl.begin(), sl.end());
+    r.insert(r.end(), sl.begin(), sl.end());
     return r;
 }
 
