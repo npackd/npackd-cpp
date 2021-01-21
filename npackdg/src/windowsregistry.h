@@ -1,6 +1,8 @@
 #ifndef WINDOWSREGISTRY_H
 #define WINDOWSREGISTRY_H
 
+#include <vector>
+
 #include "windows.h"
 
 #include "qstring.h"
@@ -189,7 +191,7 @@ public:
      * @param err the error message will be stored here
      * @return list of sub-keys
      */
-    QStringList list(QString* err) const;
+    std::vector<QString> list(QString* err) const;
 
     /**
      * @param err the error message will be stored here

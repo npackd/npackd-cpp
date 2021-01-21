@@ -23,10 +23,9 @@ void WellKnownProgramsThirdPartyPM::scanDotNet(
     }
 
     if (err.isEmpty()) {
-        QStringList entries = wr.list(&err);
+        std::vector<QString> entries = wr.list(&err);
         if (err.isEmpty()) {
-            for (int i = 0; i < entries.count(); i++) {
-                QString v_ = entries.at(i);
+            for (auto& v_: entries) {
                 Version v;
                 if (v_.startsWith("v") && v.setVersion(
                         v_.right(v_.length() - 1))) {
@@ -235,16 +234,15 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
     QString err = jreWR.open(HKEY_LOCAL_MACHINE,
             "Software\\JavaSoft\\Java Runtime Environment", !w64bit, KEY_READ);
     if (err.isEmpty()) {
-        QStringList entries = jreWR.list(&err);
-        for (int i = 0; i < entries.count(); i++) {
-            QString v_ = entries.at(i);
+        std::vector<QString> entries = jreWR.list(&err);
+        for (auto& v_: entries) {
             v_ = v_.replace('_', '.');
             Version v;
             if (!v.setVersion(v_) || v.getNParts() <= 2)
                 continue;
 
             WindowsRegistry wr;
-            err = wr.open(jreWR, entries.at(i), KEY_READ);
+            err = wr.open(jreWR, v_, KEY_READ);
             if (!err.isEmpty())
                 continue;
 
@@ -286,10 +284,8 @@ void WellKnownProgramsThirdPartyPM::detectPython(std::vector<InstalledPackageVer
     QString err = pythonWR.open(HKEY_LOCAL_MACHINE,
             "Software\\Python\\PythonCore", !w64bit, KEY_READ);
     if (err.isEmpty()) {
-        QStringList entries = pythonWR.list(&err);
-        for (int i = 0; i < entries.count(); i++) {
-            QString v_ = entries.at(i);
-
+        std::vector<QString> entries = pythonWR.list(&err);
+        for (auto& v_: entries) {
             if (v_.endsWith("-32")) {
                 if (w64bit)
                     continue;
@@ -302,7 +298,7 @@ void WellKnownProgramsThirdPartyPM::detectPython(std::vector<InstalledPackageVer
                 continue;
 
             WindowsRegistry wr;
-            err = wr.open(pythonWR, entries.at(i) + "\\InstallPath", KEY_READ);
+            err = wr.open(pythonWR, v_ + "\\InstallPath", KEY_READ);
             if (!err.isEmpty())
                 continue;
 
@@ -347,10 +343,9 @@ void WellKnownProgramsThirdPartyPM::detectJDK(std::vector<InstalledPackageVersio
             "Software\\JavaSoft\\Java Development Kit",
             !w64bit, KEY_READ);
     if (err.isEmpty()) {
-        QStringList entries = wr.list(&err);
+        std::vector<QString> entries = wr.list(&err);
         if (err.isEmpty()) {
-            for (int i = 0; i < entries.count(); i++) {
-                QString v_ = entries.at(i);
+            for (auto& v_: entries) {
                 WindowsRegistry r;
                 err = r.open(wr, v_, KEY_READ);
                 if (!err.isEmpty())

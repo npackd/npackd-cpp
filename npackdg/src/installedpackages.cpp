@@ -1099,9 +1099,8 @@ QString InstalledPackages::readRegistryDatabase()
     if (e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) {
         err = "";
     } else if (err.isEmpty()) {
-        QStringList entries = packagesWR.list(&err);
-        for (int i = 0; i < entries.count(); ++i) {
-            QString name = entries.at(i);
+        std::vector<QString> entries = packagesWR.list(&err);
+        for (auto& name: entries) {
             int pos = name.lastIndexOf("-");
             if (pos <= 0)
                 continue;
@@ -1204,9 +1203,8 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
     } else if (err.isEmpty()) {
         Version found = Version::EMPTY;
 
-        QStringList entries = packagesWR.list(&err);
-        for (int i = 0; i < entries.count(); ++i) {
-            QString name = entries.at(i);
+        std::vector<QString> entries = packagesWR.list(&err);
+        for (auto& name: entries) {
             int pos = name.lastIndexOf("-");
             if (pos <= 0)
                 continue;

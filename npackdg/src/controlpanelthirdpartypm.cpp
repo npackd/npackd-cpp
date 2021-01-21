@@ -67,14 +67,13 @@ void ControlPanelThirdPartyPM::
             fullPath = QString("%1").arg(reinterpret_cast<uintptr_t>(root));
         fullPath += "\\" + path;
 
-        QStringList entries = wr.list(&err);
-        for (int i = 0; i < entries.count(); i++) {
+        std::vector<QString> entries = wr.list(&err);
+        for (auto& e: entries) {
             WindowsRegistry k;
-            err = k.open(wr, entries.at(i), KEY_READ);
+            err = k.open(wr, e, KEY_READ);
             if (err.isEmpty()) {
                 detectOneControlPanelProgram(installed, rep,
-                        fullPath + "\\" + entries.at(i),
-                        k, entries.at(i));
+                        fullPath + "\\" + e, k, e);
             }
         }
     }
