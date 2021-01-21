@@ -35,7 +35,7 @@ const UINT WM_ICONTRAY = WM_USER + 1;
  */
 class _SearchResult {
 public:
-    QStringList found;
+    std::vector<QString> found;
     std::vector<QStringList> cats, cats1;
 };
 

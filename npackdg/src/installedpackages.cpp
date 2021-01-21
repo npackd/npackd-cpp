@@ -323,7 +323,7 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
 
             qCDebug(npackd) << "trying to replace" << p->name << p->title;
 
-            QStringList found = r->findBetterPackages(p->title, &err);
+            std::vector<QString> found = r->findBetterPackages(p->title, &err);
 
             if (err.isEmpty() && found.size() == 1) {
                 std::vector<Package*> replacements = r->findPackages(found);

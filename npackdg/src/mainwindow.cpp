@@ -1647,7 +1647,7 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
     QModelIndex index = sm->currentIndex();
 
     PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
-    m->setPackages(QStringList());
+    m->setPackages(std::vector<QString>());
     m->clearCache();
     fillList();
 

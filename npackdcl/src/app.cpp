@@ -972,7 +972,7 @@ void App::search(Job* job)
             sub->completeWithProgress();
     }
 
-    QStringList packageNames;
+    std::vector<QString> packageNames;
     std::vector<Package*> list;
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.01, "Searching for packages");
@@ -1385,14 +1385,14 @@ void App::update(Job* job)
         }
     }
 
-    QStringList packages_;
+    std::vector<QString> packages_;
     QStringList versions_;
 
     std::vector<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
     for (int i = 0; i < static_cast<int>(parsed.size()); ) {
         CommandLine::ParsedOption* po = parsed.at(i);
         if (po->opt && po->opt->name == "package") {
-            packages_.append(po->value);
+            packages_.push_back(po->value);
             i++;
 
             QString versions;
@@ -1416,10 +1416,10 @@ void App::update(Job* job)
     if (job->shouldProceed()) {
         if (!query.isNull()) {
             QString err;
-            QStringList list = rep->findPackages(Package::Status::UPDATEABLE,
+            std::vector<QString> list = rep->findPackages(Package::Status::UPDATEABLE,
                     Package::Status::NOT_INSTALLED_NOT_AVAILABLE, query, -1, -1, &err);
-            packages_.append(list);
-            for (int i = 0; i < list.size(); i++) {
+            packages_.insert(packages_.end(), list.begin(), list.end());
+            for (auto& v: list) {
                 versions_.append(QString());
             }
         }
@@ -1432,8 +1432,7 @@ void App::update(Job* job)
     }
 
     if (job->shouldProceed()) {
-        for (int i = 0; i < packages_.size(); i++) {
-            QString package = packages_.at(i);
+        for (auto& package: packages_) {
             if (!Package::isValidName(package)) {
                 job->setErrorMessage("Invalid package name: " + package);
             }

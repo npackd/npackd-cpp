@@ -247,8 +247,9 @@ QString CLProcessor::checkForUpdates()
     if (err.isEmpty()) {
         r->clearAndDownloadRepositories(&job, urls, true, "", "", "", "", false);
 
-        QStringList packages = r->findPackages(Package::UPDATEABLE, Package::NOT_INSTALLED_NOT_AVAILABLE, "", -1, -1, &err);
-        int nupdates = packages.count();
+        std::vector<QString> packages = r->findPackages(Package::UPDATEABLE,
+                Package::NOT_INSTALLED_NOT_AVAILABLE, "", -1, -1, &err);
+        int nupdates = packages.size();
 
         if (job.getErrorMessage().isEmpty() && nupdates > 0) {
             QApplication* app = (QApplication*) QApplication::instance();

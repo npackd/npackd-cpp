@@ -28,7 +28,7 @@ MainFrame::MainFrame(QWidget *parent) :
 
     QItemSelectionModel *sm = t->selectionModel();
     QAbstractItemModel* m = t->model();
-    t->setModel(new PackageItemModel(QStringList()));
+    t->setModel(new PackageItemModel(std::vector<QString>()));
     delete sm;
     delete m;
 

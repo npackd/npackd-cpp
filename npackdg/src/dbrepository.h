@@ -75,7 +75,7 @@ private:
      * @param err
      * @return
      */
-    QStringList findPackagesWhere(const QString &sql,
+    std::vector<QString> findPackagesWhere(const QString &sql,
             const std::vector<QVariant> &params, QString *err) const;
 
     /**
@@ -256,7 +256,7 @@ public:
      * @param err error message will be stored here
      * @return found packages
      */
-    QStringList findPackages(Package::Status minStatus,
+    std::vector<QString> findPackages(Package::Status minStatus,
             Package::Status maxStatus,
             const QString &query, int cat0, int cat1, QString* err) const;
 
@@ -350,7 +350,7 @@ public:
      * @return list of found packages. The order of returned packages does *NOT*
      *     correspond the order in names.
      */
-    std::vector<Package*> findPackages(const QStringList &names);
+    std::vector<Package*> findPackages(const std::vector<QString> &names);
 
     /**
      * @brief searches for better packages for detection
@@ -358,7 +358,7 @@ public:
      * @param err error message will be stored here
      * @return list of found packages.
      */
-    QStringList findBetterPackages(const QString &title, QString *err);
+    std::vector<QString> findBetterPackages(const QString &title, QString *err);
 
     /**
      * @return maximum number of stars for a package

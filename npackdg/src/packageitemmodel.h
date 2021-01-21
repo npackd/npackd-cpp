@@ -19,7 +19,7 @@ class PackageItemModel: public QAbstractTableModel
 
     mutable int maxStars;
 
-    QStringList packages;
+    std::vector<QString> packages;
 
     /**
      * @brief package information for one row
@@ -46,7 +46,7 @@ public:
     /**
      * @param packages list of package names
      */
-    PackageItemModel(const QStringList &packages);
+    PackageItemModel(const std::vector<QString> &packages);
 
     ~PackageItemModel();
 
@@ -62,7 +62,7 @@ public:
      * @brief changes the list of packages
      * @param packages list of package names
      */
-    void setPackages(const QStringList &packages);
+    void setPackages(const std::vector<QString> &packages);
 
     /**
      * @brief should be called if an icon has changed

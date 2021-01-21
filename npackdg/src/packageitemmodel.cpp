@@ -11,7 +11,7 @@
 #include "mainwindow.h"
 #include "wpmutils.h"
 
-PackageItemModel::PackageItemModel(const QStringList& packages) :
+PackageItemModel::PackageItemModel(const std::vector<QString>& packages) :
         obsoleteBrush(QColor(255, 0xc7, 0xc7)),
         maxStars(-1)
 {
@@ -24,7 +24,7 @@ PackageItemModel::~PackageItemModel()
 
 int PackageItemModel::rowCount(const QModelIndex &/*parent*/) const
 {
-    return this->packages.count();
+    return this->packages.size();
 }
 
 int PackageItemModel::columnCount(const QModelIndex &/*parent*/) const
@@ -290,7 +290,7 @@ QVariant PackageItemModel::headerData(int section, Qt::Orientation orientation,
     return r;
 }
 
-void PackageItemModel::setPackages(const QStringList& packages)
+void PackageItemModel::setPackages(const std::vector<QString>& packages)
 {
     this->beginResetModel();
     this->packages = packages;
@@ -300,13 +300,13 @@ void PackageItemModel::setPackages(const QStringList& packages)
 void PackageItemModel::iconUpdated(const QString &/*url*/)
 {
     this->dataChanged(this->index(0, 0), this->index(
-            this->packages.count() - 1, 0));
+            this->packages.size() - 1, 0));
 }
 
 void PackageItemModel::downloadSizeUpdated(const QString &/*url*/)
 {
     this->dataChanged(this->index(0, 5), this->index(
-            this->packages.count() - 1, 5));
+            this->packages.size() - 1, 5));
 }
 
 void PackageItemModel::installedStatusChanged(const QString& package,
@@ -315,7 +315,7 @@ void PackageItemModel::installedStatusChanged(const QString& package,
     //qCDebug(npackd) << "PackageItemModel::installedStatusChanged" << package <<
     //        version.getVersionString();
     this->cache.remove(package);
-    for (int i = 0; i < this->packages.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
         QString p = this->packages.at(i);
         if (p == package) {
             this->dataChanged(this->index(i, 4), this->index(i, 4));
@@ -327,5 +327,5 @@ void PackageItemModel::clearCache()
 {
     this->cache.clear();
     this->dataChanged(this->index(0, 3),
-            this->index(this->packages.count() - 1, 4));
+            this->index(this->packages.size() - 1, 4));
 }

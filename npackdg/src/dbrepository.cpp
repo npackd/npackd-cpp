@@ -280,7 +280,7 @@ Package *DBRepository::findPackage_(const QString &name) const
     return r;
 }
 
-std::vector<Package*> DBRepository::findPackages(const QStringList& names)
+std::vector<Package*> DBRepository::findPackages(const std::vector<QString>& names)
 {
     QMutexLocker ml(&this->mutex);
 
@@ -288,7 +288,7 @@ std::vector<Package*> DBRepository::findPackages(const QStringList& names)
     QString err;
 
     int start = 0;
-    int c = names.count();
+    int c = names.size();
     const int block = 10;
 
     QString sql = QStringLiteral(
@@ -621,9 +621,9 @@ QStringList DBRepository::tokenizeTitle(const QString& title)
     return keywords;
 }
 
-QStringList DBRepository::findBetterPackages(const QString& title, QString* err)
+std::vector<QString> DBRepository::findBetterPackages(const QString& title, QString* err)
 {
-    QStringList packages;
+    std::vector<QString> packages;
 
     QStringList keywords = tokenizeTitle(title);
 
@@ -736,7 +736,7 @@ QString DBRepository::createQuery(Package::Status minStatus,
     return where;
 }
 
-QStringList DBRepository::findPackages(Package::Status minStatus,
+std::vector<QString> DBRepository::findPackages(Package::Status minStatus,
         Package::Status maxStatus,
         const QString& query, int cat0, int cat1, QString *err) const
 {
@@ -832,7 +832,7 @@ std::vector<QStringList> DBRepository::findCategories(Package::Status minStatus,
     return r;
 }
 
-QStringList DBRepository::findPackagesWhere(const QString& sql,
+std::vector<QString> DBRepository::findPackagesWhere(const QString& sql,
         const std::vector<QVariant>& params,
         QString *err) const
 {
@@ -840,7 +840,7 @@ QStringList DBRepository::findPackagesWhere(const QString& sql,
 
     *err = QStringLiteral("");
 
-    QStringList r;
+    std::vector<QString> r;
     MySQLQuery q(db);
 
     if (!q.prepare(sql))
@@ -857,7 +857,7 @@ QStringList DBRepository::findPackagesWhere(const QString& sql,
             *err = SQLUtils::getErrorString(q);
 
         while (q.next()) {
-            r.append(q.value(0).toString());
+            r.push_back(q.value(0).toString());
         }
     }
 
