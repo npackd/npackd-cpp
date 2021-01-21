@@ -559,23 +559,23 @@ void App::where(Job* job)
     if (job->shouldProceed()) {
         bool json = cl.isPresent("json");
 
-        QStringList paths = ip->getAllInstalledPackagePaths();
+        std::vector<QString> paths = ip->getAllInstalledPackagePaths();
 
         if (json) {
             QJsonObject top;
             QJsonArray a;
-            for (int i = 0; i < paths.count(); i++) {
-                QFileInfo fi(paths[i], file);
+            for (auto& path: paths) {
+                QFileInfo fi(path, file);
                 if (fi.exists())
-                    a.append(paths[i] + "\\" + file);
+                    a.append(path + "\\" + file);
             }
             top["paths"] = a;
             printJSON(top);
         } else {
-            for (int i = 0; i < paths.count(); i++) {
-                QFileInfo fi(paths[i], file);
+            for (auto& path: paths) {
+                QFileInfo fi(path, file);
                 if (fi.exists())
-                    WPMUtils::writeln(paths[i] + "\\" + file);
+                    WPMUtils::writeln(path + "\\" + file);
             }
         }
     }

@@ -109,7 +109,7 @@ void App::testInstalledPackages()
     QVERIFY(packages.size() == 0);
     qDeleteAll(packages);
 
-    QStringList paths = ip->getAllInstalledPackagePaths();
+    std::vector<QString> paths = ip->getAllInstalledPackagePaths();
     QVERIFY(paths.size() == 1);
     QVERIFY(paths.at(0) == "C:\\test");
 

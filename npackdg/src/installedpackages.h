@@ -245,7 +245,7 @@ public:
      * @brief paths to all installed package versions
      * @return list of directories
      */
-    QStringList getAllInstalledPackagePaths() const;
+    std::vector<QString> getAllInstalledPackagePaths() const;
 
     /**
      * Software detection.

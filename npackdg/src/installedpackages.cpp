@@ -786,7 +786,7 @@ QString InstalledPackages::notifyInstalled(const QString &package,
 {
     QString err;
 
-    QStringList paths = getAllInstalledPackagePaths();
+    std::vector<QString> paths = getAllInstalledPackagePaths();
 
     std::vector<QString> env;
     env.push_back("NPACKD_PACKAGE_NAME");
@@ -802,8 +802,7 @@ QString InstalledPackages::notifyInstalled(const QString &package,
     // searching for a file in all installed package versions may take up to 5
     // seconds if the data is not in the cache and only 20 milliseconds
     // otherwise
-    for (int i = 0; i < paths.size(); i++) {
-        QString path = paths.at(i);
+    for (auto& path: paths) {
         QString file = path + "\\.Npackd\\InstallHook.bat";
         QFileInfo fi(file);
         if (fi.exists()) {
@@ -822,15 +821,15 @@ QString InstalledPackages::notifyInstalled(const QString &package,
     return "";
 }
 
-QStringList InstalledPackages::getAllInstalledPackagePaths() const
+std::vector<QString> InstalledPackages::getAllInstalledPackagePaths() const
 {
     this->mutex.lock();
 
-    QStringList r;
+    std::vector<QString> r;
     for (auto&& it: data) {
         InstalledPackageVersion* ipv = it.second;
         if (ipv->installed())
-            r.append(ipv->getDirectory());
+            r.push_back(ipv->getDirectory());
     }
 
     this->mutex.unlock();
