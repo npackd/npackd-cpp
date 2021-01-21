@@ -66,7 +66,7 @@ private:
             const std::vector<InstallOperation *> &ops, DWORD programCloseType,
             bool interactive, const QString user, const QString password,
             const QString proxyUser, const QString proxyPassword);
-    QStringList sortPackageVersionsByPackageTitle(
+    std::vector<QString> sortPackageVersionsByPackageTitle(
             std::vector<PackageVersion *> *list);
 public:
     App();

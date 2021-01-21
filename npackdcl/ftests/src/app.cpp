@@ -1,6 +1,5 @@
 #include <shlobj.h>
 
-#include <QStringList>
 #include <QCoreApplication>
 #include <QDir>
 #include <QLoggingCategory>

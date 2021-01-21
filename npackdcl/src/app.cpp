@@ -42,7 +42,7 @@ App::App() : currentJob(nullptr)
 
 }
 
-QStringList App::sortPackageVersionsByPackageTitle(
+std::vector<QString> App::sortPackageVersionsByPackageTitle(
         std::vector<PackageVersion*> *list) {
     std::vector<QPair<PackageVersion*, QString> > items;
 
@@ -57,10 +57,10 @@ QStringList App::sortPackageVersionsByPackageTitle(
 
     std::sort(items.begin(), items.end(), compareByPackageTitle);
 
-    QStringList titles;
+    std::vector<QString> titles;
     for (int i = 0; i < static_cast<int>(list->size()); i++) {
         (*list)[i] = items.at(i).first;
-        titles.append(items.at(i).second);
+        titles.push_back(items.at(i).second);
     }
 
     return titles;
@@ -819,7 +819,7 @@ void App::list(Job* job)
     }
 
     std::vector<PackageVersion*> list;
-    QStringList titles;
+    std::vector<QString> titles;
 
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.99,
