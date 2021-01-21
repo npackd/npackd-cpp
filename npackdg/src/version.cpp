@@ -1,5 +1,6 @@
 #include "qstringlist.h"
 
+#include "wpmutils.h"
 #include "version.h"
 
 const Version Version::EMPTY(-1, -1);
@@ -112,12 +113,12 @@ bool Version::setVersion(const QString& v)
 {
     bool result = false;
     if (!v.trimmed().isEmpty()) {
-        QStringList sl = v.split(".", Qt::KeepEmptyParts);
+        std::vector<QString> sl = WPMUtils::split(v, ".", Qt::KeepEmptyParts);
 
-        if (sl.count() > 0) {
+        if (sl.size() > 0) {
             bool ok = true;
-            for (int i = 0; i < sl.count(); i++) {
-                sl.at(i).toInt(&ok);
+            for (auto& s: sl) {
+                s.toInt(&ok);
                 if (!ok)
                     break;
             }
@@ -125,7 +126,7 @@ bool Version::setVersion(const QString& v)
             if (ok) {
                 if (this->parts != basic)
                     delete[] this->parts;
-                this->nparts = sl.count();
+                this->nparts = sl.size();
                 if (nparts <= BASIC_PARTS)
                     this->parts = basic;
                 else

@@ -465,6 +465,16 @@ public:
             const QString& delimiter);
 
     /**
+     * @brief split a text
+     * @param s text
+     * @param sep separator
+     * @param behavior see Qt constants
+     * @return the parts
+     */
+    static std::vector<QString> split(const QString &s, const QString &sep,
+            Qt::SplitBehavior behavior = Qt::KeepEmptyParts);
+
+    /**
      * @param path .DLL file path
      * @return version number or 0.0 it it cannot be determined
      */
