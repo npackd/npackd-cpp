@@ -16,7 +16,7 @@ class UIUtils
 private:
     UIUtils();
 
-    static QString createPackageVersionsHTML(const QStringList &names);
+    static QString createPackageVersionsHTML(const std::vector<QString> &names);
 public:
     /** size of an icon in the UI */
     static const int ICON_SIZE = 32;

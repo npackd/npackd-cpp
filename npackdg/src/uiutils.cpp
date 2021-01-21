@@ -29,19 +29,19 @@ UIUtils::UIUtils()
 {
 }
 
-QString UIUtils::createPackageVersionsHTML(const QStringList& names)
+QString UIUtils::createPackageVersionsHTML(const std::vector<QString>& names)
 {
-    QStringList allNames;
-    if (names.count() > 10) {
-        allNames = names.mid(0, 10);
-        allNames.append("...");
+    std::vector<QString> allNames;
+    if (names.size() > 10) {
+        allNames.insert(allNames.end(), names.begin(), names.begin() + 10);
+        allNames.push_back("...");
     } else {
         allNames = names;
     }
-    for (int i = 0; i < allNames.count(); i++) {
+    for (int i = 0; i < static_cast<int>(allNames.size()); i++) {
         allNames[i] = allNames[i].toHtmlEscaped();
     }
-    return allNames.join("<br>");
+    return WPMUtils::join(allNames, "<br>");
 }
 
 bool UIUtils::confirmInstallOperations(QWidget* parent,
@@ -79,7 +79,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
     }
 
     // find updates
-    QStringList updateNames;
+    std::vector<QString> updateNames;
     if (err->isEmpty()) {
         for (int i = 0; i < static_cast<int>(install.size()); i++) {
             if (used[i])
@@ -97,7 +97,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                         used[i] = used[j] = true;
 
                         PackageVersion* pv = pvs.at(i);
-                        updateNames.append(pv->toString() + " -> " +
+                        updateNames.push_back(pv->toString() + " -> " +
                                 op2->version.getVersionString());
                     }
                 }
@@ -106,7 +106,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
     }
 
     // find uninstalls
-    QStringList uninstallNames;
+    std::vector<QString> uninstallNames;
     if (err->isEmpty()) {
         for (int i = 0; i < static_cast<int>(install.size()); i++) {
             if (used[i])
@@ -115,13 +115,13 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             if (!op->install) {
-                uninstallNames.append(pv->toString());
+                uninstallNames.push_back(pv->toString());
             }
         }
     }
 
     // find installs
-    QStringList installNames;
+    std::vector<QString> installNames;
     if (err->isEmpty()) {
         for (int i = 0; i < static_cast<int>(install.size()); i++) {
             if (used[i])
@@ -130,7 +130,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
             InstallOperation* op = install.at(i);
             PackageVersion* pv = pvs.at(i);
             if (op->install) {
-                installNames.append(pv->toString());
+                installNames.push_back(pv->toString());
             }
         }
     }
@@ -139,12 +139,12 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
     QString msg;
     QString dialogTitle;
     QString detailedMessage;
-    if (installNames.count() == 1 && uninstallNames.count() == 0 &&
-            updateNames.count() == 0) {
+    if (installNames.size() == 1 && uninstallNames.size() == 0 &&
+            updateNames.size() == 0) {
         b = true;
         *title = QObject::tr("Installing %1").arg(installNames.at(0));
-    } else if (installNames.count() == 0 && uninstallNames.count() == 1 &&
-            updateNames.count() == 0) {
+    } else if (installNames.size() == 0 && uninstallNames.size() == 1 &&
+            updateNames.size() == 0) {
         *title = QObject::tr("Uninstalling %1").arg(uninstallNames.at(0));
 
         PackageVersion* pv = pvs.at(0);
@@ -159,28 +159,28 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 "</body>";
         detailedMessage = QObject::tr("The package %1 will be uninstalled.").
                 arg(pv->toString());
-    } else if (installNames.count() > 0 && uninstallNames.count() == 0 &&
-            updateNames.count() == 0) {
+    } else if (installNames.size() > 0 && uninstallNames.size() == 0 &&
+            updateNames.size() == 0) {
         *title = QString(QObject::tr("Installing %1 packages")).arg(
-                installNames.count());
+                installNames.size());
         dialogTitle = QObject::tr("Install");
         msg = QString("<html><head/><body><h2>") +
                 QObject::tr("%1 package(s) will be installed:").
-                arg(installNames.count()).toHtmlEscaped() +
+                arg(installNames.size()).toHtmlEscaped() +
                 "</h2><br><b>" +
                 createPackageVersionsHTML(installNames) +
                 "</b></body>";
         detailedMessage = QObject::tr("%1 package(s) will be installed:").
-                arg(installNames.count()) + "\r\n" +
-                installNames.join("\r\n");
-    } else if (installNames.count() == 0 && uninstallNames.count() > 0 &&
-            updateNames.count() == 0) {
+                arg(installNames.size()) + "\r\n" +
+                WPMUtils::join(installNames, "\r\n");
+    } else if (installNames.size() == 0 && uninstallNames.size() > 0 &&
+            updateNames.size() == 0) {
         *title = QString(QObject::tr("Uninstalling %1 packages")).arg(
-                uninstallNames.count());
+                uninstallNames.size());
         dialogTitle = QObject::tr("Uninstall");
         msg = QString("<html><head/><body><h2>") +
                 QObject::tr("%1 package(s) will be uninstalled:").
-                arg(uninstallNames.count()).toHtmlEscaped() +
+                arg(uninstallNames.size()).toHtmlEscaped() +
                 "</h2><br><b>" +
                 createPackageVersionsHTML(uninstallNames) +
                 "</b>.<br><br>" +
@@ -188,22 +188,22 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
                 toHtmlEscaped() +
                 "</body>";
         detailedMessage = QObject::tr("%1 package(s) will be uninstalled:").
-                arg(uninstallNames.count()) + "\r\n" +
-                uninstallNames.join("\r\n");
+                arg(uninstallNames.size()) + "\r\n" +
+                WPMUtils::join(uninstallNames, "\r\n");
     } else {
         *title = "";
 
-        if (installNames.count() > 0) {
+        if (installNames.size() > 0) {
             *title += QObject::tr("installing %1 packages").
-                    arg(installNames.count());
+                    arg(installNames.size());
         }
-        if (uninstallNames.count() > 0) {
+        if (uninstallNames.size() > 0) {
             *title += ", " + QObject::tr("uninstalling %1 packages").
-                    arg(uninstallNames.count());
+                    arg(uninstallNames.size());
         }
-        if (updateNames.count() > 0) {
+        if (updateNames.size() > 0) {
             *title += ", " + QObject::tr("updating %1 packages").
-                    arg(updateNames.count());
+                    arg(updateNames.size());
         }
         if (title->startsWith(", "))
             title->remove(0, 2);
@@ -211,44 +211,44 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
 
         dialogTitle = QObject::tr("Install/Uninstall");
         msg = "<html><head/><body>";
-        if (updateNames.count() > 0) {
+        if (updateNames.size() > 0) {
             msg += "<h2>" +
                     QObject::tr("%3 package(s) will be updated:").
-                    arg(updateNames.count()).toHtmlEscaped() +
+                    arg(updateNames.size()).toHtmlEscaped() +
                     "</h2><br><b>" +
                     createPackageVersionsHTML(updateNames) +
                     "</b>";
             if (!detailedMessage.isEmpty())
                 detailedMessage += "\r\n\r\n";
             detailedMessage += QObject::tr("%3 package(s) will be updated:").
-                    arg(updateNames.count()) + "\r\n" +
-                    updateNames.join("\r\n");
+                    arg(updateNames.size()) + "\r\n" +
+                    WPMUtils::join(updateNames, "\r\n");
         }
-        if (uninstallNames.count() > 0) {
+        if (uninstallNames.size() > 0) {
             msg += "<h2>" +
                     QObject::tr("%1 package(s) will be uninstalled:").
-                    arg(uninstallNames.count()).toHtmlEscaped() +
+                    arg(uninstallNames.size()).toHtmlEscaped() +
                     "</h2><br><b>" +
                     createPackageVersionsHTML(uninstallNames) +
                     "</b>";
             if (!detailedMessage.isEmpty())
                 detailedMessage += "\r\n\r\n";
             detailedMessage += QObject::tr("%1 package(s) will be uninstalled:").
-                    arg(uninstallNames.count()) + "\r\n" +
-                    uninstallNames.join("\r\n");
+                    arg(uninstallNames.size()) + "\r\n" +
+                    WPMUtils::join(uninstallNames, "\r\n");
         }
-        if (installNames.count() > 0) {
+        if (installNames.size() > 0) {
             msg += "<h2>" +
                     QObject::tr("%3 package(s) will be installed:").
-                    arg(installNames.count()).toHtmlEscaped() +
+                    arg(installNames.size()).toHtmlEscaped() +
                     "</h2><br><b>" +
                     createPackageVersionsHTML(installNames) +
                     "</b>";
             if (!detailedMessage.isEmpty())
                 detailedMessage += "\r\n\r\n";
             detailedMessage += QObject::tr("%3 package(s) will be installed:").
-                    arg(installNames.count()) + "\r\n" +
-                    installNames.join("\r\n");
+                    arg(installNames.size()) + "\r\n" +
+                    WPMUtils::join(installNames, "\r\n");
         }
         msg += "<br><br>" +
                 QObject::tr("The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.").
