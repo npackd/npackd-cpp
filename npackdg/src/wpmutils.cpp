@@ -2242,8 +2242,8 @@ QString WPMUtils::setSystemEnvVar(const QString& name, const QString& value,
 
 QString WPMUtils::getFirstLine(const QString& text)
 {
-    QStringList sl = text.trimmed().split('\n');
-    if (sl.count() > 0)
+    std::vector<QString> sl = WPMUtils::split(text.trimmed(), '\n');
+    if (sl.size() > 0)
         return sl.at(0).trimmed();
     else
         return QStringLiteral("");

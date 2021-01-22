@@ -1,7 +1,6 @@
 #include <math.h>
 
 #include <QTreeWidgetItem>
-#include <QStringList>
 #include <QString>
 #include <QProgressBar>
 #include <QPushButton>
@@ -48,13 +47,13 @@ ProgressTree2::ProgressTree2(QWidget *parent) :
     setColumnWidth(4, 100);
     header()->setStretchLastSection(false);
 
-    QStringList hls;
-    hls.append(QObject::tr("Task / Step"));
-    hls.append(QObject::tr("Elapsed time"));
-    hls.append(QObject::tr("Remaining time"));
-    hls.append(QObject::tr("Progress"));
-    hls.append(QObject::tr(""));
-    setHeaderLabels(hls);
+    std::vector<QString> hls;
+    hls.push_back(QObject::tr("Task / Step"));
+    hls.push_back(QObject::tr("Elapsed time"));
+    hls.push_back(QObject::tr("Remaining time"));
+    hls.push_back(QObject::tr("Progress"));
+    hls.push_back(QObject::tr(""));
+    setHeaderLabels(WPMUtils::toQStringList(hls));
 }
 
 void ProgressTree2::timerTimeout()

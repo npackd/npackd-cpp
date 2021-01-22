@@ -12,16 +12,16 @@ PackageUtils::PackageUtils()
 
 }
 
-std::tuple<QStringList, QStringList, bool, QString> PackageUtils::getRepositoryURLs(
+std::tuple<std::vector<QString>, std::vector<QString>, bool, QString> PackageUtils::getRepositoryURLs(
         HKEY hk, const QString &path)
 {
     QString err;
     bool keyExists = false;
-    QStringList comments;
+    std::vector<QString> comments;
 
     WindowsRegistry wr;
     err = wr.open(hk, path, false, KEY_READ);
-    QStringList urls;
+    std::vector<QString> urls;
     if (err.isEmpty()) {
         keyExists = true;
         DWORD size = wr.getDWORD("size", &err);
@@ -32,8 +32,8 @@ std::tuple<QStringList, QStringList, bool, QString> PackageUtils::getRepositoryU
                 if (err.isEmpty()) {
                     QString url = er.get("repository", &err);
                     if (err.isEmpty()) {
-                        urls.append(url);
-                        comments.append(er.get("comment", &err));
+                        urls.push_back(url);
+                        comments.push_back(er.get("comment", &err));
                     }
                 }
             }
@@ -253,8 +253,8 @@ QString PackageUtils::validateFullPackageName(const QString &n)
             return QString(QObject::tr("-- at position %1 in %2")).
                     arg(pos + 1).arg(n);
 
-        QStringList parts = n.split('.', Qt::SkipEmptyParts);
-        for (int j = 0; j < parts.count(); j++) {
+        std::vector<QString> parts = WPMUtils::split(n, '.', Qt::SkipEmptyParts);
+        for (int j = 0; j < parts.size(); j++) {
             QString part = parts.at(j);
 
             int pos = part.indexOf(QStringLiteral("--"));
@@ -304,8 +304,8 @@ QString PackageUtils::validateFullPackageName(const QString &n)
 QString PackageUtils::makeValidFullPackageName(const QString &name)
 {
     QString r(name);
-    QStringList parts = r.split('.', Qt::SkipEmptyParts);
-    for (int j = 0; j < parts.count(); ) {
+    std::vector<QString> parts = WPMUtils::split(r, '.', Qt::SkipEmptyParts);
+    for (int j = 0; j < parts.size(); ) {
         QString part = parts.at(j);
 
         if (!part.isEmpty()) {
@@ -340,13 +340,13 @@ QString PackageUtils::makeValidFullPackageName(const QString &name)
         }
 
         if (part.isEmpty())
-            parts.removeAt(j);
+            parts.erase(parts.begin() + j);
         else {
-            parts.replace(j, part);
+            parts.at(j) = part;
             j++;
         }
     }
-    r = parts.join(".");
+    r = WPMUtils::join(parts, ".");
     if (r.isEmpty())
         r = '_';
     return r;
@@ -453,12 +453,12 @@ void PackageUtils::setCloseProcessType(DWORD cpt)
 
 std::vector<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
 {
-    QStringList reps, comments;
+    std::vector<QString> reps, comments;
     std::tie(reps, comments, *err) = getRepositoryURLsAndComments();
 
     std::vector<QUrl*> r;
     if (err->isEmpty()) {
-        for (int i = 0; i < reps.count(); i++) {
+        for (int i = 0; i < reps.size(); i++) {
             QUrl* url = new QUrl(reps.at(i));
             if (url->scheme() == "file")
                 *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
@@ -469,11 +469,11 @@ std::vector<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
     return r;
 }
 
-std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAndComments(bool used)
+std::tuple<std::vector<QString>, std::vector<QString>, QString> PackageUtils::getRepositoryURLsAndComments(bool used)
 {
     QString suffix = used ? "Reps" : "UnusedReps";
 
-    QStringList comments;
+    std::vector<QString> comments;
     QString err;
 
     // the most errors in this method are ignored so that we get the URLs even
@@ -481,7 +481,7 @@ std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAnd
     QString e;
 
     bool keyExists;
-    QStringList urls;
+    std::vector<QString> urls;
     std::tie(urls, comments, keyExists, e) = getRepositoryURLs(
             HKEY_LOCAL_MACHINE, "SOFTWARE\\Policies\\Npackd\\" + suffix);
 
@@ -497,22 +497,22 @@ std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAnd
     if (!keyExists && used) {
         std::tie(urls, comments, keyExists, e) = getRepositoryURLs(HKEY_CURRENT_USER,
                 "Software\\Npackd\\Npackd\\repositories");
-        if (urls.isEmpty())
+        if (urls.size() == 0)
             std::tie(urls, comments, keyExists, e) = getRepositoryURLs(HKEY_CURRENT_USER,
                     "Software\\WPM\\Windows Package Manager\\repositories");
 
-        if (urls.isEmpty()) {
-            urls.append(
+        if (urls.size() == 0) {
+            urls.push_back(
                     "https://www.npackd.org/rep/zip?tag=stable");
             if (WPMUtils::is64BitWindows())
-                urls.append(
+                urls.push_back(
                         "https://www.npackd.org/rep/zip?tag=stable64");
         }
         save = true;
     }
 
     std::vector<QUrl*> r;
-    for (int i = 0; i < urls.count(); i++) {
+    for (int i = 0; i < urls.size(); i++) {
         QUrl* url = new QUrl(urls.at(i));
         if (url->scheme() == "file")
             *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
@@ -530,16 +530,16 @@ std::tuple<QStringList, QStringList, QString> PackageUtils::getRepositoryURLsAnd
 
 void PackageUtils::setRepositoryURLs(std::vector<QUrl *> &urls, QString *err)
 {
-    QStringList reps;
-    QStringList comments;
+    std::vector<QString> reps;
+    std::vector<QString> comments;
     for (auto& url: urls) {
-        reps.append(url->toString(QUrl::FullyEncoded));
-        comments.append(QString());
+        reps.push_back(url->toString(QUrl::FullyEncoded));
+        comments.push_back(QString());
     }
     *err = setRepositoryURLsAndComments(reps, comments);
 }
 
-QString PackageUtils::setRepositoryURLsAndComments(const QStringList &urls, const QStringList &comments, bool used)
+QString PackageUtils::setRepositoryURLsAndComments(const std::vector<QString> &urls, const std::vector<QString> &comments, bool used)
 {
     QString suffix = used ? "Reps" : "UnusedReps";
 
@@ -553,8 +553,8 @@ QString PackageUtils::setRepositoryURLsAndComments(const QStringList &urls, cons
         WindowsRegistry wrr = wr.createSubKey(
                 "Software\\Npackd\\Npackd\\" + suffix, &err, KEY_ALL_ACCESS);
         if (err.isEmpty()) {
-            wrr.setDWORD("size", static_cast<DWORD>(urls.count()));
-            for (int i = 0; i < urls.count(); i++) {
+            wrr.setDWORD("size", static_cast<DWORD>(urls.size()));
+            for (int i = 0; i < urls.size(); i++) {
                 WindowsRegistry r = wrr.createSubKey(QString("%1").arg(i + 1),
                         &err, KEY_ALL_ACCESS);
                 if (err.isEmpty()) {

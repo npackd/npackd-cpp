@@ -22,7 +22,7 @@ private:
      * @return list of repositories in the specified registry key, list of comments,
      * error message, whether the registry key exists
      */
-    static std::tuple<QStringList, QStringList, bool, QString> getRepositoryURLs(
+    static std::tuple<std::vector<QString>, std::vector<QString>, bool, QString> getRepositoryURLs(
             HKEY hk, const QString &path);
 public:
     /** true = install programs globally, false = locally */
@@ -98,7 +98,7 @@ public:
      * @return repositories, comments and an error message.
      * Repositories and comments list have the same length.
      */
-    static std::tuple<QStringList, QStringList, QString> getRepositoryURLsAndComments(bool used=true);
+    static std::tuple<std::vector<QString>, std::vector<QString>, QString> getRepositoryURLsAndComments(bool used=true);
 
     /*
      * Changes the default repository url.
@@ -115,7 +115,7 @@ public:
      * @param comments corresponding comments
      * @return error message
      */
-    static QString setRepositoryURLsAndComments(const QStringList& urls, const QStringList& comments, bool used=true);
+    static QString setRepositoryURLsAndComments(const std::vector<QString>& urls, const std::vector<QString>& comments, bool used=true);
 };
 
 #endif // PACKAGEUTILS_H

@@ -72,11 +72,7 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
             i++;
     }
 
-    QStringList dirs_;
-    for (auto& dir: dirs)
-        dirs_.append(dir);
-
-    this->ui->comboBoxDir->addItems(dirs_);
+    this->ui->comboBoxDir->addItems(WPMUtils::toQStringList(dirs));
 
     wr.close();
 
@@ -149,7 +145,7 @@ void SettingsFrame::fillRepositories()
     std::vector<RepositoriesItemModel::Entry*> entries;
 
     QString err;
-    QStringList urls, comments;
+    std::vector<QString> urls, comments;
 
     std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments(false);
     for (int i = 0; i < urls.size(); i++) {
@@ -234,21 +230,21 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     RepositoriesItemModel* m = static_cast<RepositoriesItemModel*>(t->model());
     std::vector<RepositoriesItemModel::Entry*> entries = m->getEntries();
 
-    QStringList uiReps;
-    QStringList uiComments;
-    QStringList uiUnusedReps;
-    QStringList uiUnusedComments;
+    std::vector<QString> uiReps;
+    std::vector<QString> uiComments;
+    std::vector<QString> uiUnusedReps;
+    std::vector<QString> uiUnusedComments;
     for (auto e: entries) {
         if (e->enabled) {
-            uiReps.append(e->url.trimmed());
-            uiComments.append(e->comment.trimmed());
+            uiReps.push_back(e->url.trimmed());
+            uiComments.push_back(e->comment.trimmed());
         } else {
-            uiUnusedReps.append(e->url.trimmed());
-            uiUnusedComments.append(e->comment.trimmed());
+            uiUnusedReps.push_back(e->url.trimmed());
+            uiUnusedComments.push_back(e->comment.trimmed());
         }
     }
 
-    if (err.isEmpty() && uiReps.count() == 0)
+    if (err.isEmpty() && uiReps.size() == 0)
         err = QObject::tr("No repositories defined");
 
     if (err.isEmpty()) {
@@ -256,7 +252,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < uiReps.count(); i++) {
+        for (int i = 0; i < uiReps.size(); i++) {
             QUrl url(uiReps.at(i));
             if (!url.isValid()) {
                 err = QString(QObject::tr("%1 is not a valid repository address")).arg(
@@ -274,8 +270,8 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     bool repsChanged = false;
 
     if (err.isEmpty()) {
-        QStringList reps, comments;
-        QStringList unusedReps, unusedComments;
+        std::vector<QString> reps, comments;
+        std::vector<QString> unusedReps, unusedComments;
         std::tie(reps, comments, err) = PackageUtils::getRepositoryURLsAndComments();
         std::tie(unusedReps, unusedComments, err) = PackageUtils::getRepositoryURLsAndComments(false);
         repsChanged = (reps != uiReps) || (comments != uiComments) ||

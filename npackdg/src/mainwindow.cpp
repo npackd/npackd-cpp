@@ -17,7 +17,6 @@
 #include <QTimer>
 #include <QObject>
 #include <QString>
-#include <QStringList>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <qinputdialog.h>
@@ -79,7 +78,7 @@ QRegExp re("\\W+", Qt::CaseInsensitive);
 for (int i = 0; i < ps.count(); i++) {
     Package* p = ps.at(i);
     QString txt = p->title + " " + p->description;
-    QStringList sl = txt.toLower().split(re, QString::SkipEmptyParts);
+    Q StringList sl = txt.toLower().split(re, QString::SkipEmptyParts);
     sl.removeDuplicates();
     for (int j = 0; j < sl.count(); j++) {
         QString w = sl.at(j);
@@ -92,7 +91,7 @@ for (int i = 0; i < ps.count(); i++) {
 }
 qDeleteAll(ps);
 
-QStringList stopWords = QString("a an and are as at be but by for if in "
+Q StringList stopWords = QString("a an and are as at be but by for if in "
         "into is it no not of on or such that the their then there these "
         "they this to was will with").split(" ");
 for (int i = 0; i < stopWords.count(); i++)
@@ -758,7 +757,7 @@ void MainWindow::monitoredJobCompleted()
     }
 
     /*
-    QStringList logMessages = getLogMessages();
+    Q StringList logMessages = getLogMessages();
     if (!logMessages.isEmpty()) {
         addTextTab("log", logMessages.join('\n'));
     }
@@ -1998,8 +1997,8 @@ void MainWindow::addErrorMessage(const QString& msg, const QString& details,
         m = m.left(200).trimmed();
         dots = true;
     }
-    QStringList sl = m.split("\r\n");
-    if (sl.count() > 2) {
+    std::vector<QString> sl = WPMUtils::split(m, "\r\n");
+    if (sl.size() > 2) {
         m = sl.at(0) + "\r\n" + sl.at(1);
         dots = true;
     }

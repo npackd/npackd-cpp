@@ -15,6 +15,7 @@
 #include "windowsregistry.h"
 #include "abstractrepository.h"
 #include "uiutils.h"
+#include "wpmutils.h"
 
 MainFrame::MainFrame(QWidget *parent) :
     QFrame(parent), Selection(),
@@ -132,7 +133,7 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
 {
     this->categoryCombosEvents = false;
 
-    QStringList labels;
+    std::vector<QString> labels;
     int count = 0;
     for (int i = 0; i < static_cast<int>(cats.size()); i++) {
         QString n;
@@ -140,7 +141,7 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
         if (n.isEmpty()) {
             n = QObject::tr("Uncategorized");
         }
-        labels.append(n + " (" + cats.at(i).at(1) + ")");
+        labels.push_back(n + " (" + cats.at(i).at(1) + ")");
         count += cats.at(i).at(1).toInt();
     }
 
@@ -148,7 +149,7 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
         this->ui->comboBoxCategory0->clear();
         this->ui->comboBoxCategory0->addItem(QObject::tr("All") +
                 " (" + QString::number(count) + ")");
-        this->ui->comboBoxCategory0->addItems(labels);
+        this->ui->comboBoxCategory0->addItems(WPMUtils::toQStringList(labels));
         this->ui->comboBoxCategory0->setEnabled(true);
         this->categories0 = cats;
 
@@ -156,10 +157,10 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
         this->ui->comboBoxCategory1->setEnabled(false);
     } else if (level == 1) {
         this->ui->comboBoxCategory1->clear();
-        if (labels.count() > 0) {
+        if (labels.size() > 0) {
             this->ui->comboBoxCategory1->addItem(QObject::tr("All") +
                     " (" + QString::number(count) + ")");
-            this->ui->comboBoxCategory1->addItems(labels);
+            this->ui->comboBoxCategory1->addItems(WPMUtils::toQStringList(labels));
             this->ui->comboBoxCategory1->setEnabled(true);
         } else {
             this->ui->comboBoxCategory1->setEnabled(false);

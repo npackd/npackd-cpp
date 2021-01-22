@@ -58,11 +58,11 @@ DBRepository::DBRepository(): mutex(QMutex::Recursive)
     insertInstalledQuery = nullptr;
 
     // please note that words shorter than 3 characters are removed later anyway
-    stopWords = QString("version build edition remove only "
+    stopWords = WPMUtils::split(QString("version build edition remove only "
             "bit sp1 sp2 sp3 deu enu update microsoft corporation mozilla "
             "setup package "
             "and are but for into not such that the their then there these "
-            "they this was will with windows").split(' ');
+            "they this was will with windows"), ' ');
 }
 
 DBRepository::~DBRepository()
@@ -600,7 +600,7 @@ std::vector<QString> DBRepository::tokenizeTitle(const QString& title)
     //  - vX...
     for (int i = 0; i < static_cast<int>(keywords.size()); ) {
         const QString& p = keywords.at(i);
-        if (stopWords.contains(p)) {
+        if (std::find(stopWords.begin(), stopWords.end(), p) != stopWords.end()) {
             keywords.erase(keywords.begin() + i);
         } else if (p.length() < 3) {
             keywords.erase(keywords.begin() + i);

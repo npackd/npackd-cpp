@@ -58,7 +58,7 @@ private:
     std::unique_ptr<MySQLQuery> deleteCmdFilesQuery;
     MySQLQuery* insertInstalledQuery;
 
-    QStringList stopWords;
+    std::vector<QString> stopWords;
 
     QSqlDatabase db;
 
