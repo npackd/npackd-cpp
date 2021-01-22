@@ -541,7 +541,7 @@ License *DBRepository::findLicense_(const QString& name, QString *err)
     return r;
 }
 
-QStringList DBRepository::tokenizeTitle(const QString& title)
+std::vector<QString> DBRepository::tokenizeTitle(const QString& title)
 {
     QString txt = title.toLower();
     txt.replace('(', ' ');
@@ -556,10 +556,10 @@ QStringList DBRepository::tokenizeTitle(const QString& title)
     txt.replace('@', ' ');
     txt = txt.simplified();
 
-    QStringList keywords = txt.split(' ', Qt::SkipEmptyParts);
+    std::vector<QString> keywords = WPMUtils::split(txt, ' ', Qt::SkipEmptyParts);
 
     // synonyms
-    for (int i = 0; i < keywords.size(); i++) {
+    for (int i = 0; i < static_cast<int>(keywords.size()); i++) {
         const QString& p = keywords.at(i);
         if (p == QStringLiteral("x64") || p == QStringLiteral("amd64") ) {
             keywords[i] = QStringLiteral("x86_64");
@@ -569,20 +569,27 @@ QStringList DBRepository::tokenizeTitle(const QString& title)
     }
 
     // "32 bit" and "64 bit"
-    for (int i = 0; i < keywords.size() - 1; i++) {
+    for (int i = 0; i < static_cast<int>(keywords.size()) - 1; i++) {
         const QString& p = keywords.at(i);
         const QString& p2 = keywords.at(i + 1).toLower();
         if (p == QStringLiteral("32") && p2 == QStringLiteral("bit")) {
             keywords[i] = QStringLiteral("i686");
-            keywords.removeAt(i + 1);
+            keywords.erase(keywords.begin() + i + 1);
         } else if (p == QStringLiteral("64") && p2 == QStringLiteral("bit")) {
             keywords[i] = QStringLiteral("x86_64");
-            keywords.removeAt(i + 1);
+            keywords.erase(keywords.begin() + i + 1);
         }
     }
-    if (!keywords.contains(QStringLiteral("x86_64")) &&
-            !keywords.contains(QStringLiteral("i686")))
-        keywords.append(QStringLiteral("i686"));
+
+    bool bits = false;
+    for (auto& k: keywords) {
+        if (k == QStringLiteral("x86_64") || k == QStringLiteral("i686")) {
+            bits = true;
+            break;
+        }
+    }
+    if (!bits)
+        keywords.push_back(QStringLiteral("i686"));
 
     // remove (X == a digit)
     //  - stop words
@@ -591,28 +598,28 @@ QStringList DBRepository::tokenizeTitle(const QString& title)
     //  - KBXXXXXXX
     //  - all words shorter than 3 characters
     //  - vX...
-    for (int i = 0; i < keywords.size(); ) {
+    for (int i = 0; i < static_cast<int>(keywords.size()); ) {
         const QString& p = keywords.at(i);
         if (stopWords.contains(p)) {
-            keywords.removeAt(i);
+            keywords.erase(keywords.begin() + i);
         } else if (p.length() < 3) {
-            keywords.removeAt(i);
+            keywords.erase(keywords.begin() + i);
         } else if (p.length() > 0 && p.at(0).isDigit()) {
-            keywords.removeAt(i);
+            keywords.erase(keywords.begin() + i);
         } else if (p.length() >= 2 && (p.at(0).toUpper() == 'V') &&
                p.at(1).isDigit()) {
-            keywords.removeAt(i);
+            keywords.erase(keywords.begin() + i);
         } else if (p.length() == 8 && (p.at(0).toUpper() == 'K') &&
                 (p.at(1).toUpper() == 'B') && p.at(2).isDigit() &&
                 p.at(3).isDigit() && p.at(4).isDigit() &&
                 p.at(5).isDigit() && p.at(6).isDigit() && p.at(7).isDigit()) {
-            keywords.removeAt(i);
+            keywords.erase(keywords.begin() + i);
         } else if (p.length() == 9 && (p.at(0).toUpper() == 'K') &&
                 (p.at(1).toUpper() == 'B') && p.at(2).isDigit() &&
                 p.at(3).isDigit() && p.at(4).isDigit() &&
                 p.at(5).isDigit() && p.at(6).isDigit() && p.at(7).isDigit() &&
                 p.at(8).isDigit()) {
-            keywords.removeAt(i);
+            keywords.erase(keywords.begin() + i);
         } else {
             i++;
         }
@@ -625,7 +632,7 @@ std::vector<QString> DBRepository::findBetterPackages(const QString& title, QStr
 {
     std::vector<QString> packages;
 
-    QStringList keywords = tokenizeTitle(title);
+    std::vector<QString> keywords = tokenizeTitle(title);
 
     if (keywords.size() > 0) {
         QString where = QStringLiteral("select name from package "
@@ -633,7 +640,7 @@ std::vector<QString> DBRepository::findBetterPackages(const QString& title, QStr
                 "and name not like 'control-panel.%'");
         std::vector<QVariant> params;
 
-        for (int i = 0; i < keywords.count(); i++) {
+        for (int i = 0; i < static_cast<int>(keywords.size()); i++) {
             QString kw = keywords.at(i);
             if (kw.length() > 1) {
                 if (!where.isEmpty())
@@ -655,7 +662,7 @@ std::vector<QString> DBRepository::findBetterPackages(const QString& title, QStr
         else
             what = QString("%1 packages").arg(packages.size());
 
-        qCDebug(npackd) << "searching for" <<  keywords.join(' ') <<
+        qCDebug(npackd) << "searching for" << WPMUtils::join(keywords, ' ') <<
                 "found" << what;
     }
 
@@ -675,11 +682,11 @@ QString DBRepository::createQuery(Package::Status minStatus,
 
     // simplified() returns single spaces between words and none
     // at the beginning or at the end
-    QStringList keywords = query.toLower().simplified().split(
+    std::vector<QString> keywords = WPMUtils::split(query.toLower().simplified(),
             QStringLiteral(" "),
             Qt::SkipEmptyParts);
 
-    for (int i = 0; i < keywords.count(); i++) {
+    for (int i = 0; i < static_cast<int>(keywords.size()); i++) {
         QString kw = keywords.at(i);
 
         if (kw.length() <= 1)
@@ -754,27 +761,27 @@ std::vector<QString> DBRepository::findPackages(Package::Status minStatus,
             where + QStringLiteral(" ORDER BY TITLE"), params, err);
 }
 
-QStringList DBRepository::getCategories(const QStringList& ids, QString* err)
+std::vector<QString> DBRepository::getCategories(const std::vector<QString>& ids, QString* err)
 {
     QMutexLocker ml(&this->mutex);
 
     *err = "";
 
     QString sql = QStringLiteral("SELECT NAME FROM CATEGORY WHERE ID IN (") +
-            ids.join(QStringLiteral(", ")) + QStringLiteral(")");
+            WPMUtils::join(ids, QStringLiteral(", ")) + QStringLiteral(")");
 
     MySQLQuery q(db);
 
     if (!q.prepare(sql))
         *err = SQLUtils::getErrorString(q);
 
-    QStringList r;
+    std::vector<QString> r;
     if (err->isEmpty()) {
         if (!q.exec())
             *err = SQLUtils::getErrorString(q);
         else {
             while (q.next()) {
-                r.append(q.value(0).toString());
+                r.push_back(q.value(0).toString());
             }
         }
     }
@@ -1099,29 +1106,29 @@ QString DBRepository::savePackage(Package *p, bool replace)
 
     if (p->categories.size() > 0) {
         QString category = p->categories.front();
-        QStringList cats = category.split('/');
-        for (int i = 0; i < cats.length(); i++) {
+        std::vector<QString> cats = WPMUtils::split(category, '/');
+        for (int i = 0; i < static_cast<int>(cats.size()); i++) {
             cats[i] = cats.at(i).trimmed();
         }
 
         QString c;
-        if (cats.count() > 0) {
+        if (cats.size() > 0) {
             c = cats.at(0);
             cat0 = insertCategory(0, 0, c, &err);
         }
-        if (cats.count() > 1) {
+        if (cats.size() > 1) {
             c = cats.at(1);
             cat1 = insertCategory(cat0, 1, c, &err);
         }
-        if (cats.count() > 2) {
+        if (cats.size() > 2) {
             c = cats.at(2);
             cat2 = insertCategory(cat1, 2, c, &err);
         }
-        if (cats.count() > 3) {
+        if (cats.size() > 3) {
             c = cats.at(3);
             cat3 = insertCategory(cat2, 3, c, &err);
         }
-        if (cats.count() > 4) {
+        if (cats.size() > 4) {
             c = cats.at(4);
             cat4 = insertCategory(cat3, 4, c, &err);
         }
@@ -1220,7 +1227,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
             else
                 savePackageQuery->bindValue(QStringLiteral(":CATEGORY4"), cat4);
             savePackageQuery->bindValue(QStringLiteral(":TITLE_FULLTEXT"),
-                    ' ' + tokenizeTitle(p->title).join(' ') + ' ');
+                    ' ' + WPMUtils::join(tokenizeTitle(p->title), ' ') + ' ');
             savePackageQuery->bindValue(QStringLiteral(":STARS"), p->stars);
 
             if (!savePackageQuery->exec())
@@ -1575,9 +1582,9 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
 {
     QString err;
     if (repositories.size() > 0) {
-        QStringList reps;
+        std::vector<QString> reps;
         for (auto r: repositories) {
-            reps.append(r->toString(QUrl::FullyEncoded));
+            reps.push_back(r->toString(QUrl::FullyEncoded));
         }
 
         err = saveRepositories(reps);
@@ -2060,11 +2067,11 @@ QString DBRepository::readCategories()
     return err;
 }
 
-QStringList DBRepository::readRepositories(QString* err)
+std::vector<QString> DBRepository::readRepositories(QString* err)
 {
     QMutexLocker ml(&this->mutex);
 
-    QStringList r;
+    std::vector<QString> r;
 
     *err = QStringLiteral("");
 
@@ -2080,7 +2087,7 @@ QStringList DBRepository::readRepositories(QString* err)
             *err = SQLUtils::getErrorString(q);
         else {
             while (q.next()) {
-                r.append(q.value(1).toString());
+                r.push_back(q.value(1).toString());
             }
         }
     }
@@ -2137,7 +2144,7 @@ void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
 }
 
 
-QString DBRepository::saveRepositories(const QStringList &reps)
+QString DBRepository::saveRepositories(const std::vector<QString> &reps)
 {
     QMutexLocker ml(&this->mutex);
 
@@ -2154,7 +2161,7 @@ QString DBRepository::saveRepositories(const QStringList &reps)
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < reps.size(); i++) {
+        for (int i = 0; i < static_cast<int>(reps.size()); i++) {
             q.bindValue(QStringLiteral(":ID"), i + 1);
             q.bindValue(QStringLiteral(":URL"), reps.at(i));
             if (!q.exec())

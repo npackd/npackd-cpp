@@ -143,7 +143,7 @@ private:
     QString updateDatabase();
     void transferFrom(Job *job, const QString &databaseFilename);
     QString deleteCmdFiles(const QString &name, const Version &version);
-    QStringList tokenizeTitle(const QString &title);
+    std::vector<QString> tokenizeTitle(const QString &title);
     QString deleteTags(const QString &name);
     QString saveTags(Package *p);
     QString readTags(Package *p) const;
@@ -327,14 +327,14 @@ public:
      * @param err error message will be stored here
      * @return category titles
      */
-    QStringList getCategories(const QStringList &ids, QString *err);
+    std::vector<QString> getCategories(const std::vector<QString> &ids, QString *err);
 
     /**
      * @brief reads the list of repositories
      * @param err error message will be stored here
      * @return list of URLs
      */
-    QStringList readRepositories(QString *err);
+    std::vector<QString> readRepositories(QString *err);
 
     /**
      * @brief saves the list of given repository URLs. The repositories will
@@ -342,7 +342,7 @@ public:
      * @param reps URLs
      * @return error message
      */
-    QString saveRepositories(const QStringList& reps);
+    QString saveRepositories(const std::vector<QString> &reps);
 
     /**
      * @brief searches for packages
