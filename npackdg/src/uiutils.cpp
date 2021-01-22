@@ -271,7 +271,7 @@ bool UIUtils::confirm(QWidget* parent, QString title, QString text,
         QString detailedText)
 {
     /*
-    QStringList lines = text.split("\n", QString::SkipEmptyParts);
+    std::vector<QString> lines = text.split("\n", QString::SkipEmptyParts);
     int max;
     if (lines.count() > 20) {
         max = 20;
@@ -347,7 +347,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
         Job* sub = job->newSubJob(0.1, "Creating the .bat file");
 
         QString pct = WPMUtils::programCloseType2String(programCloseType);
-        QStringList batch;
+        std::vector<QString> batch;
         for (auto op: ops) {
             QString oneCmd = "\"" + newExe + "\" ";
 
@@ -362,10 +362,10 @@ void UIUtils::processWithSelfUpdate(Job* job,
                         " -e " + pct +
                         " || ping 1.1.1.1 -n 1 -w 10000 > nul || exit /b %errorlevel%";
             }
-            batch.append(oneCmd);
+            batch.push_back(oneCmd);
         }
 
-        batch.append("\"" + newExe + "\" start-newest");
+        batch.push_back("\"" + newExe + "\" start-newest");
 
         // qCDebug(npackd) << "self-update 3";
 
@@ -381,7 +381,7 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
             QTextStream stream(&file);
             stream.setCodec("UTF-8");
-            stream << batch.join("\r\n");
+            stream << WPMUtils::join(batch, "\r\n");
             if (stream.status() != QTextStream::Ok)
                 job->setErrorMessage("Error writing the .bat file");
             file.close();
@@ -434,12 +434,12 @@ void UIUtils::processWithSelfUpdate(Job* job,
     job->complete();
 }
 
-QString UIUtils::extractAccelerators(const QStringList& titles)
+QString UIUtils::extractAccelerators(const std::vector<QString> &titles)
 {
     QString valid = "abcdefghijklmnopqrstuvwxyz";
 
     QString used;
-    for (int i = 0; i < titles.count(); i++) {
+    for (int i = 0; i < static_cast<int>(titles.size()); i++) {
         QString title = titles.at(i);
 
         int pos = title.indexOf('&');

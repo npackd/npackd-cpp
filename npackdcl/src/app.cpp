@@ -277,10 +277,10 @@ void App::printJSON(const QJsonObject &obj)
 
     QJsonDocument d(obj);
 
-    QStringList sl = QString::fromUtf8(d.toJson(
-            QJsonDocument::Indented)).split("\n");
-    for (int i = 0; i < sl.count(); i++) {
-        if (i != sl.count() - 1)
+    std::vector<QString> sl = WPMUtils::split(QString::fromUtf8(d.toJson(
+            QJsonDocument::Indented)), "\n");
+    for (int i = 0; i < static_cast<int>(sl.size()); i++) {
+        if (i != static_cast<int>(sl.size()) - 1)
             WPMUtils::writeln(sl.at(i));
         else
             WPMUtils::outputTextConsole(sl.at(i));
@@ -1144,9 +1144,9 @@ void App::path(Job* job)
     */
 
     if (err.isEmpty()) {
-        QStringList paths;
+        std::vector<QString> paths;
         for (int i = 0; i < static_cast<int>(ipvs.size()); i++) {
-            paths.append(ipvs.at(i)->getDirectory().replace('/', '\\'));
+            paths.push_back(ipvs.at(i)->getDirectory().replace('/', '\\'));
         }
 
         if (cl.isPresent("json")) {
@@ -1158,12 +1158,12 @@ void App::path(Job* job)
             top["path"] = path;
             printJSON(top);
         } else if (cl.isPresent("cmd")) {
-            for (int i = 0; i < paths.size(); i++) {
+            for (int i = 0; i < static_cast<int>(paths.size()); i++) {
                 WPMUtils::writeln(QString("set npackd_path") +
                         QString::number(i) + "=" + paths.at(i));
             }
         } else {
-            for (int i = 0; i < paths.size(); i++) {
+            for (int i = 0; i < static_cast<int>(paths.size()); i++) {
                 WPMUtils::writeln(paths.at(i));
             }
         }
@@ -1383,7 +1383,7 @@ void App::update(Job* job)
     }
 
     std::vector<QString> packages_;
-    QStringList versions_;
+    std::vector<QString> versions_;
 
     std::vector<CommandLine::ParsedOption*> parsed = cl.getParsedOptions();
     for (int i = 0; i < static_cast<int>(parsed.size()); ) {
@@ -1400,7 +1400,7 @@ void App::update(Job* job)
                     i++;
                 }
             }
-            versions_.append(versions);
+            versions_.push_back(versions);
         } else if (po->opt && po->opt->name == "versions") {
             job->setErrorMessage("Missing option: --versions without --package");
             break;
@@ -1417,7 +1417,7 @@ void App::update(Job* job)
                     Package::Status::NOT_INSTALLED_NOT_AVAILABLE, query, -1, -1, &err);
             packages_.insert(packages_.end(), list.begin(), list.end());
             for (auto& v: list) {
-                versions_.append(QString());
+                versions_.push_back(QString());
             }
         }
     }
@@ -1607,7 +1607,7 @@ void App::processInstallOperations(Job *job,
         QString batchFileName;
         if (job->shouldProceed()) {
             QString pct = WPMUtils::programCloseType2String(programCloseType);
-            QStringList batch;
+            std::vector<QString> batch;
             for (auto op: ops) {
                 QString oneCmd = "\"" + newExe + "\" ";
 
@@ -1622,7 +1622,7 @@ void App::processInstallOperations(Job *job,
                             " -e " + pct +
                             " || ping 1.1.1.1 -n 1 -w 10000 > nul || exit /b %errorlevel%";
                 }
-                batch.append(oneCmd);
+                batch.push_back(oneCmd);
             }
 
             // qCDebug(npackd) << "self-update 3";
@@ -1639,7 +1639,7 @@ void App::processInstallOperations(Job *job,
 
                 QTextStream stream(&file);
                 stream.setCodec("UTF-8");
-                stream << batch.join("\r\n");
+                stream << WPMUtils::join(batch, "\r\n");
                 if (stream.status() != QTextStream::Ok)
                     job->setErrorMessage("Error writing the .bat file");
                 file.close();

@@ -75,7 +75,7 @@ public:
      * @param titles titles
      * @return lower case characters for found accelerators
      */
-    static QString extractAccelerators(const QStringList &titles);
+    static QString extractAccelerators(const std::vector<QString> &titles);
 };
 
 #endif // UIUTILS_H

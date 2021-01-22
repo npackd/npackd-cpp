@@ -287,11 +287,11 @@ std::vector<QString> WindowsRegistry::list(QString* err) const
     return res;
 }
 
-QStringList WindowsRegistry::listValues(QString *err) const
+std::vector<QString> WindowsRegistry::listValues(QString *err) const
 {
     err->clear();
 
-    QStringList res;
+    std::vector<QString> res;
     if (this->hkey == nullptr) {
         err->append(QObject::tr("No key is open"));
         return res;
@@ -308,7 +308,7 @@ QStringList WindowsRegistry::listValues(QString *err) const
         if (r == ERROR_SUCCESS) {
             QString v_;
             v_.setUtf16((ushort*) name, nameSize);
-            res.append(v_);
+            res.push_back(v_);
             index++;
         } else if (r == ERROR_NO_MORE_ITEMS) {
             break;

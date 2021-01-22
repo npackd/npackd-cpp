@@ -13,7 +13,7 @@ extern QMutex logMutex;
 void clearLogMessages();
 
 /**
- * @brief logs to the Windows event log and to a QStringList
+ * @brief logs to the Windows event log and to a string list
  * @param type message type
  * @param context context
  * @param message message

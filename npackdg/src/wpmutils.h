@@ -222,15 +222,6 @@ public:
         QString* err);
 
     /**
-     * Checks if a file or a directory is an ancestoer of at least one of
-     * the specified directories or equals to one of this directories.
-     *
-     * @param file file or directory.
-     * @param dirs directories.
-     */
-    static bool isOverOrEquals(const QString& file, const QStringList& dirs);
-
-    /**
      * Checks if a file or a directory is under the specified directory or
      * equals to it.
      *

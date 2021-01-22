@@ -859,21 +859,6 @@ std::vector<QString> WPMUtils::parseCommandLine(const QString& commandLine,
     return params;
 }
 
-bool WPMUtils::isOverOrEquals(const QString& file, const QStringList& dirs)
-{
-    bool r = false;
-    for (int j = 0; j < dirs.count(); j++) {
-        const QString& dir = dirs.at(j);
-        if (WPMUtils::pathEquals(file, dir) ||
-                WPMUtils::isUnder(dir, file)) {
-            r = true;
-            break;
-        }
-    }
-
-    return r;
-}
-
 #ifdef QT_GUI_LIB
 
 // Qt 5.2.1

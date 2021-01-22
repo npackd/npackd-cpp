@@ -197,10 +197,10 @@ public:
      * @param err the error message will be stored here
      * @return list of values
      */
-    QStringList listValues(QString* err) const;
+    std::vector<QString> listValues(QString* err) const;
 
     /**
-     * @brief loads QStringList from this key
+     * @brief loads a string listfrom this key
      * @param err error message
      * @return data from the registry
      */

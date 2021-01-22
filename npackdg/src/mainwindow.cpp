@@ -1783,11 +1783,11 @@ void MainWindow::on_actionSettings_triggered()
 
         QMenuBar* mb = this->menuBar();
 
-        QStringList titles;
+        std::vector<QString> titles;
         for (int i = 0; i < mb->children().count(); i++) {
             QMenu* m = dynamic_cast<QMenu*>(mb->children().at(i));
             if (m) {
-                titles.append(m->title());
+                titles.push_back(m->title());
             }
         }
 
