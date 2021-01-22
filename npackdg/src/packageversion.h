@@ -99,7 +99,7 @@ private:
      *     stopped
      */
     void removeDirectory(Job* job, const QString& dir, DWORD programCloseType,
-            QStringList *stoppedServices);
+            std::vector<QString> *stoppedServices);
 
     void emitStatusChanged();
 
@@ -394,7 +394,7 @@ public:
      */
     void install(Job* job, const QString& where, const QString &binary,
             bool printScriptOutput, DWORD programCloseType,
-            QStringList *stoppedServices);
+            std::vector<QString> *stoppedServices);
 
     /**
      * Downloads the package binary, checks its hash sum, checks the binary for
@@ -427,7 +427,7 @@ public:
      *     stopped
      */
     void uninstall(Job* job, bool printScriptOutput, DWORD programCloseType,
-            QStringList *stoppedServices);
+            std::vector<QString> *stoppedServices);
 
     /**
      * @param r DB repository
@@ -485,7 +485,7 @@ public:
      *     stored here
      */
     void stop(Job *job, DWORD programCloseType, bool printScriptOutput,
-            QStringList *stoppedServices);
+            std::vector<QString> *stoppedServices);
 
     /**
      * @brief returns the file name without the path for a command line tool

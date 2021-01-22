@@ -88,10 +88,10 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
                     arg(pv->getPackageTitle()), true, true);
 
             QString fn = pv->download.path();
-            QStringList parts = fn.split('/');
+            std::vector<QString> parts = WPMUtils::split(fn, '/');
             fn = where + "\\";
 
-            QFileInfo fi(parts.at(parts.count() - 1));
+            QFileInfo fi(parts.at(parts.size() - 1));
             fn = fn + fi.baseName();
             QString suffix = fi.completeSuffix();
             if (!suffix.isEmpty())
@@ -338,10 +338,10 @@ void AbstractRepository::process(Job *job,
     int n = install.size();
 
     // where the binary was downloaded
-    QStringList dirs;
+    std::vector<QString> dirs;
 
     // names of the binaries relative to the directory
-    QStringList binaries;
+    std::vector<QString> binaries;
 
     // 70% for downloading the binaries
     if (job->shouldProceed()) {
@@ -367,20 +367,20 @@ void AbstractRepository::process(Job *job,
                     sub->setErrorMessage(
                             QObject::tr("Directory %1 already exists").
                             arg(dir));
-                    dirs.append("");
-                    binaries.append("");
+                    dirs.push_back("");
+                    binaries.push_back("");
                 } else {
-                    dirs.append(dir);
+                    dirs.push_back(dir);
 
                     QString binary = pv->download_(sub, dir, interactive,
                             user, password, proxyUser, proxyPassword);
-                    binaries.append(QFileInfo(binary).fileName());
+                    binaries.push_back(QFileInfo(binary).fileName());
                     if (sub->isCancelled())
                         job->cancel();
                 }
             } else {
-                dirs.append("");
-                binaries.append("");
+                dirs.push_back("");
+                binaries.push_back("");
                 job->setProgress(job->getProgress() + 0.7 / n);
             }
 
@@ -412,7 +412,7 @@ void AbstractRepository::process(Job *job,
     }
     job->setTitle(initialTitle);
 
-    QStringList stoppedServices;
+    std::vector<QString> stoppedServices;
 
     // 10% for stopping the packages
     if (job->shouldProceed()) {
@@ -529,15 +529,15 @@ void AbstractRepository::process(Job *job,
 
     // removing the binaries if we should not proceed
     if (!job->shouldProceed()) {
-        for (int i = processed; i < dirs.count(); i++) {
+        for (int i = processed; i < static_cast<int>(dirs.size()); i++) {
             QString dir = dirs.at(i);
             if (!dir.isEmpty()) {
                 QString txt = QObject::tr("Deleting %1").arg(dir);
 
-                Job* sub = job->newSubJob(0.01 / dirs.count(), txt, true, false);
+                Job* sub = job->newSubJob(0.01 / dirs.size(), txt, true, false);
                 WPMUtils::removeDirectory(sub, dir);
             } else {
-                job->setProgress(job->getProgress() + 0.01 / dirs.count());
+                job->setProgress(job->getProgress() + 0.01 / dirs.size());
             }
         }
     }
@@ -565,7 +565,7 @@ void AbstractRepository::process(Job *job,
         }
 
         if (err.isEmpty()) {
-            for (int i = 0; i < stoppedServices.size(); i++) {
+            for (int i = 0; i < static_cast<int>(stoppedServices.size()); i++) {
                 err = WPMUtils::startService(schSCManager, stoppedServices.at(i));
 
                 if (!err.isEmpty())

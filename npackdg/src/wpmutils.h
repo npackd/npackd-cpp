@@ -81,9 +81,9 @@ private:
 
     static QString disconnectFrom(LPWSTR netname);
     static QString StopDependentServices(SC_HANDLE schSCManager, SC_HANDLE schService,
-            QStringList *stoppedServices);
+            std::vector<QString> *stoppedServices);
     static QString DoStopSvc(SC_HANDLE schSCManager, const QString &serviceName,
-                             QStringList *stoppedServices);
+                             std::vector<QString> *stoppedServices);
     static QString waitForServiceStatus(SC_HANDLE schService,
             const QString &operation, DWORD status);
 
@@ -564,7 +564,7 @@ public:
      *     stored here
      */
     static void closeProcessesThatUseDirectory(const QString& dir,
-            DWORD cpt, QStringList *stoppedServices);
+            DWORD cpt, std::vector<QString> *stoppedServices);
 
     /**
      * @brief disconnects all users from all shares that include the specified
@@ -750,7 +750,7 @@ public:
      * @return error message
      */
     static QString stopService(const QString &serviceName,
-                               QStringList *stoppedServices);
+                               std::vector<QString> *stoppedServices);
 
     /**
      * @brief starts a Windows service

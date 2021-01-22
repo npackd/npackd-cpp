@@ -435,7 +435,7 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
 }
 
 void PackageVersion::uninstall(Job* job, bool printScriptOutput,
-        DWORD programCloseType, QStringList* stoppedServices)
+        DWORD programCloseType, std::vector<QString>* stoppedServices)
 {
     if (!installed()) {
         job->setProgress(1);
@@ -659,7 +659,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 }
 
 void PackageVersion::removeDirectory(Job* job, const QString& dir,
-        DWORD programCloseType, QStringList* stoppedServices)
+        DWORD programCloseType, std::vector<QString>* stoppedServices)
 {
     // for a .dll loaded in another process it is possible to:
     // - rename the .dll file
@@ -1544,7 +1544,7 @@ void PackageVersion::installWith(Job* /*job*/)
 void PackageVersion::install(Job* job, const QString& where,
         const QString& binary,
         bool printScriptOutput, DWORD programCloseType,
-        QStringList* stoppedServices)
+        std::vector<QString>* stoppedServices)
 {
     if (installed()) {
         qCInfo(npackd).noquote() << QObject::tr(
@@ -2125,7 +2125,7 @@ PackageVersionFile* PackageVersion::findFile(const QString& path) const
 }
 
 void PackageVersion::stop(Job* job, DWORD programCloseType,
-        bool printScriptOutput, QStringList* stoppedServices)
+        bool printScriptOutput, std::vector<QString>* stoppedServices)
 {
     bool me = false;
     QString myPackage = InstalledPackages::packageName;

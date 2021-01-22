@@ -1429,7 +1429,7 @@ QString WPMUtils::getTaskName()
 }
 
 void WPMUtils::closeProcessesThatUseDirectory(const QString &dir,
-        DWORD cpt, QStringList* stoppedServices)
+        DWORD cpt, std::vector<QString>* stoppedServices)
 {
     //QString f = dir + "\\abc.txt";
     //test((PCWSTR) f.utf16());
@@ -3809,7 +3809,7 @@ void WPMUtils::executeFile(Job* job, const QString& where,
 }
 
 QString WPMUtils::stopService(const QString& serviceName,
-        QStringList* stoppedServices)
+        std::vector<QString>* stoppedServices)
 {
     QString err;
 
@@ -3835,7 +3835,7 @@ QString WPMUtils::stopService(const QString& serviceName,
 }
 
 QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
-        QStringList* stoppedServices)
+        std::vector<QString>* stoppedServices)
 {
     QString err;
 
@@ -3888,7 +3888,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
             formatMessage(GetLastError(), &err);
             err = QObject::tr("ControlService failed: %1").arg(err);
         } else {
-            stoppedServices->append(serviceName);
+            stoppedServices->push_back(serviceName);
         }
     }
 
@@ -3905,7 +3905,7 @@ QString WPMUtils::DoStopSvc(SC_HANDLE schSCManager, const QString& serviceName,
 
 QString WPMUtils::StopDependentServices(SC_HANDLE schSCManager,
         SC_HANDLE schService,
-        QStringList* stoppedServices)
+        std::vector<QString>* stoppedServices)
 {
     QString err;
 
