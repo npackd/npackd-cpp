@@ -306,9 +306,9 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
                 "Software\\Npackd\\Npackd\\InstallationDirs", &err,
                 KEY_ALL_ACCESS);
 
-        QStringList dirs;
+        std::vector<QString> dirs;
         for (int i = 0; i < this->ui->comboBoxDir->count(); i++)
-            dirs.append(this->ui->comboBoxDir->itemText(i));
+            dirs.push_back(this->ui->comboBoxDir->itemText(i));
         if (err.isEmpty()) {
             wr.saveStringList(dirs);
         }

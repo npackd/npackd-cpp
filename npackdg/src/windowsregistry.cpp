@@ -71,12 +71,12 @@ std::vector<QString> WindowsRegistry::loadStringList(QString* err) const
     return r;
 }
 
-QString WindowsRegistry::saveStringList(const QStringList &values) const
+QString WindowsRegistry::saveStringList(const std::vector<QString> &values) const
 {
-    QString err = setDWORD("", values.count());
+    QString err = setDWORD("", values.size());
 
     if (err.isEmpty()) {
-        for (int i = 0; i < values.count(); i++) {
+        for (int i = 0; i < static_cast<int>(values.size()); i++) {
             err = set(QString::number(i), values.at(i));
             if (!err.isEmpty())
                 break;

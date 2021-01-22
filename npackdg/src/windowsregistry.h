@@ -52,7 +52,7 @@ public:
      * @param values the values
      * @return error message
      */
-    QString saveStringList(const QStringList& values) const;
+    QString saveStringList(const std::vector<QString> &values) const;
 
     /**
      * Delete a sub-key without children.
