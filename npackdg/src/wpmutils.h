@@ -152,6 +152,13 @@ public:
             bool firstLevel=true);
 
     /**
+     * @brief converts std::vector to QStringList
+     * @param v std::vector
+     * @return QStringList
+     */
+    static QStringList toQStringList(const std::vector<QString>& v);
+
+    /**
      * Uses the Shell's IShellLink and IPersistFile interfaces
      * to create and store a shortcut to the specified object.
      *

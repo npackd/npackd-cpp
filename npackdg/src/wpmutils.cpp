@@ -2845,6 +2845,16 @@ void WPMUtils::removeDirectory(Job* job, const QString &aDir_, bool firstLevel)
     job->complete();
 }
 
+QStringList WPMUtils::toQStringList(const std::vector<QString> &v)
+{
+    QStringList r;
+    r.reserve(v.size());
+    for (auto& s: v) {
+        r.append(s);
+    }
+    return r;
+}
+
 QString WPMUtils::makeValidFilename(const QString &name, QChar rep)
 {
     // http://msdn.microsoft.com/en-us/library/aa365247(v=vs.85).aspx

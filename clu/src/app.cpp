@@ -1,6 +1,5 @@
 #include <vector>
 
-#include <QStringList>
 #include <QTemporaryFile>
 #include <QDirIterator>
 
@@ -62,19 +61,19 @@ void App::unwrapDir(Job *job)
     if (job->shouldProceed()) {
         if (path.contains('*') || path.contains('?')) {
             path = WPMUtils::normalizePath(path, false);
-            QStringList nameFilters;
+            std::vector<QString> nameFilters;
             int p = path.lastIndexOf('\\');
             if (p >= 0) {
                 path = path.left(p);
-                nameFilters.append(path.mid(p + 1));
+                nameFilters.push_back(path.mid(p + 1));
             } else {
-                nameFilters.append(path);
+                nameFilters.push_back(path);
                 path.clear();
             }
 
             path = QDir(path).absolutePath();
 
-            QDirIterator it(path, nameFilters, QDir::Dirs);
+            QDirIterator it(path, WPMUtils::toQStringList(nameFilters), QDir::Dirs);
             if (it.hasNext()) {
                 path = it.next();
             } else {
@@ -441,9 +440,9 @@ int App::addPath()
         QString err;
         QString curPath = WPMUtils::getSystemEnvVar("PATH", &err);
         if (err.isEmpty()) {
-            QStringList sl = curPath.split(';');
+            std::vector<QString> sl = WPMUtils::split(curPath, ';');
             bool found = false;
-            for (int i = 0; i < sl.count(); i++) {
+            for (int i = 0; i < static_cast<int>(sl.size()); i++) {
                 QString s = sl.at(i).toLower().trimmed();
                 s.replace('/', '\\');
                 if (s == mpath) {
@@ -508,9 +507,9 @@ int App::removePath()
         QString err;
         QString curPath = WPMUtils::getSystemEnvVar("PATH", &err);
         if (err.isEmpty()) {
-            QStringList sl = curPath.split(';');
+            std::vector<QString> sl = WPMUtils::split(curPath, ';');
             int index = -1;
-            for (int i = 0; i < sl.count(); i++) {
+            for (int i = 0; i < static_cast<int>(sl.size()); i++) {
                 QString s = sl.at(i).toLower().trimmed();
                 s.replace('/', '\\');
                 if (s == mpath) {
@@ -519,8 +518,8 @@ int App::removePath()
                 }
             }
             if (index >= 0) {
-                sl.removeAt(index);
-                curPath = sl.join(";");
+                sl.erase(sl.begin() + index);
+                curPath = WPMUtils::join(sl, ";");
 
                 // it's actually 2048, but Explorer seems to have a bug
                 if (curPath.length() < 2040) {
