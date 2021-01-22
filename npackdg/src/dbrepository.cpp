@@ -259,7 +259,7 @@ Package *DBRepository::findPackage_(const QString &name) const
                     }
                 }
             }
-            r->categories.append(c);
+            r->categories.push_back(c);
 
             if (err.isEmpty())
                 err = readLinks(r);
@@ -1063,7 +1063,7 @@ QString DBRepository::saveTags(Package* p)
     }
 
     if (err.isEmpty()) {
-        for (int j = 0; j < p->tags.size(); j++) {
+        for (int j = 0; j < static_cast<int>(p->tags.size()); j++) {
             if (!err.isEmpty())
                 break;
 
@@ -1097,8 +1097,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
     int cat3 = 0;
     int cat4 = 0;
 
-    if (p->categories.count() > 0) {
-        QString category = p->categories.at(0);
+    if (p->categories.size() > 0) {
+        QString category = p->categories.front();
         QStringList cats = category.split('/');
         for (int i = 0; i < cats.length(); i++) {
             cats[i] = cats.at(i).trimmed();
@@ -1189,8 +1189,8 @@ QString DBRepository::savePackage(Package *p, bool replace)
                     (p->title + QStringLiteral(" ") + p->description +
                     QStringLiteral(" ") +
                     p->name + QStringLiteral(" ") +
-                    p->categories.join(' ') + QStringLiteral(" ") +
-                    p->tags.join(' ')).toLower());
+                    WPMUtils::join(p->categories, ' ') + QStringLiteral(" ") +
+                    WPMUtils::join(p->tags, ' ')).toLower());
             savePackageQuery->bindValue(QStringLiteral(":STATUS"), 0);
             savePackageQuery->bindValue(QStringLiteral(":SHORT_NAME"),
                     p->getShortName());
@@ -1296,7 +1296,7 @@ std::vector<Package*> DBRepository::findPackagesByShortName(const QString &name)
                 q.value(9).toInt(),
                 q.value(10).toInt());
         if (!path.isEmpty())
-            p->categories.append(path);
+            p->categories.push_back(path);
 
         if (err.isEmpty())
             err = readLinks(p);
@@ -1355,7 +1355,7 @@ QString DBRepository::readTags(Package* p) const
     }
 
     while (err.isEmpty() && q.next()) {
-        p->tags.append(q.value(0).toString());
+        p->tags.push_back(q.value(0).toString());
     }
 
     return err;

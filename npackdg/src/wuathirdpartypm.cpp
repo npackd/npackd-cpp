@@ -91,7 +91,7 @@ void WUAThirdPartyPM::scan(Job *job,
 
             Package* p = new Package("package", title);
 
-            p->categories.append(QObject::tr("Windows update"));
+            p->categories.push_back(QObject::tr("Windows update"));
 
             IUpdateIdentity* identity = nullptr;
 

@@ -4,8 +4,6 @@
 #include <map>
 
 #include <QString>
-#include <QStringList>
-#include <QStringList>
 #include <QXmlStreamWriter>
 #include <QJsonObject>
 
@@ -45,10 +43,10 @@ public:
     QString license;
 
     /** categories. Sub-categories are separated by / */
-    QStringList categories;
+    std::vector<QString> categories;
 
     /** tags */
-    QStringList tags;
+    std::vector<QString> tags;
 
     /**
      * <link> rel->href. The order of the values is from

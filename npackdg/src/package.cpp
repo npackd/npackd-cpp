@@ -108,12 +108,12 @@ void Package::toXML(QXmlStreamWriter *w) const
     if (!this->license.isEmpty())
         w->writeTextElement("license", this->license);
 
-    for (int i = 0; i < this->categories.count(); i++) {
-        w->writeTextElement("category", this->categories.at(i));
+    for (auto& c: categories) {
+        w->writeTextElement("category", c);
     }
 
-    for (int i = 0; i < this->tags.count(); i++) {
-        w->writeTextElement("tag", this->tags.at(i));
+    for (auto& t: tags) {
+        w->writeTextElement("tag", t);
     }
 
     if (this->stars > 0) {
@@ -144,18 +144,18 @@ void Package::toJSON(QJsonObject& w) const
     if (!this->license.isEmpty())
         w["license"] = this->license;
 
-    if (!this->categories.isEmpty()) {
+    if (this->categories.size() != 0) {
         QJsonArray category;
-        for (int i = 0; i < this->categories.count(); i++) {
-            category.append(this->categories.at(i));
+        for (auto& c: categories) {
+            category.append(c);
         }
         w["categories"] = category;
     }
 
-    if (!this->tags.isEmpty()) {
+    if (this->tags.size() != 0) {
         QJsonArray tag;
-        for (int i = 0; i < this->tags.count(); i++) {
-            tag.append(this->tags.at(i));
+        for (auto& t: tags) {
+            tag.append(t);
         }
         w["tags"] = tag;
     }

@@ -36,7 +36,7 @@ void InstalledPackagesThirdPartyPM::scan(Job* job,
                 if (pos > 1)
                     title = title.right(title.count() - pos - 1);
                 Package* p = new Package(ipv->package, title);
-                p->categories.append(
+                p->categories.push_back(
                         QObject::tr("Npackd list of installed packages"));
                 p->description = p->title;
                 // Crystal Icons

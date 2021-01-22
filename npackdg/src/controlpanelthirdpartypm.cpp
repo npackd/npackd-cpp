@@ -183,7 +183,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     if (err.isEmpty() && WPMUtils::checkURL(QUrl(), &changelog, false).isEmpty())
         p->setChangeLog(changelog);
 
-    p->categories.append(QObject::tr("Control panel software"));
+    p->categories.push_back(QObject::tr("Control panel software"));
 
     QString icon = k.get("DisplayIcon", &err);
     if (err.isEmpty())

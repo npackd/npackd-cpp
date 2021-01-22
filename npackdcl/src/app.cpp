@@ -2281,7 +2281,7 @@ void App::info(Job* job)
             WPMUtils::writeln("Package home page: " + p->url);
             WPMUtils::writeln("Change log: " + p->getChangeLog());
             WPMUtils::writeln("Categories: " +
-                    p->categories.join(", "));
+                    WPMUtils::join(p->categories, ", "));
             WPMUtils::writeln("Icon: " + p->getIcon());
             std::vector<QString> screenshots = p->getLinks("screenshot");
             WPMUtils::writeln("Screen shots: " +

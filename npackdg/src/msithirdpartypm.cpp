@@ -123,7 +123,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
         // qCDebug(npackd) << "MSIThirdPartyPM::scan loop 1.5";
 
-        p->categories.append(QObject::tr("MSI packages"));
+        p->categories.push_back(QObject::tr("MSI packages"));
 
         if (err.isEmpty()) {
             QString icon = WPMUtils::getMSIProductAttribute(guid,

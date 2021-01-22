@@ -465,6 +465,15 @@ public:
             const QString& delimiter);
 
     /**
+     * @brief joins strings together
+     * @param items list items
+     * @param delimiter delimiter between items
+     * @return joined string
+     */
+    static QString join(const std::vector<QString>& items,
+            QChar delimiter);
+
+    /**
      * @brief split a text
      * @param s text
      * @param sep separator

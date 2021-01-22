@@ -97,7 +97,7 @@ PackageItemModel::Info* PackageItemModel::createInfo(
         r->category.clear();
     }
 
-    r->tags = p->tags.join(QStringLiteral(", "));
+    r->tags = WPMUtils::join(p->tags, QStringLiteral(", "));
 
     r->stars = p->stars;
 

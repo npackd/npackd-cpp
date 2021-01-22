@@ -244,10 +244,10 @@ void RepositoryXMLHandler::parsePackage()
             if (!err.isEmpty()) {
                 error = QObject::tr("Error in category tag for %1: %2").
                         arg(p->title).arg(err);
-            } else if (p->categories.contains(c)) {
+            } else if (std::find(p->categories.begin(), p->categories.end(), c) != p->categories.end()) {
                 error = QObject::tr("More than one <category> %1").arg(c);
             } else {
-                p->categories.append(c);
+                p->categories.push_back(c);
             }
         } else if (reader->name() == "tag") {
             QString c = reader->readElementText().trimmed();
@@ -255,10 +255,10 @@ void RepositoryXMLHandler::parsePackage()
             if (!err.isEmpty()) {
                 error = QObject::tr("Error in <tag> for %1: %2").
                         arg(p->title).arg(err);
-            } else if (p->tags.contains(c)) {
+            } else if (std::find(p->tags.begin(), p->tags.end(), c) != p->tags.end()) {
                 error = QObject::tr("More than one <tag> %1").arg(c);
             } else {
-                p->tags.append(c);
+                p->tags.push_back(c);
             }
         } else if (reader->name() == "stars") {
             QString c = reader->readElementText().trimmed();

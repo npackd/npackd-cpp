@@ -18,6 +18,7 @@
 #include "packageversionform.h"
 #include "dbrepository.h"
 #include "uiutils.h"
+#include "wpmutils.h"
 
 PackageFrame::PackageFrame(QWidget *parent) :
     QFrame(parent),
@@ -141,9 +142,9 @@ void PackageFrame::fillForm(Package* p)
     }
     this->ui->labelHomePage->setText(hp);
 
-    this->ui->labelCategory->setText(p->categories.join(", "));
+    this->ui->labelCategory->setText(WPMUtils::join(p->categories, ", "));
 
-    this->ui->labelTags->setText(p->tags.join(", "));
+    this->ui->labelTags->setText(WPMUtils::join(p->tags, ", "));
 
     this->ui->labelStars->setText(QString::number(p->stars));
 
