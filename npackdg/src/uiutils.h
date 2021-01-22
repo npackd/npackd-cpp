@@ -60,7 +60,8 @@ public:
      * @param titles existing titles with or without accelerators (will be modified)
      * @param ignore lower case characters that should be ignored
      */
-    static void chooseAccelerators(QStringList* titles, const QString &ignore=QString());
+    static void chooseAccelerators(std::vector<QString>* titles,
+            const QString &ignore=QString());
 
     /**
      * @brief choose the accelerators automatically

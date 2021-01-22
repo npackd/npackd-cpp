@@ -1561,11 +1561,11 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
 void MainWindow::setMenuAccelerators(){
     QMenuBar* mb = this->menuBar();
 
-    QStringList titles;
+    std::vector<QString> titles;
     for (int i = 0; i < mb->children().count(); i++) {
         QMenu* m = dynamic_cast<QMenu*>(mb->children().at(i));
         if (m) {
-            titles.append(m->title());
+            titles.push_back(m->title());
         }
     }
 
@@ -1580,11 +1580,11 @@ void MainWindow::setMenuAccelerators(){
 }
 
 void MainWindow::setActionAccelerators(QWidget* w) {
-    QStringList titles;
+    std::vector<QString> titles;
     for (int i = 0; i < w->children().count(); i++) {
         QAction* m = dynamic_cast<QAction*>(w->children().at(i));
         if (m) {
-            titles.append(m->text());
+            titles.push_back(m->text());
         }
     }
     UIUtils::chooseAccelerators(&titles);

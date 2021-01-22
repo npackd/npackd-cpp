@@ -457,12 +457,12 @@ QString UIUtils::extractAccelerators(const QStringList& titles)
     return used;
 }
 
-void UIUtils::chooseAccelerators(QStringList* titles, const QString& ignore)
+void UIUtils::chooseAccelerators(std::vector<QString>* titles, const QString& ignore)
 {
     QString valid = "abcdefghijklmnopqrstuvwxyz";
 
     QString used = ignore;
-    for (int i = 0; i < titles->count(); i++) {
+    for (int i = 0; i < static_cast<int>(titles->size()); i++) {
         QString title = titles->at(i);
 
         if (title.contains('&')) {
@@ -496,7 +496,7 @@ void UIUtils::chooseAccelerators(QStringList* titles, const QString& ignore)
             }
         }
 
-        titles->replace(i, title);
+        titles->at(i) = title;
     }
 }
 
@@ -505,21 +505,21 @@ void UIUtils::chooseAccelerators(QWidget *w, const QString& ignore)
     QList<QWidget*> widgets = w->findChildren<QWidget*>();
 
     std::vector<QWidget*> used;
-    QStringList usedTexts;
+    std::vector<QString> usedTexts;
     for (int i = 0; i < widgets.count(); i++) {
         QWidget* w = widgets.at(i);
 
         QLabel *label = dynamic_cast<QLabel*>(w);
         if (label) {
             used.push_back(label);
-            usedTexts.append(label->text());
+            usedTexts.push_back(label->text());
             continue;
         }
 
         QAbstractButton *button= dynamic_cast<QAbstractButton*>(w);
         if (button) {
             used.push_back(button);
-            usedTexts.append(button->text());
+            usedTexts.push_back(button->text());
             continue;
         }
     }
