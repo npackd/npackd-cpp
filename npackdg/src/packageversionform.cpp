@@ -138,7 +138,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     this->ui->lineEditType->setText(type);
 
     QString details;
-    for (int i = 0; i < pv->importantFiles.count(); i++) {
+    for (int i = 0; i < static_cast<int>(pv->importantFiles.size()); i++) {
         details.append(pv->importantFilesTitles.at(i));
         details.append(" (");
         details.append(pv->importantFiles.at(i));
@@ -147,7 +147,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     this->ui->textEditImportantFiles->setText(details);
 
     details = "";
-    for (int i = 0; i < pv->cmdFiles.count(); i++) {
+    for (int i = 0; i < static_cast<int>(pv->cmdFiles.size()); i++) {
         details.append(pv->cmdFiles.at(i));
         details.append("\r\n");
     }

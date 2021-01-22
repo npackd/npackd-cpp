@@ -221,8 +221,8 @@ void PackageVersion::findLockedPackageVersion(QString* package, Version* version
     lockedPackageVersionsMutex.unlock();
 
     if (!key.isEmpty()) {
-        QStringList parts = key.split('/');
-        if (parts.count() == 2) {
+        std::vector<QString> parts = WPMUtils::split(key, '/');
+        if (parts.size() == 2) {
             *package = parts.at(0);
             if (!version->setVersion(parts.at(1))) {
                 package->clear();
@@ -357,8 +357,8 @@ QString PackageVersion::toString(bool includeFullPackageName)
 
 QString PackageVersion::getShortPackageName()
 {
-    QStringList sl = this->package.split(".");
-    return sl.last();
+    std::vector<QString> sl = WPMUtils::split(this->package, ".");
+    return sl.back();
 }
 
 PackageVersion::~PackageVersion()
@@ -829,8 +829,8 @@ QString PackageVersion::getFileExtension()
 {
     if (this->download.isValid()) {
         QString fn = this->download.path();
-        QStringList parts = fn.split('/');
-        QString file = parts.at(parts.count() - 1);
+        std::vector<QString> parts = WPMUtils::split(fn, '/');
+        QString file = parts.back();
         int index = file.lastIndexOf('.');
         if (index > 0)
             return file.right(file.length() - index);
@@ -1131,7 +1131,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
         if (!d.exists(sourceBasePath))
             d.mkpath(sourceBasePath);
 
-        for (int i = 0; i < this->cmdFiles.count(); i++) {
+        for (int i = 0; i < static_cast<int>(this->cmdFiles.size()); i++) {
             QString cmdFilePath = this->cmdFiles.at(i);
             cmdFilePath.replace('/', '\\');
 
@@ -1158,7 +1158,7 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
                     QString targetPath;
                     if (last) {
                         targetPath = last->getPath() + "\\";
-                        for (int j = 0; j < last->cmdFiles.size(); j++) {
+                        for (int j = 0; j < static_cast<int>(last->cmdFiles.size()); j++) {
                             QString fn = last->getCmdFileName(j);
                             if (fn.toLower() == cmdFileNameLC) {
                                 targetPath.append(last->cmdFiles.at(j));
@@ -1207,7 +1207,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 
     QDir d(dir);
     Package* p = DBRepository::getDefault()->findPackage_(this->package);
-    for (int i = 0; i < this->importantFiles.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->importantFiles.size()); i++) {
         QString ifile = this->importantFiles.at(i);
         QString ift = this->importantFilesTitles.at(i);
 
@@ -1497,8 +1497,8 @@ QString PackageVersion::download_(Job* job, const QString& where,
             QString t = d.absolutePath();
             t.append("\\");
             QString fn = this->download.path();
-            QStringList parts = fn.split('/');
-            t.append(parts.at(parts.count() - 1));
+            std::vector<QString> parts = WPMUtils::split(fn, '/');
+            t.append(parts.back());
             t.replace('/', '\\');
 
             binary = t;
@@ -1994,13 +1994,13 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeAttribute("type", "inno-setup");
     else if (this->type == PackageVersion::Type::NSIS)
         w->writeAttribute("type", "nsis");
-    for (int i = 0; i < this->importantFiles.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->importantFiles.size()); i++) {
         w->writeStartElement("important-file");
         w->writeAttribute("path", this->importantFiles.at(i));
         w->writeAttribute("title", this->importantFilesTitles.at(i));
         w->writeEndElement();
     }
-    for (int i = 0; i < this->cmdFiles.count(); i++) {
+    for (int i = 0; i < static_cast<int>(this->cmdFiles.size()); i++) {
         w->writeStartElement("cmd-file");
         //qCDebug(npackd) << this->package << this->version.getVersionString() <<
         //    this->cmdFiles.at(i) << "!";
@@ -2051,9 +2051,9 @@ void PackageVersion::toJSON(QJsonObject& w) const
     else if (this->type == PackageVersion::Type::NSIS)
         w["type"] = "nsis";
 
-    if (!importantFiles.isEmpty()) {
+    if (importantFiles.size() != 0) {
         QJsonArray a;
-        for (int i = 0; i < this->importantFiles.count(); i++) {
+        for (int i = 0; i < static_cast<int>(this->importantFiles.size()); i++) {
             QJsonObject obj;
             obj["path"] = this->importantFiles.at(i);
             obj["title"] = this->importantFilesTitles.at(i);
@@ -2062,9 +2062,9 @@ void PackageVersion::toJSON(QJsonObject& w) const
         w["importantFiles"] = a;
     }
 
-    if (!cmdFiles.isEmpty()) {
+    if (cmdFiles.size() != 0) {
         QJsonArray a;
-        for (int i = 0; i < this->cmdFiles.count(); i++) {
+        for (int i = 0; i < static_cast<int>(this->cmdFiles.size()); i++) {
             QJsonObject obj;
             obj["path"] = this->cmdFiles.at(i);
             a.append(obj);

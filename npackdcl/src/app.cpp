@@ -2315,7 +2315,7 @@ void App::info(Job* job)
                         ": " + pv->sha1);
 
                 QString details;
-                for (int i = 0; i < pv->importantFiles.count(); i++) {
+                for (int i = 0; i < static_cast<int>(pv->importantFiles.size()); i++) {
                     if (i != 0)
                         details.append("; ");
                     details.append(pv->importantFilesTitles.at(i));

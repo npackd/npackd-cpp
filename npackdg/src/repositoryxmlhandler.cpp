@@ -85,14 +85,14 @@ void RepositoryXMLHandler::parseVersion()
             }
 
             if (error.isEmpty()) {
-                if (pv->importantFiles.contains(p)) {
+                if (std::find(pv->importantFiles.begin(), pv->importantFiles.end(), p) != pv->importantFiles.end()) {
                     error = QObject::tr("More than one <important-file> with the same 'path' attribute %1 for %2").
                             arg(p).arg(pv->toString());
                 }
             }
 
             if (error.isEmpty()) {
-                pv->importantFiles.append(p);
+                pv->importantFiles.push_back(p);
             }
 
             QString title = reader->attributes().value(QStringLiteral("title")).toString();
@@ -104,7 +104,7 @@ void RepositoryXMLHandler::parseVersion()
             }
 
             if (error.isEmpty()) {
-                pv->importantFilesTitles.append(title);
+                pv->importantFilesTitles.push_back(title);
             }
 
             if (error.isEmpty())
@@ -128,14 +128,14 @@ void RepositoryXMLHandler::parseVersion()
             }
 
             if (error.isEmpty()) {
-                if (pv->cmdFiles.contains(p)) {
+                if (std::find(pv->cmdFiles.begin(), pv->cmdFiles.end(), p) != pv->cmdFiles.end()) {
                     error = QObject::tr("More than one <cmd-file> with the same 'path' attribute %1 for %2").
                             arg(p).arg(pv->toString());
                 }
             }
 
             if (error.isEmpty()) {
-                pv->cmdFiles.append(WPMUtils::normalizePath(p));
+                pv->cmdFiles.push_back(WPMUtils::normalizePath(p));
                 //qCDebug(npackd) << pv->package << pv->version.getVersionString() <<
                 //        p << "??";
             }

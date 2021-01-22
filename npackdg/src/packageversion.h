@@ -9,7 +9,6 @@
 #include <QMetaType>
 #include <QDir>
 #include <QUrl>
-#include <QStringList>
 #include <QSemaphore>
 #include <QXmlStreamWriter>
 #include <QCryptographicHash>
@@ -201,13 +200,13 @@ public:
     QString package;
 
     /** important files (shortcuts for these will be created in the menu) */
-    QStringList importantFiles;
+    std::vector<QString> importantFiles;
 
     /** titles for the important files */
-    QStringList importantFilesTitles;
+    std::vector<QString> importantFilesTitles;
 
     /** command line tools ("shim" executables for these will be created) */
-    QStringList cmdFiles;
+    std::vector<QString> cmdFiles;
 
     /**
      * Text files.
