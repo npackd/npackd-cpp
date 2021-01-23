@@ -3,7 +3,6 @@
 
 #include <QApplication>
 #include <QDesktopServices>
-#include <QSharedPointer>
 
 #include "package.h"
 #include "repository.h"

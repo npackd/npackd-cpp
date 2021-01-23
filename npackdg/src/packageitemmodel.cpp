@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <cmath>
 
-#include <QSharedPointer>
 #include <QApplication>
 
 #include "dbrepository.h"
@@ -84,10 +83,11 @@ PackageItemModel::Info* PackageItemModel::createInfo(
     r->title = p->title;
 
     // the error message is ignored
-    QSharedPointer<License> lic(rep->findLicense_(
-            p->license, &err));
-    if (lic)
+    License* lic = rep->findLicense_(p->license, &err);
+    if (lic) {
         r->licenseTitle = lic->title;
+        delete lic;
+    }
 
     r->icon = p->getIcon();
 

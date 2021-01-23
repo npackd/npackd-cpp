@@ -1,5 +1,4 @@
 #include <limits>
-#include <math.h>
 #include <memory>
 
 #include <QRegExp>

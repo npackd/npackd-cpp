@@ -1,6 +1,8 @@
 #ifndef COMMANDLINE_H
 #define COMMANDLINE_H
 
+#include <vector>
+
 #include "qstring.h"
 
 /**

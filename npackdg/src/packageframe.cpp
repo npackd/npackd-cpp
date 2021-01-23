@@ -6,7 +6,6 @@
 
 #include <QApplication>
 #include <QDesktopServices>
-#include <QSharedPointer>
 #include <QVariant>
 #include <QAction>
 

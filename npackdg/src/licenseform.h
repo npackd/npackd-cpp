@@ -2,7 +2,6 @@
 #define LICENSEFORM_H
 
 #include <QWidget>
-#include <QSharedPointer>
 
 #include "license.h"
 

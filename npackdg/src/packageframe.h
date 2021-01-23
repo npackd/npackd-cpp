@@ -3,7 +3,6 @@
 
 #include <QFrame>
 #include <QModelIndex>
-#include <QSharedPointer>
 #include <QListWidgetItem>
 
 #include "package.h"

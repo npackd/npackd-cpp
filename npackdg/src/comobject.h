@@ -19,7 +19,8 @@ public:
 template<typename T>
 COMObject<T>::COMObject(T *aptr): ptr(aptr)
 {
-    static_assert(std::is_base_of<IDispatch, T>::value, "type parameter of this class must derive from IDispatch");
+    static_assert(std::is_base_of<IDispatch, T>::value,
+            "type parameter of this class must derive from IDispatch");
 }
 
 template<typename T>

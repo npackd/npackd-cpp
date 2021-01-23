@@ -2,7 +2,6 @@
 #define CLPROCESSOR_H
 
 #include <QString>
-#include <QApplication>
 
 #include "commandline.h"
 #include "job.h"

@@ -2,7 +2,6 @@
 #define PACKAGEVERSIONFORM_H
 
 #include <QWidget>
-#include <QSharedPointer>
 
 #include "packageversion.h"
 #include "selection.h"
