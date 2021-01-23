@@ -1,8 +1,6 @@
 #ifndef PACKAGEITEMMODEL_H
 #define PACKAGEITEMMODEL_H
 
-#include <stdint.h>
-
 #include <QAbstractTableModel>
 #include <QCache>
 #include <QBrush>

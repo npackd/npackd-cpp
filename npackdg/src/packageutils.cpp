@@ -254,9 +254,7 @@ QString PackageUtils::validateFullPackageName(const QString &n)
                     arg(pos + 1).arg(n);
 
         std::vector<QString> parts = WPMUtils::split(n, '.', Qt::SkipEmptyParts);
-        for (int j = 0; j < parts.size(); j++) {
-            QString part = parts.at(j);
-
+        for (auto& part: parts) {
             int pos = part.indexOf(QStringLiteral("--"));
             if (pos >= 0)
                 return QString(QObject::tr("-- at position %1 in %2")).
@@ -305,7 +303,7 @@ QString PackageUtils::makeValidFullPackageName(const QString &name)
 {
     QString r(name);
     std::vector<QString> parts = WPMUtils::split(r, '.', Qt::SkipEmptyParts);
-    for (int j = 0; j < parts.size(); ) {
+    for (int j = 0; j < static_cast<int>(parts.size()); ) {
         QString part = parts.at(j);
 
         if (!part.isEmpty()) {
@@ -458,8 +456,8 @@ std::vector<QUrl *> PackageUtils::getRepositoryURLs(QString *err)
 
     std::vector<QUrl*> r;
     if (err->isEmpty()) {
-        for (int i = 0; i < reps.size(); i++) {
-            QUrl* url = new QUrl(reps.at(i));
+        for (auto& rep: reps) {
+            QUrl* url = new QUrl(rep);
             if (url->scheme() == "file")
                 *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
             r.push_back(url);
@@ -512,8 +510,8 @@ std::tuple<std::vector<QString>, std::vector<QString>, QString> PackageUtils::ge
     }
 
     std::vector<QUrl*> r;
-    for (int i = 0; i < urls.size(); i++) {
-        QUrl* url = new QUrl(urls.at(i));
+    for (auto& u: urls) {
+        QUrl* url = new QUrl(u);
         if (url->scheme() == "file")
             *url = QUrl::fromLocalFile(url->toLocalFile().replace('\\', '/'));
         r.push_back(url);
@@ -554,7 +552,7 @@ QString PackageUtils::setRepositoryURLsAndComments(const std::vector<QString> &u
                 "Software\\Npackd\\Npackd\\" + suffix, &err, KEY_ALL_ACCESS);
         if (err.isEmpty()) {
             wrr.setDWORD("size", static_cast<DWORD>(urls.size()));
-            for (int i = 0; i < urls.size(); i++) {
+            for (int i = 0; i < static_cast<int>(urls.size()); i++) {
                 WindowsRegistry r = wrr.createSubKey(QString("%1").arg(i + 1),
                         &err, KEY_ALL_ACCESS);
                 if (err.isEmpty()) {

@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 #include <QObject>
-#include <QSet>
 #include <QString>
 
 #include "installedpackageversion.h"

@@ -3295,6 +3295,32 @@ void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
     job->complete();
 }
 
+void WPMUtils::startProcess(const QString &prg, const QString &args)
+{
+    PROCESS_INFORMATION pinfo;
+
+    STARTUPINFOW startupInfo = {
+        sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
+        static_cast<DWORD>(CW_USEDEFAULT),
+        static_cast<DWORD>(CW_USEDEFAULT),
+        static_cast<DWORD>(CW_USEDEFAULT),
+        static_cast<DWORD>(CW_USEDEFAULT),
+        0, 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr
+    };
+
+    bool success = CreateProcess(
+            WPMUtils::toLPWSTR(prg),
+            WPMUtils::toLPWSTR(args),
+            nullptr, nullptr, TRUE,
+            0 /*CREATE_UNICODE_ENVIRONMENT*/, nullptr,
+            nullptr, &startupInfo, &pinfo);
+
+    if (success) {
+        CloseHandle(pinfo.hThread);
+        CloseHandle(pinfo.hProcess);
+    }
+}
+
 void WPMUtils::executeBatchFile(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const std::vector<QString>& env,

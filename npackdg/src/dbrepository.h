@@ -7,7 +7,6 @@
 #include <QString>
 #include <QSqlError>
 #include <QSqlDatabase>
-#include <QWeakPointer>
 #include <QCache>
 #include <QMutex>
 

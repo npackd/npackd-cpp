@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 
 #include "clprogress.h"
 #include "wpmutils.h"

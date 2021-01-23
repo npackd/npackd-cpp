@@ -565,8 +565,8 @@ void AbstractRepository::process(Job *job,
         }
 
         if (err.isEmpty()) {
-            for (int i = 0; i < static_cast<int>(stoppedServices.size()); i++) {
-                err = WPMUtils::startService(schSCManager, stoppedServices.at(i));
+            for (auto& s: stoppedServices) {
+                err = WPMUtils::startService(schSCManager, s);
 
                 if (!err.isEmpty())
                     qCDebug(npackd) << "AbstractRepository::process: " << err;

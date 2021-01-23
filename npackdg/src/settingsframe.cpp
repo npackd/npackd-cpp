@@ -148,7 +148,7 @@ void SettingsFrame::fillRepositories()
     std::vector<QString> urls, comments;
 
     std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments(false);
-    for (int i = 0; i < urls.size(); i++) {
+    for (int i = 0; i < static_cast<int>(urls.size()); i++) {
         RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
         e->enabled = false;
         e->url = urls.at(i);
@@ -157,7 +157,7 @@ void SettingsFrame::fillRepositories()
     }
 
     std::tie(urls, comments, err) = PackageUtils::getRepositoryURLsAndComments();
-    for (int i = 0; i < urls.size(); i++) {
+    for (int i = 0; i < static_cast<int>(urls.size()); i++) {
         RepositoriesItemModel::Entry* e = new RepositoriesItemModel::Entry();
         e->enabled = true;
         e->url = urls.at(i);
@@ -252,11 +252,11 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     }
 
     if (err.isEmpty()) {
-        for (int i = 0; i < uiReps.size(); i++) {
-            QUrl url(uiReps.at(i));
+        for (auto& uiRep: uiReps) {
+            QUrl url(uiRep);
             if (!url.isValid()) {
                 err = QString(QObject::tr("%1 is not a valid repository address")).arg(
-                        uiReps.at(i));
+                        uiRep);
                 break;
             }
         }

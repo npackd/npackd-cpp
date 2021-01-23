@@ -135,14 +135,14 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
 
     std::vector<QString> labels;
     int count = 0;
-    for (int i = 0; i < static_cast<int>(cats.size()); i++) {
+    for (auto& c: cats) {
         QString n;
-        n = cats.at(i).at(2);
+        n = c.at(2);
         if (n.isEmpty()) {
             n = QObject::tr("Uncategorized");
         }
-        labels.push_back(n + " (" + cats.at(i).at(1) + ")");
-        count += cats.at(i).at(1).toInt();
+        labels.push_back(n + " (" + c.at(1) + ")");
+        count += c.at(1).toInt();
     }
 
     if (level == 0) {

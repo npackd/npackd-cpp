@@ -1,6 +1,5 @@
 #include <memory>
 
-#include <QSet>
 #include <QString>
 
 #include "installedpackagesthirdpartypm.h"

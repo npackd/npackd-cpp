@@ -78,7 +78,7 @@ void App::unwrapDir(Job *job)
                 path = it.next();
             } else {
                 job->setErrorMessage(QString("No directory found for \"%0\" in \"%1\"").
-                        arg(nameFilters.at(0)).arg(path));
+                        arg(nameFilters.at(0), path));
             }
         }
     }
@@ -442,8 +442,8 @@ int App::addPath()
         if (err.isEmpty()) {
             std::vector<QString> sl = WPMUtils::split(curPath, ';');
             bool found = false;
-            for (int i = 0; i < static_cast<int>(sl.size()); i++) {
-                QString s = sl.at(i).toLower().trimmed();
+            for (auto& v: sl) {
+                QString s = v.toLower().trimmed();
                 s.replace('/', '\\');
                 if (s == mpath) {
                     found = true;

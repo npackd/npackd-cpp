@@ -1,8 +1,6 @@
 #ifndef REPOSITORIESITEMMODEL_H
 #define REPOSITORIESITEMMODEL_H
 
-#include <stdint.h>
-
 #include <QAbstractTableModel>
 #include <QCache>
 #include <QBrush>

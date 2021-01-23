@@ -2000,11 +2000,11 @@ void PackageVersion::toXML(QXmlStreamWriter *w) const
         w->writeAttribute("title", this->importantFilesTitles.at(i));
         w->writeEndElement();
     }
-    for (int i = 0; i < static_cast<int>(this->cmdFiles.size()); i++) {
+    for (auto& f: this->cmdFiles) {
         w->writeStartElement("cmd-file");
         //qCDebug(npackd) << this->package << this->version.getVersionString() <<
         //    this->cmdFiles.at(i) << "!";
-        w->writeAttribute("path", this->cmdFiles.at(i));
+        w->writeAttribute("path", f);
         w->writeEndElement();
     }
     for (auto f: this->files) {
@@ -2064,9 +2064,9 @@ void PackageVersion::toJSON(QJsonObject& w) const
 
     if (cmdFiles.size() != 0) {
         QJsonArray a;
-        for (int i = 0; i < static_cast<int>(this->cmdFiles.size()); i++) {
+        for (auto& f: this->cmdFiles) {
             QJsonObject obj;
-            obj["path"] = this->cmdFiles.at(i);
+            obj["path"] = f;
             a.append(obj);
         }
         w["cmdFiles"] = a;

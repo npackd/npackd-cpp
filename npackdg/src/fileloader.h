@@ -8,7 +8,6 @@
 #include <QObject>
 #include <QUrl>
 #include <QTemporaryFile>
-#include <QAtomicInt>
 #include <QMutex>
 #include <QTemporaryDir>
 #include <QSqlError>

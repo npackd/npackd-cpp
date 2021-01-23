@@ -157,7 +157,6 @@ public:
      * @return QStringList
      */
     static QStringList toQStringList(const std::vector<QString>& v);
-
     /**
      * Uses the Shell's IShellLink and IPersistFile interfaces
      * to create and store a shortcut to the specified object.
@@ -646,6 +645,13 @@ public:
      * @param outputdir output directory
      */
     static void unzip(Job* job, const QString zipfile, const QString outputdir);
+
+    /**
+     * @brief starts a program and returns immediately
+     * @param prg program
+     * @param args arguments
+     */
+    static void startProcess(const QString& prg, const QString &args);
 
     /**
      * @param job job to monitor the progress. The error message will be set

@@ -1,5 +1,5 @@
 #include <limits>
-#include <math.h>
+#include <cmath>
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -1145,8 +1145,8 @@ void App::path(Job* job)
 
     if (err.isEmpty()) {
         std::vector<QString> paths;
-        for (int i = 0; i < static_cast<int>(ipvs.size()); i++) {
-            paths.push_back(ipvs.at(i)->getDirectory().replace('/', '\\'));
+        for (auto ipv: ipvs) {
+            paths.push_back(ipv->getDirectory().replace('/', '\\'));
         }
 
         if (cl.isPresent("json")) {
@@ -1163,8 +1163,8 @@ void App::path(Job* job)
                         QString::number(i) + "=" + paths.at(i));
             }
         } else {
-            for (int i = 0; i < static_cast<int>(paths.size()); i++) {
-                WPMUtils::writeln(paths.at(i));
+            for (auto& path: paths) {
+                WPMUtils::writeln(path);
             }
         }
     }
@@ -2555,8 +2555,7 @@ void App::removeSCP(Job *job)
                 qCDebug(npackd) << "regular expression" << title;
 
                 QRegExp re(title, cs);
-                for (int i = 0; i < static_cast<int>(rep.packages.size()); i++) {
-                    Package* p = rep.packages.at(i);
+                for (auto p: rep.packages) {
                     qCDebug(npackd) << p->title;
                     if (re.indexIn(p->title) >= 0) {
                         found = p;

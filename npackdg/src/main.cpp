@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <shobjidl.h>
 #include <shellapi.h>
-#include <stdint.h>
 
 #include <QApplication>
 #include <QMetaType>

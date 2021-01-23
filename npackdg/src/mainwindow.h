@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <shobjidl.h>
-#include <stdint.h>
 
 #include <QMainWindow>
 #include <QProgressDialog>

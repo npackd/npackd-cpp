@@ -454,8 +454,8 @@ std::vector<PackageVersion*> DBRepository::getPackageVersions_(const QString& pa
         if (err->isEmpty()) {
             pvl = new PackageVersionList();
             pvl->data.reserve(r.size());
-            for (int i = 0; i < static_cast<int>(r.size()); i++) {
-                pvl->data.push_back(r.at(i)->clone());
+            for (auto pv: r) {
+                pvl->data.push_back(pv->clone());
             }
             this->packageVersions.insert(package, pvl);
         }
@@ -1070,11 +1070,9 @@ QString DBRepository::saveTags(Package* p)
     }
 
     if (err.isEmpty()) {
-        for (int j = 0; j < static_cast<int>(p->tags.size()); j++) {
+        for (auto& value: p->tags) {
             if (!err.isEmpty())
                 break;
-
-            QString value = p->tags.at(j);
 
             if (!value.isEmpty()) {
                 insertTagQuery->bindValue(QStringLiteral(":PACKAGE"), p->name);
@@ -1441,7 +1439,7 @@ QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 
         MySQLQuery* q = insertCmdFileQuery.get();
 
-        for (int i = 0; i < p->cmdFiles.size(); i++) {
+        for (int i = 0; i < static_cast<int>(p->cmdFiles.size()); i++) {
             // qCDebug(npackd) << p->package << p->version.getVersionString() << p->cmdFiles.at(i);
             q->bindValue(QStringLiteral(":PACKAGE"), p->package);
             Version v = p->version;

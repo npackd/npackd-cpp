@@ -146,8 +146,8 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     this->ui->textEditImportantFiles->setText(details);
 
     details = "";
-    for (int i = 0; i < static_cast<int>(pv->cmdFiles.size()); i++) {
-        details.append(pv->cmdFiles.at(i));
+    for (auto& f: pv->cmdFiles) {
+        details.append(f);
         details.append("\r\n");
     }
     this->ui->textEditCmdFiles->setText(details);

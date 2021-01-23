@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <wininet.h>
-#include <stdint.h>
 
 #include <QTemporaryFile>
 #include <QUrl>

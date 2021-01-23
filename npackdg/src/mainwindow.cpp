@@ -1,5 +1,4 @@
-﻿#include <math.h>
-#include <stdint.h>
+﻿#include <cmath>
 #include <memory>
 #include <tuple>
 
@@ -11,7 +10,6 @@
 #include <windows.h>
 #include <shlobj.h>
 #include <shobjidl.h>
-#include <stdint.h>
 
 #include <QApplication>
 #include <QTimer>
@@ -314,10 +312,10 @@ void MainWindow::showDetails()
 
                 int index = this->findPackageTab(p->name);
                 if (index < 0) {
-                    PackageFrame* pf = new PackageFrame(this->ui->tabWidget);
                     Package* p_ = DBRepository::getDefault()->
                             findPackage_(p->name);
                     if (p_) {
+                        PackageFrame* pf = new PackageFrame(this->ui->tabWidget);
                         pf->fillForm(p_);
                         QIcon icon = getPackageIcon(p->name);
                         QString t = p->title;
@@ -1223,7 +1221,6 @@ void MainWindow::updateShowFolderAction()
 
                 Package* p = static_cast<Package*>(selected.at(i));
 
-                QString err;
                 InstalledPackageVersion* pv = InstalledPackages::getDefault()->getNewestInstalled(
                         p->name);
 
