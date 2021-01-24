@@ -25,11 +25,6 @@
 
 extern HWND defaultPasswordWindow;
 
-transwarp::detail::thread_pool FileLoader::threadPool{10, [](size_t){
-    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
-    SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
-}};
-
 std::tuple<int64_t, QString> FileLoader::saveURLInfos(
         const QString& url, int64_t size,
         const QString& file)
@@ -66,7 +61,7 @@ std::tuple<int64_t, QString> FileLoader::saveURLInfos(
     }
 
     if (err.isEmpty() && !insertURLInfosQuery) {
-        insertURLInfosQuery = new MySQLQuery(db);
+        insertURLInfosQuery.reset(new MySQLQuery(db));
 
         QString insertSQL("INSERT INTO URL"
                 "(ADDRESS, SIZE, SIZE_MODIFIED, FILE) "
@@ -74,7 +69,7 @@ std::tuple<int64_t, QString> FileLoader::saveURLInfos(
 
         if (!insertURLInfosQuery->prepare(insertSQL)) {
             err = SQLUtils::getErrorString(*insertURLInfosQuery);
-            delete insertURLInfosQuery;
+            insertURLInfosQuery.reset(nullptr);
         }
     }
 
@@ -103,6 +98,15 @@ std::tuple<int64_t, QString> FileLoader::saveURLInfos(
     return std::tie(id, err);
 }
 
+FileLoader::FileLoader(): threadPool(10)
+/*, [](size_t){
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+    SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
+}};*/
+{
+
+}
+
 int64_t FileLoader::downloadSizeOrQueue(const QString &url)
 {
     int64_t r = -1;
@@ -126,7 +130,7 @@ int64_t FileLoader::downloadSizeOrQueue(const QString &url)
         loadingSize.insert(url);
         this->mutex.unlock();
 
-        threadPool.push([this, url] {
+        threadPool.addTask([this, url] {
             this->downloadSizeRunnable(url);
         });
     }
@@ -215,7 +219,6 @@ QString FileLoader::init()
 
 FileLoader::~FileLoader()
 {
-    delete insertURLInfosQuery;
 }
 
 std::tuple<FileLoader::DownloadFile, QString>
@@ -295,7 +298,7 @@ QString FileLoader::downloadFileOrQueue(const QString &url, QString *err)
         loading.insert(url);
         mutex.unlock();
 
-        threadPool.push([this, id, url] {
+        threadPool.addTask([this, id, url] {
             this->downloadFileRunnable(id, url);
         });
     }

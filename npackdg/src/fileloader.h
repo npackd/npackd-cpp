@@ -13,10 +13,9 @@
 #include <QSqlError>
 #include <QMutex>
 
-#include "transwarp.h"
-
 #include "mysqlquery.h"
 #include "dbrepository.h"
+#include "threadpool.h"
 
 /**
  * Loads files from the Internet.
@@ -40,7 +39,7 @@ class FileLoader: public QObject
         time_t sizeModified;
     };
 
-    MySQLQuery* insertURLInfosQuery = nullptr;
+    std::unique_ptr<MySQLQuery> insertURLInfosQuery;
     std::unique_ptr<MySQLQuery> updateURLQuery;
 
     QMutex mutex;
@@ -86,6 +85,8 @@ class FileLoader: public QObject
     std::unordered_set<QString> loading;
     std::unordered_set<QString> loadingSize;
 
+    ThreadPool threadPool;
+
     /**
      * @brief saves the download size for an URL
      * @param url URL
@@ -99,11 +100,11 @@ class FileLoader: public QObject
 
     void watcherSizeFinished(const DownloadFile &r);
     void watcherFileFinished(const DownloadFile &r);
-public:
-    static transwarp::detail::thread_pool threadPool;
-private:
+
     QString getUnusedFilename();
 public:
+    FileLoader();
+
     /**
      * @brief initialize the cache
      *

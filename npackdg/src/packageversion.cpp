@@ -720,8 +720,10 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
     job->complete();
 }
 
-QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPackages &installed,
-        std::vector<InstallOperation*>& ops, std::vector<PackageVersion*>& avoid,
+QString PackageVersion::planInstallation(AbstractRepository* rep,
+        InstalledPackages &installed,
+        std::vector<InstallOperation*>& ops,
+        std::vector<PackageVersion*>& avoid,
         const QString& where)
 {
     QString res;
@@ -729,78 +731,58 @@ QString PackageVersion::planInstallation(AbstractRepository* rep, InstalledPacka
     avoid.push_back(this->clone());
 
     for (auto d: this->dependencies) {
-        bool depok = installed.isInstalled(*d);
-        if (!depok) {
-            // we cannot just use Dependency->findBestMatchToInstall here as
-            // it is possible that the highest match cannot be installed because
-            // of unsatisfied dependencies. Example: the newest version depends
-            // on Windows Vista, but the current operating system is XP.
+        if (installed.isInstalled(*d))
+            continue;
 
-            /* old code:
-            QString err;
-            _ScopedPointer<PackageVersion> pv(d->findBestMatchToInstall(avoid,
-                    &err));
-            if (!err.isEmpty()) {
-                res = QString(QObject::tr("Error searching for the best dependency match: %1")).
-                           arg(err);
-                break;
-            }
+        // we cannot just use Dependency->findBestMatchToInstall here as
+        // it is possible that the highest match cannot be installed because
+        // of unsatisfied dependencies. Example: the newest version depends
+        // on Windows Vista, but the current operating system is XP.
 
-            if (!pv) {
-                res = QString(QObject::tr("Unsatisfied dependency: %1")).
-                           arg(d->toString());
-                break;
-            } else {
-                res = pv->planInstallation(installed, ops, avoid);
-                if (!res.isEmpty())
-                    break;
-            }
-            */
-
-            QString err;
-            std::vector<PackageVersion*> pvs = rep->findAllMatchesToInstall(
-                    *d, avoid, &err);
-            if (!err.isEmpty()) {
-                res = QString(QObject::tr("Error searching for the dependency matches: %1")).
-                           arg(err);
-                qDeleteAll(pvs);
-                break;
-            }
-            if (pvs.size() == 0) {
-                res = QString(QObject::tr("Unsatisfied dependency: %1")).
-                           arg(rep->toString(*d));
-                break;
-            } else {
-                bool found = false;
-                for (auto pv: pvs) {
-                    InstalledPackages installed2(installed);
-                    int opsCount = ops.size();
-                    int avoidCount = avoid.size();
-
-                    res = pv->planInstallation(rep, installed2, ops, avoid);
-                    if (!res.isEmpty()) {
-                        // rollback
-                        while (static_cast<int>(ops.size()) > opsCount) {
-                            delete ops.back();
-                            ops.pop_back();
-                        }
-                        while (static_cast<int>(avoid.size()) > avoidCount) {
-                            delete avoid.back();
-                            avoid.pop_back();
-                        }
-                    } else {
-                        found = true;
-                        installed = installed2;
-                        break;
-                    }
-                }
-                if (!found) {
-                    res = QString(QObject::tr("Unsatisfied dependency: %1")).
-                               arg(rep->toString(*d));
-                }
-            }
+        QString err;
+        std::vector<PackageVersion*> pvs = rep->findAllMatchesToInstall(
+                *d, avoid, &err);
+        if (!err.isEmpty()) {
+            res = QString(QObject::tr("Error searching for the dependency matches: %1")).
+                       arg(err);
             qDeleteAll(pvs);
+            break;
         }
+
+        if (pvs.size() == 0) {
+            res = QString(QObject::tr("Unsatisfied dependency: %1")).
+                       arg(rep->toString(*d));
+            break;
+        }
+
+        bool found = false;
+        for (auto pv: pvs) {
+            InstalledPackages installed2(installed);
+            int opsCount = ops.size();
+            int avoidCount = avoid.size();
+
+            res = pv->planInstallation(rep, installed2, ops, avoid);
+            if (!res.isEmpty()) {
+                // rollback
+                while (static_cast<int>(ops.size()) > opsCount) {
+                    delete ops.back();
+                    ops.pop_back();
+                }
+                while (static_cast<int>(avoid.size()) > avoidCount) {
+                    delete avoid.back();
+                    avoid.pop_back();
+                }
+            } else {
+                found = true;
+                installed = installed2;
+                break;
+            }
+        }
+        if (!found) {
+            res = QString(QObject::tr("Unsatisfied dependency: %1")).
+                       arg(rep->toString(*d));
+        }
+        qDeleteAll(pvs);
     }
 
     if (res.isEmpty()) {
