@@ -2427,7 +2427,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
     /*
     AsyncDownloader ad;
 
-    Job* job = new Job("TODO");
+    Job* job = new Job("");
     Downloader::Request request(QUrl("https://www.microsoft.com"));
     QFile file("abc.htm");
     file.open(QFile::WriteOnly | QFile::Truncate);
