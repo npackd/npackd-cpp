@@ -20,8 +20,6 @@
 #include "mainwindow.h"
 #include "packageutils.h"
 
-// TODO: i18n
-
 class ProgressDialog: public QDialog {
 public:
     Job* job;
@@ -468,46 +466,9 @@ void CLProcessor::usage()
         "        if only one is installed.",
         "        Short package names can be used here",
         "        (e.g. App instead of com.example.App)",
-        /*
-        "    npackdg update (--package=<package>)+ [--end-process=<types>]",
-        "        updates packages by uninstalling the currently installed",
-        "        and installing the newest version. ",
-        "        Short package names can be used here",
-        "        (e.g. App instead of com.example.App)",
-        */
         "    npackdg start-newest",
         "        searches for the newest installed version ",
         "        of Npackd GUI and starts it",
-        /*
-        "    npackdcl list [--status=installed | all] [--bare-format]",
-        "        lists package versions sorted by package name and version.",
-        "        Please note that since 1.18 only installed package versions",
-        "        are listed regardless of the --status switch.",
-        "    npackdcl search [--query=<search terms>] [--status=installed | all]",
-        "            [--bare-format]",
-        "        full text search. Lists found packages sorted by package name.",
-        "        All packages are shown by default.",
-        "    npackdcl info --package=<package> [--version=<version>]",
-        "        shows information about the specified package or package version",
-        "    npackdcl path --package=<package> [--versions=<versions>]",
-        "        searches for an installed package and prints its location",
-        "    npackdcl add-repo --url=<repository>",
-        "        appends a repository to the list",
-        "    npackdcl remove-repo --url=<repository>",
-        "        removes a repository from the list",
-        "    npackdcl list-repos",
-        "        list currently defined repositories",
-        "    npackdcl detect",
-        "        detect packages from the MSI database and software control panel",
-        "    npackdcl check",
-        "        checks the installed packages for missing dependencies",
-        "    npackdcl which --file=<file>",
-        "        finds the package that owns the specified file or directory",
-        "    npackdcl set-install-dir --file=<directory>",
-        "        changes the directory where packages will be installed",
-        "    npackdcl get-install-dir",
-        "        prints the directory where packages will be installed",
-        */
         "Options:",
     };
 
@@ -522,8 +483,6 @@ void CLProcessor::usage()
     const char* lines2[] = {
         "",
         "The process exits with the code unequal to 0 if an error occures."
-        //"",
-        // "See https://github.com/tim-lebedkov/npackd/wiki/CommandLine for more details.",
     };
     for (auto line: lines2) {
         sl.push_back(QString(line));
@@ -564,31 +523,11 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
             QObject::tr("range"), false);
     cl.add("version", 'v', QObject::tr("version number (e.g. 1.5.12)"),
             QObject::tr("version"), false);
-            /*
-    cl.add("url", 'u', "repository URL (e.g. https://www.example.com/Rep.xml)",
-            "repository", false);
-    cl.add("status", 's', "filters package versions by status",
-            "status", false);
-    cl.add("bare-format", 'b', "bare format (no heading or summary)",
-            "", false);
-    cl.add("query", 'q', "search terms (e.g. editor)",
-            "search terms", false);
-    cl.add("debug", 'd', "turn on the debug output", "", false);
-    cl.add("file", 'f', "file or directory", "file", false);
-    */
     cl.add("end-process", 'e',
             QObject::tr("list of ways to close running applications (c=close, k=kill). The default value is 'c'."),
             QObject::tr("[c][k]"), false);
 
     QString commandLineParsingError = cl.parse();
-
-    // cl.dump();
-
-    /*
-    if (cl.isPresent("debug")) {
-        clp.setUpdateRate(0);
-    }
-    */
 
     std::vector<CommandLine::ParsedOption*> options = cl.getParsedOptions();
 
@@ -612,9 +551,7 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
         QString err;
         if (cmd == "help") {
             usage();
-        }/* else if (cmd == "path") {
-            err = path();
-        }*/ else if (cmd == "remove" || cmd == "rm") {
+        } else if (cmd == "remove" || cmd == "rm") {
             err = remove();
         } else if (cmd == "add") {
             err = add();
@@ -624,27 +561,7 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
                 ret = false;
         } else if (cmd == "check-for-updates") {
             err = checkForUpdates();
-        } /* else if (cmd == "add-repo") {
-            err = addRepo();
-        } else if (cmd == "remove-repo") {
-            err = removeRepo();
-        } else if (cmd == "list-repos") {
-            err = listRepos();
-        } else if (cmd == "search") {
-            err = search();
-        } else if (cmd == "check") {
-            err = check();
-        } else if (cmd == "which") {
-            err = which();
-        } else if (cmd == "list") {
-            err = list();
-        } else if (cmd == "info") {
-            err = info();
-        } else if (cmd == "update") {
-            err = update();
-        } else if (cmd == "detect") {
-            err = detect();
-        }*/ else {
+        } else {
             err = QObject::tr("Wrong command: %1. Try npackdg help").arg(cmd);
         }
         if (!err.isEmpty()) {
