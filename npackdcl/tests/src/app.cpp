@@ -13,6 +13,7 @@
 #include "abstractrepository.h"
 #include "dbrepository.h"
 #include "hrtimer.h"
+#include "dag.h"
 
 void App::test()
 {
@@ -197,4 +198,20 @@ void App::testCopyDirectory()
 void App::testNormalizePath()
 {
     QCOMPARE(WPMUtils::normalizePath("../", false), "..");
+}
+
+void App::testTopologicalSort()
+{
+    DAG d;
+    d.addEdge(5, 0);
+    d.addEdge(4, 0);
+    d.addEdge(5, 2);
+    d.addEdge(4, 1);
+    d.addEdge(2, 3);
+    d.addEdge(1, 3);
+
+    auto r = d.topologicalSort();
+    std::vector<int> e{4, 5, 1, 0, 2, 3};
+
+    QVERIFY2(r == e, qPrintable(WPMUtils::toQString(r)));
 }

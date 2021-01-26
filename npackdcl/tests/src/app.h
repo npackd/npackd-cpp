@@ -44,6 +44,11 @@ private slots:
      * Tests for WPMUtils::normalizePath
      */
     void testNormalizePath();
+
+    /**
+     * @brief tests topological search in a DAG
+     */
+    void testTopologicalSort();
 };
 
 #endif // APP_H

@@ -3321,6 +3321,18 @@ void WPMUtils::startProcess(const QString &prg, const QString &args)
     }
 }
 
+QString WPMUtils::toQString(const std::vector<int> &v)
+{
+    QString r;
+    for (auto item: v) {
+        if (r.length() > 0)
+            r.append(", ");
+        r.append(QString::number(item));
+    }
+
+    return r;
+}
+
 void WPMUtils::executeBatchFile(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const std::vector<QString>& env,

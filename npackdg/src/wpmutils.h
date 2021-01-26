@@ -654,6 +654,13 @@ public:
     static void startProcess(const QString& prg, const QString &args);
 
     /**
+     * @brief converts a vector to a QString
+     * @param v the vector
+     * @return a, b, c
+     */
+    static QString toQString(const std::vector<int>& v);
+
+    /**
      * @param job job to monitor the progress. The error message will be set
      *     to a non-empty string if the exit code of the process is not 0.
      * @param where working directory

@@ -88,6 +88,7 @@ set(NPACKDG_SOURCES
     src/dismthirdpartypm.cpp
     src/sqlutils.cpp
     src/threadpool.cpp
+    src/dag.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -146,6 +147,7 @@ set(NPACKDG_HEADERS
     src/dismthirdpartypm.h
     src/sqlutils.h
     src/threadpool.h
+    src/dag.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui

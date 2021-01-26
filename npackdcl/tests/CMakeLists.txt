@@ -65,6 +65,7 @@ set(TESTS_SOURCES
     ../../npackdg/src/comobject.cpp
     ../../npackdg/src/dismthirdpartypm.cpp
     ../../npackdg/src/sqlutils.cpp
+    ../../npackdg/src/dag.cpp
 )
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
@@ -99,8 +100,9 @@ set(TESTS_HEADERS
     ../../npackdg/src/wuathirdpartypm.h
     ../../npackdg/src/wuapi.h
     ../../npackdg/src/comobject.h
-    ../../npackdg/src/dismthirdpartypm.cpp
-    ../../npackdg/src/sqlutils.cpp
+    ../../npackdg/src/dismthirdpartypm.h
+    ../../npackdg/src/sqlutils.h
+    ../../npackdg/src/dag.h
 )
 
 set(OUTPUT_FILE_NAME "tests.exe")
