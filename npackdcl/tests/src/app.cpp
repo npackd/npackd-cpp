@@ -211,6 +211,8 @@ void App::testTopologicalSort()
     d.addEdge(1, 3);
 
     auto r = d.topologicalSort();
+
+    // this is not the only solution, but what the current algorithm returns
     std::vector<int> e{4, 5, 1, 0, 2, 3};
 
     QVERIFY2(r == e, qPrintable(WPMUtils::toQString(r)));
