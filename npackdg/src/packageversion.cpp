@@ -787,10 +787,8 @@ QString PackageVersion::planInstallation(AbstractRepository* rep,
 
     if (res.isEmpty()) {
         if (!installed.isInstalled(this->package, this->version)) {
-            InstallOperation* io = new InstallOperation();
-            io->install = true;
-            io->package = this->package;
-            io->version = this->version;
+            InstallOperation* io = new InstallOperation(this->package,
+                    this->version, true);
             io->where = where;
             ops.push_back(io);
 

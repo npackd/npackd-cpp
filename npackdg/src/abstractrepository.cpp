@@ -905,10 +905,7 @@ QString AbstractRepository::planUninstallation(InstalledPackages &installed,
     }
 
     if (res.isEmpty()) {
-        InstallOperation* op = new InstallOperation();
-        op->install = false;
-        op->package = package;
-        op->version = version;
+        InstallOperation* op = new InstallOperation(package, version, false);
         ops.push_back(op);
     }
 

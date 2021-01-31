@@ -332,7 +332,8 @@ public:
      * @return error message or ""
      */
     QString planInstallation(AbstractRepository *rep, InstalledPackages& installed,
-            std::vector<InstallOperation*>& ops, std::vector<PackageVersion*>& avoid,
+            std::vector<InstallOperation*>& ops,
+            std::vector<PackageVersion*>& avoid,
             const QString &where="");
 
     /**

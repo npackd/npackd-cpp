@@ -31,7 +31,7 @@ public:
      */
     QString where;
 
-    InstallOperation();
+    InstallOperation(const QString& package, const Version& version, bool install);
 
     /**
      * @brief finds the corresponding package version

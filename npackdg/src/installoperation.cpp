@@ -2,9 +2,10 @@
 #include "dbrepository.h"
 #include "abstractrepository.h"
 
-InstallOperation::InstallOperation()
+InstallOperation::InstallOperation(
+        const QString &package, const Version &version, bool install):
+        install(install), package(package), version(version)
 {
-    this->install = true;
 }
 
 PackageVersion *InstallOperation::findPackageVersion(QString* err) const
@@ -15,8 +16,9 @@ PackageVersion *InstallOperation::findPackageVersion(QString* err) const
 
 InstallOperation *InstallOperation::clone() const
 {
-    InstallOperation* r = new InstallOperation();
-    *r = *this;
+    InstallOperation* r = new InstallOperation(this->package, this->version,
+            this->install);
+    r->exactLocation = this->exactLocation;
     return r;
 }
 
