@@ -20,6 +20,7 @@
 #include "dependency.h"
 #include "installoperation.h"
 #include "commandline.h"
+#include "dag.h"
 
 // 30ed381d-59ea-4ca5-bd1d-5ee8ec97b2be
 DEFINE_GUID(UUID_ClientID,0x30ed381dL,0x59ea,0x4ca5,0xbd,0x1d,0x5e,0xe8,0xec,0x97,0xb2,0xbe);
@@ -323,6 +324,7 @@ public:
      * @param op necessary operations will be appended here.
      *     The existing
      *     elements will not be modified in any way.
+     * @param opsDependencies dependencies between installation operations
      * @param avoid list of package versions that cannot be
      *     installed. The list
      *     will be changed by this method. Normally this is an empty list and
@@ -332,7 +334,7 @@ public:
      * @return error message or ""
      */
     QString planInstallation(AbstractRepository *rep, InstalledPackages& installed,
-            std::vector<InstallOperation*>& ops,
+            std::vector<InstallOperation*>& ops, DAG &opsDependencies,
             std::vector<PackageVersion*>& avoid,
             const QString &where="");
 

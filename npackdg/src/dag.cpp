@@ -3,10 +3,6 @@
 #include <algorithm>
 #include <stdexcept>
 
-DAG::DAG()
-{
-}
-
 void DAG::addEdge(int u, int v)
 {
     int m = std::max(u, v);

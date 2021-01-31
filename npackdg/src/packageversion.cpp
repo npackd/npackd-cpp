@@ -723,6 +723,7 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
 QString PackageVersion::planInstallation(AbstractRepository* rep,
         InstalledPackages &installed,
         std::vector<InstallOperation*>& ops,
+        DAG& opsDependencies,
         std::vector<PackageVersion*>& avoid,
         const QString& where)
 {
@@ -758,10 +759,12 @@ QString PackageVersion::planInstallation(AbstractRepository* rep,
         bool found = false;
         for (auto pv: pvs) {
             InstalledPackages installed2(installed);
+            auto opsDependencies2 = opsDependencies;
             int opsCount = ops.size();
             int avoidCount = avoid.size();
 
-            res = pv->planInstallation(rep, installed2, ops, avoid);
+            res = pv->planInstallation(rep, installed2, ops,
+                    opsDependencies2, avoid);
             if (!res.isEmpty()) {
                 // rollback
                 while (static_cast<int>(ops.size()) > opsCount) {
@@ -775,6 +778,7 @@ QString PackageVersion::planInstallation(AbstractRepository* rep,
             } else {
                 found = true;
                 installed = installed2;
+                opsDependencies = opsDependencies2;
                 break;
             }
         }

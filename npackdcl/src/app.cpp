@@ -1500,11 +1500,12 @@ void App::update(Job* job)
     bool install = cl.isPresent("install");
 
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
         QString err = DBRepository::getDefault()->planAddMissingDeps(
-                installed, ops);
+                installed, ops, opsDependencies);
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }
@@ -1916,11 +1917,12 @@ void App::add(Job* job)
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*ip);
 
     if (job->shouldProceed()) {
         QString err;
-        err = dbr->planAddMissingDeps(installed, ops);
+        err = dbr->planAddMissingDeps(installed, ops, opsDependencies);
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }
@@ -1931,7 +1933,8 @@ void App::add(Job* job)
         std::vector<PackageVersion*> avoid;
         for (auto pv: toInstall) {
             if (job->shouldProceed())
-                err = pv->planInstallation(dbr, installed, ops, avoid, file);
+                err = pv->planInstallation(dbr, installed, ops,
+                        opsDependencies, avoid, file);
             if (!err.isEmpty()) {
                 job->setErrorMessage(err);
             }
@@ -2116,10 +2119,11 @@ void App::remove(Job *job)
         job->setErrorMessage(err);
 
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
-        err = rep->planAddMissingDeps(installed, ops);
+        err = rep->planAddMissingDeps(installed, ops, opsDependencies);
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }

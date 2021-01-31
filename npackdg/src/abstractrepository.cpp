@@ -608,7 +608,7 @@ std::vector<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
 }
 
 QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
-        std::vector<InstallOperation*>& ops)
+        std::vector<InstallOperation*>& ops, DAG& opsDependencies)
 {
     QString err;
 
@@ -623,7 +623,8 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
         if (pv) {
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(this, installed, ops, avoid);
+            err = pv->planInstallation(this, installed, ops, opsDependencies,
+                    avoid);
             delete pv;
             if (!err.isEmpty())
                 break;
@@ -777,8 +778,9 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     else if (keepDirectories)
                         where = b->getPath();
 
-                    err = newest.at(i)->planInstallation(this, installedCopy, ops2,
-                            avoid, where);
+                    DAG opsDependencies;
+                    err = newest.at(i)->planInstallation(this, installedCopy,
+                            ops2, opsDependencies, avoid, where);
 
                     qCDebug(npackd) << "planUpdates: 1st install and uninstall" <<
                             b->package << "resulted in" << ops2.size() <<
@@ -818,8 +820,9 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     where = a->getPath();
 
                 std::vector<PackageVersion*> avoid;
-                err = newest.at(i)->planInstallation(this, installedCopy, ops, avoid,
-                        where);
+                DAG opsDependencies;
+                err = newest.at(i)->planInstallation(this, installedCopy, ops,
+                        opsDependencies, avoid, where);
                 if (!err.isEmpty())
                     break;
 

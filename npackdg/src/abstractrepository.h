@@ -290,10 +290,11 @@ public:
      * @param installed list of installed packages. This object will be
      *      modified.
      * @param ops installation operations will be appended here
+     * @param opsDependencies dependencies between installation operations
      * @return error message or ""
      */
     QString planAddMissingDeps(InstalledPackages &installed,
-            std::vector<InstallOperation *> &ops);
+            std::vector<InstallOperation *> &ops, DAG &opsDependencies);
 };
 
 #endif // ABSTRACTREPOSITORY_H

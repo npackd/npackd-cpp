@@ -11,8 +11,6 @@ class DAG
     // array containing adjacency lists
     std::vector<std::vector<int>> adj;
 public:
-    DAG();
-
     /**
      * @brief computes a topological sort of the complete graph using indegrees
      * @return

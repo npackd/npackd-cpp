@@ -90,10 +90,12 @@ QString CLProcessor::remove()
     }
 
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops,
+                opsDependencies);
     }
 
     if (err.isEmpty()) {
@@ -195,17 +197,19 @@ QString CLProcessor::add()
 
     // debug: WPMUtils::outputTextConsole << "Versions: " << d.toString()) << std::endl;
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
 
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
-        err = dbr->planAddMissingDeps(installed, ops);
+        err = dbr->planAddMissingDeps(installed, ops, opsDependencies);
     }
 
     if (err.isEmpty()) {
         std::vector<PackageVersion*> avoid;
         for (auto pv: toInstall) {
-            err = pv->planInstallation(dbr, installed, ops, avoid);
+            err = pv->planInstallation(dbr, installed, ops, opsDependencies,
+                    avoid);
             if (!err.isEmpty())
                 break;
         }
@@ -324,10 +328,12 @@ QString CLProcessor::update()
     }
 
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (job->shouldProceed()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops,
+                opsDependencies);
         if (!err.isEmpty())
             job->setErrorMessage(err);
     }

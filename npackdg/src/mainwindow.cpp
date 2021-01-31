@@ -1841,10 +1841,12 @@ void MainWindow::on_actionUpdate_triggered()
     }
 
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops,
+                opsDependencies);
     }
 
     if (err.isEmpty() && packages.size() > 0) {
@@ -2090,18 +2092,20 @@ void MainWindow::on_actionInstall_triggered()
     }
 
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*InstalledPackages::getDefault());
     std::vector<PackageVersion*> avoid;
 
     if (err.isEmpty()) {
-        err = dbr->planAddMissingDeps(installed, ops);
+        err = dbr->planAddMissingDeps(installed, ops, opsDependencies);
     }
 
     if (err.isEmpty()) {
         for (auto pv: pvs) {
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(dbr, installed, ops, avoid);
+            err = pv->planInstallation(dbr, installed, ops, opsDependencies,
+                    avoid);
             if (!err.isEmpty())
                 break;
         }
@@ -2153,10 +2157,12 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     std::vector<InstallOperation*> ops;
+    DAG opsDependencies;
     InstalledPackages installed(*InstalledPackages::getDefault());
 
     if (err.isEmpty()) {
-        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops);
+        err = DBRepository::getDefault()->planAddMissingDeps(installed, ops,
+                opsDependencies);
     }
 
     if (err.isEmpty()) {
