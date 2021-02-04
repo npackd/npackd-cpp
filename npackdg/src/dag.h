@@ -24,20 +24,18 @@ public:
      */
     void addEdge(int u, int v);
 
-    /// <summary>Ermittelt die benachbarten Knoten</summary>
-    ///
-    /// <param name="U">ID eines Knoten: 0, 1, 2, ...</param>
-    /// <returns>
-    /// die IDs der Knoten. Dieser Array darf nicht geändert werden.
-    /// </returns>
-    ///
-
     /**
      * @brief getEdges returns the adjacent nodes
      * @param u a node
      * @return adjacent nodes
      */
     std::vector<int> getEdges(int u);
+
+    /**
+     * @brief changes the number of nodes
+     * @param count new number of nodes
+     */
+    void resize(size_t count);
 };
 
 #endif // DAG_H
