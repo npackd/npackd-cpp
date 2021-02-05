@@ -1932,9 +1932,14 @@ void App::add(Job* job)
 
         std::vector<PackageVersion*> avoid;
         for (auto pv: toInstall) {
-            if (job->shouldProceed())
-                err = pv->planInstallation(dbr, installed, ops,
+            if (job->shouldProceed()) {
+                std::vector<InstallOperation*> installOps;
+                std::tie(installOps, err) = pv->planInstallation(dbr, installed,
                         opsDependencies, avoid, file);
+                if (err.isEmpty())
+                    ops.insert(ops.end(), installOps.begin(), installOps.end());
+            }
+
             if (!err.isEmpty()) {
                 job->setErrorMessage(err);
             }

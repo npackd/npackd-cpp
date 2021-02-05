@@ -623,11 +623,18 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
         if (pv) {
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(this, installed, ops, opsDependencies,
-                    avoid);
+
+            std::vector<InstallOperation*> oneOps;
+            std::tie(oneOps, err) = pv->planInstallation(this, installed,
+                    opsDependencies, avoid);
+
             delete pv;
-            if (!err.isEmpty())
+
+            if (!err.isEmpty()) {
                 break;
+            } else {
+                ops.insert(ops.end(), oneOps.begin(), oneOps.end());
+            }
         }
     }
     qDeleteAll(all);
@@ -779,8 +786,13 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                         where = b->getPath();
 
                     DAG opsDependencies;
-                    err = newest.at(i)->planInstallation(this, installedCopy,
-                            ops2, opsDependencies, avoid, where);
+                    std::vector<InstallOperation*> oneOps;
+                    std::tie(oneOps, err) = newest.at(i)->planInstallation(this,
+                            installedCopy,
+                            opsDependencies, avoid, where);
+
+                    if (err.isEmpty())
+                        ops2.insert(ops2.end(), oneOps.begin(), oneOps.end());
 
                     qCDebug(npackd) << "planUpdates: 1st install and uninstall" <<
                             b->package << "resulted in" << ops2.size() <<
@@ -821,8 +833,14 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
                 std::vector<PackageVersion*> avoid;
                 DAG opsDependencies;
-                err = newest.at(i)->planInstallation(this, installedCopy, ops,
+                std::vector<InstallOperation*> oneOps;
+                std::tie(oneOps, err) = newest.at(i)->planInstallation(this,
+                        installedCopy,
                         opsDependencies, avoid, where);
+
+                if (err.isEmpty())
+                    ops.insert(ops.end(), oneOps.begin(), oneOps.end());
+
                 if (!err.isEmpty())
                     break;
 

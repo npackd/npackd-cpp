@@ -2104,8 +2104,14 @@ void MainWindow::on_actionInstall_triggered()
         for (auto pv: pvs) {
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(dbr, installed, ops, opsDependencies,
-                    avoid);
+
+            std::vector<InstallOperation*> oneOps;
+            std::tie(oneOps, err) = pv->planInstallation(dbr, installed,
+                    opsDependencies, avoid);
+
+            if (err.isEmpty())
+                ops.insert(ops.end(), oneOps.begin(), oneOps.end());
+
             if (!err.isEmpty())
                 break;
         }
