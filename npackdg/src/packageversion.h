@@ -331,12 +331,10 @@ public:
      *     objects will be added to it on different recursion levels.
      * @param where target directory for the installation or "" if the
      *     directory should be chosen automatically
-     * @return operations and an error message or "". The operations vector will
-     *     be empty if an error is returned.
+     * @return error message or ""
      */
-    std::tuple<std::vector<InstallOperation*>, QString> planInstallation(
-            AbstractRepository *rep, InstalledPackages& installed,
-            DAG &opsDependencies,
+    QString planInstallation(AbstractRepository *rep, InstalledPackages& installed,
+            std::vector<InstallOperation*>& ops, DAG &opsDependencies,
             std::vector<PackageVersion*>& avoid,
             const QString &where="");
 

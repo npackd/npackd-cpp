@@ -720,14 +720,13 @@ void PackageVersion::removeDirectory(Job* job, const QString& dir,
     job->complete();
 }
 
-std::tuple<std::vector<InstallOperation*>, QString>
-        PackageVersion::planInstallation(AbstractRepository* rep,
+QString PackageVersion::planInstallation(AbstractRepository* rep,
         InstalledPackages &installed,
+        std::vector<InstallOperation*>& ops,
         DAG& opsDependencies,
         std::vector<PackageVersion*>& avoid,
         const QString& where)
 {
-    std::vector<InstallOperation*> ops;
     QString res;
 
     avoid.push_back(this->clone());
@@ -761,13 +760,17 @@ std::tuple<std::vector<InstallOperation*>, QString>
         for (auto pv: pvs) {
             InstalledPackages installed2(installed);
             auto opsDependencies2 = opsDependencies;
+            int opsCount = ops.size();
             int avoidCount = avoid.size();
 
-            std::vector<InstallOperation*> depOps;
-            std::tie(depOps, res) = pv->planInstallation(rep, installed2,
+            res = pv->planInstallation(rep, installed2, ops,
                     opsDependencies2, avoid);
             if (!res.isEmpty()) {
                 // rollback
+                while (static_cast<int>(ops.size()) > opsCount) {
+                    delete ops.back();
+                    ops.pop_back();
+                }
                 while (static_cast<int>(avoid.size()) > avoidCount) {
                     delete avoid.back();
                     avoid.pop_back();
@@ -776,7 +779,6 @@ std::tuple<std::vector<InstallOperation*>, QString>
                 found = true;
                 installed = installed2;
                 opsDependencies = opsDependencies2;
-                ops.insert(ops.end(), depOps.begin(), depOps.end());
                 break;
             }
         }
@@ -804,12 +806,7 @@ std::tuple<std::vector<InstallOperation*>, QString>
         }
     }
 
-    if (!res.isEmpty()) {
-        qDeleteAll(ops);
-        ops.clear();
-    }
-
-    return std::tie(ops, res);
+    return res;
 }
 
 QString PackageVersion::getFileExtension()

@@ -208,13 +208,8 @@ QString CLProcessor::add()
     if (err.isEmpty()) {
         std::vector<PackageVersion*> avoid;
         for (auto pv: toInstall) {
-            std::vector<InstallOperation*> oneOps;
-            std::tie(oneOps, err) = pv->planInstallation(dbr, installed,
-                    opsDependencies, avoid);
-
-            if (err.isEmpty())
-                ops.insert(ops.end(), oneOps.begin(), oneOps.end());
-
+            err = pv->planInstallation(dbr, installed, ops, opsDependencies,
+                    avoid);
             if (!err.isEmpty())
                 break;
         }
