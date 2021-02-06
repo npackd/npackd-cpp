@@ -954,6 +954,7 @@ void MainWindow::fillList()
 }
 
 void MainWindow::process(std::vector<InstallOperation*> &install,
+        const DAG& opsDependencies,
         DWORD programCloseType)
 {
     QString err;
@@ -985,8 +986,9 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 
                 monitor(job);
 
-                std::thread thr([rep, job, install](){
+                std::thread thr([rep, job, install, opsDependencies](){
                     rep->processWithCoInitializeAndFree(job, install,
+                            opsDependencies,
                             PackageUtils::getCloseProcessType());
                 });
                 thr.detach();
@@ -1856,7 +1858,7 @@ void MainWindow::on_actionUpdate_triggered()
 
     if (err.isEmpty()) {
         if (ops.size() > 0) {
-            process(ops, PackageUtils::getCloseProcessType());
+            process(ops, opsDependencies, PackageUtils::getCloseProcessType());
         }
     } else
         addErrorMessage(err, err, true, QMessageBox::Critical);
@@ -2112,7 +2114,7 @@ void MainWindow::on_actionInstall_triggered()
     }
 
     if (err.isEmpty())
-        process(ops, PackageUtils::getCloseProcessType());
+        process(ops, opsDependencies, PackageUtils::getCloseProcessType());
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 
@@ -2175,7 +2177,7 @@ void MainWindow::on_actionUninstall_triggered()
     }
 
     if (err.isEmpty())
-        process(ops, PackageUtils::getCloseProcessType());
+        process(ops, opsDependencies, PackageUtils::getCloseProcessType());
     else
         addErrorMessage(err, err, true, QMessageBox::Critical);
 

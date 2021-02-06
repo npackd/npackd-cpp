@@ -37,7 +37,9 @@ bool AbstractRepository::includesRemoveItself(
 }
 
 void AbstractRepository::processWithCoInitializeAndFree(Job *job,
-        const std::vector<InstallOperation *> &install_, DWORD programCloseType)
+        const std::vector<InstallOperation *> &install_,
+        const DAG& opsDependencies,
+        DWORD programCloseType)
 {
     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
 
@@ -48,7 +50,8 @@ void AbstractRepository::processWithCoInitializeAndFree(Job *job,
     */
 
     CoInitialize(nullptr);
-    process(job, install_, programCloseType, false, true, "", "", "", "");
+    process(job, install_, opsDependencies, programCloseType,
+            false, true, "", "", "", "");
     CoUninitialize();
 
     qDeleteAll(install_);
@@ -273,7 +276,8 @@ QString AbstractRepository::toString(const Dependency &dep,
 }
 
 void AbstractRepository::process(Job *job,
-        const std::vector<InstallOperation *> &install_, DWORD programCloseType,
+        const std::vector<InstallOperation *> &install_,
+        const DAG& opsDependencies, DWORD programCloseType,
         bool printScriptOutput, bool interactive,
         const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
@@ -283,10 +287,18 @@ void AbstractRepository::process(Job *job,
     if (npackd().isDebugEnabled()) {
         qCDebug(npackd) << "AbstractRepository::process: " <<
                 install_.size() << " operations";
-        for (auto op: install_) {
+        for (int i = 0; i < static_cast<int>(install_.size()); i++) {
+            auto op = install_.at(i);
             qCDebug(npackd) << op->package << ": " <<
                     op->version.getVersionString() <<
-                    op->install << " in " << op->where;
+                    (op->install ? "install" : "remove") << " in " << op->where;
+
+            if (static_cast<int>(opsDependencies.size()) > i) {
+                auto edges = opsDependencies.getEdges(i);
+                for (auto edge: edges) {
+                    qCDebug(npackd) << "depends on" << edge;
+                }
+            }
         }
     }
 

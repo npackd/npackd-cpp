@@ -55,10 +55,14 @@ public:
 private:
     /**
      * @param install the objects will be destroyed
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @param programCloseType how the programs should be closed
      * @return error message or ""
      */
-    QString process(std::vector<InstallOperation *> &install, DWORD programCloseType);
+    QString process(std::vector<InstallOperation *> &install,
+            const DAG &opsDependencies, DWORD programCloseType);
 
     /**
      * @brief waits for a job

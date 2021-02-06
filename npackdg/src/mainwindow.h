@@ -279,9 +279,13 @@ protected:
 
     /**
      * @param install the objects will be destroyed
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @param programCloseType how the programs should be closed
      */
-    void process(std::vector<InstallOperation *> &install, DWORD programCloseType);
+    void process(std::vector<InstallOperation *> &install,
+            const DAG &opsDependencies, DWORD programCloseType);
 public slots:
     void on_errorMessage(const QString& msg, const QString& details="",
             bool autoHide=true, QMessageBox::Icon icon=QMessageBox::Critical);

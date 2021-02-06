@@ -1545,7 +1545,8 @@ void App::update(Job* job)
 
     if (job->shouldProceed() && !up2date) {
         Job* ijob = job->newSubJob(0.85, "Updating");
-        processInstallOperations(ijob, rep, ops, programCloseType, interactive,
+        processInstallOperations(ijob, rep, ops, opsDependencies,
+                programCloseType, interactive,
                 user, password, proxyUser, proxyPassword);
         if (!ijob->getErrorMessage().isEmpty()) {
             job->setErrorMessage(QString("Error updating: %1").
@@ -1572,7 +1573,8 @@ void App::update(Job* job)
 
 void App::processInstallOperations(Job *job,
         DBRepository* rep,
-        const std::vector<InstallOperation *> &ops, DWORD programCloseType,
+        const std::vector<InstallOperation *> &ops,
+        const DAG& opsDependencies, DWORD programCloseType,
         bool interactive, const QString user, const QString password,
         const QString proxyUser, const QString proxyPassword)
 {
@@ -1704,7 +1706,8 @@ void App::processInstallOperations(Job *job,
 
         job->complete();
     } else {
-        rep->process(job, ops, programCloseType, debug, interactive, user,
+        rep->process(job, ops, opsDependencies,
+                programCloseType, debug, interactive, user,
                 password, proxyUser, proxyPassword);
     }
 }
@@ -1949,7 +1952,8 @@ void App::add(Job* job)
 
     if (job->shouldProceed() && ops.size() > 0) {
         Job* ijob = job->newSubJob(0.8, "Installing");
-        processInstallOperations(ijob, dbr, ops, WPMUtils::CLOSE_WINDOW,
+        processInstallOperations(ijob, dbr, ops, opsDependencies,
+                WPMUtils::CLOSE_WINDOW,
                 interactive, user, password, proxyUser, proxyPassword);
         if (!ijob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error installing: %1").
@@ -2163,7 +2167,8 @@ void App::remove(Job *job)
     if (job->shouldProceed()) {
         Job* removeJob = job->newSubJob(0.9,
                 "Removing");
-        processInstallOperations(removeJob, rep, ops, programCloseType,
+        processInstallOperations(removeJob, rep, ops, opsDependencies,
+                programCloseType,
                 interactive, "", "", "", "");
         if (!removeJob->getErrorMessage().isEmpty())
             job->setErrorMessage(QString("Error removing: %1\r\n").

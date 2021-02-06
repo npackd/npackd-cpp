@@ -29,13 +29,18 @@ public:
      * @param u a node
      * @return adjacent nodes
      */
-    std::vector<int> getEdges(int u);
+    const std::vector<int> &getEdges(int u) const;
 
     /**
      * @brief changes the number of nodes
      * @param count new number of nodes
      */
     void resize(size_t count);
+
+    /**
+     * @return number of nodes
+     */
+    size_t size() const;
 };
 
 #endif // DAG_H

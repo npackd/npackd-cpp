@@ -123,6 +123,9 @@ public:
      * @brief processes the given operations
      * @param job job
      * @param install operations that should be performed
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @param programCloseType how to close running applications
      * @param printScriptOutput true = redirect the script output to the
      *     standard output
@@ -133,10 +136,11 @@ public:
      * @param proxyPassword password for the HTTP proxy authentication
      */
     void process(Job* job, const std::vector<InstallOperation *> &install,
-                 DWORD programCloseType, bool printScriptOutput,
-                 bool interactive,
-                 const QString user, const QString password,
-                 const QString proxyUser, const QString proxyPassword);
+            const DAG &opsDependencies,
+            DWORD programCloseType, bool printScriptOutput,
+            bool interactive,
+            const QString user, const QString password,
+            const QString proxyUser, const QString proxyPassword);
 
     /**
      * Finds all installed package versions.
@@ -243,10 +247,14 @@ public:
      * @param job job
      * @param install operations that should be performed. The objects will be
      *     freed
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @param programCloseType how to close running applications
      */
     void processWithCoInitializeAndFree(Job *job,
-            const std::vector<InstallOperation *> &install_, DWORD programCloseType);
+            const std::vector<InstallOperation *> &install_,
+            const DAG &opsDependencies, DWORD programCloseType);
 
     /**
      * @param dep a dependency

@@ -108,7 +108,7 @@ QString CLProcessor::remove()
     }
 
     if (err.isEmpty()) {
-        err = process(ops, programCloseType);
+        err = process(ops, opsDependencies, programCloseType);
     }
 
     qDeleteAll(toRemove);
@@ -218,7 +218,7 @@ QString CLProcessor::add()
     // debug: WPMUtils::outputTextConsole(QString("%1\r\n").arg(ops.size()));
 
     if (err.isEmpty()) {
-        err = process(ops, pct);
+        err = process(ops, opsDependencies, pct);
     }
 
     qDeleteAll(ops);
@@ -365,7 +365,7 @@ QString CLProcessor::update()
     */
 
     if (job->shouldProceed() && !up2date) {
-        err = process(ops, programCloseType);
+        err = process(ops, opsDependencies, programCloseType);
     }
 
     /*
@@ -406,6 +406,7 @@ QString CLProcessor::update()
 }
 
 QString CLProcessor::process(std::vector<InstallOperation*> &install,
+        const DAG& opsDependencies,
         DWORD programCloseType)
 {
     QString err;
@@ -431,8 +432,9 @@ QString CLProcessor::process(std::vector<InstallOperation*> &install,
             } else {
                 Job* job = new Job(title);
 
-                std::thread thr([rep, job, install](){
+                std::thread thr([rep, job, install, opsDependencies](){
                     rep->processWithCoInitializeAndFree(job, install,
+                            opsDependencies,
                             PackageUtils::getCloseProcessType());
                 });
                 thr.detach();

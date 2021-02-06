@@ -78,7 +78,7 @@ std::vector<int> DAG::topologicalSort()
     return result;
 }
 
-std::vector<int> DAG::getEdges(int u)
+const std::vector<int>& DAG::getEdges(int u) const
 {
     return adj[u];
 }
@@ -87,5 +87,10 @@ void DAG::resize(size_t count)
 {
     if (count < this->adj.size())
         this->adj.resize(count);
+}
+
+size_t DAG::size() const
+{
+    return this->adj.size();
 }
 

@@ -63,7 +63,8 @@ private:
     QString printDependencies(bool onlyInstalled,
             const QString parentPrefix, int level, PackageVersion *pv);
     void processInstallOperations(Job *job, DBRepository *rep,
-            const std::vector<InstallOperation *> &ops, DWORD programCloseType,
+            const std::vector<InstallOperation *> &ops,
+            const DAG &opsDependencies, DWORD programCloseType,
             bool interactive, const QString user, const QString password,
             const QString proxyUser, const QString proxyPassword);
     std::vector<QString> sortPackageVersionsByPackageTitle(
