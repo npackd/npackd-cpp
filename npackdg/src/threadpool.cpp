@@ -13,6 +13,7 @@ ThreadPool::~ThreadPool()
         std::lock_guard<std::mutex> lock{mutex};
         done = true;
     }
+    cond.notify_all();
 
     for (auto& thr: threads) {
         thr.join();
