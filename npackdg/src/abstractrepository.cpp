@@ -639,7 +639,8 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
 QString AbstractRepository::planUpdates(InstalledPackages& installed,
         const std::vector<Package*> packages,
         std::vector<Dependency*> ranges,
-        std::vector<InstallOperation*>& ops, bool keepDirectories,
+        std::vector<InstallOperation*>& ops,
+        DAG& opsDependencies, bool keepDirectories,
         bool install, const QString &where_, bool exactLocation)
 {
     QString err;
@@ -761,11 +762,13 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             std::vector<PackageVersion*> avoid;
             std::vector<InstallOperation*> ops2;
             InstalledPackages installedCopy(installed);
+            DAG ops2Dependencies;
 
             PackageVersion* b = newesti.at(i);
             if (b) {
                 QString err = planUninstallation(
-                        installedCopy, b->package, b->version, ops2);
+                        installedCopy, b->package, b->version, ops2,
+                        ops2Dependencies);
 
                 qCDebug(npackd) << "planUpdates: 1st uninstall" <<
                         b->package << "resulted in" << ops2.size() <<
@@ -778,9 +781,8 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     else if (keepDirectories)
                         where = b->getPath();
 
-                    DAG opsDependencies;
                     err = newest.at(i)->planInstallation(this, installedCopy,
-                            ops2, opsDependencies, avoid, where);
+                            ops2, ops2Dependencies, avoid, where);
 
                     qCDebug(npackd) << "planUpdates: 1st install and uninstall" <<
                             b->package << "resulted in" << ops2.size() <<
@@ -820,7 +822,6 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     where = a->getPath();
 
                 std::vector<PackageVersion*> avoid;
-                DAG opsDependencies;
                 err = newest.at(i)->planInstallation(this, installedCopy, ops,
                         opsDependencies, avoid, where);
                 if (!err.isEmpty())
@@ -829,7 +830,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 PackageVersion* b = newesti.at(i);
                 if (b) {
                     err = planUninstallation(installedCopy, b->package,
-                            b->version, ops);
+                            b->version, ops, opsDependencies);
 
                     qCDebug(npackd) << "planUpdates: 2nd uninstall" <<
                             b->package << "resulted in" << ops.size() <<
@@ -877,10 +878,13 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
 QString AbstractRepository::planUninstallation(InstalledPackages &installed,
         const QString &package, const Version &version,
-        std::vector<InstallOperation *> &ops)
+        std::vector<InstallOperation *> &ops,
+        DAG& opsDependencies)
 {
     // qCDebug(npackd) << "PackageVersion::planUninstallation()" << this->toString();
     QString res;
+
+    int initialOpsSize = ops.size();
 
     if (!installed.isInstalled(package, version))
         return res;
@@ -894,12 +898,8 @@ QString AbstractRepository::planUninstallation(InstalledPackages &installed,
         std::unique_ptr<InstalledPackageVersion> ipv(installed.
                 findFirstWithMissingDependency());
         if (ipv.get()) {
-            std::unique_ptr<PackageVersion> pv(findPackageVersion_(
-                    ipv.get()->package, ipv.get()->version, &res));
-            if (!res.isEmpty())
-                break;
-
-            res = planUninstallation(installed, pv->package, pv->version, ops);
+            res = planUninstallation(installed, ipv->package, ipv->version, ops,
+                    opsDependencies);
             if (!res.isEmpty())
                 break;
         } else {
@@ -910,6 +910,11 @@ QString AbstractRepository::planUninstallation(InstalledPackages &installed,
     if (res.isEmpty()) {
         InstallOperation* op = new InstallOperation(package, version, false);
         ops.push_back(op);
+
+        int me = ops.size() - 1;
+        for (int i = initialOpsSize; i < me; ++i) {
+            opsDependencies.addEdge(me, i);
+        }
     }
 
     return res;

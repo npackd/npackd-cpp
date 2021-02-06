@@ -1850,8 +1850,8 @@ void MainWindow::on_actionUpdate_triggered()
     }
 
     if (err.isEmpty() && packages.size() > 0) {
-        err = r->planUpdates(installed, packages, std::vector<Dependency*>(), ops,
-                true, false, "", false);
+        err = r->planUpdates(installed, packages, std::vector<Dependency*>(),
+                ops, opsDependencies, true, false, "", false);
     }
 
     if (err.isEmpty()) {
@@ -2168,7 +2168,7 @@ void MainWindow::on_actionUninstall_triggered()
     if (err.isEmpty()) {
         for (auto pv: pvs) {
             err = DBRepository::getDefault()->planUninstallation(installed,
-                    pv->package, pv->version, ops);
+                    pv->package, pv->version, ops, opsDependencies);
             if (!err.isEmpty())
                 break;
         }

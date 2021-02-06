@@ -65,6 +65,7 @@ set(FTESTS_SOURCES
     ../../npackdg/src/comobject.cpp
     ../../npackdg/src/dismthirdpartypm.cpp
     ../../npackdg/src/sqlutils.cpp
+    ../../npackdg/src/dag.cpp
     src/main.cpp
 )
 set(FTESTS_HEADERS
@@ -100,7 +101,8 @@ set(FTESTS_HEADERS
     ../../npackdg/src/wuapi.h
     ../../npackdg/src/comobject.h
     ../../npackdg/src/dismthirdpartypm.h
-    ../../npackdg/src/sqlutils.cpp
+    ../../npackdg/src/sqlutils.h
+    ../../npackdg/src/dag.h
 )
 
 set(OUTPUT_FILE_NAME "ftests.exe")

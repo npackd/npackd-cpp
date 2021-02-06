@@ -101,7 +101,7 @@ QString CLProcessor::remove()
     if (err.isEmpty()) {
         for (auto pv: toRemove) {
             err = DBRepository::getDefault()->planUninstallation(installed,
-                    pv->package, pv->version, ops);
+                    pv->package, pv->version, ops, opsDependencies);
             if (!err.isEmpty())
                 break;
         }
@@ -342,7 +342,7 @@ QString CLProcessor::update()
     if (job->shouldProceed()) {
         Job* sub = job->newSubJob(0.12, QObject::tr("Planning"));
         QString err = rep->planUpdates(installed,
-                toUpdate, std::vector<Dependency*>(), ops);
+                toUpdate, std::vector<Dependency*>(), ops, opsDependencies);
         if (!err.isEmpty())
             job->setErrorMessage(err);
         else {

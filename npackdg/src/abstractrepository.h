@@ -158,6 +158,9 @@ public:
      *     range will be uninstalled and the newest available in the range will
      *     be installed.
      * @param ops installation operations will be appended here
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @param keepDirectories true = use the same directories for the updated
      *     versions
      * @param install this determines the behaviour if no version is installed.
@@ -171,11 +174,13 @@ public:
      *     "Notepad"
      * @return error message or ""
      */
-    QString planUpdates(InstalledPackages &installed, const std::vector<Package *> packages,
-                        std::vector<Dependency *> ranges,
-                        std::vector<InstallOperation *> &ops, bool keepDirectories=false,
-                        bool install=false, const QString& where_="",
-                        bool exactLocation=true);
+    QString planUpdates(InstalledPackages &installed,
+            const std::vector<Package *> packages,
+            std::vector<Dependency *> ranges,
+            std::vector<InstallOperation *> &ops, DAG &opsDependencies,
+            bool keepDirectories=false,
+            bool install=false, const QString& where_="",
+            bool exactLocation=true);
 
     /**
      * Plans un-installation of a package version and all the dependent
@@ -189,11 +194,14 @@ public:
      * @param version version number to be uninstalled
      * @param op necessary operations will be added here. The existing
      *     elements will not be modified in any way.
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @return error message or ""
      */
     QString planUninstallation(InstalledPackages& installed,
             const QString& package, const Version& version,
-            std::vector<InstallOperation *> &ops);
+            std::vector<InstallOperation *> &ops, DAG &opsDependencies);
 
     /**
      * Find the newest available package version.
@@ -204,7 +212,7 @@ public:
      * @return [move] found package version or 0
      */
     virtual PackageVersion* findPackageVersion_(const QString& package,
-                                                const Version& version, QString* err) const = 0;
+            const Version& version, QString* err) const = 0;
 
     /**
      * Searches for a license by name.
@@ -290,7 +298,9 @@ public:
      * @param installed list of installed packages. This object will be
      *      modified.
      * @param ops installation operations will be appended here
-     * @param opsDependencies dependencies between installation operations
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @return error message or ""
      */
     QString planAddMissingDeps(InstalledPackages &installed,

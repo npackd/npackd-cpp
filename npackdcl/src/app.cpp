@@ -1374,7 +1374,8 @@ void App::update(Job* job)
             if (job->shouldProceed()) {
                 Job* sub = job->newSubJob(0.10,
                         QObject::tr("Updating the temporary database"), true, true);
-                rep->clearAndDownloadRepositories(sub, urls, interactive, user, password, proxyUser, proxyPassword, true, false);
+                rep->clearAndDownloadRepositories(sub, urls, interactive, user,
+                        password, proxyUser, proxyPassword, true, false);
             }
 
             qDeleteAll(urls);
@@ -1516,6 +1517,7 @@ void App::update(Job* job)
                 "packages and " << toUpdate2.size() << "version ranges";
 
         QString err = rep->planUpdates(installed, toUpdate, toUpdate2, ops,
+                opsDependencies,
                 keepDirectories, install, file);
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -2136,7 +2138,7 @@ void App::remove(Job *job)
         if (job->shouldProceed()) {
             for (auto pv: toRemove) {
                 err = rep->planUninstallation(installed,
-                        pv->package, pv->version, ops);
+                        pv->package, pv->version, ops, opsDependencies);
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);
                     break;

@@ -85,6 +85,7 @@ set(CLU_SOURCES
     ../npackdg/src/wuapi_i.c
     ../npackdg/src/comobject.cpp
     ../npackdg/src/sqlutils.cpp
+    ../npackdg/src/dag.cpp
     ../npackdcl/src/commandlinemessagehandler.cpp
 )
 set(CLU_HEADERS
@@ -120,6 +121,7 @@ set(CLU_HEADERS
     ../npackdg/src/wuapi.h
     ../npackdg/src/comobject.h
     ../npackdg/src/sqlutils.h
+    ../npackdg/src/dag.h
     ../npackdcl/src/commandlinemessagehandler.h
 )
 

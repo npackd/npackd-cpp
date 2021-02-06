@@ -727,6 +727,8 @@ QString PackageVersion::planInstallation(AbstractRepository* rep,
         std::vector<PackageVersion*>& avoid,
         const QString& where)
 {
+    int initialOpsSize = ops.size();
+
     QString res;
 
     avoid.push_back(this->clone());
@@ -803,6 +805,11 @@ QString PackageVersion::planInstallation(AbstractRepository* rep,
             }
             installed.setPackageVersionPath(this->package, this->version,
                     where2, false);
+
+            int me = ops.size() - 1;
+            for (int i = initialOpsSize; i < me; ++i) {
+                opsDependencies.addEdge(me, i);
+            }
         }
     }
 

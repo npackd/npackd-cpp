@@ -324,7 +324,9 @@ public:
      * @param op necessary operations will be appended here.
      *     The existing
      *     elements will not be modified in any way.
-     * @param opsDependencies dependencies between installation operations
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
      * @param avoid list of package versions that cannot be
      *     installed. The list
      *     will be changed by this method. Normally this is an empty list and
