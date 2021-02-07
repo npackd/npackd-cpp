@@ -15,7 +15,7 @@ public:
      * @brief computes a topological sort of the complete graph using indegrees
      * @return
      */
-    std::vector<int> topologicalSort();
+    std::vector<int> topologicalSort() const;
 
     /**
      * @brief function to add an edge to graph

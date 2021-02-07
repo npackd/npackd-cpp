@@ -36,32 +36,6 @@ bool AbstractRepository::includesRemoveItself(
     return res;
 }
 
-void AbstractRepository::processWithCoInitializeAndFree(Job *job,
-        const std::vector<InstallOperation *> &install_,
-        const DAG& opsDependencies,
-        DWORD programCloseType)
-{
-    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
-
-    /*
-    makes the process too slow
-    bool b = SetThreadPriority(GetCurrentThread(),
-            THREAD_MODE_BACKGROUND_BEGIN);
-    */
-
-    CoInitialize(nullptr);
-    process(job, install_, opsDependencies, programCloseType,
-            false, true, "", "", "", "");
-    CoUninitialize();
-
-    qDeleteAll(install_);
-
-    /*
-    if (b)
-        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_END);
-    */
-}
-
 void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
         const std::vector<PackageVersion *> &pvs, const QString& where,
         int def)

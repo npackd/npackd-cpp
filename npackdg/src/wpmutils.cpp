@@ -3321,6 +3321,15 @@ void WPMUtils::startProcess(const QString &prg, const QString &args)
     }
 }
 
+std::function<void ()> WPMUtils::wrapCoInitialize(const std::function<void ()> f)
+{
+    return [f]() {
+        CoInitialize(nullptr);
+        f();
+        CoUninitialize();
+    };
+}
+
 QString WPMUtils::toQString(const std::vector<int> &v)
 {
     QString r;

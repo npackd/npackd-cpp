@@ -432,11 +432,15 @@ QString CLProcessor::process(std::vector<InstallOperation*> &install,
             } else {
                 Job* job = new Job(title);
 
-                std::thread thr([rep, job, install, opsDependencies](){
-                    rep->processWithCoInitializeAndFree(job, install,
+                std::thread thr(WPMUtils::wrapCoInitialize(
+                    [rep, job, install, opsDependencies](){
+                    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+                    rep->process(job, install,
                             opsDependencies,
-                            PackageUtils::getCloseProcessType());
-                });
+                            PackageUtils::getCloseProcessType(),
+                            false, true, "", "", "", "");
+                    qDeleteAll(install);
+                }));
                 thr.detach();
 
                 monitorAndWaitFor(job);

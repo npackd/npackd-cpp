@@ -243,20 +243,6 @@ public:
     bool includesRemoveItself(const std::vector<InstallOperation *> &install_);
 
     /**
-     * @brief processes the given operations. Calls CoInitialize/CoUninitialize.
-     * @param job job
-     * @param install operations that should be performed. The objects will be
-     *     freed
-     * @param opsDependencies dependencies between installation operations. The
-     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
-     *     to "v" means that "u" depends on "v".
-     * @param programCloseType how to close running applications
-     */
-    void processWithCoInitializeAndFree(Job *job,
-            const std::vector<InstallOperation *> &install_,
-            const DAG &opsDependencies, DWORD programCloseType);
-
-    /**
      * @param dep a dependency
      * @param avoid list of package versions that should be avoided and cannot
      *     be considered to be a match

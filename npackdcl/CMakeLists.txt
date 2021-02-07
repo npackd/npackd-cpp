@@ -63,6 +63,8 @@ set(NPACKDCL_SOURCES
     ../npackdg/src/dismthirdpartypm.cpp
     ../npackdg/src/sqlutils.cpp
     ../npackdg/src/dag.cpp
+    ../npackdg/src/deptask.cpp
+    ../npackdg/src/threadpool.cpp
     src/commandlinemessagehandler.cpp
     src/main.cpp
     src/app.cpp
@@ -102,6 +104,8 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/dismthirdpartypm.h
     ../npackdg/src/sqlutils.h
     ../npackdg/src/dag.h
+    ../npackdg/src/deptask.h
+    ../npackdg/src/threadpool.h
     src/commandlinemessagehandler.h
     src/app.h
 )

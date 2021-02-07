@@ -654,6 +654,13 @@ public:
     static void startProcess(const QString& prg, const QString &args);
 
     /**
+     * @brief wraps a function in CoInitialize/CoUninitialize calls
+     * @param f a function
+     * @return wrapped function
+     */
+    static std::function<void()> wrapCoInitialize(const std::function<void()> f);
+
+    /**
      * @brief converts a vector to a QString
      * @param v the vector
      * @return a, b, c

@@ -62,6 +62,9 @@ private:
     /** Icon on the tray or zeros */
     NOTIFYICONDATAW nid;
 
+    /** should be used for installation operations */
+    ThreadPool threadPool;
+
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
             const Version& version) const;

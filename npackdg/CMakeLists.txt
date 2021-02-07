@@ -89,6 +89,7 @@ set(NPACKDG_SOURCES
     src/sqlutils.cpp
     src/threadpool.cpp
     src/dag.cpp
+    src/deptask.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -148,6 +149,7 @@ set(NPACKDG_HEADERS
     src/sqlutils.h
     src/threadpool.h
     src/dag.h
+    src/deptask.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui

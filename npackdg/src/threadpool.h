@@ -18,11 +18,13 @@ class ThreadPool
     std::mutex mutex;
     std::condition_variable cond;
     bool done = false;
+    int priority;
 public:
     /**
      * @param n number of threads
+     * @param priority thread priority, e.g. THREAD_PRIORITY_LOWEST
      */
-    ThreadPool(const int n);
+    ThreadPool(const int n, const int priority);
 
     ~ThreadPool();
 

@@ -13,7 +13,7 @@ void DAG::addEdge(int u, int v)
     adj[u].push_back(v);
 }
 
-std::vector<int> DAG::topologicalSort()
+std::vector<int> DAG::topologicalSort() const
 {
     std::vector<int> inDegree;
 

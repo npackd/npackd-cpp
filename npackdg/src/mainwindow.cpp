@@ -60,6 +60,7 @@
 #include "uimessagehandler.h"
 #include "packageutils.h"
 #include "uiutils.h"
+#include "deptask.h"
 
 extern HWND defaultPasswordWindow;
 
@@ -137,8 +138,7 @@ addTab(jobsScrollArea, genericAppIcon, "Tags");
 */
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow), threadPool(10, THREAD_PRIORITY_LOWEST)
 {
     instance = this;
 
@@ -986,11 +986,20 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 
                 monitor(job);
 
-                std::thread thr([rep, job, install, opsDependencies](){
-                    rep->processWithCoInitializeAndFree(job, install,
+                /*
+                DepTask dt(install, opsDependencies);
+                threadPool.addTask(dt);
+                */
+
+                std::thread thr(WPMUtils::wrapCoInitialize(
+                    [rep, job, install, opsDependencies](){
+                    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+                    rep->process(job, install,
                             opsDependencies,
-                            PackageUtils::getCloseProcessType());
-                });
+                            PackageUtils::getCloseProcessType(),
+                            false, true, "", "", "", "");
+                    qDeleteAll(install);
+                }));
                 thr.detach();
 
                 install.clear();

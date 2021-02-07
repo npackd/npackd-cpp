@@ -1,6 +1,8 @@
+#include <windows.h>
+
 #include "threadpool.h"
 
-ThreadPool::ThreadPool(const int n)
+ThreadPool::ThreadPool(const int n, const int priority): priority(priority)
 {
     for (int i = 0; i < n; ++i) {
         this->threads.emplace_back(&ThreadPool::process, this);
@@ -30,6 +32,8 @@ void ThreadPool::addTask(std::function<void ()> task)
 }
 
 void ThreadPool::process() {
+    SetThreadPriority(GetCurrentThread(), priority);
+
     while (true) {
         std::function<void()> f;
         {
