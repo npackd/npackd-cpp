@@ -2,6 +2,7 @@
 #define VISIBLEJOBS_H
 
 #include <time.h>
+#include <mutex>
 
 #include <QObject>
 
@@ -16,11 +17,13 @@ class VisibleJobs: public QObject
 private:
     static VisibleJobs def;
 
-    VisibleJobs();
-public:
-    time_t monitoredJobLastChanged;
+    mutable std::mutex mutex;
+
+    /** running jobs. The access should be guarded by the mutex */
     std::vector<Job*> runningJobs;
 
+    VisibleJobs();
+public:
     /**
      * @return default instance
      */
@@ -32,6 +35,23 @@ public:
      * @param job a currently running and monitored job
      */
     void unregisterJob(Job *job);
+
+    /**
+     * @return number of currently registered jobs
+     */
+    size_t size() const;
+
+    /**
+     * @brief registeres a job
+     * @param job the job
+     */
+    void push_back(Job* job);
+
+    /**
+     * @brief estimates the time to complete all tasks
+     * @return remaining time, maximum progress of a task
+     */
+    std::tuple<time_t, double> getRemainingTime() const;
 signals:
     /**
      * This signal will be fired each time a job is added or removed

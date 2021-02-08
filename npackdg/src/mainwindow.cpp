@@ -504,7 +504,7 @@ void MainWindow::loadUISettings()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    int n = VisibleJobs::getDefault()->runningJobs.size();
+    int n = VisibleJobs::getDefault()->size();
 
     if (n == 0) {
         this->saveUISettings();
@@ -576,21 +576,10 @@ void MainWindow::prepare()
 
 void MainWindow::updateProgressTabTitle()
 {
-    int n = VisibleJobs::getDefault()->runningJobs.size();
-    time_t max = -1;
-    double maxProgress = 0;
-    for (int i = 0; i < n; i++) {
-        Job* state = VisibleJobs::getDefault()->runningJobs.at(i);
-
-        // state.job may be null if the corresponding task was just started
-        time_t t = state->remainingTime();
-        if (t > max) {
-            max = t;
-            maxProgress = state->getProgress();
-        }
-    }
-    if (max < 0)
-        max = 0;
+    int n = VisibleJobs::getDefault()->size();
+    time_t max;
+    double maxProgress;
+    std::tie(max, maxProgress) = VisibleJobs::getDefault()->getRemainingTime();
 
     int maxProgress_ = lround(maxProgress * 100);
     QTime rest = WPMUtils::durationToTime(max);
@@ -770,12 +759,7 @@ void MainWindow::monitoredJobCompleted()
 
 void MainWindow::monitoredJobChanged(Job* state)
 {
-    time_t now;
-    time(&now);
-
     if (!state->parentJob) {
-        VisibleJobs::getDefault()->monitoredJobLastChanged = now;
-
         updateProgressTabTitle();
     }
 }
@@ -790,7 +774,7 @@ void MainWindow::monitor(Job* job)
             SLOT(monitoredJobCompleted()),
             Qt::QueuedConnection);
 
-    VisibleJobs::getDefault()->runningJobs.push_back(job);
+    VisibleJobs::getDefault()->push_back(job);
 
     updateProgressTabTitle();
 
@@ -991,7 +975,7 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
                     ops.push_back([rep, op](){
                         std::vector<InstallOperation*> v;
                         v.push_back(op);
-                        Job* job = new Job();
+                        Job* job = new Job("install TODO");
                         rep->process(job, v,
                                 DAG(),
                                 PackageUtils::getCloseProcessType(),
@@ -1072,7 +1056,7 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_actionExit_triggered()
 {
-    int n = VisibleJobs::getDefault()->runningJobs.size();
+    int n = VisibleJobs::getDefault()->size();
 
     if (n > 0) {
         QString msg = QObject::tr("Cannot exit while jobs are running");
