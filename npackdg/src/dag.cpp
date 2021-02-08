@@ -85,8 +85,7 @@ const std::vector<int>& DAG::getEdges(int u) const
 
 void DAG::resize(size_t count)
 {
-    if (count < this->adj.size())
-        this->adj.resize(count);
+    this->adj.resize(count);
 }
 
 size_t DAG::size() const

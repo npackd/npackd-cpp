@@ -1,30 +1,40 @@
 #include "deptask.h"
 
-DepTask::DepTask(const std::vector<std::function<void ()> > &tasks,
+DepTask::DepTask(const DepTask &other): job(other.job),
+    tasks(other.tasks),
+    dependencies(other.dependencies),
+    threadPool(other.threadPool)
+{
+}
+
+DepTask::DepTask(Job* job, const std::vector<std::function<void ()> > &tasks,
         const DAG &dependencies, ThreadPool &threadPool):
-    tasks(tasks), dependencies(dependencies), threadPool(threadPool)
+    job(job), tasks(tasks), dependencies(dependencies), threadPool(threadPool)
 {
 }
 
 void DepTask::operator ()()
 {
-    std::mutex doneMutex;
-    std::vector<bool> done;
+    std::mutex statusMutex;
+
+    // 0 - not started, 1 - scheduled, 2 - done
+    std::vector<int> status(tasks.size());
+
+    int doneCount = 0;
+
     this->dependencies.resize(tasks.size());
     std::vector<int> order = dependencies.topologicalSort();
-    done.resize(tasks.size());
 
-    int scheduled = 0;
     while (true) {
         int found = -1;
         {
-            std::unique_lock<std::mutex> lock{doneMutex};
+            std::unique_lock<std::mutex> lock{statusMutex};
             for (int i = 0; i < static_cast<int>(order.size()); i++) {
-                if (!done[order[i]]) {
+                if (status[order[i]] == 0) {
                     bool depsOK = true;
                     auto edges = dependencies.getEdges(order[i]);
                     for (auto edge: edges) {
-                        if (!done[edge]) {
+                        if (status[edge] != 2) {
                             depsOK = false;
                             break;
                         }
@@ -39,22 +49,39 @@ void DepTask::operator ()()
         }
 
         if (found >= 0) {
-            threadPool.addTask([this, found, &done, &doneMutex](){
+            {
+                std::unique_lock<std::mutex> lock{statusMutex};
+                status[found] = 1;
+            }
+
+            threadPool.addTask([this, found, &status, &statusMutex, &doneCount](){
                 (tasks[found])();
                 cv.notify_one();
 
                 {
-                    std::unique_lock<std::mutex> lock{doneMutex};
-                    done[found] = true;
+                    std::unique_lock<std::mutex> lock{statusMutex};
+                    status[found] = 2;
+                    doneCount++;
                 }
             });
-            scheduled++;
         }
 
-        if (scheduled == static_cast<int>(order.size()))
-            break;
+        {
+            std::unique_lock<std::mutex> lock{statusMutex};
+
+            if (order.size() > 0)
+                job->setProgress(static_cast<double>(doneCount) / order.size());
+
+            if (doneCount == static_cast<int>(order.size()))
+                break;
+        }
 
         std::unique_lock<std::mutex> lock{mutex};
         cv.wait_for(lock, std::chrono::seconds(1));
     }
+
+    if (job->shouldProceed())
+        job->setProgress(1);
+
+    job->complete();
 }

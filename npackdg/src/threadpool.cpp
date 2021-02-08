@@ -22,7 +22,7 @@ ThreadPool::~ThreadPool()
     }
 }
 
-void ThreadPool::addTask(std::function<void ()> task)
+void ThreadPool::addTask(std::function<void()> &&task)
 {
     {
         std::lock_guard<std::mutex> lock{mutex};

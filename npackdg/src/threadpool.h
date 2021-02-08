@@ -32,7 +32,7 @@ public:
      * @brief adds a task
      * @param task a task
      */
-    void addTask(std::function<void()> task);
+    void addTask(std::function<void()>&& task);
 private:
     void process();
 };

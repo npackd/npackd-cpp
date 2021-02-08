@@ -986,13 +986,28 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 
                 monitor(job);
 
-                /*
-                DepTask dt(install, opsDependencies);
-                threadPool.addTask(dt);
-                */
+                std::vector<std::function<void()>> ops;
+                for (auto op: install) {
+                    ops.push_back([rep, op](){
+                        std::vector<InstallOperation*> v;
+                        v.push_back(op);
+                        Job* job = new Job();
+                        rep->process(job, v,
+                                DAG(),
+                                PackageUtils::getCloseProcessType(),
+                                false, true, "", "", "", "");
+                        delete job;
+                        delete op;
+                    });
+                }
 
+                DepTask dt(job, ops, opsDependencies, threadPool);
+                threadPool.addTask(dt);
+
+
+                /*
                 std::thread thr(WPMUtils::wrapCoInitialize(
-                    [rep, job, install, opsDependencies](){
+                    [rep, job, install, opsDependencies]() {
                     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
                     rep->process(job, install,
                             opsDependencies,
@@ -1001,6 +1016,7 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
                     qDeleteAll(install);
                 }));
                 thr.detach();
+                */
 
                 install.clear();
             }
