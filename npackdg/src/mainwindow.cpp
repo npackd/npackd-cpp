@@ -776,8 +776,6 @@ void MainWindow::monitor(Job* job)
 
     VisibleJobs::getDefault()->push_back(job);
 
-    updateProgressTabTitle();
-
     pt->addJob(job);
 }
 

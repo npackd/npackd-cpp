@@ -33,8 +33,12 @@ size_t VisibleJobs::size() const
 
 void VisibleJobs::push_back(Job *job)
 {
-    std::unique_lock<std::mutex> lock{mutex};
-    runningJobs.push_back(job);
+    {
+        std::unique_lock<std::mutex> lock{mutex};
+        runningJobs.push_back(job);
+    }
+
+    emit changed();
 }
 
 std::tuple<time_t, double> VisibleJobs::getRemainingTime() const
