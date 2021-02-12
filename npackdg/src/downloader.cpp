@@ -103,7 +103,6 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         }
     }
 
-
     if (job->shouldProceed()) {
         if (!request.user.isEmpty()) {
             setStringOption(hConnectHandle, INTERNET_OPTION_USERNAME,
@@ -159,8 +158,6 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         }
     }
 
-    qCDebug(npackd) << "HttpOpenRequestW succeeded";
-
     int64_t contentLength = -1;
 
     if (hResourceHandle != nullptr && hConnectHandle != nullptr) {
@@ -172,14 +169,8 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                     HTTP_ADDREQ_FLAG_ADD);
         }
 
-        // qCDebug(npackd) << "download.5";
         int callNumber = 0;
         while (job->shouldProceed()) {
-            // qCDebug(npackd) << "download.5.1";
-
-            // NOTE: dwStatus is only valid if sendRequestError == 0
-            DWORD dwStatus = 0, dwStatusSize = sizeof(dwStatus);
-
             DWORD sendRequestError = 0;
 
             // the following call uses NULL for headers in case there are no headers
@@ -192,116 +183,76 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 sendRequestError = GetLastError();
             }
 
-            // http://msdn.microsoft.com/en-us/library/aa384220(v=vs.85).aspx
-            if (sendRequestError == 0) {
-                if (!HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER |
-                        HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, nullptr)) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(GetLastError(), &errMsg);
-                    job->setErrorMessage(errMsg);
-                    break;
-                }
-            }
-
             qCDebug(npackd) << "Downloader::downloadWin callNumber="
                     << callNumber << ", sendRequestError="
-                    << sendRequestError << ", dwStatus=" << dwStatus;
-
-            // 2XX
-            if (sendRequestError == 0) {
-                DWORD hundreds = dwStatus / 100;
-                if (hundreds == 2 || hundreds == 5)
-                    break;
-            }
-
-            // the InternetErrorDlg calls below can either handle
-            // sendRequestError <> 0 or HTTP error code <> 2xx
-
-            void* p = nullptr;
+                    << sendRequestError;
 
             // both calls to InternetErrorDlg should be enclosed by one
             // mutex, so that only one dialog will be shown
             loginDialogMutex.lock();
 
-            DWORD r;
+            void* p = nullptr;
 
-            // first call is processed differently
-            if (callNumber == 0) {
-                r = InternetErrorDlg(nullptr,
-                       hResourceHandle, sendRequestError,
-                        FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                        FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                        FLAGS_ERROR_UI_FLAGS_GENERATE_DATA |
-                        FLAGS_ERROR_UI_FLAGS_NO_UI, &p);
-                if ((r == ERROR_SUCCESS || r == ERROR_INTERNET_INTERNAL_ERROR) && interactive)
-                    r = ERROR_INTERNET_FORCE_RETRY;
-            } else {
-                if (interactive) {
-                    if (parentWindow) {
-                        r = InternetErrorDlg(parentWindow,
-                                hResourceHandle, sendRequestError,
-                                FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
-                                FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                                FLAGS_ERROR_UI_FLAGS_GENERATE_DATA, &p);
-                    } else {
-                        if (sendRequestError == 0) {
-                            QString e = inputPassword(hConnectHandle, dwStatus);
+            if (job->shouldProceed()) {
+                if (sendRequestError == 0) {
+                    // convert HTTP status codes into errors
+                    // (FLAGS_ERROR_UI_FILTER_FOR_ERRORS)
 
-                            //qCDebug(npackd) << "inputPassword: " << e;
-                            if (!e.isEmpty()) {
-                                job->setErrorMessage(e);
-                                r = ERROR_CANCELLED;
-                            } else {
-                                r = ERROR_INTERNET_FORCE_RETRY;
-                            }
-                        } else {
-                            // cannot help
-                            r = ERROR_SUCCESS;
-                        }
-                    }
-                } else {
-                    if (sendRequestError == 0) {
-                        QString e = setPassword(hConnectHandle, dwStatus,
-                                request);
-
-                        if (!e.isEmpty()) {
-                            job->setErrorMessage(e);
-                            r = ERROR_CANCELLED;
-                        } else {
-                            r = ERROR_INTERNET_FORCE_RETRY;
-                        }
-                    } else {
-                        // cannot help
-                        r = ERROR_SUCCESS;
-                    }
+                    DWORD flags = FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
+                            FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                            FLAGS_ERROR_UI_FLAGS_GENERATE_DATA;
+                    if (!interactive || parentWindow == 0)
+                        flags |= FLAGS_ERROR_UI_FLAGS_NO_UI;
+                    sendRequestError = InternetErrorDlg(parentWindow,
+                           hResourceHandle, sendRequestError,
+                           flags, &p);
                 }
             }
 
-            //qCDebug(npackd) << callNumber << r << dwStatus << url.toString();
-
             if (job->shouldProceed()) {
-                if (r == ERROR_SUCCESS) {
-                    if (sendRequestError) {
-                        QString errMsg;
-                        WPMUtils::formatMessage(sendRequestError, &errMsg);
-                        job->setErrorMessage(errMsg);
-                    } else {
-                        job->setErrorMessage(QString(
-                                QObject::tr("HTTP status code %1")).arg(dwStatus));
+                switch (sendRequestError) {
+                    case ERROR_HTTP_REDIRECT_NEEDS_CONFIRMATION:
+                    case ERROR_INTERNET_BAD_AUTO_PROXY_SCRIPT:
+                    case ERROR_INTERNET_CHG_POST_IS_NON_SECURE:
+                    case ERROR_INTERNET_CLIENT_AUTH_CERT_NEEDED:
+                    case ERROR_INTERNET_HTTP_TO_HTTPS_ON_REDIR:
+                    case ERROR_INTERNET_HTTPS_TO_HTTP_ON_REDIR:
+                    case ERROR_INTERNET_HTTPS_HTTP_SUBMIT_REDIR:
+                    case ERROR_INTERNET_INCORRECT_PASSWORD:
+                    case ERROR_INTERNET_INVALID_CA:
+                    case ERROR_INTERNET_MIXED_SECURITY:
+                    case ERROR_INTERNET_POST_IS_NON_SECURE:
+                    case ERROR_INTERNET_SEC_CERT_CN_INVALID:
+                    case ERROR_INTERNET_SEC_CERT_ERRORS:
+                    case ERROR_INTERNET_SEC_CERT_DATE_INVALID:
+                    case ERROR_INTERNET_SEC_CERT_REV_FAILED:
+                    case ERROR_INTERNET_SEC_CERT_REVOKED:
+                    case ERROR_INTERNET_UNABLE_TO_DOWNLOAD_SCRIPT:
+                    {
+                        DWORD flags = FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
+                                FLAGS_ERROR_UI_FLAGS_GENERATE_DATA;
+                        if (!interactive || parentWindow == 0)
+                            flags |= FLAGS_ERROR_UI_FLAGS_NO_UI;
+                        sendRequestError = InternetErrorDlg(parentWindow,
+                               hResourceHandle, sendRequestError,
+                               flags, &p);
                     }
-                } else if (r == ERROR_INTERNET_FORCE_RETRY) {
-                    // nothing
-                } else if (r == ERROR_CANCELLED) {
-                    job->setErrorMessage(QObject::tr("Cancelled by the user"));
-                } else if (r == ERROR_INVALID_HANDLE) {
-                    job->setErrorMessage(QObject::tr("Invalid handle"));
-                } else {
-                    job->setErrorMessage(QString(
-                            QObject::tr("Unknown error %1 from InternetErrorDlg in attempt %2")).arg(r).arg(callNumber + 1));
                 }
             }
 
             loginDialogMutex.unlock();
+
+            if (job->shouldProceed()) {
+                if (sendRequestError == ERROR_SUCCESS) {
+                    break;
+                } else if (sendRequestError == ERROR_INTERNET_FORCE_RETRY) {
+                    // nothing
+                } else if (sendRequestError == ERROR_CANCELLED) {
+                    QString error;
+                    WPMUtils::formatMessage(sendRequestError, &error);
+                    job->setErrorMessage(error);
+                }
+            }
 
             if (!job->shouldProceed())
                 break;
@@ -312,21 +263,21 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 DWORD read;
                 if (!InternetReadFile(hResourceHandle, &smallBuffer,
                         sizeof(smallBuffer), &read)) {
-                    QString errMsg;
-                    WPMUtils::formatMessage(GetLastError(), &errMsg);
-                    job->setErrorMessage(errMsg);
-                    goto out;
+                    break;
                 }
 
-                // qCDebug(npackd) << "read some bytes " << read;
                 if (read == 0)
                     break;
             }
 
             callNumber++;
+
+            if (callNumber > 2) {
+                job->setErrorMessage(QObject::tr("Too many retries"));
+                break;
+            }
         }; // while (job->shouldProceed())
 
-    out:
         if (job->shouldProceed()) {
             DWORD dwStatus, dwStatusSize = sizeof(dwStatus);
 
@@ -456,49 +407,6 @@ QString Downloader::setStringOption(HINTERNET hInternet, DWORD dwOption,
             static_cast<DWORD>(value.length() + 1))) {
         WPMUtils::formatMessage(GetLastError(), &result);
     }
-    return result;
-}
-
-QString Downloader::setPassword(HINTERNET hConnectHandle,
-        DWORD dwStatus, const Request& request)
-{
-    QString result;
-
-    if (dwStatus == HTTP_STATUS_PROXY_AUTH_REQ) {
-        if (request.proxyUser.isEmpty()) {
-            result = QString(QObject::tr("Cannot handle HTTP status code %1")).
-                    arg(dwStatus);
-        }
-
-        if (result.isEmpty()) {
-            result = setStringOption(hConnectHandle,
-                    INTERNET_OPTION_PROXY_USERNAME, request.proxyUser);
-        }
-
-        if (result.isEmpty()) {
-            result = setStringOption(hConnectHandle,
-                INTERNET_OPTION_PROXY_PASSWORD, request.proxyPassword);
-        }
-    } else if (dwStatus == HTTP_STATUS_DENIED) {
-        if (request.user.isEmpty()) {
-            result = QString(QObject::tr("Cannot handle HTTP status code %1")).
-                    arg(dwStatus);
-        }
-
-        if (result.isEmpty()) {
-            result = setStringOption(hConnectHandle,
-                INTERNET_OPTION_USERNAME, request.user);
-        }
-
-        if (result.isEmpty()) {
-            result = setStringOption(hConnectHandle,
-                INTERNET_OPTION_PASSWORD, request.password);
-        }
-    } else {
-        result = QString(QObject::tr("Cannot handle HTTP status code %1")).
-                arg(dwStatus);
-    }
-
     return result;
 }
 

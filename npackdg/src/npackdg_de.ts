@@ -1026,11 +1026,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cancelled by the user</source>
-        <translation>Vom Benutzer abgebrochen</translation>
+        <translation type="vanished">Vom Benutzer abgebrochen</translation>
     </message>
     <message>
         <source>Invalid handle</source>
-        <translation>Ungültiger Handle</translation>
+        <translation type="vanished">Ungültiger Handle</translation>
     </message>
     <message>
         <source>Unknown error %1 from InternetErrorDlg</source>
@@ -2526,7 +2526,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unknown error %1 from InternetErrorDlg in attempt %2</source>
-        <translation>Unbekannter Fehler %1 von InternetErrorDlg beim Versuch %2</translation>
+        <translation type="vanished">Unbekannter Fehler %1 von InternetErrorDlg beim Versuch %2</translation>
     </message>
     <message>
         <source>Saving detected packages %1</source>
@@ -2778,6 +2778,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting Windows Update packages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Too many retries</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

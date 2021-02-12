@@ -242,10 +242,6 @@ private:
      */
     static int64_t downloadWin(Job* job, const Downloader::Request& request,
                                Response *response);
-
-    static QString setPassword(HINTERNET hConnectHandle, DWORD dwStatus,
-                               const Request &request);
-
 protected:
     static QString setStringOption(HINTERNET hInternet, DWORD dwOption,
         const QString &value);
