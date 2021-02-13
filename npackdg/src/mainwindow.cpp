@@ -968,17 +968,15 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 
                 monitor(job);
 
-                std::vector<std::function<void()>> ops;
+                std::vector<std::function<void(Job*)>> ops;
                 for (auto op: install) {
-                    ops.push_back([rep, op](){
+                    ops.push_back([rep, op](Job* job){
                         std::vector<InstallOperation*> v;
                         v.push_back(op);
-                        Job* job = new Job("install TODO");
                         rep->process(job, v,
                                 DAG(),
                                 PackageUtils::getCloseProcessType(),
                                 false, true, "", "", "", "");
-                        delete job;
                         delete op;
                     });
                 }

@@ -7,7 +7,7 @@ DepTask::DepTask(const DepTask &other): job(other.job),
 {
 }
 
-DepTask::DepTask(Job* job, const std::vector<std::function<void ()> > &tasks,
+DepTask::DepTask(Job* job, const std::vector<std::function<void(Job *)>> &tasks,
         const DAG &dependencies, ThreadPool &threadPool):
     job(job), tasks(tasks), dependencies(dependencies), threadPool(threadPool)
 {
@@ -55,7 +55,9 @@ void DepTask::operator ()()
             }
 
             threadPool.addTask([this, found, &status, &statusMutex, &doneCount](){
-                (tasks[found])();
+                Job* sub = this->job->newSubJob(1.0 / this->tasks.size(),
+                        "Operation TODO", true, true);
+                (tasks[found])(sub);
                 cv.notify_one();
 
                 {
@@ -68,9 +70,6 @@ void DepTask::operator ()()
 
         {
             std::unique_lock<std::mutex> lock{statusMutex};
-
-            if (order.size() > 0)
-                job->setProgress(static_cast<double>(doneCount) / order.size());
 
             if (doneCount == static_cast<int>(order.size()))
                 break;

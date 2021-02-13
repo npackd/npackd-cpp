@@ -16,7 +16,7 @@
 class DepTask
 {
     Job* job;
-    const std::vector<std::function<void()>> tasks;
+    const std::vector<std::function<void(Job*)>> tasks;
     DAG dependencies;
     ThreadPool& threadPool;
     std::condition_variable cv;
@@ -33,7 +33,7 @@ public:
      *     to "v" means that "u" depends on "v".
      * @param threadPool the tasks will be executed here
      */
-    DepTask(Job* job, const std::vector<std::function<void()>>& tasks,
+    DepTask(Job* job, const std::vector<std::function<void(Job*)>>& tasks,
             const DAG& dependencies, ThreadPool& threadPool);
 
     void operator()();
