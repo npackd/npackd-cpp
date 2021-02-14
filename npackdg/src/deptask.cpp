@@ -56,7 +56,7 @@ void DepTask::operator ()()
 
             threadPool.addTask([this, found, &status, &statusMutex, &doneCount](){
                 Job* sub = this->job->newSubJob(1.0 / this->tasks.size(),
-                        "Operation TODO", true, true);
+                        QObject::tr("Installation operation"), true, true);
                 (tasks[found])(sub);
                 cv.notify_one();
 

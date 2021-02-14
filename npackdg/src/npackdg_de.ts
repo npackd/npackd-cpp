@@ -2784,6 +2784,10 @@ p, li { white-space: pre-wrap; }
         <source>Too many retries</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Installation operation</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
