@@ -7,7 +7,6 @@
 #include <QString>
 #include <QObject>
 #include <QMetaType>
-#include <QMutex>
 #include <QTime>
 
 class Job;

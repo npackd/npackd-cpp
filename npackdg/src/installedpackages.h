@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <memory>
 #include <unordered_map>
+#include <mutex>
 
 #include <QObject>
 #include <QString>
@@ -28,7 +29,7 @@ class InstalledPackages: public QObject
 private:
     static InstalledPackages def;
 
-    mutable QMutex mutex;
+    mutable std::recursive_mutex mutex;
 
     /** please use the mutex to access the data */
     std::unordered_map<QString, InstalledPackageVersion*> data;

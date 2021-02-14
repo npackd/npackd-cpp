@@ -42,12 +42,11 @@ InstalledPackages* InstalledPackages::getDefault()
     return &def;
 }
 
-InstalledPackages::InstalledPackages() : mutex(QMutex::Recursive)
+InstalledPackages::InstalledPackages()
 {
 }
 
-InstalledPackages::InstalledPackages(const InstalledPackages &other) :
-        QObject(), mutex(QMutex::Recursive)
+InstalledPackages::InstalledPackages(const InstalledPackages &other): QObject()
 {
     *this = other;
 }

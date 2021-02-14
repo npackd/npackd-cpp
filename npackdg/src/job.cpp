@@ -3,8 +3,6 @@
 
 #include <QLoggingCategory>
 
-#include "qmutex.h"
-
 #include "wpmutils.h"
 
 #include "job.h"
