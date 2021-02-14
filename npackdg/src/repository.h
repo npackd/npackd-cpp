@@ -8,7 +8,6 @@
 #include "qurl.h"
 #include "qtemporaryfile.h"
 #include "qdom.h"
-#include <QMutex>
 
 #include "package.h"
 #include "packageversion.h"

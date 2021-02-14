@@ -4,6 +4,7 @@
 #include <guiddef.h>
 #include <windows.h>
 #include <unordered_set>
+#include <mutex>
 
 #include <QString>
 #include <QMetaType>
@@ -53,7 +54,7 @@ private:
     static std::unordered_set<QString> lockedPackageVersions;
 
     /** mutex for lockedPackageVersions */
-    static QMutex lockedPackageVersionsMutex;
+    static std::recursive_mutex lockedPackageVersionsMutex;
 
     bool createShortcuts(const QString& dir, QString* errMsg);
 

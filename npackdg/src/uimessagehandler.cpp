@@ -4,7 +4,6 @@
 #include <fstream>
 
 #include "QtMessageHandler"
-#include "QMutex"
 #include "QLoggingCategory"
 #include "QTime"
 
@@ -17,8 +16,7 @@ std::mutex logMutex;
 
 void clearLogMessages()
 {
-    static QMutex mutex;
-    QMutexLocker lock(&mutex);
+    std::lock_guard<std::mutex> lock(logMutex);
 
     logMessages.clear();
 }

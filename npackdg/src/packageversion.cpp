@@ -41,7 +41,7 @@
 
 QSemaphore PackageVersion::httpConnections(3);
 std::unordered_set<QString> PackageVersion::lockedPackageVersions;
-QMutex PackageVersion::lockedPackageVersionsMutex(QMutex::Recursive);
+std::recursive_mutex PackageVersion::lockedPackageVersionsMutex;
 
 /**
  * Creates an instance of IAttachmentExecute
