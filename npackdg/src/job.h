@@ -2,6 +2,7 @@
 #define JOB_H
 
 #include <windows.h>
+#include <mutex>
 
 #include <QString>
 #include <QObject>
@@ -44,7 +45,7 @@ class Job: public QObject
 {
     Q_OBJECT
 private:
-    mutable QMutex mutex;
+    mutable std::recursive_mutex mutex;
 
     /** timeout in seconds or 0 or "unlimited" */
     int timeout = 0;

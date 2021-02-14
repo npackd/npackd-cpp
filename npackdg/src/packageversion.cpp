@@ -12,7 +12,6 @@
 
 #include <QUrl>
 #include <QIODevice>
-#include <QMutex>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QTemporaryDir>

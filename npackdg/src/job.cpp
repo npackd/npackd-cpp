@@ -9,8 +9,7 @@
 
 #include "job.h"
 
-Job::Job(const QString &title, Job *parent):
-        mutex(QMutex::Recursive), parentJob(parent)
+Job::Job(const QString &title, Job *parent): parentJob(parent)
 {
     this->title = title;
     this->progress = 0.0;
