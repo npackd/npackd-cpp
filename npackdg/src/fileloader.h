@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <random>
+#include <mutex>
 
 #include "qmetatype.h"
 #include <QObject>
@@ -11,7 +12,6 @@
 #include <QMutex>
 #include <QTemporaryDir>
 #include <QSqlError>
-#include <QMutex>
 
 #include "mysqlquery.h"
 #include "dbrepository.h"
@@ -42,7 +42,7 @@ class FileLoader: public QObject
     std::unique_ptr<MySQLQuery> insertURLInfosQuery;
     std::unique_ptr<MySQLQuery> updateURLQuery;
 
-    QMutex mutex;
+    std::mutex mutex;
 
     /**
      * @brief downloads a file

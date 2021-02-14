@@ -13,7 +13,7 @@
 
 QtMessageHandler oldMessageHandler = nullptr;
 std::vector<QString> logMessages;
-QMutex logMutex;
+std::mutex logMutex;
 
 void clearLogMessages()
 {
@@ -24,7 +24,7 @@ void clearLogMessages()
 }
 
 void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message) {
-    QMutexLocker lock(&logMutex);
+    std::lock_guard<std::mutex> lock(logMutex);
 
     if (!npackd().isEnabled(type))
         return;

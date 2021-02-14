@@ -1,11 +1,12 @@
 #ifndef EVENTLOGMESSAGEHANDLER_H
 #define EVENTLOGMESSAGEHANDLER_H
 
+#include <mutex>
+
 #include "QString"
-#include "QMutex"
 
 extern QtMessageHandler oldMessageHandler;
-extern QMutex logMutex;
+extern std::mutex logMutex;
 
 /**
  * @brief logs to the Windows event log and to the console

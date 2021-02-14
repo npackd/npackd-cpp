@@ -19,7 +19,6 @@
 #include "repositoryxmlhandler.h"
 
 Repository Repository::def;
-QMutex Repository::mutex;
 
 Repository::Repository(): AbstractRepository()
 {

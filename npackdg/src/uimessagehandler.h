@@ -2,13 +2,13 @@
 #define EVENTLOGMESSAGEHANDLER_H
 
 #include <vector>
+#include <mutex>
 
 #include "QString"
-#include "QMutex"
 
 extern QtMessageHandler oldMessageHandler;
 extern std::vector<QString> logMessages;
-extern QMutex logMutex;
+extern std::mutex logMutex;
 
 void clearLogMessages();
 

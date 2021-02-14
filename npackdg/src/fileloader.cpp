@@ -223,7 +223,7 @@ FileLoader::~FileLoader()
 std::tuple<FileLoader::DownloadFile, QString>
         FileLoader::findURLInfo(const QString& url)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::mutex> ml(this->mutex);
 
     QString err = "";
     DownloadFile info;
@@ -257,7 +257,7 @@ std::tuple<FileLoader::DownloadFile, QString>
 
 QString FileLoader::exec(const QString& sql)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::mutex> ml(this->mutex);
 
     MySQLQuery q(db);
     q.exec(sql);

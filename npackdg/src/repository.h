@@ -74,12 +74,6 @@ public:
     std::unordered_multimap<QString, PackageVersion*> package2versions;
 
     /**
-     * @brief any operation (reading or writing) on repositories, packages,
-     *     package versions, licenses etc. should be done under this lock
-     */
-    static QMutex mutex;
-
-    /**
      * Checks the specified value in <spec-version></spec-version> to be a valid
      * and compatible version number
      *

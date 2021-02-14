@@ -2,19 +2,19 @@
 
 #include <iostream>
 #include <fstream>
+#include <mutex>
 
 #include "QtMessageHandler"
-#include "QMutex"
 #include "QLoggingCategory"
 #include "QTime"
 
 #include "wpmutils.h"
 
 QtMessageHandler oldMessageHandler = nullptr;
-QMutex logMutex;
+std::mutex logMutex;
 
 void eventLogMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& message) {
-    QMutexLocker lock(&logMutex);
+    std::lock_guard<std::mutex> lock(logMutex);
 
     if (!npackd().isEnabled(type))
         return;
