@@ -3,12 +3,12 @@
 
 #include <memory>
 #include <unordered_map>
+#include <mutex>
 
 #include <QString>
 #include <QSqlError>
 #include <QSqlDatabase>
 #include <QCache>
-#include <QMutex>
 
 #include "package.h"
 #include "repository.h"
@@ -35,7 +35,7 @@ private:
 
     static QString toString(const QSqlError& e);
 
-    mutable QMutex mutex;
+    mutable std::recursive_mutex mutex;
 
     QCache<QString, License> licenses;
     mutable QCache<QString, PackageVersionList> packageVersions;

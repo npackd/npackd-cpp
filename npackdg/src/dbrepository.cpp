@@ -18,7 +18,6 @@
 #include <QTemporaryDir>
 #include <QSqlResult>
 #include <QtPlugin>
-#include <QMutexLocker>
 
 #include "package.h"
 #include "repository.h"
@@ -45,7 +44,7 @@ static bool packageVersionLessThan3(const PackageVersion* a,
 
 DBRepository DBRepository::def;
 
-DBRepository::DBRepository(): mutex(QMutex::Recursive)
+DBRepository::DBRepository()
 {
     currentRepository = -1;
     replacePackageVersionQuery = nullptr;
@@ -81,7 +80,7 @@ QString DBRepository::saveInstalled(const std::vector<InstalledPackageVersion *>
 {
     QString err;
 
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     if (!insertInstalledQuery) {
         insertInstalledQuery = new MySQLQuery(db);
@@ -133,7 +132,7 @@ DBRepository* DBRepository::getDefault()
 
 QString DBRepository::exec(const QString& sql)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     MySQLQuery q(db);
     q.exec(sql);
@@ -144,7 +143,7 @@ QString DBRepository::exec(const QString& sql)
 
 int DBRepository::count(const QString& sql, QString* err)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     int n = 0;
 
@@ -171,7 +170,7 @@ int DBRepository::count(const QString& sql, QString* err)
 
 QString DBRepository::saveLicense(License* p, bool replace)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -205,7 +204,7 @@ QString DBRepository::saveLicense(License* p, bool replace)
 
 Package *DBRepository::findPackage_(const QString &name) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -282,7 +281,7 @@ Package *DBRepository::findPackage_(const QString &name) const
 
 std::vector<Package*> DBRepository::findPackages(const std::vector<QString>& names)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     std::vector<Package*> ret;
     QString err;
@@ -367,7 +366,7 @@ std::vector<Package*> DBRepository::findPackages(const std::vector<QString>& nam
 
 QString DBRepository::findCategory(int cat) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     auto it = categories.find(cat);
     QString r;
@@ -381,7 +380,7 @@ QString DBRepository::findCategory(int cat) const
 PackageVersion* DBRepository::findPackageVersion_(
         const QString& package, const Version& version, QString* err) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     *err = "";
 
@@ -414,7 +413,7 @@ PackageVersion* DBRepository::findPackageVersion_(
 std::vector<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
         QString *err) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     *err = "";
 
@@ -467,7 +466,7 @@ std::vector<PackageVersion*> DBRepository::getPackageVersions_(const QString& pa
 std::vector<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
         const QString &name, QString *err) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     *err = "";
 
@@ -505,7 +504,7 @@ std::vector<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
 
 License *DBRepository::findLicense_(const QString& name, QString *err)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     *err = QStringLiteral("");
 
@@ -763,7 +762,7 @@ std::vector<QString> DBRepository::findPackages(Package::Status minStatus,
 
 std::vector<QString> DBRepository::getCategories(const std::vector<QString>& ids, QString* err)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     *err = "";
 
@@ -809,7 +808,7 @@ std::vector<std::vector<QString>> DBRepository::findCategories(Package::Status m
             where + QStringLiteral(" GROUP BY CATEGORY.ID, CATEGORY.NAME "
             "ORDER BY CATEGORY.NAME");
 
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     MySQLQuery q(db);
 
@@ -843,7 +842,7 @@ std::vector<QString> DBRepository::findPackagesWhere(const QString& sql,
         const std::vector<QVariant>& params,
         QString *err) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     *err = QStringLiteral("");
 
@@ -874,7 +873,7 @@ std::vector<QString> DBRepository::findPackagesWhere(const QString& sql,
 int DBRepository::insertCategory(int parent, int level,
         const QString& category, QString* err)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     int id = -1;
 
@@ -931,7 +930,7 @@ int DBRepository::insertCategory(int parent, int level,
 
 QString DBRepository::deleteLinks(const QString& name)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -956,7 +955,7 @@ QString DBRepository::deleteLinks(const QString& name)
 
 QString DBRepository::deleteTags(const QString& name)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -981,7 +980,7 @@ QString DBRepository::deleteTags(const QString& name)
 
 QString DBRepository::deleteCmdFiles(const QString& name, const Version& version)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -1010,7 +1009,7 @@ QString DBRepository::deleteCmdFiles(const QString& name, const Version& version
 
 QString DBRepository::saveLinks(Package* p)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -1052,7 +1051,7 @@ QString DBRepository::saveLinks(Package* p)
 
 QString DBRepository::saveTags(Package* p)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -1132,7 +1131,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
         }
     }
 
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     if (!insertPackageQuery) {
         insertPackageQuery = new MySQLQuery(db);
@@ -1266,7 +1265,7 @@ QString DBRepository::savePackage(Package *p, bool replace)
 
 std::vector<Package*> DBRepository::findPackagesByShortName(const QString &name) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -1314,7 +1313,7 @@ std::vector<Package*> DBRepository::findPackagesByShortName(const QString &name)
 
 QString DBRepository::readLinks(Package* p) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -1341,7 +1340,7 @@ QString DBRepository::readLinks(Package* p) const
 
 QString DBRepository::readTags(Package* p) const
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -1368,7 +1367,7 @@ QString DBRepository::readTags(Package* p) const
 
 QString DBRepository::savePackageVersion(PackageVersion *p, bool replace)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -2038,7 +2037,7 @@ QString DBRepository::toString(const QSqlError& e)
 
 QString DBRepository::readCategories()
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 
@@ -2067,7 +2066,7 @@ QString DBRepository::readCategories()
 
 std::vector<QString> DBRepository::readRepositories(QString* err)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     std::vector<QString> r;
 
@@ -2095,7 +2094,7 @@ std::vector<QString> DBRepository::readRepositories(QString* err)
 
 QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString r;
 
@@ -2124,7 +2123,7 @@ QString DBRepository::getRepositorySHA1(const QString& url, QString* err)
 void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
         QString* err)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     MySQLQuery q(db);
 
@@ -2144,7 +2143,7 @@ void DBRepository::setRepositorySHA1(const QString& url, const QString& sha1,
 
 QString DBRepository::saveRepositories(const std::vector<QString> &reps)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err = exec(QStringLiteral("DELETE FROM REPOSITORY"));
 
@@ -2196,7 +2195,7 @@ QString DBRepository::getCategoryPath(int c0, int c1, int c2, int c3,
 
 QString DBRepository::updateStatus(const QString& package)
 {
-    QMutexLocker ml(&this->mutex);
+    std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
     QString err;
 

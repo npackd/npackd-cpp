@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QUrl>
 #include <QTemporaryFile>
-#include <QMutex>
 #include <QTemporaryDir>
 #include <QSqlError>
 

@@ -7,7 +7,6 @@
 
 #include <QObject>
 #include <QWaitCondition>
-#include <QMutex>
 #include <QCryptographicHash>
 #include <QLoggingCategory>
 
