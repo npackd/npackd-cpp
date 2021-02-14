@@ -16,7 +16,7 @@
 #include "wpmutils.h"
 
 HWND defaultPasswordWindow = nullptr;
-QMutex loginDialogMutex;
+std::mutex loginDialogMutex;
 
 DWORD __stdcall myInternetAuthNotifyCallback(DWORD_PTR /* dwContext */,
         DWORD dwReturn, LPVOID /* lpReserved */) {

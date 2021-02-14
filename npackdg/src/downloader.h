@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <wininet.h>
+#include <mutex>
 
 #include <QTemporaryFile>
 #include <QUrl>
@@ -14,7 +15,7 @@
 #include "job.h"
 
 extern HWND defaultPasswordWindow;
-extern QMutex loginDialogMutex;
+extern std::mutex loginDialogMutex;
 
 /**
  * Blocks execution and downloads a file over http.
