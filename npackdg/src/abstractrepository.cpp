@@ -780,6 +780,11 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                             installed = installedCopy;
                             ops.push_back(ops2[0]);
                             ops.push_back(ops2[1]);
+
+                            // the installation depends on the un-installation
+                            opsDependencies.addEdge(ops.size() - 1,
+                                    ops.size() - 2);
+
                             ops2.clear();
                         }
                     }
@@ -813,6 +818,8 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 if (!err.isEmpty())
                     break;
 
+                int sizeAfterInstallation = ops.size();
+
                 PackageVersion* b = newesti.at(i);
                 if (b) {
                     err = planUninstallation(installedCopy, b->package,
@@ -833,6 +840,15 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     }
                 } else {
                     installed = installedCopy;
+
+                    // all un-installation operations depend on all installation
+                    // operations
+                    for (int i = sizeAfterInstallation;
+                            i < static_cast<int>(ops.size()); i++) {
+                        for (int j = oldSize; j < sizeAfterInstallation; j++) {
+                            opsDependencies.addEdge(i, j);
+                        }
+                    }
                 }
             }
         }
