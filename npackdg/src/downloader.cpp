@@ -257,16 +257,18 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                 break;
 
             // read all the data before re-sending the request
-            char smallBuffer[4 * 1024];
-            while (true) {
-                DWORD read;
-                if (!InternetReadFile(hResourceHandle, &smallBuffer,
-                        sizeof(smallBuffer), &read)) {
-                    break;
-                }
+            if (!request.ignoreContent) {
+                char smallBuffer[4 * 1024];
+                while (true) {
+                    DWORD read;
+                    if (!InternetReadFile(hResourceHandle, &smallBuffer,
+                            sizeof(smallBuffer), &read)) {
+                        break;
+                    }
 
-                if (read == 0)
-                    break;
+                    if (read == 0)
+                        break;
+                }
             }
 
             callNumber++;
