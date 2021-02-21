@@ -213,7 +213,7 @@ qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
 SET(NPACKDG_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
-SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} Qt5::WinExtras Qt5VulkanSupport Qt5::Widgets Qt5FontDatabaseSupport Qt5::QSvgIconPlugin Qt5::QSvgPlugin Qt5::Svg Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core)
+SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} Qt5::WinExtras Qt5::Widgets Qt5FontDatabaseSupport Qt5::QSvgIconPlugin Qt5::QSvgPlugin Qt5::Svg Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core)
 
 if(${NPACKD_FORCE_STATIC})
     SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} qsqlite qicns qico qjpeg qgif qtga qtiff qwbmp qwebp qwindows qwindowsvistastyle)
