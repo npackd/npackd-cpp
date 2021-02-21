@@ -1950,7 +1950,7 @@ QString GetObjectNameThread::getName() {
     QString r;
     {
         std::unique_lock<std::mutex> lck(mutex_);
-        cv.wait_for(lck, std::chrono::seconds(1),
+        cv.wait_for(lck, std::chrono::milliseconds(100),
                 [this]{ return done; });
         d = done;
         r = name;
