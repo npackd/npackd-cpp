@@ -615,7 +615,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             if (d.exists()) {
                 qCWarning(npackd).noquote() << QObject::tr(
                         "Failed to delete the package directory \"%1\": %2").
-                        arg(d.absolutePath()).arg(rjob->getErrorMessage());
+                        arg(d.absolutePath(), rjob->getErrorMessage());
             }
 
             QString err = setPath("");
@@ -879,7 +879,7 @@ void PackageVersion::downloadTo(Job& job, const QString& filename, bool interact
                 dsha1 = response.hashSum;
                 if (!djob->getErrorMessage().isEmpty())
                     job.setErrorMessage(QObject::tr("Error downloading %1: %2").
-                        arg(this->download.toString()).arg(
+                        arg(this->download.toString(),
                         djob->getErrorMessage()));
                 f->close();
             }
@@ -958,7 +958,7 @@ std::vector<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(cons
                     if (ipvs.size() == 0) {
                         *err = QObject::tr(
                                 "Package %1 (%2) is not installed").
-                                arg(p->title).arg(p->name);
+                                arg(p->title, p->name);
                     } else if (ipvs.size() > 1) {
                         QString vns;
                         for (auto ipv: ipvs) {
@@ -968,15 +968,15 @@ std::vector<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(cons
                         }
                         *err = QObject::tr(
                                 "More than one version of the package %1 (%2) "
-                                "is installed: %3").arg(p->title).arg(p->name).
-                                arg(vns);
+                                "is installed: %3").arg(p->title, p->name,
+                                vns);
                     } else {
                         pv = rep->findPackageVersion_(p->name,
                                 ipvs.at(0)->version, err);
                         if (err->isEmpty()) {
                             if (!pv) {
                                 *err = QObject::tr("Package version not found: %1 (%2) %3").
-                                        arg(p->title).arg(p->name).arg(version);
+                                        arg(p->title, p->name, version);
                             }
                         }
                     }
@@ -1233,7 +1233,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
         withVersion = commonStartMenu + "\\" + withVersion;
 
         QString from;
-        if (QFileInfo(simple).exists())
+        if (QFileInfo::exists(simple))
             from = WPMUtils::findNonExistingFile(withVersion, ".lnk");
         else
             from = simple;
@@ -1259,7 +1259,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
 
         if (!r.isEmpty()) {
             *errMsg = QString(QObject::tr("Shortcut creation from %1 to %2 failed: %3")).
-                    arg(from).arg(path).arg(r);
+                    arg(from, path, r);
             break;
         }
     }
@@ -1291,7 +1291,7 @@ QString PackageVersion::getPreferredInstallationDirectory()
             PackageUtils::getInstallationDirectory() + "\\" +
             WPMUtils::makeValidFilename(this->getPackageTitle(), '_'),
             false);
-    if (!QFileInfo(name).exists())
+    if (!QFileInfo::exists(name))
         return name;
     else
         return WPMUtils::findNonExistingFile(name + "-" +
@@ -1418,7 +1418,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
                 dsha1 = response.hashSum;
                 if (!djob->getErrorMessage().isEmpty())
                     job->setErrorMessage(QObject::tr("Error downloading %1: %2").
-                        arg(this->download.toString()).arg(
+                        arg(this->download.toString(),
                         djob->getErrorMessage()));
                 f->close();
             }
@@ -1434,8 +1434,8 @@ QString PackageVersion::download_(Job* job, const QString& where,
         if (!this->sha1.isEmpty()) {
             if (dsha1.toLower() != this->sha1.toLower()) {
                 job->setErrorMessage(QString(
-                        QObject::tr("Hash sum %1 found, but %2 was expected. The file has changed.")).arg(dsha1).
-                        arg(this->sha1));
+                        QObject::tr("Hash sum %1 found, but %2 was expected. The file has changed.")).arg(dsha1,
+                        this->sha1));
             } else {
                 job->setProgress(0.91);
             }
@@ -1477,8 +1477,8 @@ QString PackageVersion::download_(Job* job, const QString& where,
             if (!djob->getErrorMessage().isEmpty())
                 job->setErrorMessage(QString(
                         QObject::tr("Error unzipping file into directory %0: %1")).
-                        arg(d.absolutePath()).
-                        arg(djob->getErrorMessage()));
+                        arg(d.absolutePath(),
+                        djob->getErrorMessage()));
             else if (!job->isCancelled())
                 job->setProgress(0.98);
         } else {
@@ -1495,7 +1495,7 @@ QString PackageVersion::download_(Job* job, const QString& where,
 
             if (!QFile::rename(f->fileName(), t)) {
                 job->setErrorMessage(QString(QObject::tr("Cannot rename %0 to %1")).
-                        arg(f->fileName()).arg(t));
+                        arg(f->fileName(), t));
             } else {
                 job->setProgress(0.98);
             }

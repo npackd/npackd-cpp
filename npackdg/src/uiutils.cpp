@@ -54,7 +54,7 @@ bool UIUtils::confirmInstallOperations(QWidget* parent,
         PackageVersion* pv = op->findPackageVersion(err);
         if (!err->isEmpty()) {
             *err = QObject::tr("Cannot find the package version %1: %2").arg(
-                    pv->toString()).arg(*err);
+                    pv->toString(), *err);
             break;
         }
         pvs.push_back(pv);

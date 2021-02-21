@@ -1635,7 +1635,7 @@ void DBRepository::load(Job* job, const std::vector<QUrl *> &repositories, bool 
             if (!s->getErrorMessage().isEmpty()) {
                 job->setErrorMessage(QString(
                         QObject::tr("Error loading the repository %1: %2")).arg(
-                        repositories.at(i)->toString()).arg(
+                        repositories.at(i)->toString(),
                         s->getErrorMessage()));
                 break;
             }
@@ -1666,8 +1666,8 @@ void DBRepository::loadOne(Job* job, QFile* f, const QUrl& url) {
                 if (!sub->getErrorMessage().isEmpty()) {
                     job->setErrorMessage(
                             QObject::tr("Unzipping the repository %1 failed: %2").
-                            arg(f->fileName()).
-                            arg(sub->getErrorMessage()));
+                            arg(f->fileName(),
+                            sub->getErrorMessage()));
                 } else {
                     QString repfn = dir->path() + QStringLiteral("\\Rep.xml");
                     if (QFile::exists(repfn)) {

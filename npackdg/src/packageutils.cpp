@@ -105,8 +105,8 @@ std::vector<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
                             if (err->isEmpty()) {
                                 if (!pv) {
                                     *err = QObject::tr("Package version not found: %1 (%2) %3").
-                                            arg(p->title).arg(p->name).
-                                            arg(ipv->version.getVersionString());
+                                            arg(p->title, p->name,
+                                            ipv->version.getVersionString());
                                 }
                             }
                             delete ipv;
@@ -116,8 +116,8 @@ std::vector<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
                             if (err->isEmpty()) {
                                 if (!pv) {
                                     *err = QObject::tr("Package version not found: %1 (%2) %3").
-                                            arg(p->title).arg(p->name).
-                                            arg(versions);
+                                            arg(p->title, p->name,
+                                            versions);
                                 }
                             }
                         }
@@ -128,7 +128,7 @@ std::vector<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
                     if (err->isEmpty()) {
                         if (!pv) {
                             *err = QObject::tr("No installable version was found for the package %1 (%2)").
-                                    arg(p->title).arg(p->name);
+                                    arg(p->title, p->name);
                         }
                     }
                 } else {
@@ -143,7 +143,7 @@ std::vector<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
                         if (err->isEmpty()) {
                             if (!pv) {
                                 *err = QObject::tr("Package version not found: %1 (%2) %3").
-                                        arg(p->title).arg(p->name).arg(version);
+                                        arg(p->title, p->name, version);
                             }
                         }
                     }

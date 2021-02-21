@@ -1454,7 +1454,7 @@ void MainWindow::updateRunAction()
                         p->name, &err);
                 if (!err.isEmpty()) {
                     err = QObject::tr("Error finding the newest installed version for %1: %2").
-                            arg(p->title).arg(err);
+                            arg(p->title, err);
                     addErrorMessage(err, err, true, QMessageBox::Critical);
                 }
 
@@ -1650,12 +1650,12 @@ void MainWindow::openLicense(const QString& name, bool select)
 {
     int index = this->findLicenseTab(name);
     if (index < 0) {
-        LicenseForm* f = new LicenseForm(this->ui->tabWidget);
         QString err;
         License* lic =
                 DBRepository::getDefault()->
                 findLicense_(name, &err);
         if (err.isEmpty()) {
+            LicenseForm* f = new LicenseForm(this->ui->tabWidget);
             f->fillForm(lic);
             this->ui->tabWidget->addTab(f, lic->title);
         } else {
@@ -1673,8 +1673,6 @@ void MainWindow::openPackageVersion(const QString& package,
 {
     int index = this->findPackageVersionTab(package, version);
     if (index < 0) {
-        PackageVersionForm* pvf = new PackageVersionForm(
-                this->ui->tabWidget);
         QString err;
         PackageVersion* pv_ =
                 DBRepository::getDefault()->
@@ -1682,6 +1680,8 @@ void MainWindow::openPackageVersion(const QString& package,
         if (!err.isEmpty())
             addErrorMessage(err, err, true, QMessageBox::Critical);
         if (pv_) {
+            PackageVersionForm* pvf = new PackageVersionForm(
+                    this->ui->tabWidget);
             pvf->fillForm(pv_);
             QIcon icon = getPackageIcon(package);
             this->ui->tabWidget->addTab(pvf, icon, pv_->toString());
@@ -1696,9 +1696,9 @@ void MainWindow::openPackage(const QString& package, bool select)
 {
     int index = this->findPackageTab(package);
     if (index < 0) {
-        PackageFrame* pf = new PackageFrame(this->ui->tabWidget);
         Package* p_ = DBRepository::getDefault()->findPackage_(package);
         if (p_) {
+            PackageFrame* pf = new PackageFrame(this->ui->tabWidget);
             pf->fillForm(p_);
             QIcon icon = getPackageIcon(package);
             QString t = p_->title;
@@ -2456,8 +2456,8 @@ void MainWindow::on_actionCheck_dependencies_triggered()
                 if (!ip->isInstalled(*d)) {
                     msg += "\r\n" + QString(
                             "%1 depends on %2, which is not installed").
-                            arg(pv->toString(true)).
-                            arg(dbr->toString(*d, true));
+                            arg(pv->toString(true),
+                            dbr->toString(*d, true));
                     n++;
                 }
             }

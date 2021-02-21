@@ -51,7 +51,7 @@ void RepositoryXMLHandler::parseVersion()
             pv->version.normalize();
         } else {
             error = QObject::tr("Not a valid version for %1: %2").
-                    arg(pv->package).arg(name);
+                    arg(pv->package, name);
         }
     }
 
@@ -69,7 +69,7 @@ void RepositoryXMLHandler::parseVersion()
             pv->type = PackageVersion::Type::ZIP;
         else {
             error = QObject::tr("Wrong value for the attribute 'type' for %1: %3").
-                    arg(pv->toString()).arg(type);
+                    arg(pv->toString(), type);
         }
     }
 
@@ -87,7 +87,7 @@ void RepositoryXMLHandler::parseVersion()
             if (error.isEmpty()) {
                 if (std::find(pv->importantFiles.begin(), pv->importantFiles.end(), p) != pv->importantFiles.end()) {
                     error = QObject::tr("More than one <important-file> with the same 'path' attribute %1 for %2").
-                            arg(p).arg(pv->toString());
+                            arg(p, pv->toString());
                 }
             }
 
@@ -116,7 +116,7 @@ void RepositoryXMLHandler::parseVersion()
                 error = WPMUtils::validateSHA1(pv->sha1);
                 if (!error.isEmpty()) {
                     error = QObject::tr("Invalid SHA1 for %1: %2").
-                            arg(pv->toString()).arg(error);
+                            arg(pv->toString(), error);
                 }
             }
         } else if (reader->name() == "cmd-file") {
@@ -130,7 +130,7 @@ void RepositoryXMLHandler::parseVersion()
             if (error.isEmpty()) {
                 if (std::find(pv->cmdFiles.begin(), pv->cmdFiles.end(), p) != pv->cmdFiles.end()) {
                     error = QObject::tr("More than one <cmd-file> with the same 'path' attribute %1 for %2").
-                            arg(p).arg(pv->toString());
+                            arg(p, pv->toString());
                 }
             }
 
@@ -170,7 +170,7 @@ void RepositoryXMLHandler::parseVersion()
                 error = WPMUtils::validateSHA256(pv->sha1);
                 if (!error.isEmpty()) {
                     error = QObject::tr("Invalid SHA-256 for %1: %2").
-                            arg(pv->toString()).arg(error);
+                            arg(pv->toString(), error);
                 }
             }
         } else if (reader->name() == "dependency") {
@@ -199,8 +199,8 @@ void RepositoryXMLHandler::parseVersion()
 
     if (!error.isEmpty())
         error = QObject::tr("Error saving the package version %1 %2: %3").
-                arg(pv->package).arg(pv->version.getVersionString()).
-                arg(error);
+                arg(pv->package).arg(pv->version.getVersionString(),
+                error);
     delete pv;
 
     if (!error.isEmpty())
@@ -243,7 +243,7 @@ void RepositoryXMLHandler::parsePackage()
             QString c = Repository::checkCategory(reader->readElementText().trimmed(), &err);
             if (!err.isEmpty()) {
                 error = QObject::tr("Error in category tag for %1: %2").
-                        arg(p->title).arg(err);
+                        arg(p->title, err);
             } else if (std::find(p->categories.begin(), p->categories.end(), c) != p->categories.end()) {
                 error = QObject::tr("More than one <category> %1").arg(c);
             } else {
@@ -254,7 +254,7 @@ void RepositoryXMLHandler::parsePackage()
             QString err = PackageUtils::validateFullPackageName(c);
             if (!err.isEmpty()) {
                 error = QObject::tr("Error in <tag> for %1: %2").
-                        arg(p->title).arg(err);
+                        arg(p->title ,err);
             } else if (std::find(p->tags.begin(), p->tags.end(), c) != p->tags.end()) {
                 error = QObject::tr("More than one <tag> %1").arg(c);
             } else {
@@ -298,7 +298,7 @@ void RepositoryXMLHandler::parsePackage()
 
     if (!error.isEmpty())
         error = QObject::tr("Error saving the package %1: %2").
-                arg(p->title).arg(error);
+                arg(p->title, error);
     delete p;
 
     if (!error.isEmpty())
@@ -337,8 +337,7 @@ void RepositoryXMLHandler::parseLicense()
 
     if (!error.isEmpty())
         error = QObject::tr("Error saving the license %1: %2").
-                arg(lic->title).
-                arg(error);
+                arg(lic->title, error);
     delete lic;
 
     if (!error.isEmpty())

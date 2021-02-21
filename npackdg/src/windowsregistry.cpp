@@ -419,7 +419,7 @@ QString WindowsRegistry::remove(const QString& name) const
     if (r != ERROR_SUCCESS && r != ERROR_FILE_NOT_FOUND) {
         WPMUtils::formatMessage(r, &result);
         result = QObject::tr("Error removing registry node %1: %2").
-                arg(name).arg(result);
+                arg(name, result);
     }
     return result;
 }

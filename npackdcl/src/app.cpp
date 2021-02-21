@@ -515,13 +515,13 @@ void App::which(Job* job)
             } else if (bare) {
                 WPMUtils::writeln(QString(
                         "%1\t%2\t%3\t%4").
-                        arg(title).arg(f->version.getVersionString()).
-                        arg(f->package).arg(f->directory));
+                        arg(title, f->version.getVersionString(),
+                        f->package, f->directory));
             } else {
                 WPMUtils::writeln(QString(
                         "%1 %2 (%3) is installed in \"%4\"").
-                        arg(title).arg(f->version.getVersionString()).
-                        arg(f->package).arg(f->directory));
+                        arg(title, f->version.getVersionString(),
+                        f->package, f->directory));
             }
 
             delete p;
@@ -681,8 +681,8 @@ void App::check(Job* job)
                 if (!ip->isInstalled(*d)) {
                     WPMUtils::writeln(QString(
                             "%1 depends on %2, which is not installed").
-                            arg(pv->toString(true)).
-                            arg(rep->toString(*d, true)));
+                            arg(pv->toString(true),
+                            rep->toString(*d, true)));
                     n++;
                 }
             }
@@ -1246,8 +1246,8 @@ void App::place(Job* job)
             QString title = p ? p->title : "?";
             job->setErrorMessage(QString(
                     "%1 %2 (%3) is installed in \"%4\"").
-                    arg(title).arg(f->version.getVersionString()).
-                    arg(f->package).arg(f->directory));
+                    arg(title, f->version.getVersionString(),
+                    f->package, f->directory));
             delete p;
             delete f;
         }
@@ -1665,7 +1665,7 @@ void App::processInstallOperations(Job *job,
 
             WPMUtils::writeln(
                     (QObject::tr("Starting update process %1 with parameters %2")).
-                    arg(prg).arg(args));
+                    arg(prg, args));
 
             args = "\"" + prg + "\" " + args;
 
@@ -1803,7 +1803,7 @@ void App::build(Job* job)
     if (job->shouldProceed()) {
         qCInfo(npackdImportant()).noquote() << QObject::tr(
                 "The package %1 was built successfully in %2 to %3").arg(
-                pv->toString()).arg(outputDir).arg(outputPackage);
+                pv->toString(), outputDir, outputPackage);
     }
 
     job->complete();
@@ -2041,8 +2041,7 @@ bool App::confirm(const std::vector<InstallOperation*> install, QString* title,
                     "The corresponding directory %2 "
                     "will be completely deleted. "
                     "There is no way to restore the files. Are you sure (y/n)?:").
-                    arg(pv->toString()).
-                    arg(pv->getPath());
+                    arg(pv->toString(), pv->getPath());
             b = WPMUtils::confirmConsole(msg);
         } else {
             b = false;
@@ -2442,8 +2441,8 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
             before = ' ';
         } else {
             s = QString("%1 resolved to %2").
-                    arg(rep->toString(*d, true)).
-                    arg(pvd->version.getVersionString());
+                    arg(rep->toString(*d, true),
+                    pvd->version.getVersionString());
             if (!pvd->installed())
                 s += " (not yet installed)";
 

@@ -1935,8 +1935,6 @@ void GetObjectNameThread::run()
                         objectName.Length / 2);
                 done = true;
             }
-        } else {
-            ok = false;
         }
     }
 
@@ -2107,7 +2105,7 @@ std::vector<HANDLE> WPMUtils::getProcessHandlesLockingDirectory2(const QString &
 
                     qCDebug(npackd) << "File object converted" << name;
 
-                    if (QFileInfo(name).exists() &&
+                    if (QFileInfo::exists(name) &&
                             WPMUtils::isUnderOrEquals(name, dir)) {
                         result.push_back(processHandle);
                         processHandle = INVALID_HANDLE_VALUE;
@@ -2445,7 +2443,7 @@ QString WPMUtils::getWindowsDir()
 QString WPMUtils::findCmdExe()
 {
     QString r = getWindowsDir() + QStringLiteral("\\Sysnative\\cmd.exe");
-    if (!QFileInfo(r).exists()) {
+    if (!QFileInfo::exists(r)) {
         r = getWindowsDir() + QStringLiteral("\\system32\\cmd.exe");
     }
     return r;
@@ -2585,8 +2583,7 @@ QString WPMUtils::moveToRecycleBin(QString dir)
         return QStringLiteral("");
     else {
         return QString(QObject::tr("Error deleting %1: %2")).
-                arg(dir).arg(
-                WPMUtils::getShellFileOperationErrorMessage(r));
+                arg(dir, WPMUtils::getShellFileOperationErrorMessage(r));
     }
 }
 
@@ -2783,7 +2780,8 @@ void WPMUtils::renameDirectory(Job* job, const QString &oldName, const QString &
             WPMUtils::removeDirectory(sub, oldName, true);
             job->setProgress(1);
         } else {
-            job->setErrorMessage(QObject::tr("Error copying %1 to %2").arg(oldName).arg(newName));
+            job->setErrorMessage(QObject::tr("Error copying %1 to %2").
+                arg(oldName, newName));
         }
     }
 
@@ -3023,12 +3021,12 @@ QString WPMUtils::findNonExistingFile(const QString& start,
         const QString ext)
 {
     QString result = start + ext;
-    if (!QFileInfo(result).exists())
+    if (!QFileInfo::exists(result))
         return result;
 
     for (int i = 2; i < 100; i++) {
         result = start + QStringLiteral("_") + QString::number(i) + ext;
-        if (!QFileInfo(result).exists())
+        if (!QFileInfo::exists(result))
             return result;
     }
 

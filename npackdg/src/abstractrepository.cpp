@@ -300,16 +300,13 @@ void AbstractRepository::process(Job *job,
         if (!err.isEmpty()) {
             job->setErrorMessage(QString(
                     QObject::tr("Cannot find the package version %1 %2: %3")).
-                    arg(op->package).
-                    arg(op->version.getVersionString()).
-                    arg(err));
+                    arg(op->package, op->version.getVersionString(), err));
             break;
         }
         if (!pv) {
             job->setErrorMessage(QString(
                     QObject::tr("Cannot find the package version %1 %2")).
-                    arg(op->package).
-                    arg(op->version.getVersionString()));
+                    arg(op->package, op->version.getVersionString()));
             break;
         }
         pvs.push_back(pv);
@@ -477,7 +474,7 @@ void AbstractRepository::process(Job *job,
                             WPMUtils::removeDirectory(djob, dir);
                             job->setErrorMessage(QObject::tr(
                                     "Cannot install %1 into %2. The directory already exists.").
-                                    arg(pv->toString(true)).arg(op->where));
+                                    arg(pv->toString(true), op->where));
                             break;
                         }
                     } else {
@@ -656,7 +653,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
             if (!err.isEmpty()) {
                 err = QString(QObject::tr("Cannot find the newest installed version for %1: %2")).
-                        arg(p->title).arg(err);
+                        arg(p->title, err);
                 break;
             }
 
@@ -707,7 +704,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                 b = findPackageVersion_(ipv->package, ipv->version, &err);
                 if (!err.isEmpty()) {
                     err = QString(QObject::tr("Cannot find the newest installed version for %1: %2")).
-                            arg(p->title).arg(err);
+                            arg(p->title, err);
                     break;
                 }
             }
@@ -1034,9 +1031,8 @@ QString AbstractRepository::checkInstallationDirectory(const QString &dir) const
         InstalledPackageVersion* ipv = ip->findOwner(dir);
         if (ipv) {
             err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").
-                    arg(dir).
-                    arg(getPackageTitleAndName(ipv->package)).
-                    arg(ipv->version.getVersionString());
+                    arg(dir, getPackageTitleAndName(ipv->package),
+                    ipv->version.getVersionString());
             delete ipv;
         }
     }

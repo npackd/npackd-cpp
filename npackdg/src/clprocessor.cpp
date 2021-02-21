@@ -169,7 +169,7 @@ QString CLProcessor::startNewestNpackdg()
             CloseHandle(pinfo.hProcess);
         } else {
             WPMUtils::formatMessage(GetLastError(), &err);
-            err = QObject::tr("Error starting %1: %2").arg(exe).arg(err);
+            err = QObject::tr("Error starting %1: %2").arg(exe, err);
         }
     }
 

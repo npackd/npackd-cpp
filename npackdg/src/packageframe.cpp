@@ -299,7 +299,7 @@ void PackageFrame::screenshotsItemActivated(QListWidgetItem *item)
     QString filename = mw->fileLoader.downloadFileOrQueue(url, &err);
     if (!err.isEmpty()) {
         QString msg = QObject::tr("Error downloading the file %1: %2").
-                arg(url).arg(err);
+                arg(url, err);
         mw->addErrorMessage(msg, msg, true, QMessageBox::Critical);
     } else if (!filename.isEmpty()) {
         if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename))) {
