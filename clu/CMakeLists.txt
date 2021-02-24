@@ -86,6 +86,7 @@ set(CLU_SOURCES
     ../npackdg/src/comobject.cpp
     ../npackdg/src/sqlutils.cpp
     ../npackdg/src/dag.cpp
+    ../npackdg/src/lockedfiles.cpp
     ../npackdcl/src/commandlinemessagehandler.cpp
 )
 set(CLU_HEADERS
@@ -122,6 +123,7 @@ set(CLU_HEADERS
     ../npackdg/src/comobject.h
     ../npackdg/src/sqlutils.h
     ../npackdg/src/dag.h
+    ../npackdg/src/lockedfiles.h
     ../npackdcl/src/commandlinemessagehandler.h
 )
 

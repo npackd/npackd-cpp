@@ -59,24 +59,6 @@ private:
     static void closeProcessWindows(HANDLE process,
             const std::vector<HWND> &processWindows);
 
-    /**
-     * @brief searches for the processes that somehow lock the specified
-     *     directory. This function enumerates the loaded modules (.dll, etc.)
-     * @param dir a directory
-     * @return list of handles with PROCESS_ALL_ACCESS permissions. These
-     *     handles should be closed later using CloseHandle()
-     */
-    static std::vector<HANDLE> getProcessHandlesLockingDirectory(const QString &dir);
-
-    /**
-     * @brief searches for the processes that somehow lock the specified
-     *     directory. This function enumerates all files opened by the process.
-     * @param dir a directory
-     * @return list of handles with PROCESS_QUERY_LIMITED_INFORMATION
-     *     permissions. These handles should be closed later using CloseHandle()
-     */
-    static std::vector<HANDLE> getProcessHandlesLockingDirectory2(const QString &dir);
-
     static std::vector<HWND> findProcessTopWindows(DWORD processID);
 
     static QString disconnectFrom(LPWSTR netname);
@@ -86,8 +68,6 @@ private:
                              std::vector<QString> *stoppedServices);
     static QString waitForServiceStatus(SC_HANDLE schService,
             const QString &operation, DWORD status);
-
-    static std::vector<HANDLE> getAllProcessHandlesLockingDirectory(const QString &dir);
 
     static void closeHandles(const std::vector<HANDLE> handles);
 
@@ -578,13 +558,6 @@ public:
      * @param dir a directory
      */
     static void disconnectShareUsersFrom(const QString& dir);
-
-    /**
-     * @param dir the directory
-     * @return full file path to the executable locking the specified directory
-     *     or ""
-     */
-    static QString findFirstExeLockingDirectory(const QString& dir);
 
     /**
      * @brief parses the command line and returns the chosen program close type

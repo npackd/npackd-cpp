@@ -66,6 +66,7 @@ set(TESTS_SOURCES
     ../../npackdg/src/dismthirdpartypm.cpp
     ../../npackdg/src/sqlutils.cpp
     ../../npackdg/src/dag.cpp
+    ../../npackdg/src/lockedfiles.cpp
 )
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
@@ -103,6 +104,7 @@ set(TESTS_HEADERS
     ../../npackdg/src/dismthirdpartypm.h
     ../../npackdg/src/sqlutils.h
     ../../npackdg/src/dag.h
+    ../../npackdg/src/lockedfiles.h
 )
 
 set(OUTPUT_FILE_NAME "tests.exe")
