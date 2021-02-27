@@ -13,7 +13,7 @@ ExportRepositoryFrame::ExportRepositoryFrame(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->lineEditDir->setText(WPMUtils::getShellDir(CSIDL_MYDOCUMENTS));
+    ui->lineEditDir->setText(WPMUtils::getShellDir(FOLDERID_Documents));
 }
 
 ExportRepositoryFrame::~ExportRepositoryFrame()

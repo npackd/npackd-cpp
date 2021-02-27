@@ -1,5 +1,6 @@
 #include <shobjidl.h>
 #include <windows.h>
+#include <knownfolders.h>
 #include <initguid.h>
 #include <shellapi.h>
 #include <shlobj.h>
@@ -391,12 +392,12 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
 {
     if (menu) {
         Job* sub = job->newSubJob(0.33, QObject::tr("Start menu"));
-        QDir d(WPMUtils::getShellDir(CSIDL_STARTMENU));
+        QDir d(WPMUtils::getShellDir(FOLDERID_StartMenu));
         WPMUtils::deleteShortcuts(dir, d);
 
         if (PackageUtils::globalMode)
 		{
-			QDir d2(WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU));
+            QDir d2(WPMUtils::getShellDir(FOLDERID_CommonStartMenu));
 			WPMUtils::deleteShortcuts(dir, d2);
 			sub->completeWithProgress();
 		}
@@ -404,12 +405,12 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
 
     if (desktop) {
         Job* sub = job->newSubJob(0.33, QObject::tr("Desktop"));
-        QDir d3(WPMUtils::getShellDir(CSIDL_DESKTOP));
+        QDir d3(WPMUtils::getShellDir(FOLDERID_Desktop));
         WPMUtils::deleteShortcuts(dir, d3);
 
         if (PackageUtils::globalMode)
 		{
-			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_DESKTOPDIRECTORY));
+            QDir d4(WPMUtils::getShellDir(FOLDERID_PublicDesktop));
 			WPMUtils::deleteShortcuts(dir, d4);
 			sub->completeWithProgress();
 		}
@@ -418,12 +419,12 @@ void PackageVersion::deleteShortcuts(const QString& dir, Job* job,
     if (quickLaunch) {
         Job* sub = job->newSubJob(0.33, QObject::tr("Quick launch bar"));
         const char* A = "\\Microsoft\\Internet Explorer\\Quick Launch";
-        QDir d3(WPMUtils::getShellDir(CSIDL_APPDATA) + A);
+        QDir d3(WPMUtils::getShellDir(FOLDERID_RoamingAppData) + A);
         WPMUtils::deleteShortcuts(dir, d3);
 
         if (PackageUtils::globalMode)
 		{
-			QDir d4(WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + A);
+            QDir d4(WPMUtils::getShellDir(FOLDERID_ProgramData) + A);
 			WPMUtils::deleteShortcuts(dir, d4);
 			sub->completeWithProgress();
 		}
@@ -1095,8 +1096,8 @@ bool PackageVersion::createExecutableShims(const QString& dir, QString *errMsg)
         return true;
 
     QString sourceBasePath = PackageUtils::globalMode
-		? WPMUtils::getShellDir(CSIDL_COMMON_APPDATA) + "\\Npackd\\Commands\\"
-		: WPMUtils::getShellDir(CSIDL_APPDATA) + "\\Npackd\\Commands\\";
+        ? WPMUtils::getShellDir(FOLDERID_ProgramData) + "\\Npackd\\Commands\\"
+        : WPMUtils::getShellDir(FOLDERID_RoamingAppData) + "\\Npackd\\Commands\\";
 
     DBRepository* dbr = DBRepository::getDefault();
 
@@ -1227,8 +1228,8 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
         simple = WPMUtils::makeValidFilename(simple, ' ') + ".lnk";
         withVersion = WPMUtils::makeValidFilename(withVersion, ' ');
         QString commonStartMenu = PackageUtils::globalMode
-			? WPMUtils::getShellDir(CSIDL_COMMON_STARTMENU)
-			: WPMUtils::getShellDir(CSIDL_STARTMENU);
+            ? WPMUtils::getShellDir(FOLDERID_CommonStartMenu)
+            : WPMUtils::getShellDir(FOLDERID_StartMenu);
         simple = commonStartMenu + "\\" + simple;
         withVersion = commonStartMenu + "\\" + withVersion;
 

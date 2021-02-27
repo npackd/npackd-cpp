@@ -44,14 +44,14 @@ SettingsFrame::SettingsFrame(QWidget *parent) :
     if (err.isEmpty()) {
         dirs = wr.loadStringList(&err);
     }
-    dirs.push_back(WPMUtils::getShellDir(CSIDL_APPDATA) +
+    dirs.push_back(WPMUtils::getShellDir(FOLDERID_RoamingAppData) +
 		QStringLiteral("\\Npackd\\Installation"));
 
     dirs.push_back(PackageUtils::getInstallationDirectory());
     if (PackageUtils::globalMode) {
         dirs.push_back(WPMUtils::getProgramFilesDir());
 		if (WPMUtils::is64BitWindows())
-            dirs.push_back(WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86));
+            dirs.push_back(WPMUtils::getShellDir(FOLDERID_ProgramFilesX86));
 	}
 
     // remove duplicates

@@ -2413,7 +2413,7 @@ void DBRepository::transferFrom(Job* job, const QString& databaseFilename)
 QString DBRepository::openDefault(const QString& databaseName, bool readOnly)
 {
     QString dir = WPMUtils::getShellDir(PackageUtils::globalMode ?
-            CSIDL_COMMON_APPDATA : CSIDL_APPDATA) +
+            FOLDERID_ProgramData : FOLDERID_RoamingAppData) +
             QStringLiteral("\\Npackd");
     QDir d;
     if (!d.exists(dir))

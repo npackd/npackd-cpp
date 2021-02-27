@@ -71,7 +71,7 @@ WPMUtils::WPMUtils()
 QString WPMUtils::getMessagesLog()
 {
     static QString log = WPMUtils::getShellDir(PackageUtils::globalMode ?
-            CSIDL_COMMON_APPDATA : CSIDL_APPDATA) +
+            FOLDERID_ProgramData : FOLDERID_RoamingAppData) +
             "\\Npackd\\Messages.log";
 
     return log;
@@ -704,9 +704,7 @@ QString WPMUtils::getProgramFilesDir()
     }
 
     if (ret.isEmpty()) {
-        WCHAR dir[MAX_PATH];
-        SHGetFolderPath(nullptr, CSIDL_PROGRAM_FILES, nullptr, 0, dir);
-        ret = QString::fromWCharArray(dir);
+        ret = getShellDir(FOLDERID_ProgramFiles);
     }
 
     return ret;
@@ -1509,46 +1507,17 @@ std::vector<DWORD> WPMUtils::getProcessIDs()
     return r;
 }
 
-QString WPMUtils::getShellDir(int type)
+QString WPMUtils::getShellDir(REFKNOWNFOLDERID type)
 {
-    /* since Vista
-        HRESULT WINAPI (*lpfSHGetKnownFolderPath) (
-          _In_      REFKNOWNFOLDERID rfid,
-          _In_      DWORD dwFlags,
-          _In_opt_  HANDLE hToken,
-          _Out_     PWSTR *ppszPath
-        );
+    QString ret;
 
-        HINSTANCE hInstLib = LoadLibraryA("SHELL32.DLL");
-        if (hInstLib) {
-            lpfSHGetKnownFolderPath =
-                    (HRESULT (WINAPI*) (
-                      _In_      REFKNOWNFOLDERID rfid,
-                      _In_      DWORD dwFlags,
-                      _In_opt_  HANDLE hToken,
-                      _Out_     PWSTR *ppszPath
-                    ))
-                    GetProcAddress(hInstLib, "SHGetKnownFolderPath");
+    PWSTR s;
+    if (SUCCEEDED(SHGetKnownFolderPath(type, KF_FLAG_DONT_VERIFY, 0, &s))) {
+        ret = QString::fromUtf16(reinterpret_cast<ushort*>(s));
+    }
+    CoTaskMemFree(s);
 
-            if (lpfSHGetKnownFolderPath) {
-                outputTextConsole("not null\r\n");
-                PWSTR s;
-                const DWORD KF_FLAG_DONT_VERIFY = 0x00004000;
-                if (SUCCEEDED(lpfSHGetKnownFolderPath(FOLDERID_ProgramFilesX64,
-                        KF_FLAG_DONT_VERIFY,
-                        0, &s))) {
-                    outputTextConsole("S_OK\r\n");
-                    ret = QString::fromUtf16(reinterpret_cast<ushort*>(s));
-                    CoTaskMemFree(s);
-                }
-            }
-
-            FreeLibrary(hInstLib);
-        }
-     */
-    WCHAR dir[MAX_PATH];
-    SHGetFolderPath(nullptr, type, nullptr, 0, dir);
-    return QString::fromWCharArray(dir);
+    return ret;
 }
 
 QString WPMUtils::validateSHA1(const QString& sha1)

@@ -386,7 +386,7 @@ QString PackageUtils::getInstallationDirectory()
             v = WPMUtils::getProgramFilesDir();
         else
         {
-            v = WPMUtils::getShellDir(CSIDL_APPDATA) +
+            v = WPMUtils::getShellDir(FOLDERID_RoamingAppData) +
                 QStringLiteral("\\Npackd\\Installation");
             QDir dir(v);
             if (!dir.exists()) dir.mkpath(v);

@@ -2,6 +2,7 @@
 #define WPMUTILS_H
 
 #include <windows.h>
+#include <shlobj.h>
 #include <time.h>
 #include <taskschd.h>
 #include <unordered_map>
@@ -234,11 +235,11 @@ public:
     static QString validateGUID(const QString& guid);
 
     /**
-     * @param type a CSIDL constant like CSIDL_COMMON_PROGRAMS
+     * @param type a folder constant like FOLDERID_CommonPrograms
      * @return directory like
      *     "C:\Documents and Settings\All Users\Start Menu\Programs"
      */
-    static QString getShellDir(int type);
+    static QString getShellDir(const KNOWNFOLDERID &type);
 
     /**
      * Validates an SHA1.

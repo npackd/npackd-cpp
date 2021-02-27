@@ -168,7 +168,7 @@ void FileLoader::downloadSizeRunnable(
 
 QString FileLoader::init()
 {
-    dir = WPMUtils::getShellDir(CSIDL_LOCAL_APPDATA) +
+    dir = WPMUtils::getShellDir(FOLDERID_LocalAppData) +
             QStringLiteral("\\Npackd\\Cache");
     QDir d;
     if (!d.exists(dir + "\\Files"))

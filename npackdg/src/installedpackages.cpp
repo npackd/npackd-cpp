@@ -423,7 +423,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         }
     }
 
-    QString programFilesX86Dir = WPMUtils::getShellDir(CSIDL_PROGRAM_FILESX86);
+    QString programFilesX86Dir = WPMUtils::getShellDir(FOLDERID_ProgramFilesX86);
 
     // ancestor of "C:\Program Files (x86)"
     if (err.isEmpty()) {
