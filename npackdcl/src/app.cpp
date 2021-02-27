@@ -1085,10 +1085,6 @@ void App::removeRepo(Job* job)
     job->complete();
 }
 
-#if defined(max) && defined(_MSC_VER)
-#undef max
-#endif
-
 void App::path(Job* job)
 {
     if (job->shouldProceed()) {

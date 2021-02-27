@@ -1398,10 +1398,6 @@ QString WPMUtils::getHostName()
     }
 }
 
-#if defined(max) && defined(_MSC_VER)
-#undef max
-#endif
-
 void WPMUtils::closeProcessWindows(HANDLE process,
         const std::vector<HWND>& processWindows)
 {
