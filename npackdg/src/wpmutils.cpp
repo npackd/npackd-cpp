@@ -1216,7 +1216,7 @@ QString WPMUtils::findService(DWORD processId, QString* err)
     return r;
 }
 
-void WPMUtils::closeHandles(const std::vector<HANDLE> handles)
+void WPMUtils::closeHandles(const std::vector<HANDLE> &handles)
 {
     for (auto h: handles) {
         CloseHandle(h);
@@ -1960,7 +1960,7 @@ bool WPMUtils::is64BitWindows()
 #endif
 }
 
-std::tuple<QString, QString> WPMUtils::readLastLines(const QString filename)
+std::tuple<QString, QString> WPMUtils::readLastLines(const QString &filename)
 {
     QString text;
     QString error;
@@ -2366,7 +2366,7 @@ QString WPMUtils::inputPasswordConsole()
 }
 
 QString WPMUtils::findNonExistingFile(const QString& start,
-        const QString ext)
+        const QString &ext)
 {
     QString result = start + ext;
     if (!QFileInfo::exists(result))
@@ -2517,7 +2517,7 @@ QString WPMUtils::fileCheckSum(Job* job,
     return sha1;
 }
 
-QString WPMUtils::appendFile(const QString from, const QString to)
+QString WPMUtils::appendFile(const QString &from, const QString &to)
 {
     QString result;
 
@@ -2555,7 +2555,7 @@ QString WPMUtils::appendFile(const QString from, const QString to)
     return result;
 }
 
-QString WPMUtils::createEmptyTempFile(const QString pattern)
+QString WPMUtils::createEmptyTempFile(const QString &pattern)
 {
     QString result;
 
@@ -2571,7 +2571,7 @@ QString WPMUtils::createEmptyTempFile(const QString pattern)
     return result;
 }
 
-void WPMUtils::unzip(Job* job, const QString zipfile, const QString outputdir)
+void WPMUtils::unzip(Job* job, const QString &zipfile, const QString &outputdir)
 {
     QString initialTitle = job->getTitle();
 

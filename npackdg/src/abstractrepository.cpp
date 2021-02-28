@@ -100,10 +100,10 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
             superv->type = PackageVersion::Type::ONE_FILE;
             superv->download.setUrl("Rep.xml");
             for (auto pv: pvs) {
-                Dependency* d = new Dependency();
-                d->package = pv->package;
-                d->setVersions("[0,2000000000)");
-                superv.get()->dependencies.push_back(d);
+                Dependency* dep = new Dependency();
+                dep->package = pv->package;
+                dep->setVersions("[0,2000000000)");
+                superv.get()->dependencies.push_back(dep);
             }
             rep->savePackageVersion(superv.get(), true);
         }
@@ -253,8 +253,8 @@ void AbstractRepository::process(Job *job,
         const std::vector<InstallOperation *> &install_,
         const DAG& opsDependencies, DWORD programCloseType,
         bool printScriptOutput, bool interactive,
-        const QString user, const QString password,
-        const QString proxyUser, const QString proxyPassword)
+        const QString& user, const QString& password,
+        const QString& proxyUser, const QString& proxyPassword)
 {
     QString initialTitle = job->getTitle();
 
@@ -620,7 +620,7 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
 }
 
 QString AbstractRepository::planUpdates(InstalledPackages& installed,
-        const std::vector<Package*> packages,
+        const std::vector<Package*>& packages,
         std::vector<Dependency*> ranges,
         std::vector<InstallOperation*>& ops,
         DAG& opsDependencies, bool keepDirectories,
@@ -840,10 +840,10 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
 
                     // all un-installation operations depend on all installation
                     // operations
-                    for (int i = sizeAfterInstallation;
-                            i < static_cast<int>(ops.size()); i++) {
+                    for (int i_ = sizeAfterInstallation;
+                            i_ < static_cast<int>(ops.size()); i_++) {
                         for (int j = oldSize; j < sizeAfterInstallation; j++) {
-                            opsDependencies.addEdge(i, j);
+                            opsDependencies.addEdge(i_, j);
                         }
                     }
                 }

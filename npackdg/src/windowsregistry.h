@@ -69,7 +69,7 @@ public:
      * @param err error message will be stored here
      * @return the value
      */
-    QString get(QString name, QString* err) const;
+    QString get(const QString& name, QString* err) const;
 
     /**
      * Changes permissions for this key so that everybody can read it.
@@ -85,7 +85,7 @@ public:
      * @param err error message will be stored here
      * @return the value
      */
-    DWORD getDWORD(QString name, QString* err) const;
+    DWORD getDWORD(const QString& name, QString* err) const;
 
     /**
      * Reads a DWORD value and interpretes it as an int32_t.
@@ -94,7 +94,7 @@ public:
      * @param err error message will be stored here
      * @return the value
      */
-    inline int32_t getInt(QString name, QString* err) const
+    inline int32_t getInt(const QString& name, QString* err) const
     {
         return static_cast<int32_t>(getDWORD(name, err));
     }
@@ -106,7 +106,7 @@ public:
      * @return error message
      * @param value the value
      */
-    QString setDWORD(QString name, DWORD value) const;
+    QString setDWORD(const QString& name, DWORD value) const;
 
     /**
      * Reads a BINARY value.
@@ -115,7 +115,7 @@ public:
      * @param err error message will be stored here
      * @return the value
      */
-    QByteArray getBytes(QString name, QString* err) const;
+    QByteArray getBytes(const QString& name, QString* err) const;
 
     /**
      * Writes a BINARY value.
@@ -124,7 +124,7 @@ public:
      * @return error message
      * @param value the value
      */
-    QString setBytes(QString name, const QByteArray &value) const;
+    QString setBytes(const QString& name, const QByteArray &value) const;
 
     /**
      * Writes a REG_SZ value.
@@ -133,7 +133,7 @@ public:
      * @param value the value
      * @return error message
      */
-    QString set(QString name, QString value) const;
+    QString set(const QString& name, const QString& value) const;
 
     /**
      * Writes a REG_EXPAND_SZ value.
@@ -142,7 +142,7 @@ public:
      * @param value the value
      * @return error message
      */
-    QString setExpand(QString name, QString value) const;
+    QString setExpand(const QString& name, const QString& value) const;
 
     /**
      * Opens a key. The previously open key (if any) will be closed.
@@ -155,7 +155,7 @@ public:
      *     can be 0.
      * @return error message or ""     
      */
-    QString open(HKEY hk, QString path, bool useWow6432Node,
+    QString open(HKEY hk, const QString& path, bool useWow6432Node,
             REGSAM samDesired = KEY_ALL_ACCESS, LONG* e = nullptr);
 
     /**
@@ -166,7 +166,7 @@ public:
      * @param samDesired access flags
      * @return error message or ""
      */
-    QString open(const WindowsRegistry& wr, QString subkey,
+    QString open(const WindowsRegistry& wr, const QString& subkey,
             REGSAM samDesired = KEY_ALL_ACCESS);
 
     /**
@@ -177,7 +177,7 @@ public:
      * @param samDesired access flags
      * @return created key (uninitialized, if an error occured)
      */
-    WindowsRegistry createSubKey(QString name, QString* err,
+    WindowsRegistry createSubKey(const QString& name, QString* err,
             REGSAM samDesired = KEY_ALL_ACCESS) const;
 
     /**

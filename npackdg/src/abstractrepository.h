@@ -139,8 +139,8 @@ public:
             const DAG &opsDependencies,
             DWORD programCloseType, bool printScriptOutput,
             bool interactive,
-            const QString user, const QString password,
-            const QString proxyUser, const QString proxyPassword);
+            const QString &user, const QString &password,
+            const QString &proxyUser, const QString &proxyPassword);
 
     /**
      * Finds all installed package versions.
@@ -179,7 +179,7 @@ public:
      * @return error message or ""
      */
     QString planUpdates(InstalledPackages &installed,
-            const std::vector<Package *> packages,
+            const std::vector<Package *> &packages,
             std::vector<Dependency *> ranges,
             std::vector<InstallOperation *> &ops, DAG &opsDependencies,
             bool keepDirectories=false,

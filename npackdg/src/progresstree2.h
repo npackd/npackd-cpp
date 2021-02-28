@@ -34,7 +34,7 @@ public:
     /**
      * @param parent parent widget
      */
-    ProgressTree2(QWidget* parent);
+    explicit ProgressTree2(QWidget* parent);
 
     /**
      * @brief registers a new job. The thread should not be started yet.

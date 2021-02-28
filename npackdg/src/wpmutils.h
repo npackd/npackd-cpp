@@ -70,7 +70,7 @@ private:
     static QString waitForServiceStatus(SC_HANDLE schService,
             const QString &operation, DWORD status);
 
-    static void closeHandles(const std::vector<HANDLE> handles);
+    static void closeHandles(const std::vector<HANDLE>& handles);
 
     static QString getTaskName();
 public:
@@ -120,7 +120,7 @@ public:
      * @param filename text file
      * @return (lines, error message)
      */
-    static std::tuple<QString, QString> readLastLines(const QString filename);
+    static std::tuple<QString, QString> readLastLines(const QString& filename);
 
     /**
      * Deletes a directory
@@ -357,7 +357,7 @@ public:
      * @return non-existing path based on start
      *     (e.g. C:\Program Files\Prog 1.0_2.txt)
      */
-    static QString findNonExistingFile(const QString& start, const QString ext);
+    static QString findNonExistingFile(const QString& start, const QString& ext);
 
     /**
      * @return directory with the .exe
@@ -603,14 +603,14 @@ public:
      * @param to target file name
      * @return error message or ""
      */
-    static QString appendFile(const QString from, const QString to);
+    static QString appendFile(const QString& from, const QString& to);
 
     /**
      * @brief creates an empty file in the temporary directory
      * @param pattern e.g. "NpackdXXXXXX.log"
      * @return full path to the created file
      */
-    static QString createEmptyTempFile(const QString pattern);
+    static QString createEmptyTempFile(const QString& pattern);
 
     /**
      * @brief unzips a file
@@ -618,7 +618,7 @@ public:
      * @param zipfile .zip file
      * @param outputdir output directory
      */
-    static void unzip(Job* job, const QString zipfile, const QString outputdir);
+    static void unzip(Job* job, const QString& zipfile, const QString& outputdir);
 
     /**
      * @brief starts a program and returns immediately

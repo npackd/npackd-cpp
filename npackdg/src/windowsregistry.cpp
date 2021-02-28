@@ -86,7 +86,7 @@ QString WindowsRegistry::saveStringList(const std::vector<QString> &values) cons
     return err;
 }
 
-QString WindowsRegistry::get(QString name, QString* err) const
+QString WindowsRegistry::get(const QString &name, QString* err) const
 {
     err->clear();
 
@@ -128,7 +128,7 @@ QString WindowsRegistry::get(QString name, QString* err) const
     return value_;
 }
 
-DWORD WindowsRegistry::getDWORD(QString name, QString* err) const
+DWORD WindowsRegistry::getDWORD(const QString &name, QString* err) const
 {
     err->clear();
 
@@ -151,7 +151,7 @@ DWORD WindowsRegistry::getDWORD(QString name, QString* err) const
     return value;
 }
 
-QString WindowsRegistry::setDWORD(QString name, DWORD value) const
+QString WindowsRegistry::setDWORD(const QString &name, DWORD value) const
 {
     QString err;
 
@@ -169,7 +169,7 @@ QString WindowsRegistry::setDWORD(QString name, DWORD value) const
     return err;
 }
 
-QByteArray WindowsRegistry::getBytes(QString name, QString *err) const
+QByteArray WindowsRegistry::getBytes(const QString &name, QString *err) const
 {
     err->clear();
 
@@ -200,7 +200,7 @@ QByteArray WindowsRegistry::getBytes(QString name, QString *err) const
     return value;
 }
 
-QString WindowsRegistry::setBytes(QString name, const QByteArray& value) const
+QString WindowsRegistry::setBytes(const QString &name, const QByteArray& value) const
 {
     QString err;
 
@@ -219,7 +219,7 @@ QString WindowsRegistry::setBytes(QString name, const QByteArray& value) const
     return err;
 }
 
-QString WindowsRegistry::set(QString name, QString value) const
+QString WindowsRegistry::set(const QString &name, const QString &value) const
 {
     QString err;
 
@@ -237,7 +237,7 @@ QString WindowsRegistry::set(QString name, QString value) const
     return err;
 }
 
-QString WindowsRegistry::setExpand(QString name, QString value) const
+QString WindowsRegistry::setExpand(const QString &name, const QString &value) const
 {
     QString err;
 
@@ -327,13 +327,13 @@ std::vector<QString> WindowsRegistry::listValues(QString *err) const
     return res;
 }
 
-QString WindowsRegistry::open(const WindowsRegistry& wr, QString subkey,
+QString WindowsRegistry::open(const WindowsRegistry& wr, const QString &subkey,
         REGSAM samDesired)
 {
     return open(wr.hkey, subkey, wr.useWow6432Node, samDesired);
 }
 
-QString WindowsRegistry::open(HKEY hk, QString path, bool useWow6432Node,
+QString WindowsRegistry::open(HKEY hk, const QString &path, bool useWow6432Node,
         REGSAM samDesired, LONG *e)
 {
     QString ret;
@@ -367,7 +367,7 @@ QString WindowsRegistry::open(HKEY hk, QString path, bool useWow6432Node,
     return ret;
 }
 
-WindowsRegistry WindowsRegistry::createSubKey(QString name, QString* err,
+WindowsRegistry WindowsRegistry::createSubKey(const QString &name, QString* err,
         REGSAM samDesired) const
 {
     err->clear();

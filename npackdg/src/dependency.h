@@ -48,7 +48,7 @@ public:
      *
      * @param versions something like "[2.12, 3.4)"
      */
-    bool setVersions(const QString versions);
+    bool setVersions(const QString& versions);
 
     /**
      * @brief changes the range so that any version is allowed

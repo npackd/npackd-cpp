@@ -77,7 +77,7 @@ bool Dependency::autoFulfilledIf(const Dependency& dep)
     return r;
 }
 
-bool Dependency::setVersions(const QString versions)
+bool Dependency::setVersions(const QString &versions)
 {
     QString versions_ = versions;
 
