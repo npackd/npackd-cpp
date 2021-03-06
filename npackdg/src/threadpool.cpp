@@ -2,14 +2,17 @@
 
 #include "threadpool.h"
 
-ThreadPool::ThreadPool(const int n, const int priority): priority(priority)
+ThreadPool::ThreadPool(const int n, const int priority):
+    maxThreads(n), priority(priority)
 {
-    for (int i = 0; i < n; ++i) {
-        this->threads.emplace_back(&ThreadPool::process, this);
-    }
 }
 
 ThreadPool::~ThreadPool()
+{
+    clearThreads();
+}
+
+void ThreadPool::clearThreads()
 {
     {
         std::lock_guard<std::mutex> lock{mutex};
@@ -20,6 +23,8 @@ ThreadPool::~ThreadPool()
     for (auto& thr: threads) {
         thr.join();
     }
+
+    threads.clear();
 }
 
 void ThreadPool::addTask(std::function<void()> &&task)
@@ -27,6 +32,13 @@ void ThreadPool::addTask(std::function<void()> &&task)
     {
         std::lock_guard<std::mutex> lock{mutex};
         tasks.push(task);
+
+        if (runningTasks + static_cast<int>(tasks.size()) >
+            static_cast<int>(threads.size())) {
+            if (static_cast<int>(threads.size()) < maxThreads) {
+                this->threads.emplace_back(&ThreadPool::process, this);
+            }
+        }
     }
     cond.notify_one();
 }
@@ -48,7 +60,15 @@ void ThreadPool::process() {
 
             f = tasks.front();
             tasks.pop();
+
+            runningTasks++;
         }
+
         f();
+
+        {
+            std::unique_lock<std::mutex> lock{mutex};
+            runningTasks--;
+        }
     }
 }
