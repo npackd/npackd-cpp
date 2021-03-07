@@ -24,13 +24,18 @@ void ThreadPool::clearThreads()
         thr.join();
     }
 
-    threads.clear();
+    {
+        std::lock_guard<std::mutex> lock{mutex};
+        threads.clear();
+        done = false;
+    }
 }
 
 void ThreadPool::addTask(std::function<void()> &&task)
 {
     {
         std::lock_guard<std::mutex> lock{mutex};
+
         tasks.push(task);
 
         if (runningTasks + static_cast<int>(tasks.size()) >
