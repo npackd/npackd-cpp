@@ -116,85 +116,6 @@ bool isFileSafe(const QString& filename, const QString& url)
     return res;
 }
 
-/* this should actually be used by MS Office. MS Essentials and
- * Avira Free Antivirus do not use it
-bool isFileSafeOfficeAntiVirus(const QString& filename, QString* err)
-{
-    bool res = true;
-
-    *err = "";
-
-    ICatInformation *pInfo = 0;
-    if (err->isEmpty()) {
-        HRESULT hr = CoCreateInstance(CLSID_StdComponentCategoriesMgr, NULL,
-                CLSCTX_ALL, IID_ICatInformation, (void**)&pInfo);
-        if (!SUCCEEDED(hr))
-            WPMUtils::formatMessage(hr, err);
-    }
-
-    IEnumCLSID* pEnumCLSID = 0;
-    if (err->isEmpty()) {
-        ULONG cIDs = 1;
-        CATID IDs[1];
-        IDs[0] = CATID_MSOfficeAntiVirus;
-        HRESULT hr = pInfo->EnumClassesOfCategories(cIDs, IDs, 0, NULL,
-                &pEnumCLSID);
-        if (!SUCCEEDED(hr))
-            WPMUtils::formatMessage(hr, err);
-    }
-
-    if (err->isEmpty()) {
-        CLSID clsid;
-
-        while (pEnumCLSID->Next(1, &clsid, NULL) == S_OK) {
-            qCDebug(npackd) << "av2";
-            IOfficeAntiVirus* m_pOfficeAntiVirus;
-            HRESULT hr = CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER,
-                    IID_IOfficeAntiVirus, (void**)&m_pOfficeAntiVirus);
-            if (SUCCEEDED(hr)) {
-                MSOAVINFO msoavinfo;
-                ZeroMemory(&msoavinfo, sizeof(MSOAVINFO));
-                msoavinfo.cbsize = sizeof(MSOAVINFO);
-                msoavinfo.hwnd = ::GetActiveWindow();
-                msoavinfo.fPath = 1;
-                msoavinfo.fReadOnlyRequest = 0;
-                msoavinfo.fInstalled = 0;
-                msoavinfo.fHttpDownload = 0;
-                msoavinfo.u.pwzFullPath = (WCHAR*) filename.utf16();
-                msoavinfo.pwzHostName = (WCHAR*) L"Npackd";
-                msoavinfo.pwzOrigURL = 0; // (WCHAR*) L"http://www.test.de";
-
-                hr = m_pOfficeAntiVirus->Scan(&msoavinfo);
-                if (hr == S_OK)
-                    res = true; // no virus found
-                else {
-                    res = false;
-                    m_pOfficeAntiVirus->Release();
-                    break;
-                }
-
-                m_pOfficeAntiVirus->Release();
-            }
-        }
-    }
-
-    if (pEnumCLSID) {
-        pEnumCLSID->Release();
-        pEnumCLSID = 0;
-    }
-
-    if (pInfo) {
-        pInfo->Release();
-        pInfo = 0;
-    }
-
-    if (!res)
-        *err = "";
-
-    return res;
-}
-*/
-
 int PackageVersion::indexOf(const std::vector<PackageVersion *> &pvs, PackageVersion* f)
 {
     int r = -1;
@@ -1455,21 +1376,6 @@ QString PackageVersion::download_(Job* job, const QString& where,
         sub->completeWithProgress();
     }
 
-    /* this should actually be used by MS Office. MS Essentials and
-     * Avira Free Antivirus do not use it
-    if (job->shouldProceed(QObject::tr("Checking for viruses 2"))) {
-        QString err;
-        bool safe = isFileSafeOfficeAntiVirus(f->fileName(), &err);
-        if (!err.isEmpty()) {
-            job->setErrorMessage(QObject::tr("Antivirus check 2 failed: %1").
-                    arg(err));
-        } else if (!safe) {
-            job->setErrorMessage(QObject::tr("Antivirus check 2 failed. The file is not safe."));
-        }
-        job->setProgress(0.69);
-    }
-    */
-
     QString binary;
     if (job->shouldProceed()) {
         if (this->type == PackageVersion::Type::ZIP) {
@@ -1489,7 +1395,10 @@ QString PackageVersion::download_(Job* job, const QString& where,
             t.append("\\");
             QString fn = this->download.path();
             std::vector<QString> parts = WPMUtils::split(fn, '/');
-            t.append(parts.back());
+            if (parts.size() > 0 && parts.back().length() > 0)
+                t.append(parts.back());
+            else
+                t.append("data");
             t.replace('/', '\\');
 
             binary = t;
