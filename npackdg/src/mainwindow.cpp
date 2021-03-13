@@ -2097,7 +2097,7 @@ void MainWindow::on_actionInstall_triggered()
         for (auto pv: pvs) {
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(dbr, installed, ops, opsDependencies,
+            err = dbr->planInstallation(installed, pv, ops, opsDependencies,
                     avoid);
             if (!err.isEmpty())
                 break;

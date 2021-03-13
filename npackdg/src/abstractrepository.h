@@ -187,6 +187,34 @@ public:
             bool exactLocation=true);
 
     /**
+     * Plans installation of this package and all the dependencies recursively.
+     *
+     * @param installed list of installed packages.
+     *     This list should be
+     *     consulted instead of .installed() and will be updated and contains
+     *     all installed package versions after the process
+     * @param me package version that will be installed
+     * @param op necessary operations will be appended here.
+     *     The existing
+     *     elements will not be modified in any way.
+     * @param opsDependencies dependencies between installation operations. The
+     *     nodes of the graph are indexes in the "ops" vector. An edge from "u"
+     *     to "v" means that "u" depends on "v".
+     * @param avoid list of package versions that cannot be
+     *     installed. The list
+     *     will be changed by this method. Normally this is an empty list and
+     *     objects will be added to it on different recursion levels.
+     * @param where target directory for the installation or "" if the
+     *     directory should be chosen automatically
+     * @return error message or ""
+     */
+    QString planInstallation(InstalledPackages& installed,
+            PackageVersion* me,
+            std::vector<InstallOperation*>& ops, DAG &opsDependencies,
+            std::vector<PackageVersion*>& avoid,
+            const QString &where="");
+
+    /**
      * Plans un-installation of a package version and all the dependent
      * recursively.
      *

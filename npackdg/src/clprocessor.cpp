@@ -208,7 +208,7 @@ QString CLProcessor::add()
     if (err.isEmpty()) {
         std::vector<PackageVersion*> avoid;
         for (auto pv: toInstall) {
-            err = pv->planInstallation(dbr, installed, ops, opsDependencies,
+            err = dbr->planInstallation(installed, pv, ops, opsDependencies,
                     avoid);
             if (!err.isEmpty())
                 break;

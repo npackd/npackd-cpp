@@ -1934,8 +1934,8 @@ void App::add(Job* job)
         std::vector<PackageVersion*> avoid;
         for (auto pv: toInstall) {
             if (job->shouldProceed())
-                err = pv->planInstallation(dbr, installed, ops,
-                        opsDependencies, avoid, file);
+                err = dbr->planInstallation(installed, pv,
+                        ops, opsDependencies, avoid, file);
             if (!err.isEmpty()) {
                 job->setErrorMessage(err);
             }

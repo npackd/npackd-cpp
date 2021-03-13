@@ -606,8 +606,8 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
         if (pv) {
             qDeleteAll(avoid);
             avoid.clear();
-            err = pv->planInstallation(this, installed, ops, opsDependencies,
-                    avoid);
+            err = planInstallation(installed, pv,
+                    ops, opsDependencies, avoid);
             delete pv;
             if (!err.isEmpty())
                 break;
@@ -764,7 +764,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     else if (keepDirectories)
                         where = b->getPath();
 
-                    err = newest.at(i)->planInstallation(this, installedCopy,
+                    err = planInstallation(installedCopy, newest.at(i),
                             ops2, ops2Dependencies, avoid, where);
 
                     qCDebug(npackd) << "planUpdates: 1st install and uninstall" <<
@@ -810,8 +810,8 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
                     where = a->getPath();
 
                 std::vector<PackageVersion*> avoid;
-                err = newest.at(i)->planInstallation(this, installedCopy, ops,
-                        opsDependencies, avoid, where);
+                err = planInstallation(installedCopy, newest.at(i),
+                        ops, opsDependencies, avoid, where);
                 if (!err.isEmpty())
                     break;
 
@@ -873,6 +873,100 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
     qDeleteAll(newesti);
 
     return err;
+}
+
+QString AbstractRepository::planInstallation(InstalledPackages &installed,
+    PackageVersion *me,
+    std::vector<InstallOperation *> &ops, DAG &opsDependencies,
+    std::vector<PackageVersion *> &avoid, const QString &where)
+{
+    int initialOpsSize = ops.size();
+
+    QString res;
+
+    avoid.push_back(me->clone());
+
+    for (auto d: me->dependencies) {
+        if (installed.isInstalled(*d))
+            continue;
+
+        // we cannot just use Dependency->findBestMatchToInstall here as
+        // it is possible that the highest match cannot be installed because
+        // of unsatisfied dependencies. Example: the newest version depends
+        // on Windows Vista, but the current operating system is XP.
+
+        QString err;
+        std::vector<PackageVersion*> pvs = findAllMatchesToInstall(
+                *d, avoid, &err);
+        if (!err.isEmpty()) {
+            res = QString(QObject::tr("Error searching for the dependency matches: %1")).
+                       arg(err);
+            qDeleteAll(pvs);
+            break;
+        }
+
+        if (pvs.size() == 0) {
+            res = QString(QObject::tr("Unsatisfied dependency: %1")).
+                       arg(toString(*d));
+            break;
+        }
+
+        bool found = false;
+        for (auto pv: pvs) {
+            InstalledPackages installed2(installed);
+            auto opsDependencies2 = opsDependencies;
+            int opsCount = ops.size();
+            int avoidCount = avoid.size();
+
+            res = planInstallation(installed2, pv, ops,
+                    opsDependencies2, avoid);
+            if (!res.isEmpty()) {
+                // rollback
+                while (static_cast<int>(ops.size()) > opsCount) {
+                    delete ops.back();
+                    ops.pop_back();
+                }
+                while (static_cast<int>(avoid.size()) > avoidCount) {
+                    delete avoid.back();
+                    avoid.pop_back();
+                }
+            } else {
+                found = true;
+                installed = installed2;
+                opsDependencies = opsDependencies2;
+                break;
+            }
+        }
+        if (!found) {
+            res = QString(QObject::tr("Unsatisfied dependency: %1")).
+                       arg(toString(*d));
+        }
+        qDeleteAll(pvs);
+    }
+
+    if (res.isEmpty()) {
+        if (!installed.isInstalled(me->package, me->version)) {
+            InstallOperation* io = new InstallOperation(me->package,
+                    me->version, true);
+            io->where = where;
+            ops.push_back(io);
+
+            QString where2 = where;
+            if (where2.isEmpty()) {
+                where2 = me->getIdealInstallationDirectory();
+                where2 = WPMUtils::findNonExistingFile(where2, "");
+            }
+            installed.setPackageVersionPath(me->package, me->version,
+                    where2, false);
+
+            int me = ops.size() - 1;
+            for (int i = initialOpsSize; i < me; ++i) {
+                opsDependencies.addEdge(me, i);
+            }
+        }
+    }
+
+    return res;
 }
 
 QString AbstractRepository::planUninstallation(InstalledPackages &installed,
