@@ -26,7 +26,7 @@ public:
     bool exactLocation = true;
 
     /**
-     * the directory where the package version should be installed on "" if the
+     * the directory where the package version should be installed or "" if the
      * the installation directory should be determined automatically.
      */
     QString where;
