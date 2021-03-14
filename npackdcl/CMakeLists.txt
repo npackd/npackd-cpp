@@ -66,6 +66,9 @@ set(NPACKDCL_SOURCES
     ../npackdg/src/deptask.cpp
     ../npackdg/src/threadpool.cpp
     ../npackdg/src/lockedfiles.cpp
+    ../npackdg/src/operation.cpp
+    ../npackdg/src/downloadoperation.cpp
+    ../npackdg/src/controlservicesoperation.cpp
     src/commandlinemessagehandler.cpp
     src/main.cpp
     src/app.cpp
@@ -108,6 +111,9 @@ set(NPACKDCL_HEADERS
     ../npackdg/src/deptask.h
     ../npackdg/src/threadpool.h
     ../npackdg/src/lockedfiles.h
+    ../npackdg/src/operation.h
+    ../npackdg/src/downloadoperation.h
+    ../npackdg/src/controlservicesoperation.h
     src/commandlinemessagehandler.h
     src/app.h
 )

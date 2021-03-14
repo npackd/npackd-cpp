@@ -69,6 +69,9 @@ set(FTESTS_SOURCES
     ../../npackdg/src/deptask.cpp
     ../../npackdg/src/threadpool.cpp
     ../../npackdg/src/lockedfiles.cpp
+    ../../npackdg/src/operation.cpp
+    ../../npackdg/src/downloadoperation.cpp
+    ../../npackdg/src/controlservicesoperation.cpp
     src/main.cpp
 )
 set(FTESTS_HEADERS
@@ -109,6 +112,9 @@ set(FTESTS_HEADERS
     ../../npackdg/src/deptask.h
     ../../npackdg/src/threadpool.h
     ../../npackdg/src/lockedfiles.h
+    ../../npackdg/src/operation.h
+    ../../npackdg/src/downloadoperation.h
+    ../../npackdg/src/controlservicesoperation.h
 )
 
 set(OUTPUT_FILE_NAME "ftests.exe")

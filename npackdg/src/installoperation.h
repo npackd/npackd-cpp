@@ -1,12 +1,13 @@
 #ifndef INSTALLOPERATION_H
 #define INSTALLOPERATION_H
 
+#include "operation.h"
 #include "packageversion.h"
 
 /**
  * Installation operation.
  */
-class InstallOperation
+class InstallOperation: public Operation
 {
 public:
     /** true = install, false = uninstall */
@@ -43,7 +44,9 @@ public:
     /**
      * @return [move] copy of this object
      */
-    InstallOperation* clone() const;
+    InstallOperation* clone() const override;
+
+    void execute(Job *job) override;
 
     /**
      * @return debug representation

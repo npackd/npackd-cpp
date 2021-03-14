@@ -285,7 +285,7 @@ public:
             const std::vector<PackageVersion *> &avoid, QString *err);
 
     /**
-     * @+^123param dep a dependency
+     * @param dep a dependency
      * @param avoid list of package versions that should be avoided and cannot
      *     be considered to be a match
      * @param err error message will be stored here

@@ -1379,6 +1379,7 @@ void App::update(Job* job)
         }
     }
 
+    // the lengths of these vectors are the same
     std::vector<QString> packages_;
     std::vector<QString> versions_;
 
@@ -1413,9 +1414,7 @@ void App::update(Job* job)
             std::vector<QString> list = rep->findPackages(Package::Status::UPDATEABLE,
                     Package::Status::NOT_INSTALLED_NOT_AVAILABLE, query, -1, -1, &err);
             packages_.insert(packages_.end(), list.begin(), list.end());
-            for (auto& v: list) {
-                versions_.push_back(QString());
-            }
+            versions_.resize(packages_.size());
         }
     }
 
