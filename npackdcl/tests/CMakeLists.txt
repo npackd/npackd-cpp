@@ -70,6 +70,7 @@ set(TESTS_SOURCES
     ../../npackdg/src/operation.cpp
     ../../npackdg/src/downloadoperation.cpp
     ../../npackdg/src/controlservicesoperation.cpp
+    ../../npackdg/src/threadpool.cpp
 )
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
@@ -111,6 +112,7 @@ set(TESTS_HEADERS
     ../../npackdg/src/operation.h
     ../../npackdg/src/downloadoperation.h
     ../../npackdg/src/controlservicesoperation.h
+    ../../npackdg/src/threadpool.h
 )
 
 set(OUTPUT_FILE_NAME "tests.exe")

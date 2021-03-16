@@ -138,7 +138,7 @@ addTab(jobsScrollArea, genericAppIcon, "Tags");
 */
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow), threadPool(10, THREAD_PRIORITY_LOWEST)
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
     instance = this;
 
@@ -981,8 +981,8 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
                     });
                 }
 
-                DepTask dt(job, ops, opsDependencies, threadPool);
-                threadPool.addTask(dt);
+                DepTask dt(job, ops, opsDependencies, AbstractRepository::threadPool);
+                AbstractRepository::threadPool.addTask(dt);
 
                 install.clear();
             }

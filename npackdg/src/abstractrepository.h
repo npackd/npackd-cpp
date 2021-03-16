@@ -6,6 +6,7 @@
 #include "packageversion.h"
 #include "package.h"
 #include "license.h"
+#include "threadpool.h"
 
 class InstallOperation;
 class InstalledPackages;
@@ -18,6 +19,9 @@ class AbstractRepository
 private:
     static QSemaphore installationScripts;
 public:
+    /** should be used for installation operations */
+    static ThreadPool threadPool;
+
     /**
      * @brief creates a new instance
      */

@@ -90,6 +90,7 @@ set(CLU_SOURCES
     ../npackdg/src/downloadoperation.cpp
     ../npackdg/src/operation.cpp
     ../npackdg/src/controlservicesoperation.cpp
+    ../npackdg/src/threadpool.cpp
     ../npackdcl/src/commandlinemessagehandler.cpp
 )
 set(CLU_HEADERS
@@ -130,6 +131,7 @@ set(CLU_HEADERS
     ../npackdg/src/downloadoperation.h
     ../npackdg/src/operation.h
     ../npackdg/src/controlservicesoperation.h
+    ../npackdg/src/threadpool.h
     ../npackdcl/src/commandlinemessagehandler.h
 )
 

@@ -6,8 +6,10 @@
 #include "installedpackages.h"
 #include "downloader.h"
 #include "packageutils.h"
+#include "threadpool.h"
 
 QSemaphore AbstractRepository::installationScripts(1);
+ThreadPool AbstractRepository::threadPool(10, THREAD_PRIORITY_LOWEST);
 
 bool AbstractRepository::includesRemoveItself(
         const std::vector<InstallOperation *> &install_)
