@@ -968,21 +968,14 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 
                 monitor(job);
 
-                std::vector<std::function<void(Job*)>> ops;
-                for (auto op: install) {
-                    ops.push_back([rep, op](Job* job){
-                        std::vector<InstallOperation*> v;
-                        v.push_back(op);
-                        rep->process(job, v,
-                                DAG(),
+                AbstractRepository::threadPool.addTask(
+                    [job, rep, install, opsDependencies](){
+                        rep->process(job, install,
+                                opsDependencies,
                                 PackageUtils::getCloseProcessType(),
                                 false, true, "", "", "", "");
-                        delete op;
+                        qDeleteAll(install);
                     });
-                }
-
-                DepTask dt(job, ops, opsDependencies, AbstractRepository::threadPool);
-                AbstractRepository::threadPool.addTask(dt);
 
                 install.clear();
             }
