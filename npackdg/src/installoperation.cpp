@@ -14,27 +14,6 @@ PackageVersion *InstallOperation::findPackageVersion(QString* err) const
             this->package, this->version, err);
 }
 
-InstallOperation *InstallOperation::clone() const
-{
-    return new InstallOperation(*this);
-}
-
-void InstallOperation::execute(Job *job)
-{
-    /* TODO
-    PackageVersion* pv;
-    std::vector<QString> stoppedServices;
-    Job* sub;
-    if (install) {
-        QString binary;
-        pv->install(sub, this->where, binary, false, 0, &stoppedServices);
-    } else {
-        pv->uninstall(sub, false, 0, &stoppedServices);
-    }
-    */
-    job->complete();
-}
-
 QString InstallOperation::toString() const
 {
     return package + " " + version.getVersionString() + " " +

@@ -67,8 +67,6 @@ set(TESTS_SOURCES
     ../../npackdg/src/sqlutils.cpp
     ../../npackdg/src/dag.cpp
     ../../npackdg/src/lockedfiles.cpp
-    ../../npackdg/src/operation.cpp
-    ../../npackdg/src/controlservicesoperation.cpp
     ../../npackdg/src/threadpool.cpp
 )
 set(TESTS_HEADERS
@@ -108,8 +106,6 @@ set(TESTS_HEADERS
     ../../npackdg/src/sqlutils.h
     ../../npackdg/src/dag.h
     ../../npackdg/src/lockedfiles.h
-    ../../npackdg/src/operation.h
-    ../../npackdg/src/controlservicesoperation.h
     ../../npackdg/src/threadpool.h
 )
 
