@@ -1,3 +1,5 @@
+#include <future>
+
 #include "QLoggingCategory"
 
 #include "abstractrepository.h"
@@ -10,6 +12,7 @@
 
 QSemaphore AbstractRepository::installationScripts(1);
 ThreadPool AbstractRepository::threadPool(10, THREAD_PRIORITY_LOWEST);
+
 
 bool AbstractRepository::includesRemoveItself(
         const std::vector<InstallOperation *> &install_)
@@ -330,6 +333,10 @@ void AbstractRepository::process(Job *job,
 
     // 70% for downloading the binaries
     if (job->shouldProceed()) {
+        // QString here is the full path to the downloaded file
+        // or an empty string if not applicable
+        std::vector<std::future<QString>> downloadFutures;
+
         // downloading packages
         for (int i = 0; i < static_cast<int>(install.size()); i++) {
             InstallOperation* op = install.at(i);
@@ -353,24 +360,39 @@ void AbstractRepository::process(Job *job,
                             QObject::tr("Directory %1 already exists").
                             arg(dir));
                     dirs.push_back("");
-                    binaries.push_back("");
+                    std::future<QString> future = std::async([](){ return QString(); });
+                    downloadFutures.push_back(std::move(future));
                 } else {
                     dirs.push_back(dir);
 
-                    QString binary = pv->download_(sub, dir, interactive,
-                            user, password, proxyUser, proxyPassword);
-                    binaries.push_back(QFileInfo(binary).fileName());
+                    std::future<QString> future = std::async(
+                        std::launch::async,
+                        [pv, interactive, sub, dir, user, password, proxyUser, proxyPassword](){
+                            return pv->download_(sub, dir, interactive,
+                                    user, password, proxyUser, proxyPassword);
+                        });
+                    downloadFutures.push_back(std::move(future));
+
                     if (sub->isCancelled())
                         job->cancel();
                 }
             } else {
                 dirs.push_back("");
-                binaries.push_back("");
+                std::future<QString> future = std::async([](){ return QString(); });
                 job->setProgress(job->getProgress() + 0.7 / n);
             }
 
             if (!job->shouldProceed())
                 break;
+        }
+
+        // waiting for all downloads to finish
+        if (job->shouldProceed()) {
+            for (int i = 0; i < static_cast<int>(downloadFutures.size()); i++) {
+                binaries.push_back(QFileInfo(downloadFutures.at(i).get()).fileName());
+                if (!job->shouldProceed())
+                    break;
+            }
         }
     }
 
