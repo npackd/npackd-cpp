@@ -1,6 +1,8 @@
 #ifndef ABSTRACTREPOSITORY_H
 #define ABSTRACTREPOSITORY_H
 
+#include <mutex>
+
 #include "stable.h"
 
 #include "packageversion.h"
@@ -17,10 +19,27 @@ class InstalledPackages;
 class AbstractRepository
 {
 private:
-    static QSemaphore installationScripts;
+    static std::mutex installationScripts;
 public:
     /** should be used for installation operations */
     static ThreadPool threadPool;
+
+    /**
+     * @brief acquire the lock for executing installation/uninstallation scripts.
+     * Only one script is allowed to be executed at any time.
+     *
+     * @param job job
+     * @return true = acquired
+     */
+    static bool lockInstallationScript(Job* job);
+
+    /**
+     * @brief release the lock for executing installation/uninstallation scripts.
+     * Only one script is allowed to be executed at any time.
+     *
+     * @param job job
+     */
+    static void unlockInstallationScript();
 
     /**
      * @brief creates a new instance
@@ -330,7 +349,7 @@ public:
      * @return error message or ""
      */
     QString planAddMissingDeps(InstalledPackages &installed,
-            std::vector<InstallOperation *> &ops, DAG &opsDependencies);
+                               std::vector<InstallOperation *> &ops, DAG &opsDependencies);
 };
 
 #endif // ABSTRACTREPOSITORY_H

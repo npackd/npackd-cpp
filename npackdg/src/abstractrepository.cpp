@@ -10,9 +10,8 @@
 #include "packageutils.h"
 #include "threadpool.h"
 
-QSemaphore AbstractRepository::installationScripts(1);
+std::mutex AbstractRepository::installationScripts;
 ThreadPool AbstractRepository::threadPool(10, THREAD_PRIORITY_LOWEST);
-
 
 bool AbstractRepository::includesRemoveItself(
         const std::vector<InstallOperation *> &install_)
@@ -254,6 +253,36 @@ QString AbstractRepository::toString(const Dependency &dep,
     return res;
 }
 
+bool AbstractRepository::lockInstallationScript(Job* job)
+{
+    bool r = false;
+
+    QString initialTitle = job->getTitle();
+    time_t start = time(nullptr);
+    while (!job->isCancelled()) {
+        bool installationScriptAcquired = installationScripts.try_lock();
+        if (installationScriptAcquired) {
+            job->setProgress(1);
+            r = true;
+            break;
+        }
+
+        time_t seconds = time(nullptr) - start;
+        job->setTitle(initialTitle + " / " + QObject::tr("%1 minutes").
+                arg(seconds / 60));
+    }
+    job->setTitle(initialTitle);
+
+    job->complete();
+
+    return r;
+}
+
+void AbstractRepository::unlockInstallationScript()
+{
+    installationScripts.unlock();
+}
+
 void AbstractRepository::process(Job *job,
         const std::vector<InstallOperation *> &install_,
         const DAG& opsDependencies, DWORD programCloseType,
@@ -261,8 +290,6 @@ void AbstractRepository::process(Job *job,
         const QString& user, const QString& password,
         const QString& proxyUser, const QString& proxyPassword)
 {
-    QString initialTitle = job->getTitle();
-
     if (npackd().isDebugEnabled()) {
         qCDebug(npackd) << "AbstractRepository::process: " <<
                 install_.size() << " operations";
@@ -395,29 +422,6 @@ void AbstractRepository::process(Job *job,
             }
         }
     }
-
-    bool installationScriptAcquired = false;
-
-    if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
-                QObject::tr("Waiting while other (un)installation scripts are running"));
-
-        time_t start = time(nullptr);
-        while (!job->isCancelled()) {
-            installationScriptAcquired = installationScripts.
-                    tryAcquire(1, 10000);
-            if (installationScriptAcquired) {
-                job->setProgress(job->getProgress() + 0.01);
-                break;
-            }
-
-            time_t seconds = time(nullptr) - start;
-            job->setTitle(initialTitle + " / " + QString(
-                    QObject::tr("Waiting while other (un)installation scripts are running (%1 minutes)")).
-                    arg(seconds / 60));
-        }
-    }
-    job->setTitle(initialTitle);
 
     std::vector<QString> stoppedServices;
 
@@ -583,9 +587,6 @@ void AbstractRepository::process(Job *job,
         if (schSCManager)
             CloseServiceHandle(schSCManager);
     }
-
-    if (installationScriptAcquired)
-        installationScripts.release();
 
     if (job->shouldProceed())
         job->setProgress(1);

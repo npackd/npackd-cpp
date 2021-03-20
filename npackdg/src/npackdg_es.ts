@@ -2346,11 +2346,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Waiting while other (un)installation scripts are running</source>
-        <translation>Esperando mientras otro script de (des)instalación está en ejecución</translation>
+        <translation type="vanished">Esperando mientras otro script de (des)instalación está en ejecución</translation>
     </message>
     <message>
         <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
-        <translation>Esperando mientras otro script de (des)instalación está en ejecución (%1 minutos)</translation>
+        <translation type="vanished">Esperando mientras otro script de (des)instalación está en ejecución (%1 minutos)</translation>
     </message>
     <message>
         <source>Running the uninstallation script (this may take some time)</source>
@@ -3579,6 +3579,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Installation operation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acquire installation script lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acquire the installation script lock</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

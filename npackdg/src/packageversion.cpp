@@ -383,7 +383,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
     // Inno Setup, NSIS
     if (job->shouldProceed() && this->type == PackageVersion::Type::INNO_SETUP) {
-        Job* exec = job->newSubJob(0.3,
+        Job* exec = job->newSubJob(0.29,
                 QObject::tr("Running the Inno Setup removal (this may take some time)"),
                 true, true);
         if (!d.exists(".Npackd"))
@@ -403,10 +403,16 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         // run the removal
         QString dir = WPMUtils::normalizePath(d.absolutePath());
         QString fullBinary = WPMUtils::normalizePath(where, false) + "\\unins000.exe";
+
+
+        Job* sub = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
+        bool acquired = AbstractRepository::lockInstallationScript(sub);
         WPMUtils::executeFile(exec, dir,
                 fullBinary,
                 "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=\"" + innoSetupLog + "\"",
                 QString(), env, false, printScriptOutput, false);
+        if (acquired)
+            AbstractRepository::unlockInstallationScript();
 
         // copy the Inno Setup log
         // ignore the errors. The log is not as important as the package removal.
@@ -427,7 +433,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
         QFile::remove(innoSetupLog);
     } else if (job->shouldProceed() && this->type == PackageVersion::Type::NSIS) {
-        Job* exec = job->newSubJob(0.3,
+        Job* exec = job->newSubJob(0.29,
                 QObject::tr("Running the NSIS removal (this may take some time)"),
                 true, true);
         if (!d.exists(".Npackd"))
@@ -444,9 +450,14 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         // run the removal
         QString dir = WPMUtils::normalizePath(d.absolutePath());
         QString fullBinary = WPMUtils::normalizePath(where, false) + "\\uninstall.exe";
+
+        Job* sub = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
+        bool acquired = AbstractRepository::lockInstallationScript(sub);
         WPMUtils::executeFile(exec, dir,
                 fullBinary, "/S _?=" + dir,
                 QString(), env, false, printScriptOutput, false);
+        if (acquired)
+            AbstractRepository::unlockInstallationScript();
 
         if (!job->getErrorMessage().isEmpty()) {
             job->setErrorMessage((QObject::tr("%1. Full output was saved in %2") +
@@ -474,7 +485,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
         if (!uninstallationScript.isEmpty()) {
             if (!d.exists(".Npackd"))
                 d.mkdir(".Npackd");
-            Job* sub = job->newSubJob(0.45,
+            Job* sub = job->newSubJob(0.44,
                     QObject::tr("Running the uninstallation script (this may take some time)"),
                     true, true);
 
@@ -502,8 +513,12 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             }
             */
 
+            Job* sub2 = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
+            bool acquired = AbstractRepository::lockInstallationScript(sub2);
             this->executeFile2(sub, d.absolutePath(), usfn,
                     env, printScriptOutput, false);
+            if (acquired)
+                AbstractRepository::unlockInstallationScript();
 
             if (ush != INVALID_HANDLE_VALUE) {
                 CloseHandle(ush);
@@ -1377,7 +1392,7 @@ void PackageVersion::install(Job* job, const QString& where,
 
     // Inno Setup, NSIS
     if (job->shouldProceed() && this->type == PackageVersion::Type::INNO_SETUP) {
-        Job* exec = job->newSubJob(0.3,
+        Job* exec = job->newSubJob(0.29,
                 QObject::tr("Running the Inno Setup installation (this may take some time)"),
                 true, true);
         if (!d.exists(".Npackd"))
@@ -1399,11 +1414,16 @@ void PackageVersion::install(Job* job, const QString& where,
         // run the installation
         QString dir = WPMUtils::normalizePath(d.absolutePath());
         QString fullBinary = WPMUtils::normalizePath(where, false) + "\\" + binary;
+
+        Job* sub = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
+        bool acquired = AbstractRepository::lockInstallationScript(sub);
         WPMUtils::executeFile(exec, dir,
                 fullBinary,
                 "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NOCANCEL /NORESTART /DIR=\"" + dir +
                 "\" /SAVEINF=\".Npackd\\InnoSetupInfo.ini\" /LOG=\"" + innoSetupLog + "\"",
                 QString(), env, false, printScriptOutput, false);
+        if (acquired)
+            AbstractRepository::unlockInstallationScript();
 
         if (job->shouldProceed()) {
             // ignore the errors here
@@ -1429,7 +1449,7 @@ void PackageVersion::install(Job* job, const QString& where,
 
         QFile::remove(innoSetupLog);
     } else if (job->shouldProceed() && this->type == PackageVersion::Type::NSIS) {
-        Job* exec = job->newSubJob(0.3,
+        Job* exec = job->newSubJob(0.29,
                 QObject::tr("Running the NSIS installation (this may take some time)"),
                 true, true);
         if (!d.exists(".Npackd"))
@@ -1448,9 +1468,14 @@ void PackageVersion::install(Job* job, const QString& where,
         // run the installation
         QString dir = WPMUtils::normalizePath(d.absolutePath());
         QString fullBinary = WPMUtils::normalizePath(where, false) + "\\" + binary;
+
+        Job* sub = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
+        bool acquired = AbstractRepository::lockInstallationScript(sub);
         WPMUtils::executeFile(exec, dir,
                 fullBinary, "/S /D=" + dir,
                 QString(), env, false, printScriptOutput, false);
+        if (acquired)
+            AbstractRepository::unlockInstallationScript();
 
         if (job->shouldProceed()) {
             // ignore the errors here
@@ -1481,7 +1506,7 @@ void PackageVersion::install(Job* job, const QString& where,
         }
 
         if (!installationScript.isEmpty()) {
-            Job* exec = job->newSubJob(0.6,
+            Job* exec = job->newSubJob(0.59,
                     QObject::tr("Running the installation script (this may take some time)"),
                     true, true);
             if (!d.exists(".Npackd"))
@@ -1497,9 +1522,14 @@ void PackageVersion::install(Job* job, const QString& where,
 
             addDependencyVars(&env);
 
+            Job* sub = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
+            bool acquired = AbstractRepository::lockInstallationScript(sub);
             this->executeFile2(exec, d.absolutePath(),
                     d.absolutePath() + "\\" + installationScript,
                     env, printScriptOutput, false);
+            if (acquired)
+                AbstractRepository::unlockInstallationScript();
+
             if (exec->getErrorMessage().isEmpty()) {
                 QString path = d.absolutePath();
                 path.replace('/', '\\');
@@ -1945,7 +1975,7 @@ void PackageVersion::stop(Job* job, DWORD programCloseType,
     if (me) {
         job->setProgress(0.5);
     } else if (QFile::exists(d.absolutePath() + "\\.Npackd\\Stop.bat")) {
-        Job* exec = job->newSubJob(0.5,
+        Job* exec = job->newSubJob(0.49,
                 QObject::tr("Executing the stop script"), true, true);
         if (!d.exists(".Npackd"))
             d.mkdir(".Npackd");
@@ -1957,10 +1987,15 @@ void PackageVersion::stop(Job* job, DWORD programCloseType,
 
         addDependencyVars(&env);
 
-        this->executeFile2(exec, d.absolutePath(),
-                d.absolutePath() + "\\.Npackd\\Stop.bat",
-                env,
-                printScriptOutput, false);
+        Job* sub = job->newSubJob(0.01, QObject::tr("Acquire the installation script lock"), true, true);
+        bool acquired = AbstractRepository::lockInstallationScript(sub);
+        if (job->shouldProceed())
+            this->executeFile2(exec, d.absolutePath(),
+                    d.absolutePath() + "\\.Npackd\\Stop.bat",
+                    env,
+                    printScriptOutput, false);
+        if (acquired)
+            AbstractRepository::unlockInstallationScript();
     } else {
         WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType,
                 stoppedServices);
