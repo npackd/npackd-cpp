@@ -92,7 +92,6 @@ set(NPACKDG_SOURCES
     src/deptask.cpp
     src/lockedfiles.cpp
     src/operation.cpp
-    src/downloadoperation.cpp
     src/controlservicesoperation.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
@@ -156,7 +155,6 @@ set(NPACKDG_HEADERS
     src/deptask.h
     src/lockedfiles.h
     src/operation.h
-    src/downloadoperation.h
     src/controlservicesoperation.h
 )
 set(NPACKDG_FORMS
