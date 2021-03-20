@@ -25,8 +25,9 @@ void DepTask::operator ()()
     this->dependencies.resize(tasks.size());
     std::vector<int> order = dependencies.topologicalSort();
 
-    while (true) {
+    while (job->shouldProceed()) {
         int found = -1;
+
         {
             std::unique_lock<std::mutex> lock{statusMutex};
             for (int i = 0; i < static_cast<int>(order.size()); i++) {

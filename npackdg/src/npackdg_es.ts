@@ -3589,6 +3589,14 @@ p, li { white-space: pre-wrap; }
         <source>Acquire the installation script lock</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Prepare install operations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Install operations</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

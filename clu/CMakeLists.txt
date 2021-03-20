@@ -88,6 +88,7 @@ set(CLU_SOURCES
     ../npackdg/src/dag.cpp
     ../npackdg/src/lockedfiles.cpp
     ../npackdg/src/threadpool.cpp
+    ../npackdg/src/deptask.cpp
     ../npackdcl/src/commandlinemessagehandler.cpp
 )
 set(CLU_HEADERS
@@ -126,6 +127,7 @@ set(CLU_HEADERS
     ../npackdg/src/dag.h
     ../npackdg/src/lockedfiles.h
     ../npackdg/src/threadpool.h
+    ../npackdg/src/deptask.h
     ../npackdcl/src/commandlinemessagehandler.h
 )
 

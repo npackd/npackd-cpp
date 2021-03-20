@@ -68,6 +68,7 @@ set(TESTS_SOURCES
     ../../npackdg/src/dag.cpp
     ../../npackdg/src/lockedfiles.cpp
     ../../npackdg/src/threadpool.cpp
+    ../../npackdg/src/deptask.cpp
 )
 set(TESTS_HEADERS
     ../../npackdg/src/visiblejobs.h
@@ -107,13 +108,14 @@ set(TESTS_HEADERS
     ../../npackdg/src/dag.h
     ../../npackdg/src/lockedfiles.h
     ../../npackdg/src/threadpool.h
+    ../../npackdg/src/deptask.h
 )
 
 set(OUTPUT_FILE_NAME "tests.exe")
 file(COPY DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(MSVC)
-    # Configure the template file that allows debugging
+    # Configure the template file that al^^lows debugging
     set(QT_USE_IMPORTED_TARGETS TRUE)
     find_package(Qt5Core REQUIRED)
     set(QT_BIN_DIR ${_qt5Core_install_prefix}/bin)

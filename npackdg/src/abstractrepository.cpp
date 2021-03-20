@@ -9,6 +9,7 @@
 #include "downloader.h"
 #include "packageutils.h"
 #include "threadpool.h"
+#include "deptask.h"
 
 std::mutex AbstractRepository::installationScripts;
 ThreadPool AbstractRepository::threadPool(10, THREAD_PRIORITY_LOWEST);
@@ -450,6 +451,10 @@ void AbstractRepository::process(Job *job,
 
     // 19% for removing/installing the packages
     if (job->shouldProceed()) {
+        std::vector<std::function<void(Job*)>> tasks;
+
+        Job* prep = job->newSubJob(0.01, QObject::tr("Prepare install operations"), true, true);
+
         // installing/removing packages
         for (int i = 0; i < static_cast<int>(install.size()); i++) {
             InstallOperation* op = install.at(i);
@@ -462,7 +467,6 @@ void AbstractRepository::process(Job *job,
                 txt = QString(QObject::tr("Uninstalling %1")).arg(
                         pv->toString());
 
-            Job* sub = job->newSubJob(0.18 / n, txt, true, true);
             if (op->install) {
                 QString dir = dirs.at(i);
                 QString binary = binaries.at(i);
@@ -496,7 +500,7 @@ void AbstractRepository::process(Job *job,
                                 op->exactLocation) {
                             // we should install in a particular directory, but it
                             // exists.
-                            Job* djob = sub->newSubJob(1,
+                            Job* djob = prep->newSubJob(1.0 / n,
                                     QObject::tr("Deleting temporary directory %1").
                                     arg(dir));
                             WPMUtils::removeDirectory(djob, dir);
@@ -506,14 +510,14 @@ void AbstractRepository::process(Job *job,
                             break;
                         }
                     } else {
-                        Job* moveJob = sub->newSubJob(0.01, QObject::tr("Renaming directory"), true, true);
+                        Job* moveJob = prep->newSubJob(1.0 / n, QObject::tr("Renaming directory"), true, true);
                         WPMUtils::renameDirectory(moveJob, dir, op->where);
                         if (moveJob->getErrorMessage().isEmpty())
                             dir = op->where;
                         else if (op->exactLocation) {
                             // we should install in a particular directory, but it
                             // exists.
-                            Job* djob = sub->newSubJob(1,
+                            Job* djob = prep->newSubJob(1.0 / n,
                                     QObject::tr("Deleting temporary directory %1").
                                     arg(dir));
                             WPMUtils::removeDirectory(djob, dir);
@@ -525,16 +529,32 @@ void AbstractRepository::process(Job *job,
                     }
                 }
 
-                pv->install(sub, dir, binary, printScriptOutput,
-                        programCloseType, &stoppedServices);
-            } else
-                pv->uninstall(sub, printScriptOutput, programCloseType,
-                        &stoppedServices);
+                // TODO: stopped services are not collected. If a task is cancelled,
+                // the std::vector with the names of the stopped services is already destroyed
+                tasks.push_back([pv, dir, binary, printScriptOutput, programCloseType](Job* job){
+                    std::vector<QString> svc;
+                    pv->install(job, dir, binary, printScriptOutput,
+                            programCloseType, &svc);
+                });
+            } else {
+                // TODO: stopped services are not collected. If a task is cancelled,
+                // the std::vector with the names of the stopped services is already destroyed
+                tasks.push_back([pv, printScriptOutput, programCloseType](Job* job){
+                    std::vector<QString> svc;
+                    pv->uninstall(job, printScriptOutput, programCloseType, &svc);
+                });
+            }
 
             if (!job->shouldProceed())
                 break;
 
             processed = i + 1;
+        }
+
+        if (job->shouldProceed()) {
+            Job* sub = job->newSubJob(0.17, QObject::tr("Install operations"), true, true);
+            DepTask dt(sub, tasks, opsDependencies, threadPool);
+            dt();
         }
     }
 
