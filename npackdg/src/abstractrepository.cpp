@@ -548,8 +548,14 @@ void AbstractRepository::process(Job *job,
             if (!job->shouldProceed())
                 break;
 
+            prep->setProgress((i + 1.0) / n);
+
             processed = i + 1;
         }
+
+        if (prep->shouldProceed())
+            prep->setProgress(1);
+        prep->complete();
 
         if (job->shouldProceed()) {
             Job* sub = job->newSubJob(0.17, QObject::tr("Install operations"), true, true);
