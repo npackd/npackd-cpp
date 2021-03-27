@@ -1,6 +1,7 @@
 #include "lockedfiles.h"
 
 #include <psapi.h>
+#include <signal.h>
 
 #include <thread>
 #include <condition_variable>
@@ -357,6 +358,8 @@ class GetObjectNameThread {
 
     std::mutex mutex_;
     std::condition_variable cv;
+
+    void run0();
 public:
     GetObjectNameThread(HANDLE h): h(h), thr(&GetObjectNameThread::run, this) {
     }
@@ -366,7 +369,26 @@ public:
     QString getName();
 };
 
+extern "C" {
+EXCEPTION_DISPOSITION _catch1( _EXCEPTION_RECORD* exception_record,
+    void* err, _CONTEXT* context, void* par)
+{
+    throw exception_record;
+}
+}
+
 void GetObjectNameThread::run()
+{
+    try {
+        __try1(_catch1)
+        run0();
+        __except1
+    } catch(_EXCEPTION_RECORD* seh) {
+        qCWarning(npackd) << "getting an object name via NtQueryObject failed";
+    };
+}
+
+void GetObjectNameThread::run0()
 {
     HMODULE module = GetModuleHandleA("ntdll.dll");
     _NtQueryObject NtQueryObject;
@@ -417,15 +439,19 @@ QString GetObjectNameThread::getName() {
         r = name;
     }
 
-    if (d) {
-        // Finished
-        thr.join();
-    } else {
-        thr.detach();
+    try {
+        if (d) {
+            // Finished
+            thr.join();
+        } else {
+            thr.detach();
 
-        // Not finished
-        TerminateThread(reinterpret_cast<HANDLE>(
-                thr.native_handle()), 255);
+            // Not finished
+            TerminateThread(reinterpret_cast<HANDLE>(
+                    thr.native_handle()), 255);
+        }
+    } catch (const std::system_error& e) {
+        qCWarning(npackd) << "GetObjectNameThread::getName" << e.what();
     }
 
     return r;

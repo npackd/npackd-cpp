@@ -1,6 +1,7 @@
 #include <windows.h>
 
 #include "threadpool.h"
+#include "wpmutils.h"
 
 ThreadPool::ThreadPool(const int n, const int priority):
     maxThreads(n), priority(priority)
@@ -20,8 +21,12 @@ void ThreadPool::clearThreads()
     }
     cond.notify_all();
 
-    for (auto& thr: threads) {
-        thr.join();
+    try {
+        for (auto& thr: threads) {
+            thr.join();
+        }
+    } catch (const std::system_error& e) {
+        qCWarning(npackd) << "ThreadPool::clearThreads" << e.what();
     }
 
     {

@@ -7,6 +7,11 @@
 
 #include "QString"
 
+extern "C" {
+EXCEPTION_DISPOSITION _catch1( _EXCEPTION_RECORD* exception_record,
+    void* err, _CONTEXT* context, void* par);
+}
+
 class LockedFiles
 {
     /**
