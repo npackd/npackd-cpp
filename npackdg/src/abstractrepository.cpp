@@ -316,7 +316,7 @@ void AbstractRepository::process(Job *job,
     // reoder the operations if a package is updated. In this case it is better
     // to uninstall the old first and then install the new one.
     if (install.size() == 2) {
-        InstallOperation* first = install.at(0);
+        InstallOperation* first = install.at(0); // TODO: also update the DAG
         InstallOperation* second = install.at(1);
         if (first->package == second->package &&
                 first->install && !second->install) {
@@ -407,6 +407,7 @@ void AbstractRepository::process(Job *job,
             } else {
                 dirs.push_back("");
                 std::future<QString> future = std::async([](){ return QString(); });
+                downloadFutures.push_back(std::move(future));
                 job->setProgress(job->getProgress() + 0.7 / n);
             }
 
