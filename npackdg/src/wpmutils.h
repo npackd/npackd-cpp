@@ -73,6 +73,8 @@ private:
     static void closeHandles(const std::vector<HANDLE>& handles);
 
     static QString getTaskName();
+    static void FindDesktopFolderView(const IID &riid, void **ppv, QString *err);
+    static void GetDesktopAutomationObject(const IID &riid, void **ppv, QString *err);
 public:
     /**
      * @brief how to close a process
@@ -138,6 +140,7 @@ public:
      * @return QStringList
      */
     static QStringList toQStringList(const std::vector<QString>& v);
+
     /**
      * Uses the Shell's IShellLink and IPersistFile interfaces
      * to create and store a shortcut to the specified object.
@@ -855,6 +858,22 @@ public:
      * @return [move] token data or nullptr
      */
     static PTOKEN_USER getUserSID(QString *err);
+
+    /**
+     * @brief starts a program or a file from the Explorer.
+     * This can be used to start a process unelevated from an elevated process.
+     *
+     * @param pszFile program or any other file
+     * @param pszParameters program parameters
+     * @param pszDirectory where to start
+     * @param pszOperation operation, e.g. "print"
+     * @param nShowCmd e.g. SW_SHOWNORMAL
+     * @param err error message will be stored here
+     */
+    static void ShellExecuteFromExplorer(const QString& pszFile,
+        const QString& pszParameters,
+        const QString& pszDirectory, const QString& pszOperation,
+        int nShowCmd, QString* err);
 };
 
 #endif // WPMUTILS_H

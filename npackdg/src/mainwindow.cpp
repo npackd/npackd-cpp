@@ -2320,11 +2320,21 @@ void MainWindow::on_actionRun_triggered()
 
                 QString filename = pv->getPath() + "\\" + impf;
 
+                // start the program without elevation
+                // see also https://devblogs.microsoft.com/oldnewthing/20131118-00/?p=2643
+                WPMUtils::ShellExecuteFromExplorer(filename,
+                    "", "", "open", SW_SHOWNORMAL, &err);
+
+                /*
+                this starts the program elevated, but may be useful in the
+                non-admin version
                 if (!QDesktopServices::openUrl(QUrl::fromLocalFile(filename))) {
                     QString msg = QObject::tr("Cannot open the file %1").
                             arg(filename);
-                    addErrorMessage(msg, msg, true, QMessageBox::Critical);
-                }
+                }*/
+
+                if (!err.isEmpty())
+                    addErrorMessage(err, err, true, QMessageBox::Critical);
             }
         }
     }

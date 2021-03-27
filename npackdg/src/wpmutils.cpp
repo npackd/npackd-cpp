@@ -19,6 +19,7 @@
 #include <taskschd.h>
 #include <comdef.h>
 #include <sddl.h>
+#include <objbase.h>
 #include <unordered_set>
 
 #include <QCoreApplication>
@@ -48,6 +49,7 @@
 #include "version.h"
 #include "windowsregistry.h"
 #include "lockedfiles.h"
+#include "comobject.h"
 
 QAtomicInt WPMUtils::nextNamePipeId;
 
@@ -66,6 +68,133 @@ Q_LOGGING_CATEGORY(npackdImportant, "npackd.important")
 
 WPMUtils::WPMUtils()
 {
+}
+
+void WPMUtils::FindDesktopFolderView(REFIID riid, void **ppv, QString* err)
+{
+    *err = "";
+
+    COMObject<IShellWindows> spShellWindows;
+
+    HRESULT hr = CoCreateInstance(CLSID_ShellWindows, nullptr, CLSCTX_ALL,
+                    IID_IShellWindows,
+                     reinterpret_cast<void**>(&spShellWindows.ptr));
+    if (FAILED(hr)) {
+        formatMessage(hr, err);
+    }
+
+    _variant_t vtLoc(CSIDL_DESKTOP);
+    _variant_t vtEmpty;
+
+    long lhwnd;
+    COMObject<IDispatch> spdisp;
+    if (err->isEmpty()) {
+        HRESULT hr = spShellWindows->FindWindowSW(&vtLoc, &vtEmpty,
+            SWC_DESKTOP, &lhwnd, SWFO_NEEDDISPATCH, &spdisp.ptr);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    COMObject<IShellBrowser> spBrowser;
+
+    COMObject<IServiceProvider> serviceProvider;
+    if (err->isEmpty()) {
+        HRESULT hr = spdisp->QueryInterface(IID_IServiceProvider,
+            reinterpret_cast<void**>(&serviceProvider.ptr));
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    if (err->isEmpty()) {
+        HRESULT hr = serviceProvider->QueryService(SID_STopLevelBrowser,
+                      IID_PPV_ARGS(&spBrowser.ptr));
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    COMObject<IShellView> spView;
+    if (err->isEmpty()) {
+        HRESULT hr = spBrowser->QueryActiveShellView(&spView.ptr);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    if (err->isEmpty()) {
+        HRESULT hr = spView->QueryInterface(riid, ppv);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+}
+
+void WPMUtils::GetDesktopAutomationObject(REFIID riid, void **ppv, QString* err)
+{
+    *err = "";
+
+    COMObject<IShellView> spsv;
+    FindDesktopFolderView(IID_PPV_ARGS(&spsv.ptr), err);
+
+    COMObject<IDispatch> spdispView;
+    if (err->isEmpty()) {
+        HRESULT hr = spsv->GetItemObject(SVGIO_BACKGROUND,
+            IID_PPV_ARGS(&spdispView.ptr));
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    if (err->isEmpty()) {
+        HRESULT hr = spdispView->QueryInterface(riid, ppv);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+}
+
+void WPMUtils::ShellExecuteFromExplorer(
+    const QString& pszFile,
+    const QString& pszParameters,
+    const QString& pszDirectory,
+    const QString& pszOperation,
+    int nShowCmd, QString* err)
+{
+    *err = "";
+
+    COMObject<IShellFolderViewDual> spFolderView;
+    GetDesktopAutomationObject(IID_PPV_ARGS(&spFolderView.ptr), err);
+
+    COMObject<IDispatch> spdispShell;
+    if (err->isEmpty()) {
+        HRESULT hr = spFolderView->get_Application(&spdispShell.ptr);
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    COMObject<IShellDispatch2> shellDispatch2;
+    if (err->isEmpty()) {
+        HRESULT hr = spdispShell->QueryInterface(IID_IShellDispatch2,
+            reinterpret_cast<void**>(&shellDispatch2.ptr));
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
+
+    if (err->isEmpty()) {
+        HRESULT hr = shellDispatch2->ShellExecute(
+            _bstr_t(WPMUtils::toLPWSTR(pszFile)),
+            _variant_t(WPMUtils::toLPWSTR(pszParameters)),
+            _variant_t(WPMUtils::toLPWSTR(pszDirectory)),
+            _variant_t(WPMUtils::toLPWSTR(pszOperation)),
+            _variant_t(nShowCmd));
+        if (FAILED(hr)) {
+            formatMessage(hr, err);
+        }
+    }
 }
 
 QString WPMUtils::getMessagesLog()
@@ -3668,3 +3797,4 @@ bool WPMUtils::hasAdminPrivileges()
 
     return fReturn;
 }
+
