@@ -429,6 +429,7 @@ void AbstractRepository::process(Job *job,
     }
 
     std::vector<QString> stoppedServices;
+    std::mutex stoppedServicesLock;
 
     // 10% for stopping the packages
     if (job->shouldProceed()) {
@@ -533,19 +534,27 @@ void AbstractRepository::process(Job *job,
                     }
                 }
 
-                // TODO: stopped services are not collected. If a task is cancelled,
-                // the std::vector with the names of the stopped services is already destroyed
-                tasks.push_back([pv, dir, binary, printScriptOutput, programCloseType](Job* job){
+                tasks.push_back([pv, dir, binary, printScriptOutput, programCloseType,
+                    &stoppedServicesLock, &stoppedServices](Job* job){
                     std::vector<QString> svc;
                     pv->install(job, dir, binary, printScriptOutput,
                             programCloseType, &svc);
+
+                    stoppedServicesLock.lock();
+                    stoppedServices.insert(stoppedServices.end(), svc.begin(),
+                        svc.end());
+                    stoppedServicesLock.unlock();
                 });
             } else {
-                // TODO: stopped services are not collected. If a task is cancelled,
-                // the std::vector with the names of the stopped services is already destroyed
-                tasks.push_back([pv, printScriptOutput, programCloseType](Job* job){
+                tasks.push_back([pv, printScriptOutput, programCloseType,
+                    &stoppedServicesLock, &stoppedServices](Job* job){
                     std::vector<QString> svc;
                     pv->uninstall(job, printScriptOutput, programCloseType, &svc);
+
+                    stoppedServicesLock.lock();
+                    stoppedServices.insert(stoppedServices.end(), svc.begin(),
+                        svc.end());
+                    stoppedServicesLock.unlock();
                 });
             }
 
