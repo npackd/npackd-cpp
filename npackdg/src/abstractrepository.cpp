@@ -286,11 +286,13 @@ void AbstractRepository::unlockInstallationScript()
 
 void AbstractRepository::process(Job *job,
         const std::vector<InstallOperation *> &install_,
-        const DAG& opsDependencies, DWORD programCloseType,
+        const DAG& opsDependencies_, DWORD programCloseType,
         bool printScriptOutput, bool interactive,
         const QString& user, const QString& password,
         const QString& proxyUser, const QString& proxyPassword)
 {
+    DAG opsDependencies(opsDependencies_);
+
     if (npackd().isDebugEnabled()) {
         qCDebug(npackd) << "AbstractRepository::process: " <<
                 install_.size() << " operations";
@@ -316,12 +318,13 @@ void AbstractRepository::process(Job *job,
     // reoder the operations if a package is updated. In this case it is better
     // to uninstall the old first and then install the new one.
     if (install.size() == 2) {
-        InstallOperation* first = install.at(0); // TODO: also update the DAG
+        InstallOperation* first = install.at(0);
         InstallOperation* second = install.at(1);
         if (first->package == second->package &&
                 first->install && !second->install) {
             install.insert(install.begin(), second);
             install.erase(install.begin() + 2);
+            opsDependencies.swapNodes(0, 1);
         }
     }
 

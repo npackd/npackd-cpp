@@ -91,9 +91,6 @@ std::tuple<int64_t, QString> FileLoader::saveURLInfos(
 }
 
 FileLoader::FileLoader(): threadPool(10, THREAD_PRIORITY_LOWEST)
-/*, [](size_t){ TODO
-    SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
-}};*/
 {
 
 }

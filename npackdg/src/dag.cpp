@@ -78,6 +78,22 @@ std::vector<int> DAG::topologicalSort() const
     return result;
 }
 
+void DAG::swapNodes(int a, int b)
+{
+    auto tmp = adj[a];
+    adj[a] = adj[b];
+    adj[b] = tmp;
+
+    for (int i = 0; i < static_cast<int>(adj.size()); ++i) {
+        for (int j = 0; j < static_cast<int>(adj[i].size()); ++j) {
+            if (adj[i][j] == a)
+                adj[i][j] = b;
+            else if (adj[i][j] == b)
+                adj[i][j] = a;
+        };
+    };
+}
+
 const std::vector<int>& DAG::getEdges(int u) const
 {
     return adj[u];

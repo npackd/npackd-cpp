@@ -18,6 +18,13 @@ public:
     std::vector<int> topologicalSort() const;
 
     /**
+     * @brief swaps (renames) the nodes
+     * @param a first node
+     * @param b second node
+     */
+    void swapNodes(int a, int b);
+
+    /**
      * @brief function to add an edge to graph
      * @param u from this edge
      * @param v to this edge
