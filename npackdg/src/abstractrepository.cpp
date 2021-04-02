@@ -438,8 +438,8 @@ void AbstractRepository::process(Job *job,
             PackageVersion* pv = pvs.at(i);
             if (!op->install) {
                 Job* sub = job->newSubJob(0.1 / n,
-                        QObject::tr("Stopping the package %1 of %2").
-                        arg(i + 1).arg(n));
+                        QObject::tr("Stopping the package %1").
+                        arg(pv->toString(false)));
                 pv->stop(sub, programCloseType, printScriptOutput,
                         &stoppedServices);
                 if (!sub->getErrorMessage().isEmpty()) {

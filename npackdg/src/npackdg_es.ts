@@ -3162,10 +3162,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Stopping the package %1 of %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Deleting temporary directory %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3595,6 +3591,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Install operations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopping the package %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

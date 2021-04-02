@@ -1751,7 +1751,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Stopping the package %1 of %2</source>
-        <translation>Останавливаю пакет %1 из %2</translation>
+        <translation type="vanished">Останавливаю пакет %1 из %2</translation>
     </message>
     <message>
         <source>Installing %1</source>
@@ -3583,6 +3583,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Install operations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopping the package %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
