@@ -284,6 +284,69 @@ void AbstractRepository::unlockInstallationScript()
     installationScripts.unlock();
 }
 
+QString AbstractRepository::createDirForInstallation(Job& job,
+        const PackageVersion& pv,
+        const InstallOperation& op, const QString& dir) {
+    QString ret;
+    QDir d;
+
+    if (op.where.isEmpty()) {
+        // if we are not forced to install in a particular
+        // directory, we try to use the ideal location
+        QString try_ = pv.getIdealInstallationDirectory();
+        if (WPMUtils::pathEquals(try_, dir) ||
+                (!d.exists(try_) && d.rename(dir, try_))) {
+            ret = try_;
+        } else {
+            qCWarning(npackdImportant()).noquote() << QObject::tr(
+                    "The preferred installation directory \"%1\" is not available").arg(try_);
+
+            try_ = pv.getSecondaryInstallationDirectory();
+            if (WPMUtils::pathEquals(try_, dir) ||
+                    (!d.exists(try_) && d.rename(dir, try_))) {
+                ret = try_;
+            } else {
+                try_ = WPMUtils::findNonExistingFile(try_, "");
+                if (WPMUtils::pathEquals(try_, dir) ||
+                        (!d.exists(try_) && d.rename(dir, try_))) {
+                    ret = try_;
+                }
+            }
+        }
+    } else {
+        if (d.exists(op.where)) {
+            if (!WPMUtils::pathEquals(op.where, dir) &&
+                    op.exactLocation) {
+                job.setErrorMessage(QObject::tr(
+                        "Cannot install %1 into %2. The directory already exists.").
+                        arg(pv.toString(true), op.where));
+            } else {
+                ret = dir;
+            }
+        } else {
+            ret = op.where;
+
+            Job* sub = job.newSubJob(0.99, QObject::tr("Rename %1 to %2").
+                arg(dir, op.where), true, false);
+            WPMUtils::renameDirectory(&job, dir, op.where);
+
+            if (!sub->getErrorMessage().isEmpty()) {
+                 if (op.exactLocation) {
+                    job.setErrorMessage(sub->getErrorMessage());
+                 } else {
+                    // we were not able to rename the directory, but an exact
+                    // location is not obligatory
+                    ret = dir;
+                }
+            }
+        }
+    }
+
+    job.complete();
+
+    return ret;
+}
+
 void AbstractRepository::process(Job *job,
         const std::vector<InstallOperation *> &install_,
         const DAG& opsDependencies_, DWORD programCloseType,
@@ -472,74 +535,26 @@ void AbstractRepository::process(Job *job,
                 QString dir = dirs.at(i);
                 QString binary = binaries.at(i);
 
-                if (op->where.isEmpty()) {
-                    // if we are not forced to install in a particular
-                    // directory, we try to use the ideal location
-                    QString try_ = pv->getIdealInstallationDirectory();
-                    if (WPMUtils::pathEquals(try_, dir) ||
-                            (!d.exists(try_) && d.rename(dir, try_))) {
-                        dir = try_;
-                    } else {
-                        qCWarning(npackdImportant()).noquote() << QObject::tr(
-                                "The preferred installation directory \"%1\" is not available").arg(try_);
-
-                        try_ = pv->getSecondaryInstallationDirectory();
-                        if (WPMUtils::pathEquals(try_, dir) ||
-                                (!d.exists(try_) && d.rename(dir, try_))) {
-                            dir = try_;
-                        } else {
-                            try_ = WPMUtils::findNonExistingFile(try_, "");
-                            if (WPMUtils::pathEquals(try_, dir) ||
-                                    (!d.exists(try_) && d.rename(dir, try_))) {
-                                dir = try_;
-                            }
-                        }
-                    }
-                } else {
-                    if (d.exists(op->where)) {
-                        if (!WPMUtils::pathEquals(op->where, dir) &&
-                                op->exactLocation) {
-                            // we should install in a particular directory, but it
-                            // exists.
-                            Job* djob = prep->newSubJob(1.0 / n,
-                                    QObject::tr("Deleting temporary directory %1").
-                                    arg(dir));
-                            WPMUtils::removeDirectory(djob, dir);
-                            job->setErrorMessage(QObject::tr(
-                                    "Cannot install %1 into %2. The directory already exists.").
-                                    arg(pv->toString(true), op->where));
-                            break;
-                        }
-                    } else {
-                        Job* moveJob = prep->newSubJob(1.0 / n, QObject::tr("Renaming directory"), true, true);
-                        WPMUtils::renameDirectory(moveJob, dir, op->where);
-                        if (moveJob->getErrorMessage().isEmpty())
-                            dir = op->where;
-                        else if (op->exactLocation) {
-                            // we should install in a particular directory, but it
-                            // exists.
-                            Job* djob = prep->newSubJob(1.0 / n,
-                                    QObject::tr("Deleting temporary directory %1").
-                                    arg(dir));
-                            WPMUtils::removeDirectory(djob, dir);
-                            job->setErrorMessage(QObject::tr(
-                                    "Cannot install %1 into %2. Cannot rename %3.").
-                                    arg(pv->toString(true), op->where, dir));
-                            break;
-                        }
-                    }
-                }
-
-                tasks.push_back([pv, dir, binary, printScriptOutput, programCloseType,
+                tasks.push_back([this, pv, dir, op, binary, printScriptOutput, programCloseType,
                     &stoppedServicesLock, &stoppedServices](Job* job){
+                    Job* sub = job->newSubJob(0.01,
+                        QObject::tr("Create package directory"), true, true);
+                    QString newDir = createDirForInstallation(*sub, *pv, *op, dir);
+
                     std::vector<QString> svc;
-                    pv->install(job, dir, binary, printScriptOutput,
+                    if (job->shouldProceed()) {
+                        sub = job->newSubJob(0.99,
+                            QObject::tr("Install package"), true, true);
+                        pv->install(sub, newDir, binary, printScriptOutput,
                             programCloseType, &svc);
+                    }
 
                     stoppedServicesLock.lock();
                     stoppedServices.insert(stoppedServices.end(), svc.begin(),
                         svc.end());
                     stoppedServicesLock.unlock();
+
+                    job->complete();
                 });
             } else {
                 tasks.push_back([pv, printScriptOutput, programCloseType,

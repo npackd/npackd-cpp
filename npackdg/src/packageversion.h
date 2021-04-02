@@ -329,7 +329,7 @@ public:
      * @param includeFullPackageName true = the full package name will be added
      * @return human readable title for this package version
      */
-    QString toString(bool includeFullPackageName=false);
+    QString toString(bool includeFullPackageName=false) const;
 
     /**
      * @return true if this package version is installed
@@ -346,14 +346,14 @@ public:
      * @return a maybe existing directory where this package would normally
      *     installed (e.g. C:\Program Files\My_Prog)
      */
-    QString getIdealInstallationDirectory();
+    QString getIdealInstallationDirectory() const;
 
     /**
      * @return a maybe existing directory where this package would normally
      *     installed as secondary location including the version number
      *     (e.g. C:\Program Files\My_Prog-12.2.3)
      */
-    QString getSecondaryInstallationDirectory();
+    QString getSecondaryInstallationDirectory() const;
 
     /**
      * Installs this package without dependencies. The directory should already

@@ -3158,15 +3158,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Deleting temporary directory %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot install %1 into %2. The directory already exists.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cannot install %1 into %2. Cannot rename %3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3454,10 +3446,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Renaming directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The preferred installation directory &quot;%1&quot; is not available</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3595,6 +3583,18 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot create the directory %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rename %1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create package directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Install package</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

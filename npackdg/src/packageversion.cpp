@@ -269,7 +269,7 @@ bool PackageVersion::isDirectoryLocked()
 }
 
 
-QString PackageVersion::toString(bool includeFullPackageName)
+QString PackageVersion::toString(bool includeFullPackageName) const
 {
     QString r = this->getPackageTitle(includeFullPackageName) + " " +
             this->version.getVersionString();
@@ -1109,7 +1109,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
     return errMsg->isEmpty();
 }
 
-QString PackageVersion::getIdealInstallationDirectory()
+QString PackageVersion::getIdealInstallationDirectory() const
 {
     return WPMUtils::normalizePath(
             PackageUtils::getInstallationDirectory() + "\\" +
@@ -1117,7 +1117,7 @@ QString PackageVersion::getIdealInstallationDirectory()
             false);
 }
 
-QString PackageVersion::getSecondaryInstallationDirectory()
+QString PackageVersion::getSecondaryInstallationDirectory() const
 {
     return WPMUtils::normalizePath(
             PackageUtils::getInstallationDirectory() + "\\" +

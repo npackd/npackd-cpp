@@ -20,6 +20,8 @@ class AbstractRepository
 {
 private:
     static std::mutex installationScripts;
+    QString createDirForInstallation(Job &job,
+        const PackageVersion &pv, const InstallOperation &op, const QString &dir);
 public:
     /** should be used for installation operations */
     static ThreadPool threadPool;
