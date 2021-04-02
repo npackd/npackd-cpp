@@ -2426,7 +2426,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Creating directory</source>
-        <translation>Creando directorio</translation>
+        <translation type="vanished">Creando directorio</translation>
     </message>
     <message>
         <source>Cannot create directory: %0</source>
@@ -3158,10 +3158,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Directory %1 already exists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Deleting temporary directory %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3595,6 +3591,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Stopping the package %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the directory %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

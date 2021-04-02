@@ -1636,7 +1636,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Creating directory</source>
-        <translation>Erzeuge Verzeichnis</translation>
+        <translation type="vanished">Erzeuge Verzeichnis</translation>
     </message>
     <message>
         <source>Cannot create directory: %0</source>
@@ -2398,7 +2398,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Directory %1 already exists</source>
-        <translation>Das Verzeichnis %1 existiert bereits</translation>
+        <translation type="vanished">Das Verzeichnis %1 existiert bereits</translation>
     </message>
     <message>
         <source>Invalid dependency link</source>
@@ -2806,6 +2806,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Stopping the package %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the directory %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

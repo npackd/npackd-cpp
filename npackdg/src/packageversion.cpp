@@ -1157,19 +1157,6 @@ QString PackageVersion::download_(Job* job, const QString& where,
 
     if (job->shouldProceed()) {
         job->setTitle(initialTitle + " / " +
-                QObject::tr("Creating directory"));
-        QString s = d.absolutePath();
-        if (!d.mkpath(s)) {
-            job->setErrorMessage(QObject::tr("Cannot create directory: %0").
-                    arg(s));
-        } else {
-            job->setProgress(0.01);
-        }
-    }
-    job->setTitle(initialTitle);
-
-    if (job->shouldProceed()) {
-        job->setTitle(initialTitle + " / " +
                 QObject::tr("Creating .Npackd sub-directory"));
         QString s = npackdDir;
         if (!d.mkpath(s)) {

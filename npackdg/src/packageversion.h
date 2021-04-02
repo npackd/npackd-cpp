@@ -379,7 +379,7 @@ public:
      * viruses, unpacks it in case of a .zip file, stores the text files.
      *
      * @param job job for this method
-     * @param where a non-existing directory for the package
+     * @param where an existing directory for the package
      * @param interactive true = allow the interaction with the user
      * @param user user name for the HTTP authentication or ""
      * @param password password for the HTTP authentication or ""

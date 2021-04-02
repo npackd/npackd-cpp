@@ -2168,7 +2168,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Creating directory</source>
-        <translation>Création du dossier</translation>
+        <translation type="vanished">Création du dossier</translation>
     </message>
     <message>
         <source>Cannot create directory: %0</source>
@@ -2753,10 +2753,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Downloading %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Directory %1 already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3477,6 +3473,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Stopping the package %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the directory %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

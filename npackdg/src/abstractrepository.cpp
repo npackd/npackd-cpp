@@ -386,13 +386,9 @@ void AbstractRepository::process(Job *job,
                 }
                 dir = WPMUtils::findNonExistingFile(dir, "");
 
-                if (d.exists(dir)) {
-                    sub->setErrorMessage(
-                            QObject::tr("Directory %1 already exists").
+                if (!d.mkpath(dir)) {
+                    sub->setErrorMessage(QObject::tr("Cannot create the directory %1").
                             arg(dir));
-                    dirs.push_back("");
-                    std::future<QString> future = std::async([](){ return QString(); });
-                    downloadFutures.push_back(std::move(future));
                 } else {
                     dirs.push_back(dir);
 
