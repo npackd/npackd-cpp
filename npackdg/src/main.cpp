@@ -49,18 +49,17 @@
 #define IDM_ADD_PACKAGE 34
 #define IDM_EXPORT 35
 
-#define DAYS_IN_WEEK 7
-
 MainWindow_t mainWindow;
 
-// Global Variables:
-HINSTANCE hInst;                                // current instance
-const WCHAR* szWindowClass = L"Npackdg";            // the main window class name
+// current instance
+HINSTANCE hInst;
+
+const WCHAR* mainWindowClass = L"Npackdg";
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -132,9 +131,6 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 
     // TODO: Place code here.
 
-    // Initialize global strings
-    MyRegisterClass(hInstance);
-
     // Initialize common controls.
     INITCOMMONCONTROLSEX icex = {};
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -143,10 +139,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 
     hInst = hInstance; // Store instance handle in our global variable
 
-    // Perform application initialization:
+    // create main window
     mainWindow.window = createMainWindow(nCmdShow);
-
-    //HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HELLOWINDOWS));
 
     MSG msg;
 
@@ -158,7 +152,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 
     destroyMainWindow(mainWindow.window);
 
-    UnregisterClassW(szWindowClass, hInstance);
+    UnregisterClassW(mainWindowClass, hInstance);
 
     return (int) msg.wParam;
 }
@@ -170,40 +164,32 @@ void destroyMainWindow(HWND hWnd)
     DestroyMenu(mainMenu);
 }
 
-ATOM MyRegisterClass(HINSTANCE hInstance)
-{
-    WNDCLASSEXW wcex = {};
-
-    wcex.cbSize = sizeof(WNDCLASSEX);
-
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, L"IDI_ICON1");
-    wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, L"IDI_ICON1");
-
-    return RegisterClassExW(&wcex);
-}
-
 HWND createMainWindow(int nCmdShow)
 {
-    HWND hWnd = CreateWindowW(szWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInst, NULL);
+    WNDCLASSEXW wcex = {};
+    wcex.cbSize = sizeof(WNDCLASSEX);
+    wcex.style          = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc    = mainWindowProc;
+    wcex.hInstance      = hInst;
+    wcex.hIcon          = LoadIcon(hInst, L"IDI_ICON1");
+    wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.lpszClassName  = mainWindowClass;
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, L"IDI_ICON1");
+    RegisterClassExW(&wcex);
 
-    if (!hWnd) {
-       return FALSE;
-    }
+    HWND hWnd = CreateWindowW(mainWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
+      CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInst, NULL);
 
     SetMenu(hWnd, createMainMenu());
 
-    mainWindow.tabs = createTabControl(hWnd);
+    mainWindow.tabs = createTab(hWnd);
 
-    mainWindow.table = createTable(mainWindow.tabs);
+    mainWindow.packagesPanel = createStatic(mainWindow.tabs);
+    SetWindowSubclass(mainWindow.packagesPanel,
+        &packagesPanelSubClassProc, 1, 0);
+
+    mainWindow.table = createTable(mainWindow.packagesPanel);
     LVCOLUMN col = {};
     col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
     col.fmt = LVCFMT_LEFT;
@@ -219,7 +205,90 @@ HWND createMainWindow(int nCmdShow)
     return hWnd;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK packagesPanelSubClassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/)
+{
+    switch(uMsg)
+    {
+        case WM_NOTIFY:
+        {
+            switch (((LPNMHDR)lParam)->code) {
+                case LVN_GETDISPINFO:
+                {
+                    // provide the data for the packages table
+                    NMLVDISPINFO* pnmv = (NMLVDISPINFO*) lParam;
+                    if (pnmv->item.iItem < 0 || // typo fixed 11am
+                            pnmv->item.iItem >= 1000) {
+                        return E_FAIL;         // requesting invalid item
+                    }
+
+                    LPWSTR pszResult;
+                    if (pnmv->item.mask & LVIF_TEXT) {
+                        switch (pnmv->item.iSubItem) {
+                        case 0:
+                            pszResult = const_cast<LPWSTR>(L"First");
+                            break;
+                        case 1:
+                            pszResult = const_cast<LPWSTR>(L"Second");
+                            break;
+                        default:
+                            pszResult = const_cast<LPWSTR>(L"Other");
+                            break;
+                        }
+                        pnmv->item.pszText = const_cast<LPWSTR>(pszResult);
+                    }
+                    if (pnmv->item.mask & LVIF_IMAGE) {
+                        pnmv->item.iImage = -1;
+                    }
+                    if (pnmv->item.mask & LVIF_STATE) {
+                        pnmv->item.state = 0;
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+        case WM_SIZE:
+        {
+            RECT r = {.left = 200, .top = 0,
+                .right = GET_X_LPARAM(lParam),
+                .bottom = GET_Y_LPARAM(lParam)};
+
+            // Resize the tab control to fit the client are of main window.
+            MoveWindow(mainWindow.table, r.left, r.top,
+                r.right - r.left, r.bottom - r.top, FALSE);
+            break;
+        }
+    }
+
+    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT CALLBACK tabSubClassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/)
+{
+    switch(uMsg)
+    {
+        case WM_SIZE:
+        {
+            RECT r = {.left = 0, .top = 0,
+                .right = GET_X_LPARAM(lParam),
+                .bottom = GET_Y_LPARAM(lParam)};
+
+            TabCtrl_AdjustRect(hWnd, FALSE, &r);
+
+            // Resize the tab control to fit the client are of main window.
+            MoveWindow(mainWindow.packagesPanel, r.left, r.top,
+                r.right - r.left, r.bottom - r.top, FALSE);
+
+            break;
+        }
+    }
+
+    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case WM_COMMAND:
@@ -253,8 +322,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
         case WM_DESTROY:
+        {
             PostQuitMessage(0);
-        break;
+            break;
+        }
 
         case WM_SIZE:
         {
@@ -286,38 +357,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     MessageBox(hWnd, L"changed", L"Caption", MB_OK);
                     /*SendMessage(hwndDisplay, WM_SETTEXT, 0,
                         (LPARAM) L"test!!!");*/
-                    break;
-                }
-
-                case LVN_GETDISPINFO:
-                {
-                    NMLVDISPINFO* pnmv = (NMLVDISPINFO*) lParam;
-                    if (pnmv->item.iItem < 0 || // typo fixed 11am
-                            pnmv->item.iItem >= 1000) {
-                        return E_FAIL;         // requesting invalid item
-                    }
-
-                    LPWSTR pszResult;
-                    if (pnmv->item.mask & LVIF_TEXT) {
-                        switch (pnmv->item.iSubItem) {
-                        case 0:
-                            pszResult = const_cast<LPWSTR>(L"First");
-                            break;
-                        case 1:
-                            pszResult = const_cast<LPWSTR>(L"Second");
-                            break;
-                        default:
-                            pszResult = const_cast<LPWSTR>(L"Other");
-                            break;
-                        }
-                        pnmv->item.pszText = const_cast<LPWSTR>(pszResult);
-                    }
-                    if (pnmv->item.mask & LVIF_IMAGE) {
-                        pnmv->item.iImage = -1;
-                    }
-                    if (pnmv->item.mask & LVIF_STATE) {
-                        pnmv->item.state = 0;
-                    }
                     break;
                 }
             }
@@ -353,7 +392,7 @@ void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title)
 
 HWND createStatic(HWND parent)
 {
-    HWND hwndStatic = CreateWindow(WC_STATIC, L"Text!",
+    HWND hwndStatic = CreateWindow(WC_STATIC, L"",
         WS_CHILD | WS_VISIBLE | WS_BORDER,
         100, 100, 100, 100,        // Position and dimensions; example only.
         parent, NULL, hInst,    // hInst is the global instance handle
@@ -408,25 +447,21 @@ HMENU createMainMenu()
     return hmenuMain;
 }
 
-HWND createTabControl(HWND hwndParent)
+HWND createTab(HWND hwndParent)
 {
     RECT rcClient;
-    HWND hwndTab;
-    TCITEM tie;
 
     // Get the dimensions of the parent window's client area, and
-    // create a tab control child window of that size. Note that g_hInst
-    // is the global instance handle.
+    // create a tab control child window of that size.
     GetClientRect(hwndParent, &rcClient);
-    hwndTab = CreateWindow(WC_TABCONTROL, L"",
+
+    HWND hwndTab = CreateWindow(WC_TABCONTROL, L"",
         WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
         0, 0, rcClient.right, rcClient.bottom,
         hwndParent, NULL, hInst, NULL);
-    if (hwndTab == NULL) {
-        return NULL;
-    }
 
     // Add tabs for each day of the week.
+    TCITEM tie;
     tie.mask = TCIF_TEXT | TCIF_IMAGE;
     tie.iImage = -1;
 
@@ -435,6 +470,8 @@ HWND createTabControl(HWND hwndParent)
 
     tie.pszText = const_cast<LPWSTR>(L"Jobs");
     TabCtrl_InsertItem(hwndTab, 1, &tie);
+
+    SetWindowSubclass(hwndTab, &tabSubClassProc, 1, 0);
 
     return hwndTab;
 }
@@ -451,3 +488,4 @@ HWND createTable(HWND parent)
                   hInst,
                   NULL);
 }
+

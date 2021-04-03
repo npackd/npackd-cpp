@@ -9,13 +9,16 @@
  * Main window.
  */
 typedef struct MainWindow_t {
-    /** handle or 0 */
+    /** handle */
     HWND window;
 
-    /** tab control or 0 */
+    /** tab control */
     HWND tabs;
 
-    /** table with packages or 0 */
+    /** panel for packages */
+    HWND packagesPanel;
+
+    /** table with packages */
     HWND table;
 } MainWindow_t;
 
@@ -37,10 +40,35 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
 HWND createMainWindow(int);
 
 /**
+ * @brief processes messages in the packages panel
+ *
+ * @param hWnd window
+ * @param uMsg message
+ * @param wParam first parameter
+ * @param lParam second parameter
+ * @param uIdSubclass Id of the Subclass procedure
+ * @param dwRefData reference data
+ * @return result
+ */
+LRESULT CALLBACK packagesPanelSubClassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+
+/**
+ * @brief processes messages in the tab control
+ *
+ * @param hWnd window
+ * @param uMsg message
+ * @param wParam first parameter
+ * @param lParam second parameter
+ * @param uIdSubclass Id of the Subclass procedure
+ * @param dwRefData reference data
+ * @return result
+ */
+LRESULT CALLBACK tabSubClassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+
+/**
  * @brief Processes messages for the main window.
- * WM_COMMAND  - process the application menu
- * WM_PAINT    - Paint the main window
- * WM_DESTROY  - post a quit message and return
  *
  * @param hWnd windows handle
  * @param message message
@@ -48,7 +76,7 @@ HWND createMainWindow(int);
  * @param lParam second parameter
  * @return result
  */
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK mainWindowProc(HWND, UINT, WPARAM, LPARAM);
 
 /**
  * @brief Message handler for about box.
@@ -69,8 +97,8 @@ INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title);
 
 /**
- * @brief Creates a child window (a static control) to occupy the tab control's
- * display area.
+ * @brief creates a static control with a text. This can be used also as a
+ * panel to group other controls.
  * @param parent parent control
  * @return the handle to the static control
  */
@@ -94,7 +122,7 @@ void destroyMainWindow(HWND hWnd);
  * @param hwndParent parent window (the application's main window)
  * @return handle to the tab control
  */
-HWND createTabControl(HWND hwndParent);
+HWND createTab(HWND hwndParent);
 
 /**
  * @brief creates the table with packages
