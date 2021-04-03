@@ -3617,6 +3617,70 @@ p, li { white-space: pre-wrap; }
         <source>Toggle toolbar</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation type="unfinished">&amp;Instalar</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation type="unfinished">Desi&amp;nstalar</translation>
+    </message>
+    <message>
+        <source>&amp;Update</source>
+        <translation type="unfinished">Act&amp;ualizar</translation>
+    </message>
+    <message>
+        <source>Show details</source>
+        <translation type="unfinished">Mostrar detalles</translation>
+    </message>
+    <message>
+        <source>Show changelog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open folder</source>
+        <translation type="unfinished">Abrir carpeta</translation>
+    </message>
+    <message>
+        <source>&amp;Open web site</source>
+        <translation type="unfinished">Abrir siti&amp;o web</translation>
+    </message>
+    <message>
+        <source>&amp;Test download site</source>
+        <translation type="unfinished">&amp;Probar sitio de descarga</translation>
+    </message>
+    <message>
+        <source>Check dependencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reload repositories</source>
+        <translation type="unfinished">Recargar repositorios</translation>
+    </message>
+    <message>
+        <source>Add package...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Package</source>
+        <translation type="unfinished">Paquete</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">Ayuda</translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

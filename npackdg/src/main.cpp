@@ -34,6 +34,19 @@
 #define IDM_CLOSE_TAB 20
 #define IDM_CHOOSE_COLUMNS 21
 #define IDM_TOGGLE_TOOLBAR 22
+#define IDM_INSTALL 23
+#define IDM_UNINSTALL 24
+#define IDM_UPDATE 25
+#define IDM_SHOW_DETAILS 26
+#define IDM_SHOW_CHANGELOG 27
+#define IDM_RUN 28
+#define IDM_OPEN_FOLDER 29
+#define IDM_OPEN_WEB_SITE 30
+#define IDM_TEST_DOWNLOAD_SITE 31
+#define IDM_CHECK_DEPENDENCIES 32
+#define IDM_RELOAD_REPOSITORIES 33
+#define IDM_ADD_PACKAGE 34
+#define IDM_EXPORT 35
 
 #define DAYS_IN_WEEK 7
 
@@ -251,34 +264,25 @@ void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title)
 HMENU createMainMenu()
 {
     HMENU packageMenu = CreateMenu();
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"&Install");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"U&ninstall");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"&Update");
+    appendMenuItem(packageMenu, IDM_INSTALL, QObject::tr("&Install"));
+    appendMenuItem(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"));
+    appendMenuItem(packageMenu, IDM_UPDATE, QObject::tr("&Update"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Show details");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Show changelog");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Run");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Open folder");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"&Open web site");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"&Test download site");
+    appendMenuItem(packageMenu, IDM_SHOW_DETAILS, QObject::tr("Show details"));
+    appendMenuItem(packageMenu, IDM_SHOW_CHANGELOG,
+        QObject::tr("Show changelog"));
+    appendMenuItem(packageMenu, IDM_RUN, QObject::tr("Run"));
+    appendMenuItem(packageMenu, IDM_OPEN_FOLDER, QObject::tr("Open folder"));
+    appendMenuItem(packageMenu, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"));
+    appendMenuItem(packageMenu, IDM_TEST_DOWNLOAD_SITE,
+        QObject::tr("&Test download site"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Check dependencies");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Reload repositories");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Add package...");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Export...");
+    appendMenuItem(packageMenu, IDM_CHECK_DEPENDENCIES,
+        QObject::tr("Check dependencies"));
+    appendMenuItem(packageMenu, IDM_RELOAD_REPOSITORIES,
+        QObject::tr("Reload repositories"));
+    appendMenuItem(packageMenu, IDM_ADD_PACKAGE, QObject::tr("Add package..."));
+    appendMenuItem(packageMenu, IDM_EXPORT, QObject::tr("Export..."));
     appendMenuItem(packageMenu, IDM_SETTINGS, QObject::tr("&Settings"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
     appendMenuItem(packageMenu, IDM_EXIT, QObject::tr("&Exit"));
@@ -295,11 +299,11 @@ HMENU createMainMenu()
 
     HMENU hmenuMain = CreateMenu();
     AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) packageMenu,
-        L"Package");
+        WPMUtils::toLPWSTR(QObject::tr("Package")));
     AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) viewMenu,
-        L"View");
+        WPMUtils::toLPWSTR(QObject::tr("View")));
     AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) helpMenu,
-        L"Help");
+        WPMUtils::toLPWSTR(QObject::tr("Help")));
 
     return hmenuMain;
 }
