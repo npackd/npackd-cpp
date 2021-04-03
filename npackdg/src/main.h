@@ -40,6 +40,24 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
 HWND createMainWindow(int);
 
 /**
+ * @brief creates a button
+ *
+ * @param hParent parent
+ * @param szCaption title
+ * @param r bounds
+ * @return handle
+ */
+HWND createButton(HWND hParent, const TCHAR *szCaption, const RECT& r);
+
+/**
+ * @brief create the panel with packages table and all the fiters
+ *
+ * @param parent parent window
+ * @return handle
+ */
+HWND createPackagesPanel(HWND parent);
+
+/**
  * @brief processes messages in the packages panel
  *
  * @param hWnd window
@@ -97,12 +115,23 @@ INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title);
 
 /**
- * @brief creates a static control with a text. This can be used also as a
- * panel to group other controls.
+ * @brief creates a label.
+ *
  * @param parent parent control
+ * @param title caption
  * @return the handle to the static control
  */
-HWND createStatic(HWND parent);
+HWND createStatic(HWND parent, const LPCWSTR title);
+
+/**
+ * @brief creates a static control that can be used as a
+ * panel to group other controls.
+ *
+ * @param parent parent control
+ * @param title caption
+ * @return the handle to the static control
+ */
+HWND createPanel(HWND parent);
 
 /**
  * @brief create the main menu

@@ -185,11 +185,39 @@ HWND createMainWindow(int nCmdShow)
 
     mainWindow.tabs = createTab(hWnd);
 
-    mainWindow.packagesPanel = createStatic(mainWindow.tabs);
-    SetWindowSubclass(mainWindow.packagesPanel,
-        &packagesPanelSubClassProc, 1, 0);
+    mainWindow.packagesPanel = createPackagesPanel(mainWindow.tabs);
 
-    mainWindow.table = createTable(mainWindow.packagesPanel);
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+
+    return hWnd;
+}
+
+HWND createButton(HWND hParent, const TCHAR *szCaption, const RECT& r)
+{
+    return CreateWindow(WC_BUTTON, szCaption, WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
+        r.left, r.top, r.right - r.left, r.bottom - r.top,
+        hParent, NULL, hInst, NULL);
+}
+
+HWND createPackagesPanel(HWND parent)
+{
+    HWND result = createPanel(parent);
+    SetWindowSubclass(result, &packagesPanelSubClassProc, 1, 0);
+
+    HWND searchLabel = createStatic(result, L"S&earch:");
+    MoveWindow(searchLabel, 0, 0, 200, 20, FALSE);
+
+    RECT r = {.left = 0, .top = 40, .right = 200, .bottom = 60};
+    createButton(result, L"&All", r);
+
+    r = {.left = 0, .top = 60, .right = 200, .bottom = 80};
+    createButton(result, L"&Installed", r);
+
+    r = {.left = 0, .top = 80, .right = 200, .bottom = 100};
+    createButton(result, L"&Updateable", r);
+
+    mainWindow.table = createTable(result);
     LVCOLUMN col = {};
     col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
     col.fmt = LVCFMT_LEFT;
@@ -199,10 +227,7 @@ HWND createMainWindow(int nCmdShow)
     ListView_SetItemCountEx(mainWindow.table, 1000,
         LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
 
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
-
-    return hWnd;
+    return result;
 }
 
 LRESULT CALLBACK packagesPanelSubClassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
@@ -390,14 +415,20 @@ void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title)
     AppendMenu(menu, MF_STRING, id, WPMUtils::toLPWSTR(title));
 }
 
-HWND createStatic(HWND parent)
+HWND createStatic(HWND parent, const LPCWSTR title)
 {
-    HWND hwndStatic = CreateWindow(WC_STATIC, L"",
+    return CreateWindow(WC_STATIC, title,
+        WS_CHILD | WS_VISIBLE,
+        0, 0, 100, 50,
+        parent, NULL, hInst, NULL);
+}
+
+HWND createPanel(HWND parent)
+{
+    return CreateWindow(WC_STATIC, L"",
         WS_CHILD | WS_VISIBLE | WS_BORDER,
-        100, 100, 100, 100,        // Position and dimensions; example only.
-        parent, NULL, hInst,    // hInst is the global instance handle
-        NULL);
-    return hwndStatic;
+        100, 100, 100, 100,
+        parent, NULL, hInst, NULL);
 }
 
 HMENU createMainMenu()
