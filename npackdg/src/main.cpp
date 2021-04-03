@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <windowsx.h>
 #include <shobjidl.h>
 #include <shellapi.h>
 
@@ -53,6 +54,7 @@
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 const WCHAR* szWindowClass = L"Npackdg";            // the main window class name
+HWND hwndTab = 0;
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -192,7 +194,7 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    SetMenu(hWnd, createMainMenu());
 
-   createTabControl(hWnd);
+   hwndTab = createTabControl(hWnd);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -203,7 +205,8 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
-        case WM_COMMAND: {
+        case WM_COMMAND:
+        {
             int wmId = LOWORD(wParam);
             // Parse the menu selections:
             switch (wmId) {
@@ -219,13 +222,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
 
-        case WM_PAINT: {
+        case WM_PAINT:
+        {
             PAINTSTRUCT ps;
             RECT rect;
             HDC hdc = BeginPaint(hWnd, &ps);
 
             GetClientRect(hWnd, &rect);
-            DrawText(hdc, TEXT("Hello, Windows!"), -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+            DrawText(hdc, TEXT("Hello, Windows!"), -1, &rect, DT_SINGLELINE |
+                DT_CENTER | DT_VCENTER);
             EndPaint(hWnd, &ps);
         }
         break;
@@ -233,6 +238,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_DESTROY:
             PostQuitMessage(0);
         break;
+
+        case WM_SIZE:
+        {
+            if (hwndTab == 0)
+                return E_INVALIDARG;
+
+            // Resize the tab control to fit the client are of main window.
+            if (!SetWindowPos(hwndTab, HWND_TOP, 0, 0, GET_X_LPARAM(lParam),
+                GET_Y_LPARAM(lParam), SWP_SHOWWINDOW))
+                return E_FAIL;
+
+            break;
+        }
 
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -314,9 +332,6 @@ HWND createTabControl(HWND hwndParent)
     INITCOMMONCONTROLSEX icex;
     HWND hwndTab;
     TCITEM tie;
-    int i;
-    TCHAR achTemp[256];  // Temporary buffer for strings.
-    wcscpy(achTemp, L"Sunday");
 
     // Initialize common controls.
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -338,14 +353,13 @@ HWND createTabControl(HWND hwndParent)
     // Add tabs for each day of the week.
     tie.mask = TCIF_TEXT | TCIF_IMAGE;
     tie.iImage = -1;
-    tie.pszText = achTemp;
 
-    for (i = 0; i < DAYS_IN_WEEK; i++) {
-        if (TabCtrl_InsertItem(hwndTab, i, &tie) == -1) {
-            DestroyWindow(hwndTab);
-            return NULL;
-        }
-    }
+    tie.pszText = const_cast<LPWSTR>(L"Packages");
+    TabCtrl_InsertItem(hwndTab, 0, &tie);
+
+    tie.pszText = const_cast<LPWSTR>(L"Jobs");
+    TabCtrl_InsertItem(hwndTab, 1, &tie);
+
     return hwndTab;
 }
 
