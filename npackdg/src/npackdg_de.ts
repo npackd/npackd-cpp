@@ -2828,6 +2828,22 @@ p, li { white-space: pre-wrap; }
         <source>&amp;Exit</source>
         <translation type="unfinished">B&amp;eenden</translation>
     </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">&amp;Einstellungen</translation>
+    </message>
+    <message>
+        <source>Close tab</source>
+        <translation type="unfinished">Tab schließen</translation>
+    </message>
+    <message>
+        <source>Choose columns...</source>
+        <translation type="unfinished">Spalten auswählen...</translation>
+    </message>
+    <message>
+        <source>Toggle toolbar</source>
+        <translation type="unfinished">Werkzeugleiste ein-/ausschalten</translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

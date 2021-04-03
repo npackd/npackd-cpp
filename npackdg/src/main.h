@@ -3,6 +3,8 @@
 
 #include <windows.h>
 
+#include <QString>
+
 /**
  * @brief Registers the window class.
  * @param hInstance application instance
@@ -45,6 +47,14 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 
 /**
+ * @brief appends a new menu item
+ * @param menu menu handle
+ * @param id command Id
+ * @param title title
+ */
+void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title);
+
+/**
  * @brief create the main menu
  * @return menu handle
  */
@@ -55,5 +65,13 @@ HMENU createMainMenu();
  * @param hWnd main window handle
  */
 void destroyMainWindow(HWND hWnd);
+
+/**
+ * @brief Creates a tab control, sized to fit the specified parent window's client
+ * area, and adds some tabs.
+ * @param hwndParent parent window (the application's main window)
+ * @return handle to the tab control
+ */
+HWND createTabControl(HWND hwndParent);
 
 #endif // MAIN_H

@@ -3601,6 +3601,22 @@ p, li { white-space: pre-wrap; }
         <source>&amp;Exit</source>
         <translation type="unfinished">&amp;Выход</translation>
     </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">&amp;Настройки</translation>
+    </message>
+    <message>
+        <source>Close tab</source>
+        <translation type="unfinished">Закрыть вкладку</translation>
+    </message>
+    <message>
+        <source>Choose columns...</source>
+        <translation type="unfinished">Быбрать столбцы...</translation>
+    </message>
+    <message>
+        <source>Toggle toolbar</source>
+        <translation type="unfinished">Показать панель инструментов</translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

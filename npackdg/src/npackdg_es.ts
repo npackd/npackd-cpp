@@ -3601,6 +3601,22 @@ p, li { white-space: pre-wrap; }
         <source>&amp;Exit</source>
         <translation type="unfinished">&amp;Salir</translation>
     </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">Preferencia&amp;s</translation>
+    </message>
+    <message>
+        <source>Close tab</source>
+        <translation type="unfinished">Cerrar pestaña</translation>
+    </message>
+    <message>
+        <source>Choose columns...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

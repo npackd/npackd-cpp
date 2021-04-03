@@ -27,8 +27,15 @@
 #include "uimessagehandler.h"
 #include "main.h"
 
-#define IDM_ABOUT 0x0010
-#define IDM_EXIT 0x0011
+#define IDM_ABOUT 16
+#define IDM_EXIT 17
+#define IDM_SETTINGS 18
+#define IDM_FEEDBACK 19
+#define IDM_CLOSE_TAB 20
+#define IDM_CHOOSE_COLUMNS 21
+#define IDM_TOGGLE_TOOLBAR 22
+
+#define DAYS_IN_WEEK 7
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -172,6 +179,8 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    SetMenu(hWnd, createMainMenu());
 
+   createTabControl(hWnd);
+
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
@@ -186,7 +195,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // Parse the menu selections:
             switch (wmId) {
             case IDM_ABOUT:
-                // DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                MessageBox(hWnd, L"hello", L"Caption", MB_OK);
                 break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
@@ -234,6 +243,11 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
+void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title)
+{
+    AppendMenu(menu, MF_STRING, id, WPMUtils::toLPWSTR(title));
+}
+
 HMENU createMainMenu()
 {
     HMENU packageMenu = CreateMenu();
@@ -265,25 +279,19 @@ HMENU createMainMenu()
         L"Add package...");
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
         L"Export...");
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"&Settings");
+    appendMenuItem(packageMenu, IDM_SETTINGS, QObject::tr("&Settings"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
-    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        WPMUtils::toLPWSTR(QObject::tr("&Exit")));
+    appendMenuItem(packageMenu, IDM_EXIT, QObject::tr("&Exit"));
 
     HMENU viewMenu = CreateMenu();
-    AppendMenu(viewMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Close tab");
-    AppendMenu(viewMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Choose columns...");
-    AppendMenu(viewMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Toggle toolbar");
+    appendMenuItem(viewMenu, IDM_CLOSE_TAB, QObject::tr("Close tab"));
+    appendMenuItem(viewMenu, IDM_CHOOSE_COLUMNS,
+        QObject::tr("Choose columns..."));
+    appendMenuItem(viewMenu, IDM_TOGGLE_TOOLBAR, QObject::tr("Toggle toolbar"));
 
     HMENU helpMenu = CreateMenu();
-    AppendMenu(helpMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Feedback");
-    AppendMenu(helpMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"About...");
+    AppendMenu(helpMenu, MF_STRING, IDM_FEEDBACK, L"Feedback");
+    AppendMenu(helpMenu, MF_STRING, IDM_ABOUT, L"About");
 
     HMENU hmenuMain = CreateMenu();
     AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) packageMenu,
@@ -294,5 +302,46 @@ HMENU createMainMenu()
         L"Help");
 
     return hmenuMain;
+}
+
+HWND createTabControl(HWND hwndParent)
+{
+    RECT rcClient;
+    INITCOMMONCONTROLSEX icex;
+    HWND hwndTab;
+    TCITEM tie;
+    int i;
+    TCHAR achTemp[256];  // Temporary buffer for strings.
+    wcscpy(achTemp, L"Sunday");
+
+    // Initialize common controls.
+    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    icex.dwICC = ICC_TAB_CLASSES;
+    InitCommonControlsEx(&icex);
+
+    // Get the dimensions of the parent window's client area, and
+    // create a tab control child window of that size. Note that g_hInst
+    // is the global instance handle.
+    GetClientRect(hwndParent, &rcClient);
+    hwndTab = CreateWindow(WC_TABCONTROL, L"",
+        WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
+        0, 0, rcClient.right, rcClient.bottom,
+        hwndParent, NULL, hInst, NULL);
+    if (hwndTab == NULL) {
+        return NULL;
+    }
+
+    // Add tabs for each day of the week.
+    tie.mask = TCIF_TEXT | TCIF_IMAGE;
+    tie.iImage = -1;
+    tie.pszText = achTemp;
+
+    for (i = 0; i < DAYS_IN_WEEK; i++) {
+        if (TabCtrl_InsertItem(hwndTab, i, &tie) == -1) {
+            DestroyWindow(hwndTab);
+            return NULL;
+        }
+    }
+    return hwndTab;
 }
 
