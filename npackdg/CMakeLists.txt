@@ -152,6 +152,7 @@ set(NPACKDG_HEADERS
     src/dag.h
     src/deptask.h
     src/lockedfiles.h
+    src/main.h
 )
 set(NPACKDG_FORMS
     src/mainwindow.ui

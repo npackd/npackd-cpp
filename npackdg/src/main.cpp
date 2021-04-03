@@ -25,6 +25,7 @@
 #include "uiutils.h"
 #include "clprocessor.h"
 #include "uimessagehandler.h"
+#include "main.h"
 
 #define IDM_ABOUT 0x0010
 #define IDM_EXIT 0x0011
@@ -32,12 +33,6 @@
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 const WCHAR* szWindowClass = L"Npackdg";            // the main window class name
-
-// Forward declarations of functions included in this code module:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -179,6 +174,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
+   SetMenu(hWnd, createMainMenu());
+
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
@@ -259,5 +256,67 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             break;
     }
     return (INT_PTR)FALSE;
+}
+
+HMENU createMainMenu()
+{
+    HMENU packageMenu = CreateMenu();
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Install");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Uninstall");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Update");
+    AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Show details");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Show changelog");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Run");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Open folder");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Open web site");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Test download site");
+    AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Check dependencies");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Reload repositories");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Add package...");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Export...");
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Settings");
+    AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
+    AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
+        WPMUtils::toLPWSTR(QObject::tr("Exit")));
+
+    HMENU viewMenu = CreateMenu();
+    AppendMenu(viewMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Close tab");
+    AppendMenu(viewMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Choose columns...");
+    AppendMenu(viewMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Toggle toolbar");
+
+    HMENU helpMenu = CreateMenu();
+    AppendMenu(helpMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"Feedback");
+    AppendMenu(helpMenu, MF_STRING, (UINT_PTR) nullptr,
+        L"About...");
+
+    HMENU hmenuMain = CreateMenu();
+    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) packageMenu,
+        L"Package");
+    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) viewMenu,
+        L"View");
+    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) helpMenu,
+        L"Help");
+
+    return hmenuMain;
 }
 

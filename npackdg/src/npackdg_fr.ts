@@ -3479,6 +3479,10 @@ p, li { white-space: pre-wrap; }
         <source>Install package</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
