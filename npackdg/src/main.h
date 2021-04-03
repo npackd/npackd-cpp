@@ -16,11 +16,11 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
  * @brief saves instance handle and creates main window. In this function,
  * we save the instance handle in a global variable and
  * create and display the main program window.
- * @param hInstance application instance
+ *
  * @param nCmdShow SW_*
  * @return main window handle
  */
-HWND InitInstance(HINSTANCE, int);
+HWND createMainWindow(int);
 
 /**
  * @brief Processes messages for the main window.
@@ -55,6 +55,14 @@ INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title);
 
 /**
+ * @brief Creates a child window (a static control) to occupy the tab control's
+ * display area.
+ * @param parent parent control
+ * @return the handle to the static control
+ */
+HWND createStatic(HWND parent);
+
+/**
  * @brief create the main menu
  * @return menu handle
  */
@@ -73,5 +81,12 @@ void destroyMainWindow(HWND hWnd);
  * @return handle to the tab control
  */
 HWND createTabControl(HWND hwndParent);
+
+/**
+ * @brief creates the table with packages
+ * @param parent parent window
+ * @return window handle
+ */
+HWND createTable(HWND parent);
 
 #endif // MAIN_H

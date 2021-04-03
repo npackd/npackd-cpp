@@ -134,8 +134,16 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
     // Initialize global strings
     MyRegisterClass(hInstance);
 
+    // Initialize common controls.
+    INITCOMMONCONTROLSEX icex = {};
+    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    icex.dwICC = ICC_TAB_CLASSES;
+    InitCommonControlsEx(&icex);
+
+    hInst = hInstance; // Store instance handle in our global variable
+
     // Perform application initialization:
-    HWND hWnd = InitInstance (hInstance, nCmdShow);
+    HWND hWnd = createMainWindow(nCmdShow);
 
     //HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HELLOWINDOWS));
 
@@ -181,12 +189,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
+HWND createMainWindow(int nCmdShow)
 {
-   hInst = hInstance; // Store instance handle in our global variable
-
    HWND hWnd = CreateWindowW(szWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInstance, NULL);
+      CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInst, NULL);
 
    if (!hWnd) {
       return FALSE;
@@ -195,6 +201,15 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
    SetMenu(hWnd, createMainMenu());
 
    hwndTab = createTabControl(hWnd);
+
+   HWND table = createTable(hwndTab);
+   LVCOLUMN col = {};
+   col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+   col.fmt = LVCFMT_LEFT;
+   col.cx = 100;
+   col.pszText = const_cast<LPWSTR>(L"ColumnHeader");
+   ListView_InsertColumn(table, 0, &col);
+   ListView_SetItemCountEx(table, 1000, LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -252,6 +267,55 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
+        case WM_NOTIFY:
+        {
+            switch (((LPNMHDR)lParam)->code) {
+                case TCN_SELCHANGING:
+                {
+                    // Return FALSE to allow the selection to change.
+                    return FALSE;
+                }
+
+                case TCN_SELCHANGE:
+                {
+                    // int iPage = TabCtrl_GetCurSel(hwndTab);
+
+                    // Note that g_hInst is the global instance handle.
+                    MessageBox(hWnd, L"changed", L"Caption", MB_OK);
+                    /*SendMessage(hwndDisplay, WM_SETTEXT, 0,
+                        (LPARAM) L"test!!!");*/
+                    break;
+                }
+
+                case LVN_GETDISPINFO:
+                {
+                    NMLVDISPINFO* pnmv = (NMLVDISPINFO*) lParam;
+                    if (pnmv->item.iItem < 0 || // typo fixed 11am
+                            pnmv->item.iItem >= 1000) {
+                        return E_FAIL;         // requesting invalid item
+                    }
+
+                    LPWSTR pszResult;
+                    if (pnmv->item.mask & LVIF_TEXT) {
+                        switch (pnmv->item.iSubItem) {
+                        case 0:    pszResult = L"First";    break;
+                        case 1:  pszResult = L"Second";  break;
+                        default: pszResult = L"Other"; break;
+                        }
+                        pnmv->item.pszText = const_cast<LPWSTR>(pszResult);
+                    }
+                    if (pnmv->item.mask & LVIF_IMAGE) {
+                        pnmv->item.iImage = -1;
+                    }
+                    if (pnmv->item.mask & LVIF_STATE) {
+                        pnmv->item.state = 0;
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -277,6 +341,16 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 void appendMenuItem(HMENU menu, UINT_PTR id, const QString& title)
 {
     AppendMenu(menu, MF_STRING, id, WPMUtils::toLPWSTR(title));
+}
+
+HWND createStatic(HWND parent)
+{
+    HWND hwndStatic = CreateWindow(WC_STATIC, L"Text!",
+        WS_CHILD | WS_VISIBLE | WS_BORDER,
+        100, 100, 100, 100,        // Position and dimensions; example only.
+        parent, NULL, hInst,    // hInst is the global instance handle
+        NULL);
+    return hwndStatic;
 }
 
 HMENU createMainMenu()
@@ -329,14 +403,8 @@ HMENU createMainMenu()
 HWND createTabControl(HWND hwndParent)
 {
     RECT rcClient;
-    INITCOMMONCONTROLSEX icex;
     HWND hwndTab;
     TCITEM tie;
-
-    // Initialize common controls.
-    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-    icex.dwICC = ICC_TAB_CLASSES;
-    InitCommonControlsEx(&icex);
 
     // Get the dimensions of the parent window's client area, and
     // create a tab control child window of that size. Note that g_hInst
@@ -363,3 +431,15 @@ HWND createTabControl(HWND hwndParent)
     return hwndTab;
 }
 
+HWND createTable(HWND parent)
+{
+    return CreateWindow(WC_LISTVIEW, NULL,
+                  WS_VISIBLE | WS_CHILD | WS_TABSTOP |
+                  LVS_NOSORTHEADER | LVS_OWNERDATA |
+                  LVS_SINGLESEL | LVS_REPORT,
+                  200, 25, 200, 200,
+                  parent,
+                  0,
+                  hInst,
+                  NULL);
+}
