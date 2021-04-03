@@ -6,6 +6,20 @@
 #include <QString>
 
 /**
+ * Main window.
+ */
+typedef struct MainWindow_t {
+    /** handle or 0 */
+    HWND window;
+
+    /** tab control or 0 */
+    HWND tabs;
+
+    /** table with packages or 0 */
+    HWND table;
+} MainWindow_t;
+
+/**
  * @brief Registers the window class.
  * @param hInstance application instance
  * @return result from the call to RegisterClassExW

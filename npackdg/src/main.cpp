@@ -51,10 +51,11 @@
 
 #define DAYS_IN_WEEK 7
 
+MainWindow_t mainWindow;
+
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 const WCHAR* szWindowClass = L"Npackdg";            // the main window class name
-HWND hwndTab = 0;
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -143,7 +144,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
     hInst = hInstance; // Store instance handle in our global variable
 
     // Perform application initialization:
-    HWND hWnd = createMainWindow(nCmdShow);
+    mainWindow.window = createMainWindow(nCmdShow);
 
     //HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HELLOWINDOWS));
 
@@ -155,7 +156,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         DispatchMessage(&msg);
     }
 
-    destroyMainWindow(hWnd);
+    destroyMainWindow(mainWindow.window);
 
     UnregisterClassW(szWindowClass, hInstance);
 
@@ -191,30 +192,31 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 HWND createMainWindow(int nCmdShow)
 {
-   HWND hWnd = CreateWindowW(szWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
+    HWND hWnd = CreateWindowW(szWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInst, NULL);
 
-   if (!hWnd) {
-      return FALSE;
-   }
+    if (!hWnd) {
+       return FALSE;
+    }
 
-   SetMenu(hWnd, createMainMenu());
+    SetMenu(hWnd, createMainMenu());
 
-   hwndTab = createTabControl(hWnd);
+    mainWindow.tabs = createTabControl(hWnd);
 
-   HWND table = createTable(hwndTab);
-   LVCOLUMN col = {};
-   col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
-   col.fmt = LVCFMT_LEFT;
-   col.cx = 100;
-   col.pszText = const_cast<LPWSTR>(L"ColumnHeader");
-   ListView_InsertColumn(table, 0, &col);
-   ListView_SetItemCountEx(table, 1000, LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
+    mainWindow.table = createTable(mainWindow.tabs);
+    LVCOLUMN col = {};
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"ColumnHeader");
+    ListView_InsertColumn(mainWindow.table, 0, &col);
+    ListView_SetItemCountEx(mainWindow.table, 1000,
+        LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
 
-   return hWnd;
+    return hWnd;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -256,11 +258,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case WM_SIZE:
         {
-            if (hwndTab == 0)
+            if (mainWindow.tabs == 0)
                 return E_INVALIDARG;
 
             // Resize the tab control to fit the client are of main window.
-            if (!SetWindowPos(hwndTab, HWND_TOP, 0, 0, GET_X_LPARAM(lParam),
+            if (!SetWindowPos(mainWindow.tabs, HWND_TOP, 0, 0, GET_X_LPARAM(lParam),
                 GET_Y_LPARAM(lParam), SWP_SHOWWINDOW))
                 return E_FAIL;
 
@@ -298,9 +300,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     LPWSTR pszResult;
                     if (pnmv->item.mask & LVIF_TEXT) {
                         switch (pnmv->item.iSubItem) {
-                        case 0:    pszResult = L"First";    break;
-                        case 1:  pszResult = L"Second";  break;
-                        default: pszResult = L"Other"; break;
+                        case 0:
+                            pszResult = const_cast<LPWSTR>(L"First");
+                            break;
+                        case 1:
+                            pszResult = const_cast<LPWSTR>(L"Second");
+                            break;
+                        default:
+                            pszResult = const_cast<LPWSTR>(L"Other");
+                            break;
                         }
                         pnmv->item.pszText = const_cast<LPWSTR>(pszResult);
                     }
