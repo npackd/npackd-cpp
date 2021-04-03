@@ -113,9 +113,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow)) {
-        return FALSE;
-    }
+    HWND hWnd = InitInstance (hInstance, nCmdShow);
 
     //HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HELLOWINDOWS));
 
@@ -127,14 +125,20 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         DispatchMessage(&msg);
     }
 
+    destroyMainWindow(hWnd);
+
+    UnregisterClassW(szWindowClass, hInstance);
+
     return (int) msg.wParam;
 }
 
-/**
- * @brief Registers the window class.
- * @param hInstance application instance
- * @return result from the call to RegisterClassExW
- */
+void destroyMainWindow(HWND hWnd)
+{
+    HMENU mainMenu = GetMenu(hWnd);
+    DestroyWindow(hWnd);
+    DestroyMenu(mainMenu);
+}
+
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex = {};
@@ -155,15 +159,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-/**
- * @brief saves instance handle and creates main window. In this function,
- * we save the instance handle in a global variable and
- * create and display the main program window.
- * @param hInstance application instance
- * @param nCmdShow SW_*
- * @return TRUE if the application was successfully initialized
- */
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
@@ -179,21 +175,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
-   return TRUE;
+   return hWnd;
 }
 
-/**
- * @brief Processes messages for the main window.
- * WM_COMMAND  - process the application menu
- * WM_PAINT    - Paint the main window
- * WM_DESTROY  - post a quit message and return
- *
- * @param hWnd windows handle
- * @param message message
- * @param wParam first parameter
- * @param lParam second parameter
- * @return result
- */
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
@@ -234,14 +218,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-/**
- * @brief Message handler for about box.
- * @param hDlg dialog
- * @param message message
- * @param wParam first parameter
- * @param lParam second parameter
- * @return result
- */
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -262,11 +238,11 @@ HMENU createMainMenu()
 {
     HMENU packageMenu = CreateMenu();
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Install");
+        L"&Install");
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Uninstall");
+        L"U&ninstall");
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Update");
+        L"&Update");
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
         L"Show details");
@@ -277,9 +253,9 @@ HMENU createMainMenu()
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
         L"Open folder");
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Open web site");
+        L"&Open web site");
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Test download site");
+        L"&Test download site");
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
         L"Check dependencies");
@@ -290,10 +266,10 @@ HMENU createMainMenu()
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
         L"Export...");
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        L"Settings");
+        L"&Settings");
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
     AppendMenu(packageMenu, MF_STRING, (UINT_PTR) nullptr,
-        WPMUtils::toLPWSTR(QObject::tr("Exit")));
+        WPMUtils::toLPWSTR(QObject::tr("&Exit")));
 
     HMENU viewMenu = CreateMenu();
     AppendMenu(viewMenu, MF_STRING, (UINT_PTR) nullptr,

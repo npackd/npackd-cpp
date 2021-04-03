@@ -3598,8 +3598,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Exit</source>
+        <translation type="unfinished">&amp;Выход</translation>
     </message>
 </context>
 <context>
