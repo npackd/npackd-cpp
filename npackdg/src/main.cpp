@@ -26,11 +26,27 @@
 #include "clprocessor.h"
 #include "uimessagehandler.h"
 
-// Modern and efficient C++ Thread Pool Library
-// https://github.com/vit-vit/CTPL
+#define IDM_ABOUT 0x0010
+#define IDM_EXIT 0x0011
 
-int main(int argc, char *argv[])
+// Global Variables:
+HINSTANCE hInst;                                // current instance
+const WCHAR* szWindowClass = L"Npackdg";            // the main window class name
+
+// Forward declarations of functions included in this code module:
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+int APIENTRY WinMain(_In_ HINSTANCE hInstance,
+                     _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPSTR    lpCmdLine,
+                     _In_ int       nCmdShow)
 {
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
+
     //qCDebug(npackd) << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
 
     qInstallMessageHandler(eventLogMessageHandler);
@@ -60,6 +76,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<QMessageBox::Icon>("QMessageBox::Icon");
 
 #if !defined(__x86_64__) && !defined(_WIN64)
+    // TODO: use Windows MessageDlg
     if (WPMUtils::is64BitWindows()) {
         QMessageBox::critical(0, "Error",
                 QObject::tr("The 32 bit version of Npackd requires a 32 bit operating system.") + "\r\n" +
@@ -84,12 +101,163 @@ int main(int argc, char *argv[])
 
     CLProcessor clp;
 
-    int errorCode;
-    clp.process(argc, argv, &errorCode);
+    // int errorCode = 0; // TODO
+
+
+    // TODO: clp.process(argc, argv, &errorCode);
 
     //WPMUtils::timer.dump();
 
     FreeLibrary(m);
 
-    return errorCode;
+    // TODO: return errorCode;
+
+    // TODO: Place code here.
+
+    // Initialize global strings
+    MyRegisterClass(hInstance);
+
+    // Perform application initialization:
+    if (!InitInstance (hInstance, nCmdShow)) {
+        return FALSE;
+    }
+
+    //HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HELLOWINDOWS));
+
+    MSG msg;
+
+    // Main message loop:
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return (int) msg.wParam;
 }
+
+/**
+ * @brief Registers the window class.
+ * @param hInstance application instance
+ * @return result from the call to RegisterClassExW
+ */
+ATOM MyRegisterClass(HINSTANCE hInstance)
+{
+    WNDCLASSEXW wcex = {};
+
+    wcex.cbSize = sizeof(WNDCLASSEX);
+
+    wcex.style          = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc    = WndProc;
+    wcex.cbClsExtra     = 0;
+    wcex.cbWndExtra     = 0;
+    wcex.hInstance      = hInstance;
+    wcex.hIcon          = LoadIcon(hInstance, L"IDI_ICON1");
+    wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.lpszClassName  = szWindowClass;
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, L"IDI_ICON1");
+
+    return RegisterClassExW(&wcex);
+}
+
+/**
+ * @brief saves instance handle and creates main window. In this function,
+ * we save the instance handle in a global variable and
+ * create and display the main program window.
+ * @param hInstance application instance
+ * @param nCmdShow SW_*
+ * @return TRUE if the application was successfully initialized
+ */
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{
+   hInst = hInstance; // Store instance handle in our global variable
+
+   HWND hWnd = CreateWindowW(szWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
+      CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInstance, NULL);
+
+   if (!hWnd) {
+      return FALSE;
+   }
+
+   ShowWindow(hWnd, nCmdShow);
+   UpdateWindow(hWnd);
+
+   return TRUE;
+}
+
+/**
+ * @brief Processes messages for the main window.
+ * WM_COMMAND  - process the application menu
+ * WM_PAINT    - Paint the main window
+ * WM_DESTROY  - post a quit message and return
+ *
+ * @param hWnd windows handle
+ * @param message message
+ * @param wParam first parameter
+ * @param lParam second parameter
+ * @return result
+ */
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message) {
+        case WM_COMMAND: {
+            int wmId = LOWORD(wParam);
+            // Parse the menu selections:
+            switch (wmId) {
+            case IDM_ABOUT:
+                // DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                break;
+            case IDM_EXIT:
+                DestroyWindow(hWnd);
+                break;
+            default:
+                return DefWindowProc(hWnd, message, wParam, lParam);
+            }
+        }
+        break;
+
+        case WM_PAINT: {
+            PAINTSTRUCT ps;
+            RECT rect;
+            HDC hdc = BeginPaint(hWnd, &ps);
+
+            GetClientRect(hWnd, &rect);
+            DrawText(hdc, TEXT("Hello, Windows!"), -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+            EndPaint(hWnd, &ps);
+        }
+        break;
+
+        case WM_DESTROY:
+            PostQuitMessage(0);
+        break;
+
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
+
+/**
+ * @brief Message handler for about box.
+ * @param hDlg dialog
+ * @param message message
+ * @param wParam first parameter
+ * @param lParam second parameter
+ * @return result
+ */
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message) {
+        case WM_INITDIALOG:
+            return (INT_PTR)TRUE;
+        case WM_COMMAND:
+            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
+                EndDialog(hDlg, LOWORD(wParam));
+                return (INT_PTR)TRUE;
+            }
+            break;
+    }
+    return (INT_PTR)FALSE;
+}
+
