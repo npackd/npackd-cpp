@@ -1884,7 +1884,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Packages</source>
-        <translation>Paquets</translation>
+        <translation type="vanished">Paquets</translation>
     </message>
     <message>
         <source>Cannot exit while jobs are running</source>
@@ -1980,7 +1980,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Settings</source>
-        <translation>Paramètres</translation>
+        <translation type="vanished">Paramètres</translation>
     </message>
     <message>
         <source>About</source>
@@ -2004,7 +2004,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Jobs</source>
-        <translation>Tâches</translation>
+        <translation type="vanished">Tâches</translation>
     </message>
     <message>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
@@ -2936,18 +2936,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>All</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Found in %1 ms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose columns</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>MSI packages</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3136,15 +3124,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Export</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Choose export directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -11,14 +11,10 @@
 #include "package.h"
 #include "selection.h"
 
-namespace Ui {
-    class MainFrame;
-}
-
 /**
  * Main frame
  */
-class MainFrame : public QFrame, public Selection
+class MainFrame : public QObject, public Selection
 {
     Q_OBJECT
 private:
@@ -110,7 +106,6 @@ public:
      */
     void setStatusFilter(int status);
 private:
-    Ui::MainFrame *ui;
     void selectSomething();
 private slots:
     void on_tableWidget_doubleClicked(QModelIndex index);

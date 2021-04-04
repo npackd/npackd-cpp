@@ -2074,11 +2074,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>All</source>
-        <translation>Все</translation>
+        <translation type="vanished">Все</translation>
     </message>
     <message>
         <source>Packages</source>
-        <translation>Пакеты</translation>
+        <translation type="vanished">Пакеты</translation>
     </message>
     <message>
         <source>Cannot exit while jobs are running</source>
@@ -2178,7 +2178,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Settings</source>
-        <translation>Настройки</translation>
+        <translation type="vanished">Настройки</translation>
     </message>
     <message>
         <source>About</source>
@@ -2202,7 +2202,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Jobs</source>
-        <translation>Задания</translation>
+        <translation type="vanished">Задания</translation>
     </message>
     <message>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
@@ -3166,14 +3166,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Found in %1 ms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose columns</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>MSI package with the GUID %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3258,15 +3250,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Export</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Choose export directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

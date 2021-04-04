@@ -18,14 +18,12 @@
 #include "wpmutils.h"
 
 MainFrame::MainFrame(QWidget *parent) :
-    QFrame(parent), Selection(),
-    ui(new Ui::MainFrame)
+    QObject(parent), Selection()
 {
-    ui->setupUi(this);
-
     this->categoryCombosEvents = true;
 
-    QTableView* t = this->ui->tableWidget;
+    /* todo
+     * QTableView* t = this->ui->tableWidget;
 
     QItemSelectionModel *sm = t->selectionModel();
     QAbstractItemModel* m = t->model();
@@ -59,19 +57,20 @@ MainFrame::MainFrame(QWidget *parent) :
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this,
             SLOT(tableWidget_selectionChanged()));
+            */
 }
 
 MainFrame::~MainFrame()
 {
-    QTableView* t = this->ui->tableWidget;
-    QItemSelectionModel *sm = t->selectionModel();
-    QAbstractItemModel* m = t->model();
+    // TODO QTableView* t = this->ui->tableWidget;
+    // TODO QItemSelectionModel *sm = t->selectionModel();
+    // TODO QAbstractItemModel* m = t->model();
 
-    qDeleteAll(this->selectedPackages);
-    delete ui;
+    // TODO qDeleteAll(this->selectedPackages);
+    // TODO delete ui;
 
-    delete sm;
-    delete m;
+    // TODO delete sm;
+    // TODO delete m;
 }
 
 void MainFrame::saveColumns() const
@@ -87,8 +86,8 @@ void MainFrame::saveColumns() const
     }
 
     if (err.isEmpty()) {
-        QTableView* t = this->ui->tableWidget;
-        wrr.setBytes("MainTableState", t->horizontalHeader()->saveState());
+        // TODO QTableView* t = this->ui->tableWidget;
+        // TODO wrr.setBytes("MainTableState", t->horizontalHeader()->saveState());
     }
 }
 
@@ -101,8 +100,8 @@ void MainFrame::loadColumns() const
         QString err;
         QByteArray ba = wr.getBytes("MainTableState", &err);
         if (err.isEmpty()) {
-            QTableView* t = this->ui->tableWidget;
-            t->horizontalHeader()->restoreState(ba);
+            // TODO QTableView* t = this->ui->tableWidget;
+            // TODO t->horizontalHeader()->restoreState(ba);
         }
     } else {
         QString err = wr.open(HKEY_CURRENT_USER,
@@ -115,6 +114,7 @@ void MainFrame::loadColumns() const
         }
 
         if (err.isEmpty()) {
+        /* todo
             QTableView* t = this->ui->tableWidget;
             for (int i = 0; i < std::min<int>(t->model()->columnCount(),
                     v.size()); i++) {
@@ -125,6 +125,7 @@ void MainFrame::loadColumns() const
 
                 t->setColumnWidth(i, w);
             }
+            */
         }
     }
 }
@@ -145,6 +146,7 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
         count += c.at(1).toInt();
     }
 
+/*todo
     if (level == 0) {
         this->ui->comboBoxCategory0->clear();
         this->ui->comboBoxCategory0->addItem(QObject::tr("All") +
@@ -167,6 +169,7 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
         }
         this->categories1 = cats;
     }
+    */
 
     this->categoryCombosEvents = true;
 }
@@ -174,6 +177,7 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
 int MainFrame::getCategoryFilter(int level) const
 {
     int r;
+    /* todo
     if (level == 0) {
         int sel = this->ui->comboBoxCategory0->currentIndex();
         if (sel <= 0)
@@ -188,18 +192,20 @@ int MainFrame::getCategoryFilter(int level) const
             r = this->categories1.at(sel - 1).at(0).toInt();
     } else
         r = -1;
+        */
     return r;
 }
 
 void MainFrame::setDuration(int d)
 {
-    this->ui->labelDuration->setText(QObject::tr("Found in %1 ms").arg(d));
+    // TODO this->ui->labelDuration->setText(QObject::tr("Found in %1 ms").arg(d));
 }
 
 void MainFrame::setCategoryFilter(int level, int v)
 {
     this->categoryCombosEvents = false;
 
+/* todo
     if (level == 0) {
         int newCurrentIndex = this->ui->comboBoxCategory0->currentIndex();
         if (v == -1)
@@ -234,12 +240,14 @@ void MainFrame::setCategoryFilter(int level, int v)
             this->ui->comboBoxCategory1->setCurrentIndex(newCurrentIndex);
         }
     }
+    */
 
     this->categoryCombosEvents = true;
 }
 
 void MainFrame::chooseColumns()
 {
+    /* todo
     QDialog* d = new QDialog(this);
     d->setWindowTitle(QObject::tr("Choose columns"));
     QVBoxLayout* layout = new QVBoxLayout();
@@ -270,39 +278,45 @@ void MainFrame::chooseColumns()
         }
     }
     d->deleteLater();
+    */
 }
 
 QTableView * MainFrame::getTableWidget() const
 {
-    return this->ui->tableWidget;
+    // TODO return this->ui->tableWidget;
+    return nullptr;
 }
 
 QLineEdit *MainFrame::getFilterLineEdit() const
 {
-    return this->ui->lineEditText;
+    // TODO return this->ui->lineEditText;
+    return nullptr;
 }
 
 int MainFrame::getStatusFilter() const
 {
     int r;
-    if (this->ui->radioButtonInstalled->isChecked())
+    /* todo if (this->ui->radioButtonInstalled->isChecked())
         r = 1;
     else if (this->ui->radioButtonUpdateable->isChecked())
         r = 2;
     else
         r = 0;
+        */
 
     return r;
 }
 
 void MainFrame::setStatusFilter(int status)
 {
+    /*todo
     if (status == 1)
         this->ui->radioButtonInstalled->setChecked(true);
     else if (status == 2)
         this->ui->radioButtonUpdateable->setChecked(true);
     else
         this->ui->radioButtonAll->setChecked(true);
+        */
 }
 
 std::vector<void*> MainFrame::getSelected(const QString& type) const
@@ -341,6 +355,7 @@ void MainFrame::tableWidget_selectionChanged()
     qDeleteAll(this->selectedPackages);
     this->selectedPackages.clear();
 
+/*todo
     QAbstractItemModel* m = this->ui->tableWidget->model();
     QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
     QModelIndexList sel = sm->selectedRows();
@@ -352,8 +367,9 @@ void MainFrame::tableWidget_selectionChanged()
         Package* p = r->findPackage_(name);
         this->selectedPackages.push_back(p);
     }
-
+*/
     MainWindow::getInstance()->updateActions();
+
 }
 
 void MainFrame::fillList()
@@ -364,10 +380,11 @@ void MainFrame::fillList()
 
 void MainFrame::selectSomething()
 {
-    QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
+    /* todo QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
     if (!sm->hasSelection()) {
         this->ui->tableWidget->selectRow(0);
     }
+    */
 }
 
 void MainFrame::on_radioButtonAll_toggled(bool /*checked*/)

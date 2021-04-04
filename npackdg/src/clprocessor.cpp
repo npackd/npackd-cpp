@@ -512,20 +512,17 @@ void CLProcessor::usage()
     mb.exec();
 }
 
-bool CLProcessor::process(int argc, char *argv[], int* errorCode)
+bool CLProcessor::process(int* errorCode)
 {
     *errorCode = 0;
 
     bool ret = true;
 
-    QApplication app(argc, argv);
-
     QTranslator myappTranslator;
-    bool r = myappTranslator.load(
-            "npackdg_" + QLocale::system().name(),
+    bool r = myappTranslator.load("npackdg_" + QLocale::system().name(),
             ":/translations");
     if (r) {
-        app.installTranslator(&myappTranslator);
+        QCoreApplication::installTranslator(&myappTranslator);
     }
 
     cl.add("package", 'p',
@@ -557,7 +554,7 @@ bool CLProcessor::process(int argc, char *argv[], int* errorCode)
         MainWindow w;
 
         w.prepare();
-        w.show();
+        // TODO w.show();
         *errorCode = QApplication::exec();
     } else if (!cmd.isEmpty()) {
         QString err;

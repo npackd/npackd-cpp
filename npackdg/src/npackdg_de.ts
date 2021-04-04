@@ -1159,19 +1159,19 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>All</source>
-        <translation>Alle</translation>
+        <translation type="vanished">Alle</translation>
     </message>
     <message>
         <source>Found in %1 ms</source>
-        <translation>Gefunden in %1 ms</translation>
+        <translation type="vanished">Gefunden in %1 ms</translation>
     </message>
     <message>
         <source>Choose columns</source>
-        <translation>Spalten wählen</translation>
+        <translation type="vanished">Spalten wählen</translation>
     </message>
     <message>
         <source>Packages</source>
-        <translation>Pakete</translation>
+        <translation type="vanished">Pakete</translation>
     </message>
     <message>
         <source>Cannot exit while jobs are running</source>
@@ -1372,7 +1372,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <translation type="vanished">Einstellungen</translation>
     </message>
     <message>
         <source>About</source>
@@ -1404,7 +1404,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Jobs</source>
-        <translation>Jobs</translation>
+        <translation type="vanished">Jobs</translation>
     </message>
     <message>
         <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
@@ -2470,7 +2470,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Export</source>
-        <translation>Export</translation>
+        <translation type="vanished">Export</translation>
     </message>
     <message>
         <source>Choose export directory</source>
@@ -2482,7 +2482,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Export packages</source>
-        <translation>Pakete exportieren</translation>
+        <translation type="vanished">Pakete exportieren</translation>
     </message>
     <message>
         <source>Downloading &amp; computing hash sum for %1</source>

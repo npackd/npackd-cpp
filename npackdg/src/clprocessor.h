@@ -46,12 +46,11 @@ public:
 
     /**
      * @brief process the command line
-     * @param arg number of arguments
-     * @param argv program arguments
+     *
      * @param errorCode error code will be stored here
      * @return false = GUI should be started
      */
-    bool process(int argc, char *argv[], int *errorCode);
+    bool process(int *errorCode);
 private:
     /**
      * @param install the objects will be destroyed

@@ -35,7 +35,6 @@
 #include <QHeaderView>
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "repository.h"
 #include "job.h"
 #include "wpmutils.h"
@@ -138,16 +137,16 @@ addTab(jobsScrollArea, genericAppIcon, "Tags");
 */
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow)
+    QObject(parent)
 {
     instance = this;
 
     fileLoader.init();
 
-    ui->setupUi(this);
+    // TODO ui->setupUi(this);
 
     this->setMenuAccelerators();
-    this->setActionAccelerators(this);
+    // TODO this->setActionAccelerators(this);
 
     this->taskbarMessageId = 0;
 
@@ -159,18 +158,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->reloadRepositoriesThreadRunning = false;
 
-    setWindowTitle("Npackd");
+    // TODO setWindowTitle("Npackd");
 
     MainWindow::genericAppIcon = QIcon(":/images/app.png");
     MainWindow::waitAppIcon = QIcon(":/images/wait.png");
     this->brokenIcon = QIcon(":/images/broken.png");
 
-    this->mainFrame = new MainFrame(this);
+    this->mainFrame = new MainFrame();
 
     updateActions();
 
     // also update packageframe.cpp if adding a new action here
-    QTableView* t = this->mainFrame->getTableWidget();
+    /* todo QTableView* t = this->mainFrame->getTableWidget();
     t->addAction(this->ui->actionInstall);
     t->addAction(this->ui->actionUninstall);
     t->addAction(this->ui->actionUpdate);
@@ -224,7 +223,7 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(repositoryStatusChanged(const QString&, const Version&)),
             Qt::QueuedConnection);
 
-    defaultPasswordWindow = reinterpret_cast<HWND>(this->winId());
+    // TODO defaultPasswordWindow = reinterpret_cast<HWND>(this->winId());
 
     this->taskbarMessageId = RegisterWindowMessage(L"TaskbarButtonCreated");
     // qCDebug(npackd) << "id " << taskbarMessageId;
@@ -243,6 +242,7 @@ MainWindow::MainWindow(QWidget *parent) :
         // qCDebug(npackd) << "allow taskbar event " << taskbarMessageId;
     }
     FreeLibrary(hInstLib);
+    */
 }
 
 void MainWindow::applicationFocusChanged(QWidget* /*old*/, QWidget* /*now*/)
@@ -272,6 +272,8 @@ bool MainWindow::nativeEvent(const QByteArray & /*eventType*/, void * message,
     } else if (msg->message == WM_ICONTRAY) {
         //QMessageBox::critical(nullptr, QObject::tr("Warn"), "wm_icontray");
         // qCDebug(npackd) << "MainWindow::winEvent " << message->lParam;
+
+        /*// TODO
         switch (msg->lParam) {
             case (LPARAM) NIN_BALLOONUSERCLICK:
                 this->mainFrame->setStatusFilter(2);
@@ -287,6 +289,7 @@ bool MainWindow::nativeEvent(const QByteArray & /*eventType*/, void * message,
                 ((QApplication*) QApplication::instance())->quit();
                 break;
         }
+        */
         return true;
     }
 
@@ -307,6 +310,7 @@ void MainWindow::showDetails()
             }
         } else {
             selected = sel->getSelected("Package");
+            /* todo
             for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 Package* p = static_cast<Package*>(selected.at(i));
 
@@ -329,6 +333,7 @@ void MainWindow::showDetails()
                 if (i == static_cast<int>(selected.size()) - 1)
                     this->ui->tabWidget->setCurrentIndex(index);
             }
+            */
         }
     }
 }
@@ -353,6 +358,7 @@ void MainWindow::updateIcon(const QString& url)
         }
     }
 
+/* todo
     for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
         PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
@@ -368,11 +374,14 @@ void MainWindow::updateIcon(const QString& url)
             this->ui->tabWidget->setTabIcon(i, icon);
         }
     }
+    */
 }
 
 int MainWindow::findPackageTab(const QString& package) const
 {
     int r = -1;
+
+    /* todo
     for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
         PackageFrame* pf = dynamic_cast<PackageFrame*>(w);
@@ -383,6 +392,7 @@ int MainWindow::findPackageTab(const QString& package) const
             }
         }
     }
+    */
     return r;
 }
 
@@ -390,7 +400,7 @@ int MainWindow::findPackageVersionTab(const QString& package,
         const Version& version) const
 {
     int r = -1;
-    for (int i = 0; i < this->ui->tabWidget->count(); i++) {
+    /* todo for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
         PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
         if (pvf) {
@@ -402,13 +412,14 @@ int MainWindow::findPackageVersionTab(const QString& package,
             }
         }
     }
+    */
     return r;
 }
 
 int MainWindow::findLicenseTab(const QString& name) const
 {
     int r = -1;
-    for (int i = 0; i < this->ui->tabWidget->count(); i++) {
+    /* todo for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
         LicenseForm* pvf = dynamic_cast<LicenseForm*>(w);
         if (pvf) {
@@ -420,12 +431,13 @@ int MainWindow::findLicenseTab(const QString& name) const
             }
         }
     }
+    */
     return r;
 }
 
 void MainWindow::updateStatusInDetailTabs()
 {
-    for (int i = 0; i < this->ui->tabWidget->count(); i++) {
+    /* todo for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
         PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
         if (pvf) {
@@ -435,7 +447,7 @@ void MainWindow::updateStatusInDetailTabs()
             if (pf)
                 pf->updateStatus();
         }
-    }
+    }*/
 }
 
 QIcon MainWindow::getPackageIcon(const QString& package)
@@ -468,8 +480,8 @@ void MainWindow::saveUISettings()
     WindowsRegistry n = r.createSubKey("SOFTWARE\\Npackd\\Npackd", &err,
             KEY_ALL_ACCESS);
     if (err.isEmpty()) {
-        n.setBytes("MainWindowState", this->saveState());
-        n.setBytes("MainWindowGeometry", this->saveGeometry());
+        // TODO n.setBytes("MainWindowState", this->saveState());
+        // TODO n.setBytes("MainWindowGeometry", this->saveGeometry());
     }
 }
 
@@ -480,6 +492,8 @@ void MainWindow::loadUISettings()
     QString err;
     WindowsRegistry n = r.createSubKey("SOFTWARE\\Npackd\\Npackd", &err,
             KEY_ALL_ACCESS);
+
+            /* todo
     // qCDebug(npackd) << "MainWindow::loadUISettings" << err;
     if (err.isEmpty()) {
         QByteArray ba = n.getBytes("MainWindowState", &err);
@@ -499,7 +513,7 @@ void MainWindow::loadUISettings()
         }
     } else {
         this->setWindowState(Qt::WindowMaximized);
-    }
+    }*/
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -596,6 +610,7 @@ void MainWindow::updateProgressTabTitle()
                 arg(QString::number(n), QString::number(maxProgress_),
                 rest.toString());
 
+/* todo
     int index = this->ui->tabWidget->indexOf(this->jobsTab);
     if (this->ui->tabWidget->tabText(index) != title)
         this->ui->tabWidget->setTabText(index, title);
@@ -610,12 +625,12 @@ void MainWindow::updateProgressTabTitle()
                     static_cast<ULONGLONG>(lround(maxProgress * 10000)),
                     10000);
         }
-    }
+    }*/
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    // TODO delete ui;
 }
 
 QIcon MainWindow::downloadIcon(const QString &url)
@@ -662,7 +677,7 @@ void MainWindow::showIconInSystemTray(int nupdates)
 {
     nid.cbSize = sizeof(nid);
 
-    nid.hWnd = (HWND) winId();
+    // TODO  nid.hWnd = (HWND) winId();
     nid.uID = 0;
     nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_INFO;
     nid.uCallbackMessage = WM_ICONTRAY;
@@ -781,8 +796,8 @@ void MainWindow::monitor(Job* job)
 
 void MainWindow::onShow()
 {
-    this->ui->actionToggle_toolbar->setChecked(
-            this->ui->mainToolBar->isVisible());
+    // TODO this->ui->actionToggle_toolbar->setChecked(
+    // TODO         this->ui->mainToolBar->isVisible());
 
     DBRepository* dbr = DBRepository::getDefault();
     QString err = dbr->openDefault();
@@ -941,10 +956,11 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 {
     QString err;
 
+/* todo
     bool confirmed = false;
     QString title;
     if (err.isEmpty())
-        confirmed = UIUtils::confirmInstallOperations(this, install, &title,
+        confirmed = UIUtils::confirmInstallOperationsthis, install, &title,
             &err);
 
     if (err.isEmpty()) {
@@ -988,6 +1004,7 @@ void MainWindow::process(std::vector<InstallOperation*> &install,
 
     qDeleteAll(install);
     install.clear();
+    */
 }
 
 void MainWindow::on_errorMessage(const QString &msg,
@@ -1015,7 +1032,7 @@ void MainWindow::processThreadFinished()
 
 void MainWindow::changeEvent(QEvent *e)
 {
-    QMainWindow::changeEvent(e);
+    /* todo QMainWindow::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
@@ -1027,17 +1044,20 @@ void MainWindow::changeEvent(QEvent *e)
     default:
         break;
     }
+    */
 }
 
 void MainWindow::on_actionExit_triggered()
 {
     int n = VisibleJobs::getDefault()->size();
 
+/* todo
     if (n > 0) {
         QString msg = QObject::tr("Cannot exit while jobs are running");
         addErrorMessage(msg, msg, true, QMessageBox::Critical);
     } else
         this->close();
+        */
 }
 
 bool MainWindow::isUpdateEnabled(const QString& package)
@@ -1128,7 +1148,7 @@ void MainWindow::updateInstallAction()
         }
     }
 
-    this->ui->actionInstall->setEnabled(enabled);
+    // TODO this->ui->actionInstall->setEnabled(enabled);
 }
 
 void MainWindow::updateExportAction()
@@ -1172,7 +1192,7 @@ void MainWindow::updateExportAction()
         }
     }
 
-    this->ui->actionExport->setEnabled(enabled);
+    // TODO this->ui->actionExport->setEnabled(enabled);
 }
 
 void MainWindow::updateShowFolderAction()
@@ -1218,7 +1238,7 @@ void MainWindow::updateShowFolderAction()
             }
         }
     }
-    this->ui->actionOpen_folder->setEnabled(enabled);
+    // TODO this->ui->actionOpen_folder->setEnabled(enabled);
     // qCDebug(npackd) << "MainWindow::updateUninstallAction end " << enabled;
 }
 
@@ -1265,7 +1285,7 @@ void MainWindow::updateUninstallAction()
             }
         }
     }
-    this->ui->actionUninstall->setEnabled(enabled);
+    // TODO this->ui->actionUninstall->setEnabled(enabled);
     // qCDebug(npackd) << "MainWindow::updateUninstallAction end " << enabled;
 }
 
@@ -1300,20 +1320,20 @@ void MainWindow::updateUpdateAction()
             }
         }
     }
-    this->ui->actionUpdate->setEnabled(enabled);
+    // TODO this->ui->actionUpdate->setEnabled(enabled);
 }
 
 void MainWindow::updateReloadRepositoriesAction()
 {
-    this->ui->actionReload_Repositories->setEnabled(
-            !reloadRepositoriesThreadRunning);
+    // TODO this->ui->actionReload_Repositories->setEnabled(
+    // TODO         !reloadRepositoriesThreadRunning);
 }
 
 void MainWindow::updateCloseTabAction()
 {
-    QTabWidget* t = this->ui->tabWidget;
-    bool e = this->ui->tabWidget->tabBar()->tabButton(t->currentIndex(), QTabBar::RightSide) != nullptr;
-    this->ui->actionClose_Tab->setEnabled(e);
+    // TODO QTabWidget* t = this->ui->tabWidget;
+    // TODO bool e = this->ui->tabWidget->tabBar()->tabButton(t->currentIndex(), QTabBar::RightSide) != nullptr;
+    // TODO this->ui->actionClose_Tab->setEnabled(e);
 }
 
 void MainWindow::updateActionShowDetailsAction()
@@ -1328,7 +1348,7 @@ void MainWindow::updateActionShowDetailsAction()
         enabled = selected.size() > 0;
     }
 
-    this->ui->actionShow_Details->setEnabled(enabled);
+    // TODO this->ui->actionShow_Details->setEnabled(enabled);
 }
 
 void MainWindow::updateTestDownloadSiteAction()
@@ -1365,7 +1385,7 @@ void MainWindow::updateTestDownloadSiteAction()
         }
     }
 
-    this->ui->actionTest_Download_Site->setEnabled(enabled);
+    // TODO this->ui->actionTest_Download_Site->setEnabled(enabled);
 }
 
 void MainWindow::updateShowChangelogAction()
@@ -1407,7 +1427,7 @@ void MainWindow::updateShowChangelogAction()
         }
     }
 
-    this->ui->actionShow_changelog->setEnabled(enabled);
+    // TODO this->ui->actionShow_changelog->setEnabled(enabled);
 }
 
 void MainWindow::updateRunAction()
@@ -1460,7 +1480,7 @@ void MainWindow::updateRunAction()
             }
         }
     }
-    this->ui->actionRun->setEnabled(enabled);
+    // TODO this->ui->actionRun->setEnabled(enabled);
 }
 
 void MainWindow::updateGotoPackageURLAction()
@@ -1502,12 +1522,12 @@ void MainWindow::updateGotoPackageURLAction()
         }
     }
 
-    this->ui->actionGotoPackageURL->setEnabled(enabled);
+    // TODO this->ui->actionGotoPackageURL->setEnabled(enabled);
 }
 
 void MainWindow::closeDetailTabs()
 {
-    for (int i = 0; i < this->ui->tabWidget->count(); ) {
+    /* todo for (int i = 0; i < this->ui->tabWidget->count(); ) {
         QWidget* w = this->ui->tabWidget->widget(i);
         PackageVersionForm* pvf = dynamic_cast<PackageVersionForm*>(w);
         PackageFrame* pf = dynamic_cast<PackageFrame*>(w);
@@ -1518,6 +1538,7 @@ void MainWindow::closeDetailTabs()
             i++;
         }
     }
+    */
 }
 
 void MainWindow::recognizeAndLoadRepositories(bool useCache)
@@ -1541,7 +1562,7 @@ void MainWindow::recognizeAndLoadRepositories(bool useCache)
 }
 
 void MainWindow::setMenuAccelerators(){
-    QMenuBar* mb = this->menuBar();
+    /* todo QMenuBar* mb = this->menuBar();
 
     std::vector<QString> titles;
     for (int i = 0; i < mb->children().count(); i++) {
@@ -1559,6 +1580,7 @@ void MainWindow::setMenuAccelerators(){
             j++;
         }
     }
+    */
 }
 
 void MainWindow::setActionAccelerators(QWidget* w) {
@@ -1581,7 +1603,7 @@ void MainWindow::setActionAccelerators(QWidget* w) {
 
 void MainWindow::reloadTabs()
 {
-    for (int i = 0; i < this->ui->tabWidget->count(); i++) {
+    /* todo for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
 
         PackageFrame* pf = dynamic_cast<PackageFrame*>(w);
@@ -1598,7 +1620,7 @@ void MainWindow::reloadTabs()
         if (lf) {
             lf->reload();
         }
-    }
+    }*/
 }
 
 void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
@@ -1629,18 +1651,20 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 
 std::vector<void*> MainWindow::getSelected(const QString& type) const
 {
-    QWidget* w = this->ui->tabWidget->currentWidget();
+    /* todo QWidget* w = this->ui->tabWidget->currentWidget();*/
     std::vector<void*> r;
-    if (w) {
+   /* todoif (w) {
         Selection* sel = dynamic_cast<Selection*>(w);
         if (sel)
             r = sel->getSelected(type);
     }
+    */
     return r;
 }
 
 void MainWindow::openLicense(const QString& name, bool select)
 {
+/* todo
     int index = this->findLicenseTab(name);
     if (index < 0) {
         QString err;
@@ -1659,11 +1683,13 @@ void MainWindow::openLicense(const QString& name, bool select)
     }
     if (select)
         this->ui->tabWidget->setCurrentIndex(index);
+        */
 }
 
 void MainWindow::openPackageVersion(const QString& package,
         const Version& version, bool select)
 {
+/* todo
     int index = this->findPackageVersionTab(package, version);
     if (index < 0) {
         QString err;
@@ -1683,10 +1709,12 @@ void MainWindow::openPackageVersion(const QString& package,
     }
     if (select)
         this->ui->tabWidget->setCurrentIndex(index);
+        */
 }
 
 void MainWindow::openPackage(const QString& package, bool select)
 {
+/* todo
     int index = this->findPackageTab(package);
     if (index < 0) {
         Package* p_ = DBRepository::getDefault()->findPackage_(package);
@@ -1704,12 +1732,15 @@ void MainWindow::openPackage(const QString& package, bool select)
 
     if (select)
         this->ui->tabWidget->setCurrentIndex(index);
+        */
 }
 
 void MainWindow::addTab(QWidget* w, const QIcon& icon, const QString& title)
 {
+/* todo
     this->ui->tabWidget->addTab(w, icon, title);
     this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);
+    */
 }
 
 void MainWindow::on_actionGotoPackageURL_triggered()
@@ -1750,7 +1781,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    SettingsFrame* d = nullptr;
+    /* todo SettingsFrame* d = nullptr;
     for (int i = 0; i < this->ui->tabWidget->count(); i++) {
         QWidget* w = this->ui->tabWidget->widget(i);
         d = dynamic_cast<SettingsFrame*>(w);
@@ -1783,7 +1814,7 @@ void MainWindow::on_actionSettings_triggered()
 
         this->ui->tabWidget->addTab(d, QObject::tr("Settings"));
         this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);
-    }
+    }*/
 }
 
 void MainWindow::on_actionUpdate_triggered()
@@ -1915,10 +1946,10 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
-    QWidget* w = this->ui->tabWidget->widget(index);
+    /* todo QWidget* w = this->ui->tabWidget->widget(index);
     if (w != this->mainFrame && w != this->jobsTab) {
         this->ui->tabWidget->removeTab(index);
-    }
+    }*/
 }
 
 void MainWindow::on_tabWidget_currentChanged(int /*index*/)
@@ -1929,7 +1960,7 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 void MainWindow::addTextTab(const QString& title, const QString& text,
         bool html)
 {
-    QWidget* w;
+    /* todo QWidget* w;
     if (html) {
         QTextBrowser* te = new QTextBrowser(this->ui->tabWidget);
         te->setReadOnly(true);
@@ -1944,11 +1975,12 @@ void MainWindow::addTextTab(const QString& title, const QString& text,
     }
     this->ui->tabWidget->addTab(w, title);
     this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);
+    */
 }
 
 void MainWindow::addJobsTab()
 {
-    QWidget* w = new QWidget(this->ui->tabWidget);
+    /* todo QWidget* w = new QWidget(this->ui->tabWidget);
     QVBoxLayout* layout = new QVBoxLayout(w);
     layout->setContentsMargins(0, 10, 0, 0);
     w->setLayout(layout);
@@ -1961,6 +1993,7 @@ void MainWindow::addJobsTab()
 
     this->jobsTab = this->ui->tabWidget->widget(index);
     updateProgressTabTitle();
+    */
 }
 
 void MainWindow::on_actionShow_Details_triggered()
@@ -1990,11 +2023,12 @@ void MainWindow::addErrorMessage(const QString& msg, const QString& details,
     if (dots)
         m += "...";
 
-    MessageFrame* label = new MessageFrame(this->centralWidget(), m,
+    /* todo MessageFrame* label = new MessageFrame(this->centralWidget(), m,
             details, autoHide ? 30 : 0, icon);
     QVBoxLayout* layout = static_cast<QVBoxLayout*>(
             this->centralWidget()->layout());
     layout->insertWidget(0, label);
+    */
 }
 
 void MainWindow::on_actionReload_Repositories_triggered()
@@ -2026,10 +2060,11 @@ void MainWindow::on_actionReload_Repositories_triggered()
 
 void MainWindow::on_actionClose_Tab_triggered()
 {
-    QWidget* w = this->ui->tabWidget->currentWidget();
+    /* todo QWidget* w = this->ui->tabWidget->currentWidget();
     if (w != this->mainFrame && w != this->jobsTab) {
         this->ui->tabWidget->removeTab(this->ui->tabWidget->currentIndex());
     }
+    */
 }
 
 void MainWindow::updateActionsSlot()
@@ -2269,12 +2304,12 @@ void MainWindow::on_actionShow_changelog_triggered()
 
 void MainWindow::on_actionToggle_toolbar_triggered(bool checked)
 {
-    this->ui->mainToolBar->setVisible(checked);
+    // todo this->ui->mainToolBar->setVisible(checked);
 }
 
 void MainWindow::on_mainToolBar_visibilityChanged(bool visible)
 {
-    this->ui->actionToggle_toolbar->setChecked(visible);
+    // TODO this->ui->actionToggle_toolbar->setChecked(visible);
 }
 
 void MainWindow::on_actionRun_triggered()
@@ -2375,6 +2410,7 @@ void MainWindow::on_actionExport_triggered()
         }
     }
 
+/* todo
     if (err.isEmpty()) {
         QDialog* d = new QDialog(this);
         d->setWindowTitle(QObject::tr("Export"));
@@ -2420,7 +2456,7 @@ void MainWindow::on_actionExport_triggered()
         d->deleteLater();
     } else
         addErrorMessage(err, err, true, QMessageBox::Critical);
-
+*/
     qDeleteAll(pvs);
 }
 

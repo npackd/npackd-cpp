@@ -91,6 +91,7 @@ set(NPACKDG_SOURCES
     src/dag.cpp
     src/deptask.cpp
     src/lockedfiles.cpp
+    src/gui.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/npackdg.qrc
 )
 set(NPACKDG_HEADERS
@@ -152,6 +153,7 @@ set(NPACKDG_HEADERS
     src/dag.h
     src/deptask.h
     src/lockedfiles.h
+    src/gui.h
     src/main.h
 )
 set(NPACKDG_FORMS

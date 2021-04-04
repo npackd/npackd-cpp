@@ -22,10 +22,6 @@
 #include "mainframe.h"
 #include "progresstree2.h"
 
-namespace Ui {
-    class MainWindow;
-}
-
 const UINT WM_ICONTRAY = WM_USER + 1;
 
 /**
@@ -40,7 +36,7 @@ public:
 /**
  * Main window.
  */
-class MainWindow : public QMainWindow, public Selection {
+class MainWindow : public QObject, public Selection {
     Q_OBJECT
 private:
     static MainWindow* instance;
@@ -48,8 +44,6 @@ private:
     QIcon brokenIcon;
 
     ProgressTree2* pt;
-
-    Ui::MainWindow *ui;
 
     QWidget* jobsTab;
     MainFrame* mainFrame;
