@@ -193,11 +193,65 @@ HWND createMainWindow(int nCmdShow)
     return hWnd;
 }
 
-HWND createButton(HWND hParent, const TCHAR *szCaption, const RECT& r)
+HWND createButton(HWND hParent, const TCHAR *szCaption)
 {
-    return CreateWindow(WC_BUTTON, szCaption, WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
-        r.left, r.top, r.right - r.left, r.bottom - r.top,
+    return CreateWindow(WC_BUTTON, szCaption,
+        WS_VISIBLE | WS_CHILD | BS_RADIOBUTTON,
+        0, 0, CW_USEDEFAULT, CW_USEDEFAULT,
         hParent, NULL, hInst, NULL);
+}
+
+HWND createEdit(HWND hParent)
+{
+    return CreateWindow(WC_EDIT, NULL,
+        WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT,
+        0, 0, 100, CW_USEDEFAULT,
+        hParent, NULL, hInst, NULL);
+}
+
+void layoutPackagesPanel()
+{
+    RECT r;
+    GetClientRect(mainWindow.packagesPanel, &r);
+
+    r.left = 200;
+    MoveWindow(mainWindow.table, r.left, r.top,
+        r.right - r.left, r.bottom - r.top, FALSE);
+}
+
+SIZE getPreferredSize(HWND window)
+{
+    SIZE r = {.cx = 100, .cy = 100};
+
+    WCHAR className[256];
+    WCHAR text[256];
+    if (GetClassName(window, className,
+        sizeof(className) / sizeof(className[0]))) {
+        if (wcsicmp(WC_BUTTON, className) == 0) {
+            Button_GetIdealSize(window, &r);
+        } else if (wcsicmp(WC_STATIC, className) == 0) {
+            HDC hDC = GetDC(window);
+            RECT rect = { 0, 0, 0, 0 };
+
+            int textLen = GetWindowText(window, text,
+                sizeof(text) / sizeof(text[0]));
+            if (textLen) {
+                DrawText(hDC, text, textLen, &rect, DT_CALCRECT);
+                r.cx = rect.right - rect.left;
+                r.cy = rect.bottom - rect.top;
+            }
+        } else if (wcsicmp(WC_EDIT, className) == 0) {
+            HDC hDC = GetDC(window);
+            GetTextExtentPoint32W(hDC, L"W", 1, &r);
+            r.cx = 200;
+        } else if (wcsicmp(WC_COMBOBOX, className) == 0) {
+            HDC hDC = GetDC(window);
+            GetTextExtentPoint32W(hDC, L"W", 1, &r);
+            r.cx = 200;
+        }
+    }
+
+    return r;
 }
 
 HWND createPackagesPanel(HWND parent)
@@ -205,17 +259,50 @@ HWND createPackagesPanel(HWND parent)
     HWND result = createPanel(parent);
     SetWindowSubclass(result, &packagesPanelSubClassProc, 1, 0);
 
-    HWND searchLabel = createStatic(result, L"S&earch:");
-    MoveWindow(searchLabel, 0, 0, 200, 20, FALSE);
+    HWND label = createStatic(result, L"S&earch:");
+    SIZE sz = getPreferredSize(label);
+    MoveWindow(label, 0, 0, sz.cx, sz.cy, FALSE);
+    int y = sz.cy;
 
-    RECT r = {.left = 0, .top = 40, .right = 200, .bottom = 60};
-    createButton(result, L"&All", r);
+    HWND edit = createEdit(result);
+    sz = getPreferredSize(edit);
+    MoveWindow(edit, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
 
-    r = {.left = 0, .top = 60, .right = 200, .bottom = 80};
-    createButton(result, L"&Installed", r);
+    HWND btn = createButton(result, L"&All");
+    sz = getPreferredSize(btn);
+    MoveWindow(btn, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
 
-    r = {.left = 0, .top = 80, .right = 200, .bottom = 100};
-    createButton(result, L"&Updateable", r);
+    btn = createButton(result, L"&Installed");
+    sz = getPreferredSize(btn);
+    MoveWindow(btn, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
+
+    btn = createButton(result, L"&Updateable");
+    sz = getPreferredSize(btn);
+    MoveWindow(btn, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
+
+    label = createStatic(result, L"Category:");
+    sz = getPreferredSize(label);
+    MoveWindow(label, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
+
+    HWND combobox = createComboBox(result);
+    sz = getPreferredSize(combobox);
+    MoveWindow(combobox, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
+
+    label = createStatic(result, L"Sub-category:");
+    sz = getPreferredSize(label);
+    MoveWindow(label, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
+
+    combobox = createComboBox(result);
+    sz = getPreferredSize(combobox);
+    MoveWindow(combobox, 0, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy;
 
     mainWindow.table = createTable(result);
     LVCOLUMN col = {};
@@ -275,13 +362,7 @@ LRESULT CALLBACK packagesPanelSubClassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
         }
         case WM_SIZE:
         {
-            RECT r = {.left = 200, .top = 0,
-                .right = GET_X_LPARAM(lParam),
-                .bottom = GET_Y_LPARAM(lParam)};
-
-            // Resize the tab control to fit the client are of main window.
-            MoveWindow(mainWindow.table, r.left, r.top,
-                r.right - r.left, r.bottom - r.top, FALSE);
+            layoutPackagesPanel();
             break;
         }
     }
@@ -520,3 +601,11 @@ HWND createTable(HWND parent)
                   NULL);
 }
 
+
+HWND createComboBox(HWND hParent)
+{
+    return CreateWindow(WC_COMBOBOX, NULL,
+        WS_VISIBLE | WS_CHILD | CBS_DROPDOWNLIST,
+        0, 0, 100, CW_USEDEFAULT,
+        hParent, NULL, hInst, NULL);
+}

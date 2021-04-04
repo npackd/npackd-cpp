@@ -44,10 +44,39 @@ HWND createMainWindow(int);
  *
  * @param hParent parent
  * @param szCaption title
- * @param r bounds
  * @return handle
  */
-HWND createButton(HWND hParent, const TCHAR *szCaption, const RECT& r);
+HWND createButton(HWND hParent, const TCHAR *szCaption);
+
+/**
+ * @brief creates a one-line edit field
+ *
+ * @param hParent parent window
+ * @return handle
+ */
+HWND createEdit(HWND hParent);
+
+/**
+ * @brief creates a combobox
+ *
+ * @param hParent parent window
+ * @return handle
+ */
+HWND createComboBox(HWND hParent);
+
+/**
+ * @brief layout the controls on the packages page
+ */
+void layoutPackagesPanel();
+
+/**
+ * @brief determines the preferred size of a control. This works for
+ * WC_BUTTON and WC_STATIC
+ *
+ * @param window a window
+ * @return preferred size
+ */
+SIZE getPreferredSize(HWND window);
 
 /**
  * @brief create the panel with packages table and all the fiters
