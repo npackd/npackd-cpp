@@ -221,4 +221,13 @@ HWND createTab(HWND hwndParent);
  */
 HWND createTable(HWND parent);
 
+/**
+ * @brief shows a critical error message
+ *
+ * @param hwnd parent window or 0
+ * @param title window title
+ * @param message message
+ */
+void gui_critical(HWND hwnd, const QString& title, const QString& message);
+
 #endif // GUI_H

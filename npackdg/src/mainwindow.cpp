@@ -581,11 +581,12 @@ void MainWindow::downloadSizeCompleted(const QString& url, int64_t /*size*/)
 
 void MainWindow::prepare()
 {
-    QTimer *pTimer = new QTimer(this);
+    /* todo QTimer *pTimer = new QTimer(this);
     pTimer->setSingleShot(true);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(onShow()));
 
     pTimer->start(0);
+    */
 }
 
 void MainWindow::updateProgressTabTitle()

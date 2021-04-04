@@ -93,11 +93,9 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
     int errorCode = 0;
 
-    //clp.process(&errorCode);
+    clp.process(&errorCode);
 
     //WPMUtils::timer.dump();
-
-    errorCode = guiRun(nCmdShow);
 
     FreeLibrary(m);
 

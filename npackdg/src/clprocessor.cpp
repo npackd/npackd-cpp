@@ -19,6 +19,7 @@
 #include "progresstree2.h"
 #include "mainwindow.h"
 #include "packageutils.h"
+#include "gui.h"
 
 class ProgressDialog: public QDialog {
 public:
@@ -452,7 +453,7 @@ QString CLProcessor::process(std::vector<InstallOperation*> &install,
     }
 
     if (!err.isEmpty()) {
-        QMessageBox::critical(nullptr, QObject::tr("Error"), err);
+        gui_critical(0, QObject::tr("Error"), err);
     }
 
     qDeleteAll(install);
@@ -518,6 +519,9 @@ bool CLProcessor::process(int* errorCode)
 
     bool ret = true;
 
+    int argc;
+    QCoreApplication app(argc, nullptr);
+
     QTranslator myappTranslator;
     bool r = myappTranslator.load("npackdg_" + QLocale::system().name(),
             ":/translations");
@@ -548,14 +552,13 @@ bool CLProcessor::process(int* errorCode)
     if (!commandLineParsingError.isEmpty()) {
         QString msg = QObject::tr("Error parsing the command line: %1").
                 arg(commandLineParsingError);
-        QMessageBox::critical(nullptr, QObject::tr("Error"), msg);
+        gui_critical(0, QObject::tr("Error"), msg);
         *errorCode = 1;
     } else if (options.size() == 0) {
         MainWindow w;
 
         w.prepare();
-        // TODO w.show();
-        *errorCode = QApplication::exec();
+        *errorCode = guiRun(SW_SHOWNORMAL); // TODO ncmdshow
     } else if (!cmd.isEmpty()) {
         QString err;
         if (cmd == "help") {
@@ -574,13 +577,13 @@ bool CLProcessor::process(int* errorCode)
             err = QObject::tr("Wrong command: %1. Try npackdg help").arg(cmd);
         }
         if (!err.isEmpty()) {
-            QMessageBox::critical(nullptr, QObject::tr("Error"), err);
+            gui_critical(0, QObject::tr("Error"), err);
             *errorCode = 1;
         }
     } else {
         QString err = QObject::tr("Unexpected argument: %1").
                 arg(options.at(0)->opt->name);
-        QMessageBox::critical(nullptr, QObject::tr("Error"), err);
+        gui_critical(0, QObject::tr("Error"), err);
         *errorCode = 1;
     }
 

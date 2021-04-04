@@ -492,3 +492,9 @@ HWND createComboBox(HWND hParent)
         hParent, NULL, hInst, NULL);
 }
 
+
+void gui_critical(HWND hwnd, const QString &title, const QString &message)
+{
+    MessageBox(hwnd, WPMUtils::toLPWSTR(title), WPMUtils::toLPWSTR(message),
+        MB_OK | MB_ICONERROR);
+}
