@@ -453,7 +453,7 @@ QString CLProcessor::process(std::vector<InstallOperation*> &install,
     }
 
     if (!err.isEmpty()) {
-        gui_critical(0, QObject::tr("Error"), err);
+        critical(0, QObject::tr("Error"), err);
     }
 
     qDeleteAll(install);
@@ -552,13 +552,13 @@ bool CLProcessor::process(int* errorCode)
     if (!commandLineParsingError.isEmpty()) {
         QString msg = QObject::tr("Error parsing the command line: %1").
                 arg(commandLineParsingError);
-        gui_critical(0, QObject::tr("Error"), msg);
+        critical(0, QObject::tr("Error"), msg);
         *errorCode = 1;
     } else if (options.size() == 0) {
         MainWindow w;
 
         w.prepare();
-        *errorCode = guiRun(SW_SHOWNORMAL); // TODO ncmdshow
+        *errorCode = runGUI(SW_SHOWNORMAL); // TODO ncmdshow
     } else if (!cmd.isEmpty()) {
         QString err;
         if (cmd == "help") {
@@ -577,13 +577,13 @@ bool CLProcessor::process(int* errorCode)
             err = QObject::tr("Wrong command: %1. Try npackdg help").arg(cmd);
         }
         if (!err.isEmpty()) {
-            gui_critical(0, QObject::tr("Error"), err);
+            critical(0, QObject::tr("Error"), err);
             *errorCode = 1;
         }
     } else {
         QString err = QObject::tr("Unexpected argument: %1").
                 arg(options.at(0)->opt->name);
-        gui_critical(0, QObject::tr("Error"), err);
+        critical(0, QObject::tr("Error"), err);
         *errorCode = 1;
     }
 

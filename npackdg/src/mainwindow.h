@@ -34,6 +34,14 @@ public:
 };
 
 /**
+ * @brief runs the GUI
+ *
+ * @param nCmdShow SW_*
+ * @return error code
+ */
+int runGUI(int nCmdShow);
+
+/**
  * Main window.
  */
 class MainWindow : public QObject, public Selection {

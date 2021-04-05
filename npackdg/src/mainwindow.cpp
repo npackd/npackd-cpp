@@ -60,12 +60,33 @@
 #include "packageutils.h"
 #include "uiutils.h"
 #include "deptask.h"
+#include "gui.h"
+
+/**
+ * Main window.
+ */
+typedef struct MainWindow_t {
+    /** handle */
+    HWND window;
+
+    /** tab control */
+    HWND tabs;
+
+    /** panel for packages */
+    HWND packagesPanel;
+
+    /** table with packages */
+    HWND table;
+} MainWindow_t;
 
 extern HWND defaultPasswordWindow;
 
 QIcon MainWindow::genericAppIcon;
 QIcon MainWindow::waitAppIcon;
 MainWindow* MainWindow::instance = nullptr;
+MainWindow_t mainWindow;
+const WCHAR* mainWindowClass = L"Npackdg";
+
 
 /* creating a tag cloud
 QString err;
@@ -135,6 +156,531 @@ jobsScrollArea->setWidget(window);
 jobsScrollArea->setWidgetResizable(true);
 addTab(jobsScrollArea, genericAppIcon, "Tags");
 */
+
+#define IDM_ABOUT 16
+#define IDM_EXIT 17
+#define IDM_SETTINGS 18
+#define IDM_FEEDBACK 19
+#define IDM_CLOSE_TAB 20
+#define IDM_CHOOSE_COLUMNS 21
+#define IDM_TOGGLE_TOOLBAR 22
+#define IDM_INSTALL 23
+#define IDM_UNINSTALL 24
+#define IDM_UPDATE 25
+#define IDM_SHOW_DETAILS 26
+#define IDM_SHOW_CHANGELOG 27
+#define IDM_RUN 28
+#define IDM_OPEN_FOLDER 29
+#define IDM_OPEN_WEB_SITE 30
+#define IDM_TEST_DOWNLOAD_SITE 31
+#define IDM_CHECK_DEPENDENCIES 32
+#define IDM_RELOAD_REPOSITORIES 33
+#define IDM_ADD_PACKAGE 34
+#define IDM_EXPORT 35
+
+/**
+ * @brief saves instance handle and creates main window. In this function,
+ * we save the instance handle in a global variable and
+ * create and display the main program window.
+ *
+ * @param nCmdShow SW_*
+ * @return main window handle
+ */
+HWND createMainWindow(int);
+
+/**
+ * @brief layout the controls on the packages page
+ */
+void packagesPanelLayout();
+
+/**
+ * @brief create the panel with packages table and all the fiters
+ *
+ * @param parent parent window
+ * @return handle
+ */
+HWND createPackagesPanel(HWND parent);
+
+/**
+ * @brief processes messages in the packages panel
+ *
+ * @param hWnd window
+ * @param uMsg message
+ * @param wParam first parameter
+ * @param lParam second parameter
+ * @param uIdSubclass Id of the Subclass procedure
+ * @param dwRefData reference data
+ * @return result
+ */
+LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+
+/**
+ * @brief processes messages in the tab control
+ *
+ * @param hWnd window
+ * @param uMsg message
+ * @param wParam first parameter
+ * @param lParam second parameter
+ * @param uIdSubclass Id of the Subclass procedure
+ * @param dwRefData reference data
+ * @return result
+ */
+LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+
+/**
+ * @brief Processes messages for the main window.
+ *
+ * @param hWnd windows handle
+ * @param message message
+ * @param wParam first parameter
+ * @param lParam second parameter
+ * @return result
+ */
+LRESULT CALLBACK mainWindowProc(HWND, UINT, WPARAM, LPARAM);
+
+/**
+ * @brief creates a static control that can be used as a
+ * panel to group other controls.
+ *
+ * @param parent parent control
+ * @param title caption
+ * @return the handle to the static control
+ */
+HWND createPanel(HWND parent);
+
+/**
+ * @brief create the main menu
+ * @return menu handle
+ */
+HMENU createMainMenu();
+
+/**
+ * @brief Destroy the main window.
+ * @param hWnd main window handle
+ */
+void destroyMainWindow(HWND hWnd);
+
+/**
+ * @brief Creates a tab control, sized to fit the specified parent window's client
+ * area, and adds some tabs.
+ * @param hwndParent parent window (the application's main window)
+ * @return handle to the tab control
+ */
+HWND createTab(HWND hwndParent);
+
+/**
+ * @brief creates the table with packages
+ * @param parent parent window
+ * @return window handle
+ */
+HWND createTable(HWND parent);
+
+void layoutMainWindow();
+void layoutTab();
+
+void packagesPanelLayout()
+{
+    RECT r;
+    GetClientRect(mainWindow.packagesPanel, &r);
+
+    r.left = 200;
+    r.top = 10;
+    r.bottom -= 10;
+    r.right -= 10;
+    MoveWindow(mainWindow.table, r.left, r.top,
+        r.right - r.left, r.bottom - r.top, FALSE);
+}
+
+HWND createPackagesPanel(HWND parent)
+{
+    HWND result = createPanel(parent);
+    SetWindowSubclass(result, &packagesPanelSubclassProc, 1, 0);
+
+    SendMessage(result, WM_SETFONT, (LPARAM)defaultFont, TRUE);
+
+    int y = 10;
+    HWND label = createLabel(result, L"S&earch:");
+    SIZE sz = windowGetPreferredSize(label);
+    MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    HWND edit = createEdit(result);
+    sz = windowGetPreferredSize(edit);
+    MoveWindow(edit, 10, y, 180, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    HWND btn = createRadioButton(result, L"&All");
+    sz = windowGetPreferredSize(btn);
+    MoveWindow(btn, 10, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    btn = createRadioButton(result, L"&Installed");
+    sz = windowGetPreferredSize(btn);
+    MoveWindow(btn, 10, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    btn = createRadioButton(result, L"&Updateable");
+    sz = windowGetPreferredSize(btn);
+    MoveWindow(btn, 10, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    label = createLabel(result, L"Category:");
+    sz = windowGetPreferredSize(label);
+    MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    HWND combobox = createCombobox(result);
+    sz = windowGetPreferredSize(combobox);
+    MoveWindow(combobox, 10, y, 180, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    label = createLabel(result, L"Sub-category:");
+    sz = windowGetPreferredSize(label);
+    MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    combobox = createCombobox(result);
+    sz = windowGetPreferredSize(combobox);
+    MoveWindow(combobox, 10, y, 180, sz.cy, FALSE);
+    //y += sz.cy;
+
+    mainWindow.table = createTable(result);
+    LVCOLUMN col = {};
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"ColumnHeader");
+    ListView_InsertColumn(mainWindow.table, 0, &col);
+    ListView_SetItemCountEx(mainWindow.table, 1000,
+        LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
+
+    return result;
+}
+
+LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/)
+{
+    switch(uMsg)
+    {
+        case WM_NOTIFY:
+        {
+            switch (((LPNMHDR)lParam)->code) {
+                case LVN_GETDISPINFO:
+                {
+                    // provide the data for the packages table
+                    NMLVDISPINFO* pnmv = (NMLVDISPINFO*) lParam;
+                    if (pnmv->item.iItem < 0 || // typo fixed 11am
+                            pnmv->item.iItem >= 1000) {
+                        return E_FAIL;         // requesting invalid item
+                    }
+
+                    LPWSTR pszResult;
+                    if (pnmv->item.mask & LVIF_TEXT) {
+                        switch (pnmv->item.iSubItem) {
+                        case 0:
+                            pszResult = const_cast<LPWSTR>(L"First");
+                            break;
+                        case 1:
+                            pszResult = const_cast<LPWSTR>(L"Second");
+                            break;
+                        default:
+                            pszResult = const_cast<LPWSTR>(L"Other");
+                            break;
+                        }
+                        pnmv->item.pszText = const_cast<LPWSTR>(pszResult);
+                    }
+                    if (pnmv->item.mask & LVIF_IMAGE) {
+                        pnmv->item.iImage = -1;
+                    }
+                    if (pnmv->item.mask & LVIF_STATE) {
+                        pnmv->item.state = 0;
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+        case WM_SIZE:
+        {
+            packagesPanelLayout();
+            break;
+        }
+    }
+
+    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+}
+
+void layoutTab()
+{
+    RECT r;
+    GetClientRect(mainWindow.tabs, &r);
+
+    TabCtrl_AdjustRect(mainWindow.tabs, FALSE, &r);
+
+    // Resize the tab control to fit the client are of main window.
+    MoveWindow(mainWindow.packagesPanel, r.left, r.top,
+        r.right - r.left, r.bottom - r.top, FALSE);
+}
+
+LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/)
+{
+    switch(uMsg)
+    {
+        case WM_SIZE:
+        {
+            layoutTab();
+
+            break;
+        }
+    }
+
+    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+}
+
+void layoutMainWindow()
+{
+    if (mainWindow.tabs != 0) {
+        RECT r;
+        GetClientRect(mainWindow.window, &r);
+
+        // Resize the tab control to fit the client are of main window.
+        SetWindowPos(mainWindow.tabs, HWND_TOP, r.left, r.top, r.right - r.left,
+            r.bottom - r.top, SWP_SHOWWINDOW);
+    }
+}
+
+LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message) {
+        case WM_COMMAND:
+        {
+            int wmId = LOWORD(wParam);
+            // Parse the menu selections:
+            switch (wmId) {
+            case IDM_ABOUT:
+                MessageBox(hWnd, L"hello", L"Caption", MB_OK);
+                break;
+            case IDM_EXIT:
+                DestroyWindow(hWnd);
+                break;
+            default:
+                return DefWindowProc(hWnd, message, wParam, lParam);
+            }
+        }
+        break;
+
+        case WM_PAINT:
+        {
+            PAINTSTRUCT ps;
+            RECT rect;
+            HDC hdc = BeginPaint(hWnd, &ps);
+
+            GetClientRect(hWnd, &rect);
+            DrawText(hdc, TEXT("Hello, Windows!"), -1, &rect, DT_SINGLELINE |
+                DT_CENTER | DT_VCENTER);
+            EndPaint(hWnd, &ps);
+        }
+        break;
+
+        case WM_DESTROY:
+        {
+            PostQuitMessage(0);
+            break;
+        }
+
+        case WM_SIZE:
+            layoutMainWindow();
+            break;
+
+        case WM_NOTIFY:
+        {
+            switch (((LPNMHDR)lParam)->code) {
+                case TCN_SELCHANGING:
+                {
+                    // Return FALSE to allow the selection to change.
+                    return FALSE;
+                }
+
+                case TCN_SELCHANGE:
+                {
+                    // int iPage = TabCtrl_GetCurSel(hwndTab);
+
+                    // Note that g_hInst is the global instance handle.
+                    MessageBox(hWnd, L"changed", L"Caption", MB_OK);
+                    /*SendMessage(hwndDisplay, WM_SETTEXT, 0,
+                        (LPARAM) L"test!!!");*/
+                    break;
+                }
+            }
+            break;
+        }
+
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
+
+HMENU createMainMenu()
+{
+    HMENU packageMenu = CreateMenu();
+    menuAppendItem(packageMenu, IDM_INSTALL, QObject::tr("&Install"));
+    menuAppendItem(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"));
+    menuAppendItem(packageMenu, IDM_UPDATE, QObject::tr("&Update"));
+    AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
+    menuAppendItem(packageMenu, IDM_SHOW_DETAILS, QObject::tr("Show details"));
+    menuAppendItem(packageMenu, IDM_SHOW_CHANGELOG,
+        QObject::tr("Show changelog"));
+    menuAppendItem(packageMenu, IDM_RUN, QObject::tr("Run"));
+    menuAppendItem(packageMenu, IDM_OPEN_FOLDER, QObject::tr("Open folder"));
+    menuAppendItem(packageMenu, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"));
+    menuAppendItem(packageMenu, IDM_TEST_DOWNLOAD_SITE,
+        QObject::tr("&Test download site"));
+    AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
+    menuAppendItem(packageMenu, IDM_CHECK_DEPENDENCIES,
+        QObject::tr("Check dependencies"));
+    menuAppendItem(packageMenu, IDM_RELOAD_REPOSITORIES,
+        QObject::tr("Reload repositories"));
+    menuAppendItem(packageMenu, IDM_ADD_PACKAGE, QObject::tr("Add package..."));
+    menuAppendItem(packageMenu, IDM_EXPORT, QObject::tr("Export..."));
+    menuAppendItem(packageMenu, IDM_SETTINGS, QObject::tr("&Settings"));
+    AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
+    menuAppendItem(packageMenu, IDM_EXIT, QObject::tr("&Exit"));
+
+    HMENU viewMenu = CreateMenu();
+    menuAppendItem(viewMenu, IDM_CLOSE_TAB, QObject::tr("Close tab"));
+    menuAppendItem(viewMenu, IDM_CHOOSE_COLUMNS,
+        QObject::tr("Choose columns..."));
+    menuAppendItem(viewMenu, IDM_TOGGLE_TOOLBAR, QObject::tr("Toggle toolbar"));
+
+    HMENU helpMenu = CreateMenu();
+    AppendMenu(helpMenu, MF_STRING, IDM_FEEDBACK, L"Feedback");
+    AppendMenu(helpMenu, MF_STRING, IDM_ABOUT, L"About");
+
+    HMENU hmenuMain = CreateMenu();
+    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) packageMenu,
+        WPMUtils::toLPWSTR(QObject::tr("Package")));
+    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) viewMenu,
+        WPMUtils::toLPWSTR(QObject::tr("View")));
+    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) helpMenu,
+        WPMUtils::toLPWSTR(QObject::tr("Help")));
+
+    return hmenuMain;
+}
+
+HWND createTab(HWND hwndParent)
+{
+    RECT rcClient;
+
+    // Get the dimensions of the parent window's client area, and
+    // create a tab control child window of that size.
+    GetClientRect(hwndParent, &rcClient);
+
+    HWND w = CreateWindow(WC_TABCONTROL, L"",
+        WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
+        0, 0, rcClient.right, rcClient.bottom,
+        hwndParent, NULL, hInst, NULL);
+
+    // Add tabs for each day of the week.
+    TCITEM tie;
+    tie.mask = TCIF_TEXT | TCIF_IMAGE;
+    tie.iImage = -1;
+
+    tie.pszText = const_cast<LPWSTR>(L"Packages");
+    TabCtrl_InsertItem(w, 0, &tie);
+
+    tie.pszText = const_cast<LPWSTR>(L"Jobs");
+    TabCtrl_InsertItem(w, 1, &tie);
+
+    SetWindowSubclass(w, &tabSubclassProc, 1, 0);
+
+    SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
+
+    return w;
+}
+
+HWND createTable(HWND parent)
+{
+    return CreateWindow(WC_LISTVIEW, NULL,
+                  WS_VISIBLE | WS_CHILD | WS_TABSTOP |
+                  LVS_NOSORTHEADER | LVS_OWNERDATA |
+                  LVS_SINGLESEL | LVS_REPORT,
+                  200, 25, 200, 200,
+                  parent,
+                  0,
+                  hInst,
+                  NULL);
+}
+
+int runGUI(int nCmdShow)
+{
+    initGUI();
+
+    // create main window
+    createMainWindow(nCmdShow);
+
+    MSG msg;
+
+    // Main message loop:
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    destroyMainWindow(mainWindow.window);
+
+    DeleteObject(defaultFont);
+
+    UnregisterClassW(mainWindowClass, hInst);
+
+    return (int) msg.wParam;
+}
+
+void destroyMainWindow(HWND hWnd)
+{
+    HMENU mainMenu = GetMenu(hWnd);
+    DestroyWindow(hWnd);
+    DestroyMenu(mainMenu);
+}
+
+
+HWND createMainWindow(int nCmdShow)
+{
+    WNDCLASSEXW wcex = {};
+    wcex.cbSize = sizeof(WNDCLASSEX);
+    wcex.style          = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc    = mainWindowProc;
+    wcex.hInstance      = hInst;
+    wcex.hIcon          = LoadIcon(hInst, L"IDI_ICON1");
+    wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.lpszClassName  = mainWindowClass;
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, L"IDI_ICON1");
+    RegisterClassExW(&wcex);
+
+    HWND hWnd = CreateWindowW(mainWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
+      CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInst, NULL);
+
+    mainWindow.window = hWnd;
+
+    SetMenu(hWnd, createMainMenu());
+
+    mainWindow.tabs = createTab(hWnd);
+
+    mainWindow.packagesPanel = createPackagesPanel(mainWindow.tabs);
+
+    layoutMainWindow();
+    layoutTab();
+    packagesPanelLayout();
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+
+    return hWnd;
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QObject(parent)
