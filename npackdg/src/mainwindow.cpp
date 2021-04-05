@@ -8,6 +8,7 @@
 #include <qprogressdialog.h>
 #include <qwaitcondition.h>
 #include <windows.h>
+#include <windowsx.h>
 #include <shlobj.h>
 #include <shobjidl.h>
 
@@ -77,6 +78,27 @@ typedef struct MainWindow_t {
 
     /** table with packages */
     HWND table;
+
+    /** label where the search duration is shown */
+    HWND labelDuration;
+
+    /** edit field for the filter */
+    HWND filterLineEdit;
+
+    /** filter "all" */
+    HWND buttonAll;
+
+    /** filter "installed" */
+    HWND buttonInstalled;
+
+    /** filter "updateable" */
+    HWND buttonUpdateable;
+
+    /** top-level category filter */
+    HWND comboBoxCategory0;
+
+    /** second level category filter */
+    HWND comboBoxCategory1;
 } MainWindow_t;
 
 extern HWND defaultPasswordWindow;
@@ -178,15 +200,17 @@ addTab(jobsScrollArea, genericAppIcon, "Tags");
 #define IDM_ADD_PACKAGE 34
 #define IDM_EXPORT 35
 
+/** ID of the edit filter control. 8 is the first valid Id. */
+#define ID_EDIT_FILTER 8
+
 /**
  * @brief saves instance handle and creates main window. In this function,
  * we save the instance handle in a global variable and
  * create and display the main program window.
  *
  * @param nCmdShow SW_*
- * @return main window handle
  */
-HWND createMainWindow(int);
+void createMainWindow(int);
 
 /**
  * @brief layout the controls on the packages page
@@ -306,24 +330,25 @@ HWND createPackagesPanel(HWND parent)
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    HWND edit = createEdit(result);
-    sz = windowGetPreferredSize(edit);
-    MoveWindow(edit, 10, y, 180, sz.cy, FALSE);
+    mainWindow.filterLineEdit = createEdit(result, ID_EDIT_FILTER);
+    sz = windowGetPreferredSize(mainWindow.filterLineEdit);
+    MoveWindow(mainWindow.filterLineEdit, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    HWND btn = createRadioButton(result, L"&All");
-    sz = windowGetPreferredSize(btn);
-    MoveWindow(btn, 10, y, sz.cx, sz.cy, FALSE);
+    mainWindow.buttonAll = createRadioButton(result, L"&All");
+    sz = windowGetPreferredSize(mainWindow.buttonAll);
+    MoveWindow(mainWindow.buttonAll, 10, y, sz.cx, sz.cy, FALSE);
+    Button_SetCheck(mainWindow.buttonAll, BST_CHECKED);
     y += sz.cy + 5;
 
-    btn = createRadioButton(result, L"&Installed");
-    sz = windowGetPreferredSize(btn);
-    MoveWindow(btn, 10, y, sz.cx, sz.cy, FALSE);
+    mainWindow.buttonInstalled = createRadioButton(result, L"&Installed");
+    sz = windowGetPreferredSize(mainWindow.buttonInstalled);
+    MoveWindow(mainWindow.buttonInstalled, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    btn = createRadioButton(result, L"&Updateable");
-    sz = windowGetPreferredSize(btn);
-    MoveWindow(btn, 10, y, sz.cx, sz.cy, FALSE);
+    mainWindow.buttonUpdateable = createRadioButton(result, L"&Updateable");
+    sz = windowGetPreferredSize(mainWindow.buttonUpdateable);
+    MoveWindow(mainWindow.buttonUpdateable, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
     label = createLabel(result, L"Category:");
@@ -331,9 +356,9 @@ HWND createPackagesPanel(HWND parent)
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    HWND combobox = createCombobox(result);
-    sz = windowGetPreferredSize(combobox);
-    MoveWindow(combobox, 10, y, 180, sz.cy, FALSE);
+    mainWindow.comboBoxCategory0 = createCombobox(result);
+    sz = windowGetPreferredSize(mainWindow.comboBoxCategory0);
+    MoveWindow(mainWindow.comboBoxCategory0, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
     label = createLabel(result, L"Sub-category:");
@@ -341,10 +366,16 @@ HWND createPackagesPanel(HWND parent)
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    combobox = createCombobox(result);
-    sz = windowGetPreferredSize(combobox);
-    MoveWindow(combobox, 10, y, 180, sz.cy, FALSE);
-    //y += sz.cy;
+    mainWindow.comboBoxCategory1 = createCombobox(result);
+    sz = windowGetPreferredSize(mainWindow.comboBoxCategory1);
+    MoveWindow(mainWindow.comboBoxCategory1, 10, y, 180, sz.cy, FALSE);
+    y += sz.cy + 5;
+
+    mainWindow.labelDuration = createLabel(result, L"");
+    sz = windowGetPreferredSize(mainWindow.labelDuration);
+    MoveWindow(mainWindow.labelDuration, 10, y, 180, sz.cy, FALSE);
+    SetWindowTextW(mainWindow.labelDuration, L"0ms");
+    //y += sz.cy + 5;
 
     mainWindow.table = createTable(result);
     LVCOLUMN col = {};
@@ -353,8 +384,6 @@ HWND createPackagesPanel(HWND parent)
     col.cx = 100;
     col.pszText = const_cast<LPWSTR>(L"ColumnHeader");
     ListView_InsertColumn(mainWindow.table, 0, &col);
-    ListView_SetItemCountEx(mainWindow.table, 1000,
-        LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
 
     return result;
 }
@@ -362,6 +391,8 @@ HWND createPackagesPanel(HWND parent)
 LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/)
 {
+    MainWindow* mw = MainWindow::getInstance();
+
     switch(uMsg)
     {
         case WM_NOTIFY:
@@ -372,7 +403,8 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                     // provide the data for the packages table
                     NMLVDISPINFO* pnmv = (NMLVDISPINFO*) lParam;
                     if (pnmv->item.iItem < 0 || // typo fixed 11am
-                            pnmv->item.iItem >= 1000) {
+                            pnmv->item.iItem >= static_cast<int>(
+                            mw->found.size())) {
                         return E_FAIL;         // requesting invalid item
                     }
 
@@ -380,7 +412,8 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                     if (pnmv->item.mask & LVIF_TEXT) {
                         switch (pnmv->item.iSubItem) {
                         case 0:
-                            pszResult = const_cast<LPWSTR>(L"First");
+                            pszResult = WPMUtils::toLPWSTR(
+                                mw->found[pnmv->item.iItem]);
                             break;
                         case 1:
                             pszResult = const_cast<LPWSTR>(L"Second");
@@ -404,6 +437,14 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
         }
         case WM_SIZE:
         {
+            packagesPanelLayout();
+            break;
+        }
+        case WM_COMMAND:
+        {
+            if (LOWORD(wParam) == ID_EDIT_FILTER && HIWORD(wParam) == EN_CHANGE) {
+                mw->fillList();
+            }
             packagesPanelLayout();
             break;
         }
@@ -622,6 +663,8 @@ int runGUI(int nCmdShow)
     // create main window
     createMainWindow(nCmdShow);
 
+    MainWindow::getInstance()->onShow();
+
     MSG msg;
 
     // Main message loop:
@@ -647,7 +690,7 @@ void destroyMainWindow(HWND hWnd)
 }
 
 
-HWND createMainWindow(int nCmdShow)
+void createMainWindow(int nCmdShow)
 {
     WNDCLASSEXW wcex = {};
     wcex.cbSize = sizeof(WNDCLASSEX);
@@ -678,8 +721,6 @@ HWND createMainWindow(int nCmdShow)
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
-
-    return hWnd;
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -1313,7 +1354,7 @@ void MainWindow::monitoredJobCompleted()
     */
 
     VisibleJobs::getDefault()->unregisterJob(job);
-    pt->removeJob(job);
+    // TODO pt->removeJob(job);
     updateProgressTabTitle();
     job->disconnect();
     job->deleteLater();
@@ -1338,7 +1379,7 @@ void MainWindow::monitor(Job* job)
 
     VisibleJobs::getDefault()->push_back(job);
 
-    pt->addJob(job);
+    // TODO pt->addJob(job);
 }
 
 void MainWindow::onShow()
@@ -1358,7 +1399,7 @@ void MainWindow::onShow()
 
         // this seems to improve the rendering of the main table before
         // the background repository loading starts
-        this->mainFrame->getTableWidget()->repaint();
+        // TODO this->mainFrame->getTableWidget()->repaint();
 
         recognizeAndLoadRepositories(true);
     } else
@@ -1444,18 +1485,51 @@ void MainWindow::fillListInBackground()
     fillList();
 }
 
+int MainWindow::getCategoryFilter(int level) const
+{
+    int r = -1;
+
+    /* TODO
+    if (level == 0) {
+        int sel = ComboBox_GetCurSel(mainWindow.comboBoxCategory0);
+        if (sel <= 0)
+            r = -1;
+        else
+            r = this->categories0.at(sel - 1).at(0).toInt();
+    } else if (level == 1) {
+        int sel = this->ui->comboBoxCategory1->currentIndex();
+        if (sel <= 0)
+            r = -1;
+        else
+            r = this->categories1.at(sel - 1).at(0).toInt();
+    } else
+        r = -1;
+        */
+    return r;
+}
+
+int MainWindow::getStatusFilter() const
+{
+    int r;
+    if (Button_GetCheck(mainWindow.buttonInstalled) == BST_CHECKED)
+        r = 1;
+    else if (Button_GetCheck(mainWindow.buttonUpdateable) == BST_CHECKED)
+        r = 2;
+    else
+        r = 0;
+
+    return r;
+}
+
 void MainWindow::fillList()
 {
     DWORD start = GetTickCount();
 
     // qCDebug(npackd) << "MainWindow::fillList";
-    QTableView* t = this->mainFrame->getTableWidget();
 
-    t->setUpdatesEnabled(false);
+    QString query = getWindowText(mainWindow.filterLineEdit);
 
-    QString query = this->mainFrame->getFilterLineEdit()->text();
-
-    int statusFilter = this->mainFrame->getStatusFilter();
+    int statusFilter = getStatusFilter();
     Package::Status minStatus, maxStatus;
     switch (statusFilter) {
         case 1:
@@ -1472,8 +1546,8 @@ void MainWindow::fillList()
             break;
     }
 
-    int cat0 = this->mainFrame->getCategoryFilter(0);
-    int cat1 = this->mainFrame->getCategoryFilter(1);
+    int cat0 = getCategoryFilter(0);
+    int cat1 = getCategoryFilter(1);
 
     QString err;
     _SearchResult sr = search(minStatus, maxStatus, query, cat0, cat1, &err);
@@ -1487,13 +1561,13 @@ void MainWindow::fillList()
         addErrorMessage(err, err, true, QMessageBox::Critical);
     }
 
-    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
-    m->setPackages(sr.found);
-    t->setUpdatesEnabled(true);
-    t->horizontalHeader()->setSectionsMovable(true);
+    found = sr.found;
+    // TODO: t->horizontalHeader()->setSectionsMovable(true);
 
     DWORD dur = GetTickCount() - start;
 
+    ListView_SetItemCountEx(mainWindow.table, found.size(),
+        LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
     this->mainFrame->setDuration(static_cast<int>(dur));
 }
 

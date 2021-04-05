@@ -109,7 +109,23 @@ private:
     void updateDownloadSize(const QString &url);
     _SearchResult search(Package::Status minStatus, Package::Status maxStatus,
                          const QString &query, int cat0, int cat1, QString *err);
+
+    /**
+     * @brief filter for the status
+     * @return 0=All, 1=Installed, 2=Updateable
+     */
+    int getStatusFilter() const;
+
+    /**
+     * @brief returns selected category
+     * @param level 0, 1, ...
+     * @return category ID or -1 for "All" or 0 for "Uncategorized"
+     */
+    int getCategoryFilter(int level) const;
 public:
+    /** package names for found packages */
+    std::vector<QString> found;
+
     /**
      * Adds an entry in the "Progress" tab and monitors a task. The thread
      * itself should be started after the call to this method.
@@ -276,6 +292,8 @@ public:
      * @brief start filling the list asnchronously
      */
     void fillListInBackground();
+
+    void onShow();
 protected:
     void changeEvent(QEvent *e);
 
@@ -288,6 +306,7 @@ protected:
      */
     void process(std::vector<InstallOperation *> &install,
             const DAG &opsDependencies, DWORD programCloseType);
+
 public slots:
     void on_errorMessage(const QString& msg, const QString& details="",
             bool autoHide=true, QMessageBox::Icon icon=QMessageBox::Critical);
@@ -302,7 +321,6 @@ private slots:
     void on_actionUpdate_triggered();
     void on_actionSettings_triggered();
     void on_actionGotoPackageURL_triggered();
-    void onShow();
     void on_actionExit_triggered();
     void on_actionReload_Repositories_triggered();
     void on_actionClose_Tab_triggered();

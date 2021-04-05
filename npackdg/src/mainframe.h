@@ -51,12 +51,6 @@ public:
     QLineEdit* getFilterLineEdit() const;
 
     /**
-     * @brief filter for the status
-     * @return 0=All, 1=Installed, 2=Updateable
-     */
-    int getStatusFilter() const;
-
-    /**
      * @brief saves the column widths in the Windows registry
      */
     void saveColumns() const;
@@ -73,13 +67,6 @@ public:
      * @param cats new categories: ID, COUNT, NAME
      */
     void setCategories(int level, const std::vector<std::vector<QString> > &cats);
-
-    /**
-     * @brief returns selected category
-     * @param level 0, 1, ...
-     * @return category ID or -1 for "All" or 0 for "Uncategorized"
-     */
-    int getCategoryFilter(int level) const;
 
     /**
      * @brief changes the chosen category. Changing the category at level 0 will

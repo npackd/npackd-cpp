@@ -26,19 +26,19 @@ void initGUI()
 HWND createRadioButton(HWND hParent, const TCHAR *szCaption)
 {
     HWND w = CreateWindow(WC_BUTTON, szCaption,
-        WS_VISIBLE | WS_CHILD | BS_RADIOBUTTON,
+        WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON,
         0, 0, CW_USEDEFAULT, CW_USEDEFAULT,
         hParent, NULL, hInst, NULL);
     SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
     return w;
 }
 
-HWND createEdit(HWND hParent)
+HWND createEdit(HWND hParent, int id)
 {
     return CreateWindow(WC_EDIT, NULL,
         WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT,
         0, 0, 100, CW_USEDEFAULT,
-        hParent, NULL, hInst, NULL);
+        hParent, reinterpret_cast<HMENU>(id), hInst, NULL);
 }
 
 SIZE windowGetPreferredSize(HWND window)
@@ -70,7 +70,7 @@ SIZE windowGetPreferredSize(HWND window)
             r.cx = 200;
         } else if (wcsicmp(WC_COMBOBOX, className) == 0) {
             r.cx = 200;
-            r.cy = 20;
+            r.cy = 25;
         }
     }
 
@@ -131,4 +131,19 @@ void critical(HWND hwnd, const QString &title, const QString &message)
 {
     MessageBox(hwnd, WPMUtils::toLPWSTR(title), WPMUtils::toLPWSTR(message),
         MB_OK | MB_ICONERROR);
+}
+
+QString getWindowText(HWND wnd)
+{
+    QString r;
+
+    int len = GetWindowTextLengthW(wnd);
+    if (len) {
+        r.resize(len);
+        if (!GetWindowTextW(wnd, WPMUtils::toLPWSTR(r), len + 1)) {
+            r.clear();
+        }
+    }
+
+    return r;
 }

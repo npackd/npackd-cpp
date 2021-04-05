@@ -174,28 +174,6 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
     this->categoryCombosEvents = true;
 }
 
-int MainFrame::getCategoryFilter(int level) const
-{
-    int r;
-    /* todo
-    if (level == 0) {
-        int sel = this->ui->comboBoxCategory0->currentIndex();
-        if (sel <= 0)
-            r = -1;
-        else
-            r = this->categories0.at(sel - 1).at(0).toInt();
-    } else if (level == 1) {
-        int sel = this->ui->comboBoxCategory1->currentIndex();
-        if (sel <= 0)
-            r = -1;
-        else
-            r = this->categories1.at(sel - 1).at(0).toInt();
-    } else
-        r = -1;
-        */
-    return r;
-}
-
 void MainFrame::setDuration(int d)
 {
     // TODO this->ui->labelDuration->setText(QObject::tr("Found in %1 ms").arg(d));
@@ -291,20 +269,6 @@ QLineEdit *MainFrame::getFilterLineEdit() const
 {
     // TODO return this->ui->lineEditText;
     return nullptr;
-}
-
-int MainFrame::getStatusFilter() const
-{
-    int r;
-    /* todo if (this->ui->radioButtonInstalled->isChecked())
-        r = 1;
-    else if (this->ui->radioButtonUpdateable->isChecked())
-        r = 2;
-    else
-        r = 0;
-        */
-
-    return r;
 }
 
 void MainFrame::setStatusFilter(int status)

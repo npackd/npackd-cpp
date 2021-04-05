@@ -17,6 +17,14 @@ extern HFONT defaultFont;
 void initGUI();
 
 /**
+ * @brief retrives the window text
+ *
+ * @param wnd a window
+ * @return text
+ */
+QString getWindowText(HWND wnd);
+
+/**
  * @brief creates a button
  *
  * @param hParent parent
@@ -29,9 +37,10 @@ HWND createRadioButton(HWND hParent, const TCHAR *szCaption);
  * @brief creates a one-line edit field
  *
  * @param hParent parent window
+ * @param id Id of the control
  * @return handle
  */
-HWND createEdit(HWND hParent);
+HWND createEdit(HWND hParent, int id=0);
 
 /**
  * @brief creates a combobox
