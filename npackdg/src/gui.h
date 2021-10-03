@@ -14,7 +14,7 @@ extern HFONT defaultFont;
 /**
  * @brief initializes the GUI
  */
-void initGUI();
+void t_gui_init();
 
 /**
  * @brief retrives the window text
@@ -22,7 +22,7 @@ void initGUI();
  * @param wnd a window
  * @return text
  */
-QString getWindowText(HWND wnd);
+QString t_gui_get_window_text(HWND wnd);
 
 /**
  * @brief creates a button
@@ -31,7 +31,7 @@ QString getWindowText(HWND wnd);
  * @param szCaption title
  * @return handle
  */
-HWND createRadioButton(HWND hParent, const TCHAR *szCaption);
+HWND t_gui_create_radio_button(HWND hParent, const TCHAR *szCaption);
 
 /**
  * @brief creates a one-line edit field
@@ -40,7 +40,7 @@ HWND createRadioButton(HWND hParent, const TCHAR *szCaption);
  * @param id Id of the control
  * @return handle
  */
-HWND createEdit(HWND hParent, int id=0);
+HWND t_gui_create_edit(HWND hParent, int id=0);
 
 /**
  * @brief creates a combobox
@@ -48,7 +48,7 @@ HWND createEdit(HWND hParent, int id=0);
  * @param hParent parent window
  * @return handle
  */
-HWND createCombobox(HWND hParent);
+HWND t_gui_create_combobox(HWND hParent);
 
 /**
  * @brief determines the preferred size of a control. This works for
@@ -57,7 +57,7 @@ HWND createCombobox(HWND hParent);
  * @param window a window
  * @return preferred size
  */
-SIZE windowGetPreferredSize(HWND window);
+SIZE t_gui_get_preferred_size(HWND window);
 
 /**
  * @brief Message handler for about box.
@@ -75,7 +75,7 @@ INT_PTR CALLBACK about(HWND, UINT, WPARAM, LPARAM);
  * @param id command Id
  * @param title title
  */
-void menuAppendItem(HMENU menu, UINT_PTR id, const QString& title);
+void t_gui_menu_append_item(HMENU menu, UINT_PTR id, const QString& title);
 
 /**
  * @brief creates a label.
@@ -84,7 +84,7 @@ void menuAppendItem(HMENU menu, UINT_PTR id, const QString& title);
  * @param title caption
  * @return the handle to the static control
  */
-HWND createLabel(HWND parent, const LPCWSTR title);
+HWND t_gui_create_label(HWND parent, const LPCWSTR title);
 
 /**
  * @brief shows a critical error message
@@ -93,6 +93,6 @@ HWND createLabel(HWND parent, const LPCWSTR title);
  * @param title window title
  * @param message message
  */
-void critical(HWND hwnd, const QString& title, const QString& message);
+void t_gui_critical_error(HWND hwnd, const QString& title, const QString& message);
 
 #endif // GUI_H

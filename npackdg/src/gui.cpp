@@ -9,7 +9,7 @@ HINSTANCE hInst;
 
 HFONT defaultFont;
 
-void initGUI()
+void t_gui_init()
 {
     // Initialize common controls.
     INITCOMMONCONTROLSEX icex = {};
@@ -23,7 +23,7 @@ void initGUI()
         DEFAULT_PITCH | FF_DONTCARE, TEXT("Tahoma"));
 }
 
-HWND createRadioButton(HWND hParent, const TCHAR *szCaption)
+HWND t_gui_create_radio_button(HWND hParent, const TCHAR *szCaption)
 {
     HWND w = CreateWindow(WC_BUTTON, szCaption,
         WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON,
@@ -33,7 +33,7 @@ HWND createRadioButton(HWND hParent, const TCHAR *szCaption)
     return w;
 }
 
-HWND createEdit(HWND hParent, int id)
+HWND t_gui_create_edit(HWND hParent, int id)
 {
     return CreateWindow(WC_EDIT, NULL,
         WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT,
@@ -41,7 +41,7 @@ HWND createEdit(HWND hParent, int id)
         hParent, reinterpret_cast<HMENU>(id), hInst, NULL);
 }
 
-SIZE windowGetPreferredSize(HWND window)
+SIZE t_gui_get_preferred_size(HWND window)
 {
     SIZE r = {.cx = 100, .cy = 100};
 
@@ -93,12 +93,12 @@ INT_PTR CALLBACK about(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-void menuAppendItem(HMENU menu, UINT_PTR id, const QString& title)
+void t_gui_menu_append_item(HMENU menu, UINT_PTR id, const QString& title)
 {
     AppendMenu(menu, MF_STRING, id, WPMUtils::toLPWSTR(title));
 }
 
-HWND createLabel(HWND parent, const LPCWSTR title)
+HWND t_gui_create_label(HWND parent, const LPCWSTR title)
 {
     HWND w = CreateWindow(WC_STATIC, title,
         WS_CHILD | WS_VISIBLE,
@@ -117,7 +117,7 @@ HWND createPanel(HWND parent)
         parent, NULL, hInst, NULL);
 }
 
-HWND createCombobox(HWND hParent)
+HWND t_gui_create_combobox(HWND hParent)
 {
     HWND w = CreateWindow(WC_COMBOBOX, NULL,
         WS_VISIBLE | WS_CHILD | CBS_DROPDOWNLIST,
@@ -127,13 +127,13 @@ HWND createCombobox(HWND hParent)
 }
 
 
-void critical(HWND hwnd, const QString &title, const QString &message)
+void t_gui_critical_error(HWND hwnd, const QString &title, const QString &message)
 {
     MessageBox(hwnd, WPMUtils::toLPWSTR(title), WPMUtils::toLPWSTR(message),
         MB_OK | MB_ICONERROR);
 }
 
-QString getWindowText(HWND wnd)
+QString t_gui_get_window_text(HWND wnd)
 {
     QString r;
 

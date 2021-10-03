@@ -325,54 +325,54 @@ HWND createPackagesPanel(HWND parent)
     SendMessage(result, WM_SETFONT, (LPARAM)defaultFont, TRUE);
 
     int y = 10;
-    HWND label = createLabel(result, L"S&earch:");
-    SIZE sz = windowGetPreferredSize(label);
+    HWND label = t_gui_create_label(result, L"S&earch:");
+    SIZE sz = t_gui_get_preferred_size(label);
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.filterLineEdit = createEdit(result, ID_EDIT_FILTER);
-    sz = windowGetPreferredSize(mainWindow.filterLineEdit);
+    mainWindow.filterLineEdit = t_gui_create_edit(result, ID_EDIT_FILTER);
+    sz = t_gui_get_preferred_size(mainWindow.filterLineEdit);
     MoveWindow(mainWindow.filterLineEdit, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.buttonAll = createRadioButton(result, L"&All");
-    sz = windowGetPreferredSize(mainWindow.buttonAll);
+    mainWindow.buttonAll = t_gui_create_radio_button(result, L"&All");
+    sz = t_gui_get_preferred_size(mainWindow.buttonAll);
     MoveWindow(mainWindow.buttonAll, 10, y, sz.cx, sz.cy, FALSE);
     Button_SetCheck(mainWindow.buttonAll, BST_CHECKED);
     y += sz.cy + 5;
 
-    mainWindow.buttonInstalled = createRadioButton(result, L"&Installed");
-    sz = windowGetPreferredSize(mainWindow.buttonInstalled);
+    mainWindow.buttonInstalled = t_gui_create_radio_button(result, L"&Installed");
+    sz = t_gui_get_preferred_size(mainWindow.buttonInstalled);
     MoveWindow(mainWindow.buttonInstalled, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.buttonUpdateable = createRadioButton(result, L"&Updateable");
-    sz = windowGetPreferredSize(mainWindow.buttonUpdateable);
+    mainWindow.buttonUpdateable = t_gui_create_radio_button(result, L"&Updateable");
+    sz = t_gui_get_preferred_size(mainWindow.buttonUpdateable);
     MoveWindow(mainWindow.buttonUpdateable, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    label = createLabel(result, L"Category:");
-    sz = windowGetPreferredSize(label);
+    label = t_gui_create_label(result, L"Category:");
+    sz = t_gui_get_preferred_size(label);
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.comboBoxCategory0 = createCombobox(result);
-    sz = windowGetPreferredSize(mainWindow.comboBoxCategory0);
+    mainWindow.comboBoxCategory0 = t_gui_create_combobox(result);
+    sz = t_gui_get_preferred_size(mainWindow.comboBoxCategory0);
     MoveWindow(mainWindow.comboBoxCategory0, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    label = createLabel(result, L"Sub-category:");
-    sz = windowGetPreferredSize(label);
+    label = t_gui_create_label(result, L"Sub-category:");
+    sz = t_gui_get_preferred_size(label);
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.comboBoxCategory1 = createCombobox(result);
-    sz = windowGetPreferredSize(mainWindow.comboBoxCategory1);
+    mainWindow.comboBoxCategory1 = t_gui_create_combobox(result);
+    sz = t_gui_get_preferred_size(mainWindow.comboBoxCategory1);
     MoveWindow(mainWindow.comboBoxCategory1, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.labelDuration = createLabel(result, L"");
-    sz = windowGetPreferredSize(mainWindow.labelDuration);
+    mainWindow.labelDuration = t_gui_create_label(result, L"");
+    sz = t_gui_get_preferred_size(mainWindow.labelDuration);
     MoveWindow(mainWindow.labelDuration, 10, y, 180, sz.cy, FALSE);
     SetWindowTextW(mainWindow.labelDuration, L"0ms");
     //y += sz.cy + 5;
@@ -568,34 +568,34 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 HMENU createMainMenu()
 {
     HMENU packageMenu = CreateMenu();
-    menuAppendItem(packageMenu, IDM_INSTALL, QObject::tr("&Install"));
-    menuAppendItem(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"));
-    menuAppendItem(packageMenu, IDM_UPDATE, QObject::tr("&Update"));
+    t_gui_menu_append_item(packageMenu, IDM_INSTALL, QObject::tr("&Install"));
+    t_gui_menu_append_item(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"));
+    t_gui_menu_append_item(packageMenu, IDM_UPDATE, QObject::tr("&Update"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
-    menuAppendItem(packageMenu, IDM_SHOW_DETAILS, QObject::tr("Show details"));
-    menuAppendItem(packageMenu, IDM_SHOW_CHANGELOG,
+    t_gui_menu_append_item(packageMenu, IDM_SHOW_DETAILS, QObject::tr("Show details"));
+    t_gui_menu_append_item(packageMenu, IDM_SHOW_CHANGELOG,
         QObject::tr("Show changelog"));
-    menuAppendItem(packageMenu, IDM_RUN, QObject::tr("Run"));
-    menuAppendItem(packageMenu, IDM_OPEN_FOLDER, QObject::tr("Open folder"));
-    menuAppendItem(packageMenu, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"));
-    menuAppendItem(packageMenu, IDM_TEST_DOWNLOAD_SITE,
+    t_gui_menu_append_item(packageMenu, IDM_RUN, QObject::tr("Run"));
+    t_gui_menu_append_item(packageMenu, IDM_OPEN_FOLDER, QObject::tr("Open folder"));
+    t_gui_menu_append_item(packageMenu, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"));
+    t_gui_menu_append_item(packageMenu, IDM_TEST_DOWNLOAD_SITE,
         QObject::tr("&Test download site"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
-    menuAppendItem(packageMenu, IDM_CHECK_DEPENDENCIES,
+    t_gui_menu_append_item(packageMenu, IDM_CHECK_DEPENDENCIES,
         QObject::tr("Check dependencies"));
-    menuAppendItem(packageMenu, IDM_RELOAD_REPOSITORIES,
+    t_gui_menu_append_item(packageMenu, IDM_RELOAD_REPOSITORIES,
         QObject::tr("Reload repositories"));
-    menuAppendItem(packageMenu, IDM_ADD_PACKAGE, QObject::tr("Add package..."));
-    menuAppendItem(packageMenu, IDM_EXPORT, QObject::tr("Export..."));
-    menuAppendItem(packageMenu, IDM_SETTINGS, QObject::tr("&Settings"));
+    t_gui_menu_append_item(packageMenu, IDM_ADD_PACKAGE, QObject::tr("Add package..."));
+    t_gui_menu_append_item(packageMenu, IDM_EXPORT, QObject::tr("Export..."));
+    t_gui_menu_append_item(packageMenu, IDM_SETTINGS, QObject::tr("&Settings"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
-    menuAppendItem(packageMenu, IDM_EXIT, QObject::tr("&Exit"));
+    t_gui_menu_append_item(packageMenu, IDM_EXIT, QObject::tr("&Exit"));
 
     HMENU viewMenu = CreateMenu();
-    menuAppendItem(viewMenu, IDM_CLOSE_TAB, QObject::tr("Close tab"));
-    menuAppendItem(viewMenu, IDM_CHOOSE_COLUMNS,
+    t_gui_menu_append_item(viewMenu, IDM_CLOSE_TAB, QObject::tr("Close tab"));
+    t_gui_menu_append_item(viewMenu, IDM_CHOOSE_COLUMNS,
         QObject::tr("Choose columns..."));
-    menuAppendItem(viewMenu, IDM_TOGGLE_TOOLBAR, QObject::tr("Toggle toolbar"));
+    t_gui_menu_append_item(viewMenu, IDM_TOGGLE_TOOLBAR, QObject::tr("Toggle toolbar"));
 
     HMENU helpMenu = CreateMenu();
     AppendMenu(helpMenu, MF_STRING, IDM_FEEDBACK, L"Feedback");
@@ -658,7 +658,7 @@ HWND createTable(HWND parent)
 
 int runGUI(int nCmdShow)
 {
-    initGUI();
+    t_gui_init();
 
     // create main window
     createMainWindow(nCmdShow);
@@ -1527,7 +1527,7 @@ void MainWindow::fillList()
 
     // qCDebug(npackd) << "MainWindow::fillList";
 
-    QString query = getWindowText(mainWindow.filterLineEdit);
+    QString query = t_gui_get_window_text(mainWindow.filterLineEdit);
 
     int statusFilter = getStatusFilter();
     Package::Status minStatus, maxStatus;

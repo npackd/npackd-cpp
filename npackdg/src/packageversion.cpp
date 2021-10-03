@@ -1594,9 +1594,10 @@ void PackageVersion::install(Job* job, const QString& where,
                 "The package %1 was installed successfully in \"%2\"").
                 arg(this->toString(true), where);
     } else {
-        qCCritical(npackd).noquote() << QObject::tr(
-                "The installation of the package %1 in \"%2\" failed: %3").
-                arg(this->toString(true), where, job->getErrorMessage());
+        qCCritical(npackd);
+        /*, qUtf8Printable(QObject::tr(
+                       "The installation of the package %1 in \"%2\" failed: %3").
+                       arg(this->toString(true), where, job->getErrorMessage())));*/
     }
 
     if (job->shouldProceed()) {
