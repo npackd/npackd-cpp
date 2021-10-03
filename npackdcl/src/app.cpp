@@ -1472,7 +1472,8 @@ void App::update(Job* job)
                     Dependency* d = new Dependency();
                     if (!d->setVersions(versions)) {
                         delete d;
-                        job->setErrorMessage(err);
+                        job->setErrorMessage(QString(
+                            "Invalid version range: %1").arg(versions));
                     } else {
                         // this package name could be different from the one in
                         // the command line if the short package name is used
