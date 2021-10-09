@@ -272,7 +272,7 @@ LRESULT CALLBACK mainWindowProc(HWND, UINT, WPARAM, LPARAM);
  * @param title caption
  * @return the handle to the static control
  */
-HWND createPanel(HWND parent);
+HWND t_gui_create_panel(HWND parent);
 
 /**
  * @brief create the main menu
@@ -319,7 +319,7 @@ void packagesPanelLayout()
 
 HWND createPackagesPanel(HWND parent)
 {
-    HWND result = createPanel(parent);
+    HWND result = t_gui_create_panel(parent);
     SetWindowSubclass(result, &packagesPanelSubclassProc, 1, 0);
 
     SendMessage(result, WM_SETFONT, (LPARAM)defaultFont, TRUE);

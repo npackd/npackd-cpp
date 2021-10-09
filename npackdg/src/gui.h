@@ -60,16 +60,6 @@ HWND t_gui_create_combobox(HWND hParent);
 SIZE t_gui_get_preferred_size(HWND window);
 
 /**
- * @brief Message handler for about box.
- * @param hDlg dialog
- * @param message message
- * @param wParam first parameter
- * @param lParam second parameter
- * @return result
- */
-INT_PTR CALLBACK about(HWND, UINT, WPARAM, LPARAM);
-
-/**
  * @brief appends a new menu item
  * @param menu menu handle
  * @param id command Id
@@ -94,5 +84,12 @@ HWND t_gui_create_label(HWND parent, const LPCWSTR title);
  * @param message message
  */
 void t_gui_critical_error(HWND hwnd, const QString& title, const QString& message);
+
+/**
+ * @brief creates a panel
+ * @param parent parent window
+ * @return the handle
+ */
+HWND t_gui_create_panel(HWND parent);
 
 #endif // GUI_H

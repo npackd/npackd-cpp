@@ -77,22 +77,6 @@ SIZE t_gui_get_preferred_size(HWND window)
     return r;
 }
 
-INT_PTR CALLBACK about(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message) {
-        case WM_INITDIALOG:
-            return (INT_PTR)TRUE;
-        case WM_COMMAND:
-            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
-                EndDialog(hDlg, LOWORD(wParam));
-                return (INT_PTR)TRUE;
-            }
-            break;
-    }
-    return (INT_PTR)FALSE;
-}
-
 void t_gui_menu_append_item(HMENU menu, UINT_PTR id, const QString& title)
 {
     AppendMenu(menu, MF_STRING, id, WPMUtils::toLPWSTR(title));
@@ -109,7 +93,7 @@ HWND t_gui_create_label(HWND parent, const LPCWSTR title)
     return w;
 }
 
-HWND createPanel(HWND parent)
+HWND t_gui_create_panel(HWND parent)
 {
     return CreateWindow(WC_STATIC, L"",
         WS_CHILD | WS_VISIBLE,
