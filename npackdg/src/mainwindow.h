@@ -64,6 +64,39 @@ private:
     /** Icon on the tray or zeros */
     NOTIFYICONDATAW nid;
 
+    /** handle */
+    HWND window;
+
+    /** tab control */
+    HWND tabs;
+
+    /** panel for packages */
+    HWND packagesPanel;
+
+    /** table with packages */
+    HWND table;
+
+    /** label where the search duration is shown */
+    HWND labelDuration;
+
+    /** edit field for the filter */
+    HWND filterLineEdit;
+
+    /** filter "all" */
+    HWND buttonAll;
+
+    /** filter "installed" */
+    HWND buttonInstalled;
+
+    /** filter "updateable" */
+    HWND buttonUpdateable;
+
+    /** top-level category filter */
+    HWND comboBoxCategory0;
+
+    /** second level category filter */
+    HWND comboBoxCategory1;
+
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
             const Version& version) const;

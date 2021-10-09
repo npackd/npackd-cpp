@@ -63,50 +63,11 @@
 #include "deptask.h"
 #include "gui.h"
 
-/**
- * Main window.
- */
-typedef struct MainWindow_t {
-    /** handle */
-    HWND window;
-
-    /** tab control */
-    HWND tabs;
-
-    /** panel for packages */
-    HWND packagesPanel;
-
-    /** table with packages */
-    HWND table;
-
-    /** label where the search duration is shown */
-    HWND labelDuration;
-
-    /** edit field for the filter */
-    HWND filterLineEdit;
-
-    /** filter "all" */
-    HWND buttonAll;
-
-    /** filter "installed" */
-    HWND buttonInstalled;
-
-    /** filter "updateable" */
-    HWND buttonUpdateable;
-
-    /** top-level category filter */
-    HWND comboBoxCategory0;
-
-    /** second level category filter */
-    HWND comboBoxCategory1;
-} MainWindow_t;
-
 extern HWND defaultPasswordWindow;
 
 QIcon MainWindow::genericAppIcon;
 QIcon MainWindow::waitAppIcon;
 MainWindow* MainWindow::instance = nullptr;
-MainWindow_t mainWindow;
 const WCHAR* mainWindowClass = L"Npackdg";
 
 
@@ -245,13 +206,13 @@ LRESULT CALLBACK mainWindowProc(HWND, UINT, WPARAM, LPARAM);
 void MainWindow::packagesPanelLayout()
 {
     RECT r;
-    GetClientRect(mainWindow.packagesPanel, &r);
+    GetClientRect(packagesPanel, &r);
 
     r.left = 200;
     r.top = 10;
     r.bottom -= 10;
     r.right -= 10;
-    MoveWindow(mainWindow.table, r.left, r.top,
+    MoveWindow(table, r.left, r.top,
         r.right - r.left, r.bottom - r.top, FALSE);
 }
 
@@ -268,25 +229,25 @@ HWND MainWindow::createPackagesPanel(HWND parent)
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.filterLineEdit = t_gui_create_edit(result, ID_EDIT_FILTER);
-    sz = t_gui_get_preferred_size(mainWindow.filterLineEdit);
-    MoveWindow(mainWindow.filterLineEdit, 10, y, 180, sz.cy, FALSE);
+    filterLineEdit = t_gui_create_edit(result, ID_EDIT_FILTER);
+    sz = t_gui_get_preferred_size(filterLineEdit);
+    MoveWindow(filterLineEdit, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.buttonAll = t_gui_create_radio_button(result, L"&All");
-    sz = t_gui_get_preferred_size(mainWindow.buttonAll);
-    MoveWindow(mainWindow.buttonAll, 10, y, sz.cx, sz.cy, FALSE);
-    Button_SetCheck(mainWindow.buttonAll, BST_CHECKED);
+    buttonAll = t_gui_create_radio_button(result, L"&All");
+    sz = t_gui_get_preferred_size(buttonAll);
+    MoveWindow(buttonAll, 10, y, sz.cx, sz.cy, FALSE);
+    Button_SetCheck(buttonAll, BST_CHECKED);
     y += sz.cy + 5;
 
-    mainWindow.buttonInstalled = t_gui_create_radio_button(result, L"&Installed");
-    sz = t_gui_get_preferred_size(mainWindow.buttonInstalled);
-    MoveWindow(mainWindow.buttonInstalled, 10, y, sz.cx, sz.cy, FALSE);
+    buttonInstalled = t_gui_create_radio_button(result, L"&Installed");
+    sz = t_gui_get_preferred_size(buttonInstalled);
+    MoveWindow(buttonInstalled, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.buttonUpdateable = t_gui_create_radio_button(result, L"&Updateable");
-    sz = t_gui_get_preferred_size(mainWindow.buttonUpdateable);
-    MoveWindow(mainWindow.buttonUpdateable, 10, y, sz.cx, sz.cy, FALSE);
+    buttonUpdateable = t_gui_create_radio_button(result, L"&Updateable");
+    sz = t_gui_get_preferred_size(buttonUpdateable);
+    MoveWindow(buttonUpdateable, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
     label = t_gui_create_label(result, L"Category:");
@@ -294,9 +255,9 @@ HWND MainWindow::createPackagesPanel(HWND parent)
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.comboBoxCategory0 = t_gui_create_combobox(result);
-    sz = t_gui_get_preferred_size(mainWindow.comboBoxCategory0);
-    MoveWindow(mainWindow.comboBoxCategory0, 10, y, 180, sz.cy, FALSE);
+    comboBoxCategory0 = t_gui_create_combobox(result);
+    sz = t_gui_get_preferred_size(comboBoxCategory0);
+    MoveWindow(comboBoxCategory0, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
     label = t_gui_create_label(result, L"Sub-category:");
@@ -304,24 +265,24 @@ HWND MainWindow::createPackagesPanel(HWND parent)
     MoveWindow(label, 10, y, sz.cx, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.comboBoxCategory1 = t_gui_create_combobox(result);
-    sz = t_gui_get_preferred_size(mainWindow.comboBoxCategory1);
-    MoveWindow(mainWindow.comboBoxCategory1, 10, y, 180, sz.cy, FALSE);
+    comboBoxCategory1 = t_gui_create_combobox(result);
+    sz = t_gui_get_preferred_size(comboBoxCategory1);
+    MoveWindow(comboBoxCategory1, 10, y, 180, sz.cy, FALSE);
     y += sz.cy + 5;
 
-    mainWindow.labelDuration = t_gui_create_label(result, L"");
-    sz = t_gui_get_preferred_size(mainWindow.labelDuration);
-    MoveWindow(mainWindow.labelDuration, 10, y, 180, sz.cy, FALSE);
-    SetWindowTextW(mainWindow.labelDuration, L"0ms");
+    labelDuration = t_gui_create_label(result, L"");
+    sz = t_gui_get_preferred_size(labelDuration);
+    MoveWindow(labelDuration, 10, y, 180, sz.cy, FALSE);
+    SetWindowTextW(labelDuration, L"0ms");
     //y += sz.cy + 5;
 
-    mainWindow.table = createTable(result);
+    table = createTable(result);
     LVCOLUMN col = {};
     col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
     col.fmt = LVCFMT_LEFT;
     col.cx = 100;
     col.pszText = const_cast<LPWSTR>(L"ColumnHeader");
-    ListView_InsertColumn(mainWindow.table, 0, &col);
+    ListView_InsertColumn(table, 0, &col);
 
     return result;
 }
@@ -394,12 +355,12 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 void MainWindow::layoutTab()
 {
     RECT r;
-    GetClientRect(mainWindow.tabs, &r);
+    GetClientRect(tabs, &r);
 
-    TabCtrl_AdjustRect(mainWindow.tabs, FALSE, &r);
+    TabCtrl_AdjustRect(tabs, FALSE, &r);
 
     // Resize the tab control to fit the client are of main window.
-    MoveWindow(mainWindow.packagesPanel, r.left, r.top,
+    MoveWindow(packagesPanel, r.left, r.top,
         r.right - r.left, r.bottom - r.top, FALSE);
 }
 
@@ -422,12 +383,12 @@ LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 
 void MainWindow::layoutMainWindow()
 {
-    if (mainWindow.tabs != 0) {
+    if (tabs != 0) {
         RECT r;
-        GetClientRect(mainWindow.window, &r);
+        GetClientRect(window, &r);
 
         // Resize the tab control to fit the client are of main window.
-        SetWindowPos(mainWindow.tabs, HWND_TOP, r.left, r.top, r.right - r.left,
+        SetWindowPos(tabs, HWND_TOP, r.left, r.top, r.right - r.left,
             r.bottom - r.top, SWP_SHOWWINDOW);
     }
 }
@@ -613,8 +574,8 @@ int MainWindow::runGUI(int nCmdShow)
         DispatchMessage(&msg);
     }
 
-    HMENU mainMenu = GetMenu(mainWindow.window);
-    DestroyWindow(mainWindow.window);
+    HMENU mainMenu = GetMenu(window);
+    DestroyWindow(window);
     DestroyMenu(mainMenu);
 
     DeleteObject(defaultFont);
@@ -641,13 +602,13 @@ void MainWindow::createMainWindow(int nCmdShow)
     HWND hWnd = CreateWindowW(mainWindowClass, L"Npackd", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInst, NULL);
 
-    mainWindow.window = hWnd;
+    window = hWnd;
 
     SetMenu(hWnd, createMainMenu());
 
-    mainWindow.tabs = createTab(hWnd);
+    tabs = createTab(hWnd);
 
-    mainWindow.packagesPanel = createPackagesPanel(mainWindow.tabs);
+    packagesPanel = createPackagesPanel(tabs);
 
     layoutMainWindow();
     layoutTab();
@@ -1445,9 +1406,9 @@ int MainWindow::getCategoryFilter(int level) const
 int MainWindow::getStatusFilter() const
 {
     int r;
-    if (Button_GetCheck(mainWindow.buttonInstalled) == BST_CHECKED)
+    if (Button_GetCheck(buttonInstalled) == BST_CHECKED)
         r = 1;
-    else if (Button_GetCheck(mainWindow.buttonUpdateable) == BST_CHECKED)
+    else if (Button_GetCheck(buttonUpdateable) == BST_CHECKED)
         r = 2;
     else
         r = 0;
@@ -1461,7 +1422,7 @@ void MainWindow::fillList()
 
     // qCDebug(npackd) << "MainWindow::fillList";
 
-    QString query = t_gui_get_window_text(mainWindow.filterLineEdit);
+    QString query = t_gui_get_window_text(filterLineEdit);
 
     int statusFilter = getStatusFilter();
     Package::Status minStatus, maxStatus;
@@ -1500,7 +1461,7 @@ void MainWindow::fillList()
 
     DWORD dur = GetTickCount() - start;
 
-    ListView_SetItemCountEx(mainWindow.table, found.size(),
+    ListView_SetItemCountEx(table, found.size(),
         LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
     this->mainFrame->setDuration(static_cast<int>(dur));
 }
