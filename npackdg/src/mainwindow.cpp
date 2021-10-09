@@ -204,28 +204,6 @@ addTab(jobsScrollArea, genericAppIcon, "Tags");
 #define ID_EDIT_FILTER 8
 
 /**
- * @brief saves instance handle and creates main window. In this function,
- * we save the instance handle in a global variable and
- * create and display the main program window.
- *
- * @param nCmdShow SW_*
- */
-void createMainWindow(int);
-
-/**
- * @brief layout the controls on the packages page
- */
-void packagesPanelLayout();
-
-/**
- * @brief create the panel with packages table and all the fiters
- *
- * @param parent parent window
- * @return handle
- */
-HWND createPackagesPanel(HWND parent);
-
-/**
  * @brief processes messages in the packages panel
  *
  * @param hWnd window
@@ -264,47 +242,7 @@ LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
  */
 LRESULT CALLBACK mainWindowProc(HWND, UINT, WPARAM, LPARAM);
 
-/**
- * @brief creates a static control that can be used as a
- * panel to group other controls.
- *
- * @param parent parent control
- * @param title caption
- * @return the handle to the static control
- */
-HWND t_gui_create_panel(HWND parent);
-
-/**
- * @brief create the main menu
- * @return menu handle
- */
-HMENU createMainMenu();
-
-/**
- * @brief Destroy the main window.
- * @param hWnd main window handle
- */
-void destroyMainWindow(HWND hWnd);
-
-/**
- * @brief Creates a tab control, sized to fit the specified parent window's client
- * area, and adds some tabs.
- * @param hwndParent parent window (the application's main window)
- * @return handle to the tab control
- */
-HWND createTab(HWND hwndParent);
-
-/**
- * @brief creates the table with packages
- * @param parent parent window
- * @return window handle
- */
-HWND createTable(HWND parent);
-
-void layoutMainWindow();
-void layoutTab();
-
-void packagesPanelLayout()
+void MainWindow::packagesPanelLayout()
 {
     RECT r;
     GetClientRect(mainWindow.packagesPanel, &r);
@@ -317,7 +255,7 @@ void packagesPanelLayout()
         r.right - r.left, r.bottom - r.top, FALSE);
 }
 
-HWND createPackagesPanel(HWND parent)
+HWND MainWindow::createPackagesPanel(HWND parent)
 {
     HWND result = t_gui_create_panel(parent);
     SetWindowSubclass(result, &packagesPanelSubclassProc, 1, 0);
@@ -437,7 +375,7 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
         }
         case WM_SIZE:
         {
-            packagesPanelLayout();
+            mw->packagesPanelLayout();
             break;
         }
         case WM_COMMAND:
@@ -445,7 +383,7 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
             if (LOWORD(wParam) == ID_EDIT_FILTER && HIWORD(wParam) == EN_CHANGE) {
                 mw->fillList();
             }
-            packagesPanelLayout();
+            mw->packagesPanelLayout();
             break;
         }
     }
@@ -453,7 +391,7 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 }
 
-void layoutTab()
+void MainWindow::layoutTab()
 {
     RECT r;
     GetClientRect(mainWindow.tabs, &r);
@@ -468,11 +406,12 @@ void layoutTab()
 LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/)
 {
+    MainWindow* mw = MainWindow::getInstance();
     switch(uMsg)
     {
         case WM_SIZE:
         {
-            layoutTab();
+            mw->layoutTab();
 
             break;
         }
@@ -481,7 +420,7 @@ LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 }
 
-void layoutMainWindow()
+void MainWindow::layoutMainWindow()
 {
     if (mainWindow.tabs != 0) {
         RECT r;
@@ -495,6 +434,7 @@ void layoutMainWindow()
 
 LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    MainWindow* mw = MainWindow::getInstance();
     switch (message) {
         case WM_COMMAND:
         {
@@ -533,7 +473,7 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         }
 
         case WM_SIZE:
-            layoutMainWindow();
+            mw->layoutMainWindow();
             break;
 
         case WM_NOTIFY:
@@ -565,7 +505,7 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     return 0;
 }
 
-HMENU createMainMenu()
+HMENU MainWindow::createMainMenu()
 {
     HMENU packageMenu = CreateMenu();
     t_gui_menu_append_item(packageMenu, IDM_INSTALL, QObject::tr("&Install"));
@@ -612,7 +552,7 @@ HMENU createMainMenu()
     return hmenuMain;
 }
 
-HWND createTab(HWND hwndParent)
+HWND MainWindow::createTab(HWND hwndParent)
 {
     RECT rcClient;
 
@@ -636,14 +576,14 @@ HWND createTab(HWND hwndParent)
     tie.pszText = const_cast<LPWSTR>(L"Jobs");
     TabCtrl_InsertItem(w, 1, &tie);
 
-    SetWindowSubclass(w, &tabSubclassProc, 1, 0);
+    SetWindowSubclass(w, &tabSubclassProc, 1, reinterpret_cast<DWORD_PTR>(this));
 
     SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
 
     return w;
 }
 
-HWND createTable(HWND parent)
+HWND MainWindow::createTable(HWND parent)
 {
     return CreateWindow(WC_LISTVIEW, NULL,
                   WS_VISIBLE | WS_CHILD | WS_TABSTOP |
@@ -656,7 +596,7 @@ HWND createTable(HWND parent)
                   NULL);
 }
 
-int runGUI(int nCmdShow)
+int MainWindow::runGUI(int nCmdShow)
 {
     t_gui_init();
 
@@ -673,7 +613,9 @@ int runGUI(int nCmdShow)
         DispatchMessage(&msg);
     }
 
-    destroyMainWindow(mainWindow.window);
+    HMENU mainMenu = GetMenu(mainWindow.window);
+    DestroyWindow(mainWindow.window);
+    DestroyMenu(mainMenu);
 
     DeleteObject(defaultFont);
 
@@ -682,15 +624,7 @@ int runGUI(int nCmdShow)
     return (int) msg.wParam;
 }
 
-void destroyMainWindow(HWND hWnd)
-{
-    HMENU mainMenu = GetMenu(hWnd);
-    DestroyWindow(hWnd);
-    DestroyMenu(mainMenu);
-}
-
-
-void createMainWindow(int nCmdShow)
+void MainWindow::createMainWindow(int nCmdShow)
 {
     WNDCLASSEXW wcex = {};
     wcex.cbSize = sizeof(WNDCLASSEX);

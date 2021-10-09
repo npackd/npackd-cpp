@@ -122,9 +122,62 @@ private:
      * @return category ID or -1 for "All" or 0 for "Uncategorized"
      */
     int getCategoryFilter(int level) const;
+
+    /**
+     * @brief create the panel with packages table and all the fiters
+     *
+     * @param parent parent window
+     * @return handle
+     */
+    HWND createPackagesPanel(HWND parent);
+
+    /**
+     * @brief creates the table with packages
+     * @param parent parent window
+     * @return window handle
+     */
+    HWND createTable(HWND parent);
+
+    /**
+     * @brief saves instance handle and creates main window. In this function,
+     * we save the instance handle in a global variable and
+     * create and display the main program window.
+     *
+     * @param nCmdShow SW_*
+     */
+    void createMainWindow(int);
+
+    /**
+     * @brief create the main menu
+     * @return menu handle
+     */
+    HMENU createMainMenu();
+
+    /**
+     * @brief Creates a tab control, sized to fit the specified parent window's client
+     * area, and adds some tabs.
+     * @param hwndParent parent window (the application's main window)
+     * @return handle to the tab control
+     */
+    HWND createTab(HWND hwndParent);
 public:
     /** package names for found packages */
     std::vector<QString> found;
+
+    /**
+     * @brief layout the main window
+     */
+    void layoutMainWindow();
+
+    /**
+     * @brief layout the tabs inside of the main window
+     */
+    void layoutTab();
+
+    /**
+     * @brief layout the controls on the packages page
+     */
+    void packagesPanelLayout();
 
     /**
      * Adds an entry in the "Progress" tab and monitors a task. The thread
@@ -294,6 +347,13 @@ public:
     void fillListInBackground();
 
     void onShow();
+
+    /**
+     * @brief runs the GUI
+     * @param nCmdShow how the window should be shown (see WinMain)
+     * @return process exit code
+     */
+    int runGUI(int nCmdShow);
 protected:
     void changeEvent(QEvent *e);
 

@@ -558,7 +558,7 @@ bool CLProcessor::process(int* errorCode)
         MainWindow w;
 
         w.prepare();
-        *errorCode = runGUI(SW_SHOWNORMAL); // TODO ncmdshow
+        *errorCode = w.runGUI(SW_SHOWNORMAL); // TODO ncmdshow
     } else if (!cmd.isEmpty()) {
         QString err;
         if (cmd == "help") {

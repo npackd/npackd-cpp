@@ -86,9 +86,12 @@ HWND t_gui_create_label(HWND parent, const LPCWSTR title);
 void t_gui_critical_error(HWND hwnd, const QString& title, const QString& message);
 
 /**
- * @brief creates a panel
- * @param parent parent window
- * @return the handle
+ * @brief creates a static control that can be used as a
+ * panel to group other controls.
+ *
+ * @param parent parent control
+ * @param title caption
+ * @return the handle to the static control
  */
 HWND t_gui_create_panel(HWND parent);
 
