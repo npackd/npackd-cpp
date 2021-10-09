@@ -73,30 +73,6 @@ private:
     /** panel for packages */
     HWND packagesPanel;
 
-    /** table with packages */
-    HWND table;
-
-    /** label where the search duration is shown */
-    HWND labelDuration;
-
-    /** edit field for the filter */
-    HWND filterLineEdit;
-
-    /** filter "all" */
-    HWND buttonAll;
-
-    /** filter "installed" */
-    HWND buttonInstalled;
-
-    /** filter "updateable" */
-    HWND buttonUpdateable;
-
-    /** top-level category filter */
-    HWND comboBoxCategory0;
-
-    /** second level category filter */
-    HWND comboBoxCategory1;
-
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
             const Version& version) const;
@@ -144,34 +120,6 @@ private:
                          const QString &query, int cat0, int cat1, QString *err);
 
     /**
-     * @brief filter for the status
-     * @return 0=All, 1=Installed, 2=Updateable
-     */
-    int getStatusFilter() const;
-
-    /**
-     * @brief returns selected category
-     * @param level 0, 1, ...
-     * @return category ID or -1 for "All" or 0 for "Uncategorized"
-     */
-    int getCategoryFilter(int level) const;
-
-    /**
-     * @brief create the panel with packages table and all the fiters
-     *
-     * @param parent parent window
-     * @return handle
-     */
-    HWND createPackagesPanel(HWND parent);
-
-    /**
-     * @brief creates the table with packages
-     * @param parent parent window
-     * @return window handle
-     */
-    HWND createTable(HWND parent);
-
-    /**
      * @brief saves instance handle and creates main window. In this function,
      * we save the instance handle in a global variable and
      * create and display the main program window.
@@ -206,11 +154,6 @@ public:
      * @brief layout the tabs inside of the main window
      */
     void layoutTab();
-
-    /**
-     * @brief layout the controls on the packages page
-     */
-    void packagesPanelLayout();
 
     /**
      * Adds an entry in the "Progress" tab and monitors a task. The thread

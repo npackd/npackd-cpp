@@ -26,12 +26,72 @@ private:
 
     std::vector<Package*> selectedPackages;
 
+    /** label where the search duration is shown */
+    HWND labelDuration;
+
+    /** filter "all" */
+    HWND buttonAll;
+
+    /** filter "installed" */
+    HWND buttonInstalled;
+
+    /** filter "updateable" */
+    HWND buttonUpdateable;
+
+    /** top-level category filter */
+    HWND comboBoxCategory0;
+
+    /** second level category filter */
+    HWND comboBoxCategory1;
+
+    /** panel for packages */
+    HWND packagesPanel;
+
     void fillList();
+
+    /**
+     * @brief creates the table with packages
+     * @param parent parent window
+     * @return window handle
+     */
+    HWND createTable(HWND parent);
 public:
+    /** table with packages */
+    HWND table;
+
+    /** edit field for the filter */
+    HWND filterLineEdit;
+
     explicit MainFrame(QWidget *parent = nullptr);
     ~MainFrame();
 
+    /**
+     * @brief filter for the status
+     * @return 0=All, 1=Installed, 2=Updateable
+     */
+    int getStatusFilter() const;
+
+    /**
+     * @brief returns selected category
+     * @param level 0, 1, ...
+     * @return category ID or -1 for "All" or 0 for "Uncategorized"
+     */
+    int getCategoryFilter(int level) const;
+
     std::vector<void*> getSelected(const QString& type) const;
+
+    /**
+     * @brief layout the controls on the packages page
+     */
+    void packagesPanelLayout();
+
+    /**
+     * @brief create the panel with packages table and all the fiters
+     *
+     * @param parent parent window
+     * @return handle
+     */
+    HWND createPackagesPanel(HWND parent);
 
     /**
      * This method returns all selected Package* items
