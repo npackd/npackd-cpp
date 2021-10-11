@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <windows.h>
 #include <windowsx.h>
 
 #include "mainframe.h"

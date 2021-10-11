@@ -64,8 +64,9 @@ SIZE t_gui_get_preferred_size(HWND window);
  * @param menu menu handle
  * @param id command Id
  * @param title title
+ * @param bitmap the bitmap that should be used or NULL
  */
-void t_gui_menu_append_item(HMENU menu, UINT_PTR id, const QString& title);
+void t_gui_menu_append_item(HMENU menu, UINT_PTR id, const QString& title, HBITMAP bitmap);
 
 /**
  * @brief creates a label.

@@ -2,6 +2,7 @@
 
 #include <commctrl.h>
 #include <windowsx.h>
+#include <gdiplus.h>
 
 #include "wpmutils.h"
 
@@ -77,9 +78,10 @@ SIZE t_gui_get_preferred_size(HWND window)
     return r;
 }
 
-void t_gui_menu_append_item(HMENU menu, UINT_PTR id, const QString& title)
+void t_gui_menu_append_item(HMENU menu, UINT_PTR id, const QString& title, HBITMAP bitmap)
 {
     AppendMenu(menu, MF_STRING, id, WPMUtils::toLPWSTR(title));
+    SetMenuItemBitmaps(menu, id, MF_BYCOMMAND, bitmap, bitmap);
 }
 
 HWND t_gui_create_label(HWND parent, const LPCWSTR title)
@@ -130,4 +132,111 @@ QString t_gui_get_window_text(HWND wnd)
     }
 
     return r;
+}
+
+/*HBITMAP GetHBITMAPFromImageFile(WCHAR* pFilePath)
+{
+    GdiplusStartupInput gpStartupInput;
+    ULONG_PTR gpToken;
+    GdiplusStartup(&gpToken, &gpStartupInput, NULL);
+    HBITMAP result = NULL;
+    Gdiplus::Bitmap* bitmap = Gdiplus::Bitmap::FromFile(pFilePath, false);
+    if (bitmap)
+    {
+        bitmap->GetHBITMAP(Color(255, 255, 255), &result);
+        delete bitmap;
+    }
+    GdiplusShutdown(gpToken);
+    return result;
+}
+*/
+
+/*
+HBITMAP t_gui_icon_to_pargb32_bitmap() {
+    HRESULT hr = E_OUTOFMEMORY;
+    HBITMAP hBmp = NULL;
+
+    HICON hIcon = (HICON)LoadImageA(g_hResInst, sIcon.c_str(), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+    if(!hIcon)
+        return NULL;
+
+    SIZE sizIcon;
+    sizIcon.cx = GetSystemMetrics(SM_CXSMICON);
+    sizIcon.cy = GetSystemMetrics(SM_CYSMICON);
+
+    RECT rcIcon;
+    SetRect(&rcIcon, 0, 0, sizIcon.cx, sizIcon.cy);
+
+    HDC hdcDest = CreateCompatibleDC(NULL);
+    if(hdcDest) {
+        hr = Create32BitHBITMAP(hdcDest, &sizIcon, NULL, &hbmp);
+        if(SUCCEEDED(hr)) {
+            hr = E_FAIL;
+
+            HBITMAP hbmpOld = (HBITMAP)SelectObject(hdcDest, hbmp);
+            if(hbmpOld) {
+                BLENDFUNCTION bfAlpha = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
+                BP_PAINTPARAMS paintParams = {0};
+                paintParams.cbSize = sizeof(paintParams);
+                paintParams.dwFlags = BPPF_ERASE;
+                paintParams.pBlendFunction = &bfAlpha;
+
+                HDC hdcBuffer;
+                HPAINTBUFFER hPaintBuffer = pfnBeginBufferedPaint(hdcDest, &rcIcon, BPBF_DIB, &paintParams, &hdcBuffer);
+                if(hPaintBuffer) {
+                    if(DrawIconEx(hdcBuffer, 0, 0, hIcon, sizIcon.cx, sizIcon.cy, 0, NULL, DI_NORMAL)) {
+                        // If icon did not have an alpha channel, we need to convert buffer to PARGB.
+                        hr = ConvertBufferToPARGB32(hPaintBuffer, hdcDest, hIcon, sizIcon);
+                    }
+
+                    // This will write the buffer contents to the destination bitmap.
+                    pfnEndBufferedPaint(hPaintBuffer, TRUE);
+                }
+                SelectObject(hdcDest, hbmpOld);
+            }
+        }
+        DeleteDC(hdcDest);
+    }
+
+    DestroyIcon(hIcon);
+    if(SUCCEEDED(hr)) {
+        return hBmp;
+    }
+    DeleteObject(hBmp);
+    return NULL;
+}
+*/
+
+static HBITMAP t_gui_load_png_resource(LPCTSTR pName) {
+    // https://www.codeproject.com/Articles/3537/Loading-JPG-PNG-resources-using-GDI
+    HBITMAP ret = NULL;
+
+    HRSRC hResource = FindResource(hInst, pName, RT_RCDATA);
+
+    DWORD imageSize = SizeofResource(hInst, hResource);
+
+    const void* pResourceData = LockResource(::LoadResource(hInst,
+                                              hResource));
+
+    HGLOBAL m_hBuffer  = GlobalAlloc(GMEM_MOVEABLE, imageSize);
+    void* pBuffer = GlobalLock(m_hBuffer);
+    if (pBuffer) {
+        CopyMemory(pBuffer, pResourceData, imageSize);
+
+        IStream* pStream = NULL;
+        if (CreateStreamOnHGlobal(m_hBuffer, FALSE, &pStream) == S_OK) {
+            Gdiplus::Bitmap* m_pBitmap = Gdiplus::Bitmap::FromStream(pStream);
+            pStream->Release();
+            if (m_pBitmap) {
+                m_pBitmap->GetHICON()
+                if (m_pBitmap->GetLastStatus() == Gdiplus::Ok)
+                    delete m_pBitmap;
+                m_pBitmap = NULL;
+            }
+        }
+        GlobalUnlock(m_hBuffer);
+    }
+    GlobalFree(m_hBuffer);
+
+    return ret;
 }

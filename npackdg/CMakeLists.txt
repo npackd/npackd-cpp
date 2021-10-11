@@ -32,7 +32,8 @@ find_package(QuaZip REQUIRED)
 readVersion("../appveyor.yml")
 
 file(GLOB RESOURCE_IMAGES "src/*.png")
-file(COPY ${RESOURCE_IMAGES} src/npackdg.qrc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(GLOB BMP_IMAGES "src/*.bmp")
+file(COPY ${RESOURCE_IMAGES} ${BMP_IMAGES} src/npackdg.qrc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(NPACKDG_SOURCES
     src/main.cpp
