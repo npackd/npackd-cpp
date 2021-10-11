@@ -227,7 +227,7 @@ if(${NPACKD_FORCE_STATIC})
     SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} jasper icuin icuuc icudt icutu qtpcre2 qtharfbuzz qtfreetype qtlibpng jpeg zstd z)
 endif()
 
-SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} comctl32 imm32 winmm glu32 mpr userenv wtsapi32 opengl32 ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 UxTheme Dwmapi taskschd)
+SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} comctl32 gdiplus imm32 winmm glu32 mpr userenv wtsapi32 opengl32 ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 UxTheme Dwmapi taskschd)
 
 target_link_libraries(npackdg ${NPACKDG_LIBRARIES})
 target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})

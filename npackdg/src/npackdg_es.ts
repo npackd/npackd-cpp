@@ -3450,10 +3450,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The installation of the package %1 in &quot;%2&quot; failed: %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Moving &quot;%1&quot; to the recycle bin</source>
         <translation type="unfinished"></translation>
     </message>

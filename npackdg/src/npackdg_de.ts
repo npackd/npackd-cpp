@@ -2694,7 +2694,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>The installation of the package %1 in &quot;%2&quot; failed: %3</source>
-        <translation>Die Installation des Pakets %1 in &quot;%2&quot; ist fehlgeschlagen: %3</translation>
+        <translation type="vanished">Die Installation des Pakets %1 in &quot;%2&quot; ist fehlgeschlagen: %3</translation>
     </message>
     <message>
         <source>Moving &quot;%1&quot; to the recycle bin</source>

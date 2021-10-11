@@ -207,36 +207,39 @@ HBITMAP t_gui_icon_to_pargb32_bitmap() {
 }
 */
 
-static HBITMAP t_gui_load_png_resource(LPCTSTR pName) {
+HBITMAP t_gui_load_png_resource(LPCTSTR pName) {
     // https://www.codeproject.com/Articles/3537/Loading-JPG-PNG-resources-using-GDI
     HBITMAP ret = NULL;
 
-    HRSRC hResource = FindResource(hInst, pName, RT_RCDATA);
+    HRSRC h_resource = FindResource(hInst, pName, RT_RCDATA);
+    if (h_resource != NULL) {
+        DWORD image_size = SizeofResource(hInst, h_resource);
+        if (image_size > 0) {
+            HGLOBAL res = LoadResource(hInst, h_resource);
+            if (res != NULL) {
+                const void* p_resource_data = LockResource(res);
 
-    DWORD imageSize = SizeofResource(hInst, hResource);
+                HGLOBAL global_buffer  = GlobalAlloc(GMEM_MOVEABLE, image_size);
+                void* buffer = GlobalLock(global_buffer);
+                if (buffer) {
+                    CopyMemory(buffer, p_resource_data, image_size);
 
-    const void* pResourceData = LockResource(::LoadResource(hInst,
-                                              hResource));
-
-    HGLOBAL m_hBuffer  = GlobalAlloc(GMEM_MOVEABLE, imageSize);
-    void* pBuffer = GlobalLock(m_hBuffer);
-    if (pBuffer) {
-        CopyMemory(pBuffer, pResourceData, imageSize);
-
-        IStream* pStream = NULL;
-        if (CreateStreamOnHGlobal(m_hBuffer, FALSE, &pStream) == S_OK) {
-            Gdiplus::Bitmap* m_pBitmap = Gdiplus::Bitmap::FromStream(pStream);
-            pStream->Release();
-            if (m_pBitmap) {
-                m_pBitmap->GetHICON()
-                if (m_pBitmap->GetLastStatus() == Gdiplus::Ok)
-                    delete m_pBitmap;
-                m_pBitmap = NULL;
+                    IStream* stream = NULL;
+                    if (CreateStreamOnHGlobal(global_buffer, FALSE, &stream) == S_OK) {
+                        Gdiplus::Bitmap* m_pBitmap = Gdiplus::Bitmap::FromStream(stream);
+                        stream->Release();
+                        if (m_pBitmap) {
+                            if (m_pBitmap->GetLastStatus() == Gdiplus::Ok)
+                            m_pBitmap->GetHBITMAP(Gdiplus::Color(), &ret);
+                            delete m_pBitmap;
+                        }
+                    }
+                    GlobalUnlock(global_buffer);
+                }
+                GlobalFree(global_buffer);
             }
         }
-        GlobalUnlock(m_hBuffer);
     }
-    GlobalFree(m_hBuffer);
 
     return ret;
 }

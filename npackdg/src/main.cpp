@@ -2,6 +2,7 @@
 #include <windowsx.h>
 #include <shobjidl.h>
 #include <shellapi.h>
+#include <gdiplus.h>
 
 #include <QApplication>
 #include <QMetaType>
@@ -89,6 +90,10 @@ int APIENTRY WinMain(HINSTANCE hInstance,
     // July, 25 2018: "windowsvista", "Windows", "Fusion"
     qCDebug(npackd) << QStyleFactory::keys();
 
+    Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+    ULONG_PTR gdiplusToken;
+    GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
     CLProcessor clp;
 
     int errorCode = 0;
@@ -96,6 +101,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
     clp.process(&errorCode);
 
     //WPMUtils::timer.dump();
+
+    Gdiplus::GdiplusShutdown(gdiplusToken);
 
     FreeLibrary(m);
 

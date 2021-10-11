@@ -334,7 +334,7 @@ HMENU MainWindow::createMainMenu()
         QObject::tr("Check dependencies"), NULL);
     t_gui_menu_append_item(packageMenu, IDM_RELOAD_REPOSITORIES,
         QObject::tr("Reload repositories"), NULL);
-    HBITMAP bitmap = LoadBitmap(hInst, L"ADD16_BMP");
+    HBITMAP bitmap = t_gui_load_png_resource(L"add16_png");
 
     t_gui_menu_append_item(packageMenu, IDM_ADD_PACKAGE, QObject::tr("Add package..."),
                            bitmap);

@@ -96,4 +96,11 @@ void t_gui_critical_error(HWND hwnd, const QString& title, const QString& messag
  */
 HWND t_gui_create_panel(HWND parent);
 
+/**
+ * @brief load a .png file from a resource of type RCDATA
+ * @param pName
+ * @return the loaded bitmap or NULL
+ */
+HBITMAP t_gui_load_png_resource(LPCTSTR pName);
+
 #endif // GUI_H
