@@ -317,16 +317,20 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 HMENU MainWindow::createMainMenu()
 {
     HMENU packageMenu = CreateMenu();
-    t_gui_menu_append_item(packageMenu, IDM_INSTALL, QObject::tr("&Install"), NULL);
-    t_gui_menu_append_item(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"), NULL);
-    t_gui_menu_append_item(packageMenu, IDM_UPDATE, QObject::tr("&Update"), NULL);
+    t_gui_menu_append_item(packageMenu, IDM_INSTALL, QObject::tr("&Install"),
+                           t_gui_load_png_resource(L"install16_png"));
+    t_gui_menu_append_item(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"),
+                           t_gui_load_png_resource(L"uninstall16_png"));
+    t_gui_menu_append_item(packageMenu, IDM_UPDATE, QObject::tr("&Update"),
+                           t_gui_load_png_resource(L"update16_png"));
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
     t_gui_menu_append_item(packageMenu, IDM_SHOW_DETAILS, QObject::tr("Show details"), NULL);
     t_gui_menu_append_item(packageMenu, IDM_SHOW_CHANGELOG,
         QObject::tr("Show changelog"), NULL);
     t_gui_menu_append_item(packageMenu, IDM_RUN, QObject::tr("Run"), NULL);
     t_gui_menu_append_item(packageMenu, IDM_OPEN_FOLDER, QObject::tr("Open folder"), NULL);
-    t_gui_menu_append_item(packageMenu, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"), NULL);
+    t_gui_menu_append_item(packageMenu, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"),
+                           t_gui_load_png_resource(L"gotosite16_png"));
     t_gui_menu_append_item(packageMenu, IDM_TEST_DOWNLOAD_SITE,
         QObject::tr("&Test download site"), NULL);
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
@@ -334,10 +338,8 @@ HMENU MainWindow::createMainMenu()
         QObject::tr("Check dependencies"), NULL);
     t_gui_menu_append_item(packageMenu, IDM_RELOAD_REPOSITORIES,
         QObject::tr("Reload repositories"), NULL);
-    HBITMAP bitmap = t_gui_load_png_resource(L"add16_png");
-
     t_gui_menu_append_item(packageMenu, IDM_ADD_PACKAGE, QObject::tr("Add package..."),
-                           bitmap);
+                           t_gui_load_png_resource(L"add16_png"));
     t_gui_menu_append_item(packageMenu, IDM_EXPORT, QObject::tr("Export..."), NULL);
     t_gui_menu_append_item(packageMenu, IDM_SETTINGS, QObject::tr("&Settings"), NULL);
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
@@ -350,7 +352,8 @@ HMENU MainWindow::createMainMenu()
     t_gui_menu_append_item(viewMenu, IDM_TOGGLE_TOOLBAR, QObject::tr("Toggle toolbar"), NULL);
 
     HMENU helpMenu = CreateMenu();
-    AppendMenu(helpMenu, MF_STRING, IDM_FEEDBACK, L"Feedback");
+    t_gui_menu_append_item(helpMenu, IDM_FEEDBACK, QObject::tr("Feedback"),
+                           t_gui_load_png_resource(L"fileissue16_png"));
     AppendMenu(helpMenu, MF_STRING, IDM_ABOUT, L"About");
 
     HMENU hmenuMain = CreateMenu();

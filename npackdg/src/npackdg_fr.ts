@@ -3539,6 +3539,10 @@ p, li { white-space: pre-wrap; }
         <source>Help</source>
         <translation type="unfinished">Aide</translation>
     </message>
+    <message>
+        <source>Feedback</source>
+        <translation type="unfinished">Retour d&apos;expérience</translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

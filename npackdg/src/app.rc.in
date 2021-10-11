@@ -7,12 +7,21 @@ app_png RCDATA DISCARDABLE "app.png"
 gotosite_png RCDATA DISCARDABLE "gotosite.png"
 install_png RCDATA DISCARDABLE "install.png"
 uninstall_png RCDATA DISCARDABLE "uninstall.png"
+update_png RCDATA DISCARDABLE "update.png"
 fileissue_png RCDATA DISCARDABLE "fileissue.png"
 wait_png RCDATA DISCARDABLE "wait.png"
 add_png RCDATA DISCARDABLE "add.png"
 broken_png RCDATA DISCARDABLE "broken.png"
 
+app16_png RCDATA DISCARDABLE "app16.png"
 add16_png RCDATA DISCARDABLE "add16.png"
+gotosite16_png RCDATA DISCARDABLE "gotosite16.png"
+install16_png RCDATA DISCARDABLE "install16.png"
+uninstall16_png RCDATA DISCARDABLE "uninstall16.png"
+update16_png RCDATA DISCARDABLE "update16.png"
+fileissue16_png RCDATA DISCARDABLE "fileissue16.png"
+wait16_png RCDATA DISCARDABLE "wait16.png"
+broken16_png RCDATA DISCARDABLE "broken16.png"
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION    	@NPACKD_VERSION_MAJOR@,@NPACKD_VERSION_MINOR@,@NPACKD_VERSION_PATCH@,@NPACKD_VERSION_TWEAK@

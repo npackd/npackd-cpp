@@ -2908,6 +2908,10 @@ p, li { white-space: pre-wrap; }
         <source>Help</source>
         <translation type="unfinished">Hilfe</translation>
     </message>
+    <message>
+        <source>Feedback</source>
+        <translation type="unfinished">Feedback</translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>
