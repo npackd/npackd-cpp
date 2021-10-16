@@ -454,25 +454,14 @@ void MainWindow::createMainWindow(int nCmdShow)
 
     toolbar = t_gui_create_toolbar(hWnd);
 
-    // Create the image list.
-    HIMAGELIST g_hImageList = ImageList_Create(32, 32,   // Dimensions of individual bitmaps.
-                                    ILC_COLOR32,   // Ensures transparent background.
-                                    0, 0);
-
-    HBITMAP b = t_gui_load_png_resource(L"install32_png");
-    ImageList_Add(g_hImageList, b, NULL);
-    DeleteObject(b);
-
-    b = t_gui_load_png_resource(L"uninstall32_png");
-    ImageList_Add(g_hImageList, b, NULL);
-    DeleteObject(b);
-
-    b = t_gui_load_png_resource(L"update32_png");
-    ImageList_Add(g_hImageList, b, NULL);
-    DeleteObject(b);
+    LPCWSTR names[] = {L"install32_png", L"uninstall32_png",
+                       L"update32_png", L"gotosite32_png",
+                      L"fileissue32_png", L"add32_png"};
+    HIMAGELIST images = t_gui_create_image_list(32, 32, names,
+                                                sizeof(names) / sizeof(names[0]));
 
     // Set the image list.
-    SendMessage(toolbar, TB_SETIMAGELIST, (WPARAM)0, (LPARAM)g_hImageList);
+    SendMessage(toolbar, TB_SETIMAGELIST, (WPARAM)0, (LPARAM)images);
 
     // Declare and initialize local constants.
     const int ImageListID    = 0;

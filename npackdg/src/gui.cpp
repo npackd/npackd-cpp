@@ -233,3 +233,16 @@ HWND t_gui_create_rebar(HWND hwndOwner, HWND hwndToolbar)
 
     return (hwndRebar);
 }
+
+HIMAGELIST t_gui_create_image_list(int cx, int cy, LPCWSTR* pngs, int count)
+{
+    HIMAGELIST images = ImageList_Create(cx, cy, ILC_COLOR32, 0, 0);
+
+    for (int i = 0; i < count; i++) {
+        HBITMAP b = t_gui_load_png_resource(pngs[i]);
+        ImageList_Add(images, b, NULL);
+        DeleteObject(b);
+    }
+
+    return images;
+}

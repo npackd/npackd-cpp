@@ -2,6 +2,7 @@
 #define GUI_H
 
 #include <windows.h>
+#include <commctrl.h>
 
 #include <QString>
 
@@ -117,5 +118,15 @@ HWND t_gui_create_rebar(HWND hwndOwner, HWND hwndToolbar);
  * @return the handle
  */
 HWND t_gui_create_toolbar(HWND hWndParent);
+
+/**
+ * @brief creates an image list from .png files
+ * @param cx width of an image
+ * @param cy height of an image
+ * @param pngs resource names
+ * @param count number of images
+ * @return handle
+ */
+HIMAGELIST t_gui_create_image_list(int cx, int cy, LPCWSTR* pngs, int count);
 
 #endif // GUI_H
