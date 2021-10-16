@@ -230,14 +230,19 @@ HWND MainFrame::createTable(HWND parent)
     HWND table = CreateWindow(WC_LISTVIEW, NULL,
                   WS_VISIBLE | WS_CHILD | WS_TABSTOP |
                   LVS_NOSORTHEADER | LVS_OWNERDATA |
-                  LVS_SINGLESEL | LVS_REPORT,
+                  LVS_REPORT,
                   200, 25, 200, 200,
                   parent,
                   0,
                   hInst,
                   NULL);
 
-    HIMAGELIST images = t_gui_create_image_list(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE, NULL, 0);
+    ListView_SetExtendedListViewStyle(table,
+        LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES |
+        LVS_EX_HEADERDRAGDROP | LVS_EX_LABELTIP);
+
+    HIMAGELIST images = t_gui_create_image_list(
+        UIUtils::ICON_SIZE, UIUtils::ICON_SIZE, NULL, 0);
     ListView_SetImageList(table, images, LVSIL_SMALL);
 
     LVCOLUMN col = {};
@@ -246,7 +251,6 @@ HWND MainFrame::createTable(HWND parent)
     col.cx = 190;
     col.pszText = const_cast<LPWSTR>(L"Title");
     ListView_InsertColumn(table, 0, &col);
-
 
     col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
     col.fmt = LVCFMT_LEFT;
@@ -829,6 +833,8 @@ void MainFrame::setPackages(const std::vector<QString>& packages)
 
     ListView_SetItemCountEx(table, this->packages.size(),
         LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
+
+    InvalidateRect(table, NULL, false);
 }
 
 void MainFrame::iconUpdated(const QString &/*url*/)
