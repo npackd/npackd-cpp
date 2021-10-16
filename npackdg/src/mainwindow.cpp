@@ -235,9 +235,14 @@ void MainWindow::layoutMainWindow()
         RECT r;
         GetClientRect(window, &r);
 
+        RECT tr;
+        GetClientRect(toolbar, &tr);
+
+        MoveWindow(toolbar, r.left, r.top, r.right - r.left, tr.bottom - r.top, false);
+
         // Resize the tab control to fit the client are of main window.
-        SetWindowPos(tabs, HWND_TOP, r.left, r.top, r.right - r.left,
-            r.bottom - r.top, SWP_SHOWWINDOW);
+        MoveWindow(tabs, r.left, tr.bottom, r.right - r.left,
+            r.bottom - tr.bottom, false);
     }
 }
 
@@ -446,6 +451,9 @@ void MainWindow::createMainWindow(int nCmdShow)
     window = hWnd;
 
     SetMenu(hWnd, createMainMenu());
+
+    toolbar = t_gui_create_toolbar(hWnd);
+    //HWND rebar = t_gui_create_rebar(hWnd, toolbar);
 
     tabs = createTab(hWnd);
 

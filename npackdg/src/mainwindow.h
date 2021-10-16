@@ -70,6 +70,8 @@ private:
     /** tab control */
     HWND tabs;
 
+    HWND toolbar;
+
     /** panel for packages */
     HWND packagesPanel;
 

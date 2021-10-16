@@ -103,4 +103,19 @@ HWND t_gui_create_panel(HWND parent);
  */
 HBITMAP t_gui_load_png_resource(LPCTSTR pName);
 
+/**
+ * @brief creates a rebar with one toolbar
+ * @param hwndOwner parent of the rebar
+ * @param hwndToolbar toolbar
+ * @return the handle
+ */
+HWND t_gui_create_rebar(HWND hwndOwner, HWND hwndToolbar);
+
+/**
+ * @brief creates a toolbar
+ * @param hWndParent parent window
+ * @return the handle
+ */
+HWND t_gui_create_toolbar(HWND hWndParent);
+
 #endif // GUI_H

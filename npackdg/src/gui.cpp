@@ -15,7 +15,7 @@ void t_gui_init()
     // Initialize common controls.
     INITCOMMONCONTROLSEX icex = {};
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-    icex.dwICC = ICC_TAB_CLASSES;
+    icex.dwICC = ICC_TAB_CLASSES | ICC_COOL_CLASSES | ICC_BAR_CLASSES;
     InitCommonControlsEx(&icex);
 
     defaultFont = CreateFont(13, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
@@ -169,4 +169,107 @@ HBITMAP t_gui_load_png_resource(LPCTSTR pName) {
     }
 
     return ret;
+}
+
+HWND t_gui_create_toolbar(HWND hWndParent)
+{
+    // Declare and initialize local constants.
+    const int ImageListID    = 0;
+    const int numButtons     = 3;
+    const int bitmapSize     = 16;
+
+    const DWORD buttonStyles = BTNS_AUTOSIZE;
+
+    // Create the toolbar.
+    HWND hWndToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL,
+                                      WS_CHILD | TBSTYLE_WRAPABLE, 0, 0, 0, 0,
+                                      hWndParent, NULL, hInst, NULL);
+
+    if (hWndToolbar == NULL)
+        return NULL;
+
+/*    // Create the image list.
+    g_hImageList = ImageList_Create(bitmapSize, bitmapSize,   // Dimensions of individual bitmaps.
+                                    ILC_COLOR16 | ILC_MASK,   // Ensures transparent background.
+                                    numButtons, 0);
+
+    // Set the image list.
+    SendMessage(hWndToolbar, TB_SETIMAGELIST,
+                (WPARAM)ImageListID,
+                (LPARAM)g_hImageList);*/
+
+    // Load the button images.
+    SendMessage(hWndToolbar, TB_LOADIMAGES,
+                (WPARAM)IDB_STD_SMALL_COLOR,
+                (LPARAM)HINST_COMMCTRL);
+
+    // Initialize button info.
+    // IDM_NEW, IDM_OPEN, and IDM_SAVE are application-defined command constants.
+
+    TBBUTTON tbButtons[numButtons] =
+    {
+        { MAKELONG(STD_FILENEW,  ImageListID), 1/*IDM_NEW*/,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"New" },
+        { MAKELONG(STD_FILEOPEN, ImageListID), 2/*IDM_OPEN*/, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Open"},
+        { MAKELONG(STD_FILESAVE, ImageListID), 3/*IDM_SAVE*/, 0,               buttonStyles, {0}, 0, (INT_PTR)L"Save"}
+    };
+
+    // Add buttons.
+    SendMessage(hWndToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+    SendMessage(hWndToolbar, TB_ADDBUTTONS,       (WPARAM)numButtons,       (LPARAM)&tbButtons);
+
+    // Resize the toolbar, and then show it.
+    SendMessage(hWndToolbar, TB_AUTOSIZE, 0, 0);
+    ShowWindow(hWndToolbar,  TRUE);
+
+    return hWndToolbar;
+}
+
+#define NUMBUTTONS 3
+
+HWND t_gui_create_rebar(HWND hwndOwner, HWND hwndToolbar)
+{
+    // Create the rebar.
+    HWND hwndRebar = CreateWindowEx(WS_EX_TOOLWINDOW,
+        REBARCLASSNAME,
+        NULL,
+        WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
+        WS_CLIPCHILDREN | RBS_VARHEIGHT |
+        CCS_NODIVIDER | RBS_BANDBORDERS,
+        0,0,0,0,
+        hwndOwner,
+        NULL,
+        hInst, // global instance handle
+        NULL);
+
+    if(!hwndRebar) {
+        return NULL;
+    }
+
+    // Initialize band info used by both bands.
+    REBARBANDINFO rbBand = {  };
+    rbBand.cbSize = sizeof(REBARBANDINFO);
+    rbBand.fMask  =
+          RBBIM_STYLE       // fStyle is valid.
+        | RBBIM_TEXT        // lpText is valid.
+        | RBBIM_CHILD       // hwndChild is valid.
+        | RBBIM_CHILDSIZE   // child size members are valid.
+        | RBBIM_SIZE;       // cx is valid
+    rbBand.fStyle = RBBS_CHILDEDGE | RBBS_GRIPPERALWAYS;
+
+    // Get the height of the toolbar.
+    DWORD dwBtnSize = (DWORD)SendMessage(hwndToolbar, TB_GETBUTTONSIZE, 0,0);
+
+    // Set values unique to the band with the toolbar.
+    rbBand.lpText = (LPWSTR) L"";
+    rbBand.hwndChild = hwndToolbar;
+    rbBand.cyChild = LOWORD(dwBtnSize);
+    rbBand.cxMinChild = NUMBUTTONS * HIWORD(dwBtnSize);
+    rbBand.cyMinChild = LOWORD(dwBtnSize);
+    // The default width is the width of the buttons.
+    rbBand.cx = 0;
+
+    // Add the band that has the toolbar.
+    SendMessage(hwndRebar, RB_INSERTBAND, (WPARAM)-1, (LPARAM)&rbBand);
+
+    return (hwndRebar);
 }
