@@ -453,6 +453,55 @@ void MainWindow::createMainWindow(int nCmdShow)
     SetMenu(hWnd, createMainMenu());
 
     toolbar = t_gui_create_toolbar(hWnd);
+
+    // Create the image list.
+    HIMAGELIST g_hImageList = ImageList_Create(32, 32,   // Dimensions of individual bitmaps.
+                                    ILC_COLOR32,   // Ensures transparent background.
+                                    0, 0);
+
+    HBITMAP b = t_gui_load_png_resource(L"install32_png");
+    ImageList_Add(g_hImageList, b, NULL);
+    DeleteObject(b);
+
+    b = t_gui_load_png_resource(L"uninstall32_png");
+    ImageList_Add(g_hImageList, b, NULL);
+    DeleteObject(b);
+
+    b = t_gui_load_png_resource(L"update32_png");
+    ImageList_Add(g_hImageList, b, NULL);
+    DeleteObject(b);
+
+    // Set the image list.
+    SendMessage(toolbar, TB_SETIMAGELIST, (WPARAM)0, (LPARAM)g_hImageList);
+
+    // Declare and initialize local constants.
+    const int ImageListID    = 0;
+    const int numButtons     = 6;
+
+    const DWORD buttonStyles = BTNS_AUTOSIZE;
+
+    // Initialize button info.
+    // IDM_NEW, IDM_OPEN, and IDM_SAVE are application-defined command constants.
+
+    TBBUTTON tbButtons[numButtons] =
+    {
+        { MAKELONG(0,  ImageListID), 1/*IDM_NEW*/,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Install" },
+        { MAKELONG(1, ImageListID), 2/*IDM_OPEN*/, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Uninstall"},
+        { MAKELONG(2, ImageListID), 3/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Update"},
+        { MAKELONG(3, ImageListID), 4/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Open web site"},
+        { MAKELONG(4, ImageListID), 5/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Feedback"},
+        { MAKELONG(5, ImageListID), 6/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Add package"}
+    };
+
+    // Add buttons.
+    SendMessage(toolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+    SendMessage(toolbar, TB_ADDBUTTONS,       (WPARAM)numButtons,       (LPARAM)&tbButtons);
+
+    // Resize the toolbar, and then show it.
+    SendMessage(toolbar, TB_AUTOSIZE, 0, 0);
+    ShowWindow(toolbar,  TRUE);
+
+
     //HWND rebar = t_gui_create_rebar(hWnd, toolbar);
 
     tabs = createTab(hWnd);
