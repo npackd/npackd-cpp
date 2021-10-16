@@ -6,6 +6,9 @@
 
 #include <QString>
 
+/** number of elements in an array */
+#define T_GUI_COUNT_OF(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
+
 /** application instance */
 extern HINSTANCE hInst;
 

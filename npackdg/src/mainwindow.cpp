@@ -452,46 +452,8 @@ void MainWindow::createMainWindow(int nCmdShow)
 
     SetMenu(hWnd, createMainMenu());
 
-    toolbar = t_gui_create_toolbar(hWnd);
-
-    LPCWSTR names[] = {L"install32_png", L"uninstall32_png",
-                       L"update32_png", L"gotosite32_png",
-                      L"fileissue32_png", L"add32_png"};
-    HIMAGELIST images = t_gui_create_image_list(32, 32, names,
-                                                sizeof(names) / sizeof(names[0]));
-
-    // Set the image list.
-    SendMessage(toolbar, TB_SETIMAGELIST, (WPARAM)0, (LPARAM)images);
-
-    // Declare and initialize local constants.
-    const int ImageListID    = 0;
-    const int numButtons     = 6;
-
-    const DWORD buttonStyles = BTNS_AUTOSIZE;
-
-    // Initialize button info.
-    // IDM_NEW, IDM_OPEN, and IDM_SAVE are application-defined command constants.
-
-    TBBUTTON tbButtons[numButtons] =
-    {
-        { MAKELONG(0,  ImageListID), 1/*IDM_NEW*/,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Install" },
-        { MAKELONG(1, ImageListID), 2/*IDM_OPEN*/, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Uninstall"},
-        { MAKELONG(2, ImageListID), 3/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Update"},
-        { MAKELONG(3, ImageListID), 4/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Open web site"},
-        { MAKELONG(4, ImageListID), 5/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Feedback"},
-        { MAKELONG(5, ImageListID), 6/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Add package"}
-    };
-
-    // Add buttons.
-    SendMessage(toolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-    SendMessage(toolbar, TB_ADDBUTTONS,       (WPARAM)numButtons,       (LPARAM)&tbButtons);
-
-    // Resize the toolbar, and then show it.
-    SendMessage(toolbar, TB_AUTOSIZE, 0, 0);
+    toolbar = createToolbar(hWnd);
     ShowWindow(toolbar,  TRUE);
-
-
-    //HWND rebar = t_gui_create_rebar(hWnd, toolbar);
 
     tabs = createTab(hWnd);
 
@@ -503,6 +465,49 @@ void MainWindow::createMainWindow(int nCmdShow)
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+}
+
+HWND MainWindow::createToolbar(HWND parent)
+{
+    HWND toolbar = t_gui_create_toolbar(parent);
+
+    LPCWSTR names[] = {L"install32_png", L"uninstall32_png",
+                       L"update32_png", L"gotosite32_png",
+                      L"fileissue32_png", L"add32_png"};
+    HIMAGELIST images = t_gui_create_image_list(32, 32, names,
+                                                T_GUI_COUNT_OF(names));
+
+    // Set the image list.
+    SendMessage(toolbar, TB_SETIMAGELIST, (WPARAM)0, (LPARAM)images);
+
+    // Declare and initialize local constants.
+    const int ImageListID    = 0;
+
+    const DWORD buttonStyles = BTNS_AUTOSIZE;
+
+    // Initialize button info.
+    // IDM_NEW, IDM_OPEN, and IDM_SAVE are application-defined command constants.
+
+    TBBUTTON tbButtons[] =
+    {
+        { MAKELONG(0,  ImageListID), 1/*IDM_NEW*/,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Install" },
+        { MAKELONG(1, ImageListID), 2/*IDM_OPEN*/, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Uninstall"},
+        { MAKELONG(2, ImageListID), 3/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Update"},
+        { 6, 0, 0,  BTNS_SEP, {0}, 0, NULL},
+        { MAKELONG(3, ImageListID), 4/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Open web site"},
+        { 6, 0, 0,  BTNS_SEP, {0}, 0, NULL},
+        { MAKELONG(4, ImageListID), 5/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Feedback"},
+        { MAKELONG(5, ImageListID), 6/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Add package"}
+    };
+
+    // Add buttons.
+    SendMessage(toolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+    SendMessage(toolbar, TB_ADDBUTTONS,       (WPARAM)T_GUI_COUNT_OF(tbButtons),       (LPARAM)&tbButtons);
+
+    // Resize the toolbar, and then show it.
+    SendMessage(toolbar, TB_AUTOSIZE, 0, 0);
+
+    return toolbar;
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -1059,12 +1064,12 @@ void MainWindow::showIconInSystemTray(int nupdates)
             "Click here to review and install.").arg(nupdates);
 
     wcsncpy(nid.szTip, (wchar_t*) tip.utf16(),
-            sizeof(nid.szTip) / sizeof(nid.szTip[0]) - 1);
+            T_GUI_COUNT_OF(nid.szTip) - 1);
     wcsncpy(nid.szInfo, (wchar_t*) txt.utf16(),
-            sizeof(nid.szInfo) / sizeof(nid.szInfo[0]) - 1);
+            T_GUI_COUNT_OF(nid.szInfo) - 1);
     nid.uVersion = 3; // NOTIFYICON_VERSION
     wcsncpy(nid.szInfoTitle, (wchar_t*) tip.utf16(),
-            sizeof(nid.szInfoTitle) / sizeof(nid.szInfoTitle[0]) - 1);
+            T_GUI_COUNT_OF(nid.szInfoTitle) - 1);
     nid.dwInfoFlags = 1; // NIIF_INFO
     nid.uTimeout = 30000;
 

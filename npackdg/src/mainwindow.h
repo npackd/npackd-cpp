@@ -143,6 +143,8 @@ private:
      * @return handle to the tab control
      */
     HWND createTab(HWND hwndParent);
+
+    HWND createToolbar(HWND parent);
 public:
     /** package names for found packages */
     std::vector<QString> found;

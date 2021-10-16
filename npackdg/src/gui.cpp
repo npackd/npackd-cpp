@@ -48,16 +48,14 @@ SIZE t_gui_get_preferred_size(HWND window)
 
     WCHAR className[256];
     WCHAR text[256];
-    if (GetClassName(window, className,
-        sizeof(className) / sizeof(className[0]))) {
+    if (GetClassName(window, className, T_GUI_COUNT_OF(className))) {
         if (wcsicmp(WC_BUTTON, className) == 0) {
             Button_GetIdealSize(window, &r);
         } else if (wcsicmp(WC_STATIC, className) == 0) {
             HDC hDC = GetDC(window);
             RECT rect = { 0, 0, 0, 0 };
 
-            int textLen = GetWindowText(window, text,
-                sizeof(text) / sizeof(text[0]));
+            int textLen = GetWindowText(window, text, T_GUI_COUNT_OF(text));
             if (textLen) {
                 DrawText(hDC, text, textLen, &rect, DT_CALCRECT);
                 r.cx = rect.right - rect.left;
@@ -175,7 +173,7 @@ HWND t_gui_create_toolbar(HWND hWndParent)
 {
     // Create the toolbar.
     HWND hWndToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL,
-                                      WS_CHILD | TBSTYLE_WRAPABLE, 0, 0, 0, 0,
+                                      WS_CHILD | TBSTYLE_WRAPABLE |TBSTYLE_FLAT, 0, 0, 0, 0,
                                       hWndParent, NULL, hInst, NULL);
 
     if (hWndToolbar == NULL)
