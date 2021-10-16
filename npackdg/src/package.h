@@ -13,9 +13,7 @@
  * Adding a field:
  * - add the member variable
  * - update package.cpp
- * - add a field to PackageItemModel::Info
- * - update PackageItemModel.cpp
- * - update MainFrame::MainFrame
+ * - update MainFrame.cpp
  * - update RepositoryXMLHandler
  * - add field in the database (DBRepository.cpp)
  * - add the field to the package detail frame

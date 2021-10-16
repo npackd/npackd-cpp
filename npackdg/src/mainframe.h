@@ -7,9 +7,11 @@
 #include <QTableWidget>
 #include <QComboBox>
 #include <QTreeWidget>
+#include <QCache>
 
 #include "package.h"
 #include "selection.h"
+#include "version.h"
 
 /**
  * Main frame
@@ -46,6 +48,34 @@ private:
 
     /** panel for packages */
     HWND packagesPanel;
+
+    QBrush obsoleteBrush;
+
+    mutable int maxStars;
+
+    std::vector<QString> packages;
+
+    /**
+     * @brief package information for one row
+     */
+    class Info {
+    public:
+        QString avail;
+        QString installed;
+        bool up2date;
+        QString newestDownloadURL;
+        QString shortenDescription;
+        QString title;
+        QString licenseTitle;
+        QString icon;
+        QString category;
+        QString tags;
+        int stars;
+    };
+
+    mutable QCache<QString, Info> cache;
+
+    Info *createInfo(Package *p) const;
 
     void fillList();
 
@@ -111,6 +141,11 @@ public:
     QLineEdit* getFilterLineEdit() const;
 
     /**
+     * @return the number of packages
+     */
+    int getRowCount() const;
+
+    /**
      * @brief saves the column widths in the Windows registry
      */
     void saveColumns() const;
@@ -152,6 +187,45 @@ public:
      * @param status new filter. 0=All, 1=Installed, 2=Updateable
      */
     void setStatusFilter(int status);
+
+    /**
+     * @brief cell text
+     * @param row row index
+     * @param column column index
+     * @return text
+     */
+    QString getCellText(int row, int column) const;
+
+    /**
+     * @brief changes the list of packages
+     * @param packages list of package names
+     */
+    void setPackages(const std::vector<QString> &packages);
+
+    /**
+     * @brief should be called if an icon has changed
+     * @param url URL of the icon
+     */
+    void iconUpdated(const QString& url);
+
+    /**
+     * @brief should be called if the "installed" status of a package version
+     *     has changed
+     * @param package full package name
+     * @param version version number
+     */
+    void installedStatusChanged(const QString &package, const Version &version);
+
+    /**
+     * @brief clears the cache
+     */
+    void clearCache();
+
+    /**
+     * @brief should be called if a download size for a package was computed
+     * @param url URL of the binary
+     */
+    void downloadSizeUpdated(const QString &url);
 private:
     void selectSomething();
 private slots:

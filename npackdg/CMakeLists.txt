@@ -66,7 +66,6 @@ set(NPACKDG_SOURCES
     src/installedpackages.cpp
     src/installedpackageversion.cpp
     src/abstractrepository.cpp
-    src/packageitemmodel.cpp
     src/abstractthirdpartypm.cpp
     src/controlpanelthirdpartypm.cpp
     src/msithirdpartypm.cpp
@@ -125,7 +124,6 @@ set(NPACKDG_HEADERS
     src/installedpackages.h
     src/installedpackageversion.h
     src/abstractrepository.h
-    src/packageitemmodel.h
     src/abstractthirdpartypm.h
     src/controlpanelthirdpartypm.h
     src/msithirdpartypm.h

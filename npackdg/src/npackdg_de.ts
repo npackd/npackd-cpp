@@ -1484,31 +1484,31 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Icon</source>
-        <translation>Symbol</translation>
+        <translation type="vanished">Symbol</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation>Name</translation>
+        <translation type="vanished">Name</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation>Beschreibung</translation>
+        <translation type="vanished">Beschreibung</translation>
     </message>
     <message>
         <source>Available</source>
-        <translation>Verfügbar</translation>
+        <translation type="vanished">Verfügbar</translation>
     </message>
     <message>
         <source>Installed</source>
-        <translation>Installiert</translation>
+        <translation type="vanished">Installiert</translation>
     </message>
     <message>
         <source>License</source>
-        <translation>Lizenz</translation>
+        <translation type="vanished">Lizenz</translation>
     </message>
     <message>
         <source>Download size</source>
-        <translation>Download-Größe</translation>
+        <translation type="vanished">Download-Größe</translation>
     </message>
     <message>
         <source>Error storing the information about an installed package version in the Windows registry: %1</source>
@@ -2650,15 +2650,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Category</source>
-        <translation>Kategorie</translation>
+        <translation type="vanished">Kategorie</translation>
     </message>
     <message>
         <source>Tags</source>
-        <translation>Tags</translation>
+        <translation type="vanished">Tags</translation>
     </message>
     <message>
         <source>Stars</source>
-        <translation>Sterne</translation>
+        <translation type="vanished">Sterne</translation>
     </message>
     <message>
         <source>Error in &lt;stars&gt; for %1: not a number</source>

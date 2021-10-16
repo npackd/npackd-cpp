@@ -13,7 +13,6 @@
 #include "dbrepository.h"
 #include "mainwindow.h"
 #include "package.h"
-#include "packageitemmodel.h"
 #include "windowsregistry.h"
 #include "abstractrepository.h"
 #include "uiutils.h"
@@ -24,7 +23,8 @@
 #define ID_EDIT_FILTER 8
 
 MainFrame::MainFrame(QWidget *parent) :
-    QObject(parent), Selection()
+    QObject(parent), Selection(), obsoleteBrush(QColor(255, 0xc7, 0xc7)),
+    maxStars(-1)
 {
     this->categoryCombosEvents = true;
 
@@ -33,7 +33,6 @@ MainFrame::MainFrame(QWidget *parent) :
 
     QItemSelectionModel *sm = t->selectionModel();
     QAbstractItemModel* m = t->model();
-    t->setModel(new PackageItemModel(std::vector<QString>()));
     delete sm;
     delete m;
 
@@ -109,25 +108,13 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                     NMLVDISPINFO* pnmv = (NMLVDISPINFO*) lParam;
                     if (pnmv->item.iItem < 0 || // typo fixed 11am
                             pnmv->item.iItem >= static_cast<int>(
-                            mw->found.size())) {
+                            mf->getRowCount())) {
                         return E_FAIL;         // requesting invalid item
                     }
 
                     LPWSTR pszResult;
                     if (pnmv->item.mask & LVIF_TEXT) {
-                        switch (pnmv->item.iSubItem) {
-                        case 0:
-                            pszResult = WPMUtils::toLPWSTR(
-                                mw->found[pnmv->item.iItem]);
-                            break;
-                        case 1:
-                            pszResult = const_cast<LPWSTR>(L"Second");
-                            break;
-                        default:
-                            pszResult = const_cast<LPWSTR>(L"Other");
-                            break;
-                        }
-                        pnmv->item.pszText = const_cast<LPWSTR>(pszResult);
+                        pnmv->item.pszText = WPMUtils::toLPWSTR(mf->getCellText(pnmv->item.iItem, pnmv->item.iSubItem));
                     }
                     if (pnmv->item.mask & LVIF_IMAGE) {
                         pnmv->item.iImage = -1;
@@ -286,7 +273,7 @@ HWND MainFrame::createTable(HWND parent)
     ListView_InsertColumn(table, 4, &col);
 
     col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
-    col.fmt = LVCFMT_LEFT;
+    col.fmt = LVCFMT_RIGHT;
     col.cx = 100;
     col.pszText = const_cast<LPWSTR>(L"Download size");
     ListView_InsertColumn(table, 5, &col);
@@ -304,7 +291,7 @@ HWND MainFrame::createTable(HWND parent)
     ListView_InsertColumn(table, 7, &col);
 
     col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
-    col.fmt = LVCFMT_LEFT;
+    col.fmt = LVCFMT_RIGHT;
     col.cx = 20;
     col.pszText = const_cast<LPWSTR>(L"Stars");
     ListView_InsertColumn(table, 8, &col);
@@ -524,6 +511,11 @@ QLineEdit *MainFrame::getFilterLineEdit() const
     return nullptr;
 }
 
+int MainFrame::getRowCount() const
+{
+    return packages.size();
+}
+
 void MainFrame::setStatusFilter(int status)
 {
     /*todo
@@ -636,4 +628,245 @@ void MainFrame::on_comboBoxCategory1_currentIndexChanged(int /*index*/)
         fillList();
         selectSomething();
     }
+}
+
+MainFrame::Info* MainFrame::createInfo(
+        Package* p) const
+{
+    Info* r = new Info();
+
+    DBRepository* rep = DBRepository::getDefault();
+
+    // error is ignored here
+    QString err;
+    std::vector<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &err);
+
+    PackageVersion* newestInstallable = nullptr;
+    PackageVersion* newestInstalled = nullptr;
+    for (auto pv: pvs) {
+        if (pv->installed()) {
+            if (!r->installed.isEmpty())
+                r->installed.append(", ");
+            r->installed.append(pv->version.getVersionString());
+            if (!newestInstalled ||
+                    newestInstalled->version.compare(pv->version) < 0)
+                newestInstalled = pv;
+        }
+
+        if (pv->download.isValid()) {
+            if (!newestInstallable ||
+                    newestInstallable->version.compare(pv->version) < 0)
+                newestInstallable = pv;
+        }
+    }
+
+    if (newestInstallable) {
+        r->avail = newestInstallable->version.getVersionString();
+        r->newestDownloadURL = newestInstallable->download.toString(
+                QUrl::FullyEncoded);
+    }
+
+    r->up2date = !(newestInstalled && newestInstallable &&
+            newestInstallable->version.compare(
+            newestInstalled->version) > 0);
+
+    qDeleteAll(pvs);
+    pvs.clear();
+
+    QString s = p->description;
+    if (s.length() > 200) {
+        s = s.left(200) + "...";
+    }
+    r->shortenDescription = s;
+
+    r->title = p->title;
+
+    // the error message is ignored
+    License* lic = rep->findLicense_(p->license, &err);
+    if (lic) {
+        r->licenseTitle = lic->title;
+        delete lic;
+    }
+
+    r->icon = p->getIcon();
+
+    if (p->categories.size() > 0) {
+        r->category = p->categories.at(0);
+    } else {
+        r->category.clear();
+    }
+
+    r->tags = WPMUtils::join(p->tags, QStringLiteral(", "));
+
+    r->stars = p->stars;
+
+    return r;
+}
+
+QString MainFrame::getCellText(int row, int column) const
+{
+    QString p = this->packages.at(row);
+
+    QString r;
+    DBRepository* rep = DBRepository::getDefault();
+    Info* cached = this->cache.object(p);
+    bool insertIntoCache = false;
+    if (!cached) {
+        Package* pk = rep->findPackage_(p);
+        cached = createInfo(pk);
+        delete pk;
+        insertIntoCache = true;
+    }
+
+    switch (column) {
+    case 0:
+        r = cached->title;
+        break;
+    case 1: {
+        r = cached->shortenDescription;
+        break;
+    }
+    case 2: {
+        r = cached->avail;
+        break;
+    }
+    case 3: {
+        r = cached->installed;
+        break;
+    }
+    case 4: {
+        r = cached->licenseTitle;
+        break;
+    }
+    case 5: {
+        MainWindow* mw = MainWindow::getInstance();
+        if (cached->newestDownloadURL.isEmpty()) {
+            r = "";
+        } else {
+            int64_t sz = mw->fileLoader.downloadSizeOrQueue(
+                        cached->newestDownloadURL);
+            if (sz >= 0)
+                r = QString::number(
+                            static_cast<double>(sz) /
+                            (1024.0 * 1024.0), 'f', 1) +
+                        " MiB";
+            else if (sz == -1)
+                r = QObject::tr("computing");
+            else
+                r = "";
+        }
+        break;
+    }
+    case 6: {
+        r = cached->category;
+        break;
+    }
+    case 7: {
+        r = cached->tags;
+        break;
+    }
+    case 8: {
+        if (cached->stars > 0)
+            r = QString::number(cached->stars);
+        break;
+    }
+    }
+
+/* TODO        } else if (role == Qt::UserRole) {
+        switch (index.column()) {
+            case 0:
+                r = QVariant::fromValue(cached->icon);
+                break;
+            default:
+                r = p;
+        }
+} else if (role == Qt::DecorationRole) {
+        switch (index.column()) {
+            case 0: {
+                MainWindow* mw = MainWindow::getInstance();
+                if (!cached->icon.isEmpty()) {
+                    r = QVariant::fromValue(mw->downloadIcon(cached->icon));
+                } else {
+                    r = QVariant::fromValue(MainWindow::genericAppIcon);
+                }
+                break;
+            }
+        }
+    } else if (role == Qt::BackgroundRole) {
+        switch (index.column()) {
+            case 4: {
+                if (!cached->up2date)
+                    r = QVariant::fromValue(obsoleteBrush);
+                break;
+            }
+            case 9: {
+                if (cached->stars > 0) {
+                    if (maxStars < 0) {
+                        QString err;
+                        maxStars = rep->getMaxStars(&err);
+                    }
+
+                    int f = static_cast<int>(100.0 *
+                        (1.0 + log(maxStars / cached->stars)));
+                    r = QVariant::fromValue(QBrush(QColor(
+                            0xd4, 0xed, 0xda).lighter(f)));
+                }
+                break;
+            }
+        }*/
+
+    if (insertIntoCache)
+        this->cache.insert(p, cached);
+
+    return r;
+}
+
+void MainFrame::setPackages(const std::vector<QString>& packages)
+{
+    // TODO: this->beginResetModel();
+    this->packages = packages;
+    // TODO this->endResetModel();
+
+    ListView_SetItemCountEx(table, this->packages.size(),
+        LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
+}
+
+void MainFrame::iconUpdated(const QString &/*url*/)
+{
+    /* TODO
+    this->dataChanged(this->index(0, 0), this->index(
+            this->packages.size() - 1, 0));*/
+}
+
+void MainFrame::downloadSizeUpdated(const QString &/*url*/)
+{
+    /* TODO
+    this->dataChanged(this->index(0, 5), this->index(
+            this->packages.size() - 1, 5));
+            */
+}
+
+void MainFrame::installedStatusChanged(const QString& package,
+        const Version& /*version*/)
+{
+    //qCDebug(npackd) << "PackageItemModel::installedStatusChanged" << package <<
+    //        version.getVersionString();
+    this->cache.remove(package);
+
+    /* TODO
+    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
+        QString p = this->packages.at(i);
+        if (p == package) {
+            this->dataChanged(this->index(i, 4), this->index(i, 4));
+        }
+    }*/
+}
+
+void MainFrame::clearCache()
+{
+    this->cache.clear();
+
+    /* TODO
+    this->dataChanged(this->index(0, 3),
+            this->index(this->packages.size() - 1, 4));*/
 }

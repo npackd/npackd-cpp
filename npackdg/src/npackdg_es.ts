@@ -2302,27 +2302,27 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Icon</source>
-        <translation>Icono</translation>
+        <translation type="vanished">Icono</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation>Título</translation>
+        <translation type="vanished">Título</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation>Descripción</translation>
+        <translation type="vanished">Descripción</translation>
     </message>
     <message>
         <source>Available</source>
-        <translation>Disponible</translation>
+        <translation type="vanished">Disponible</translation>
     </message>
     <message>
         <source>Installed</source>
-        <translation>Instalado</translation>
+        <translation type="vanished">Instalado</translation>
     </message>
     <message>
         <source>License</source>
-        <translation>Licencia</translation>
+        <translation type="vanished">Licencia</translation>
     </message>
     <message>
         <source>Error storing the information about an installed package version in the Windows registry: %1</source>
@@ -3210,10 +3210,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Download size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Task / Step</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3407,18 +3403,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clearing the tags table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Tags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

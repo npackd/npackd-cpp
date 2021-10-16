@@ -50,7 +50,6 @@
 #include "packageframe.h"
 #include "hrtimer.h"
 #include "dbrepository.h"
-#include "packageitemmodel.h"
 #include "installedpackages.h"
 #include "flowlayout.h"
 #include "visiblejobs.h"
@@ -715,15 +714,14 @@ void MainWindow::showDetails()
 void MainWindow::updateDownloadSize(const QString& url)
 {
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
-    m->downloadSizeUpdated(url);
+    this->mainFrame->downloadSizeUpdated(url);
 }
 
 void MainWindow::updateIcon(const QString& url)
 {
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
 
+    /* TODO
     for (int row = t->rowAt(0); row <= t->rowAt(t->height()); row++) {
         QModelIndex index = m->index(row, 0);
         QString v = m->data(index, Qt::UserRole).toString();
@@ -731,6 +729,7 @@ void MainWindow::updateIcon(const QString& url)
             m->dataChanged(index, index);
         }
     }
+    */
 
 /* todo
     for (int i = 0; i < this->ui->tabWidget->count(); i++) {
@@ -910,8 +909,7 @@ void MainWindow::repositoryStatusChanged(const QString& package,
     // qCDebug(npackd) << "MainWindow::repositoryStatusChanged" << pv->toString();
 
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
-    m->installedStatusChanged(package, version);
+    this->mainFrame->installedStatusChanged(package, version);
     this->updateStatusInDetailTabs();
     this->updateActions();
 }
@@ -949,8 +947,7 @@ void MainWindow::downloadCompleted(const QString& url,
 void MainWindow::downloadSizeCompleted(const QString& url, int64_t /*size*/)
 {
     QTableView* t = this->mainFrame->getTableWidget();
-    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
-    m->downloadSizeUpdated(url);
+    this->mainFrame->downloadSizeUpdated(url);
 }
 
 void MainWindow::prepare()
@@ -1312,13 +1309,11 @@ void MainWindow::fillList()
         addErrorMessage(err, err, true, QMessageBox::Critical);
     }
 
-    found = sr.found;
+    this->mainFrame->setPackages(sr.found);
     // TODO: t->horizontalHeader()->setSectionsMovable(true);
 
     DWORD dur = GetTickCount() - start;
 
-    ListView_SetItemCountEx(this->mainFrame->table, found.size(),
-        LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
     this->mainFrame->setDuration(static_cast<int>(dur));
 }
 
@@ -2007,9 +2002,8 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
     }
     QModelIndex index = sm->currentIndex();
 
-    PackageItemModel* m = static_cast<PackageItemModel*>(t->model());
-    m->setPackages(std::vector<QString>());
-    m->clearCache();
+    this->mainFrame->setPackages(std::vector<QString>());
+    this->mainFrame->clearCache();
     fillList();
 
     sm->setCurrentIndex(index, QItemSelectionModel::Current);

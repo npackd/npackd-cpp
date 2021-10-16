@@ -146,9 +146,6 @@ private:
 
     HWND createToolbar(HWND parent);
 public:
-    /** package names for found packages */
-    std::vector<QString> found;
-
     /**
      * @brief layout the main window
      */
