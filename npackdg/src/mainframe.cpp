@@ -43,16 +43,6 @@ MainFrame::MainFrame(QWidget *parent) :
     t->horizontalHeader()->setSectionsMovable(true);
 
     t->verticalHeader()->setDefaultSectionSize(36);
-    t->setColumnWidth(0, 40);
-    t->setColumnWidth(1, 150);
-    t->setColumnWidth(2, 300);
-    t->setColumnWidth(3, 100);
-    t->setColumnWidth(4, 100);
-    t->setColumnWidth(5, 100);
-    t->setColumnWidth(6, 100);
-    t->setColumnWidth(7, 100);
-    t->setColumnWidth(8, 100);
-    t->setColumnWidth(9, 20);
     t->horizontalHeader()->setSectionHidden(6, true);
     t->horizontalHeader()->setSectionHidden(7, true);
     t->horizontalHeader()->setSectionHidden(8, true);
@@ -242,12 +232,6 @@ HWND MainFrame::createPackagesPanel(HWND parent)
     //y += sz.cy + 5;
 
     table = createTable(result);
-    LVCOLUMN col = {};
-    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
-    col.fmt = LVCFMT_LEFT;
-    col.cx = 100;
-    col.pszText = const_cast<LPWSTR>(L"ColumnHeader");
-    ListView_InsertColumn(table, 0, &col);
 
     this->packagesPanel = result;
 
@@ -256,7 +240,7 @@ HWND MainFrame::createPackagesPanel(HWND parent)
 
 HWND MainFrame::createTable(HWND parent)
 {
-    return CreateWindow(WC_LISTVIEW, NULL,
+    HWND table = CreateWindow(WC_LISTVIEW, NULL,
                   WS_VISIBLE | WS_CHILD | WS_TABSTOP |
                   LVS_NOSORTHEADER | LVS_OWNERDATA |
                   LVS_SINGLESEL | LVS_REPORT,
@@ -265,6 +249,67 @@ HWND MainFrame::createTable(HWND parent)
                   0,
                   hInst,
                   NULL);
+
+    HIMAGELIST images = t_gui_create_image_list(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE, NULL, 0);
+    ListView_SetImageList(table, images, LVSIL_SMALL);
+
+    LVCOLUMN col = {};
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 190;
+    col.pszText = const_cast<LPWSTR>(L"Title");
+    ListView_InsertColumn(table, 0, &col);
+
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 300;
+    col.pszText = const_cast<LPWSTR>(L"Description");
+    ListView_InsertColumn(table, 1, &col);
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"Available");
+    ListView_InsertColumn(table, 2, &col);
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"Installed");
+    ListView_InsertColumn(table, 3, &col);
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"License");
+    ListView_InsertColumn(table, 4, &col);
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"Download size");
+    ListView_InsertColumn(table, 5, &col);
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"Category");
+    ListView_InsertColumn(table, 6, &col);
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 100;
+    col.pszText = const_cast<LPWSTR>(L"Tags");
+    ListView_InsertColumn(table, 7, &col);
+
+    col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
+    col.fmt = LVCFMT_LEFT;
+    col.cx = 20;
+    col.pszText = const_cast<LPWSTR>(L"Stars");
+    ListView_InsertColumn(table, 8, &col);
+
+    return table;
 }
 
 
