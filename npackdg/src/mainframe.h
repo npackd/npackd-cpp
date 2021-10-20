@@ -136,11 +136,6 @@ public:
     QTableView *getTableWidget() const;
 
     /**
-     * @return filter line edit
-     */
-    QLineEdit* getFilterLineEdit() const;
-
-    /**
      * @return the number of packages
      */
     int getRowCount() const;
@@ -226,12 +221,13 @@ public:
      * @param url URL of the binary
      */
     void downloadSizeUpdated(const QString &url);
+
+    void tableWidget_selectionChanged();
 private:
     void selectSomething();
 private slots:
     void on_tableWidget_doubleClicked(QModelIndex index);
     void on_lineEditText_textChanged(QString );
-    void tableWidget_selectionChanged();
     void on_radioButtonAll_toggled(bool checked);
     void on_radioButtonInstalled_toggled(bool checked);
     void on_radioButtonUpdateable_toggled(bool checked);

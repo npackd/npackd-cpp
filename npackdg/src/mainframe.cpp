@@ -29,24 +29,12 @@ MainFrame::MainFrame(QWidget *parent) :
     this->categoryCombosEvents = true;
 
     /* todo
-     * QTableView* t = this->ui->tableWidget;
-
-    QItemSelectionModel *sm = t->selectionModel();
-    QAbstractItemModel* m = t->model();
-    delete sm;
-    delete m;
-
-    t->setTextElideMode(Qt::ElideRight);
-    t->setEditTriggers(QTableWidget::NoEditTriggers);
-    t->setSortingEnabled(false);
-    t->horizontalHeader()->setSectionsMovable(true);
 
     t->verticalHeader()->setDefaultSectionSize(36);
     t->horizontalHeader()->setSectionHidden(6, true);
     t->horizontalHeader()->setSectionHidden(7, true);
     t->horizontalHeader()->setSectionHidden(8, true);
     t->horizontalHeader()->setSectionHidden(9, true);
-    t->setIconSize(QSize(UIUtils::ICON_SIZE, UIUtils::ICON_SIZE));
 
     connect(t->selectionModel(),
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -59,7 +47,7 @@ int MainFrame::getCategoryFilter(int level) const
 {
     int r = -1;
 
-    /* TODO
+    /*
     if (level == 0) {
         int sel = ComboBox_GetCurSel(mainWindow.comboBoxCategory0);
         if (sel <= 0)
@@ -74,7 +62,7 @@ int MainFrame::getCategoryFilter(int level) const
             r = this->categories1.at(sel - 1).at(0).toInt();
     } else
         r = -1;
-        */
+*/
     return r;
 }
 
@@ -123,6 +111,9 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                         pnmv->item.state = 0;
                     }
                     break;
+                }
+                case LVN_ITEMCHANGED:{
+                    mf->tableWidget_selectionChanged();
                 }
             }
             break;
@@ -390,30 +381,38 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
         count += c.at(1).toInt();
     }
 
-/*todo
     if (level == 0) {
-        this->ui->comboBoxCategory0->clear();
-        this->ui->comboBoxCategory0->addItem(QObject::tr("All") +
-                " (" + QString::number(count) + ")");
-        this->ui->comboBoxCategory0->addItems(WPMUtils::toQStringList(labels));
-        this->ui->comboBoxCategory0->setEnabled(true);
+        ComboBox_ResetContent(this->comboBoxCategory0);
+
+        QString s = QObject::tr("All") + " (" + QString::number(count) + ")";
+        ComboBox_AddString(this->comboBoxCategory0, WPMUtils::toLPWSTR(s));
+
+        for (auto& label: labels) {
+            ComboBox_AddString(this->comboBoxCategory0, WPMUtils::toLPWSTR(label));
+        }
+
+        EnableWindow(this->comboBoxCategory0, true);
         this->categories0 = cats;
 
         this->categories1.clear();
-        this->ui->comboBoxCategory1->setEnabled(false);
+        EnableWindow(this->comboBoxCategory1, false);
     } else if (level == 1) {
-        this->ui->comboBoxCategory1->clear();
+        ComboBox_ResetContent(this->comboBoxCategory1);
+
         if (labels.size() > 0) {
-            this->ui->comboBoxCategory1->addItem(QObject::tr("All") +
-                    " (" + QString::number(count) + ")");
-            this->ui->comboBoxCategory1->addItems(WPMUtils::toQStringList(labels));
-            this->ui->comboBoxCategory1->setEnabled(true);
+            QString s = QObject::tr("All") + " (" + QString::number(count) + ")";
+            ComboBox_AddString(this->comboBoxCategory1, WPMUtils::toLPWSTR(s));
+
+            for (auto& label: labels) {
+                ComboBox_AddString(this->comboBoxCategory1, WPMUtils::toLPWSTR(label));
+            }
+
+            EnableWindow(this->comboBoxCategory1, true);
         } else {
-            this->ui->comboBoxCategory1->setEnabled(false);
+            EnableWindow(this->comboBoxCategory1, false);
         }
         this->categories1 = cats;
     }
-    */
 
     this->categoryCombosEvents = true;
 }
@@ -509,12 +508,6 @@ QTableView * MainFrame::getTableWidget() const
     return nullptr;
 }
 
-QLineEdit *MainFrame::getFilterLineEdit() const
-{
-    // TODO return this->ui->lineEditText;
-    return nullptr;
-}
-
 int MainFrame::getRowCount() const
 {
     return packages.size();
@@ -522,14 +515,12 @@ int MainFrame::getRowCount() const
 
 void MainFrame::setStatusFilter(int status)
 {
-    /*todo
     if (status == 1)
-        this->ui->radioButtonInstalled->setChecked(true);
+        Button_SetCheck(buttonInstalled, BST_CHECKED);
     else if (status == 2)
-        this->ui->radioButtonUpdateable->setChecked(true);
+        Button_SetCheck(buttonUpdateable, BST_CHECKED);
     else
-        this->ui->radioButtonAll->setChecked(true);
-        */
+        Button_SetCheck(buttonAll, BST_CHECKED);
 }
 
 std::vector<void*> MainFrame::getSelected(const QString& type) const
@@ -568,21 +559,19 @@ void MainFrame::tableWidget_selectionChanged()
     qDeleteAll(this->selectedPackages);
     this->selectedPackages.clear();
 
-/*todo
-    QAbstractItemModel* m = this->ui->tableWidget->model();
-    QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
-    QModelIndexList sel = sm->selectedRows();
     DBRepository* r = DBRepository::getDefault();
-    for (int i = 0; i < sel.count(); i++) {
-        QModelIndex index = m->index(sel.at(i).row(), 1);
-        const QVariant v = index.data(Qt::UserRole);
-        QString name = v.toString();
-        Package* p = r->findPackage_(name);
-        this->selectedPackages.push_back(p);
-    }
-*/
-    MainWindow::getInstance()->updateActions();
 
+    // Get the first selected item
+    int iPos = ListView_GetNextItem(table, -1, LVNI_SELECTED);
+    while (iPos != -1) {
+        Package* p = r->findPackage_(packages.at(iPos));
+        this->selectedPackages.push_back(p);
+
+        // Get the next selected item
+        iPos = ListView_GetNextItem(table, iPos, LVNI_SELECTED);
+    }
+
+    MainWindow::getInstance()->updateActions();
 }
 
 void MainFrame::fillList()
@@ -593,11 +582,9 @@ void MainFrame::fillList()
 
 void MainFrame::selectSomething()
 {
-    /* todo QItemSelectionModel* sm = this->ui->tableWidget->selectionModel();
-    if (!sm->hasSelection()) {
-        this->ui->tableWidget->selectRow(0);
+    if (ListView_GetSelectedCount(table) == 0 && packages.size() > 0) {
+        ListView_SetItemState(table, 0, LVIS_SELECTED, LVIS_SELECTED);
     }
-    */
 }
 
 void MainFrame::on_radioButtonAll_toggled(bool /*checked*/)
@@ -827,9 +814,7 @@ QString MainFrame::getCellText(int row, int column) const
 
 void MainFrame::setPackages(const std::vector<QString>& packages)
 {
-    // TODO: this->beginResetModel();
     this->packages = packages;
-    // TODO this->endResetModel();
 
     ListView_SetItemCountEx(table, this->packages.size(),
         LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
@@ -839,40 +824,29 @@ void MainFrame::setPackages(const std::vector<QString>& packages)
 
 void MainFrame::iconUpdated(const QString &/*url*/)
 {
-    /* TODO
-    this->dataChanged(this->index(0, 0), this->index(
-            this->packages.size() - 1, 0));*/
+    InvalidateRect(table, NULL, false);
 }
 
 void MainFrame::downloadSizeUpdated(const QString &/*url*/)
 {
-    /* TODO
-    this->dataChanged(this->index(0, 5), this->index(
-            this->packages.size() - 1, 5));
-            */
+    InvalidateRect(table, NULL, false);
 }
 
 void MainFrame::installedStatusChanged(const QString& package,
         const Version& /*version*/)
 {
-    //qCDebug(npackd) << "PackageItemModel::installedStatusChanged" << package <<
-    //        version.getVersionString();
     this->cache.remove(package);
 
-    /* TODO
-    for (int i = 0; i < static_cast<int>(this->packages.size()); i++) {
-        QString p = this->packages.at(i);
-        if (p == package) {
-            this->dataChanged(this->index(i, 4), this->index(i, 4));
-        }
-    }*/
+    auto it = find(this->packages.begin(), this->packages.end(), package);
+    if (it != this->packages.end()) {
+        int index = it - this->packages.begin();
+        ListView_RedrawItems(table, index, index);
+    }
 }
 
 void MainFrame::clearCache()
 {
     this->cache.clear();
 
-    /* TODO
-    this->dataChanged(this->index(0, 3),
-            this->index(this->packages.size() - 1, 4));*/
+    InvalidateRect(table, NULL, false);
 }

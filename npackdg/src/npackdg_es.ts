@@ -2013,7 +2013,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>All</source>
-        <translation type="vanished">Todo</translation>
+        <translation>Todo</translation>
     </message>
     <message>
         <source>Packages</source>

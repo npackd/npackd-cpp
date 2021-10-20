@@ -3523,6 +3523,10 @@ p, li { white-space: pre-wrap; }
         <source>Feedback</source>
         <translation type="unfinished">Retour d&apos;expérience</translation>
     </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsFrame</name>

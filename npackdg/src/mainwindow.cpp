@@ -713,7 +713,6 @@ void MainWindow::showDetails()
 
 void MainWindow::updateDownloadSize(const QString& url)
 {
-    QTableView* t = this->mainFrame->getTableWidget();
     this->mainFrame->downloadSizeUpdated(url);
 }
 
@@ -908,7 +907,6 @@ void MainWindow::repositoryStatusChanged(const QString& package,
 {
     // qCDebug(npackd) << "MainWindow::repositoryStatusChanged" << pv->toString();
 
-    QTableView* t = this->mainFrame->getTableWidget();
     this->mainFrame->installedStatusChanged(package, version);
     this->updateStatusInDetailTabs();
     this->updateActions();
@@ -946,7 +944,6 @@ void MainWindow::downloadCompleted(const QString& url,
 
 void MainWindow::downloadSizeCompleted(const QString& url, int64_t /*size*/)
 {
-    QTableView* t = this->mainFrame->getTableWidget();
     this->mainFrame->downloadSizeUpdated(url);
 }
 

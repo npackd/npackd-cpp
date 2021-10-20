@@ -107,6 +107,8 @@ HWND t_gui_create_combobox(HWND hParent)
         WS_VISIBLE | WS_CHILD | CBS_DROPDOWNLIST,
         0, 0, 100, CW_USEDEFAULT,
         hParent, NULL, hInst, NULL);
+    SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
+
     return w;
 }
 
