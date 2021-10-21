@@ -30,16 +30,11 @@ MainFrame::MainFrame(QWidget *parent) :
 
     /* todo
 
-    t->verticalHeader()->setDefaultSectionSize(36);
     t->horizontalHeader()->setSectionHidden(6, true);
     t->horizontalHeader()->setSectionHidden(7, true);
     t->horizontalHeader()->setSectionHidden(8, true);
     t->horizontalHeader()->setSectionHidden(9, true);
 
-    connect(t->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this,
-            SLOT(tableWidget_selectionChanged()));
             */
 }
 
@@ -47,22 +42,21 @@ int MainFrame::getCategoryFilter(int level) const
 {
     int r = -1;
 
-    /*
     if (level == 0) {
-        int sel = ComboBox_GetCurSel(mainWindow.comboBoxCategory0);
+        int sel = ComboBox_GetCurSel(comboBoxCategory0);
         if (sel <= 0)
             r = -1;
         else
             r = this->categories0.at(sel - 1).at(0).toInt();
     } else if (level == 1) {
-        int sel = this->ui->comboBoxCategory1->currentIndex();
+        int sel = ComboBox_GetCurSel(comboBoxCategory1);
         if (sel <= 0)
             r = -1;
         else
             r = this->categories1.at(sel - 1).at(0).toInt();
     } else
         r = -1;
-*/
+
     return r;
 }
 
@@ -297,15 +291,7 @@ HWND MainFrame::createTable(HWND parent)
 
 MainFrame::~MainFrame()
 {
-    // TODO QTableView* t = this->ui->tableWidget;
-    // TODO QItemSelectionModel *sm = t->selectionModel();
-    // TODO QAbstractItemModel* m = t->model();
-
-    // TODO qDeleteAll(this->selectedPackages);
-    // TODO delete ui;
-
-    // TODO delete sm;
-    // TODO delete m;
+    qDeleteAll(this->selectedPackages);
 }
 
 void MainFrame::saveColumns() const
@@ -419,16 +405,16 @@ void MainFrame::setCategories(int level, const std::vector<std::vector<QString>>
 
 void MainFrame::setDuration(int d)
 {
-    // TODO this->ui->labelDuration->setText(QObject::tr("Found in %1 ms").arg(d));
+    QString s = QObject::tr("Found in %1 ms").arg(d);
+    Static_SetText(this->labelDuration, WPMUtils::toLPWSTR(s));
 }
 
 void MainFrame::setCategoryFilter(int level, int v)
 {
     this->categoryCombosEvents = false;
 
-/* todo
     if (level == 0) {
-        int newCurrentIndex = this->ui->comboBoxCategory0->currentIndex();
+        int newCurrentIndex = ComboBox_GetCurSel(this->comboBoxCategory0);
         if (v == -1)
             newCurrentIndex = 0;
         else {
@@ -440,12 +426,12 @@ void MainFrame::setCategoryFilter(int level, int v)
                 }
             }
         }
-        if (this->ui->comboBoxCategory0->currentIndex() != newCurrentIndex) {
-            this->ui->comboBoxCategory0->setCurrentIndex(newCurrentIndex);
-            this->ui->comboBoxCategory1->clear();
+        if (ComboBox_GetCurSel(this->comboBoxCategory0) != newCurrentIndex) {
+            ComboBox_SetCurSel(this->comboBoxCategory0, newCurrentIndex);
+            ComboBox_ResetContent(this->comboBoxCategory1);
         }
     } else if (level == 1) {
-        int newCurrentIndex = this->ui->comboBoxCategory1->currentIndex();
+        int newCurrentIndex = ComboBox_GetCurSel(this->comboBoxCategory1);
         if (v == -1)
             newCurrentIndex = 0;
         else {
@@ -457,11 +443,10 @@ void MainFrame::setCategoryFilter(int level, int v)
                 }
             }
         }
-        if (this->ui->comboBoxCategory1->currentIndex() != newCurrentIndex) {
-            this->ui->comboBoxCategory1->setCurrentIndex(newCurrentIndex);
+        if (ComboBox_GetCurSel(this->comboBoxCategory1) != newCurrentIndex) {
+            ComboBox_SetCurSel(this->comboBoxCategory1, newCurrentIndex);
         }
     }
-    */
 
     this->categoryCombosEvents = true;
 }
@@ -502,12 +487,6 @@ void MainFrame::chooseColumns()
     */
 }
 
-QTableView * MainFrame::getTableWidget() const
-{
-    // TODO return this->ui->tableWidget;
-    return nullptr;
-}
-
 int MainFrame::getRowCount() const
 {
     return packages.size();
@@ -538,6 +517,25 @@ std::vector<void*> MainFrame::getSelected(const QString& type) const
 std::vector<Package*> MainFrame::getSelectedPackagesInTable() const
 {
     return this->selectedPackages;
+}
+
+void MainFrame::setSelectedPackages(const std::vector<QString> &packageNames)
+{
+    /* TODO
+    QTableView* t = this->mainFrame->getTableWidget();
+    t->clearSelection();
+    QAbstractItemModel* m = t->model();
+    for (int i = 0; i < m->rowCount(); i++) {
+        const QVariant v = m->data(m->index(i, 1), Qt::UserRole);
+        QString name = v.toString();
+        if (packageNames.count(name) > 0) {
+            QModelIndex topLeft = t->model()->index(i, 0);
+
+            t->selectionModel()->select(topLeft, QItemSelectionModel::Rows |
+                    QItemSelectionModel::Select);
+        }
+    }
+    */
 }
 
 void MainFrame::on_tableWidget_doubleClicked(QModelIndex /*index*/)

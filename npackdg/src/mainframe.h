@@ -131,9 +131,11 @@ public:
     std::vector<Package *> getSelectedPackagesInTable() const;
 
     /**
-     * @return table with packages
+     * @brief select given packages
+     *
+     * @param packageNames full package names
      */
-    QTableView *getTableWidget() const;
+    void setSelectedPackages(const std::vector<QString>& packageNames);
 
     /**
      * @return the number of packages

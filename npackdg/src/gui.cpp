@@ -36,10 +36,13 @@ HWND t_gui_create_radio_button(HWND hParent, const TCHAR *szCaption)
 
 HWND t_gui_create_edit(HWND hParent, int id)
 {
-    return CreateWindow(WC_EDIT, NULL,
+    HWND w = CreateWindow(WC_EDIT, NULL,
         WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT,
         0, 0, 100, CW_USEDEFAULT,
         hParent, reinterpret_cast<HMENU>(id), hInst, NULL);
+    SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
+
+    return w;
 }
 
 SIZE t_gui_get_preferred_size(HWND window)

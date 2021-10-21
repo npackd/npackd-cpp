@@ -1163,7 +1163,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Found in %1 ms</source>
-        <translation type="vanished">Gefunden in %1 ms</translation>
+        <translation>Gefunden in %1 ms</translation>
     </message>
     <message>
         <source>Choose columns</source>

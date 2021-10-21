@@ -718,8 +718,6 @@ void MainWindow::updateDownloadSize(const QString& url)
 
 void MainWindow::updateIcon(const QString& url)
 {
-    QTableView* t = this->mainFrame->getTableWidget();
-
     /* TODO
     for (int row = t->rowAt(0); row <= t->rowAt(t->height()); row++) {
         QModelIndex index = m->index(row, 0);
@@ -1189,24 +1187,12 @@ void MainWindow::onShow()
 
 void MainWindow::selectPackages(std::vector<Package*> ps)
 {
-    std::unordered_set<QString> packageNames;
+    std::vector<QString> packageNames;
     for (auto p: ps) {
-        packageNames.insert(p->name);
+        packageNames.push_back(p->name);
     }
 
-    QTableView* t = this->mainFrame->getTableWidget();
-    t->clearSelection();
-    QAbstractItemModel* m = t->model();
-    for (int i = 0; i < m->rowCount(); i++) {
-        const QVariant v = m->data(m->index(i, 1), Qt::UserRole);
-        QString name = v.toString();
-        if (packageNames.count(name) > 0) {
-            QModelIndex topLeft = t->model()->index(i, 0);
-
-            t->selectionModel()->select(topLeft, QItemSelectionModel::Rows |
-                    QItemSelectionModel::Select);
-        }
-    }
+    this->mainFrame->setSelectedPackages(packageNames);
 }
 
 class QCITableWidgetItem: public QTableWidgetItem {
@@ -1379,16 +1365,13 @@ void MainWindow::on_errorMessage(const QString &msg,
 
 void MainWindow::processThreadFinished()
 {
-    QTableView* t = this->mainFrame->getTableWidget();
-    QItemSelectionModel* sm = t->selectionModel();
     std::vector<Package*> sel = mainFrame->getSelectedPackagesInTable();
     for (int i = 0; i < static_cast<int>(sel.size()); i++) {
         sel[i] = new Package(*sel[i]);
     }
-    QModelIndex index = sm->currentIndex();
+
     fillList();
     updateStatusInDetailTabs();
-    sm->setCurrentIndex(index, QItemSelectionModel::Current);
     selectPackages(sel);
     qDeleteAll(sel);
     updateActions();
@@ -1991,19 +1974,15 @@ void MainWindow::recognizeAndLoadRepositoriesThreadFinished()
 {
     DBRepository::getDefault()->clearCache();
 
-    QTableView* t = this->mainFrame->getTableWidget();
-    QItemSelectionModel* sm = t->selectionModel();
     std::vector<Package*> sel = mainFrame->getSelectedPackagesInTable();
     for (int i = 0; i < static_cast<int>(sel.size()); i++) {
         sel[i] = new Package(*sel[i]);
     }
-    QModelIndex index = sm->currentIndex();
 
     this->mainFrame->setPackages(std::vector<QString>());
     this->mainFrame->clearCache();
     fillList();
 
-    sm->setCurrentIndex(index, QItemSelectionModel::Current);
     selectPackages(sel);
     qDeleteAll(sel);
     reloadTabs();
