@@ -257,3 +257,8 @@ void t_gui_toolbar_item_enable(HWND toolbar, UINT_PTR id, bool enable) {
 void t_gui_menu_item_enable(HMENU menu, UINT_PTR id, bool enable) {
     EnableMenuItem(menu, id, MF_BYCOMMAND | (enable ? MF_ENABLED : MF_DISABLED));
 }
+
+void t_gui_open_url(LPCWSTR url)
+{
+    ShellExecute(NULL, L"open", url, NULL, NULL, SW_SHOWNORMAL);
+}

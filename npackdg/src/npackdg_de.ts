@@ -1436,7 +1436,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open the URL %1</source>
-        <translation>Kann die URL %1 nicht öffnen</translation>
+        <translation type="vanished">Kann die URL %1 nicht öffnen</translation>
     </message>
     <message>
         <source>Dismiss</source>

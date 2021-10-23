@@ -149,4 +149,10 @@ void t_gui_toolbar_item_enable(HWND toolbar, UINT_PTR id, bool enable);
  */
 void t_gui_menu_item_enable(HMENU menu, UINT_PTR id, bool enable);
 
+/**
+ * @brief opens a URL in a browser
+ * @param url URL
+ */
+void t_gui_open_url(LPCWSTR url);
+
 #endif // GUI_H

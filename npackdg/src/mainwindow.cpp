@@ -160,55 +160,9 @@ addTab(jobsScrollArea, genericAppIcon, "Tags");
 #define IDM_ADD_PACKAGE 34
 #define IDM_EXPORT 35
 
-/**
- * @brief processes messages in the packages panel
- *
- * @param hWnd window
- * @param uMsg message
- * @param wParam first parameter
- * @param lParam second parameter
- * @param uIdSubclass Id of the Subclass procedure
- * @param dwRefData reference data
- * @return result
- */
-LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
-    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-
-/**
- * @brief processes messages in the tab control
- *
- * @param hWnd window
- * @param uMsg message
- * @param wParam first parameter
- * @param lParam second parameter
- * @param uIdSubclass Id of the Subclass procedure
- * @param dwRefData reference data
- * @return result
- */
-LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
-    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-
-/**
- * @brief Processes messages for the main window.
- *
- * @param hWnd windows handle
- * @param message message
- * @param wParam first parameter
- * @param lParam second parameter
- * @return result
- */
-LRESULT CALLBACK mainWindowProc(HWND, UINT, WPARAM, LPARAM);
-
-void MainWindow::layoutTab()
+LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    RECT r;
-    GetClientRect(tabs, &r);
-
-    TabCtrl_AdjustRect(tabs, FALSE, &r);
-
-    // Resize the tab control to fit the client are of main window.
-    MoveWindow(packagesPanel, r.left, r.top,
-        r.right - r.left, r.bottom - r.top, FALSE);
+    return MainWindow::getInstance()->windowProc(hWnd, message, wParam, lParam);
 }
 
 LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
@@ -228,6 +182,20 @@ LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 }
 
+void MainWindow::layoutTab()
+{
+    if (!IsIconic(this->window)) {
+        RECT r;
+        GetClientRect(tabs, &r);
+
+        TabCtrl_AdjustRect(tabs, FALSE, &r);
+
+        // Resize the tab control to fit the client are of main window.
+        MoveWindow(packagesPanel, r.left, r.top,
+            r.right - r.left, r.bottom - r.top, FALSE);
+    }
+}
+
 void MainWindow::layoutMainWindow()
 {
     if (tabs != 0) {
@@ -245,15 +213,32 @@ void MainWindow::layoutMainWindow()
     }
 }
 
-LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MainWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    MainWindow* mw = MainWindow::getInstance();
     switch (message) {
         case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
             // Parse the menu selections:
             switch (wmId) {
+            case IDM_INSTALL:
+                on_actionInstall_triggered();
+                break;
+            case IDM_UNINSTALL:
+                on_actionUninstall_triggered();
+                break;
+            case IDM_UPDATE:
+                on_actionUpdate_triggered();
+                break;
+            case IDM_OPEN_WEB_SITE:
+                on_actionGotoPackageURL_triggered();
+                break;
+            case IDM_FEEDBACK:
+                on_actionFile_an_Issue_triggered();
+                break;
+            case IDM_ADD_PACKAGE:
+                on_actionAdd_package_triggered();
+                break;
             case IDM_ABOUT:
                 MessageBox(hWnd, L"hello", L"Caption", MB_OK);
                 break;
@@ -286,7 +271,7 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         }
 
         case WM_SIZE:
-            mw->layoutMainWindow();
+            layoutMainWindow();
             break;
 
         case WM_NOTIFY:
@@ -497,9 +482,9 @@ HWND MainWindow::createToolbar(HWND parent)
         { MAKELONG(0,  ImageListID), IDM_INSTALL,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Install" },
         { MAKELONG(1, ImageListID), IDM_UNINSTALL, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Uninstall"},
         { MAKELONG(2, ImageListID), IDM_UPDATE, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Update"},
-        { 6, 0, 0,  BTNS_SEP, {0}, 0, NULL},
+        { 6, 0, 0,  BTNS_SEP, {0}, 0, 0},
         { MAKELONG(3, ImageListID), IDM_OPEN_WEB_SITE, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Open web site"},
-        { 6, 0, 0,  BTNS_SEP, {0}, 0, NULL},
+        { 6, 0, 0,  BTNS_SEP, {0}, 0, 0},
         { MAKELONG(4, ImageListID), IDM_FEEDBACK, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Feedback"},
         { MAKELONG(5, ImageListID), IDM_ADD_PACKAGE, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Add package"}
     };
@@ -520,8 +505,6 @@ MainWindow::MainWindow(QWidget *parent) :
     instance = this;
 
     fileLoader.init();
-
-    // TODO ui->setupUi(this);
 
     this->setMenuAccelerators();
     // TODO this->setActionAccelerators(this);
@@ -1704,7 +1687,7 @@ void MainWindow::updateActionShowDetailsAction()
         enabled = selected.size() > 0;
     }
 
-    // TODO this->ui->actionShow_Details->setEnabled(enabled);
+    t_gui_menu_item_enable(this->packageMenu, IDM_SHOW_DETAILS, enabled);
 }
 
 void MainWindow::updateTestDownloadSiteAction()
@@ -1783,7 +1766,7 @@ void MainWindow::updateShowChangelogAction()
         }
     }
 
-    // TODO this->ui->actionShow_changelog->setEnabled(enabled);
+    t_gui_menu_item_enable(this->packageMenu, IDM_SHOW_CHANGELOG, enabled);
 }
 
 void MainWindow::updateRunAction()
@@ -2562,11 +2545,14 @@ void MainWindow::on_actionAdd_package_triggered()
 }
 
 void MainWindow::openURL(const QUrl& url) {
+    t_gui_open_url(WPMUtils::toLPWSTR(url.toString(QUrl::FullyEncoded)));
+    /* TODO
     if (!QDesktopServices::openUrl(url)) {
         QString err = QObject::tr("Cannot open the URL %1").
                 arg(url.toString());
         this->addErrorMessage(err, err, true, QMessageBox::Critical);
     }
+    */
 }
 
 void MainWindow::on_actionOpen_folder_triggered()

@@ -2015,10 +2015,6 @@ p, li { white-space: pre-wrap; }
         <translation>Impossible de recharger les dépôts. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
-        <source>Cannot open the URL %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Dismiss</source>
         <translation>Fermer</translation>
     </message>

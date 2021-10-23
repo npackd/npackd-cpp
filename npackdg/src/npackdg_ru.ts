@@ -2222,7 +2222,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot open the URL %1</source>
-        <translation>Не удалось открыть URL %1</translation>
+        <translation type="vanished">Не удалось открыть URL %1</translation>
     </message>
     <message>
         <source>Dismiss</source>

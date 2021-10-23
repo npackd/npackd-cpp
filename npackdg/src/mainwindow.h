@@ -334,6 +334,17 @@ public:
      * @return process exit code
      */
     int runGUI(int nCmdShow);
+
+    /**
+     * @brief process messages
+     *
+     * @param hWnd window handle
+     * @param message message
+     * @param wParam first parameter
+     * @param lParam second parameter
+     * @return result
+     */
+    LRESULT windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 protected:
     void changeEvent(QEvent *e);
 
