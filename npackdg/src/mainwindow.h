@@ -154,6 +154,7 @@ private:
     HWND createToolbar(HWND parent);
     void selectTab(int index);
     void addRichTextTab(const QString &title, const QString &rtf);
+    void on_actionToggle_toolbar_triggered();
 public:
     /**
      * @brief layout the main window
@@ -391,7 +392,6 @@ private slots:
     void downloadSizeCompleted(const QString &url,
             int64_t size);
     void on_actionShow_changelog_triggered();
-    void on_actionToggle_toolbar_triggered(bool checked);
     void on_mainToolBar_visibilityChanged(bool visible);
     void monitoredJobCompleted();
     void on_actionRun_triggered();

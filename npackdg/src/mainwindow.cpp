@@ -166,39 +166,21 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     return MainWindow::getInstance()->windowProc(hWnd, message, wParam, lParam);
 }
 
-LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
-    LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR /*dwRefData*/)
-{
-    MainWindow* mw = MainWindow::getInstance();
-    switch(uMsg)
-    {
-        case WM_SIZE:
-        {
-            //mw->layoutTab();
-
-            break;
-        }
-    }
-
-    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
-}
-
 void MainWindow::layoutMainWindow()
 {
     if (tabs != 0 && !IsIconic(window)) {
         RECT r;
         GetClientRect(window, &r);
 
-        RECT tr;
-        GetClientRect(toolbar, &tr);
+        RECT tr = {};
+        if (IsWindowVisible(toolbar)) {
+            GetClientRect(toolbar, &tr);
+            MoveWindow(toolbar, r.left, r.top, r.right - r.left, tr.bottom - r.top, false);
+        }
 
-        MoveWindow(toolbar, r.left, r.top, r.right - r.left, tr.bottom - r.top, false);
-
-        // Resize the tab control to fit the client are of main window.
         MoveWindow(tabs, r.left, tr.bottom, r.right - r.left,
             r.bottom - tr.bottom, false);
 
-        // Resize the tab control to fit the client are of main window.
         MoveWindow(packagesPanel, 5, 20, r.right - r.left - 10,
             r.bottom - tr.bottom - 30, false);
 
@@ -230,8 +212,29 @@ LRESULT CALLBACK MainWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
             case IDM_UPDATE:
                 on_actionUpdate_triggered();
                 break;
+            case IDM_SHOW_DETAILS:
+                on_actionShow_Details_triggered();
+                break;
+            case IDM_SHOW_CHANGELOG:
+                on_actionShow_changelog_triggered();
+                break;
+            case IDM_RUN:
+                on_actionRun_triggered();
+                break;
+            case IDM_OPEN_FOLDER:
+                on_actionOpen_folder_triggered();
+                break;
             case IDM_OPEN_WEB_SITE:
                 on_actionGotoPackageURL_triggered();
+                break;
+            case IDM_TEST_DOWNLOAD_SITE:
+                on_actionTest_Download_Site_triggered();
+                break;
+            case IDM_EXPORT:
+                on_actionExport_triggered();
+                break;
+            case IDM_TOGGLE_TOOLBAR:
+                on_actionToggle_toolbar_triggered();
                 break;
             case IDM_FEEDBACK:
                 on_actionFile_an_Issue_triggered();
@@ -337,6 +340,11 @@ void MainWindow::createMainMenu()
     t_gui_menu_append_item(viewMenu, IDM_CHOOSE_COLUMNS,
         QObject::tr("Choose columns..."), NULL);
     t_gui_menu_append_item(viewMenu, IDM_TOGGLE_TOOLBAR, QObject::tr("Toggle toolbar"), NULL);
+    MENUITEMINFO mii = {};
+    mii.cbSize = sizeof(mii);
+    mii.fMask = MIIM_STATE;
+    mii.fState = MFS_CHECKED;
+    SetMenuItemInfo(viewMenu, IDM_TOGGLE_TOOLBAR, false, &mii);
 
     // Help
     HMENU helpMenu = CreateMenu();
@@ -366,8 +374,6 @@ HWND MainWindow::createTabs(HWND hwndParent)
         WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
         0, 0, rcClient.right, rcClient.bottom,
         hwndParent, NULL, hInst, NULL);
-
-    SetWindowSubclass(w, &tabSubclassProc, 1, reinterpret_cast<DWORD_PTR>(this));
 
     SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
 
@@ -425,7 +431,7 @@ void MainWindow::createMainWindow(int nCmdShow)
     SetMenu(hWnd, mainMenu);
 
     toolbar = createToolbar(hWnd);
-    ShowWindow(toolbar, TRUE);
+    ShowWindow(toolbar, SW_SHOW);
 
     tabs = createTabs(hWnd);
 
@@ -437,7 +443,7 @@ void MainWindow::createMainWindow(int nCmdShow)
     progressPanel = t_gui_create_panel(tabs);
 
     // TODO: icon
-    addTab(progressPanel, genericAppIcon, QObject::tr("Progress"));
+    addTab(progressPanel, genericAppIcon, QObject::tr("0 Jobs"));
 
     layoutMainWindow();
     this->mainFrame->packagesPanelLayout();
@@ -458,16 +464,11 @@ HWND MainWindow::createToolbar(HWND parent)
     HIMAGELIST images = t_gui_create_image_list(32, 32, names,
                                                 T_GUI_COUNT_OF(names));
 
-    // Set the image list.
-    SendMessage(toolbar, TB_SETIMAGELIST, (WPARAM)0, (LPARAM)images);
+    const int ImageListID = 0;
 
-    // Declare and initialize local constants.
-    const int ImageListID    = 0;
+    SendMessage(toolbar, TB_SETIMAGELIST, (WPARAM)ImageListID, (LPARAM)images);
 
     const DWORD buttonStyles = BTNS_AUTOSIZE;
-
-    // Initialize button info.
-    // IDM_NEW, IDM_OPEN, and IDM_SAVE are application-defined command constants.
 
     TBBUTTON tbButtons[] =
     {
@@ -483,7 +484,8 @@ HWND MainWindow::createToolbar(HWND parent)
 
     // Add buttons.
     SendMessage(toolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-    SendMessage(toolbar, TB_ADDBUTTONS,       (WPARAM)T_GUI_COUNT_OF(tbButtons),       (LPARAM)&tbButtons);
+    SendMessage(toolbar, TB_ADDBUTTONS, (WPARAM)T_GUI_COUNT_OF(tbButtons),
+        (LPARAM)&tbButtons);
 
     // Resize the toolbar, and then show it.
     SendMessage(toolbar, TB_AUTOSIZE, 0, 0);
@@ -511,8 +513,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->reloadRepositoriesThreadRunning = false;
 
-    // TODO setWindowTitle("Npackd");
-
     MainWindow::genericAppIcon = QIcon(":/images/app.png");
     MainWindow::waitAppIcon = QIcon(":/images/wait.png");
     this->brokenIcon = QIcon(":/images/broken.png");
@@ -522,20 +522,9 @@ MainWindow::MainWindow(QWidget *parent) :
     updateActions();
 
     // also update packageframe.cpp if adding a new action here
-    /* todo QTableView* t = this->mainFrame->getTableWidget();
-    t->addAction(this->ui->actionInstall);
-    t->addAction(this->ui->actionUninstall);
-    t->addAction(this->ui->actionUpdate);
-    t->addAction(this->ui->actionShow_Details);
-    t->addAction(this->ui->actionShow_changelog);
-    t->addAction(this->ui->actionRun);
-    t->addAction(this->ui->actionOpen_folder);
-    t->addAction(this->ui->actionGotoPackageURL);
-    t->addAction(this->ui->actionTest_Download_Site);
-    t->addAction(this->ui->actionExport);
-
-    t->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+    /* todo
     t->horizontalHeader()->addAction(this->ui->actionChoose_columns);
+    */
 
     connect(&this->fileLoader, SIGNAL(downloadFileCompleted(QString,QString,QString)), this,
             SLOT(downloadCompleted(QString,QString,QString)),
@@ -546,6 +535,7 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(downloadSizeCompleted(QString,qlonglong)),
             Qt::QueuedConnection);
 
+    /* TODO
     // copy toolTip to statusTip for all actions
     for (int i = 0; i < this->children().count(); i++) {
         QObject* ch = this->children().at(i);
@@ -559,12 +549,9 @@ MainWindow::MainWindow(QWidget *parent) :
             SIGNAL(focusChanged(QWidget*, QWidget*)), this,
             SLOT(applicationFocusChanged(QWidget*, QWidget*)));
 
-    this->ui->tabWidget->addTab(mainFrame, QObject::tr("Packages"));
-	QTabBar *tabBar = this->ui->tabWidget->findChild<QTabBar *>();
     tabBar->setTabButton(0, QTabBar::RightSide, nullptr);
     this->loadUISettings();
 
-    this->addJobsTab();
     tabBar->setTabButton(1, QTabBar::RightSide, nullptr);
     connect(VisibleJobs::getDefault(), SIGNAL(changed()),
             this, SLOT(visibleJobsChanged()));
@@ -2066,7 +2053,7 @@ void MainWindow::selectTab(int index)
 {
     TabCtrl_SetCurSel(tabs, index);
     for (int i = 0; i < static_cast<int>(tabPanels.size()); i++) {
-        ShowWindow(tabPanels[i], i == index);
+        ShowWindow(tabPanels[i], i == index ? SW_SHOW : SW_HIDE);
     }
 }
 
@@ -2282,14 +2269,20 @@ void MainWindow::on_actionAbout_triggered()
             "{\\*\\generator Riched20 10.0.17134}\\viewkind4\\uc1 "
             "\\pard\\sa200\\sl276\\slmult1\\f0\\fs22\\lang7 Npackd %1 - software package manager for Windows (R)\\par"
             ""
-            "\\pard{\\pntext\\f1\\'B7\\tab}{\\*\\pn\\pnlvlblt\\pnf1\\pnindent0{\\pntxtb\\'B7}}\\fi-360\\li720\\sa200\\sl276\\slmult1 Home page: {{\\field{\\*\\fldinst{HYPERLINK https://www.npackd.org }}{\\fldrslt{https://www.npackd.org\\ul0\\cf0}}}}\\f0\\fs22\\par"
-            "{\\pntext\\f1\\'B7\\tab}Changelog: {{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov/npackd/wiki/ChangeLog }}{\\fldrslt{https://github.com/tim-lebedkov/npackd/wiki/ChangeLog\\ul0\\cf0}}}}\\f0\\fs22\\par"
-            "{\\pntext\\f1\\'B7\\tab}Documentation: {{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov/npackd/wiki }}{\\fldrslt{https://github.com/tim-lebedkov/npackd/wiki\\ul0\\cf0}}}}\\f0\\fs22\\par"
-            "{\\pntext\\f1\\'B7\\tab}Author: Tim Lebedkov ({\\fs24\\lang1033{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov }}{\\fldrslt{https://github.com/tim-lebedkov\\ul0\\cf0}}}}\\f0\\fs24\\lang1033 )\\fs22\\lang7\\par"
+            "\\pard{\\pntext\\f1\\'B7\\tab}{\\*\\pn\\pnlvlblt\\pnf1\\pnindent0{\\pntxtb\\'B7}}\\fi-360\\li720\\sa200\\sl276\\slmult1 Home page: {{\\field{\\*\\fldinst{HYPERLINK https://www.npackd.org }}"
+            "{\\fldrslt{https://www.npackd.org\\ul0\\cf0}}}}\\f0\\fs22\\par"
+            "{\\pntext\\f1\\'B7\\tab}Changelog: {{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov/npackd/wiki/ChangeLog }}"
+            "{\\fldrslt{https://github.com/tim-lebedkov/npackd/wiki/ChangeLog\\ul0\\cf0}}}}\\f0\\fs22\\par"
+            "{\\pntext\\f1\\'B7\\tab}Documentation: {{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov/npackd/wiki }}"
+            "{\\fldrslt{https://github.com/tim-lebedkov/npackd/wiki\\ul0\\cf0}}}}\\f0\\fs22\\par"
+            "{\\pntext\\f1\\'B7\\tab}Author: Tim Lebedkov ({\\fs24\\lang1033{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov }}"
+            "{\\fldrslt{https://github.com/tim-lebedkov\\ul0\\cf0}}}}\\f0\\fs24\\lang1033 )\\fs22\\lang7\\par"
             ""
             "\\pard\\sa200\\sl276\\slmult1 Contributors:\\par"
             ""
-            "\\pard{\\pntext\\f1\\'B7\\tab}{\\*\\pn\\pnlvlblt\\pnf1\\pnindent0{\\pntxtb\\'B7}}\\fi-360\\li720\\sa200\\sl276\\slmult1 OgreTransporter ({{\\field{\\*\\fldinst{HYPERLINK https://github.com/OgreTransporter }}{\\fldrslt{https://github.com/OgreTransporter\\ul0\\cf0}}}}\\f0\\fs22 ): Visual C++ support, CMake integration, group policy configuration, non-admin installations\\par"
+            "\\pard{\\pntext\\f1\\'B7\\tab}{\\*\\pn\\pnlvlblt\\pnf1\\pnindent0{\\pntxtb\\'B7}}\\fi-360\\li720\\sa200\\sl276\\slmult1 OgreTransporter "
+            "({{\\field{\\*\\fldinst{HYPERLINK https://github.com/OgreTransporter "
+            "}}{\\fldrslt{https://github.com/OgreTransporter\\ul0\\cf0}}}}\\f0\\fs22 ): Visual C++ support, CMake integration, group policy configuration, non-admin installations\\par"
             ""
             "\\pard\\sa200\\sl276\\slmult1\\par"
             "}").arg(NPACKD_VERSION));
@@ -2658,9 +2651,21 @@ void MainWindow::on_actionShow_changelog_triggered()
     }
 }
 
-void MainWindow::on_actionToggle_toolbar_triggered(bool checked)
+void MainWindow::on_actionToggle_toolbar_triggered()
 {
-    // todo this->ui->mainToolBar->setVisible(checked);
+    MENUITEMINFO mii = {};
+    mii.cbSize = sizeof(mii);
+    mii.fMask = MIIM_STATE;
+    GetMenuItemInfo(mainMenu, IDM_TOGGLE_TOOLBAR, false, &mii);
+    ShowWindow(toolbar, mii.fState & MFS_CHECKED ? SW_HIDE : SW_SHOW);
+
+    mii.fState ^= MFS_CHECKED;
+    SetMenuItemInfo(mainMenu, IDM_TOGGLE_TOOLBAR, false, &mii);
+
+    layoutMainWindow();
+
+    // the window is not updated otherwise unfortunately
+    InvalidateRect(window, NULL, TRUE);
 }
 
 void MainWindow::on_mainToolBar_visibilityChanged(bool visible)
