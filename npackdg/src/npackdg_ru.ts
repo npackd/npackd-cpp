@@ -3350,10 +3350,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Home page (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Changelog&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Documentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Author: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Contributors:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ support, CMake integration, group policy configuration, non-admin installations&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Choose installation directory</source>
         <translation type="unfinished"></translation>
     </message>

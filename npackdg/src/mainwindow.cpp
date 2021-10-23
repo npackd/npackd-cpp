@@ -11,6 +11,7 @@
 #include <windowsx.h>
 #include <shlobj.h>
 #include <shobjidl.h>
+#include <richedit.h>
 
 #include <QApplication>
 #include <QTimer>
@@ -2275,21 +2276,23 @@ void MainWindow::on_actionTest_Download_Site_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    addTextTab(QObject::tr("About"), QString(
-            QObject::tr("<html><body>Npackd %1 - "
-            "software package manager for Windows (R)"
-            "<ul>"
-            "<li><a href='https://www.npackd.org/'>Home page (https://www.npackd.org)</a></li>"
-            "<li><a href='https://github.com/tim-lebedkov/npackd/wiki/ChangeLog'>Changelog</a></li>"
-            "<li><a href='https://github.com/tim-lebedkov/npackd/wiki'>Documentation</a></li>"
-            "<li>Author: <a href='https://github.com/tim-lebedkov'>Tim Lebedkov</a></li>"
-            "</ul>"
-            "Contributors:"
-            "<ul>"
-            "<li><a href='https://github.com/OgreTransporter'>OgreTransporter</a>: Visual C++ support, CMake integration, group policy configuration, non-admin installations</li>"
-            "</ul>"
-            "</body></html>")).
-            arg(NPACKD_VERSION), true);
+    addRichTextTab(QObject::tr("About"), QString(
+            "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}{\\f1\\fnil\\fcharset2 Symbol;}}"
+            "{\\colortbl ;\\red0\\green0\\blue255;}"
+            "{\\*\\generator Riched20 10.0.17134}\\viewkind4\\uc1 "
+            "\\pard\\sa200\\sl276\\slmult1\\f0\\fs22\\lang7 Npackd %1 - software package manager for Windows (R)\\par"
+            ""
+            "\\pard{\\pntext\\f1\\'B7\\tab}{\\*\\pn\\pnlvlblt\\pnf1\\pnindent0{\\pntxtb\\'B7}}\\fi-360\\li720\\sa200\\sl276\\slmult1 Home page: {{\\field{\\*\\fldinst{HYPERLINK https://www.npackd.org }}{\\fldrslt{https://www.npackd.org\\ul0\\cf0}}}}\\f0\\fs22\\par"
+            "{\\pntext\\f1\\'B7\\tab}Changelog: {{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov/npackd/wiki/ChangeLog }}{\\fldrslt{https://github.com/tim-lebedkov/npackd/wiki/ChangeLog\\ul0\\cf0}}}}\\f0\\fs22\\par"
+            "{\\pntext\\f1\\'B7\\tab}Documentation: {{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov/npackd/wiki }}{\\fldrslt{https://github.com/tim-lebedkov/npackd/wiki\\ul0\\cf0}}}}\\f0\\fs22\\par"
+            "{\\pntext\\f1\\'B7\\tab}Author: Tim Lebedkov ({\\fs24\\lang1033{\\field{\\*\\fldinst{HYPERLINK https://github.com/tim-lebedkov }}{\\fldrslt{https://github.com/tim-lebedkov\\ul0\\cf0}}}}\\f0\\fs24\\lang1033 )\\fs22\\lang7\\par"
+            ""
+            "\\pard\\sa200\\sl276\\slmult1 Contributors:\\par"
+            ""
+            "\\pard{\\pntext\\f1\\'B7\\tab}{\\*\\pn\\pnlvlblt\\pnf1\\pnindent0{\\pntxtb\\'B7}}\\fi-360\\li720\\sa200\\sl276\\slmult1 OgreTransporter ({{\\field{\\*\\fldinst{HYPERLINK https://github.com/OgreTransporter }}{\\fldrslt{https://github.com/OgreTransporter\\ul0\\cf0}}}}\\f0\\fs22 ): Visual C++ support, CMake integration, group policy configuration, non-admin installations\\par"
+            ""
+            "\\pard\\sa200\\sl276\\slmult1\\par"
+            "}").arg(NPACKD_VERSION));
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
@@ -2305,24 +2308,27 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     updateActions();
 }
 
-void MainWindow::addTextTab(const QString& title, const QString& text,
-        bool html)
+void MainWindow::addTextTab(const QString& title, const QString& text)
 {
     HWND w = t_gui_create_text_area(tabs, 0);
     Edit_SetText(w, WPMUtils::toLPWSTR(text));
     Edit_SetReadOnly(w, true);
 
     addTab(w, genericAppIcon, title); // TODO: icon
+}
 
-    /* todo QWidget* w;
-    if (html) {
-        QTextBrowser* te = new QTextBrowser(this->ui->tabWidget);
-        te->setReadOnly(true);
-        te->setHtml(text);
-        te->setOpenExternalLinks(true);
-        w = te;
-    }
-    */
+void MainWindow::addRichTextTab(const QString& title, const QString& rtf)
+{
+    HWND w = t_gui_create_rich_edit(tabs);
+
+    SETTEXTEX r = {};
+    r.flags = ST_UNICODE;
+    r.codepage = CP_WINUNICODE;
+    SendMessage(w, EM_SETTEXTEX, (WPARAM) &r, (LPARAM) WPMUtils::toLPWSTR(rtf));
+
+    Edit_SetReadOnly(w, true);
+
+    addTab(w, genericAppIcon, title); // TODO: icon
 }
 
 void MainWindow::addJobsTab()

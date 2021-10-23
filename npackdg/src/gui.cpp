@@ -2,6 +2,7 @@
 
 #include <commctrl.h>
 #include <windowsx.h>
+#include <richedit.h>
 #include <gdiplus.h>
 
 #include "wpmutils.h"
@@ -12,6 +13,9 @@ HFONT defaultFont;
 
 void t_gui_init()
 {
+    // RichEdit
+    LoadLibrary(TEXT("Msftedit.dll"));
+
     // Initialize common controls.
     INITCOMMONCONTROLSEX icex = {};
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -273,4 +277,13 @@ void t_gui_menu_item_enable(HMENU menu, UINT_PTR id, bool enable) {
 void t_gui_open_url(LPCWSTR url)
 {
     ShellExecute(NULL, L"open", url, NULL, NULL, SW_SHOWNORMAL);
+}
+
+HWND t_gui_create_rich_edit(HWND hwndOwner)
+{
+    HWND hwndEdit = CreateWindowEx(0, MSFTEDIT_CLASS, L"",
+        ES_MULTILINE | WS_VISIBLE | WS_CHILD | WS_BORDER | WS_TABSTOP,
+        0, 0, 100, 100, hwndOwner, NULL, hInst, NULL);
+
+    return hwndEdit;
 }

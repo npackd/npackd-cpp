@@ -153,6 +153,7 @@ private:
 
     HWND createToolbar(HWND parent);
     void selectTab(int index);
+    void addRichTextTab(const QString &title, const QString &rtf);
 public:
     /**
      * @brief layout the main window
@@ -244,9 +245,8 @@ public:
      *
      * @param title tab title
      * @param text the text
-     * @param html true = HTML, false = plain text
      */
-    void addTextTab(const QString& title, const QString& text, bool html=false);
+    void addTextTab(const QString& title, const QString& text);
 
     bool nativeEvent(const QByteArray & eventType, void * message, long * result);
 

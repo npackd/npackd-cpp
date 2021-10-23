@@ -163,4 +163,11 @@ void t_gui_open_url(LPCWSTR url);
  */
 HWND t_gui_create_text_area(HWND hParent, int id);
 
+/**
+ * @brief creates a rich edit control
+ * @param hwndOwner parent window
+ * @return handle
+ */
+HWND t_gui_create_rich_edit(HWND hwndOwner);
+
 #endif // GUI_H
