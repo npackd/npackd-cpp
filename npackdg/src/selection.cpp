@@ -1,3 +1,5 @@
+#include <windows.h>
+
 #include "selection.h"
 
 #include <QWidget>
@@ -13,13 +15,14 @@ Selection::~Selection()
 
 Selection* Selection::findCurrent()
 {
-    QWidget* w = QApplication::focusWidget();
+    HWND w = GetFocus();
     Selection* ret = nullptr;
     while (w) {
-        ret = dynamic_cast<Selection*>(w);
+        LONG_PTR p = GetWindowLongPtr(w, GWLP_USERDATA);
+        ret = dynamic_cast<Selection*>(reinterpret_cast<QObject*>(p));
         if (ret)
             break;
-        w = w->parentWidget();
+        w = GetParent(w);
     }
     return ret;
 }

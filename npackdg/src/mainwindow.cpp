@@ -318,9 +318,10 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     return 0;
 }
 
-HMENU MainWindow::createMainMenu()
+void MainWindow::createMainMenu()
 {
-    HMENU packageMenu = CreateMenu();
+    // Package
+    packageMenu = CreateMenu();
     t_gui_menu_append_item(packageMenu, IDM_INSTALL, QObject::tr("&Install"),
                            t_gui_load_png_resource(L"install16_png"));
     t_gui_menu_append_item(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"),
@@ -349,26 +350,27 @@ HMENU MainWindow::createMainMenu()
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
     t_gui_menu_append_item(packageMenu, IDM_EXIT, QObject::tr("&Exit"), NULL);
 
+    // View
     HMENU viewMenu = CreateMenu();
     t_gui_menu_append_item(viewMenu, IDM_CLOSE_TAB, QObject::tr("Close tab"), NULL);
     t_gui_menu_append_item(viewMenu, IDM_CHOOSE_COLUMNS,
         QObject::tr("Choose columns..."), NULL);
     t_gui_menu_append_item(viewMenu, IDM_TOGGLE_TOOLBAR, QObject::tr("Toggle toolbar"), NULL);
 
+    // Help
     HMENU helpMenu = CreateMenu();
     t_gui_menu_append_item(helpMenu, IDM_FEEDBACK, QObject::tr("Feedback"),
                            t_gui_load_png_resource(L"fileissue16_png"));
     AppendMenu(helpMenu, MF_STRING, IDM_ABOUT, L"About");
 
-    HMENU hmenuMain = CreateMenu();
-    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) packageMenu,
+    // Main
+    this->mainMenu = CreateMenu();
+    AppendMenu(this->mainMenu, MF_STRING | MF_POPUP, (UINT_PTR) packageMenu,
         WPMUtils::toLPWSTR(QObject::tr("Package")));
-    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) viewMenu,
+    AppendMenu(this->mainMenu, MF_STRING | MF_POPUP, (UINT_PTR) viewMenu,
         WPMUtils::toLPWSTR(QObject::tr("View")));
-    AppendMenu(hmenuMain, MF_STRING | MF_POPUP, (UINT_PTR) helpMenu,
+    AppendMenu(this->mainMenu, MF_STRING | MF_POPUP, (UINT_PTR) helpMenu,
         WPMUtils::toLPWSTR(QObject::tr("Help")));
-
-    return hmenuMain;
 }
 
 HWND MainWindow::createTab(HWND hwndParent)
@@ -449,7 +451,8 @@ void MainWindow::createMainWindow(int nCmdShow)
 
     window = hWnd;
 
-    SetMenu(hWnd, createMainMenu());
+    createMainMenu();
+    SetMenu(hWnd, mainMenu);
 
     toolbar = createToolbar(hWnd);
     ShowWindow(toolbar,  TRUE);
@@ -461,6 +464,8 @@ void MainWindow::createMainWindow(int nCmdShow)
     layoutMainWindow();
     layoutTab();
     this->mainFrame->packagesPanelLayout();
+
+    SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR) this);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -489,14 +494,14 @@ HWND MainWindow::createToolbar(HWND parent)
 
     TBBUTTON tbButtons[] =
     {
-        { MAKELONG(0,  ImageListID), 1/*IDM_NEW*/,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Install" },
-        { MAKELONG(1, ImageListID), 2/*IDM_OPEN*/, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Uninstall"},
-        { MAKELONG(2, ImageListID), 3/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Update"},
+        { MAKELONG(0,  ImageListID), IDM_INSTALL,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Install" },
+        { MAKELONG(1, ImageListID), IDM_UNINSTALL, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Uninstall"},
+        { MAKELONG(2, ImageListID), IDM_UPDATE, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Update"},
         { 6, 0, 0,  BTNS_SEP, {0}, 0, NULL},
-        { MAKELONG(3, ImageListID), 4/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Open web site"},
+        { MAKELONG(3, ImageListID), IDM_OPEN_WEB_SITE, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Open web site"},
         { 6, 0, 0,  BTNS_SEP, {0}, 0, NULL},
-        { MAKELONG(4, ImageListID), 5/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Feedback"},
-        { MAKELONG(5, ImageListID), 6/*IDM_SAVE*/, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Add package"}
+        { MAKELONG(4, ImageListID), IDM_FEEDBACK, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Feedback"},
+        { MAKELONG(5, ImageListID), IDM_ADD_PACKAGE, TBSTATE_ENABLED,buttonStyles, {0}, 0, (INT_PTR)L"Add package"}
     };
 
     // Add buttons.
@@ -1495,7 +1500,8 @@ void MainWindow::updateInstallAction()
         }
     }
 
-    // TODO this->ui->actionInstall->setEnabled(enabled);
+    t_gui_menu_item_enable(this->packageMenu, IDM_INSTALL, enabled);
+    t_gui_toolbar_item_enable(this->toolbar, IDM_INSTALL, enabled);
 }
 
 void MainWindow::updateExportAction()
@@ -1632,8 +1638,9 @@ void MainWindow::updateUninstallAction()
             }
         }
     }
-    // TODO this->ui->actionUninstall->setEnabled(enabled);
-    // qCDebug(npackd) << "MainWindow::updateUninstallAction end " << enabled;
+
+    t_gui_menu_item_enable(this->packageMenu, IDM_UNINSTALL, enabled);
+    t_gui_toolbar_item_enable(this->toolbar, IDM_UNINSTALL, enabled);
 }
 
 void MainWindow::updateUpdateAction()
@@ -1667,7 +1674,9 @@ void MainWindow::updateUpdateAction()
             }
         }
     }
-    // TODO this->ui->actionUpdate->setEnabled(enabled);
+
+    t_gui_menu_item_enable(this->packageMenu, IDM_UPDATE, enabled);
+    t_gui_toolbar_item_enable(this->toolbar, IDM_UPDATE, enabled);
 }
 
 void MainWindow::updateReloadRepositoriesAction()
@@ -1732,7 +1741,7 @@ void MainWindow::updateTestDownloadSiteAction()
         }
     }
 
-    // TODO this->ui->actionTest_Download_Site->setEnabled(enabled);
+    t_gui_menu_item_enable(this->packageMenu, IDM_TEST_DOWNLOAD_SITE, enabled);
 }
 
 void MainWindow::updateShowChangelogAction()
@@ -1869,7 +1878,8 @@ void MainWindow::updateGotoPackageURLAction()
         }
     }
 
-    // TODO this->ui->actionGotoPackageURL->setEnabled(enabled);
+    t_gui_menu_item_enable(this->packageMenu, IDM_OPEN_WEB_SITE, enabled);
+    t_gui_toolbar_item_enable(this->toolbar, IDM_OPEN_WEB_SITE, enabled);
 }
 
 void MainWindow::closeDetailTabs()

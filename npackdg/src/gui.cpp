@@ -249,3 +249,11 @@ HIMAGELIST t_gui_create_image_list(int cx, int cy, LPCWSTR* pngs, int count)
 
     return images;
 }
+
+void t_gui_toolbar_item_enable(HWND toolbar, UINT_PTR id, bool enable) {
+    SendMessage(toolbar, TB_ENABLEBUTTON, id, MAKELONG(enable ? 1 : 0, 0));
+}
+
+void t_gui_menu_item_enable(HMENU menu, UINT_PTR id, bool enable) {
+    EnableMenuItem(menu, id, MF_BYCOMMAND | (enable ? MF_ENABLED : MF_DISABLED));
+}

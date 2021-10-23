@@ -75,6 +75,9 @@ private:
     /** panel for packages */
     HWND packagesPanel;
 
+    HMENU mainMenu;
+    HMENU packageMenu;
+
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
             const Version& version) const;
@@ -134,7 +137,7 @@ private:
      * @brief create the main menu
      * @return menu handle
      */
-    HMENU createMainMenu();
+    void createMainMenu();
 
     /**
      * @brief Creates a tab control, sized to fit the specified parent window's client

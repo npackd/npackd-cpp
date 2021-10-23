@@ -66,7 +66,8 @@ SIZE t_gui_get_preferred_size(HWND window);
 /**
  * @brief appends a new menu item
  * @param menu menu handle
- * @param id command Id
+ * @param id command Id. Command IDs must be below 0xF000 because
+ * the command IDs for the system are greater equal 0xF000.
  * @param title title
  * @param bitmap the bitmap that should be used or NULL
  */
@@ -131,5 +132,21 @@ HWND t_gui_create_toolbar(HWND hWndParent);
  * @return handle
  */
 HIMAGELIST t_gui_create_image_list(int cx, int cy, LPCWSTR* pngs, int count);
+
+/**
+ * @brief enables or disables a toolbar button
+ * @param toolbar toolbar
+ * @param id button ID
+ * @param enable true = enable
+ */
+void t_gui_toolbar_item_enable(HWND toolbar, UINT_PTR id, bool enable);
+
+/**
+ * @brief enables or disables a menu item
+ * @param menu main menu or a sub-menu where the item resides
+ * @param id item ID
+ * @param enable true = enable
+ */
+void t_gui_menu_item_enable(HMENU menu, UINT_PTR id, bool enable);
 
 #endif // GUI_H

@@ -207,6 +207,8 @@ HWND MainFrame::createPackagesPanel(HWND parent)
 
     this->packagesPanel = result;
 
+    SetWindowLongPtr(result, GWLP_USERDATA, (LONG_PTR) this);
+
     return result;
 }
 
