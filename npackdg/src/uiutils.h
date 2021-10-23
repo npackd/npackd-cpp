@@ -19,7 +19,7 @@ private:
     static QString createPackageVersionsHTML(const std::vector<QString> &names);
 public:
     /** size of an icon in the UI */
-    static const int ICON_SIZE = 32;
+    static const int  ICON_SIZE = 32;
 
     /**
      * @brief processes the specified operations by copying this executable to a
@@ -30,7 +30,7 @@ public:
      * @param programCloseType how to close processes
      */
     static void processWithSelfUpdate(Job *job,
-            std::vector<InstallOperation *> &install, DWORD programCloseType);
+        std::vector<InstallOperation *> &install, DWORD programCloseType);
 
     /**
      * Shows a confirmation dialog.
@@ -42,7 +42,7 @@ public:
      *     not HTML)
      */
     static bool confirm(QWidget* parent, QString title, QString text,
-            QString detailedText);
+        QString detailedText);
 
     /**
      * @brief confirms the specified operations
@@ -53,7 +53,7 @@ public:
      * @return true = confirmed
      */
     static bool confirmInstallOperations(QWidget *parent,
-            std::vector<InstallOperation *> &install, QString *title, QString *err);
+        std::vector<InstallOperation *> &install, QString *title, QString *err);
 
     /**
      * @brief choose the accelerators automatically
@@ -61,7 +61,7 @@ public:
      * @param ignore lower case characters that should be ignored
      */
     static void chooseAccelerators(std::vector<QString>* titles,
-            const QString &ignore=QString());
+        const QString &ignore=QString());
 
     /**
      * @brief choose the accelerators automatically

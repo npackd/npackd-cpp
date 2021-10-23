@@ -2017,7 +2017,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Packages</source>
-        <translation type="vanished">Paquetes</translation>
+        <translation>Paquetes</translation>
     </message>
     <message>
         <source>Cannot exit while jobs are running</source>

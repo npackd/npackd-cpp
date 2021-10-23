@@ -45,6 +45,18 @@ HWND t_gui_create_edit(HWND hParent, int id)
     return w;
 }
 
+HWND t_gui_create_text_area(HWND hParent, int id)
+{
+    HWND w = CreateWindow(WC_EDIT, NULL,
+        WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT |
+        ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN ,
+        0, 0, 100, CW_USEDEFAULT,
+        hParent, reinterpret_cast<HMENU>(id), hInst, NULL);
+    SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
+
+    return w;
+}
+
 SIZE t_gui_get_preferred_size(HWND window)
 {
     SIZE r = {.cx = 100, .cy = 100};

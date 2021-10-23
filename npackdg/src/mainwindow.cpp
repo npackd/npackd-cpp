@@ -173,7 +173,7 @@ LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     {
         case WM_SIZE:
         {
-            mw->layoutTab();
+            //mw->layoutTab();
 
             break;
         }
@@ -182,23 +182,9 @@ LRESULT CALLBACK tabSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 }
 
-void MainWindow::layoutTab()
-{
-    if (!IsIconic(this->window)) {
-        RECT r;
-        GetClientRect(tabs, &r);
-
-        TabCtrl_AdjustRect(tabs, FALSE, &r);
-
-        // Resize the tab control to fit the client are of main window.
-        MoveWindow(packagesPanel, r.left, r.top,
-            r.right - r.left, r.bottom - r.top, FALSE);
-    }
-}
-
 void MainWindow::layoutMainWindow()
 {
-    if (tabs != 0) {
+    if (tabs != 0 && !IsIconic(window)) {
         RECT r;
         GetClientRect(window, &r);
 
@@ -210,6 +196,19 @@ void MainWindow::layoutMainWindow()
         // Resize the tab control to fit the client are of main window.
         MoveWindow(tabs, r.left, tr.bottom, r.right - r.left,
             r.bottom - tr.bottom, false);
+
+        // Resize the tab control to fit the client are of main window.
+        MoveWindow(packagesPanel, 5, 20, r.right - r.left - 10,
+            r.bottom - tr.bottom - 30, false);
+
+        GetClientRect(tabs, &r);
+
+        TabCtrl_AdjustRect(tabs, FALSE, &r);
+
+        for (int i = 0; i < static_cast<int>(tabPanels.size()); i++) {
+            MoveWindow(tabPanels[i], r.left, r.top,
+                r.right - r.left, r.bottom - r.top, FALSE);
+        }
     }
 }
 
@@ -240,7 +239,7 @@ LRESULT CALLBACK MainWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
                 on_actionAdd_package_triggered();
                 break;
             case IDM_ABOUT:
-                MessageBox(hWnd, L"hello", L"Caption", MB_OK);
+                on_actionAbout_triggered();
                 break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
@@ -285,12 +284,8 @@ LRESULT CALLBACK MainWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
 
                 case TCN_SELCHANGE:
                 {
-                    // int iPage = TabCtrl_GetCurSel(hwndTab);
-
-                    // Note that g_hInst is the global instance handle.
-                    MessageBox(hWnd, L"changed", L"Caption", MB_OK);
-                    /*SendMessage(hwndDisplay, WM_SETTEXT, 0,
-                        (LPARAM) L"test!!!");*/
+                    int iPage = TabCtrl_GetCurSel(tabs);
+                    selectTab(iPage);
                     break;
                 }
             }
@@ -306,7 +301,7 @@ LRESULT CALLBACK MainWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
 void MainWindow::createMainMenu()
 {
     // Package
-    packageMenu = CreateMenu();
+    HMENU packageMenu = CreateMenu();
     t_gui_menu_append_item(packageMenu, IDM_INSTALL, QObject::tr("&Install"),
                            t_gui_load_png_resource(L"install16_png"));
     t_gui_menu_append_item(packageMenu, IDM_UNINSTALL, QObject::tr("U&ninstall"),
@@ -320,7 +315,7 @@ void MainWindow::createMainMenu()
     t_gui_menu_append_item(packageMenu, IDM_RUN, QObject::tr("Run"), NULL);
     t_gui_menu_append_item(packageMenu, IDM_OPEN_FOLDER, QObject::tr("Open folder"), NULL);
     t_gui_menu_append_item(packageMenu, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"),
-                           t_gui_load_png_resource(L"gotosite16_png"));
+                t_gui_load_png_resource(L"gotosite16_png"));
     t_gui_menu_append_item(packageMenu, IDM_TEST_DOWNLOAD_SITE,
         QObject::tr("&Test download site"), NULL);
     AppendMenu(packageMenu, MF_SEPARATOR, (UINT_PTR) nullptr, nullptr);
@@ -358,7 +353,7 @@ void MainWindow::createMainMenu()
         WPMUtils::toLPWSTR(QObject::tr("Help")));
 }
 
-HWND MainWindow::createTab(HWND hwndParent)
+HWND MainWindow::createTabs(HWND hwndParent)
 {
     RECT rcClient;
 
@@ -370,17 +365,6 @@ HWND MainWindow::createTab(HWND hwndParent)
         WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
         0, 0, rcClient.right, rcClient.bottom,
         hwndParent, NULL, hInst, NULL);
-
-    // Add tabs for each day of the week.
-    TCITEM tie;
-    tie.mask = TCIF_TEXT | TCIF_IMAGE;
-    tie.iImage = -1;
-
-    tie.pszText = const_cast<LPWSTR>(L"Packages");
-    TabCtrl_InsertItem(w, 0, &tie);
-
-    tie.pszText = const_cast<LPWSTR>(L"Jobs");
-    TabCtrl_InsertItem(w, 1, &tie);
 
     SetWindowSubclass(w, &tabSubclassProc, 1, reinterpret_cast<DWORD_PTR>(this));
 
@@ -440,14 +424,21 @@ void MainWindow::createMainWindow(int nCmdShow)
     SetMenu(hWnd, mainMenu);
 
     toolbar = createToolbar(hWnd);
-    ShowWindow(toolbar,  TRUE);
+    ShowWindow(toolbar, TRUE);
 
-    tabs = createTab(hWnd);
+    tabs = createTabs(hWnd);
 
     packagesPanel = this->mainFrame->createPackagesPanel(tabs);
 
+    // TODO: icon
+    addTab(packagesPanel, genericAppIcon, QObject::tr("Packages"));
+
+    progressPanel = t_gui_create_panel(tabs);
+
+    // TODO: icon
+    addTab(progressPanel, genericAppIcon, QObject::tr("Progress"));
+
     layoutMainWindow();
-    layoutTab();
     this->mainFrame->packagesPanelLayout();
 
     SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR) this);
@@ -1483,7 +1474,7 @@ void MainWindow::updateInstallAction()
         }
     }
 
-    t_gui_menu_item_enable(this->packageMenu, IDM_INSTALL, enabled);
+    t_gui_menu_item_enable(this->mainMenu, IDM_INSTALL, enabled);
     t_gui_toolbar_item_enable(this->toolbar, IDM_INSTALL, enabled);
 }
 
@@ -1622,7 +1613,7 @@ void MainWindow::updateUninstallAction()
         }
     }
 
-    t_gui_menu_item_enable(this->packageMenu, IDM_UNINSTALL, enabled);
+    t_gui_menu_item_enable(this->mainMenu, IDM_UNINSTALL, enabled);
     t_gui_toolbar_item_enable(this->toolbar, IDM_UNINSTALL, enabled);
 }
 
@@ -1658,7 +1649,7 @@ void MainWindow::updateUpdateAction()
         }
     }
 
-    t_gui_menu_item_enable(this->packageMenu, IDM_UPDATE, enabled);
+    t_gui_menu_item_enable(this->mainMenu, IDM_UPDATE, enabled);
     t_gui_toolbar_item_enable(this->toolbar, IDM_UPDATE, enabled);
 }
 
@@ -1687,7 +1678,7 @@ void MainWindow::updateActionShowDetailsAction()
         enabled = selected.size() > 0;
     }
 
-    t_gui_menu_item_enable(this->packageMenu, IDM_SHOW_DETAILS, enabled);
+    t_gui_menu_item_enable(this->mainMenu, IDM_SHOW_DETAILS, enabled);
 }
 
 void MainWindow::updateTestDownloadSiteAction()
@@ -1724,7 +1715,7 @@ void MainWindow::updateTestDownloadSiteAction()
         }
     }
 
-    t_gui_menu_item_enable(this->packageMenu, IDM_TEST_DOWNLOAD_SITE, enabled);
+    t_gui_menu_item_enable(this->mainMenu, IDM_TEST_DOWNLOAD_SITE, enabled);
 }
 
 void MainWindow::updateShowChangelogAction()
@@ -1766,7 +1757,7 @@ void MainWindow::updateShowChangelogAction()
         }
     }
 
-    t_gui_menu_item_enable(this->packageMenu, IDM_SHOW_CHANGELOG, enabled);
+    t_gui_menu_item_enable(this->mainMenu, IDM_SHOW_CHANGELOG, enabled);
 }
 
 void MainWindow::updateRunAction()
@@ -1861,7 +1852,7 @@ void MainWindow::updateGotoPackageURLAction()
         }
     }
 
-    t_gui_menu_item_enable(this->packageMenu, IDM_OPEN_WEB_SITE, enabled);
+    t_gui_menu_item_enable(this->mainMenu, IDM_OPEN_WEB_SITE, enabled);
     t_gui_toolbar_item_enable(this->toolbar, IDM_OPEN_WEB_SITE, enabled);
 }
 
@@ -2070,11 +2061,33 @@ void MainWindow::openPackage(const QString& package, bool select)
         */
 }
 
-void MainWindow::addTab(QWidget* w, const QIcon& icon, const QString& title)
+void MainWindow::selectTab(int index)
 {
-/* todo
+    TabCtrl_SetCurSel(tabs, index);
+    for (int i = 0; i < static_cast<int>(tabPanels.size()); i++) {
+        ShowWindow(tabPanels[i], i == index);
+    }
+}
+
+void MainWindow::addTab(HWND w, const QIcon& icon, const QString& title)
+{
+    // Add tabs for each day of the week.
+    TCITEM tie;
+    tie.mask = TCIF_TEXT | TCIF_IMAGE;
+    tie.iImage = -1;
+
+    tie.pszText = const_cast<LPWSTR>(WPMUtils::toLPWSTR(title));
+    int n = TabCtrl_GetItemCount(tabs);
+    TabCtrl_InsertItem(tabs, n, &tie);
+
+    tabPanels.push_back(w);
+
+    selectTab(n);
+
+    layoutMainWindow();
+
+    /* todo
     this->ui->tabWidget->addTab(w, icon, title);
-    this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);
     */
 }
 
@@ -2295,6 +2308,12 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 void MainWindow::addTextTab(const QString& title, const QString& text,
         bool html)
 {
+    HWND w = t_gui_create_text_area(tabs, 0);
+    Edit_SetText(w, WPMUtils::toLPWSTR(text));
+    Edit_SetReadOnly(w, true);
+
+    addTab(w, genericAppIcon, title); // TODO: icon
+
     /* todo QWidget* w;
     if (html) {
         QTextBrowser* te = new QTextBrowser(this->ui->tabWidget);
@@ -2302,14 +2321,7 @@ void MainWindow::addTextTab(const QString& title, const QString& text,
         te->setHtml(text);
         te->setOpenExternalLinks(true);
         w = te;
-    } else {
-        QTextEdit* te = new QTextEdit(this->ui->tabWidget);
-        te->setReadOnly(true);
-        te->setText(text);
-        w = te;
     }
-    this->ui->tabWidget->addTab(w, title);
-    this->ui->tabWidget->setCurrentIndex(this->ui->tabWidget->count() - 1);
     */
 }
 

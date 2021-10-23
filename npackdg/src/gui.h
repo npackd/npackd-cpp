@@ -155,4 +155,12 @@ void t_gui_menu_item_enable(HMENU menu, UINT_PTR id, bool enable);
  */
 void t_gui_open_url(LPCWSTR url);
 
+/**
+ * @brief creates a multi-line text area
+ * @param hParent parent window
+ * @param id control ID
+ * @return handle
+ */
+HWND t_gui_create_text_area(HWND hParent, int id);
+
 #endif // GUI_H

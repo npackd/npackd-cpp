@@ -1884,7 +1884,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Packages</source>
-        <translation type="vanished">Paquets</translation>
+        <translation>Paquets</translation>
     </message>
     <message>
         <source>Cannot exit while jobs are running</source>

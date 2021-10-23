@@ -72,11 +72,15 @@ private:
 
     HWND toolbar;
 
+    std::vector<HWND> tabPanels;
+
     /** panel for packages */
     HWND packagesPanel;
 
+    /** panel for progress */
+    HWND progressPanel;
+
     HMENU mainMenu;
-    HMENU packageMenu;
 
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
@@ -145,19 +149,15 @@ private:
      * @param hwndParent parent window (the application's main window)
      * @return handle to the tab control
      */
-    HWND createTab(HWND hwndParent);
+    HWND createTabs(HWND hwndParent);
 
     HWND createToolbar(HWND parent);
+    void selectTab(int index);
 public:
     /**
      * @brief layout the main window
      */
     void layoutMainWindow();
-
-    /**
-     * @brief layout the tabs inside of the main window
-     */
-    void layoutTab();
 
     /**
      * Adds an entry in the "Progress" tab and monitors a task. The thread
@@ -275,7 +275,7 @@ public:
      * @param icon tab icon
      * @param title tab title
      */
-    void addTab(QWidget* w, const QIcon& icon, const QString& title);
+    void addTab(HWND w, const QIcon& icon, const QString& title);
 
     /**
      * @brief opens a new tab for the specified package version. A new tab will
