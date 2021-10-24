@@ -22,6 +22,13 @@
 /** ID of the edit filter control. 8 is the first valid Id. */
 #define ID_EDIT_FILTER 8
 
+LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR dwRefData)
+{
+    MainFrame* mf = reinterpret_cast<MainFrame*>(dwRefData);
+    return mf->windowProc(hWnd, uMsg, wParam, lParam);
+}
+
 MainFrame::MainFrame(QWidget *parent) :
     QObject(parent), Selection(), obsoleteBrush(QColor(255, 0xc7, 0xc7)),
     maxStars(-1)
@@ -73,10 +80,9 @@ int MainFrame::getStatusFilter() const
     return r;
 }
 
-LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
-    LPARAM lParam, UINT_PTR /*uIdSubclass*/, DWORD_PTR dwRefData)
+LRESULT CALLBACK MainFrame::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam)
 {
-    MainFrame* mf = reinterpret_cast<MainFrame*>(dwRefData);
     MainWindow* mw = MainWindow::getInstance();
 
     switch(uMsg)
@@ -90,13 +96,14 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                     NMLVDISPINFO* pnmv = (NMLVDISPINFO*) lParam;
                     if (pnmv->item.iItem < 0 || // typo fixed 11am
                             pnmv->item.iItem >= static_cast<int>(
-                            mf->getRowCount())) {
+                            getRowCount())) {
                         return E_FAIL;         // requesting invalid item
                     }
 
                     LPWSTR pszResult;
                     if (pnmv->item.mask & LVIF_TEXT) {
-                        pnmv->item.pszText = WPMUtils::toLPWSTR(mf->getCellText(pnmv->item.iItem, pnmv->item.iSubItem));
+                        pnmv->item.pszText = WPMUtils::toLPWSTR(
+                            getCellText(pnmv->item.iItem, pnmv->item.iSubItem));
                     }
                     if (pnmv->item.mask & LVIF_IMAGE) {
                         pnmv->item.iImage = -1;
@@ -107,22 +114,39 @@ LRESULT CALLBACK packagesPanelSubclassProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                     break;
                 }
                 case LVN_ITEMCHANGED:{
-                    mf->tableWidget_selectionChanged();
+                    tableWidget_selectionChanged();
                 }
             }
             break;
         }
         case WM_SIZE:
         {
-            mf->packagesPanelLayout();
+            packagesPanelLayout();
             break;
         }
         case WM_COMMAND:
         {
-            if (LOWORD(wParam) == ID_EDIT_FILTER && HIWORD(wParam) == EN_CHANGE) {
-                mw->fillList();
+            int wmId = LOWORD(wParam);
+
+            switch (wmId) {
+                case ID_EDIT_FILTER: {
+                    if (HIWORD(wParam) == EN_CHANGE) {
+                        mw->fillList();
+                    }
+                    break;
+                }
+                default:
+                    mw->windowProc(mw->window, uMsg, wParam, lParam);
             }
-            mf->packagesPanelLayout();
+
+            break;
+        }
+        case WM_CONTEXTMENU:
+        {
+            int xPos = GET_X_LPARAM(lParam);
+            int yPos = GET_Y_LPARAM(lParam);
+
+            contextMenu(xPos, yPos);
             break;
         }
     }
@@ -309,7 +333,6 @@ void MainFrame::saveColumns() const
     }
 
     if (err.isEmpty()) {
-        // TODO QTableView* t = this->ui->tableWidget;
         // TODO wrr.setBytes("MainTableState", t->horizontalHeader()->saveState());
     }
 }
@@ -849,4 +872,33 @@ void MainFrame::clearCache()
     this->cache.clear();
 
     InvalidateRect(table, NULL, false);
+}
+
+void MainFrame::contextMenu(int x, int y)
+{
+    // TODO: icons loaded twice: here and in the main menu
+    HMENU m = CreatePopupMenu();
+    t_gui_menu_append_item(m, IDM_INSTALL, QObject::tr("&Install"),
+                           t_gui_load_png_resource(L"install16_png"));
+    t_gui_menu_append_item(m, IDM_UNINSTALL, QObject::tr("U&ninstall"),
+                           t_gui_load_png_resource(L"uninstall16_png"));
+    t_gui_menu_append_item(m, IDM_UPDATE, QObject::tr("&Update"),
+                           t_gui_load_png_resource(L"update16_png"));
+    t_gui_menu_append_item(m, IDM_SHOW_DETAILS, QObject::tr("Show details"), NULL);
+    t_gui_menu_append_item(m, IDM_SHOW_CHANGELOG,
+        QObject::tr("Show changelog"), NULL);
+    t_gui_menu_append_item(m, IDM_RUN, QObject::tr("Run"), NULL);
+    t_gui_menu_append_item(m, IDM_OPEN_FOLDER, QObject::tr("Open folder"), NULL);
+    t_gui_menu_append_item(m, IDM_OPEN_WEB_SITE, QObject::tr("&Open web site"),
+                t_gui_load_png_resource(L"gotosite16_png"));
+    t_gui_menu_append_item(m, IDM_TEST_DOWNLOAD_SITE,
+        QObject::tr("&Test download site"), NULL);
+    t_gui_menu_append_item(m, IDM_EXPORT, QObject::tr("Export..."), NULL);
+
+    SetForegroundWindow(this->packagesPanel);
+
+    // TODO: TPM_LEFGALIGN: see remarks on https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenu
+    TrackPopupMenu(m, TPM_TOPALIGN | TPM_LEFTALIGN, x, y, 0, this->packagesPanel, NULL);
+
+    DestroyMenu(m);
 }

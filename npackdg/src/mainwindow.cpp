@@ -140,27 +140,6 @@ jobsScrollArea->setWidgetResizable(true);
 addTab(jobsScrollArea, genericAppIcon, "Tags");
 */
 
-#define IDM_ABOUT 16
-#define IDM_EXIT 17
-#define IDM_SETTINGS 18
-#define IDM_FEEDBACK 19
-#define IDM_CLOSE_TAB 20
-#define IDM_CHOOSE_COLUMNS 21
-#define IDM_TOGGLE_TOOLBAR 22
-#define IDM_INSTALL 23
-#define IDM_UNINSTALL 24
-#define IDM_UPDATE 25
-#define IDM_SHOW_DETAILS 26
-#define IDM_SHOW_CHANGELOG 27
-#define IDM_RUN 28
-#define IDM_OPEN_FOLDER 29
-#define IDM_OPEN_WEB_SITE 30
-#define IDM_TEST_DOWNLOAD_SITE 31
-#define IDM_CHECK_DEPENDENCIES 32
-#define IDM_RELOAD_REPOSITORIES 33
-#define IDM_ADD_PACKAGE 34
-#define IDM_EXPORT 35
-
 LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     return MainWindow::getInstance()->windowProc(hWnd, message, wParam, lParam);
@@ -2675,11 +2654,6 @@ void MainWindow::on_actionToggle_toolbar_triggered()
 
     // the window is not updated otherwise unfortunately
     InvalidateRect(window, NULL, TRUE);
-}
-
-void MainWindow::on_mainToolBar_visibilityChanged(bool visible)
-{
-    // TODO this->ui->actionToggle_toolbar->setChecked(visible);
 }
 
 void MainWindow::on_actionRun_triggered()

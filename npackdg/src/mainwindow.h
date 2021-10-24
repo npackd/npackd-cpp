@@ -22,6 +22,28 @@
 #include "mainframe.h"
 #include "progresstree2.h"
 
+#define IDM_ABOUT 16
+#define IDM_EXIT 17
+#define IDM_SETTINGS 18
+#define IDM_FEEDBACK 19
+#define IDM_CLOSE_TAB 20
+#define IDM_CHOOSE_COLUMNS 21
+#define IDM_TOGGLE_TOOLBAR 22
+#define IDM_INSTALL 23
+#define IDM_UNINSTALL 24
+#define IDM_UPDATE 25
+#define IDM_SHOW_DETAILS 26
+#define IDM_SHOW_CHANGELOG 27
+#define IDM_RUN 28
+#define IDM_OPEN_FOLDER 29
+#define IDM_OPEN_WEB_SITE 30
+#define IDM_TEST_DOWNLOAD_SITE 31
+#define IDM_CHECK_DEPENDENCIES 32
+#define IDM_RELOAD_REPOSITORIES 33
+#define IDM_ADD_PACKAGE 34
+#define IDM_EXPORT 35
+
+
 const UINT WM_ICONTRAY = WM_USER + 1;
 
 /**
@@ -63,9 +85,6 @@ private:
 
     /** Icon on the tray or zeros */
     NOTIFYICONDATAW nid;
-
-    /** handle */
-    HWND window;
 
     /** tab control */
     HWND tabs;
@@ -156,6 +175,9 @@ private:
     void addRichTextTab(const QString &title, const QString &rtf);
     void on_actionToggle_toolbar_triggered();
 public:
+    /** handle */
+    HWND window;
+
     /**
      * @brief layout the main window
      */
@@ -363,6 +385,7 @@ public slots:
     void on_errorMessage(const QString& msg, const QString& details="",
             bool autoHide=true, QMessageBox::Icon icon=QMessageBox::Critical);
 private slots:
+    void on_actionGotoPackageURL_triggered();
     void processThreadFinished();
     void recognizeAndLoadRepositoriesThreadFinished();
     void on_actionShow_Details_triggered();
@@ -372,7 +395,6 @@ private slots:
     void on_actionTest_Download_Site_triggered();
     void on_actionUpdate_triggered();
     void on_actionSettings_triggered();
-    void on_actionGotoPackageURL_triggered();
     void on_actionExit_triggered();
     void on_actionReload_Repositories_triggered();
     void on_actionClose_Tab_triggered();
@@ -392,7 +414,6 @@ private slots:
     void downloadSizeCompleted(const QString &url,
             int64_t size);
     void on_actionShow_changelog_triggered();
-    void on_mainToolBar_visibilityChanged(bool visible);
     void monitoredJobCompleted();
     void on_actionRun_triggered();
     void on_actionExport_triggered();

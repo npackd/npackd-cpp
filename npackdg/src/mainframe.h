@@ -225,8 +225,19 @@ public:
     void downloadSizeUpdated(const QString &url);
 
     void tableWidget_selectionChanged();
+
+    /**
+     * @brief window procedure
+     * @param hWnd window
+     * @param uMsg message
+     * @param wParam first parameter
+     * @param lParam second parameter
+     * @return result
+     */
+    LRESULT windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
     void selectSomething();
+    void contextMenu(int x, int y);
 private slots:
     void on_tableWidget_doubleClicked(QModelIndex index);
     void on_lineEditText_textChanged(QString );
