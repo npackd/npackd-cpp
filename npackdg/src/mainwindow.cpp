@@ -236,6 +236,9 @@ LRESULT CALLBACK MainWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
             case IDM_TOGGLE_TOOLBAR:
                 on_actionToggle_toolbar_triggered();
                 break;
+            case IDM_CLOSE_TAB:
+                on_actionClose_Tab_triggered();
+                break;
             case IDM_FEEDBACK:
                 on_actionFile_an_Issue_triggered();
                 break;
@@ -364,6 +367,9 @@ void MainWindow::createMainMenu()
 
 HWND MainWindow::createTabs(HWND hwndParent)
 {
+    // TODO: cross icon for closing
+    // TODO: moveable tabs
+
     RECT rcClient;
 
     // Get the dimensions of the parent window's client area, and
@@ -2406,11 +2412,14 @@ void MainWindow::on_actionReload_Repositories_triggered()
 
 void MainWindow::on_actionClose_Tab_triggered()
 {
-    /* todo QWidget* w = this->ui->tabWidget->currentWidget();
-    if (w != this->mainFrame && w != this->jobsTab) {
-        this->ui->tabWidget->removeTab(this->ui->tabWidget->currentIndex());
+    int index = TabCtrl_GetCurSel(tabs);
+    HWND w = tabPanels[index];
+    if (w != this->packagesPanel && w != this->progressPanel) {
+        DestroyWindow(w);
+        tabPanels.erase(tabPanels.begin() + index);
+        TabCtrl_DeleteItem(tabs, index);
+        selectTab(index - 1);
     }
-    */
 }
 
 void MainWindow::updateActionsSlot()
