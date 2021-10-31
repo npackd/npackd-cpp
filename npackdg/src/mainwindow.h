@@ -171,7 +171,6 @@ private:
     HWND createTabs(HWND hwndParent);
 
     HWND createToolbar(HWND parent);
-    void selectTab(int index);
     void addRichTextTab(const QString &title, const QString &rtf);
     void on_actionToggle_toolbar_triggered();
 public:
@@ -292,7 +291,7 @@ public:
     void recognizeAndLoadRepositories(bool useCache);
 
     /**
-     * Adds a new tab. The new tab will be automatically selected.
+     * Adds a new tab. The new tab will *not* be automatically selected.
      *
      * @param w content of the new tab
      * @param icon tab icon
@@ -368,6 +367,17 @@ public:
      * @return result
      */
     LRESULT windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+    /**
+     * @return number of tabs
+     */
+    int getTabCount() const;
+
+    /**
+     * @brief selects a tab
+     * @param index tab index
+     */
+    void selectTab(int index);
 protected:
     void changeEvent(QEvent *e);
 

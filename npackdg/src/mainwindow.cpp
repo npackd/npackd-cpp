@@ -180,7 +180,6 @@ LRESULT CALLBACK MainWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
         case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
-            // Parse the menu selections:
             switch (wmId) {
             case IDM_INSTALL:
                 on_actionInstall_triggered();
@@ -2034,6 +2033,10 @@ void MainWindow::openPackage(const QString& package, bool select)
         */
 }
 
+int MainWindow::getTabCount() const {
+    return TabCtrl_GetItemCount(tabs);
+}
+
 void MainWindow::selectTab(int index)
 {
     TabCtrl_SetCurSel(tabs, index);
@@ -2044,7 +2047,6 @@ void MainWindow::selectTab(int index)
 
 void MainWindow::addTab(HWND w, const QIcon& icon, const QString& title)
 {
-    // Add tabs for each day of the week.
     TCITEM tie;
     tie.mask = TCIF_TEXT | TCIF_IMAGE;
     tie.iImage = -1;
@@ -2055,7 +2057,7 @@ void MainWindow::addTab(HWND w, const QIcon& icon, const QString& title)
 
     tabPanels.push_back(w);
 
-    selectTab(n);
+    ShowWindow(w, n == 0 ? SW_SHOW : SW_HIDE);
 
     layoutMainWindow();
 
@@ -2271,6 +2273,8 @@ void MainWindow::on_actionAbout_triggered()
             ""
             "\\pard\\sa200\\sl276\\slmult1\\par"
             "}").arg(NPACKD_VERSION));
+
+    selectTab(getTabCount() - 1);
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)

@@ -86,8 +86,11 @@ void MessageFrame::on_pushButtonDetails_clicked()
     QString title = this->ui->label->text();
     if (title.length() > 20)
         title = title.left(20) + "...";
-    MainWindow::getInstance()->addTextTab(title,
-            this->details);
+
+    auto mf = MainWindow::getInstance();
+    mf->addTextTab(title, this->details);
+    mf->selectTab(mf->getTabCount() - 1);
+
     this->deleteLater();
 }
 
