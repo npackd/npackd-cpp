@@ -128,15 +128,22 @@ LRESULT CALLBACK MainFrame::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam,
         {
             int wmId = LOWORD(wParam);
 
-            switch (wmId) {
-                case ID_EDIT_FILTER: {
-                    if (HIWORD(wParam) == EN_CHANGE) {
-                        mw->fillList();
-                    }
-                    break;
+            if (wmId == IDM_INSTALL || wmId == IDM_UNINSTALL ||
+                wmId == IDM_UPDATE || wmId == IDM_SHOW_DETAILS ||
+                wmId == IDM_SHOW_CHANGELOG || wmId == IDM_RUN ||
+                wmId == IDM_OPEN_FOLDER || wmId == IDM_OPEN_WEB_SITE ||
+                wmId == IDM_TEST_DOWNLOAD_SITE || wmId == IDM_EXPORT)
+            {
+                mw->windowProc(mw->window, uMsg, wParam, lParam);
+            } else if (wmId == ID_EDIT_FILTER && HIWORD(wParam) == EN_CHANGE) {
+                mw->fillList();
+            } else if (HIWORD(wParam) == BN_CLICKED) {
+                if ((HWND) lParam == buttonAll ||
+                    (HWND) lParam == buttonInstalled ||
+                    (HWND) lParam == buttonUpdateable) {
+                    fillList();
+                    selectSomething();
                 }
-                default:
-                    mw->windowProc(mw->window, uMsg, wParam, lParam);
             }
 
             break;
@@ -608,24 +615,6 @@ void MainFrame::selectSomething()
     if (ListView_GetSelectedCount(table) == 0 && packages.size() > 0) {
         ListView_SetItemState(table, 0, LVIS_SELECTED, LVIS_SELECTED);
     }
-}
-
-void MainFrame::on_radioButtonAll_toggled(bool /*checked*/)
-{
-    fillList();
-    selectSomething();
-}
-
-void MainFrame::on_radioButtonInstalled_toggled(bool /*checked*/)
-{
-    fillList();
-    selectSomething();
-}
-
-void MainFrame::on_radioButtonUpdateable_toggled(bool /*checked*/)
-{
-    fillList();
-    selectSomething();
 }
 
 void MainFrame::on_comboBoxCategory0_currentIndexChanged(int /*index*/)

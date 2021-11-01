@@ -31,7 +31,7 @@ void t_gui_init()
 HWND t_gui_create_radio_button(HWND hParent, const TCHAR *szCaption)
 {
     HWND w = CreateWindow(WC_BUTTON, szCaption,
-        WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON,
+        WS_VISIBLE | WS_CHILD | WS_TABSTOP | BS_AUTORADIOBUTTON,
         0, 0, CW_USEDEFAULT, CW_USEDEFAULT,
         hParent, NULL, hInst, NULL);
     SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
@@ -41,7 +41,7 @@ HWND t_gui_create_radio_button(HWND hParent, const TCHAR *szCaption)
 HWND t_gui_create_edit(HWND hParent, int id)
 {
     HWND w = CreateWindow(WC_EDIT, NULL,
-        WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT,
+        WS_VISIBLE | WS_CHILD | WS_BORDER | WS_TABSTOP | ES_LEFT,
         0, 0, 100, CW_USEDEFAULT,
         hParent, reinterpret_cast<HMENU>(id), hInst, NULL);
     SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
@@ -52,7 +52,7 @@ HWND t_gui_create_edit(HWND hParent, int id)
 HWND t_gui_create_text_area(HWND hParent, int id)
 {
     HWND w = CreateWindow(WC_EDIT, NULL,
-        WS_VISIBLE | WS_CHILD | WS_BORDER | ES_LEFT |
+        WS_VISIBLE | WS_CHILD | WS_BORDER | WS_TABSTOP | ES_LEFT |
         ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN ,
         0, 0, 100, CW_USEDEFAULT,
         hParent, reinterpret_cast<HMENU>(id), hInst, NULL);
@@ -123,7 +123,7 @@ HWND t_gui_create_panel(HWND parent)
 HWND t_gui_create_combobox(HWND hParent)
 {
     HWND w = CreateWindow(WC_COMBOBOX, NULL,
-        WS_VISIBLE | WS_CHILD | CBS_DROPDOWNLIST,
+        WS_VISIBLE | WS_CHILD | WS_TABSTOP | CBS_DROPDOWNLIST,
         0, 0, 100, CW_USEDEFAULT,
         hParent, NULL, hInst, NULL);
     SendMessage(w, WM_SETFONT, (LPARAM)defaultFont, TRUE);
@@ -193,9 +193,10 @@ HBITMAP t_gui_load_png_resource(LPCTSTR pName) {
 HWND t_gui_create_toolbar(HWND hWndParent)
 {
     // Create the toolbar.
-    HWND hWndToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL,
-                                      WS_CHILD | TBSTYLE_WRAPABLE |TBSTYLE_FLAT, 0, 0, 0, 0,
-                                      hWndParent, NULL, hInst, NULL);
+    HWND hWndToolbar = CreateWindowEx(
+        0, TOOLBARCLASSNAME, NULL,
+        WS_CHILD | TBSTYLE_WRAPABLE |TBSTYLE_FLAT, 0, 0, 0, 0,
+        hWndParent, NULL, hInst, NULL);
 
     if (hWndToolbar == NULL)
         return NULL;

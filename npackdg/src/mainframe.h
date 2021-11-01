@@ -241,9 +241,6 @@ private:
 private slots:
     void on_tableWidget_doubleClicked(QModelIndex index);
     void on_lineEditText_textChanged(QString );
-    void on_radioButtonAll_toggled(bool checked);
-    void on_radioButtonInstalled_toggled(bool checked);
-    void on_radioButtonUpdateable_toggled(bool checked);
     void on_comboBoxCategory0_currentIndexChanged(int index);
     void on_comboBoxCategory1_currentIndexChanged(int index);
 };

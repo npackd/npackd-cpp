@@ -377,8 +377,10 @@ int MainWindow::runGUI(int nCmdShow)
 
     // Main message loop:
     while (GetMessage(&msg, NULL, 0, 0)) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+        if (!IsDialogMessage(window, &msg)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
     }
 
     HMENU mainMenu = GetMenu(window);
