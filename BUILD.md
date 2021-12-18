@@ -34,13 +34,13 @@ their 32 bit versions.
 
 - Start cmd.exe as administrator
 ```bat
-msiexec.exe /qb- /i http://bit.ly/npackdcl64-1_25
+msiexec.exe /qb- /i http://bit.ly/npackdcl64-1_26_9
 set path=c:\Program Files\NpackdCL;%path%
 ncl set-repo -u https://www.npackd.org/rep/zip?tag=libs -u https://www.npackd.org/rep/zip?tag=stable -u https://www.npackd.org/rep/zip?tag=stable64
 ncl detect
 ncl add -p com.googlecode.windows-package-manager.Npackd64 -p windows10debloater -p qt-creator64 -p com.microsoft.ProcessExplorer -p org.7-zip.SevenZIP64 -p nircmd64 -p com.advancedinstaller.AdvancedInstallerFreeware
 ncl add -p astrogrep -p dbeaver64 -p drmemory -p firefox64 -p com.googlecode.gitextensions.GitExtensions -p kdiff3-64 -p com.lockhunter.LockHunter64 -p notepadpp64 -p org.cmake.CMake
-mkdir c:\builds\npackd-minsizerel
+mkdir c:\builds
 ncl add -p quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static --file c:\Builds\quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static
 ```
 - (optional) Start PowerShell as administrator
@@ -63,8 +63,9 @@ pacman -Su --noconfirm
 
 pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5 mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd mingw64/mingw-w64-x86_64-quazip
 pacman -S --noconfirm mingw-w64-x86_64-ninja mingw64/mingw-w64-x86_64-zstd
+pacman -S --noconfirm mingw-w64-x86_64-toolchain
 ```
-- Start Git Extensions and configure "C:\Program Files\KDiff3_64_bit\kdiff3.exe" as diff and merge tool,
+- Start Git Extensions and configure "C:\Program Files\KDiff3\bin\kdiff3.exe" as diff and merge tool,
     tim.lebedkov@gmail.com as the email and tim-lebedkov as user name.
 	Clone https://github.com/tim-lebedkov/npackd-cpp.git to C:\Users\IEUser\Documents\npackd-cpp
 
@@ -89,7 +90,7 @@ ninja
 * (optional) Start Qt Creator as administrator
     * "File"/"Manage sessions"/"Reload session on startup"
     * "File"/"Open file or project"/"CMakeLists.txt"
-    * "Projects"/"Import existing build" in Qt creator, choose "C:\builds\npackd-minsizerel"
+    * "Projects"/"Import existing build" in Qt creator, choose "C:\builds\npackd-dyn-minsizerel"
     * Define the C++ compiler
 
 ## Performance profiling (optional)
