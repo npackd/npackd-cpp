@@ -2710,119 +2710,119 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cannot load the list of repositories: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann die Liste der Repositories nicht laden: %1</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Erlaubt</translation>
     </message>
     <message>
         <source>URL</source>
-        <translation type="unfinished"></translation>
+        <translation>URL</translation>
     </message>
     <message>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommentar</translation>
     </message>
     <message>
         <source>Windows update</source>
-        <translation type="unfinished"></translation>
+        <translation>Windows-Aktualisierung</translation>
     </message>
     <message>
         <source>&lt;root&gt; expected</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;root&gt; erwartet</translation>
     </message>
     <message>
         <source>&lt;version&gt; expected</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;version&gt; erwartet</translation>
     </message>
     <message>
         <source>Sending a WM_CLOSE event to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Sende ein WM_CLOSE-Ereignis an &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Sending Ctrl+C to &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Sende Ctrl+C an &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Killing the process &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Beende den Prozess &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Stopping the service &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Stoppe den Dienst &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Running the Inno Setup installation (this may take some time)</source>
-        <translation type="unfinished"></translation>
+        <translation>Führe die Inno Setup-Installation aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>The last lines of the output from the Inno Setup log file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Die letzten Zeilen der Ausgabe von der Inno Setup-Logdatei:</translation>
     </message>
     <message>
         <source>The last lines of the output:</source>
-        <translation type="unfinished"></translation>
+        <translation>Die letzten Zeilen der Ausgabe:</translation>
     </message>
     <message>
         <source>Running the Inno Setup removal (this may take some time)</source>
-        <translation type="unfinished"></translation>
+        <translation>Führe die Inno Setup-Deinstallation  aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>Running the NSIS removal (this may take some time)</source>
-        <translation type="unfinished"></translation>
+        <translation>Führe die NSIS-Deinstallation aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>Running the NSIS installation (this may take some time)</source>
-        <translation type="unfinished"></translation>
+        <translation>Führe die NSIS-Installation aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>Detecting Windows Update packages</source>
-        <translation type="unfinished"></translation>
+        <translation>Ermittle die Windows-Update-Pakete</translation>
     </message>
     <message>
         <source>Too many retries</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu viele Wiederholungsversuche</translation>
     </message>
     <message>
         <source>Installation operation</source>
-        <translation type="unfinished"></translation>
+        <translation>Installationsvorgang</translation>
     </message>
     <message>
         <source>Acquire installation script lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Erlange den Installationsskript-Lock</translation>
     </message>
     <message>
         <source>Acquire the installation script lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Erlange den Installationsskript-Lock</translation>
     </message>
     <message>
         <source>Prepare install operations</source>
-        <translation type="unfinished"></translation>
+        <translation>Bereite die Installationsvorgänge vor</translation>
     </message>
     <message>
         <source>Install operations</source>
-        <translation type="unfinished"></translation>
+        <translation>Installationsvorgänge</translation>
     </message>
     <message>
         <source>Stopping the package %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Stoppe das Paket %1</translation>
     </message>
     <message>
         <source>Cannot create the directory %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann das Verzeichnis %1 nicht erstellen</translation>
     </message>
     <message>
         <source>Rename %1 to %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 zu %2 umbenennen</translation>
     </message>
     <message>
         <source>Create package directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Paketverzeichnis erzeugen</translation>
     </message>
     <message>
         <source>Install package</source>
-        <translation type="unfinished"></translation>
+        <translation>Paket installieren</translation>
     </message>
     <message>
         <source>&amp;Exit</source>
@@ -3021,7 +3021,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Disconnect users from file shares</source>
-        <translation>Die Benutzer von den Freigaben trennen</translation>
+        <translation>Die Benutzer von den Dateifreigaben trennen</translation>
     </message>
     <message>
         <source>list of previously used repositories</source>
@@ -3105,7 +3105,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Entfernen</translation>
     </message>
     <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -3123,14 +3123,47 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;die folgende Liste definiert Repositories, die für den Download und die Installation von Software verwendet werden. http://, https://, und file:// Protokolle werden unterstützt. Die Repositories werden von oben nach unten verwendet. Die Definitionen aus einem früheren Eintrag werden solche aus Repositories, die weiter in der Liste stehen verstecken.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;Beispiele:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Move up</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach oben verschieben</translation>
     </message>
     <message>
         <source>Move down</source>
+        <translation>Nach unten verschieben</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Segoe UI&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Example:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can find the list of available repositories and explanations about how to create your custom repositories at &lt;a href=&quot;https://github.com/npackd/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/npackd/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
