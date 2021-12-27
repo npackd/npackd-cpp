@@ -2,6 +2,7 @@
 #define DAG_H
 
 #include <vector>
+#include <cstddef>
 
 /**
  * @brief directed acyclic graph
