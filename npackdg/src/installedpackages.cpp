@@ -801,7 +801,7 @@ QString InstalledPackages::notifyInstalled(const QString &package,
             Job* job = new Job("Notification");
             WPMUtils::executeBatchFile(
                     job, path, ".Npackd\\InstallHook.bat",
-                    WPMUtils::getMessagesLog(), env, false);
+                    WPMUtils::getMessagesLog(), env, true);
 
             // ignore the possible errors
 

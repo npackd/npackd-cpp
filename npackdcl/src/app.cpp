@@ -2643,7 +2643,7 @@ void App::removeSCP(Job *job)
             //WPMUtils::writeln(path + " " + where);
 
             WPMUtils::executeBatchFile(execJob, where,
-                    path, WPMUtils::getMessagesLog(), std::vector<QString>(), false);
+                    path, WPMUtils::getMessagesLog(), std::vector<QString>(), true);
         }
     }
 
