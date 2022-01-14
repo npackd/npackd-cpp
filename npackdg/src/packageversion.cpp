@@ -516,7 +516,7 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             Job* sub2 = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
             bool acquired = AbstractRepository::lockInstallationScript(sub2);
             this->executeFile2(sub, d.absolutePath(), usfn,
-                    env, printScriptOutput, false);
+                    env, printScriptOutput, true);
             if (acquired)
                 AbstractRepository::unlockInstallationScript();
 
@@ -1513,7 +1513,7 @@ void PackageVersion::install(Job* job, const QString& where,
             bool acquired = AbstractRepository::lockInstallationScript(sub);
             this->executeFile2(exec, d.absolutePath(),
                     d.absolutePath() + "\\" + installationScript,
-                    env, printScriptOutput, false);
+                    env, printScriptOutput, true);
             if (acquired)
                 AbstractRepository::unlockInstallationScript();
 
@@ -1981,7 +1981,7 @@ void PackageVersion::stop(Job* job, DWORD programCloseType,
             this->executeFile2(exec, d.absolutePath(),
                     d.absolutePath() + "\\.Npackd\\Stop.bat",
                     env,
-                    printScriptOutput, false);
+                    printScriptOutput, true);
         if (acquired)
             AbstractRepository::unlockInstallationScript();
     } else {
