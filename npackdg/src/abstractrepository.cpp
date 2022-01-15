@@ -1,6 +1,10 @@
 #include <future>
 
 #include "QLoggingCategory"
+#include "QTemporaryDir"
+#include "QDirIterator"
+
+#include "JlCompress.h"
 
 #include "abstractrepository.h"
 #include "wpmutils.h"
@@ -168,6 +172,122 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
     CoUninitialize();
 
     qDeleteAll(pvs);
+}
+
+void AbstractRepository::exportPackageSettingsCoInitializeAndFree(
+    Job *job, const std::vector<Package *> &packages, const QString &filename)
+{
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+
+    CoInitialize(nullptr);
+
+    QTemporaryDir dir;
+
+    if (!dir.isValid()) {
+        job->setErrorMessage(QObject::tr("Cannot create a temporary directory"));
+    }
+
+    // TODO: what about locked package versions or running installation scripts?
+    if (job->shouldProceed()) {
+        QDir qd;
+        for (Package* p: packages) {
+            if (!job->shouldProceed())
+                break;
+
+            InstalledPackageVersion* ipv = InstalledPackages::getDefault()->
+                    getNewestInstalled(p->name);
+
+            if (ipv && ipv->installed()) {
+                // TODO: Package title instead of name
+                Job* sub = job->newSubJob(1 / (packages.size() + 1),
+                    QObject::tr("Exporting settings for %1").arg(p->name),
+                    true, true);
+
+                QFileInfo fi(ipv->getDirectory() + "\\.Npackd\\ExportUserSettings.bat");
+                if (fi.exists()) {
+                    QString d = dir.path() + "\\" + p->name;
+                    if (!qd.mkdir(d)) {
+                        job->setErrorMessage(QObject::tr("Cannot create the directory: %1").arg(d));
+                        break;
+                    }
+
+                    WPMUtils::executeBatchFile(sub, d, fi.absoluteFilePath(), "",
+                                                std::vector<QString>(), false, true);
+                } else {
+                    sub->setProgress(1);
+                    sub->complete();
+                }
+            }
+        }
+    }
+
+    if (job->shouldProceed()) {
+        if (!JlCompress::compressDir(filename, dir.path(), true))
+            job->setErrorMessage(QObject::tr(
+                "Cannot zip the directory \"%1\" to \"%2\"").arg(dir.path(), filename));
+    }
+
+    if (job->shouldProceed())
+        job->setProgress(1);
+
+    job->complete();
+
+    CoUninitialize();
+
+    qDeleteAll(packages);
+}
+
+void AbstractRepository::importPackageSettingsCoInitializeAndFree(
+    Job *job, const QString &filename)
+{
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
+
+    CoInitialize(nullptr);
+
+    QTemporaryDir dir;
+
+    if (!dir.isValid()) {
+        job->setErrorMessage(QObject::tr("Cannot create a temporary directory"));
+    }
+
+    if (job->shouldProceed()) {
+        Job* sub = job->newSubJob(0.1, QObject::tr("Unzip settings file"), true, true);
+        WPMUtils::unzip(sub, filename, dir.path());
+    }
+
+    if (job->shouldProceed()) {
+        QDir qd(dir.path());
+        QStringList entries = qd.entryList(QDir::Dirs | QDir::PermissionMask | QDir::AccessMask |
+                QDir::CaseSensitive | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+        for (const QString& packageName: entries) {
+            Package* p = findPackage_(packageName);
+            if (p) {
+                InstalledPackageVersion* ipv = InstalledPackages::getDefault()->
+                        getNewestInstalled(p->name);
+
+                if (ipv && ipv->installed()) {
+                    // TODO: Package title instead of name
+                    Job* sub = job->newSubJob(0.9 / (entries.size() + 1),
+                        QObject::tr("Importing settings for %1").arg(p->name),
+                        true, true);
+
+                    QFileInfo fi(ipv->getDirectory() + "\\.Npackd\\ImportUserSettings.bat");
+                    if (fi.exists()) {
+                        WPMUtils::executeBatchFile(sub, dir.path() + "\\" + packageName,
+                            fi.absoluteFilePath(), "",
+                            std::vector<QString>(), false, true);
+                    } else {
+                        sub->setProgress(1);
+                        sub->complete();
+                    }
+                }
+            }
+        }
+    }
+
+    job->complete();
+
+    CoUninitialize();
 }
 
 std::vector<PackageVersion *> AbstractRepository::findAllMatchesToInstall(

@@ -23,8 +23,6 @@
 #include <zlib.h>
 
 //#include "msoav2.h"
-#include "quazip.h"
-#include "quazipfile.h"
 
 #include "packageversion.h"
 #include "job.h"

@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>625</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -76,6 +76,8 @@
     <addaction name="actionReload_Repositories"/>
     <addaction name="actionAdd_package"/>
     <addaction name="actionExport"/>
+    <addaction name="actionExport_settings"/>
+    <addaction name="actionImport_settings"/>
     <addaction name="actionSettings"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -150,7 +152,7 @@
   </action>
   <action name="actionInstall">
    <property name="icon">
-    <iconset resource="../../../../../../builds/npackd-minsizerel/npackdg/npackdg.qrc">
+    <iconset resource="../../../../../../builds/npackd-dyn-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/install.png</normaloff>:/images/install.png</iconset>
    </property>
    <property name="text">
@@ -165,7 +167,7 @@
   </action>
   <action name="actionUninstall">
    <property name="icon">
-    <iconset resource="../../../../../../builds/npackd-minsizerel/npackdg/npackdg.qrc">
+    <iconset resource="../../../../../../builds/npackd-dyn-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/uninstall.png</normaloff>:/images/uninstall.png</iconset>
    </property>
    <property name="text">
@@ -180,7 +182,7 @@
   </action>
   <action name="actionGotoPackageURL">
    <property name="icon">
-    <iconset resource="../../../../../../builds/npackd-minsizerel/npackdg/npackdg.qrc">
+    <iconset resource="../../../../../../builds/npackd-dyn-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/gotosite.png</normaloff>:/images/gotosite.png</iconset>
    </property>
    <property name="text">
@@ -206,7 +208,7 @@
   </action>
   <action name="actionUpdate">
    <property name="icon">
-    <iconset resource="../../../../../../builds/npackd-minsizerel/npackdg/npackdg.qrc">
+    <iconset resource="../../../../../../builds/npackd-dyn-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/update.png</normaloff>:/images/update.png</iconset>
    </property>
    <property name="text">
@@ -276,7 +278,7 @@
   </action>
   <action name="actionFile_an_Issue">
    <property name="icon">
-    <iconset resource="../../../../../../builds/npackd-minsizerel/npackdg/npackdg.qrc">
+    <iconset resource="../../../../../../builds/npackd-dyn-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/fileissue.png</normaloff>:/images/fileissue.png</iconset>
    </property>
    <property name="text">
@@ -291,7 +293,7 @@
   </action>
   <action name="actionAdd_package">
    <property name="icon">
-    <iconset resource="../../../../../../builds/npackd-minsizerel/npackdg/npackdg.qrc">
+    <iconset resource="../../../../../../builds/npackd-dyn-minsizerel/npackdg/npackdg.qrc">
      <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
    </property>
    <property name="text">
@@ -372,10 +374,26 @@
     <string>Checks installed packages for missing dependencies</string>
    </property>
   </action>
+  <action name="actionExport_settings">
+   <property name="text">
+    <string>Export package settings...</string>
+   </property>
+   <property name="toolTip">
+    <string>export user settings for the selected packages to a file</string>
+   </property>
+  </action>
+  <action name="actionImport_settings">
+   <property name="text">
+    <string>Import package settings...</string>
+   </property>
+   <property name="toolTip">
+    <string>import packages settings from a file</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../../../../../../builds/npackd-minsizerel/npackdg/npackdg.qrc"/>
+  <include location="../../../../../../builds/npackd-dyn-minsizerel/npackdg/npackdg.qrc"/>
  </resources>
  <connections>
   <connection>

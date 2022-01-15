@@ -420,6 +420,26 @@ p, li { white-space: pre-wrap; }
         <source>Checks installed packages for missing dependencies</source>
         <translation>Prüft die installierten Pakete auf fehlende Abhängigkeiten</translation>
     </message>
+    <message>
+        <source>export user settings for the selected packages to a file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>import packages settings from a file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Npackd package settings (*.nps);;All Files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export package settings...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import package settings...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MessageFrame</name>
@@ -2823,6 +2843,38 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Install package</source>
         <translation>Paket installieren</translation>
+    </message>
+    <message>
+        <source>Import package settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export package settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create a temporary directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the directory: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exporting settings for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot zip the directory &quot;%1&quot; to &quot;%2&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unzip settings file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Importing settings for %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
