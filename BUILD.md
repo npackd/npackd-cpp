@@ -15,17 +15,17 @@ their 32 bit versions.
    choose "File", "Import appliance..."
    navigate to "MSEdge-Win10.ova", use the default settings, press "Import"
 - Edit the VM definition
-- (optional) "General", "Extended", set "Common clipboard" to "bidirectional"
-- (optional) "System", "Main memory", set to 8192 MB, 
-- (optional) "System", "Processor", set to 8 CPUs
-- (optional) "Audio", "Extended", check "Audio output"
-- resize the disk in VirtualBox to 100 GiB ("Tools", "Hard disks", "Properties")
+  - (optional) "General", "Extended", set "Common clipboard" to "bidirectional"
+  - (optional) "System", "Main memory", set to 8192 MB, 
+  - (optional) "System", "Processor", set to 8 CPUs
+  - (optional) "Audio", "Extended", check "Audio output"
+- "Tools", "Hard disks", "Properties", resize the disk in VirtualBox to 100 GiB ()
 - Start the VM. Password for IEUser is Passw0rd!, 
+- restart the VM so that the clipboard starts to work
 - change the password: "net user ieuser newpassword" as administrator, restart VM
 
 ## Configure Windows (optional)
 - (optional) Start netplwiz, enable and disable password on login. Enter new password. Restart VM.
-- (optional) Disable and enable bidirectional clipboard in VirtualBox under "Devices", "Common clipboard"
 - (optional) change the desktop resolution to 1280x960
 - (optional) Start "Region & language" settings, change the language, restart the VM
 - (optional) start diskmgmt.msc, extend the hard disk partition
@@ -38,7 +38,7 @@ msiexec.exe /qb- /i http://bit.ly/npackdcl64-1_26_9
 set path=c:\Program Files\NpackdCL;%path%
 ncl set-repo -u https://www.npackd.org/rep/zip?tag=libs -u https://www.npackd.org/rep/zip?tag=stable -u https://www.npackd.org/rep/zip?tag=stable64
 ncl detect
-ncl add -p com.googlecode.windows-package-manager.Npackd64 -p windows10debloater -p qt-creator64 -p com.microsoft.ProcessExplorer -p org.7-zip.SevenZIP64 -p nircmd64 -p com.advancedinstaller.AdvancedInstallerFreeware
+ncl add -p com.googlecode.windows-package-manager.Npackd64 -p windows10debloater -p qt-creator64 -p vs-code64 -p com.microsoft.ProcessExplorer -p org.7-zip.SevenZIP64 -p nircmd64 -p com.advancedinstaller.AdvancedInstallerFreeware
 ncl add -p astrogrep -p dbeaver64 -p drmemory -p firefox64 -p com.googlecode.gitextensions.GitExtensions -p kdiff3-64 -p com.lockhunter.LockHunter64 -p notepadpp64 -p org.cmake.CMake
 mkdir c:\builds
 ncl add -p quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static --file c:\Builds\quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static
@@ -52,7 +52,7 @@ cd 'C:\Program Files\Windows10Debloater\'
 	Click "Remove all Bloatware"
 	Click "Edge PDF/disable"
 	Click "Disable telemetry/tasks"
-	Click "Remove registry keys associated with Bloatware"
+	Click "Remove Bloatware regkeys"
 ```bat
 ncl add -p msys2_64 --file c:\msys64
 ```
@@ -84,6 +84,22 @@ cmake C:\Users\IEUser\Documents\npackd-cpp -G "Ninja" -DCMAKE_BUILD_TYPE=MinSize
 ```bat
 ninja
 ```
+## Configure the Visual Studio Code (optional, recommended)
+ * add "C/C++", "Doxygen Documentation Generator", "CMake Tools" extensions
+ * "CMake: Edit user-local CMake kits"
+```json
+[{
+    "name": "GCC",
+    "compilers": {
+        "C": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+        "CXX": "C:\\msys64\\mingw64\\bin\\g++.exe"
+    }
+}]
+``` 
+ * "CMake: configure"
+ * "CMake: build"
+ * add "C:\msys64\mingw64\bin" to PATH
+ * install "settings.json" and "keybindings.json" under "C:\Users\IEUser\AppData\Roaming\Code\User"
 
 ## Configure the Qt Creator IDE (optional)
 
