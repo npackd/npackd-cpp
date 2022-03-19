@@ -1052,7 +1052,7 @@ bool MainWindow::isUpdateEnabled(const QString& package)
             package);
     if (newest != nullptr && newesti != nullptr) {
         // qCDebug(npackd) << newest->version.getVersionString() << " " <<
-                newesti->version.getVersionString();
+                //newesti->version.getVersionString();
         bool canInstall = !newest->isLocked() && !newest->installed() &&
                 newest->download.isValid();
         bool canUninstall = !PackageVersion::isLocked(newesti->package, newesti->version) &&
@@ -1065,6 +1065,22 @@ bool MainWindow::isUpdateEnabled(const QString& package)
     }
     delete newest;
     delete newesti;
+
+    return res;
+}
+
+bool MainWindow::isExportSettingsEnabled(const QString& package)
+{
+    QString err;
+
+    bool res = false;
+    DBRepository* r = DBRepository::getDefault();
+    PackageVersion* newest = r->findNewestInstalledPackageVersion_(
+            package, &err);
+    if (newest != nullptr) {
+        res = newest->findFile(".Npackd\\ExportUserSettings.bat") != nullptr;
+    }
+    delete newest;
 
     return res;
 }
@@ -1083,6 +1099,7 @@ void MainWindow::updateActions()
     updateShowFolderAction();
     updateRunAction();
     updateExportAction();
+    updateExportSettingsAction();
 }
 
 void MainWindow::updateInstallAction()
@@ -1173,6 +1190,40 @@ void MainWindow::updateExportAction()
     }
 
     this->ui->actionExport->setEnabled(enabled);
+}
+
+void MainWindow::updateExportSettingsAction()
+{
+    Selection* selection = Selection::findCurrent();
+
+    bool enabled = false;
+    if (selection) {
+        std::vector<void*> selected = selection->getSelected("Package");
+        if (selected.size() > 0) {
+            enabled = true;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
+                if (!enabled)
+                    break;
+
+                Package* p = static_cast<Package*>(selected.at(i));
+
+                enabled = enabled && isExportSettingsEnabled(p->name);
+            }
+        } else {
+            selected = selection->getSelected("PackageVersion");
+            enabled = selected.size() >= 1;
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
+                if (!enabled)
+                    break;
+
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
+
+                enabled = enabled && isExportSettingsEnabled(pv->package);
+            }
+        }
+    }
+    this->ui->actionExport_settings->setEnabled(enabled);
 }
 
 void MainWindow::updateShowFolderAction()
@@ -2475,3 +2526,88 @@ void MainWindow::on_actionCheck_dependencies_triggered()
         this->addErrorMessage(msg, msg, true, QMessageBox::Information);
     }
 }
+
+void MainWindow::on_actionExport_settings_triggered()
+{
+    QString err;
+
+    std::vector<Package*> packages;
+    DBRepository* r = DBRepository::getDefault();
+    if (err.isEmpty()) {
+        Selection* sel = Selection::findCurrent();
+        std::vector<void*> selected;
+        if (sel)
+            selected = sel->getSelected("PackageVersion");
+
+        if (selected.size() > 0) {
+            // multiple versions of the same package could be selected in the table,
+            // but only one should be used
+            std::unordered_set<QString> used;
+
+            for (int i = 0; i < static_cast<int>(selected.size()); i++) {
+                PackageVersion* pv = static_cast<PackageVersion*>(
+                        selected.at(i));
+                if (used.count(pv->package) == 0) {
+                    Package* p = r->findPackage_(pv->package);
+
+                    if (p != nullptr) {
+                        packages.push_back(p);
+                        used.insert(pv->package);
+                    }
+                }
+            }
+        } else {
+            if (sel) {
+                selected = sel->getSelected("Package");
+                for (int i = 0; i < static_cast<int>(selected.size()); i++) {
+                    Package* p = static_cast<Package*>(selected.at(i));
+                    packages.push_back(new Package(*p));
+                }
+            }
+        }
+    }
+
+    QString fileName = QFileDialog::getSaveFileName(this,
+            QObject::tr("Export package settings"), "",
+            tr("Npackd package settings (*.nps);;All Files (*.*)"));
+
+    if (!fileName.isEmpty()) {
+        Job* job = new Job(QObject::tr("Export package settings"));
+
+        monitor(job);
+
+        // we move the pointers in "packages" into the thread and call
+        // packages.clear() later so that all Package* objects should
+        // be deleted by another thread
+        std::thread thr([job, packages, fileName](){
+            DBRepository::getDefault()->exportPackageSettingsCoInitializeAndFree(
+                    job, packages, fileName);
+        });
+        thr.detach();
+
+        packages.clear();
+    }
+
+    qDeleteAll(packages);
+}
+
+
+void MainWindow::on_actionImport_settings_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+            QObject::tr("Import package settings"), "",
+            tr("Npackd package settings (*.nps);;All Files (*.*)"));
+
+    if (!fileName.isEmpty()) {
+        Job* job = new Job(QObject::tr("Import package settings"));
+
+        monitor(job);
+
+        std::thread thr([job, fileName](){
+            DBRepository::getDefault()->importPackageSettingsCoInitializeAndFree(
+                    job, fileName);
+        });
+        thr.detach();
+    }
+}
+

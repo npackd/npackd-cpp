@@ -87,6 +87,8 @@ private:
     void updateShowChangelogAction();
     void updateRunAction();
     void updateExportAction();
+    void updateExportSettingsAction();
+    void updateImportSettingsAction();
 
     /**
      * @param ps selected packages
@@ -107,6 +109,7 @@ private:
     void updateDownloadSize(const QString &url);
     _SearchResult search(Package::Status minStatus, Package::Status maxStatus,
                          const QString &query, int cat0, int cat1, QString *err);
+    bool isExportSettingsEnabled(const QString &package);
 public:
     /**
      * Adds an entry in the "Progress" tab and monitors a task. The thread
@@ -327,6 +330,8 @@ private slots:
     void on_actionExport_triggered();
     void on_actionCheck_dependencies_triggered();
 
+    void on_actionExport_settings_triggered();
+    void on_actionImport_settings_triggered();
 };
 
 #endif // MAINWINDOW_H

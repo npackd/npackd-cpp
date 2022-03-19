@@ -369,6 +369,7 @@ public:
     QString getName();
 };
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
 extern "C" {
 EXCEPTION_DISPOSITION _catch1( _EXCEPTION_RECORD* exception_record,
     void* err, _CONTEXT* context, void* par)
@@ -387,6 +388,25 @@ void GetObjectNameThread::run()
         qCWarning(npackd) << "getting an object name via NtQueryObject failed";
     };
 }
+#else
+// Ref: https://docs.microsoft.com/de-de/cpp/cpp/try-except-statement?view=msvc-170
+EXCEPTION_DISPOSITION __catch(struct _EXCEPTION_POINTERS* exception_data)
+{
+    qCWarning(npackd) << "getting an object name via NtQueryObject failed";
+    return ExceptionContinueExecution;
+}
+
+void GetObjectNameThread::run()
+{
+    __try
+    {
+        run0();
+    }
+    __except (__catch(GetExceptionInformation()))
+    {
+    }
+}
+#endif
 
 void GetObjectNameThread::run0()
 {

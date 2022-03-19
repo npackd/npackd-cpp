@@ -340,6 +340,23 @@ public:
             const std::vector<PackageVersion *> &pvs, const QString &where, int def);
 
     /**
+     * @brief exports the settting for the specified packages to a file
+     * @param job job object
+     * @param packages packages. These objects will be freed.
+     * @param filename output file name
+     */
+    void exportPackageSettingsCoInitializeAndFree(Job *job,
+            const std::vector<Package*> &packages, const QString &filename);
+
+    /**
+     * @brief imports the settting from a file
+     * @param job job object
+     * @param filename input file name
+     */
+    void importPackageSettingsCoInitializeAndFree(Job *job,
+            const QString &filename);
+
+    /**
      * @brief plans adding missing dependencies
      *
      * @param installed list of installed packages. This object will be
