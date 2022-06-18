@@ -21,12 +21,12 @@ their 32 bit versions.
   - (optional) "Audio", "Extended", check "Audio output"
 - "Tools", "Hard disks", "Properties", resize the disk in VirtualBox to 100 GiB ()
 - Start the VM. Password for IEUser is Passw0rd!, 
-- restart the VM so that the clipboard starts to work
+- (optional) install newest VirtualBox guest additions
+- (optional) "View"/"Auto-resize guest display"
 - change the password: "net user ieuser newpassword" as administrator, restart VM
 
 ## Configure Windows (optional)
 - (optional) Start netplwiz, enable and disable password on login. Enter new password. Restart VM.
-- (optional) change the desktop resolution to 1280x960
 - (optional) Start "Region & language" settings, change the language, restart the VM
 - (optional) start diskmgmt.msc, extend the hard disk partition
 
@@ -51,12 +51,14 @@ cd 'C:\Program Files\Windows10Debloater\'
 ```
 	Click "Remove all Bloatware"
 	Click "Edge PDF/disable"
+	Click "Cortana/disable"
 	Click "Disable telemetry/tasks"
 	Click "Remove Bloatware regkeys"
 ```bat
 ncl add -p msys2_64 --file c:\msys64
 ```
 - Start c:\msys64\mingw64.exe
+A system restart after the first command may be necessary.
 ```bash
 pacman -Syu --noconfirm
 pacman -Su --noconfirm
