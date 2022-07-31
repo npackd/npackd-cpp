@@ -145,6 +145,7 @@ MainWindow::MainWindow(QWidget *parent) :
     fileLoader.init();
 
     ui->setupUi(this);
+    ui->retranslateUi(this);
 
     this->setMenuAccelerators();
     this->setActionAccelerators(this);
@@ -2503,7 +2504,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
         if (ipv->installed()) {
             std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion_(
                     ipv->package, ipv->version, &err));
-            if (!err.isEmpty())
+            if (!err.isEmpty() || !(bool)pv)
                 break;
 
             for (auto d: pv->dependencies) {

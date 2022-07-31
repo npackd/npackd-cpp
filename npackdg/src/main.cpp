@@ -25,6 +25,7 @@
 #include "uiutils.h"
 #include "clprocessor.h"
 #include "uimessagehandler.h"
+#include "packageutils.h"
 
 // Modern and efficient C++ Thread Pool Library
 // https://github.com/vit-vit/CTPL
@@ -40,7 +41,7 @@ int main(int argc, char *argv[])
     QLoggingCategory::setFilterRules("npackd=true\nnpackd.debug=false");
 
 #if NPACKD_ADMIN != 1
-    WPMUtils::hasAdminPrivileges();
+    PackageUtils::globalMode = WPMUtils::hasAdminPrivileges();
 #endif
 
     // this does not work unfortunately. The only way to ensure the maximum width of a tooltip is to
