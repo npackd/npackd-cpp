@@ -2774,11 +2774,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Running the Inno Setup installation (this may take some time)</source>
-        <translation>Führe die Inno Setup-Installation aus (das kann eine Weile dauern)</translation>
+        <translation type="vanished">Führe die Inno Setup-Installation aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>The last lines of the output from the Inno Setup log file:</source>
-        <translation>Die letzten Zeilen der Ausgabe von der Inno Setup-Logdatei:</translation>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von der Inno Setup-Logdatei:</translation>
     </message>
     <message>
         <source>The last lines of the output:</source>
@@ -2786,15 +2786,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Running the Inno Setup removal (this may take some time)</source>
-        <translation>Führe die Inno Setup-Deinstallation  aus (das kann eine Weile dauern)</translation>
+        <translation type="vanished">Führe die Inno Setup-Deinstallation  aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>Running the NSIS removal (this may take some time)</source>
-        <translation>Führe die NSIS-Deinstallation aus (das kann eine Weile dauern)</translation>
+        <translation type="vanished">Führe die NSIS-Deinstallation aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>Running the NSIS installation (this may take some time)</source>
-        <translation>Führe die NSIS-Installation aus (das kann eine Weile dauern)</translation>
+        <translation type="vanished">Führe die NSIS-Installation aus (das kann eine Weile dauern)</translation>
     </message>
     <message>
         <source>Detecting Windows Update packages</source>

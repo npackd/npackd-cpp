@@ -123,13 +123,7 @@ public:
         ZIP,
 
         /** any file */
-        ONE_FILE,
-
-        /** Inno Setup installer */
-        INNO_SETUP,
-
-        /** NSIS installer */
-        NSIS
+        ONE_FILE
     };
 
     /**

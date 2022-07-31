@@ -203,9 +203,8 @@ void AbstractRepository::exportPackageSettingsCoInitializeAndFree(
                     ipv->version, &err));
 
                 if (err.isEmpty()) {
-                    // TODO: Package title instead of name
                     Job* sub = job->newSubJob(1 / (packages.size() + 1),
-                        QObject::tr("Exporting settings for %1").arg(p->name),
+                        QObject::tr("Exporting settings for %1").arg(pv->getPackageTitle(false)),
                         true, true);
 
                     QFileInfo fi(ipv->getDirectory() + "\\.Npackd\\ExportUserSettings.bat");

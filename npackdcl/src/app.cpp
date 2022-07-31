@@ -2303,12 +2303,6 @@ void App::info(Job* job)
                     case PackageVersion::Type::ONE_FILE:
                         type = "one-file";
                         break;
-                    case PackageVersion::Type::INNO_SETUP:
-                        type = "inno-setup";
-                        break;
-                    case PackageVersion::Type::NSIS:
-                        type = "nsis";
-                        break;
                     default:
                         type = "zip";
                 }

@@ -3428,27 +3428,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Running the Inno Setup installation (this may take some time)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The last lines of the output from the Inno Setup log file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The last lines of the output:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Running the Inno Setup removal (this may take some time)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Running the NSIS removal (this may take some time)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Running the NSIS installation (this may take some time)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
