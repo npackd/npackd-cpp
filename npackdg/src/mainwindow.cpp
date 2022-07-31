@@ -182,6 +182,7 @@ MainWindow::MainWindow(QWidget *parent) :
     t->addAction(this->ui->actionGotoPackageURL);
     t->addAction(this->ui->actionTest_Download_Site);
     t->addAction(this->ui->actionExport);
+    t->addAction(this->ui->actionExport_settings);
 
     t->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
     t->horizontalHeader()->addAction(this->ui->actionChoose_columns);
@@ -2576,8 +2577,15 @@ void MainWindow::on_actionExport_settings_triggered()
         }
     }
 
+    QString initial;
+    if (packages.size() == 1)
+        initial = packages.at(0)->name + ".nps";
+    else
+        initial = "settings.nps";
+    initial = WPMUtils::getShellDir(FOLDERID_AppDataDocuments) + "\\" + initial;
+
     QString fileName = QFileDialog::getSaveFileName(this,
-            QObject::tr("Export package settings"), "",
+            QObject::tr("Export package settings"), initial,
             tr("Npackd package settings (*.nps);;All Files (*.*)"));
 
     if (!fileName.isEmpty()) {
