@@ -1081,8 +1081,18 @@ QString AbstractRepository::planInstallation(InstalledPackages &installed,
 
     avoid.push_back(me->clone());
 
+    bool meInstalled = installed.isInstalled(me->package, me->version);
+
     for (auto d: me->dependencies) {
         if (installed.isInstalled(*d))
+            continue;
+
+        // we ignore the dependencies on Windows. We cannot fix them
+        // anyway. If a software was installed somehow or detected, we
+        // assume that it works.
+        if (meInstalled && (d->package == "com.microsoft.Windows" ||
+            d->package == "com.microsoft.Windows32" ||
+            d->package == "com.microsoft.Windows64"))
             continue;
 
         // we cannot just use Dependency->findBestMatchToInstall here as

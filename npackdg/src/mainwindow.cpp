@@ -2508,6 +2508,14 @@ void MainWindow::on_actionCheck_dependencies_triggered()
                 break;
 
             for (auto d: pv->dependencies) {
+                // we ignore the dependencies on Windows. We cannot fix them
+                // anyway. If a software was installed somehow or detected, we
+                // assume that it works.
+                if (d->package == "com.microsoft.Windows" ||
+                    d->package == "com.microsoft.Windows32" ||
+                    d->package == "com.microsoft.Windows64")
+                    continue;
+
                 if (!ip->isInstalled(*d)) {
                     msg += "\r\n" + QString(
                             "%1 depends on %2, which is not installed").
