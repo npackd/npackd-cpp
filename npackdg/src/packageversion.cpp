@@ -741,12 +741,12 @@ QString PackageVersion::getPackageTitle(
     DBRepository* rep = DBRepository::getDefault();
 
     QString pn;
-    Package* package = rep->findPackage_(this->package);
-    if (package)
-        pn = package->title;
+    Package* p= rep->findPackage_(this->package);
+    if (p)
+        pn = p->title;
     else
         pn = this->package;
-    delete package;
+    delete p;
 
     if (includeFullPackageName)
         pn += " (" + this->package + ")";

@@ -104,7 +104,6 @@ private:
 
     void emitStatusChanged();
 
-    QString addBasicVars(std::vector<QString> *env);
     void addDependencyVars(std::vector<QString> *vars);
 
     /**
@@ -258,6 +257,13 @@ public:
     PackageVersion(const QString& package, const Version& version);
 
     virtual ~PackageVersion();
+
+    /**
+     * @brief adds some basic environment variables for this package version
+     * @param env the variables are added here
+     * @return error message
+     */
+    QString addBasicVars(std::vector<QString> *env);
 
     /**
      * @brief saves the text files associated with this package version

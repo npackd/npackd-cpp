@@ -198,24 +198,40 @@ void AbstractRepository::exportPackageSettingsCoInitializeAndFree(
                     getNewestInstalled(p->name);
 
             if (ipv && ipv->installed()) {
-                // TODO: Package title instead of name
-                Job* sub = job->newSubJob(1 / (packages.size() + 1),
-                    QObject::tr("Exporting settings for %1").arg(p->name),
-                    true, true);
+                QString err;
+                std::unique_ptr<PackageVersion> pv(findPackageVersion_(ipv->package,
+                    ipv->version, &err));
 
-                QFileInfo fi(ipv->getDirectory() + "\\.Npackd\\ExportUserSettings.bat");
-                if (fi.exists()) {
-                    QString d = dir.path() + "\\" + p->name;
-                    if (!qd.mkdir(d)) {
-                        job->setErrorMessage(QObject::tr("Cannot create the directory: %1").arg(d));
-                        break;
+                if (err.isEmpty()) {
+                    // TODO: Package title instead of name
+                    Job* sub = job->newSubJob(1 / (packages.size() + 1),
+                        QObject::tr("Exporting settings for %1").arg(p->name),
+                        true, true);
+
+                    QFileInfo fi(ipv->getDirectory() + "\\.Npackd\\ExportUserSettings.bat");
+                    if (fi.exists()) {
+                        QString d = dir.path() + "\\" + p->name;
+                        if (!qd.mkdir(d)) {
+                            job->setErrorMessage(QObject::tr("Cannot create the directory: %1").arg(d));
+                            break;
+                        }
+
+                        std::vector<QString> env;
+                        err = pv->addBasicVars(&env);
+                        if (!err.isEmpty())
+                            job->setErrorMessage(err);
+                        else {
+                            env.push_back("NPACKD_PACKAGE_DIR");
+                            env.push_back(ipv->getDirectory());
+                            WPMUtils::executeBatchFile(sub, d, fi.absoluteFilePath(), "",
+                                env, false, true);
+                        }
+                    } else {
+                        sub->setProgress(1);
+                        sub->complete();
                     }
-
-                    WPMUtils::executeBatchFile(sub, d, fi.absoluteFilePath(), "",
-                                                std::vector<QString>(), false, true);
                 } else {
-                    sub->setProgress(1);
-                    sub->complete();
+                    job->setErrorMessage(err);
                 }
             }
         }
