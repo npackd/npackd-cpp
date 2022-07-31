@@ -15,12 +15,12 @@
         <translation>Rahmen</translation>
     </message>
     <message>
-        <source>a non-existing directory where a new repository will be created</source>
-        <translation>ein nicht existierendes Verzeichnis, wo ein neues Repository erzeugt wird</translation>
-    </message>
-    <message>
         <source>Choose...</source>
         <translation>Auswählen...</translation>
+    </message>
+    <message>
+        <source>a non-existing directory where a new repository will be created</source>
+        <translation>ein nicht existierendes Verzeichnis, wo ein neues Repository erzeugt wird</translation>
     </message>
     <message>
         <source>Output directory:</source>
@@ -66,7 +66,16 @@
         <translation>URL:</translation>
     </message>
     <message>
+        <source>internal name</source>
+        <translation>interner Name</translation>
+    </message>
+    <message>
+        <source>Download URL:</source>
+        <translation type="vanished">Download-Adresse:</translation>
+    </message>
+    <message>
         <source>Internal name:</source>
+        <oldsource>Internal Name:</oldsource>
         <translation>Interner Name:</translation>
     </message>
     <message>
@@ -76,10 +85,6 @@
     <message>
         <source>TextLabel</source>
         <translation>Textfeld</translation>
-    </message>
-    <message>
-        <source>internal name</source>
-        <translation>interner Name</translation>
     </message>
 </context>
 <context>
@@ -96,13 +101,13 @@
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Enter here your search text. You can enter multiple words if a package should contain all of them. The words prefixed with a minus act as negative filters. The search is case insensitive. No special characters are filtered out.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot;width: 10cm; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Enter here your search text. You can enter multiple words if a package should contain all of them. The search is case insensitive. No special characters are filtered out.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Geben Sie hier Ihren Suchtext ein. Sie können mehrere Wörter eingeben, wenn ein Paket alle enthalten soll. Die mit einem Minuszeichen versehenen Wörter wirken als Negativfilter. Bei der Suche wird nicht zwischen Groß- und Kleinschreibung unterschieden. Es werden keine Sonderzeichen herausgefiltert.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot;width: 10cm; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Geben Sie hier Ihren zu suchenden Text ein. Sie können mehrere Wörter eingeben, falls ein Paket alle davon enthalten soll. Die Suche unterscheidet nicht zwischen Groß- und Kleinschreibung. Sonderzeichen werden nicht ausgefiltert.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&amp;Status</source>
@@ -148,6 +153,30 @@ p, li { white-space: pre-wrap; }
         <source>package sub-category filter</source>
         <translation>Paket-Unterkategorie-Filter</translation>
     </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Enter here your search text. You can enter multiple words if a package should contain all of them. The search is case insensitive. No special characters are filtered out. It is possible to search for categories too.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Geben Sie hier Ihren zu suchenden Text ein. Sie können mehrere Wörter eingeben, falls ein Paket alle davon enthalten soll. Die Suche unterscheidet nicht zwischen Groß- und Kleinschreibung. Sonderzeichen werden nicht ausgefiltert. Es ist auch möglich nach den Kategorien zu suchen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Enter here your search text. You can enter multiple words if a package should contain all of them. The words prefixed with a minus act as negative filters. The search is case insensitive. No special characters are filtered out.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Geben Sie hier Ihren Suchtext ein. Sie können mehrere Wörter eingeben, wenn ein Paket alle enthalten soll. Die mit einem Minuszeichen versehenen Wörter wirken als Negativfilter. Bei der Suche wird nicht zwischen Groß- und Kleinschreibung unterschieden. Es werden keine Sonderzeichen herausgefiltert.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -189,7 +218,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+I</source>
-        <translation>Strg+I</translation>
+        <translation>Ctrl+I</translation>
     </message>
     <message>
         <source>U&amp;ninstall</source>
@@ -201,7 +230,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+N</source>
-        <translation>Strg+N</translation>
+        <translation>Ctrl+N</translation>
     </message>
     <message>
         <source>&amp;Open web site</source>
@@ -213,7 +242,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+G</source>
-        <translation>Strg+G</translation>
+        <translation>Ctrl+G</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
@@ -225,7 +254,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation>Strg+S</translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <source>&amp;Update</source>
@@ -237,7 +266,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+U</source>
-        <translation>Strg+U</translation>
+        <translation>Ctrl+U</translation>
     </message>
     <message>
         <source>&amp;Test download site</source>
@@ -249,7 +278,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation>Strg+T</translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <source>About</source>
@@ -269,7 +298,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation>Strg+O</translation>
+        <translation>Ctrl+O</translation>
+    </message>
+    <message>
+        <source>Scan hard drives</source>
+        <translation type="vanished">Laufwerke scannen</translation>
     </message>
     <message>
         <source>Reload repositories</source>
@@ -289,7 +322,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+W</source>
-        <translation>Strg+W</translation>
+        <translation>Ctrl+W</translation>
     </message>
     <message>
         <source>Feedback</source>
@@ -312,6 +345,10 @@ p, li { white-space: pre-wrap; }
         <translation>Erzeugt ein neues Paket in einer der Standard-Repositories (Google Account wird benötigt)</translation>
     </message>
     <message>
+        <source>F2</source>
+        <translation type="vanished">F2</translation>
+    </message>
+    <message>
         <source>Open folder</source>
         <translation>Verzeichnis öffnen</translation>
     </message>
@@ -321,7 +358,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+E</source>
-        <translation>Strg+E</translation>
+        <translation>Ctrl+E</translation>
     </message>
     <message>
         <source>Choose columns...</source>
@@ -333,7 +370,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+M</source>
-        <translation>Strg+M</translation>
+        <translation>Ctrl+M</translation>
     </message>
     <message>
         <source>Show changelog</source>
@@ -345,7 +382,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+L</source>
-        <translation>Strg+L</translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <source>Toggle toolbar</source>
@@ -365,7 +402,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Ctrl+R</source>
-        <translation>Strg+R</translation>
+        <translation>Ctrl+R</translation>
     </message>
     <message>
         <source>Export...</source>
@@ -384,24 +421,24 @@ p, li { white-space: pre-wrap; }
         <translation>Prüft die installierten Pakete auf fehlende Abhängigkeiten</translation>
     </message>
     <message>
-        <source>Export package settings...</source>
-        <translation>Paketeinstellungen exportieren...</translation>
-    </message>
-    <message>
         <source>export user settings for the selected packages to a file</source>
-        <translation>Benutzereinstellungen für die ausgewählten Pakete in eine Datei exportieren</translation>
-    </message>
-    <message>
-        <source>Import package settings...</source>
-        <translation>Paketeinstellungen importieren...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>import packages settings from a file</source>
-        <translation>Paketeinstellungen aus einer Datei importieren</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Npackd package settings (*.nps);;All Files (*.*)</source>
-        <translation>Npackd-Paketeinstellungen (*.nps);;Alle Dateien (*.*)</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export package settings...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import package settings...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -442,10 +479,6 @@ p, li { white-space: pre-wrap; }
         <translation>Pakettitel</translation>
     </message>
     <message>
-        <source>Screen shots:</source>
-        <translation>Screenshots:</translation>
-    </message>
-    <message>
         <source>Description:</source>
         <translation>Beschreibung:</translation>
     </message>
@@ -467,6 +500,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Internal name:</source>
+        <oldsource>Internal Name:</oldsource>
         <translation>Interner Name:</translation>
     </message>
     <message>
@@ -475,6 +509,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Package home page:</source>
+        <oldsource>Package Home Page:</oldsource>
         <translation>Homepage des Pakets:</translation>
     </message>
     <message>
@@ -494,6 +529,22 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.test.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;TextLabel&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <source>Category:</source>
+        <translation>Kategorie:</translation>
+    </message>
+    <message>
+        <source>package category</source>
+        <translation>Paketkategorie</translation>
+    </message>
+    <message>
+        <source>Versions:</source>
+        <translation>Versionen:</translation>
+    </message>
+    <message>
+        <source>available versions</source>
+        <translation>verfügbare Versionen</translation>
+    </message>
+    <message>
         <source>Change log:</source>
         <translation>Änderungslog:</translation>
     </message>
@@ -502,20 +553,8 @@ p, li { white-space: pre-wrap; }
         <translation>Änderungslog</translation>
     </message>
     <message>
-        <source>Issue tracker:</source>
-        <translation>Problemverfolger:</translation>
-    </message>
-    <message>
-        <source>issue tracker</source>
-        <translation>Problemverfolger</translation>
-    </message>
-    <message>
-        <source>Category:</source>
-        <translation>Kategorie:</translation>
-    </message>
-    <message>
-        <source>package category</source>
-        <translation>Paketkategorie</translation>
+        <source>Screen shots:</source>
+        <translation>Screenshots:</translation>
     </message>
     <message>
         <source>Tags:</source>
@@ -534,12 +573,16 @@ p, li { white-space: pre-wrap; }
         <translation>Anzahl Sterne</translation>
     </message>
     <message>
-        <source>Versions:</source>
-        <translation>Versionen:</translation>
+        <source>Update automatically</source>
+        <translation type="vanished">Automatisches Update</translation>
     </message>
     <message>
-        <source>available versions</source>
-        <translation>verfügbare Versionen</translation>
+        <source>Issue tracker:</source>
+        <translation>Problemverfolger:</translation>
+    </message>
+    <message>
+        <source>issue tracker</source>
+        <translation>Problemverfolger</translation>
     </message>
 </context>
 <context>
@@ -577,28 +620,12 @@ p, li { white-space: pre-wrap; }
         <translation>Paketbeschreibung</translation>
     </message>
     <message>
-        <source>License:</source>
-        <translation>Lizenz:</translation>
-    </message>
-    <message>
         <source>license</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <source>TextLabel</source>
-        <translation>Textfeld</translation>
-    </message>
-    <message>
-        <source>Installation path:</source>
-        <translation>Installationspfad:</translation>
-    </message>
-    <message>
         <source>installation path on disk or empty if this package version is not installed</source>
         <translation>Installationspfad auf der Festplatte oder leer, falls diese Paketversion nicht installiert ist</translation>
-    </message>
-    <message>
-        <source>Detection info:</source>
-        <translation>Erkennungsinformationen:</translation>
     </message>
     <message>
         <source>detection info or empty</source>
@@ -606,6 +633,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Internal name:</source>
+        <oldsource>Internal Name:</oldsource>
         <translation>Interner Name:</translation>
     </message>
     <message>
@@ -629,18 +657,6 @@ p, li { white-space: pre-wrap; }
         <translation>direkter Downloadlink für die Paketdatei</translation>
     </message>
     <message>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.test.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;TextLabel&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.test.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;TextLabel&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
         <source>Type:</source>
         <translation>Typ:</translation>
     </message>
@@ -657,16 +673,8 @@ p, li { white-space: pre-wrap; }
         <translation>kryptografische Hash-Summe der Datei (entweder SHA-1 oder SHA-256)</translation>
     </message>
     <message>
-        <source>Important files:</source>
-        <translation>Wichtige Dateien:</translation>
-    </message>
-    <message>
-        <source>an entry in the start menu will be created for each important file mentioned here</source>
-        <translation>für jede hier erwähnte wichtige Datei wird ein Eintrag im Startmenü angelegt</translation>
-    </message>
-    <message>
-        <source>Dependencies:</source>
-        <translation>Abhängigkeiten:</translation>
+        <source>other packages that this one depends upon</source>
+        <translation type="vanished">andere Pakete, von denen dieses abhängt</translation>
     </message>
     <message>
         <source>Text files:</source>
@@ -685,6 +693,57 @@ p, li { white-space: pre-wrap; }
         <translation>Reiter 2</translation>
     </message>
     <message>
+        <source>SHA1:</source>
+        <translation type="vanished">SHA1:</translation>
+    </message>
+    <message>
+        <source>Important files:</source>
+        <oldsource>Important Files:</oldsource>
+        <translation>Wichtige Dateien:</translation>
+    </message>
+    <message>
+        <source>an entry in the start menu will be created for each important file mentioned here</source>
+        <translation>für jede hier erwähnte wichtige Datei wird ein Eintrag im Startmenü angelegt</translation>
+    </message>
+    <message>
+        <source>Dependencies:</source>
+        <translation>Abhängigkeiten:</translation>
+    </message>
+    <message>
+        <source>License:</source>
+        <translation>Lizenz:</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.test.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;TextLabel&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.test.de&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;TextLabel&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>TextLabel</source>
+        <translation>Textfeld</translation>
+    </message>
+    <message>
+        <source>Installation path:</source>
+        <oldsource>Installation Path:</oldsource>
+        <translation>Installationspfad:</translation>
+    </message>
+    <message>
+        <source>Package Home Page:</source>
+        <translation type="obsolete">Homepage des Pakets:</translation>
+    </message>
+    <message>
+        <source>Detection info:</source>
+        <oldsource>Detection Info:</oldsource>
+        <translation>Erkennungsinformationen:</translation>
+    </message>
+    <message>
         <source>Command line tools:</source>
         <translation>Befehlszeilen-Werkzeuge:</translation>
     </message>
@@ -694,63 +753,71 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ProgressFrame</name>
+    <message>
+        <source>Frame</source>
+        <translation type="vanished">Rahmen</translation>
+    </message>
+    <message>
+        <source>Task / Step:</source>
+        <translation type="vanished">Aufgabe / Schritt:</translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="vanished">-</translation>
+    </message>
+    <message>
+        <source>Elapsed time:</source>
+        <oldsource>Elapsed Time:</oldsource>
+        <translation type="obsolete">Vergangene Zeit:</translation>
+    </message>
+    <message>
+        <source>Remaining time:</source>
+        <oldsource>Remaining Time:</oldsource>
+        <translation type="obsolete">Verbleibende Zeit:</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>QCoreApplication</name>
+    <message>
+        <source>Missing option name: %1</source>
+        <translation type="obsolete">Fehlender Optionsname: %1</translation>
+    </message>
+    <message>
+        <source>Option name expected: %1</source>
+        <translation type="obsolete">Optionsname erwartet: %1</translation>
+    </message>
+    <message>
+        <source>Option name cannot start with the equality sign: %1</source>
+        <translation type="obsolete">Optionsname darf nicht mit einem Gleichheitszeichen beginnen: %1</translation>
+    </message>
+    <message>
+        <source>Only one-letter options can start with a minus sign: %1</source>
+        <translation type="obsolete">Nur Optionen mit einem einzigen Zeichen dürfen mit einem Minus-Zeichen beginnen: %1</translation>
+    </message>
+    <message>
+        <source>Unknown option: %1</source>
+        <translation type="obsolete">Unbekannte Option: %1</translation>
+    </message>
+    <message>
+        <source>Unexpected value for the option %1</source>
+        <translation type="obsolete">Unerwarteter Wert für die Option %1</translation>
+    </message>
+    <message>
+        <source>Missing value for the option %1</source>
+        <translation type="obsolete">Fehlender Wert für die Option %1</translation>
+    </message>
+    <message>
+        <source>CommandLineToArgvW failed</source>
+        <translation type="obsolete">CommandLineToArgvW fehlgeschlagen</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
-    <message>
-        <source>Cannot create directory: %0</source>
-        <translation>Kann Verzeichnis nicht erstellen: %0</translation>
-    </message>
-    <message>
-        <source>Downloading &amp; computing hash sum for %1</source>
-        <translation>Herunterladen &amp; Berechnen der Hash-Summe für %1</translation>
-    </message>
-    <message>
-        <source>List of packages</source>
-        <translation>Liste der Pakete</translation>
-    </message>
-    <message>
-        <source>Cannot open %1 for writing</source>
-        <translation>Kann %1 nicht zum Schreiben öffnen</translation>
-    </message>
-    <message>
-        <source>Cannot create a temporary directory</source>
-        <translation>Ein temporäres Verzeichnis kann nicht erstellt werden</translation>
-    </message>
-    <message>
-        <source>Exporting settings for %1</source>
-        <translation>Einstellungen für %1 exportieren</translation>
-    </message>
-    <message>
-        <source>Cannot create the directory: %1</source>
-        <translation>Das Verzeichnis kann nicht erstellt werden: %1</translation>
-    </message>
-    <message>
-        <source>Cannot zip the directory &quot;%1&quot; to &quot;%2&quot;</source>
-        <translation>Das Verzeichnis &quot;%1&quot; kann nicht nach &quot;%2&quot; gezippt werden.</translation>
-    </message>
-    <message>
-        <source>Unzip settings file</source>
-        <translation>Einstellungsdatei entpacken</translation>
-    </message>
-    <message>
-        <source>Importing settings for %1</source>
-        <translation>Einstellungen für %1 importieren</translation>
-    </message>
-    <message>
-        <source>%1 minutes</source>
-        <translation>%1 Minuten</translation>
-    </message>
-    <message>
-        <source>The preferred installation directory &quot;%1&quot; is not available</source>
-        <translation>Das bevorzugte Installationsverzeichnis &quot;%1&quot; ist nicht verfügbar</translation>
-    </message>
-    <message>
-        <source>Cannot install %1 into %2. The directory already exists.</source>
-        <translation>Kann %1 nicht in %2 installieren. Das Verzeichnis existiert bereits.</translation>
-    </message>
-    <message>
-        <source>Rename %1 to %2</source>
-        <translation>%1 zu %2 umbenennen</translation>
-    </message>
     <message>
         <source>Cannot find the package version %1 %2: %3</source>
         <translation>Kann Paketversion %1 %2 %3 nicht finden</translation>
@@ -760,20 +827,20 @@ p, li { white-space: pre-wrap; }
         <translation>Kann Paketversion %1 %2 nicht finden</translation>
     </message>
     <message>
-        <source>Downloading %1</source>
-        <translation>%1 herunterladen</translation>
+        <source>Closing running processes</source>
+        <translation type="vanished">Schließe laufende Prozesse</translation>
     </message>
     <message>
-        <source>Cannot create the directory %1</source>
-        <translation>Kann das Verzeichnis %1 nicht erstellen</translation>
+        <source>Directory %0 is locked</source>
+        <translation type="vanished">Verzeichnis %0 ist gesperrt</translation>
     </message>
     <message>
-        <source>Stopping the package %1</source>
-        <translation>Stoppe das Paket %1</translation>
+        <source>Directory %0 is locked by %1</source>
+        <translation type="vanished">Verzeichnis %0 ist gesperrt von %1</translation>
     </message>
     <message>
-        <source>Prepare install operations</source>
-        <translation>Bereite die Installationsvorgänge vor</translation>
+        <source>Stopping the package %1 of %2</source>
+        <translation type="vanished">Stoppe das Paket %1 von %2</translation>
     </message>
     <message>
         <source>Installing %1</source>
@@ -784,24 +851,20 @@ p, li { white-space: pre-wrap; }
         <translation>Deinstalliere %1</translation>
     </message>
     <message>
-        <source>Create package directory</source>
-        <translation>Paketverzeichnis erzeugen</translation>
+        <source>Deleting temporary directory %1</source>
+        <translation type="vanished">Lösche das temporäre Verzeichnis %1</translation>
     </message>
     <message>
-        <source>Install package</source>
-        <translation>Paket installieren</translation>
+        <source>Cannot install %1 into %2. The directory already exists.</source>
+        <translation>Kann %1 nicht in %2 installieren. Das Verzeichnis existiert bereits.</translation>
     </message>
     <message>
-        <source>Install operations</source>
-        <translation>Installationsvorgänge</translation>
+        <source>Cannot install %1 into %2. Cannot rename %3.</source>
+        <translation type="vanished">Kann %1 nicht in %2 installieren. Kann %3 nicht umbenennen.</translation>
     </message>
     <message>
-        <source>Deleting %1</source>
-        <translation>Lösche %1</translation>
-    </message>
-    <message>
-        <source>OpenSCManager failed: %0</source>
-        <translation>OpenSCManager fehlgeschlagen: %0</translation>
+        <source>No installable version found for the package %1</source>
+        <translation type="vanished">Keine installierbare Version des Pakets %1 gefunden</translation>
     </message>
     <message>
         <source>Cannot find the newest installed version for %1: %2</source>
@@ -812,152 +875,24 @@ p, li { white-space: pre-wrap; }
         <translation>Keine installierte Version des Pakets %1 gefunden</translation>
     </message>
     <message>
-        <source>Cannot find the package %1</source>
-        <translation>Kann das Paket %1 nicht finden</translation>
+        <source>The newest version (%1) for the package %2 is already installed</source>
+        <translation type="obsolete">Die neueste Version (%1) des Pakets %2 ist bereits installiert</translation>
     </message>
     <message>
-        <source>Error searching for the dependency matches: %1</source>
-        <translation>Fehler beim Suchen nach passenden Abhängigkeiten: %1</translation>
+        <source>XML parsing failed at line %1, column %2: %3</source>
+        <translation type="vanished">XML-Parsing schlug in Zeile %1, Spalte %2: %3 fehl</translation>
     </message>
     <message>
-        <source>Unsatisfied dependency: %1</source>
-        <translation>Nicht aufgelöste Abhängigkeit: %1</translation>
+        <source>Read invalid package version from the database: %1</source>
+        <translation type="vanished">Ungültige Paketversion wurde aus der Datenbank eingelesen: %1</translation>
     </message>
     <message>
-        <source>Unknown package: %1</source>
-        <translation>Unbekanntes Paket: %1</translation>
+        <source>Starting an SQL transaction</source>
+        <translation>Beginne SQL-Transaktion</translation>
     </message>
     <message>
-        <source>More than one package was found: %1</source>
-        <translation>Mehr als ein Paket wurde gefunden: %1</translation>
-    </message>
-    <message>
-        <source>The installation directory cannot be empty</source>
-        <translation>Das Installationsverzeichnis darf nicht leer sein</translation>
-    </message>
-    <message>
-        <source>The installation directory does not exist</source>
-        <translation>Das Installationsverzeichnis existiert nicht</translation>
-    </message>
-    <message>
-        <source>Cannot change the installation directory to %1. %2 %3 is installed there</source>
-        <translation>Kann das Installationsverzeichnis zu %1 nicht ändern. %2 %3 ist dort installiert</translation>
-    </message>
-    <message>
-        <source>Newer Npackd GUI was not found</source>
-        <translation>Ein neueres Npackd GUI wurde nicht gefunden</translation>
-    </message>
-    <message>
-        <source>Error starting %1: %2</source>
-        <translation>Fehler beim Starten von %1: %2</translation>
-    </message>
-    <message>
-        <source>Cannot load the list of repositories: %1</source>
-        <translation>Kann die Liste der Repositories nicht laden: %1</translation>
-    </message>
-    <message>
-        <source>Missing option: --package</source>
-        <translation>Fehlende Option: --package</translation>
-    </message>
-    <message>
-        <source>Invalid package name: %1</source>
-        <translation>Ungültiger Paketname: %1</translation>
-    </message>
-    <message>
-        <source>Planning</source>
-        <translation>Plane</translation>
-    </message>
-    <message>
-        <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
-        <translation>Die gewählten Änderungen erfordern eine Aktualisierung dieser Npackd-Instanz. Sind Sie sicher?</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Warnung</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Fehler</translation>
-    </message>
-    <message>
-        <source>internal package name (e.g. com.example.Editor or just Editor)</source>
-        <translation>interner Paketname (z.B. com.example.Editor oder einfach Editor)</translation>
-    </message>
-    <message>
-        <source>package</source>
-        <translation>Paket</translation>
-    </message>
-    <message>
-        <source>versions range (e.g. [1.5,2))</source>
-        <translation>Versionsbereich (z.B. [1.5,2))</translation>
-    </message>
-    <message>
-        <source>range</source>
-        <translation>Bereich</translation>
-    </message>
-    <message>
-        <source>version number (e.g. 1.5.12)</source>
-        <translation>Versionsnummer (z.B. 1.5.12)</translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation>Version</translation>
-    </message>
-    <message>
-        <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
-        <translation>Liste von Möglichkeiten die Anwendungen zu schließen (c=close, k=kill). Der Standardwert ist &apos;c&apos;.</translation>
-    </message>
-    <message>
-        <source>[c][k]</source>
-        <translation>[c][k]</translation>
-    </message>
-    <message>
-        <source>Error parsing the command line: %1</source>
-        <translation>Fehler beim Parsen der Befehlszeile: %1</translation>
-    </message>
-    <message>
-        <source>Wrong command: %1. Try npackdg help</source>
-        <translation>Falscher Befehl: %1. Versuchen Sie npackdg help</translation>
-    </message>
-    <message>
-        <source>Unexpected argument: %1</source>
-        <translation>Unerwarteter Argument: %1</translation>
-    </message>
-    <message>
-        <source>Missing option name: %1</source>
-        <translation>Fehlender Optionsname: %1</translation>
-    </message>
-    <message>
-        <source>Option name expected: %1</source>
-        <translation>Optionsname erwartet: %1</translation>
-    </message>
-    <message>
-        <source>Option name cannot start with the equality sign: %1</source>
-        <translation>Optionsname darf nicht mit einem Gleichheitszeichen beginnen: %1</translation>
-    </message>
-    <message>
-        <source>Only one-letter options can start with a minus sign: %1</source>
-        <translation>Nur Optionen mit einem einzigen Zeichen dürfen mit einem Minus-Zeichen beginnen: %1</translation>
-    </message>
-    <message>
-        <source>Unknown option: %1</source>
-        <translation>Unbekannte Option: %1</translation>
-    </message>
-    <message>
-        <source>Unexpected value for the option %1</source>
-        <translation>Unerwarteter Wert für die Option %1</translation>
-    </message>
-    <message>
-        <source>Missing value for the option %1</source>
-        <translation>Fehlender Wert für die Option %1</translation>
-    </message>
-    <message>
-        <source>CommandLineToArgvW failed</source>
-        <translation>CommandLineToArgvW fehlgeschlagen</translation>
-    </message>
-    <message>
-        <source>Control panel software</source>
-        <translation>Programme aus der Systemsteuerung</translation>
+        <source>Clearing the packages table</source>
+        <translation>Leere die Paketetabelle</translation>
     </message>
     <message>
         <source>No records found</source>
@@ -968,14 +903,6 @@ p, li { white-space: pre-wrap; }
         <translation>Keine Zahl</translation>
     </message>
     <message>
-        <source>Clearing the repository database</source>
-        <translation>Lösche die Repository-Datenbank</translation>
-    </message>
-    <message>
-        <source>Clearing the packages table</source>
-        <translation>Leere die Paketetabelle</translation>
-    </message>
-    <message>
         <source>Clearing the package versions table</source>
         <translation>Leere die Paketversionentabelle</translation>
     </message>
@@ -984,68 +911,45 @@ p, li { white-space: pre-wrap; }
         <translation>Leere die Lizenzentabelle</translation>
     </message>
     <message>
-        <source>Clearing the links table</source>
-        <translation>Leere die Tabelle mit den Links</translation>
-    </message>
-    <message>
-        <source>Clearing the tags table</source>
-        <translation>Löschen der Tags-Tabelle</translation>
-    </message>
-    <message>
-        <source>Clearing the command line tool definitions</source>
-        <translation>Lösche die Definitionen von Befehlszeilen-Werkzeugen</translation>
-    </message>
-    <message>
         <source>Clearing the categories table</source>
         <translation>Leere die Kategorientabelle</translation>
-    </message>
-    <message>
-        <source>Clearing the table with information about installed packages</source>
-        <translation>Lösche die Tabelle mit den Information zu den installierten Paketen</translation>
     </message>
     <message>
         <source>Error saving the list of repositories in the database: %1</source>
         <translation>Fehler beim Speichern der Liste der Repositories in der Datenbank: %1</translation>
     </message>
     <message>
-        <source>Repository %1 of %2</source>
-        <translation>Repository %1 von %2</translation>
+        <source>Detaching the temporary database</source>
+        <translation>Entkopple die temporäre Datenbank</translation>
     </message>
     <message>
-        <source>Error loading the repository %1: %2</source>
-        <translation>Fehler beim Laden des Repositories %1: %2</translation>
+        <source>Reorganizing the database</source>
+        <translation>Reorganisiere die Datenbank</translation>
     </message>
     <message>
-        <source>No repositories defined</source>
-        <translation>Keine Repositories definiert</translation>
+        <source>Creating a temporary file</source>
+        <translation type="vanished">Erstelle eine temporäre Datei</translation>
     </message>
     <message>
-        <source>Extracting</source>
-        <translation>Entpacke</translation>
+        <source>Error creating a temporary file</source>
+        <translation>Fehler beim Erstellen einer temporären Datei</translation>
     </message>
     <message>
-        <source>Unzipping the repository %1 failed: %2</source>
-        <translation>Entpacken des Repository %1 ist fehlgeschlagen: %2</translation>
-    </message>
-    <message>
-        <source>Rep.xml is missing in a repository in ZIP format</source>
-        <translation>Rep.xml fehlt in der Repository im ZIP-Format</translation>
-    </message>
-    <message>
-        <source>Parsing XML</source>
-        <translation>Parse XML</translation>
+        <source>Opening the package database</source>
+        <oldsource>Creating a temporary database</oldsource>
+        <translation type="obsolete">Öffne temporäre Datenbank</translation>
     </message>
     <message>
         <source>Starting an SQL transaction (tempdb)</source>
         <translation>Starte eine SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
-        <source>Clearing the database</source>
-        <translation>Leere die Datenbank</translation>
-    </message>
-    <message>
         <source>Downloading the remote repositories and filling the local database (tempdb)</source>
         <translation>Lade die entfernten Repositories herunter und fülle die lokale Datenbank (tempdb)</translation>
+    </message>
+    <message>
+        <source>Commiting the SQL transaction (tempdb)</source>
+        <translation>Führe einen Commit aus für die SQL-Transaktion (tempdb)</translation>
     </message>
     <message>
         <source>Refreshing the installation status (tempdb)</source>
@@ -1056,32 +960,73 @@ p, li { white-space: pre-wrap; }
         <translation>Aktualisiere die Stati für die installierten Pakete in der Datenbank (tempdb)</translation>
     </message>
     <message>
-        <source>Removing packages without versions</source>
-        <translation>Entferne Pakete ohne Versionen</translation>
+        <source>Updating the temporary database</source>
+        <translation>Aktualisiere die temporäre Datenbank</translation>
     </message>
     <message>
-        <source>Commiting the SQL transaction (tempdb)</source>
-        <translation>Führe einen Commit aus für die SQL-Transaktion (tempdb)</translation>
+        <source>Attaching the temporary database</source>
+        <translation>Die temporäre Datenbank wird angehängt</translation>
+    </message>
+    <message>
+        <source>Transferring the data from the temporary database</source>
+        <translation>Übertrage die Daten aus der temporären Datenbank</translation>
+    </message>
+    <message>
+        <source>Commiting the SQL transaction</source>
+        <translation>Commit für die  SQL-Transaktion ausführen</translation>
+    </message>
+    <message>
+        <source>Clearing the database</source>
+        <translation>Leere die Datenbank</translation>
+    </message>
+    <message>
+        <source>Downloading the remote repositories and filling the local database</source>
+        <translation type="vanished">Herunterladen der entfernten Repositories und Füllen der lokalen Datenbank</translation>
+    </message>
+    <message>
+        <source>Updating statuses</source>
+        <translation>Aktualisiere Stati</translation>
+    </message>
+    <message>
+        <source>Downloading the remote repositories</source>
+        <translation type="obsolete">Lade die entfernten Repositories</translation>
+    </message>
+    <message>
+        <source>Filling the local database</source>
+        <translation type="obsolete">Fülle die lokale Datenbank</translation>
+    </message>
+    <message>
+        <source>Refreshing the installation status</source>
+        <translation type="vanished">Aktualisiere den Installationsstatus</translation>
+    </message>
+    <message>
+        <source>Updating the status for installed packages in the database</source>
+        <translation type="vanished">Aktualisiere den Status der installierten Pakete in der Datenbank</translation>
     </message>
     <message>
         <source>Reading categories</source>
         <translation>Lese die Kategorien ein</translation>
     </message>
     <message>
-        <source>Error creating a temporary file</source>
-        <translation>Fehler beim Erstellen einer temporären Datei</translation>
+        <source>Removing packages without versions</source>
+        <translation>Entferne Pakete ohne Versionen</translation>
     </message>
     <message>
-        <source>Updating the temporary database</source>
-        <translation>Aktualisiere die temporäre Datenbank</translation>
+        <source>Clearing the links table</source>
+        <translation>Leere die Tabelle mit den Links</translation>
     </message>
     <message>
-        <source>Error opening the database: %1</source>
-        <translation>Fehler beim Öffnen der Datenbank: %1</translation>
+        <source>Downloading %1</source>
+        <translation>%1 herunterladen</translation>
     </message>
     <message>
-        <source>Transferring the data from the temporary database</source>
-        <translation>Übertrage die Daten aus der temporären Datenbank</translation>
+        <source>Unzipping the repository %1 failed: %2</source>
+        <oldsource>Unzipping the repository failed: %1</oldsource>
+        <translation>Entpacken des Repository %1 ist fehlgeschlagen: %2</translation>
+    </message>
+    <message>
+        <source>Rep.xml is missing in a repository in ZIP format</source>
+        <translation>Rep.xml fehlt in der Repository im ZIP-Format</translation>
     </message>
     <message>
         <source>Inserting data in the packages table</source>
@@ -1096,52 +1041,20 @@ p, li { white-space: pre-wrap; }
         <translation>Füge Daten in die Lizenzentabelle ein</translation>
     </message>
     <message>
-        <source>Updating statuses</source>
-        <translation>Aktualisiere Stati</translation>
-    </message>
-    <message>
-        <source>Attaching the temporary database</source>
-        <translation>Die temporäre Datenbank wird angehängt</translation>
-    </message>
-    <message>
-        <source>Starting an SQL transaction</source>
-        <translation>Beginne SQL-Transaktion</translation>
-    </message>
-    <message>
-        <source>Commiting the SQL transaction</source>
-        <translation>Commit für die  SQL-Transaktion ausführen</translation>
-    </message>
-    <message>
-        <source>Detaching the temporary database</source>
-        <translation>Entkopple die temporäre Datenbank</translation>
-    </message>
-    <message>
-        <source>Reorganizing the database</source>
-        <translation>Reorganisiere die Datenbank</translation>
-    </message>
-    <message>
-        <source>Installation operation</source>
-        <translation>Installationsvorgang</translation>
-    </message>
-    <message>
         <source>Connecting</source>
         <translation>Verbinde</translation>
     </message>
     <message>
-        <source>Too many retries</source>
-        <translation>Zu viele Wiederholungsversuche</translation>
+        <source>Cancelled by the user</source>
+        <translation type="vanished">Vom Benutzer abgebrochen</translation>
     </message>
     <message>
-        <source>HTTP status code %1</source>
-        <translation>HTTP Statuscode %1</translation>
+        <source>Invalid handle</source>
+        <translation type="vanished">Ungültiger Handle</translation>
     </message>
     <message>
-        <source>Downloading</source>
-        <translation>Herunterladen</translation>
-    </message>
-    <message>
-        <source>Reading the data</source>
-        <translation>Lese die Daten</translation>
+        <source>Unknown error %1 from InternetErrorDlg</source>
+        <translation type="vanished">Unbekannter Fehler %1 von InternetErrorDlg</translation>
     </message>
     <message>
         <source>The HTTP proxy requires authentication.</source>
@@ -1164,6 +1077,18 @@ p, li { white-space: pre-wrap; }
         <translation>Kann HTTP-Statuscode %1 nicht verarbeiten</translation>
     </message>
     <message>
+        <source>HTTP status code %1</source>
+        <translation>HTTP Statuscode %1</translation>
+    </message>
+    <message>
+        <source>Downloading</source>
+        <translation>Herunterladen</translation>
+    </message>
+    <message>
+        <source>Reading the data</source>
+        <translation>Lese die Daten</translation>
+    </message>
+    <message>
         <source>zlib error %1</source>
         <translation>zlib-Fehler %1</translation>
     </message>
@@ -1176,10 +1101,6 @@ p, li { white-space: pre-wrap; }
         <translation>%L0 Bytes</translation>
     </message>
     <message>
-        <source>Error opening file: %1</source>
-        <translation>Fehler beim Öffnen von Datei: %1</translation>
-    </message>
-    <message>
         <source>Cannot download a file from a relative path %1</source>
         <translation>Kann die Datei vom relativen Pfad %1 nicht herunterladen</translation>
     </message>
@@ -1188,64 +1109,60 @@ p, li { white-space: pre-wrap; }
         <translation>URL-Schema %1 wird nicht unterstützt</translation>
     </message>
     <message>
+        <source>Error opening file: %1</source>
+        <translation>Fehler beim Öffnen von Datei: %1</translation>
+    </message>
+    <message>
         <source>Cannot process relative file name %1</source>
         <translation>Kann den relativen Dateinamen %1 nicht verarbeiten</translation>
     </message>
     <message>
-        <source>Using the HEAD HTTP method</source>
-        <translation>Benutze die HTTP Methode HEAD</translation>
+        <source>Detecting directories deleted externally</source>
+        <translation type="vanished">Ermittle Verzeichnisse, die extern gelöscht wurden</translation>
     </message>
     <message>
-        <source>Using the GET HTTP method</source>
-        <translation>Benutze die HTTP Methode GET</translation>
+        <source>Reading registry package database</source>
+        <translation type="vanished">Lese Registry-Paketdatenbank</translation>
     </message>
     <message>
-        <source>Choose export directory</source>
-        <translation>Exportverzeichnis auswählen</translation>
-    </message>
-    <message>
-        <source>Cannot export to an existing non-empty directory</source>
-        <translation>Kann nicht in ein existierendes und nicht leeres Verzeichnis exportieren</translation>
-    </message>
-    <message>
-        <source>Cannot open the file %1</source>
-        <translation>Kann die Datei %1 nicht öffnen</translation>
-    </message>
-    <message>
-        <source>Reading the list of packages installed by Npackd</source>
-        <translation>Lese die Liste der von Npackd installierten Pakete</translation>
+        <source>Correcting installation paths created by previous versions of Npackd</source>
+        <translation type="vanished">Korrigiere die von der vorherigen Versionen von Npackd erzeugten Installationspfade</translation>
     </message>
     <message>
         <source>Adding well-known packages</source>
         <translation>Füge bekannte Pakete hinzu</translation>
     </message>
     <message>
+        <source>Setting the NPACKD_CL environment variable</source>
+        <translation>Setze die NPACKD_CL-Umgebungsvariable</translation>
+    </message>
+    <message>
+        <source>Reading the list of packages installed by Npackd</source>
+        <translation>Lese die Liste der von Npackd installierten Pakete</translation>
+    </message>
+    <message>
         <source>Detecting MSI packages</source>
         <translation>Ermittle MSI-Pakete</translation>
+    </message>
+    <message>
+        <source>Detecting</source>
+        <translation type="vanished">Entdecken</translation>
+    </message>
+    <message>
+        <source>Processing detected packages</source>
+        <translation type="vanished">Verarbeite die gefundenen Pakete</translation>
+    </message>
+    <message>
+        <source>Saving</source>
+        <translation type="vanished">Speichere</translation>
     </message>
     <message>
         <source>Detecting software control panel packages</source>
         <translation>Ermittle Pakete aus der Systemsteuerung</translation>
     </message>
     <message>
-        <source>Detecting Windows Update packages</source>
-        <translation>Ermittle die Windows-Update-Pakete</translation>
-    </message>
-    <message>
-        <source>Saving detected packages %1</source>
-        <translation>Speichere erkannte Pakete %1</translation>
-    </message>
-    <message>
-        <source>Adding detected versions %1</source>
-        <translation>Füge erkannte Versionen %1 hinzu</translation>
-    </message>
-    <message>
-        <source>Setting the NPACKD_CL environment variable</source>
-        <translation>Setze die NPACKD_CL-Umgebungsvariable</translation>
-    </message>
-    <message>
-        <source>Npackd list of installed packages</source>
-        <translation>Npackd-Liste der installierten Pakete</translation>
+        <source>Clearing information about installed package versions in nested directories</source>
+        <translation type="vanished">Leere Informationen über installierte Paketversionen in Verzeichnissen mit Unterverzeichnissen</translation>
     </message>
     <message>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
@@ -1253,6 +1170,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
+        <oldsource>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</oldsource>
         <translation>Bitte laden Sie die 64 Bit-Version von http://code.google.com/p/windows-package-manager/ herunter</translation>
     </message>
     <message>
@@ -1292,12 +1210,185 @@ p, li { white-space: pre-wrap; }
         <translation>%1 Jobs (%2%, %3)</translation>
     </message>
     <message>
+        <source>Cannot find the package version %1: %2</source>
+        <translation>Kann Paketversion %1:%2 nicht finden</translation>
+    </message>
+    <message>
+        <source>The package %1 is locked by a currently running installation/removal.</source>
+        <translation>Das Paket %1 ist von einem aktuell laufenden Installations-/Deinstallationsjob gesperrt.</translation>
+    </message>
+    <message>
+        <source>Installing</source>
+        <translation type="vanished">Installiere</translation>
+    </message>
+    <message>
+        <source>Uninstalling</source>
+        <translation type="vanished">Deinstalliere</translation>
+    </message>
+    <message>
+        <source>The package %1 will be uninstalled.</source>
+        <translation>Das Paket %1 wird deinstalliert.</translation>
+    </message>
+    <message>
+        <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
+        <translation>Das entsprechende Verzeichnis %1 wird komplett gelöscht. Es gibt keinen Weg die gelöschten Dateien wiederherzustellen. Die Prozesse, die die Dateien sperren, werden geschlossen.</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be installed:</source>
+        <translation>%1 Paket(e) werden installiert:</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be uninstalled:</source>
+        <translation>%1 Paket(e) werden deinstalliert:</translation>
+    </message>
+    <message>
+        <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
+        <translation>Die entsprechenden Verzeichnisse werden komplett gelöscht. Es gibt keinen Weg die Dateien wiederherzustellen. Die Prozesse, die die Dateien sperren, werden geschlossen.</translation>
+    </message>
+    <message>
+        <source>Installing %1 packages, uninstalling %2 packages, updating %3 packages</source>
+        <translation type="vanished">Installiere %1 Pakete, deinstalliere %2 Pakete, aktualisiere %3 Pakete</translation>
+    </message>
+    <message>
+        <source>%3 package(s) will be updated:</source>
+        <translation>%3 Paket(e) werden aktualisiert:</translation>
+    </message>
+    <message>
+        <source>%3 package(s) will be installed:</source>
+        <translation>%3 Paket(e) werden installiert:</translation>
+    </message>
+    <message>
+        <source>Cannot find the package version</source>
+        <translation type="vanished">Kann die Paketversion nicht finden</translation>
+    </message>
+    <message>
+        <source>The package %1 will be uninstalled. The corresponding directory %2 will be completely deleted. There is no way to restore the files.</source>
+        <translation type="vanished">Das Paket %1 wird deinstalliert. Das zugehörige Verzeichnis %2 wird vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Deinstallieren</translation>
+    </message>
+    <message>
+        <source>Newer Npackd GUI was not found</source>
+        <translation>Ein neueres Npackd GUI wurde nicht gefunden</translation>
+    </message>
+    <message>
+        <source>Error starting %1: %2</source>
+        <translation>Fehler beim Starten von %1: %2</translation>
+    </message>
+    <message>
+        <source>Missing option: --package</source>
+        <translation>Fehlende Option: --package</translation>
+    </message>
+    <message>
+        <source>Invalid package name: %1</source>
+        <translation>Ungültiger Paketname: %1</translation>
+    </message>
+    <message>
+        <source>Unknown package: %1</source>
+        <translation>Unbekanntes Paket: %1</translation>
+    </message>
+    <message>
+        <source>Ambiguous package name</source>
+        <translation type="vanished">Mehrdeutiger Paketname</translation>
+    </message>
+    <message>
+        <source>Planning</source>
+        <translation>Plane</translation>
+    </message>
+    <message>
+        <source>Updating</source>
+        <translation type="vanished">Aktualisiere</translation>
+    </message>
+    <message>
+        <source>internal package name (e.g. com.example.Editor or just Editor)</source>
+        <translation>interner Paketname (z.B. com.example.Editor oder einfach Editor)</translation>
+    </message>
+    <message>
+        <source>package</source>
+        <translation>Paket</translation>
+    </message>
+    <message>
+        <source>versions range (e.g. [1.5,2))</source>
+        <translation>Versionsbereich (z.B. [1.5,2))</translation>
+    </message>
+    <message>
+        <source>range</source>
+        <translation>Bereich</translation>
+    </message>
+    <message>
+        <source>version number (e.g. 1.5.12)</source>
+        <translation>Versionsnummer (z.B. 1.5.12)</translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation>Version</translation>
+    </message>
+    <message>
+        <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
+        <oldsource>comma separated list of ways to close running applications (close, kill)</oldsource>
+        <translation>Liste von Möglichkeiten die Anwendungen zu schließen (c=close, k=kill). Der Standardwert ist &apos;c&apos;.</translation>
+    </message>
+    <message>
+        <source>[c][k]</source>
+        <translation>[c][k]</translation>
+    </message>
+    <message>
+        <source>list</source>
+        <translation type="vanished">Liste</translation>
+    </message>
+    <message>
+        <source>Error parsing the command line: %1</source>
+        <translation>Fehler beim Parsen der Befehlszeile: %1</translation>
+    </message>
+    <message>
+        <source>Wrong command: %1. Try npackdg help</source>
+        <translation>Falscher Befehl: %1. Versuchen Sie npackdg help</translation>
+    </message>
+    <message>
+        <source>Unexpected argument: %1</source>
+        <translation>Unerwarteter Argument: %1</translation>
+    </message>
+    <message>
+        <source>Installing %1 packages</source>
+        <translation>Installiere %1 Pakete</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be installed: %2</source>
+        <translation type="vanished">%1 Paket(e) wird/werden installiert: %2</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Installieren</translation>
+    </message>
+    <message>
+        <source>Uninstalling %1 packages</source>
+        <translation>Deinstalliere %1 Pakete</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be uninstalled: %2. The corresponding directories will be completely deleted. There is no way to restore the files.</source>
+        <translation type="vanished">%1 Paket(e) wird/werden deinstalliert: %2. Die zugehörigen Verzeichnisse werden vollständig gelöscht. Die gelöschten Dateien können nicht wiederhergestellt werden.</translation>
+    </message>
+    <message>
+        <source>Installing %1 packages, uninstalling %2 packages</source>
+        <translation type="vanished">Installiere %1 Pakete, deinstalliere %2 Pakete</translation>
+    </message>
+    <message>
+        <source>%1 package(s) will be uninstalled: %2 (the corresponding directories will be completely deleted; there is no way to restore the files) and %3 package(s) will be installed: %4.</source>
+        <translation type="vanished">%1 Paket(e) wird/werden deinstalliert: %2 (die zugehörigen Verzeichnisse werden vollständig gelöscht; die gelöschten Dateien können nicht wiederhergestellt werden) und %3 Paket(e) wird/werden installiert: %4.</translation>
+    </message>
+    <message>
+        <source>Install/Uninstall</source>
+        <translation>Installieren/Deinstallieren</translation>
+    </message>
+    <message>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Fehler beim Suchen der neuesten installierten Version von %1: %2</translation>
     </message>
     <message>
-        <source>Reloading repositories and detecting installed software</source>
-        <translation>Lade die Repositories neu und ermittle die installierten Sofware</translation>
+        <source>Initializing</source>
+        <translation type="vanished">Initialisiere</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -1308,40 +1399,64 @@ p, li { white-space: pre-wrap; }
         <translation>Über</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Home page (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Changelog&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Documentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Author: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Contributors:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ support, CMake integration, group policy configuration, non-admin installations&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Manager für Softwarepakete für Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Homepage (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Änderungen&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Dokumentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Autor: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Mitwirkende:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ Unterstützung, CMake Integration, Konfiguration für Gruppenrichtlinien, Installationen für nicht Administratoren&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - Softwarepaketmanager für Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
+        <translation>Die gewählten Änderungen erfordern eine Aktualisierung dieser Npackd-Instanz. Sind Sie sicher?</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warnung</translation>
+    </message>
+    <message>
+        <source>Error opening the database: %1</source>
+        <translation>Fehler beim Öffnen der Datenbank: %1</translation>
+    </message>
+    <message>
+        <source>Reloading repositories and detecting installed software</source>
+        <translation>Lade die Repositories neu und ermittle die installierten Sofware</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;br&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;https://www.npackd.org/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 -Software Paket Manager für Windows (R)&lt;br&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;https://www.npackd.org/&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Jobs</source>
         <translation>Jobs</translation>
     </message>
     <message>
+        <source>Cannot start the scan now. The package %1 is locked by a currently running installation/removal.</source>
+        <translation type="vanished">Kann den Scan jetzt nicht starten. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
+    </message>
+    <message>
+        <source>Scanning the hard drives</source>
+        <translation type="vanished">Durchsuche die Festplatten</translation>
+    </message>
+    <message>
+        <source>%1 package(s) detected</source>
+        <translation type="vanished">%1 Paket(e) erkannt</translation>
+    </message>
+    <message>
+        <source>Package detection status</source>
+        <translation type="vanished">Status der Paketerkennung</translation>
+    </message>
+    <message>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Kann Repository jetzt nicht neu laden. Das Paket %1 wird von einer aktuell laufenden Installation/Deinstallation gesperrt.</translation>
     </message>
     <message>
+        <source>Cannot start this action while a drive scan is in progress</source>
+        <translation type="vanished">Kann diese Aktion nicht starten während der Festplatten-Scan läuft</translation>
+    </message>
+    <message>
+        <source>Cannot start this action while repositories reload is in progress</source>
+        <translation type="vanished">Kann diese Aktioon nicht starten während die Repositories aktualisiert werden</translation>
+    </message>
+    <message>
         <source>Cannot open the URL %1</source>
         <translation>Kann die URL %1 nicht öffnen</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation>Export</translation>
-    </message>
-    <message>
-        <source>Export packages</source>
-        <translation>Pakete exportieren</translation>
-    </message>
-    <message>
-        <source>All dependencies are installed</source>
-        <translation>Alle Abhängigkeiten sind installiert</translation>
-    </message>
-    <message>
-        <source>Export package settings</source>
-        <translation>Paketeinstellungen exportieren</translation>
-    </message>
-    <message>
-        <source>Import package settings</source>
-        <translation>Paketeinstellungen importieren</translation>
     </message>
     <message>
         <source>Dismiss</source>
@@ -1350,6 +1465,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Dismiss (%1 seconds)</source>
         <translation>Ausblenden (%1 Sekunden)</translation>
+    </message>
+    <message>
+        <source>MSI database</source>
+        <translation type="vanished">MSI-Datenbank</translation>
     </message>
     <message>
         <source>MSI packages</source>
@@ -1362,10 +1481,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>unknown</source>
         <translation>Unbekannt</translation>
-    </message>
-    <message>
-        <source>n/a</source>
-        <translation>n.v.</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1416,54 +1531,6 @@ p, li { white-space: pre-wrap; }
         <translation>Download-Größe</translation>
     </message>
     <message>
-        <source>Category</source>
-        <translation>Kategorie</translation>
-    </message>
-    <message>
-        <source>Tags</source>
-        <translation>Tags</translation>
-    </message>
-    <message>
-        <source>Stars</source>
-        <translation>Sterne</translation>
-    </message>
-    <message>
-        <source>Cannot parse a version range: %1</source>
-        <translation>Kann den Versionsbereich nicht parsen: %1</translation>
-    </message>
-    <message>
-        <source>Package version not found: %1 (%2) %3</source>
-        <translation>Paketversion nicht gefunden: %1 (%2) %3</translation>
-    </message>
-    <message>
-        <source>No installable version was found for the package %1 (%2)</source>
-        <translation>Keine installierbare Version wurde für das Paket %1 (%2) gefunden</translation>
-    </message>
-    <message>
-        <source>Cannot parse version: %1</source>
-        <translation>Kann die Version nicht Parsen: %1</translation>
-    </message>
-    <message>
-        <source>Empty ID</source>
-        <translation>Leere ID</translation>
-    </message>
-    <message>
-        <source>Empty segment at position %1 in %2</source>
-        <translation>Leeres Segment an Position %1 in %2</translation>
-    </message>
-    <message>
-        <source>-- at position %1 in %2</source>
-        <translation>-- an Position %1 in %2</translation>
-    </message>
-    <message>
-        <source>Wrong character at position 1 in %1</source>
-        <translation>Falsches Zeichen an Position 1 in %1</translation>
-    </message>
-    <message>
-        <source>Wrong character at position %1 in %2</source>
-        <translation>Falsches Zeichen an Position %1 in %2</translation>
-    </message>
-    <message>
         <source>Error storing the information about an installed package version in the Windows registry: %1</source>
         <translation>Fehler beim Speichern der Informationen über eine installierte Paketversion in der Windows-Registry: %1</translation>
     </message>
@@ -1484,84 +1551,96 @@ p, li { white-space: pre-wrap; }
         <translation>Lösche Verknüpfungen</translation>
     </message>
     <message>
-        <source>Running the Inno Setup removal (this may take some time)</source>
-        <translation>Führe die Inno Setup-Deinstallation  aus (das kann eine Weile dauern)</translation>
+        <source>Waiting while other (un)installation scripts are running</source>
+        <translation type="vanished">Warte, da andere (De-)Installationsskripte gerade laufen</translation>
     </message>
     <message>
-        <source>Acquire installation script lock</source>
-        <translation>Erlange den Installationsskript-Lock</translation>
-    </message>
-    <message>
-        <source>%1. Full output was saved in %2</source>
-        <translation>%1. Gesamte Ausgabe wurde in %2 gespeichert</translation>
-    </message>
-    <message>
-        <source>The last lines of the output from the Inno Setup log file:</source>
-        <translation>Die letzten Zeilen der Ausgabe von der Inno Setup-Logdatei:</translation>
-    </message>
-    <message>
-        <source>Running the NSIS removal (this may take some time)</source>
-        <translation>Führe die NSIS-Deinstallation aus (das kann eine Weile dauern)</translation>
+        <source>Waiting while other (un)installation scripts are running (%1 minutes)</source>
+        <translation type="vanished">Warte, da andere (De-)Installationsskripte gerade laufen (%1 Minuten)</translation>
     </message>
     <message>
         <source>Running the uninstallation script (this may take some time)</source>
         <translation>Führe das Deinstallationsskript aus (dies kann einige Zeit dauern)</translation>
     </message>
     <message>
-        <source>Deleting files</source>
-        <translation>Lösche Dateien</translation>
-    </message>
-    <message>
-        <source>Failed to delete the package directory &quot;%1&quot;: %2</source>
-        <translation>Das Paketverzeichnis &quot;%1&quot; konnte nicht gelöscht werden: %2</translation>
+        <source>The last lines of the output from the removal script:</source>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Deinstallieren:</translation>
     </message>
     <message>
         <source>Updating NPACKD_CL</source>
         <translation>Aktualisiere NPACKD_CL</translation>
     </message>
     <message>
-        <source>The package %1 was removed successfully from &quot;%2&quot;</source>
-        <translation>Das Paket %1 wurde erfolgreich aus &quot;%2&quot; entfernt</translation>
+        <source>Hash sum %1 found, but %2 was expected. The file has changed.</source>
+        <translation>Hash-Summe %1 gefunden, aber %2 wurde erwartet. Die Datei wurde geändert.</translation>
     </message>
     <message>
-        <source>The removal of the package %1 from &quot;%2&quot; failed: %3</source>
-        <translation>Das Entfernen des Pakets %1 von &quot;%2&quot; ist fehlgeschlagen: %3</translation>
+        <source>Checking for viruses</source>
+        <translation>Überprüfe auf Viren</translation>
     </message>
     <message>
-        <source>Deleting the directory %1</source>
-        <translation>Lösche das Verzeichnis %1</translation>
+        <source>Antivirus check failed. The file is not safe.</source>
+        <translation>Die Antivirus-Überprüfung is fehlgeschlagen. Diese Datei ist nicht sicher.</translation>
     </message>
     <message>
-        <source>Cannot open the file: %0</source>
-        <translation>Kann die Datei nicht öffnen: %0</translation>
+        <source>The last lines of the output from the installation script:</source>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Installieren:</translation>
     </message>
     <message>
-        <source>Downloading &amp; computing hash sum</source>
-        <translation>Herunterladen und Hash-Summe erzeugen</translation>
+        <source>%1. Full output was saved in %2</source>
+        <translation>%1. Gesamte Ausgabe wurde in %2 gespeichert</translation>
     </message>
     <message>
-        <source>Downloading &amp; computing hash sum (2nd try)</source>
-        <translation>Herunterladen und Hash-Summe erzeugen (2. Versuch)</translation>
+        <source>Executing the stop script</source>
+        <translation>Führe das Skript zum Stoppen aus</translation>
     </message>
     <message>
-        <source>Error downloading %1: %2</source>
-        <translation>Fehler beim Herunterladen von %1: %2</translation>
+        <source>The last lines of the output from the package stop script:</source>
+        <translation type="vanished">Die letzten Zeilen der Ausgabe von dem Skript zum Stoppen:</translation>
     </message>
     <message>
-        <source>Package %1 (%2) is not installed</source>
-        <translation>Paket %1 (%2) ist nicht installiert</translation>
+        <source>Deleting files</source>
+        <translation>Lösche Dateien</translation>
     </message>
     <message>
-        <source>More than one version of the package %1 (%2) is installed: %3</source>
-        <translation>Mehr als eine Version des Pakets %1 (%2) ist installiert: %3</translation>
+        <source>Cannot change directory to %1</source>
+        <translation type="vanished">Kann Verzeichnis nicht auf %1 setzen</translation>
     </message>
     <message>
-        <source>Cannot find the EXE Proxy executable.</source>
-        <translation>Kann die ausführbare Datei von EXE Proxy nicht finden.</translation>
+        <source>Cannot create directory %0%1</source>
+        <translation type="vanished">Kann Verzeichnis %0%1 nicht erstellen</translation>
     </message>
     <message>
-        <source>Command line tool %1 does not exist</source>
-        <translation>Befehlszeilen-Werkzeug %1 existiert nicht</translation>
+        <source>Cannot rename %1 to %2 in %3</source>
+        <translation type="vanished">Kann %1 nicht in %2 in %3 umbenennen</translation>
+    </message>
+    <message>
+        <source>Error searching for the best dependency match: %1</source>
+        <translation type="obsolete">Fehler bei der Suche nach dem passendsten Treffer für die Abhängigkeit: %1</translation>
+    </message>
+    <message>
+        <source>Error searching for the dependency matches: %1</source>
+        <translation>Fehler beim Suchen nach passenden Abhängigkeiten: %1</translation>
+    </message>
+    <message>
+        <source>Unsatisfied dependency: %1</source>
+        <translation>Nicht aufgelöste Abhängigkeit: %1</translation>
+    </message>
+    <message>
+        <source>No download URL</source>
+        <translation>Keine Download-Adresse</translation>
+    </message>
+    <message>
+        <source>Download failed: %1</source>
+        <translation type="vanished">Herunterladen fehlgeschlagen: %1</translation>
+    </message>
+    <message>
+        <source>Computing SHA1</source>
+        <translation type="vanished">Berechne SHA1</translation>
+    </message>
+    <message>
+        <source>Wrong SHA1: %1 was expected, but %2 found</source>
+        <translation type="vanished">Falsche SHA1-Nummer: %1 erwartet, aber %2 gefunden</translation>
     </message>
     <message>
         <source>Shortcut target %1 does not exist</source>
@@ -1572,8 +1651,16 @@ p, li { white-space: pre-wrap; }
         <translation>Anlegen der Verknüpfung von %1 nach %2 fehlgeschlagen: %3</translation>
     </message>
     <message>
-        <source>No download URL</source>
-        <translation>Keine Download-Adresse</translation>
+        <source>Preparing</source>
+        <translation type="vanished">Vorbereiten</translation>
+    </message>
+    <message>
+        <source>Creating directory</source>
+        <translation type="vanished">Erzeuge Verzeichnis</translation>
+    </message>
+    <message>
+        <source>Cannot create directory: %0</source>
+        <translation>Kann Verzeichnis nicht erstellen: %0</translation>
     </message>
     <message>
         <source>Creating .Npackd sub-directory</source>
@@ -1588,16 +1675,24 @@ p, li { white-space: pre-wrap; }
         <translation>Warte auf eine freie HTTP-Verbindung (%1 Minuten)</translation>
     </message>
     <message>
-        <source>Hash sum %1 found, but %2 was expected. The file has changed.</source>
-        <translation>Hash-Summe %1 gefunden, aber %2 wurde erwartet. Die Datei wurde geändert.</translation>
+        <source>Downloading &amp; computing hash sum</source>
+        <translation>Herunterladen und Hash-Summe erzeugen</translation>
     </message>
     <message>
-        <source>Checking for viruses</source>
-        <translation>Überprüfe auf Viren</translation>
+        <source>Cannot open the file: %0</source>
+        <translation>Kann die Datei nicht öffnen: %0</translation>
     </message>
     <message>
-        <source>Antivirus check failed. The file is not safe.</source>
-        <translation>Die Antivirus-Überprüfung is fehlgeschlagen. Diese Datei ist nicht sicher.</translation>
+        <source>Downloading &amp; computing hash sum (2nd try)</source>
+        <translation>Herunterladen und Hash-Summe erzeugen (2. Versuch)</translation>
+    </message>
+    <message>
+        <source>Error downloading %1: %2</source>
+        <translation>Fehler beim Herunterladen von %1: %2</translation>
+    </message>
+    <message>
+        <source>Hash sum (SHA1) %1 found, but %2 was expected. The file has changed.</source>
+        <translation type="vanished">Hash-Summe (SHA1) %1 gefunden, aber %2 erwartet. Die Datei hat sich verändert.</translation>
     </message>
     <message>
         <source>Extracting files</source>
@@ -1616,22 +1711,6 @@ p, li { white-space: pre-wrap; }
         <translation>Kann %0 nicht in %1 umbenennen</translation>
     </message>
     <message>
-        <source>The package %1 is already installed in &quot;%2&quot;</source>
-        <translation>Das Paket %1 ist bereits installiert in &quot;%2&quot;</translation>
-    </message>
-    <message>
-        <source>Running the installation hooks for dependencies</source>
-        <translation>Führe die Installations-Hooks für die Abhängigkeiten aus</translation>
-    </message>
-    <message>
-        <source>Running the Inno Setup installation (this may take some time)</source>
-        <translation>Führe die Inno Setup-Installation aus (das kann eine Weile dauern)</translation>
-    </message>
-    <message>
-        <source>Running the NSIS installation (this may take some time)</source>
-        <translation>Führe die NSIS-Installation aus (das kann eine Weile dauern)</translation>
-    </message>
-    <message>
         <source>Running the installation script (this may take some time)</source>
         <translation>Installationskript ausführen (dies kann einige Zeit dauern)</translation>
     </message>
@@ -1640,12 +1719,28 @@ p, li { white-space: pre-wrap; }
         <translation>Verknüpfungen aus Startmenü, Desktop und Schnellstartleiste löschen</translation>
     </message>
     <message>
-        <source>The package %1 was installed successfully in &quot;%2&quot;</source>
-        <translation>Das Paket %1 wurde erfolgreich in &quot;%2&quot; installiert</translation>
+        <source>Opening ZIP file</source>
+        <translation type="vanished">Öffne ZIP-Datei</translation>
     </message>
     <message>
-        <source>The installation of the package %1 in &quot;%2&quot; failed: %3</source>
-        <translation>Die Installation des Pakets %1 in &quot;%2&quot; ist fehlgeschlagen: %3</translation>
+        <source>Cannot open the ZIP file %1: %2</source>
+        <translation>Kann ZIP-Datei %1 nicht öffnen: %2</translation>
+    </message>
+    <message>
+        <source>Extracting</source>
+        <translation>Entpacke</translation>
+    </message>
+    <message>
+        <source>Error unzipping the file %1: Error %2 in %3</source>
+        <translation>Fehler beim Entpacken der Datei %1: Fehler %2 in %3</translation>
+    </message>
+    <message>
+        <source>Cannot create directory %1</source>
+        <translation>Kann Verzeichnis %1 nicht erstellen</translation>
+    </message>
+    <message>
+        <source>%L1 files</source>
+        <translation>%L1 Dateien</translation>
     </message>
     <message>
         <source>Could not create file %1</source>
@@ -1672,96 +1767,56 @@ p, li { white-space: pre-wrap; }
         <translation>gesperrt</translation>
     </message>
     <message>
-        <source>%1 is missing or is not a directory</source>
-        <translation>%1 fehlt oder ist kein Verzeichnis</translation>
+        <source>Process %1 exited with the code %2</source>
+        <translation>Prozess %1 wurde mit dem Code %2 beendet</translation>
     </message>
     <message>
-        <source>The last lines of the output:</source>
-        <translation>Die letzten Zeilen der Ausgabe:</translation>
+        <source>%1 minutes</source>
+        <translation>%1 Minuten</translation>
     </message>
     <message>
-        <source>Expected one package version</source>
-        <translation>Eine Paketversion wurde erwartet</translation>
+        <source>%1. No output was generated</source>
+        <translation type="vanished">%1. Keine Ausgabe wurde erzeugt</translation>
     </message>
     <message>
-        <source>Executing the stop script</source>
-        <translation>Führe das Skript zum Stoppen aus</translation>
+        <source>Empty tag &lt;path&gt; under &lt;detect-file&gt;</source>
+        <translation type="vanished">Leerer Tag &lt;path&gt; unterhalb von &lt;detect-file&gt;</translation>
     </message>
     <message>
-        <source>Acquire the installation script lock</source>
-        <translation>Erlange den Installationsskript-Lock</translation>
+        <source>Wrong SHA1 in &lt;detect-file&gt;: </source>
+        <translation type="vanished">Falscher SHA1 in &lt;detect-file&gt;:</translation>
     </message>
     <message>
-        <source>Show the package for this dependency</source>
-        <translation>Das Paket für diese Abhängigkeit anzeigen</translation>
+        <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: </source>
+        <translation type="vanished">Fehler im Attribut &apos;package&apos; in &lt;version&gt;: </translation>
     </message>
     <message>
-        <source>Invalid dependency link</source>
-        <translation>Ungültiges Abhängigkeitslink</translation>
-    </message>
-    <message>
-        <source>Task / Step</source>
-        <translation>Aufgabe / Schritt</translation>
-    </message>
-    <message>
-        <source>Elapsed time</source>
-        <translation>Vergangene Zeit</translation>
-    </message>
-    <message>
-        <source>Remaining time</source>
-        <translation>Verbleibende Zeit</translation>
-    </message>
-    <message>
-        <source>Progress</source>
-        <translation>Fortschritt</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Erlaubt</translation>
-    </message>
-    <message>
-        <source>URL</source>
-        <translation>URL</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Kommentar</translation>
-    </message>
-    <message>
-        <source>Invalid repository specification version: %1</source>
-        <translation>Ungültige Repository-Spezifikationsversion: %1</translation>
-    </message>
-    <message>
-        <source>Incompatible repository specification version: %1.</source>
-        <translation>Inkompatible Repository-Spezifikationsversion: %1.</translation>
-    </message>
-    <message>
-        <source>Please download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
-        <translation>Bitte laden Sie eine neuere Version von Npackd von https://github.com/tim-lebedkov/npackd/wiki/Downloads herunter</translation>
-    </message>
-    <message>
-        <source>Empty category tag</source>
-        <translation>Leerer Kategorie-Tag</translation>
-    </message>
-    <message>
-        <source>Empty sub-category</source>
-        <translation>Leere Unterkategorie</translation>
-    </message>
-    <message>
-        <source>XML parsing error at line %1, column %2: %3</source>
-        <translation>Fehler beim Parsen der XML in der Zeile %1, Spalte %2: %3</translation>
-    </message>
-    <message>
-        <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: %1</source>
-        <translation>Fehler in dem Attribut &apos;package&apos; in &lt;version&gt;: %1</translation>
+        <source>Not a valid download URL for %1: %2</source>
+        <translation type="vanished">Keine gültige Download-Adresse für %1: %2</translation>
     </message>
     <message>
         <source>Not a valid version for %1: %2</source>
         <translation>Keine gültige Version für %1: %2</translation>
+    </message>
+    <message>
+        <source>Invalid SHA1 for %1: </source>
+        <translation type="vanished">Ungültige SHA1 für %1: </translation>
+    </message>
+    <message>
+        <source>Invalid SHA-1 for %1: </source>
+        <translation type="vanished">Ungültige SHA-1 für %1: </translation>
+    </message>
+    <message>
+        <source>SHA-1 and SHA-256 cannot be defined both for the same package version %1</source>
+        <translation type="vanished">SHA-1 und SHA-256 können nicht gleichzeitig für dieselbe Paketversion definiert werden %1</translation>
+    </message>
+    <message>
+        <source>Unknown hash sum type %1 for %2</source>
+        <translation type="vanished">Unbekannter Typ der Hash-Summe %1 für %2</translation>
+    </message>
+    <message>
+        <source>Invalid SHA-256 for %1: </source>
+        <translation type="vanished">Ungültige SHA-256 für %1: </translation>
     </message>
     <message>
         <source>Wrong value for the attribute &apos;type&apos; for %1: %3</source>
@@ -1780,164 +1835,165 @@ p, li { white-space: pre-wrap; }
         <translation>Leerer &apos;title&apos;-Attributwert für &lt;important-file&gt; für %1</translation>
     </message>
     <message>
-        <source>Invalid SHA1 for %1: %2</source>
-        <translation>Ungültiger SHA1 für %1: %2</translation>
+        <source>Duplicate &lt;file&gt; entry for %1 in %2</source>
+        <translation type="vanished">Doppelter &lt;file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <source>Empty &apos;path&apos; attribute value for &lt;cmd-file&gt; for %1</source>
-        <translation>Leerer Wert des Attributs &apos;path&apos; für &lt;cmd-file&gt; für %1</translation>
+        <source>Invalid &lt;detect-file&gt; for %1: </source>
+        <translation type="vanished">Ungültige Datei &lt;detect-file&gt; für %1: </translation>
     </message>
     <message>
-        <source>More than one &lt;cmd-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
-        <translation>Mehr als ein &lt;cmd-file&gt; mit demselben &apos;path&apos; Attribut %1 für %2</translation>
+        <source>Duplicate &lt;detect-file&gt; entry for %1 in %2</source>
+        <translation type="vanished">Doppelter &lt;detect-file&gt;-Eintrag für %1 in %2</translation>
     </message>
     <message>
-        <source>Error in attribute &apos;type&apos; in &lt;hash-sum&gt; in %1</source>
-        <translation>Fehler im Attribut &apos;type&apos; in &lt;hash-sum&gt; in %1</translation>
+        <source>Duplicate &lt;dependency&gt; for %1 in %2</source>
+        <translation type="vanished">Doppeltes &lt;dependency&gt; für %1 in %2</translation>
     </message>
     <message>
-        <source>Invalid SHA-256 for %1: %2</source>
-        <translation>Ungültige SHA-256 für %1: %2</translation>
+        <source>Wrong MSI GUID for %1: %2</source>
+        <translation type="vanished">Falsche MSI-GUID für %1: %2</translation>
     </message>
     <message>
-        <source>Error in attribute &apos;versions&apos; in &lt;dependency&gt; in %1</source>
-        <translation>Fehler im Attribut &apos;versions&apos; in &lt;dependency&gt; in %1</translation>
+        <source>n/a</source>
+        <translation>n.v.</translation>
     </message>
     <message>
-        <source>Error saving the package version %1 %2: %3</source>
-        <translation>Fehler beim Speichern der Paketversion %1 %2: %3</translation>
+        <source>Error</source>
+        <translation>Fehler</translation>
     </message>
     <message>
         <source>Error in attribute &apos;name&apos; in &lt;package&gt;: </source>
         <translation>Fehler im Attribut &apos;name&apos; in &lt;package&gt;: </translation>
     </message>
     <message>
+        <source>Invalid icon URL for %1: %2</source>
+        <translation type="vanished">Falsche Symbol-Adresse für %1: %2</translation>
+    </message>
+    <message>
+        <source>Empty category tag for %1</source>
+        <translation type="obsolete">Leerer Kategorie-Tag für %1</translation>
+    </message>
+    <message>
+        <source>More than one &lt;category&gt; %1 for %2</source>
+        <translation type="vanished">Mehr als ein &lt;category&gt; %1 für %2</translation>
+    </message>
+    <message>
+        <source>Empty sub-category for %1</source>
+        <translation type="obsolete">Leere Unterkategorie für %1</translation>
+    </message>
+    <message>
+        <source>Cannot open %1 for writing</source>
+        <translation>Kann %1 nicht zum Schreiben öffnen</translation>
+    </message>
+    <message>
+        <source>Repository %1 of %2</source>
+        <translation>Repository %1 von %2</translation>
+    </message>
+    <message>
+        <source>Error loading the repository %1: %2</source>
+        <translation>Fehler beim Laden des Repositories %1: %2</translation>
+    </message>
+    <message>
+        <source>No repositories defined</source>
+        <translation>Keine Repositories definiert</translation>
+    </message>
+    <message>
+        <source>Download failed: %2</source>
+        <translation type="vanished">Herunterladen fehlgeschlagen: %2</translation>
+    </message>
+    <message>
+        <source>Parsing the content</source>
+        <translation type="obsolete">Parse den Inhalt</translation>
+    </message>
+    <message>
+        <source>Error loading XML: %2</source>
+        <translation type="obsolete">Fehler beim Laden von XML: %2</translation>
+    </message>
+    <message>
+        <source>Opening file</source>
+        <translation type="vanished">Öffne Datei</translation>
+    </message>
+    <message>
+        <source>Cannot open the file</source>
+        <translation type="vanished">Kann die Datei nicht öffnen</translation>
+    </message>
+    <message>
+        <source>Parsing XML</source>
+        <translation>Parse XML</translation>
+    </message>
+    <message>
+        <source>Analyzing the content</source>
+        <translation type="vanished">Analysiere den Inhalt</translation>
+    </message>
+    <message>
+        <source>Invalid repository specification version: %1</source>
+        <translation>Ungültige Repository-Spezifikationsversion: %1</translation>
+    </message>
+    <message>
         <source>Error in category tag for %1: %2</source>
         <translation>Fehler in dem Kategorie-Tag für %1: %2</translation>
     </message>
     <message>
-        <source>More than one &lt;category&gt; %1</source>
-        <translation>Mehr als eine &lt;category&gt; %1</translation>
+        <source>Incompatible repository specification version: %1.</source>
+        <translation>Inkompatible Repository-Spezifikationsversion: %1.</translation>
     </message>
     <message>
-        <source>Error in &lt;tag&gt; for %1: %2</source>
-        <translation>Fehler in &lt;tag&gt; für %1: %2</translation>
+        <source>Please download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
+        <oldsource>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</oldsource>
+        <translation>Bitte laden Sie eine neuere Version von Npackd von https://github.com/tim-lebedkov/npackd/wiki/Downloads herunter</translation>
     </message>
     <message>
-        <source>More than one &lt;tag&gt; %1</source>
-        <translation>Mehr als ein &lt;tag&gt; %1</translation>
+        <source>Empty category tag</source>
+        <translation>Leerer Kategorie-Tag</translation>
     </message>
     <message>
-        <source>Error in &lt;stars&gt; for %1: not a number</source>
-        <translation>Fehler in &lt;stars&gt; für %1: Keine Zahl</translation>
+        <source>Empty sub-category</source>
+        <translation>Leere Unterkategorie</translation>
     </message>
     <message>
-        <source>Empty &apos;rel&apos; attribute value for &lt;link&gt; for %1</source>
-        <translation>Leerer &apos;rel&apos; Attributwert für &lt;link&gt; für %1</translation>
+        <source>The package(s) cannot be uninstalled because the following files are in use (please close the corresponding applications): %1</source>
+        <translation type="vanished">Kann das/die Paket(e) nicht installieren, da die folgenden Dateien aktuell benutzt werden (bitte schließen Sie die zugehörigen Programme): %1</translation>
     </message>
     <message>
-        <source>Error saving the package %1: %2</source>
-        <translation>Fehler beim Speichern des Paketes %1: %2</translation>
+        <source>The package %1 cannot be uninstalled because some files or directories under %2 are in use.</source>
+        <translation type="vanished">Kann Paket %1 nicht deinstallieren, da einige Dateien oder Verzeichnisse unterhalb von %2 aktuell benutzt werden.</translation>
     </message>
     <message>
-        <source>Error saving the license %1: %2</source>
-        <translation>Fehler beim Speichern der Lizenz %1: %2</translation>
+        <source>Scanning %1</source>
+        <translation type="vanished">Scanne %1</translation>
     </message>
     <message>
-        <source>&lt;root&gt; expected</source>
-        <translation>&lt;root&gt; erwartet</translation>
-    </message>
-    <message>
-        <source>&lt;version&gt; expected</source>
-        <translation>&lt;version&gt; erwartet</translation>
-    </message>
-    <message>
-        <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Kann die Einstellungen jetzt nicht verändern. Das Paket %1 wird von einer aktuell laufenden (De-)Installation gesperrt.</translation>
-    </message>
-    <message>
-        <source>%1 is not a valid repository address</source>
-        <translation>%1 ist keine gültige Repository-Adresse</translation>
+        <source>Cannot change settings now. The hard drive scan is running.</source>
+        <translation type="vanished">Kann die Einstellungen jetzt nicht verändern. Der Scan des Laufwerks läuft gerade.</translation>
     </message>
     <message>
         <source>Cannot change settings now. The repositories download is running.</source>
         <translation>Kann die Einstellungen jetzt nicht verändern. Das Herunterladen des Repositories läuft gerade.</translation>
     </message>
     <message>
-        <source>Choose installation directory</source>
-        <translation>Installationsverzeichnis auswählen</translation>
+        <source>Cannot find locked package versions: %1</source>
+        <translation type="vanished">Kann die Versionen des gesperrten Pakets nicht ermitteln: %1</translation>
     </message>
     <message>
-        <source>Cannot find the package version %1: %2</source>
-        <translation>Kann Paketversion %1:%2 nicht finden</translation>
+        <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
+        <translation>Kann die Einstellungen jetzt nicht verändern. Das Paket %1 wird von einer aktuell laufenden (De-)Installation gesperrt.</translation>
     </message>
     <message>
-        <source>The package %1 is locked by a currently running installation/removal.</source>
-        <translation>Das Paket %1 ist von einem aktuell laufenden Installations-/Deinstallationsjob gesperrt.</translation>
+        <source>The installation directory cannot be empty</source>
+        <translation>Das Installationsverzeichnis darf nicht leer sein</translation>
     </message>
     <message>
-        <source>Uninstall</source>
-        <translation>Deinstallieren</translation>
+        <source>The installation directory does not exist</source>
+        <translation>Das Installationsverzeichnis existiert nicht</translation>
     </message>
     <message>
-        <source>The package %1 will be uninstalled.</source>
-        <translation>Das Paket %1 wird deinstalliert.</translation>
+        <source>Cannot change the installation directory to %1. %2 %3 is installed there</source>
+        <translation>Kann das Installationsverzeichnis zu %1 nicht ändern. %2 %3 ist dort installiert</translation>
     </message>
     <message>
-        <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
-        <translation>Das entsprechende Verzeichnis %1 wird komplett gelöscht. Es gibt keinen Weg die gelöschten Dateien wiederherzustellen. Die Prozesse, die die Dateien sperren, werden geschlossen.</translation>
-    </message>
-    <message>
-        <source>Installing %1 packages</source>
-        <translation>Installiere %1 Pakete</translation>
-    </message>
-    <message>
-        <source>Install</source>
-        <translation>Installieren</translation>
-    </message>
-    <message>
-        <source>%1 package(s) will be installed:</source>
-        <translation>%1 Paket(e) werden installiert:</translation>
-    </message>
-    <message>
-        <source>Uninstalling %1 packages</source>
-        <translation>Deinstalliere %1 Pakete</translation>
-    </message>
-    <message>
-        <source>%1 package(s) will be uninstalled:</source>
-        <translation>%1 Paket(e) werden deinstalliert:</translation>
-    </message>
-    <message>
-        <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
-        <translation>Die entsprechenden Verzeichnisse werden komplett gelöscht. Es gibt keinen Weg die Dateien wiederherzustellen. Die Prozesse, die die Dateien sperren, werden geschlossen.</translation>
-    </message>
-    <message>
-        <source>installing %1 packages</source>
-        <translation>installiere %1 Pakete</translation>
-    </message>
-    <message>
-        <source>uninstalling %1 packages</source>
-        <translation>deinstalliere %1 Pakete</translation>
-    </message>
-    <message>
-        <source>updating %1 packages</source>
-        <translation>aktualisiere %1 Pakete</translation>
-    </message>
-    <message>
-        <source>Process</source>
-        <translation>Verarbeitung</translation>
-    </message>
-    <message>
-        <source>Install/Uninstall</source>
-        <translation>Installieren/Deinstallieren</translation>
-    </message>
-    <message>
-        <source>%3 package(s) will be updated:</source>
-        <translation>%3 Paket(e) werden aktualisiert:</translation>
-    </message>
-    <message>
-        <source>%3 package(s) will be installed:</source>
-        <translation>%3 Paket(e) werden installiert:</translation>
+        <source>%1 is not a valid repository address</source>
+        <translation>%1 ist keine gültige Repository-Adresse</translation>
     </message>
     <message>
         <source>.NET runtime</source>
@@ -1952,12 +2008,12 @@ p, li { white-space: pre-wrap; }
         <translation>XML-Bibliothek</translation>
     </message>
     <message>
-        <source>Windows 32 bit</source>
-        <translation>Windows 32 bit</translation>
-    </message>
-    <message>
         <source>operating system</source>
         <translation>Betriebssystem</translation>
+    </message>
+    <message>
+        <source>Windows 32 bit</source>
+        <translation>Windows 32 bit</translation>
     </message>
     <message>
         <source>Windows 64 bit</source>
@@ -1970,14 +2026,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Java runtime</source>
         <translation>Java Runtime</translation>
-    </message>
-    <message>
-        <source>Python</source>
-        <translation>Python</translation>
-    </message>
-    <message>
-        <source>programming language</source>
-        <translation>Programmiersprache</translation>
     </message>
     <message>
         <source>JDK 64 bit</source>
@@ -2020,6 +2068,38 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler beim Löschen des Registry-Knotens %1: %2</translation>
     </message>
     <message>
+        <source>Missing option name: %1</source>
+        <translation>Fehlender Optionsname: %1</translation>
+    </message>
+    <message>
+        <source>Option name expected: %1</source>
+        <translation>Optionsname erwartet: %1</translation>
+    </message>
+    <message>
+        <source>Option name cannot start with the equality sign: %1</source>
+        <translation>Optionsname darf nicht mit einem Gleichheitszeichen beginnen: %1</translation>
+    </message>
+    <message>
+        <source>Only one-letter options can start with a minus sign: %1</source>
+        <translation>Nur Optionen mit einem einzigen Zeichen dürfen mit einem Minus-Zeichen beginnen: %1</translation>
+    </message>
+    <message>
+        <source>Unknown option: %1</source>
+        <translation>Unbekannte Option: %1</translation>
+    </message>
+    <message>
+        <source>Unexpected value for the option %1</source>
+        <translation>Unerwarteter Wert für die Option %1</translation>
+    </message>
+    <message>
+        <source>Missing value for the option %1</source>
+        <translation>Fehlender Wert für die Option %1</translation>
+    </message>
+    <message>
+        <source>CommandLineToArgvW failed</source>
+        <translation>CommandLineToArgvW fehlgeschlagen</translation>
+    </message>
+    <message>
         <source>A GUID must be 38 characters long</source>
         <translation>Eine GUID muss 38 Zeichen lang sein</translation>
     </message>
@@ -2036,28 +2116,24 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler %1: %2</translation>
     </message>
     <message>
-        <source>EnumServicesStatusEx: no services found</source>
-        <translation>EnumServiceStatusEx: Kein Dienst gefunden</translation>
+        <source>Empty package name</source>
+        <translation type="vanished">Leerer Paketname</translation>
     </message>
     <message>
-        <source>EnumServicesStatusEx failed: %0</source>
-        <translation>EnumServiceStatusEx fehlgeschlagen: %0</translation>
+        <source>Empty segment at position %1 in %2</source>
+        <translation>Leeres Segment an Position %1 in %2</translation>
     </message>
     <message>
-        <source>Sending Ctrl+C to &quot;%1&quot;</source>
-        <translation>Sende Ctrl+C an &quot;%1&quot;</translation>
+        <source>-- at position %1 in %2</source>
+        <translation>-- an Position %1 in %2</translation>
     </message>
     <message>
-        <source>Killing the process &quot;%1&quot;</source>
-        <translation>Beende den Prozess &quot;%1&quot;</translation>
+        <source>Wrong character at position 1 in %1</source>
+        <translation>Falsches Zeichen an Position 1 in %1</translation>
     </message>
     <message>
-        <source>Stopping the service &quot;%1&quot;</source>
-        <translation>Stoppe den Dienst &quot;%1&quot;</translation>
-    </message>
-    <message>
-        <source>Sending a WM_CLOSE event to &quot;%1&quot;</source>
-        <translation>Sende ein WM_CLOSE-Ereignis an &quot;%1&quot;</translation>
+        <source>Wrong character at position %1 in %2</source>
+        <translation>Falsches Zeichen an Position %1 in %2</translation>
     </message>
     <message>
         <source>Wrong length: %1</source>
@@ -2172,20 +2248,8 @@ p, li { white-space: pre-wrap; }
         <translation>Das Ziel ist ein Wurzelverzeichnis und kann nicht umbenannt werden.</translation>
     </message>
     <message>
-        <source>Moving &quot;%1&quot; to the recycle bin</source>
-        <translation>Verschieben von &quot;%1&quot; in den Papierkorb</translation>
-    </message>
-    <message>
         <source>Error deleting %1: %2</source>
         <translation>Fehler beim Löschen von %1: %2</translation>
-    </message>
-    <message>
-        <source>Error copying %1 to %2</source>
-        <translation>Fehler beim kopieren von %1 nach %2</translation>
-    </message>
-    <message>
-        <source>Deleting &quot;%1&quot;</source>
-        <translation>Lösche &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Cannot delete the file: %1</source>
@@ -2204,20 +2268,261 @@ p, li { white-space: pre-wrap; }
         <translation>Ungültiger Typ der Schließens von Programmen: %1</translation>
     </message>
     <message>
-        <source>Cannot open the ZIP file %1: %2</source>
-        <translation>Kann ZIP-Datei %1 nicht öffnen: %2</translation>
+        <source>No installable version was found for the package %1 (%2)</source>
+        <translation>Keine installierbare Version wurde für das Paket %1 (%2) gefunden</translation>
     </message>
     <message>
-        <source>Error unzipping the file %1: Error %2 in %3</source>
-        <translation>Fehler beim Entpacken der Datei %1: Fehler %2 in %3</translation>
+        <source>Package %1 (%2) is not installed</source>
+        <translation>Paket %1 (%2) ist nicht installiert</translation>
     </message>
     <message>
-        <source>Cannot create directory %1</source>
-        <translation>Kann Verzeichnis %1 nicht erstellen</translation>
+        <source>More than one version of the package %1 (%2) is installed: %3</source>
+        <translation>Mehr als eine Version des Pakets %1 (%2) ist installiert: %3</translation>
     </message>
     <message>
-        <source>%L1 files</source>
-        <translation>%L1 Dateien</translation>
+        <source>Package version not found: %1 (%2) %3</source>
+        <translation>Paketversion nicht gefunden: %1 (%2) %3</translation>
+    </message>
+    <message>
+        <source>Cannot parse version: %1</source>
+        <translation>Kann die Version nicht Parsen: %1</translation>
+    </message>
+    <message>
+        <source>%1 is already installed in %2</source>
+        <translation type="vanished">%1 ist bereits installiert in %2</translation>
+    </message>
+    <message>
+        <source>%1 is not installed</source>
+        <translation type="vanished">%1 ist nicht installiert</translation>
+    </message>
+    <message>
+        <source>More than one package was found: %1</source>
+        <translation>Mehr als ein Paket wurde gefunden: %1</translation>
+    </message>
+    <message>
+        <source>Npackd list of installed packages</source>
+        <translation>Npackd-Liste der installierten Pakete</translation>
+    </message>
+    <message>
+        <source>Control panel software</source>
+        <translation>Programme aus der Systemsteuerung</translation>
+    </message>
+    <message>
+        <source>Error in the attribute &apos;package&apos; in &lt;version&gt;: %1</source>
+        <translation>Fehler in dem Attribut &apos;package&apos; in &lt;version&gt;: %1</translation>
+    </message>
+    <message>
+        <source>Error in attribute &apos;type&apos; in &lt;hash-sum&gt; in %1</source>
+        <translation>Fehler im Attribut &apos;type&apos; in &lt;hash-sum&gt; in %1</translation>
+    </message>
+    <message>
+        <source>Error in attribute &apos;versions&apos; in &lt;dependency&gt; in %1</source>
+        <translation>Fehler im Attribut &apos;versions&apos; in &lt;dependency&gt; in %1</translation>
+    </message>
+    <message>
+        <source>Empty &apos;rel&apos; attribute value for &lt;link&gt; for %1</source>
+        <translation>Leerer &apos;rel&apos; Attributwert für &lt;link&gt; für %1</translation>
+    </message>
+    <message>
+        <source>Not a valid href URL in &lt;link&gt; for %1: %2</source>
+        <translation type="vanished">Kein gültiger href URL in &lt;link&gt; für %1: %2</translation>
+    </message>
+    <message>
+        <source>Error saving the package version %1 %2: %3</source>
+        <translation>Fehler beim Speichern der Paketversion %1 %2: %3</translation>
+    </message>
+    <message>
+        <source>Invalid SHA1 for %1: %2</source>
+        <translation>Ungültiger SHA1 für %1: %2</translation>
+    </message>
+    <message>
+        <source>Invalid SHA-256 for %1: %2</source>
+        <translation>Ungültige SHA-256 für %1: %2</translation>
+    </message>
+    <message>
+        <source>Wrong MSI GUID for %1: %2 (%3)</source>
+        <translation type="vanished">Falscher MSI GUID für %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Error saving the package %1: %2</source>
+        <translation>Fehler beim Speichern des Paketes %1: %2</translation>
+    </message>
+    <message>
+        <source>More than one &lt;category&gt; %1</source>
+        <translation>Mehr als eine &lt;category&gt; %1</translation>
+    </message>
+    <message>
+        <source>Error saving the license %1: %2</source>
+        <translation>Fehler beim Speichern der Lizenz %1: %2</translation>
+    </message>
+    <message>
+        <source>XML parsing error at line %1, column %2: %3</source>
+        <translation>Fehler beim Parsen der XML in der Zeile %1, Spalte %2: %3</translation>
+    </message>
+    <message>
+        <source>Component-Based Servicing</source>
+        <translation type="vanished">Component-Based Servicing</translation>
+    </message>
+    <message>
+        <source>Cannot open the file %1</source>
+        <translation>Kann die Datei %1 nicht öffnen</translation>
+    </message>
+    <message>
+        <source>Error in the attribute &apos;name&apos; in &lt;package&gt;: </source>
+        <translation type="vanished">Fehler im Attribut &apos;name&apos; in &lt;package&gt;: </translation>
+    </message>
+    <message>
+        <source>Empty category</source>
+        <translation type="vanished">Leere Kategorie</translation>
+    </message>
+    <message>
+        <source>Empty attribute &apos;rel&apos; in &lt;link&gt;</source>
+        <translation type="vanished">Leeres Attribut &apos;rel&apos; in &lt;link&gt;</translation>
+    </message>
+    <message>
+        <source>Empty attribute &apos;href&apos; in &lt;link&gt;</source>
+        <translation type="vanished">Leeres Attribut &apos;href&apos; in &lt;link&gt;</translation>
+    </message>
+    <message>
+        <source>Empty icon URL</source>
+        <translation type="vanished">Leerer Icon URL</translation>
+    </message>
+    <message>
+        <source>Task / Step</source>
+        <translation>Aufgabe / Schritt</translation>
+    </message>
+    <message>
+        <source>Elapsed time</source>
+        <translation>Vergangene Zeit</translation>
+    </message>
+    <message>
+        <source>Remaining time</source>
+        <oldsource>Estimated time</oldsource>
+        <translation>Verbleibende Zeit</translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation>Fortschritt</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Cannot parse a version range: %1</source>
+        <translation>Kann den Versionsbereich nicht parsen: %1</translation>
+    </message>
+    <message>
+        <source>Deleting %1</source>
+        <translation>Lösche %1</translation>
+    </message>
+    <message>
+        <source>Directory %1 already exists</source>
+        <translation type="vanished">Das Verzeichnis %1 existiert bereits</translation>
+    </message>
+    <message>
+        <source>Invalid dependency link</source>
+        <translation>Ungültiges Abhängigkeitslink</translation>
+    </message>
+    <message>
+        <source>The package %1 was installed successfully in %2</source>
+        <translation type="vanished">Das Paket %1 wurde erfolgreich installiert in %2</translation>
+    </message>
+    <message>
+        <source>The package %1 was removed successfully from %2</source>
+        <translation type="vanished">Das Paket %1 wurde erfolgreich aus %2 entfernt</translation>
+    </message>
+    <message>
+        <source>The removal of the package %1 from %2 failed: %3</source>
+        <translation type="vanished">Das Entfernen des Paketes %1 aus %2 ist fehlgeschlagen: %3</translation>
+    </message>
+    <message>
+        <source>The installation of the package %1 in %2 failed: %3</source>
+        <translation type="vanished">Die Installation des Paketes %1 in %2 ist fehlgeschlagen: %3</translation>
+    </message>
+    <message>
+        <source>Show the package for this dependency</source>
+        <translation>Das Paket für diese Abhängigkeit anzeigen</translation>
+    </message>
+    <message>
+        <source>Moving %1 to the recycle bin</source>
+        <translation type="vanished">Verschiebe %1 in den Papierkorb</translation>
+    </message>
+    <message>
+        <source>Deleting the directory %1</source>
+        <translation>Lösche das Verzeichnis %1</translation>
+    </message>
+    <message>
+        <source>Expected one package version</source>
+        <translation>Eine Paketversion wurde erwartet</translation>
+    </message>
+    <message>
+        <source>Command line tool %1 does not exist</source>
+        <translation>Befehlszeilen-Werkzeug %1 existiert nicht</translation>
+    </message>
+    <message>
+        <source>Cannot find the EXE Proxy executable.</source>
+        <translation>Kann die ausführbare Datei von EXE Proxy nicht finden.</translation>
+    </message>
+    <message>
+        <source>Cannot find the package %1</source>
+        <translation>Kann das Paket %1 nicht finden</translation>
+    </message>
+    <message>
+        <source>Clearing the command line tool definitions</source>
+        <translation>Lösche die Definitionen von Befehlszeilen-Werkzeugen</translation>
+    </message>
+    <message>
+        <source>Empty &apos;path&apos; attribute value for &lt;cmd-file&gt; for %1</source>
+        <translation>Leerer Wert des Attributs &apos;path&apos; für &lt;cmd-file&gt; für %1</translation>
+    </message>
+    <message>
+        <source>More than one &lt;cmd-file&gt; with the same &apos;path&apos; attribute %1 for %2</source>
+        <translation>Mehr als ein &lt;cmd-file&gt; mit demselben &apos;path&apos; Attribut %1 für %2</translation>
+    </message>
+    <message>
+        <source>Clearing the table with information about installed packages</source>
+        <translation>Lösche die Tabelle mit den Information zu den installierten Paketen</translation>
+    </message>
+    <message>
+        <source>Clearing the repository database</source>
+        <translation>Lösche die Repository-Datenbank</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Export</translation>
+    </message>
+    <message>
+        <source>Choose export directory</source>
+        <translation>Exportverzeichnis auswählen</translation>
+    </message>
+    <message>
+        <source>Cannot export to an existing directory</source>
+        <translation type="vanished">Kann nicht in ein existierendes Verzeichnis exportieren</translation>
+    </message>
+    <message>
+        <source>Export packages</source>
+        <translation>Pakete exportieren</translation>
+    </message>
+    <message>
+        <source>Downloading &amp; computing hash sum for %1</source>
+        <translation>Herunterladen &amp; Berechnen der Hash-Summe für %1</translation>
+    </message>
+    <message>
+        <source>List of packages</source>
+        <translation>Liste der Pakete</translation>
+    </message>
+    <message>
+        <source>Python</source>
+        <translation>Python</translation>
+    </message>
+    <message>
+        <source>programming language</source>
+        <translation>Programmiersprache</translation>
+    </message>
+    <message>
+        <source>Detecting %1</source>
+        <translation type="vanished">Erkenne %1</translation>
     </message>
     <message>
         <source>The URL cannot be empty</source>
@@ -2236,36 +2541,40 @@ p, li { white-space: pre-wrap; }
         <translation>Nicht unterstützte URL-Schema</translation>
     </message>
     <message>
-        <source>Process %1 exited with the code %2</source>
-        <translation>Prozess %1 wurde mit dem Code %2 beendet</translation>
+        <source>Running the installation hooks for dependencies</source>
+        <translation>Führe die Installations-Hooks für die Abhängigkeiten aus</translation>
     </message>
     <message>
-        <source>OpenService failed: %1</source>
-        <translation>OpenService fehlgeschlagen: %1</translation>
+        <source>Unknown error %1 from InternetErrorDlg in attempt %2</source>
+        <translation type="vanished">Unbekannter Fehler %1 von InternetErrorDlg beim Versuch %2</translation>
+    </message>
+    <message>
+        <source>Saving detected packages %1</source>
+        <translation>Speichere erkannte Pakete %1</translation>
+    </message>
+    <message>
+        <source>Adding detected versions %1</source>
+        <translation>Füge erkannte Versionen %1 hinzu</translation>
+    </message>
+    <message>
+        <source>OpenSCManager failed: %0</source>
+        <translation>OpenSCManager fehlgeschlagen: %0</translation>
     </message>
     <message>
         <source>QueryServiceStatusEx failed: %1</source>
         <translation>QueryServiceStatusEx fehlgeschlagen: %1</translation>
     </message>
     <message>
-        <source>Sending stop signal to the service %1</source>
-        <translation>Sende Stop-Signal an den Dienst %1</translation>
-    </message>
-    <message>
-        <source>ControlService failed: %1</source>
-        <translation>ControlService fehlgeschlagen: %1</translation>
-    </message>
-    <message>
         <source>Timeout waiting for service</source>
         <translation>Zeitüberschreitung beim warten auf den Dienst</translation>
     </message>
     <message>
-        <source>Cannot start the service because it is already running</source>
-        <translation>Kann den Dienst nicht starten, da dieser bereits läuft</translation>
+        <source>OpenService failed: %1</source>
+        <translation>OpenService fehlgeschlagen: %1</translation>
     </message>
     <message>
-        <source>Sending start signal to the service %1</source>
-        <translation>Sende das Startsignal an den Dienst %1</translation>
+        <source>Cannot start the service because it is already running</source>
+        <translation>Kann den Dienst nicht starten, da dieser bereits läuft</translation>
     </message>
     <message>
         <source>StartService failed: %1</source>
@@ -2276,12 +2585,296 @@ p, li { white-space: pre-wrap; }
         <translation>QueryServiceStatusEx fehlgeschlagen %1</translation>
     </message>
     <message>
+        <source>ControlService failed: %1</source>
+        <translation>ControlService fehlgeschlagen: %1</translation>
+    </message>
+    <message>
         <source>Service not started. Current status is %1</source>
         <translation>Dienst nicht gestartet. Aktueller Status ist %1</translation>
     </message>
     <message>
+        <source>EnumServicesStatusEx: no services found</source>
+        <translation>EnumServiceStatusEx: Kein Dienst gefunden</translation>
+    </message>
+    <message>
+        <source>EnumServicesStatusEx failed: %0</source>
+        <translation>EnumServiceStatusEx fehlgeschlagen: %0</translation>
+    </message>
+    <message>
+        <source>Sending stop signal to the service %1</source>
+        <translation>Sende Stop-Signal an den Dienst %1</translation>
+    </message>
+    <message>
+        <source>Using the HEAD HTTP method</source>
+        <translation>Benutze die HTTP Methode HEAD</translation>
+    </message>
+    <message>
+        <source>Using the GET HTTP method</source>
+        <translation>Benutze die HTTP Methode GET</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Home page (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Changelog&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Documentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Author: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Contributors:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ support, CMake integration, group policy configuration, non-admin installations&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;body&gt;Npackd %1 - Manager für Softwarepakete für Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Homepage (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Änderungen&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Dokumentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Autor: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Mitwirkende:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ Unterstützung, CMake Integration, Konfiguration für Gruppenrichtlinien, Installationen für nicht Administratoren&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Choose installation directory</source>
+        <translation>Installationsverzeichnis auswählen</translation>
+    </message>
+    <message>
+        <source>Cannot export to an existing non-empty directory</source>
+        <translation>Kann nicht in ein existierendes und nicht leeres Verzeichnis exportieren</translation>
+    </message>
+    <message>
+        <source>Sending start signal to the service %1</source>
+        <translation>Sende das Startsignal an den Dienst %1</translation>
+    </message>
+    <message>
+        <source>%1 is missing or is not a directory</source>
+        <translation>%1 fehlt oder ist kein Verzeichnis</translation>
+    </message>
+    <message>
+        <source>All dependencies are installed</source>
+        <translation>Alle Abhängigkeiten sind installiert</translation>
+    </message>
+    <message>
+        <source>installing %1 packages</source>
+        <translation>installiere %1 Pakete</translation>
+    </message>
+    <message>
+        <source>uninstalling %1 packages</source>
+        <translation>deinstalliere %1 Pakete</translation>
+    </message>
+    <message>
+        <source>updating %1 packages</source>
+        <translation>aktualisiere %1 Pakete</translation>
+    </message>
+    <message>
+        <source>Process</source>
+        <translation>Verarbeitung</translation>
+    </message>
+    <message>
+        <source>Error in &lt;tag&gt; for %1: %2</source>
+        <translation>Fehler in &lt;tag&gt; für %1: %2</translation>
+    </message>
+    <message>
+        <source>More than one &lt;tag&gt; %1</source>
+        <translation>Mehr als ein &lt;tag&gt; %1</translation>
+    </message>
+    <message>
+        <source>Empty ID</source>
+        <translation>Leere ID</translation>
+    </message>
+    <message>
+        <source>Clearing the tags table</source>
+        <translation>Löschen der Tags-Tabelle</translation>
+    </message>
+    <message>
+        <source>Category</source>
+        <translation>Kategorie</translation>
+    </message>
+    <message>
+        <source>Tags</source>
+        <translation>Tags</translation>
+    </message>
+    <message>
+        <source>Stars</source>
+        <translation>Sterne</translation>
+    </message>
+    <message>
+        <source>Error in &lt;stars&gt; for %1: not a number</source>
+        <translation>Fehler in &lt;stars&gt; für %1: Keine Zahl</translation>
+    </message>
+    <message>
+        <source>Error copying %1 to %2</source>
+        <translation>Fehler beim kopieren von %1 nach %2</translation>
+    </message>
+    <message>
+        <source>Renaming directory</source>
+        <translation type="vanished">Verzeichnis umbenennen</translation>
+    </message>
+    <message>
+        <source>The preferred installation directory &quot;%1&quot; is not available</source>
+        <translation>Das bevorzugte Installationsverzeichnis &quot;%1&quot; ist nicht verfügbar</translation>
+    </message>
+    <message>
+        <source>Failed to delete the package directory &quot;%1&quot;: %2</source>
+        <translation>Das Paketverzeichnis &quot;%1&quot; konnte nicht gelöscht werden: %2</translation>
+    </message>
+    <message>
+        <source>The package %1 was removed successfully from &quot;%2&quot;</source>
+        <translation>Das Paket %1 wurde erfolgreich aus &quot;%2&quot; entfernt</translation>
+    </message>
+    <message>
+        <source>The removal of the package %1 from &quot;%2&quot; failed: %3</source>
+        <translation>Das Entfernen des Pakets %1 von &quot;%2&quot; ist fehlgeschlagen: %3</translation>
+    </message>
+    <message>
+        <source>The package %1 was installed successfully in &quot;%2&quot;</source>
+        <translation>Das Paket %1 wurde erfolgreich in &quot;%2&quot; installiert</translation>
+    </message>
+    <message>
+        <source>The installation of the package %1 in &quot;%2&quot; failed: %3</source>
+        <translation>Die Installation des Pakets %1 in &quot;%2&quot; ist fehlgeschlagen: %3</translation>
+    </message>
+    <message>
+        <source>Moving &quot;%1&quot; to the recycle bin</source>
+        <translation>Verschieben von &quot;%1&quot; in den Papierkorb</translation>
+    </message>
+    <message>
+        <source>Deleting &quot;%1&quot;</source>
+        <translation>Lösche &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>The package %1 is already installed in &quot;%2&quot;</source>
+        <translation>Das Paket %1 ist bereits installiert in &quot;%2&quot;</translation>
+    </message>
+    <message>
+        <source>Cannot load the list of repositories: %1</source>
+        <translation>Kann die Liste der Repositories nicht laden: %1</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Erlaubt</translation>
+    </message>
+    <message>
+        <source>URL</source>
+        <translation>URL</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Kommentar</translation>
+    </message>
+    <message>
         <source>Windows update</source>
         <translation>Windows-Aktualisierung</translation>
+    </message>
+    <message>
+        <source>&lt;root&gt; expected</source>
+        <translation>&lt;root&gt; erwartet</translation>
+    </message>
+    <message>
+        <source>&lt;version&gt; expected</source>
+        <translation>&lt;version&gt; erwartet</translation>
+    </message>
+    <message>
+        <source>Sending a WM_CLOSE event to &quot;%1&quot;</source>
+        <translation>Sende ein WM_CLOSE-Ereignis an &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>Sending Ctrl+C to &quot;%1&quot;</source>
+        <translation>Sende Ctrl+C an &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>Killing the process &quot;%1&quot;</source>
+        <translation>Beende den Prozess &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>Stopping the service &quot;%1&quot;</source>
+        <translation>Stoppe den Dienst &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>Running the Inno Setup installation (this may take some time)</source>
+        <translation>Führe die Inno Setup-Installation aus (das kann eine Weile dauern)</translation>
+    </message>
+    <message>
+        <source>The last lines of the output from the Inno Setup log file:</source>
+        <translation>Die letzten Zeilen der Ausgabe von der Inno Setup-Logdatei:</translation>
+    </message>
+    <message>
+        <source>The last lines of the output:</source>
+        <translation>Die letzten Zeilen der Ausgabe:</translation>
+    </message>
+    <message>
+        <source>Running the Inno Setup removal (this may take some time)</source>
+        <translation>Führe die Inno Setup-Deinstallation  aus (das kann eine Weile dauern)</translation>
+    </message>
+    <message>
+        <source>Running the NSIS removal (this may take some time)</source>
+        <translation>Führe die NSIS-Deinstallation aus (das kann eine Weile dauern)</translation>
+    </message>
+    <message>
+        <source>Running the NSIS installation (this may take some time)</source>
+        <translation>Führe die NSIS-Installation aus (das kann eine Weile dauern)</translation>
+    </message>
+    <message>
+        <source>Detecting Windows Update packages</source>
+        <translation>Ermittle die Windows-Update-Pakete</translation>
+    </message>
+    <message>
+        <source>Too many retries</source>
+        <translation>Zu viele Wiederholungsversuche</translation>
+    </message>
+    <message>
+        <source>Installation operation</source>
+        <translation>Installationsvorgang</translation>
+    </message>
+    <message>
+        <source>Acquire installation script lock</source>
+        <translation>Erlange den Installationsskript-Lock</translation>
+    </message>
+    <message>
+        <source>Acquire the installation script lock</source>
+        <translation>Erlange den Installationsskript-Lock</translation>
+    </message>
+    <message>
+        <source>Prepare install operations</source>
+        <translation>Bereite die Installationsvorgänge vor</translation>
+    </message>
+    <message>
+        <source>Install operations</source>
+        <translation>Installationsvorgänge</translation>
+    </message>
+    <message>
+        <source>Stopping the package %1</source>
+        <translation>Stoppe das Paket %1</translation>
+    </message>
+    <message>
+        <source>Cannot create the directory %1</source>
+        <translation>Kann das Verzeichnis %1 nicht erstellen</translation>
+    </message>
+    <message>
+        <source>Rename %1 to %2</source>
+        <translation>%1 zu %2 umbenennen</translation>
+    </message>
+    <message>
+        <source>Create package directory</source>
+        <translation>Paketverzeichnis erzeugen</translation>
+    </message>
+    <message>
+        <source>Install package</source>
+        <translation>Paket installieren</translation>
+    </message>
+    <message>
+        <source>Import package settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export package settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create a temporary directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the directory: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exporting settings for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot zip the directory &quot;%1&quot; to &quot;%2&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unzip settings file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Importing settings for %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2295,50 +2888,8 @@ p, li { white-space: pre-wrap; }
         <translation>Repositories:</translation>
     </message>
     <message>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Segoe UI&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Example:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Segoe UI&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;In der folgenden Liste sind die Repositories aufgeführt, die für das Herunterladen und die Installation der Software verwendet werden sollen. Geben Sie mehrere Internetadressen in separaten Zeilen ein. Die Protokolle http://, https:// und file:// werden unterstützt. Die Repositories werden von oben nach unten abgefragt. Definitionen aus den früheren Einträgen können die Definitionen aus den Repositories, die weiter hinten in der Liste stehen, überdecken.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Beispiel:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation>Hinzufügen</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Entfernen</translation>
-    </message>
-    <message>
-        <source>Move up</source>
-        <translation>Nach oben verschieben</translation>
-    </message>
-    <message>
-        <source>Move down</source>
-        <translation>Nach unten verschieben</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can find the list of available repositories and explanations about how to create your custom repositories at &lt;a href=&quot;https://github.com/npackd/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/npackd/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eine Liste der verfügbaren Repositories und Erläuterungen zur Erstellung eigener Repositories finden Sie unter &lt;a href=&quot;https://github.com/npackd/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/npackd/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>Installation Directory:</source>
+        <translation type="vanished">Installationsverzeichnis:</translation>
     </message>
     <message>
         <source>Installation directory:</source>
@@ -2365,18 +2916,6 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Sie können diesen Eintrag jederzeit ändern. Diese Einstellung wirkt sich nicht auf bereits installierte Pakete aus.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
-        <source>enables daily search and notification about existing updates. The time will be chosen at random. The notifications are only shown to the current user.</source>
-        <translation>ermöglicht die tägliche Suche und Benachrichtigung über bestehende Updates. Die Zeit wird nach dem Zufallsprinzip gewählt. Die Benachrichtigungen werden nur dem aktuellen Benutzer angezeigt.</translation>
-    </message>
-    <message>
-        <source>Update notifications</source>
-        <translation>Update-Benachrichtigungen</translation>
-    </message>
-    <message>
         <source>How to close running applications:</source>
         <translation>Wie sollen die Programme geschlossen werden:</translation>
     </message>
@@ -2389,10 +2928,6 @@ p, li { white-space: pre-wrap; }
         <translation>Fenster schließen</translation>
     </message>
     <message>
-        <source>Disconnect users from file shares</source>
-        <translation>Die Benutzer von den Dateifreigaben trennen</translation>
-    </message>
-    <message>
         <source>forcefully terminates the process. All unsaved data will be lost.</source>
         <translation>Prozess beenden. Alle ungespeicherten Daten werden verloren.</translation>
     </message>
@@ -2401,28 +2936,199 @@ p, li { white-space: pre-wrap; }
         <translation>Prozess beenden</translation>
     </message>
     <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/p/windows-package-manager/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/windows-package-manager/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
+        <translatorcomment>	</translatorcomment>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;die folgende Liste definiert Repositories, die genutzt werden, um Software herunterzuladen und zu installieren. Geben Sie mehrere Internetadressen in je einer eigenen Zeile an. Die Protokolle http://, https:// und file:// werden unterstützt. Die Repositories werden von oben nach unten abgefragt. Weiter oben in der Liste festgelegte Einträge können darunter liegende überlagern.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Beispiel:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Sie finden die Liste der verfügbarer Repositories und die Erklärungen wie Sie Ihre eigenen Repositories erstellen können auf&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Disconnect users from file shares</source>
+        <translation>Die Benutzer von den Dateifreigaben trennen</translation>
+    </message>
+    <message>
+        <source>list of previously used repositories</source>
+        <translation type="vanished">Liste der zuvor verwendeten Repositories</translation>
+    </message>
+    <message>
+        <source>add the selected previously used repository to the active list</source>
+        <translation type="vanished">Fügt das ausgewählte Repository zur aktiven Liste hinzu</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Hinzufügen</translation>
+    </message>
+    <message>
         <source>terminates Windows services, if necessary</source>
         <translation>Beendet falls erforderlich einen Windows-Service</translation>
     </message>
     <message>
         <source>Stop services</source>
-        <translation>Dienst anhalten</translation>
+        <translation>Service anhalten</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Übernehmen</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. Lines starting with a # are comments. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;die folgende Liste definiert Repositories, die genutzt werden, um Software herunterzuladen und zu installieren. Geben Sie mehrere Internetadressen in je einer eigenen Zeile an. Die Protokolle http://, https:// und file:// werden unterstützt. Zeilen, die mit # anfangen, sind Kommentare. Die Repositories werden von oben nach unten abgefragt. Weiter oben in der Liste festgelegte Einträge können darunter liegende überlagern.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&gt;Sie finden die Liste der verfügbaren Repositories und die Erklärungen wie Sie Ihre eigenen Repositories erstellen können auf&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation>...</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;emulates the user pressing Ctrl+C for command line programs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;einen Benutzer, der Strg+C drückt, für die Befehlszeilenprogramme emulieren&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;einen Benutzer, der Ctrl+C drückt, für die Befehlszeilenprogramme emulieren&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Send Ctrl+C</source>
-        <translation>Strg+C senden</translation>
+        <translation>Ctrl+C senden</translation>
+    </message>
+    <message>
+        <source>enables daily search and notification about existing updates. The time will be chosen at random. The notifications are only shown to the current user.</source>
+        <translation>ermöglicht die tägliche Suche und Benachrichtigung über bestehende Updates. Die Zeit wird nach dem Zufallsprinzip gewählt. Die Benachrichtigungen werden nur dem aktuellen Benutzer angezeigt.</translation>
+    </message>
+    <message>
+        <source>Update notifications</source>
+        <translation>Update-Benachrichtigungen</translation>
     </message>
     <message>
         <source>Configure proxy settings</source>
         <translation>Proxy-Einstellungen konfigurieren</translation>
     </message>
     <message>
-        <source>Apply</source>
-        <translation>Übernehmen</translation>
+        <source>Remove</source>
+        <translation>Entfernen</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;Example:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;die folgende Liste definiert Repositories, die für den Download und die Installation von Software verwendet werden. http://, https://, und file:// Protokolle werden unterstützt. Die Repositories werden von oben nach unten verwendet. Die Definitionen aus einem früheren Eintrag werden solche aus Repositories, die weiter in der Liste stehen verstecken.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;Beispiele:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;You can find the list of available repositories and explanations about how to create your custom repositories at&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/tim-lebedkov/npackd&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/tim-lebedkov/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Move up</source>
+        <translation>Nach oben verschieben</translation>
+    </message>
+    <message>
+        <source>Move down</source>
+        <translation>Nach unten verschieben</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Segoe UI&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;the following list defines repositories that will be used to download and install the software. Enter multiple internet addresses on separate lines. http://, https://, and file:// protocols are supported. The repositories are consulted from top to bottom. Definitions from the earlier entries may hide those from the repositories that stay further in the list.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;Example:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    https://www.yournamehere.com/Software.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    http://www.yournamehere.com/Beta.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file:///C:\Users\Your username\Personal.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;    file://myserver/myshare/Rep.xml&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can find the list of available repositories and explanations about how to create your custom repositories at &lt;a href=&quot;https://github.com/npackd/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/npackd/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
