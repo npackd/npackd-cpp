@@ -58,21 +58,6 @@ private:
 
     bool createShortcuts(const QString& dir, QString* errMsg);
 
-    /**
-     * @brief executes a script like .Npackd\Install.bat
-     * @param job job for monitoring the progress
-     * @param where directory where to start
-     * @param path this is the name of the script like ".Npackd\Install.bat"
-     *     relative to "where"
-     * @param env additional environment variables
-     * @param printScriptOutput true = redirect the script output to the default
-     *     output stream
-     * @param unicode true = UTF-16, false = 1 byte system encoding
-     */
-    void executeFile2(Job *job, const QString &where, const QString &path,
-            const std::vector<QString> &env,
-            bool printScriptOutput, bool unicode=true);
-
     void deleteShortcuts(const QString& dir,
             Job* job, bool menu, bool desktop, bool quickLaunch);
 

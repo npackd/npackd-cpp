@@ -2820,7 +2820,7 @@ QString WPMUtils::toQString(const std::vector<int> &v)
 void WPMUtils::executeBatchFile(Job* job, const QString& where,
         const QString& path,
         const QString& outputFile, const std::vector<QString>& env,
-        bool printScriptOutput, bool unicode)
+        bool printScriptOutput, bool unicode, bool readLastLines)
 {
     QString exe = WPMUtils::findCmdExe();
     QString params = "/E:ON /V:OFF /C \"\"" +
@@ -2832,6 +2832,18 @@ void WPMUtils::executeBatchFile(Job* job, const QString& where,
     executeFile(job, normalizePath(where), exe,
             params,
             outputFile, env, unicode, printScriptOutput, unicode);
+
+    if (readLastLines && !outputFile.isEmpty() && !job->getErrorMessage().isEmpty()) {
+        QString text, error;
+        std::tie(text, error) = WPMUtils::readLastLines(outputFile);
+        if (error.isEmpty()) {
+            job->setErrorMessage((QObject::tr("%1. Full output was saved in %2") +
+                    "\r\n" +
+                    QObject::tr("The last lines of the output:") +
+                    "\r\n...\r\n%3").arg(
+                    job->getErrorMessage(), outputFile, text));
+        }
+    }
 }
 
 void WPMUtils::reportEvent(const QString &msg, WORD wType)

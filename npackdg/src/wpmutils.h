@@ -694,10 +694,14 @@ public:
      * @param printScriptOutput true = redirect the script output to the default
      *     output stream
      * @param unicode true = use the "/U" parameter to cmd.exe
+     * @param readLastLines true = read the last lines of the log file and add
+     *     them to the error message in "Job" if the execution ends with an exit
+     *     code other than 0.
      */
     static void executeBatchFile(Job* job, const QString& where,
             const QString& path, const QString& outputFile,
-            const std::vector<QString> &env, bool printScriptOutput, bool unicode=true);
+            const std::vector<QString> &env, bool printScriptOutput, bool unicode=true, 
+            bool readLastLines=false);
 
     /**
      * @brief reports an event using the Windows Log API

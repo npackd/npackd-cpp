@@ -428,8 +428,8 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
 
             Job* sub2 = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
             bool acquired = AbstractRepository::lockInstallationScript(sub2);
-            this->executeFile2(sub, d.absolutePath(), usfn,
-                    env, printScriptOutput, true);
+            WPMUtils::executeBatchFile(sub, d.absolutePath(), usfn, WPMUtils::getMessagesLog(),
+                    env, printScriptOutput, true, true);
             if (acquired)
                 AbstractRepository::unlockInstallationScript();
 
@@ -1325,9 +1325,9 @@ void PackageVersion::install(Job* job, const QString& where,
 
             Job* sub = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
             bool acquired = AbstractRepository::lockInstallationScript(sub);
-            this->executeFile2(exec, d.absolutePath(),
-                    d.absolutePath() + "\\" + installationScript,
-                    env, printScriptOutput, true);
+            WPMUtils::executeBatchFile(exec, d.absolutePath(),
+                    d.absolutePath() + "\\" + installationScript, WPMUtils::getMessagesLog(),
+                    env, printScriptOutput, true, true);
             if (acquired)
                 AbstractRepository::unlockInstallationScript();
 
@@ -1534,29 +1534,8 @@ void PackageVersion::build(Job* job, const QString& outputPackage,
                 "%1 is missing or is not a directory").arg(d.absoluteFilePath()));
         job->complete();
     } else {
-        executeFile2(job, outputDir, this->getPath() + "\\" + filename,
-                env, printScriptOutput, false);
-    }
-}
-
-void PackageVersion::executeFile2(Job* job, const QString& where,
-        const QString& path,
-        const std::vector<QString>& env, bool printScriptOutput, bool unicode)
-{
-    QString outputFile = WPMUtils::getMessagesLog();
-    WPMUtils::executeBatchFile(
-            job, where, path, outputFile, env, printScriptOutput, unicode);
-
-    if (!job->getErrorMessage().isEmpty()) {
-        QString text, error;
-        std::tie(text, error) = WPMUtils::readLastLines(outputFile);
-        if (error.isEmpty()) {
-            job->setErrorMessage((QObject::tr("%1. Full output was saved in %2") +
-                    "\r\n" +
-                    QObject::tr("The last lines of the output:") +
-                    "\r\n...\r\n%3").arg(
-                    job->getErrorMessage(), outputFile, text));
-        }
+        WPMUtils::executeBatchFile(job, outputDir, this->getPath() + "\\" + filename,
+                WPMUtils::getMessagesLog(), env, printScriptOutput, false, true);
     }
 }
 
@@ -1783,10 +1762,10 @@ void PackageVersion::stop(Job* job, DWORD programCloseType,
         Job* sub = job->newSubJob(0.01, QObject::tr("Acquire the installation script lock"), true, true);
         bool acquired = AbstractRepository::lockInstallationScript(sub);
         if (job->shouldProceed())
-            this->executeFile2(exec, d.absolutePath(),
+            WPMUtils::executeBatchFile(exec, d.absolutePath(),
                     d.absolutePath() + "\\.Npackd\\Stop.bat",
-                    env,
-                    printScriptOutput, true);
+                    WPMUtils::getMessagesLog(), env,
+                    printScriptOutput, true, true);
         if (acquired)
             AbstractRepository::unlockInstallationScript();
     } else {

@@ -222,8 +222,8 @@ void AbstractRepository::exportPackageSettingsCoInitializeAndFree(
                         else {
                             env.push_back("NPACKD_PACKAGE_DIR");
                             env.push_back(ipv->getDirectory());
-                            WPMUtils::executeBatchFile(sub, d, fi.absoluteFilePath(), "",
-                                env, false, true);
+                            WPMUtils::executeBatchFile(sub, d, fi.absoluteFilePath(), WPMUtils::getMessagesLog(),
+                                env, false, true, true);
                         }
                     } else {
                         sub->setProgress(1);
@@ -289,8 +289,8 @@ void AbstractRepository::importPackageSettingsCoInitializeAndFree(
                     QFileInfo fi(ipv->getDirectory() + "\\.Npackd\\ImportUserSettings.bat");
                     if (fi.exists()) {
                         WPMUtils::executeBatchFile(sub, dir.path() + "\\" + packageName,
-                            fi.absoluteFilePath(), "",
-                            std::vector<QString>(), false, true);
+                            fi.absoluteFilePath(), WPMUtils::getMessagesLog(),
+                            std::vector<QString>(), false, true, true);
                     } else {
                         sub->setProgress(1);
                         sub->complete();
