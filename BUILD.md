@@ -8,22 +8,22 @@ their 32 bit versions.
 ## Setup a virtual machine under Linux if Windows is not available ##
 
 - Download and install VirtualBox from https://www.virtualbox.org/
-- Choose "MSEdge on Win10 (x64) Stable 1809", "Virtual Box" on 
-   https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/, 
+- Choose "Virtual Box" on 
+   https://developer.microsoft.com/en-US/windows/downloads/virtual-machines/, 
    download the virtual machine disk image, unzip the file.
 - Start "Oracle VM VirtualBox Manager"
    choose "File", "Import appliance..."
-   navigate to "MSEdge-Win10.ova", use the default settings, press "Import"
+   navigate to "WinDevXXXXEval.ova", use the default settings, press "Import"
 - Edit the VM definition
   - (optional) "General", "Extended", set "Common clipboard" to "bidirectional"
   - (optional) "System", "Main memory", set to 8192 MB, 
   - (optional) "System", "Processor", set to 8 CPUs
   - (optional) "Audio", "Extended", check "Audio output"
-- "Tools", "Hard disks", "Properties", resize the disk in VirtualBox to 100 GiB ()
-- Start the VM. Password for IEUser is Passw0rd!, 
-- (optional) install newest VirtualBox guest additions
+  - (optional) "Mass storage", add optical drive
+- "Tools", "Hard disks", "Properties", resize the disk in VirtualBox to 125 GiB
+- (optional) install newest VirtualBox guest additions via the VM window menu "Devices", "Add VirtualBox guest additions"
 - (optional) "View"/"Auto-resize guest display"
-- change the password: "net user ieuser newpassword" as administrator, restart VM
+- (optional) change the password: "net user ieuser newpassword" as administrator, restart VM
 
 ## Configure Windows (optional)
 - (optional) Start netplwiz, enable and disable password on login. Enter new password. Restart VM.
@@ -78,7 +78,7 @@ set path=C:\msys64\mingw64\bin;C:\Program Files\CMake\bin
 set CMAKE_PREFIX_PATH=C:\msys64\mingw64\x86_64-w64-mingw32
 mkdir c:\builds\npackd-dyn-minsizerel
 cd c:\builds\npackd-dyn-minsizerel
-cmake C:\Users\IEUser\Documents\npackd-cpp -G "Ninja" -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=OFF
+cmake C:\Users\User\Documents\npackd-cpp -G "Ninja" -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=OFF  -DQUAZIP_ROOT:PATH=C:\builds\quazip-dev-x86_64-w64_seh_posix_8.2-qt_5.12-static
 ```
 
 ## Build
@@ -99,6 +99,7 @@ ninja
 }]
 ``` 
  * "CMake: configure"
+ * "CMake: Edit Cmake cache (UI)": change "NPACKD_FORCE_STATIC" to "OFF" and QuaZIP paths
  * "CMake: build"
  * add "C:\msys64\mingw64\bin" to PATH
  * install "settings.json" and "keybindings.json" under "C:\Users\IEUser\AppData\Roaming\Code\User"
