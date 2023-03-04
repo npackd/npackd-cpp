@@ -8,10 +8,10 @@ set version=%APPVEYOR_BUILD_VERSION:~0,-4%
 
 SET NPACKD_CL=C:\Program Files\NpackdCL
 
-set onecmd="%npackd_cl%\ncl.exe" path -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,20)
+set onecmd="%npackd_cl%\ncl.exe" path -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,100)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x
 
-set onecmd="%npackd_cl%\ncl.exe" path -p org.7-zip.SevenZIP -r [9,20)
+set onecmd="%npackd_cl%\ncl.exe" path -p org.7-zip.SevenZIP -r [9,100)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set SEVENZIP=%%x
 
 set onecmd="%npackd_cl%\ncl.exe" path -p exeproxy -r [0.2,1)
