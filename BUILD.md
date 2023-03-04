@@ -24,9 +24,11 @@ their 32 bit versions.
 - (optional) install newest VirtualBox guest additions via the VM window menu "Devices", "Add VirtualBox guest additions"
 - (optional) "View"/"Auto-resize guest display"
 - (optional) change the password: "net user ieuser newpassword" as administrator, restart VM
+- (optional) add a shared directory
 
 ## Configure Windows (optional)
-- (optional) Start netplwiz, enable and disable password on login. Enter new password. Restart VM.
+- (optional, Windows 10) Start netplwiz, enable and disable password on login. Enter new password. Restart VM.
+- (optional, Windows 11) "Settings", "Accounts", "Sign-in options", "Password", "Change". Enter an empty new password to disable password on login
 - (optional) Start "Region & language" settings, change the language, restart the VM
 - (optional) start diskmgmt.msc, extend the hard disk partition
 
@@ -64,8 +66,7 @@ pacman -Syu --noconfirm
 pacman -Su --noconfirm
 
 pacman -S --noconfirm mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5 mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd mingw64/mingw-w64-x86_64-quazip
-pacman -S --noconfirm mingw-w64-x86_64-ninja mingw64/mingw-w64-x86_64-zstd
-pacman -S --noconfirm mingw-w64-x86_64-toolchain
+pacman -S --noconfirm mingw-w64-x86_64-ninja mingw64/mingw-w64-x86_64-zstd mingw-w64-x86_64-toolchain
 ```
 - Start Git Extensions and configure "C:\Program Files\KDiff3\bin\kdiff3.exe" as diff and merge tool,
     tim.lebedkov@gmail.com as the email and tim-lebedkov as user name.
