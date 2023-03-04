@@ -17,7 +17,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 ncl set-install-dir -f "C:\Program Files (x86)"
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-ncl add -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,20) -p org.7-zip.SevenZIP -r [9,20) -p exeproxy -r [0.2,1)
+ncl add -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,100) -p org.7-zip.SevenZIP -r [9,100) -p exeproxy -r [0.2,1)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem Python will be detected, but needs NpackdCL
