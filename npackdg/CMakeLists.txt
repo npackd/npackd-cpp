@@ -4,6 +4,8 @@ project(npackdg CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
+add_subdirectory(../quazip quazip)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/")
 

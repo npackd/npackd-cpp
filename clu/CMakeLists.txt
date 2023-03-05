@@ -12,6 +12,8 @@ if(WIN32)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
+add_subdirectory(../quazip quazip)
+
 # CXX_STANDARD property is supported from cmake 3.1, we have to define -std with old cmake
 if(NOT MSVC)
   if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
