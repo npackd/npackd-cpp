@@ -24,8 +24,6 @@ include(CheckCXXCompilerFlag)
 
 include(../cmake/Common.cmake)
 
-find_package(QuaZip REQUIRED)
-
 readVersion("../appveyor.yml")
 
 set(NPACKDCL_SOURCES
@@ -139,7 +137,7 @@ add_executable(npackdcl
 )
 
 # libraries listed here like 'icuin' are necessary for static builds
-SET(NPACKDCL_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
+SET(NPACKDCL_LIBRARIES QuaZip::QuaZip ${ZLIB_LIBRARIES})
 
 if(NPACKD_FORCE_STATIC)
     SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} qsqlite)
@@ -154,7 +152,7 @@ endif()
 SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} userenv winmm ole32 uuid wininet psapi version shlwapi msi netapi32 Ws2_32 taskschd)
 
 target_link_libraries(npackdcl ${NPACKDCL_LIBRARIES})
-target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
+target_include_directories(npackdcl PRIVATE ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
 target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 if(NPACKD_ADMIN)
   target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=1)

@@ -26,8 +26,6 @@ include(CheckCXXCompilerFlag)
 
 include(../cmake/Common.cmake)
 
-find_package(QuaZip REQUIRED)
-
 readVersion("../appveyor.yml")
 
 file(GLOB RESOURCE_IMAGES "src/*.png")
@@ -210,7 +208,7 @@ add_executable(npackdg WIN32
 QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
-SET(NPACKDG_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
+SET(NPACKDG_LIBRARIES QuaZip::QuaZip ${ZLIB_LIBRARIES})
 
 SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} Qt5::WinExtras Qt5::Widgets Qt5FontDatabaseSupport Qt5::QSvgIconPlugin Qt5::QSvgPlugin Qt5::Svg Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core)
 
