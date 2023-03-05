@@ -14,7 +14,7 @@ endif()
 if(NOT MSVC)
   SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
-  if(${NPACKD_FORCE_STATIC})
+  if(NPACKD_FORCE_STATIC)
       SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc")
   endif()
 
@@ -131,13 +131,13 @@ link_directories("${Qt5_DIR}\\..\\..")
 # libraries listed here like 'icuin' are necessary for static builds
 SET(FTESTS_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
-if(${NPACKD_FORCE_STATIC})
+if(NPACKD_FORCE_STATIC)
     SET(FTESTS_LIBRARIES ${FTESTS_LIBRARIES} qsqlite)
 endif()
 
 SET(FTESTS_LIBRARIES ${FTESTS_LIBRARIES} Qt5::Sql Qt5::Test Qt5::Xml Qt5::Core)
 
-if(${NPACKD_FORCE_STATIC})
+if(NPACKD_FORCE_STATIC)
     SET(FTESTS_LIBRARIES ${FTESTS_LIBRARIES} qtpcre2 icuin icuuc icudt icutu qtharfbuzz zstd z)
 endif()
 

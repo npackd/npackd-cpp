@@ -4,7 +4,6 @@ project(npackdg CXX C)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
-# Qt5_DIR=C:\msys64\mingw64\qt5-static\lib\cmake\Qt5
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_SOURCE_DIR}/../cmake/")
 
@@ -16,7 +15,7 @@ endif()
 if(NOT MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
-    if(${NPACKD_FORCE_STATIC})
+    if(NPACKD_FORCE_STATIC)
         SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc")
     endif()
 
@@ -173,7 +172,7 @@ set(NPACKDG_TRANSLATIONS
 option(NPACKD_ADMIN "Force admin right on program" TRUE)
 set(OUTPUT_FILE_NAME "npackdg.exe")
 file(COPY src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-if(${NPACKD_ADMIN})
+if(NPACKD_ADMIN)
     file(COPY src/npackdg.manifest DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/npackdg.rc @ONLY)
 else()
@@ -211,13 +210,11 @@ add_executable(npackdg WIN32
 QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
-# libraries listed here like 'icuin' are necessary in Qt 5.12 for static builds
-
 SET(NPACKDG_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
 SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} Qt5::WinExtras Qt5::Widgets Qt5FontDatabaseSupport Qt5::QSvgIconPlugin Qt5::QSvgPlugin Qt5::Svg Qt5::Gui Qt5::Sql Qt5::Xml Qt5::Core)
 
-if(${NPACKD_FORCE_STATIC})
+if(NPACKD_FORCE_STATIC)
     SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} qsqlite qicns qico qjpeg qgif qtga qtiff qwbmp qwebp qwindows qwindowsvistastyle)
     SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} mingwex Qt5ThemeSupport Qt5EventDispatcherSupport Qt5FontDatabaseSupport Qt5PlatformCompositorSupport Qt5WindowsUIAutomationSupport qdirect2d)
     SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} jasper icuin icuuc icudt icutu qtpcre2 qtharfbuzz qtfreetype qtlibpng jpeg zstd z)
@@ -228,7 +225,7 @@ SET(NPACKDG_LIBRARIES ${NPACKDG_LIBRARIES} imm32 winmm glu32 mpr userenv wtsapi3
 target_link_libraries(npackdg ${NPACKDG_LIBRARIES})
 target_include_directories(npackdg PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS})
 target_compile_definitions(npackdg PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
-if(${NPACKD_ADMIN})
+if(NPACKD_ADMIN)
   target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=1)
 else()
   target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=0)
@@ -244,9 +241,25 @@ if(MSVC)
 endif()
 install(FILES ../CrystalIcons_LICENSE.txt ../LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-file(TO_CMAKE_PATH "$ENV{EXEPROXY}" EXEPROXY)
-install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
+if(WIN32 AND NOT NPACKD_FORCE_STATIC)
+install(FILES ${CMAKE_CXX_COMPILER}/../libquazip1-qt5.dll 
+${CMAKE_CXX_COMPILER}/../libiconv-2.dll ${CMAKE_CXX_COMPILER}/../libzstd.dll 
+${CMAKE_CXX_COMPILER}/../libintl-8.dll ${CMAKE_CXX_COMPILER}/../libbrotlidec.dll ${CMAKE_CXX_COMPILER}/../libbrotlicommon.dll 
+${CMAKE_CXX_COMPILER}/../libfreetype-6.dll ${CMAKE_CXX_COMPILER}/../libgraphite2.dll 
+${CMAKE_CXX_COMPILER}/../libglib-2.0-0.dll ${CMAKE_CXX_COMPILER}/../libpng16-16.dll 
+${CMAKE_CXX_COMPILER}/../libicudt72.dll ${CMAKE_CXX_COMPILER}/../libharfbuzz-0.dll 
+${CMAKE_CXX_COMPILER}/../libmd4c.dll ${CMAKE_CXX_COMPILER}/../libbz2-1.dll 
+${CMAKE_CXX_COMPILER}/../zlib1.dll ${CMAKE_CXX_COMPILER}/../libpcre2-16-0.dll 
+${CMAKE_CXX_COMPILER}/../libpcre2-8-0.dll 
+${CMAKE_CXX_COMPILER}/../libdouble-conversion.dll 
+${CMAKE_CXX_COMPILER}/../libicuin72.dll 
+${CMAKE_CXX_COMPILER}/../libicuuc72.dll 
+${CMAKE_CXX_COMPILER}/../libsqlite3-0.dll 
+DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif()
 
-if(WIN32 AND NOT ${NPACKD_FORCE_STATIC})
+install(FILES "C:/Program Files/EXE_Proxy/exeproxy.exe" DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+if(WIN32 AND NOT NPACKD_FORCE_STATIC)
     install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --compiler-runtime --pdb \"${CMAKE_INSTALL_PREFIX}/npackdg.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
 endif()

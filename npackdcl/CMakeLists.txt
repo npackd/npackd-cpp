@@ -13,7 +13,7 @@ endif()
 if(NOT MSVC)
   SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
-  if(${NPACKD_FORCE_STATIC})
+  if(NPACKD_FORCE_STATIC)
       SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc")
   endif()
 
@@ -141,13 +141,13 @@ add_executable(npackdcl
 # libraries listed here like 'icuin' are necessary for static builds
 SET(NPACKDCL_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
-if(${NPACKD_FORCE_STATIC})
+if(NPACKD_FORCE_STATIC)
     SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} qsqlite)
 endif()
 
 SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} Qt5::Sql Qt5::Xml Qt5::Core)
 
-if(${NPACKD_FORCE_STATIC})
+if(NPACKD_FORCE_STATIC)
     SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} mingwex qtpcre2 icuin icuuc icudt icutu zstd z)
 endif()
 
@@ -156,7 +156,7 @@ SET(NPACKDCL_LIBRARIES ${NPACKDCL_LIBRARIES} userenv winmm ole32 uuid wininet ps
 target_link_libraries(npackdcl ${NPACKDCL_LIBRARIES})
 target_include_directories(npackdcl PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src)
 target_compile_definitions(npackdcl PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
-if(${NPACKD_ADMIN})
+if(NPACKD_ADMIN)
   target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=1)
 else()
   target_compile_definitions(npackdcl PRIVATE -D NPACKD_ADMIN=0)

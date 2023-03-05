@@ -36,7 +36,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 if(NOT MSVC)
   SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map,${PROJECT_NAME}.map")
 
-  if(${NPACKD_FORCE_STATIC})
+  if(NPACKD_FORCE_STATIC)
       SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc")
   endif()
 
@@ -153,13 +153,13 @@ link_directories("${Qt5_DIR}\\..\\..")
 
 SET(CLU_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
-if(${NPACKD_FORCE_STATIC})
+if(NPACKD_FORCE_STATIC)
     SET(CLU_LIBRARIES ${CLU_LIBRARIES} qsqlite)
 endif()
 
 SET(CLU_LIBRARIES ${CLU_LIBRARIES} Qt5::Sql Qt5::Xml Qt5::Core)
 
-if(${NPACKD_FORCE_STATIC})
+if(NPACKD_FORCE_STATIC)
     SET(CLU_LIBRARIES ${CLU_LIBRARIES} qtpcre2 zstd z)
 endif()
 
