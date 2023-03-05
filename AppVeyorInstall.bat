@@ -3,6 +3,9 @@ echo on
 rem This script is used by AppVeyor automatic builds to install the necessary
 rem software dependencies.
 
+git submodule update --init --recursive
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 msiexec.exe /qn /i https://github.com/npackd/npackd-cpp/releases/download/version_1.26.9/NpackdCL64-1.26.9.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
