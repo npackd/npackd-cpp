@@ -37,6 +37,3 @@ npackdstatic/
 /npackdg/.xmake/
 /npackdg/waf3-*
 /npackdg/.lock-waf_win32_build
-/.vscode/
-/.vscode/
-/.vscode/settings.json

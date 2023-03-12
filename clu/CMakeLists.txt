@@ -12,8 +12,6 @@ if(WIN32)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif()
 
-add_subdirectory(../quazip quazip)
-
 # CXX_STANDARD property is supported from cmake 3.1, we have to define -std with old cmake
 if(NOT MSVC)
   if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
@@ -48,6 +46,8 @@ endif()
 include(CheckCXXCompilerFlag)
 
 include(../cmake/Common.cmake)
+
+find_package(QuaZip REQUIRED)
 
 readVersion("../appveyor.yml")
 
@@ -151,7 +151,7 @@ link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\imageformats")
 link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 link_directories("${Qt5_DIR}\\..\\..")
 
-SET(CLU_LIBRARIES QuaZip::QuaZip ${ZLIB_LIBRARIES})
+SET(CLU_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
 if(NPACKD_FORCE_STATIC)
     SET(CLU_LIBRARIES ${CLU_LIBRARIES} qsqlite)
@@ -170,7 +170,7 @@ add_executable(clu
     ${CLU_HEADERS}
 )
 target_link_libraries(clu ${CLU_LIBRARIES})
-target_include_directories(clu PRIVATE ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src ${CMAKE_CURRENT_SOURCE_DIR}/../npackdcl/src)
+target_include_directories(clu PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../npackdg/src ${CMAKE_CURRENT_SOURCE_DIR}/../npackdcl/src)
 target_compile_definitions(clu PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS clu DESTINATION ${CMAKE_INSTALL_PREFIX})

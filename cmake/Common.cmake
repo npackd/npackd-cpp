@@ -132,9 +132,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(BUILD_SHARED_LIBS NO)
-
 add_definitions(-DUNICODE -D_UNICODE -DNOMINMAX)
-
-option(NPACKD_FORCE_STATIC "Force generator to link statically" OFF)
-mark_as_advanced(NPACKD_FORCE_STATIC)

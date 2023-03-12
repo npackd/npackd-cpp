@@ -27,6 +27,8 @@ include(CheckCXXCompilerFlag)
 
 include(../../cmake/Common.cmake)
 
+find_package(QuaZip REQUIRED)
+
 readVersion("../../appveyor.yml")
 
 set(FTESTS_SOURCES
@@ -127,7 +129,7 @@ link_directories("${Qt5_DIR}\\..\\..\\..\\share\\qt5\\plugins\\sqldrivers")
 link_directories("${Qt5_DIR}\\..\\..")
 
 # libraries listed here like 'icuin' are necessary for static builds
-SET(FTESTS_LIBRARIES QuaZip::QuaZip ${ZLIB_LIBRARIES})
+SET(FTESTS_LIBRARIES ${QUAZIP_LIBRARIES} ${ZLIB_LIBRARIES})
 
 if(NPACKD_FORCE_STATIC)
     SET(FTESTS_LIBRARIES ${FTESTS_LIBRARIES} qsqlite)
@@ -147,7 +149,7 @@ add_executable(ftests
 )
 
 target_link_libraries(ftests ${FTESTS_LIBRARIES})
-target_include_directories(ftests PRIVATE ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../../npackdg/src)
+target_include_directories(ftests PRIVATE ${QUAZIP_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../../npackdg/src)
 target_compile_definitions(ftests PRIVATE -D NPACKD_VERSION="${NPACKD_VERSION}" -D QUAZIP_STATIC=1)
 
 install(TARGETS ftests DESTINATION ${CMAKE_INSTALL_PREFIX})
