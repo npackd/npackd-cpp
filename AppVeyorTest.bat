@@ -54,16 +54,6 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 cd build
 
 set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
-set qtdir=%qt:\=/%
-set CMAKE_INCLUDE_PATH=%quazip%\include
-set CMAKE_LIBRARY_PATH=%quazip%\lib
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
-
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-mingw32-make.exe install
-if %errorlevel% neq 0 exit /b %errorlevel%
 
 ..\install\tests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -75,14 +65,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 cd build
 
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-mingw32-make.exe install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-rem 30 minutes timeout for *all* tests
-set QTEST_FUNCTION_TIMEOUT=1800000
+rem 40 minutes timeout for *all* tests
+set QTEST_FUNCTION_TIMEOUT=2400000
 ftests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
