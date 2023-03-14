@@ -30,46 +30,14 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 
 goto start
 
-:bits64
+set path=C:\msys64\mingw64\bin;%ai%\bin\x86;%sevenzip%
 
-set QT=C:/msys64/mingw64/qt5-static
-set mingw_libs=x86_64-w64-mingw32
-set mingw=C:\msys64\mingw64
+cd npackdcl\install
 
-set onecmd="%npackd_cl%\ncl.exe" path -p quazip-dev-x86_64-w64_seh_posix_7.2-qt_5.9.2-static -v 0.7.3
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set quazip=%%x
-
-set onecmd="%npackd_cl%\ncl.exe" path -p drmingw64 -v 0.7.7
-for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
-
-goto start
-
-:start
-cd npackdcl
-cd tests
-
-mkdir build
+tests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
-
-cd build
-
-set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
-
-..\install\tests -v2
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-cd ..\..\ftests
-
-mkdir build
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-cd build
 
 rem 40 minutes timeout for *all* tests
 set QTEST_FUNCTION_TIMEOUT=2400000
 ftests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
-
-goto :eof
-
-
