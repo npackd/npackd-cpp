@@ -157,15 +157,10 @@ set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
-rem C:\Windows\System32\notepad.exe
-
 if %errorlevel% neq 0 exit /b %errorlevel%
-
-cmake -LAH
 
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
-
 
 "%EXEPROXY%\exeproxy.exe" exeproxy-copy ..\install\ncl.exe npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
