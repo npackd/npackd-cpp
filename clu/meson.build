@@ -1,5 +1,6 @@
-project('clu', 'c', 'cpp')
+project('clu', 'c', 'cpp', default_options : ['c_std=c11', 'cpp_std=c++11'])
 
+fs = import('fs') 
 qt5_mod = import('qt5')
 
 deps =[
@@ -10,60 +11,87 @@ deps =[
 ]
 
 CXX = meson.get_compiler('cpp')
-libs_you_need_to_link = ['userenv', 'winmm', 'ole32', 'uuid', 'wininet', 'psapi', 'version',
-    'shlwapi', 'msi', 'netapi32', 'Ws2_32', 'taskschd']
-foreach lib_name : libs_you_need_to_link 
-    deps += CXX.find_library(lib_name, dirs : ['C:\\msys64\\mingw64\\lib'])
+foreach lib_name : ['userenv', 'winmm', 'ole32', 'uuid', 'wininet', 'psapi', 'version',
+    'shlwapi', 'msi', 'netapi32', 'Ws2_32', 'taskschd'] 
+    deps += CXX.find_library(lib_name)
 endforeach
 
-add_global_arguments('-std=c++11', '-DUNICODE', '-D_UNICODE',  '-DNPACKD_VERSION="1.27.0.0"', 
+version = fs.read('../appveyor.yml').strip().split('\n')[0].replace('version:', '').replace('.{build}', '').strip()
+
+#TODO NPACKD_VERSION_MAJOR, MINOR, PATCH, TWEAK
+
+# -flto does not work (01.01.2020) probably because Qt is not compiled with LTO enabled
+# -fno-exceptions -fno-unwind-tables do not reduce the binary size at all (05.01.2020)
+add_global_arguments('-DUNICODE', '-D_UNICODE', '-DNOMINMAX',
+    '-D_WIN32_WINNT=0x0601', # Windows 7
+    '-DNPACKD_VERSION="' + version + '"', 
     '-Wall', '-Wwrite-strings', '-Wextra', '-Wno-unused-parameter', '-Wno-cast-function-type', '-Wduplicated-cond', 
     '-Wduplicated-branches', '-Wlogical-op',
+    '-Wno-error=cast-qual', '-Wno-unused-local-typedefs', '-Wno-unused-variable',
     language : 'cpp')
+
+# TODO static builds
+#  -static -static-libstdc++ -static-libgcc
+#  qtpcre2 zstd z
+#  -D QUAZIP_STATIC=1
+
+# TODO
+# install(FILES ../LICENSE.txt DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+
+# TODO  -g -Os
+
+# TODO
+#configure_file(src/app.rc.in ${CMAKE_CURRENT_BINARY_DIR}/clu.rc @ONLY)
+#file(COPY ../npackdg/src/app.ico DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#list(APPEND CLU_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/clu.rc)
+
+
+add_project_link_arguments('-Wl,-Map,clu.map', language: 'cpp')
 
 processed = qt5_mod.preprocess(
     # Only headers that need moc should be put here
-  moc_headers : ['../npackdg/src/job.h', '../npackdg/src/installedpackages.h', '../npackdg/src/clprogress.h'] 
-  # must have #include"moc_helperFile.cpp" 
-  #moc_sources : []
+    moc_headers : ['../npackdg/src/job.h', '../npackdg/src/installedpackages.h', '../npackdg/src/clprogress.h'] 
 )
 
-dir = '../npackdg/src'
 src = ['src/main.cpp',
     'src/app.cpp',
-    '../npackdg/src/job.cpp', '../npackdg/src/installedpackages.cpp', '../npackdg/src/clprogress.cpp',
-    dir / 'package.cpp',
-    dir / 'license.cpp',
-    dir / 'dependency.cpp',
-    dir / 'abstractrepository.cpp',
-    dir / 'repository.cpp',
-    dir / 'packageversion.cpp',
-    dir / 'packageversionfile.cpp',
-    dir / 'installedpackageversion.cpp',
-    dir / 'windowsregistry.cpp',
-    dir / 'abstractthirdpartypm.cpp',
-    dir / 'controlpanelthirdpartypm.cpp',
-    dir / 'commandline.cpp',
-    dir / 'wpmutils.cpp',
-    dir / 'hrtimer.cpp',
-    dir / 'version.cpp',
-    dir / 'installoperation.cpp',
-    dir / 'dbrepository.cpp',
-    dir / 'downloader.cpp',
-    dir / 'repositoryxmlhandler.cpp',
-    dir / 'installedpackagesthirdpartypm.cpp',
-    dir / 'wellknownprogramsthirdpartypm.cpp',
-    dir / 'msithirdpartypm.cpp',
-    dir / 'mysqlquery.cpp',
-    dir / 'packageutils.cpp',
-    dir / 'wuathirdpartypm.cpp',
-    dir / 'wuapi_i.c',
-    dir / 'comobject.cpp',
-    dir / 'sqlutils.cpp',
-    dir / 'dag.cpp',
-    dir / 'lockedfiles.cpp',
-    dir / 'threadpool.cpp',
-    dir / 'deptask.cpp',
-    'C:\\Users\\User\\Documents\\npackd-cpp\\npackdcl\\src' / 'commandlinemessagehandler.cpp', processed]
+    '../npackdg/src/job.cpp', 
+    '../npackdg/src/installedpackages.cpp', 
+    '../npackdg/src/clprogress.cpp',
+    '../npackdg/src/package.cpp',
+    '../npackdg/src/license.cpp',
+    '../npackdg/src/dependency.cpp',
+    '../npackdg/src/abstractrepository.cpp',
+    '../npackdg/src/repository.cpp',
+    '../npackdg/src/packageversion.cpp',
+    '../npackdg/src/packageversionfile.cpp',
+    '../npackdg/src/installedpackageversion.cpp',
+    '../npackdg/src/windowsregistry.cpp',
+    '../npackdg/src/abstractthirdpartypm.cpp',
+    '../npackdg/src/controlpanelthirdpartypm.cpp',
+    '../npackdg/src/commandline.cpp',
+    '../npackdg/src/wpmutils.cpp',
+    '../npackdg/src/hrtimer.cpp',
+    '../npackdg/src/version.cpp',
+    '../npackdg/src/installoperation.cpp',
+    '../npackdg/src/dbrepository.cpp',
+    '../npackdg/src/downloader.cpp',
+    '../npackdg/src/repositoryxmlhandler.cpp',
+    '../npackdg/src/installedpackagesthirdpartypm.cpp',
+    '../npackdg/src/wellknownprogramsthirdpartypm.cpp',
+    '../npackdg/src/msithirdpartypm.cpp',
+    '../npackdg/src/mysqlquery.cpp',
+    '../npackdg/src/packageutils.cpp',
+    '../npackdg/src/wuathirdpartypm.cpp',
+    '../npackdg/src/wuapi_i.c',
+    '../npackdg/src/comobject.cpp',
+    '../npackdg/src/sqlutils.cpp',
+    '../npackdg/src/dag.cpp',
+    '../npackdg/src/lockedfiles.cpp',
+    '../npackdg/src/threadpool.cpp',
+    '../npackdg/src/deptask.cpp',
+    '../npackdcl/src/commandlinemessagehandler.cpp', processed]
+
 incdir = include_directories('../npackdg/src', '../npackdcl/src')    
 executable('clu', src, dependencies: deps, include_directories : incdir)
