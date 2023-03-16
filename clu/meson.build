@@ -27,7 +27,7 @@ add_global_arguments('-DUNICODE', '-D_UNICODE', '-DNOMINMAX',
     '-DNPACKD_VERSION="' + version + '"', 
     '-Wall', '-Wwrite-strings', '-Wextra', '-Wno-unused-parameter', '-Wno-cast-function-type', '-Wduplicated-cond', 
     '-Wduplicated-branches', '-Wlogical-op',
-    '-Wno-error=cast-qual', '-Wno-unused-local-typedefs', '-Wno-unused-variable',
+    '-Wno-error=cast-qual', '-Wno-unused-local-typedefs', '-Wno-unused-variable', '-g',
     language: 'cpp')
 
 # TODO static builds
@@ -35,10 +35,7 @@ add_global_arguments('-DUNICODE', '-D_UNICODE', '-DNOMINMAX',
 #  qtpcre2 zstd z
 #  -D QUAZIP_STATIC=1
 
-# TODO
 install_data('../LICENSE.txt')
-
-# TODO  -g -Os
 
 conf = configuration_data()
 conf.set('NPACKD_VERSION_MAJOR', version_parts.length() > 0 ? version_parts[0] : '0')
