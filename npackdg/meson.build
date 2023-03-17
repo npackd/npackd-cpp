@@ -78,8 +78,18 @@ configure_file(input: 'src/app.ico',
   output: 'app.ico', copy: true)
 rc = windows.compile_resources(meson.current_build_dir() / meson.project_name() + '.rc')
 
-configure_file(input: 'src/app.ico',
-  output: 'app.ico', copy: true)
+foreach f : ['app.png',
+    'update.png',
+    'wait.png',
+    'uninstall.png',
+    'fileissue.png',
+    'gotosite.png',
+    'install.png',
+    'broken.png',
+    'add.png'] 
+    configure_file(input: 'src' / f,
+    output: f, copy: true)
+endforeach
 
 add_project_link_arguments('-Wl,-Map,' + meson.project_name() + '.map', language: 'cpp')
 
