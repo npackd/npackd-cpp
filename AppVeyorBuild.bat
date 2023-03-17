@@ -44,83 +44,22 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 goto start
 
 :start
-if %prg% equ npackdcl goto npackdcl
-if %prg% equ clu goto clu
+if %prg% equ npackd (
+    pushd npackdg
+    call build64.bat
+    popd
+)
+if %prg% equ npackdcl (
+    pushd npackdcl
+    call build64.bat
+    popd
+)
+if %prg% equ clu (
+    pushd clu
+    call build64.bat
+    popd
+)
 
-:npackd
-
-mkdir npackdg\build
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-pushd npackdg\build
-set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
-
-cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-mingw32-make.exe install
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-C:\Windows\System32\xcopy.exe ..\install ..\install-debug /E /I /H /Y
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-strip ..\install\npackdg.exe
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-pushd ..\install-debug
-
-copy ..\build\npackdg.map .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\exchndl.dll" .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\mgwhelp.dll" .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\dbghelp.dll" .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\symsrv.dll" .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy "%DRMINGW%\bin\symsrv.yes" .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-7z a ..\build\Npackd%bits%-debug-%version%.zip * -mx9	
-if %errorlevel% neq 0 exit /b %errorlevel%
-popd
-
-pushd ..\install
-7z a ..\build\Npackd%bits%-%version%.zip * -mx9	
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy ..\src\npackdg%bits%.aip .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-copy ..\src\app.ico .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-AdvancedInstaller.com /edit npackdg%bits%.aip /SetVersion %version%
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-AdvancedInstaller.com /build npackdg%bits%.aip
-if %errorlevel% neq 0 exit /b %errorlevel%
-popd
-
-popd
-
-set path=%initial_path%
-
-appveyor PushArtifact npackdg\build\Npackd%bits%-%version%.zip
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-appveyor PushArtifact npackdg\install\Npackd%bits%-%version%.msi
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-appveyor PushArtifact npackdg\build\Npackd%bits%-debug-%version%.zip
-if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem Coverity build is too slow
 goto end

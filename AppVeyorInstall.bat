@@ -31,7 +31,7 @@ rem update all packages to the newest versions
 pacman -Syu --noconfirm
 pacman -Syu --noconfirm
 
-pacman -S --noconfirm mingw64/mingw-w64-x86_64-cmake mingw64/mingw-w64-x86_64-ninja mingw64/mingw-w64-x86_64-wget
+pacman -S --noconfirm mingw64/mingw-w64-x86_64-cmake mingw64/mingw-w64-x86_64-ninja mingw64/mingw-w64-x86_64-wget mingw64/mingw-w64-x86_64-meson
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if %bits% equ 64 (if %static% equ ON (call :install64static) else (call :install64dynamic)) else (call :install32)
