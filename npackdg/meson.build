@@ -124,22 +124,6 @@ processed = qt5_mod.preprocess(
 # TODO /npackdg.qrc
 
 # TODO
-# set(NPACKDG_FORMS
-#     src/mainwindow.ui
-#     src/packageversionform.ui
-#     src/licenseform.ui
-#     src/messageframe.ui
-#     src/settingsframe.ui
-#     src/packageframe.ui
-#     src/mainframe.ui
-#     src/exportrepositoryframe.ui
-# )
-# set(NPACKDG_TRANSLATIONS
-#     src/npackdg_es.ts
-#     src/npackdg_ru.ts
-#     src/npackdg_fr.ts
-#     src/npackdg_de.ts
-# )
 # QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 # qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
