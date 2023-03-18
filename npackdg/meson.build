@@ -94,10 +94,10 @@ endforeach
 add_project_link_arguments('-Wl,-Map,' + meson.project_name() + '.map', language: 'cpp')
 
 qms = qt5_mod.compile_translations(ts_files: 
-    ['src/npackdg_ru.ts',
-    'src/npackdg_de.ts',
-    'src/npackdg_es.ts',
-    'src/npackdg_fr.ts'])
+    ['src\\npackdg_ru.ts',
+    'src\\npackdg_de.ts',
+    'src\\npackdg_es.ts',
+    'src\\npackdg_fr.ts'])
 
 configure_file(input: 'src' / meson.project_name() + '.qrc',
   output: meson.project_name() + '.qrc', copy: true)
