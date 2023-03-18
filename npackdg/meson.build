@@ -74,6 +74,8 @@ conf.set('OUTPUT_FILE_NAME', meson.project_name() + '.exe')
 configure_file(input: 'src/app.rc.in',
   output: meson.project_name() + '.rc',
   configuration: conf)
+configure_file(input: 'src/npackdg.manifest',
+  output: 'npackdg.manifest', copy: true)
 configure_file(input: 'src/app.ico',
   output: 'app.ico', copy: true)
 rc = windows.compile_resources(meson.current_build_dir() / meson.project_name() + '.rc')
@@ -91,20 +93,21 @@ foreach f : ['app.png',
     output: f, copy: true)
 endforeach
 
+
 add_project_link_arguments('-Wl,-Map,' + meson.project_name() + '.map', language: 'cpp')
 
-qms = qt5_mod.compile_translations(ts_files: 
-    ['src\\npackdg_ru.ts',
-    'src\\npackdg_de.ts',
-    'src\\npackdg_es.ts',
-    'src\\npackdg_fr.ts'])
+qms = qt5_mod.compile_translations(qresource: 'src' / meson.project_name() + '.qrc')
 
 configure_file(input: 'src' / meson.project_name() + '.qrc',
   output: meson.project_name() + '.qrc', copy: true)
 
-processed = qt5_mod.preprocess(
-    # Only headers that need moc should be put here
-    moc_headers : ['src/job.h', 
+uis = qt5_mod.compile_ui(sources: ['src/packageframe.ui', 'src/exportrepositoryframe.ui', 
+        'src/licenseform.ui', 'src/mainframe.ui', 'src/mainwindow.ui',
+        'src/messageframe.ui', 'src/packageversionform.ui',
+        'src/settingsframe.ui'])
+
+# Only headers that need moc should be put here
+mocs = qt5_mod.compile_moc(sources: ['src/job.h', 
         'src/installedpackages.h', 'src/visiblejobs.h', 
         'src/clprogress.h',
         'src/mainwindow.h',
@@ -115,14 +118,11 @@ processed = qt5_mod.preprocess(
         'src/settingsframe.h',
         'src/progresstree2.h',
         'src/downloader.h',
-        'src/asyncdownloader.h'],
-    ui_files: ['src/packageframe.ui', 'src/exportrepositoryframe.ui', 
-        'src/licenseform.ui', 'src/mainframe.ui', 'src/mainwindow.ui',
-        'src/messageframe.ui', 'src/packageversionform.ui',
-        'src/settingsframe.ui'],
-    qresources: meson.current_build_dir() / meson.project_name() + '.qrc', 
-)
+        'src/asyncdownloader.h'])
 
+processed = qt5_mod.compile_resources(
+    sources: meson.current_build_dir() / meson.project_name() + '.qrc', 
+)
 
 # TODO option(NPACKD_ADMIN "Force admin right on program" TRUE)
 #if(NPACKD_ADMIN)
@@ -134,6 +134,22 @@ processed = qt5_mod.preprocess(
 # TODO /npackdg.qrc
 
 # TODO
+# set(NPACKDG_FORMS
+#     src/mainwindow.ui
+#     src/packageversionform.ui
+#     src/licenseform.ui
+#     src/messageframe.ui
+#     src/settingsframe.ui
+#     src/packageframe.ui
+#     src/mainframe.ui
+#     src/exportrepositoryframe.ui
+# )
+# set(NPACKDG_TRANSLATIONS
+#     src/npackdg_es.ts
+#     src/npackdg_ru.ts
+#     src/npackdg_fr.ts
+#     src/npackdg_de.ts
+# )
 # QT5_CREATE_TRANSLATION(qm_files src/ ${NPACKDG_TRANSLATIONS} OPTIONS -locations none)
 # qt5_add_translation(NPACKDG_TRANSLATIONS_QM ${NPACKDG_TRANSLATIONS})
 
@@ -193,7 +209,7 @@ src = ['src/main.cpp',
     'src/dag.cpp',
     'src/deptask.cpp',
     'src/lockedfiles.cpp', 
-    qms, processed, rc]
+    mocs, uis, processed, rc]
 
 incdir = include_directories('src')    
 executable(meson.project_name(), src, dependencies: deps, include_directories: incdir, 
