@@ -22,15 +22,15 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 rem set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
 
 rem TODO  -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
-meson setup build\meson
+meson setup build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-meson compile -C build\meson
+meson compile -C build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 mkdir build\dist
 
-copy build\meson\npackdg.exe build\dist
+copy build\npackdg.exe build\dist
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy src\CrystalIcons_LICENSE.txt build\dist
@@ -44,10 +44,10 @@ rem TODO exeproxy
 C:\Windows\System32\xcopy.exe build\dist build\dist-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip dist\npackdg.exe
+strip build\dist\npackdg.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy build\meson\npackdg.map build\dist-debug
+copy build\npackdg.map build\dist-debug
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy "%DRMINGW%\bin\exchndl.dll" build\dist-debug
