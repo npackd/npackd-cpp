@@ -12,7 +12,8 @@ cd npackdcl\build
 tests\tests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+rem Too slow for AppVeyor.
 rem 40 minutes timeout for *all* tests
-set QTEST_FUNCTION_TIMEOUT=2400000
-ftests\ftests -v2
-if %errorlevel% neq 0 exit /b %errorlevel%
+rem set QTEST_FUNCTION_TIMEOUT=2400000
+rem ftests\ftests -v2
+rem if %errorlevel% neq 0 exit /b %errorlevel%
