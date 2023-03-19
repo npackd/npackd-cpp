@@ -161,11 +161,8 @@ rem C:\Windows\System32\notepad.exe
 
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-cmake -LAH
-
 mingw32-make.exe install
 if %errorlevel% neq 0 exit /b %errorlevel%
-
 
 "%EXEPROXY%\exeproxy.exe" exeproxy-copy ..\install\ncl.exe npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
