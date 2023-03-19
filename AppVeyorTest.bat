@@ -9,10 +9,10 @@ set path=C:\msys64\mingw32\bin;%ai%\bin\x86;%sevenzip%
 
 cd npackdcl\build
 
-tests -v2
+tests\tests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 rem 40 minutes timeout for *all* tests
 set QTEST_FUNCTION_TIMEOUT=2400000
-ftests -v2
+ftests\ftests -v2
 if %errorlevel% neq 0 exit /b %errorlevel%
