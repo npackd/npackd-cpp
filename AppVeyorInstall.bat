@@ -36,9 +36,6 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 if %bits% equ 64 (if %static% equ ON (call :install64static) else (call :install64dynamic)) else (call :install32)
 
-Taskkill /IM gpg-agent.exe /F
-Taskkill /IM dirmngr.exe /F
-verify
 goto :eof
 
 rem ---------------------------------------------------------------------------
@@ -53,7 +50,6 @@ exit /b
 
 rem ---------------------------------------------------------------------------
 :install64dynamic
-
 pacman -S --noconfirm mingw-w64-x86_64-toolchain mingw-w64-x86_64-libtool mingw64/mingw-w64-x86_64-jasper mingw64/mingw-w64-x86_64-qt5 mingw64/mingw-w64-x86_64-icu mingw64/mingw-w64-x86_64-zstd mingw64/mingw-w64-x86_64-quazip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -85,4 +81,4 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 for /f "delims=" %%x in ('dir /b cov-*') do set name=%%x
 ren "%name%" cov-analysis
 
-
+exit /b
