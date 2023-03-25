@@ -43,7 +43,7 @@ goto start
 
 :start
 set path=%mingw%\bin;C:\msys64\mingw64\bin\
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%mingw%\qt5-static
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;build-quazip\quazip
 cmake.exe -GNinja -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -S quazip -B build-quazip -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libbz2.a
 if %errorlevel% neq 0 exit /b %errorlevel%
 
