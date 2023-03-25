@@ -42,12 +42,12 @@ for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
 goto start
 
 :start
-set path=%mingw%\bin
+set path=%mingw%\bin;C:\msys64\mingw64\bin\
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%mingw%\qt5-static
-C:\msys64\mingw64\bin\cmake.exe -GNinja -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -S quazip -B build-quazip -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libbz2.a
+cmake.exe -GNinja -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -S quazip -B build-quazip -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libbz2.a
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-C:\msys64\mingw64\bin\cmake.exe --build build-quazip
+cmake.exe --build build-quazip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if %prg% equ npackdcl goto npackdcl
