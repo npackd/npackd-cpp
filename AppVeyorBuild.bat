@@ -50,7 +50,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 cmake.exe --build build-quazip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-tree build-quazip
+C:\Windows\System32\tree.com build-quazip
 
 if %prg% equ npackdcl goto npackdcl
 if %prg% equ clu goto clu
