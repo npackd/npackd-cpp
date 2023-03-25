@@ -4,7 +4,7 @@ rem This script is used by AppVeyor to build the project.
 
 set initial_path=%path%
 
-set version=%APPVEYOR_BUILD_VERSION:~0,-4%
+set version=%APPVEYOR_BUILD_VERSION:~0,-5%
 
 SET NPACKD_CL=C:\Program Files\NpackdCL
 
