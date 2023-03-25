@@ -19,6 +19,7 @@ set path=%mingw%\bin;C:\msys64\mingw64\bin\
 mkdir c:\builds
 
 if %static% equ ON (call :buildquazip)
+if %static% equ ON (set extra="-DQUAZIP_INCLUDE_DIRS=quazip" "-DQUAZIP_LIBRARIES=c:\builds\quazip\quazip\libquazip1-qt5.a")
 if %prg% equ npackdcl (call :buildnpackdcl)
 if %prg% equ clu (call :buildclu)
 if %prg% equ npackd (call :buildnpackd)
@@ -57,7 +58,7 @@ set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 set where=c:\builds\npackdg
 
-cmake -GNinja -S npackdg -B %where% -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=%STATIC% -DQUAZIP_INCLUDE_DIRS=quazip -DQUAZIP_LIBRARIES=c:\builds\quazip\libquazip1-qt5.a
+cmake -GNinja -S npackdg -B %where% -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=%STATIC% %extra%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake.exe --build %where%
@@ -125,7 +126,7 @@ set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 set where=c:\builds\clu
 
-cmake -GNinja -S npackdcl -B %where% -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=%STATIC% -DQUAZIP_INCLUDE_DIRS=c:\builds\quazip -DQUAZIP_LIBRARIES=c:\builds\quazip\libquazip1-qt5.a
+cmake -GNinja -S npackdcl -B %where% -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=%STATIC%  %extra%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake.exe --build %where%
@@ -201,7 +202,7 @@ set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
 set where=c:\builds\clu
 
-cmake -GNinja -S clu -B %where% -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC% -DQUAZIP_INCLUDE_DIRS=c:\builds\quazip -DQUAZIP_LIBRARIES=c:\builds\quazip\libquazip1-qt5.a
+cmake -GNinja -S clu -B %where% -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%  %extra%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake.exe --build %where%
