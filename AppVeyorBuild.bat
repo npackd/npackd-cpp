@@ -22,7 +22,7 @@ if %bits% equ 64 goto bits64
 set mingw_libs=i686-w64-mingw32
 set mingw=C:\msys64\mingw32
 
-set quazip=build-quazip
+set quazip=C:\projects\Npackd\build-quazip
 
 set onecmd="%npackd_cl%\ncl.exe" path -p drmingw -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
@@ -34,7 +34,7 @@ goto start
 set mingw_libs=x86_64-w64-mingw32
 set mingw=C:\msys64\mingw64
 
-set quazip=build-quazip
+set quazip=C:\projects\Npackd\build-quazip
 
 set onecmd="%npackd_cl%\ncl.exe" path -p drmingw64 -v 0.7.7
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set drmingw=%%x
