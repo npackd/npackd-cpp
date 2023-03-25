@@ -43,7 +43,7 @@ goto start
 
 :start
 set path=%mingw%\bin;C:\msys64\mingw64\bin\
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;build-quazip\quazip
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%\quazip
 cmake.exe -GNinja -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -S quazip -B build-quazip -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libbz2.a
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -60,7 +60,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdg\build
 set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%\quazip
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -136,7 +136,7 @@ if "%bits%" neq "64" goto end
 pushd npackdg\build
 
 set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%\quazip
 mingw32-make.exe clean
 
 "..\..\cov-analysis\bin\cov-configure.exe"  --comptype gcc --compiler C:\PROGRA~2\MINGW-~1\bin\G__~1.EXE -- -std=gnu++11
@@ -160,7 +160,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd npackdcl\build
 set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%\quazip
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 rem C:\Windows\System32\notepad.exe
@@ -247,7 +247,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 pushd clu\build
 set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
-set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%
+set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%;%quazip%\quazip
 
 cmake ..\ -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=..\install -DNPACKD_FORCE_STATIC:BOOL=%STATIC%
 if %errorlevel% neq 0 exit /b %errorlevel%
