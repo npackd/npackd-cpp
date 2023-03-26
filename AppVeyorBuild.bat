@@ -81,6 +81,15 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 mkdir %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+copy %where%\npackdg.exe %where%\install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy CrystalIcons_LICENSE.txt %where%\install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy LICENSE.txt %where%\install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 C:\Windows\System32\xcopy.exe %where%\install %where%\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -138,7 +147,7 @@ rem ---------------------------------------------------------------------------
 :buildnpackdcl
 set path=%mingw%\bin;%ai%\bin\x86;%sevenzip%;C:\msys64\mingw64\bin
 set CMAKE_PREFIX_PATH=%mingw%\%mingw_libs%
-set where=c:\builds\clu
+set where=c:\builds\npackdcl
 
 cmake -GNinja -S npackdcl -B %where% -DCMAKE_BUILD_TYPE=MinSizeRel -DNPACKD_FORCE_STATIC:BOOL=%STATIC%  %extra%
 if %errorlevel% neq 0 exit /b %errorlevel%
