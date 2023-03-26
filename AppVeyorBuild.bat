@@ -90,6 +90,77 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy LICENSE.txt %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+"%mingw%\qt5-static\bin\windeployqt.exe" --libdir %where%\install --dir %where%\install --compiler-runtime --pdb %where%\install\npackdg.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy "%EXEPROXY%\exeproxy.exe" %where%\install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+if %static% equ ON (
+    copy %mingw%\bin\libquazip1-qt5.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libiconv-2.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libzstd.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libintl-8.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libbrotlidec.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libbrotlicommon.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libfreetype-6.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libgraphite2.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libglib-2.0-0.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libpng16-16.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libicudt72.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libharfbuzz-0.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libmd4c.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libbz2-1.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\zlib1.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libpcre2-16-0.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libpcre2-8-0.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libdouble-conversion.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libicuin72.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libicuuc72.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+
+    copy %mingw%\bin\libsqlite3-0.dll %where%\install
+    if %errorlevel% neq 0 exit /b %errorlevel%
+)
+
 C:\Windows\System32\xcopy.exe %where%\install %where%\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -120,11 +191,13 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 7z a %where%\Npackd%bits%-%version%.zip %where%\install-debug -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy ..\src\npackdg%bits%.aip %where%\install
+copy npackdg\src\npackdg%bits%.aip %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy ..\src\app.ico %where%\install
+copy npackdg\src\app.ico %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+set path=%initial_path%
 
 AdvancedInstaller.com /edit %where%\install\npackdg%bits%.aip /SetVersion %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -194,10 +267,10 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 7z a %where%\NpackdCL%bits%-%version%.zip %where%\install -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
-copy ..\src\NpackdCL%bits%.aip %where%
+copy npackdcl\src\NpackdCL%bits%.aip %where%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy ..\src\app.ico %where%\
+copy npackdcl\src\app.ico %where%\
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 AdvancedInstaller.com /edit %where%\NpackdCL%bits%.aip /SetVersion %version%
@@ -237,10 +310,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 7z a CLU%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
-copy ..\src\app.ico .
-if %errorlevel% neq 0 exit /b %errorlevel%
-
 set path=%initial_path%
+
 appveyor PushArtifact %where%\CLU%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 

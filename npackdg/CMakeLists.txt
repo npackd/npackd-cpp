@@ -230,36 +230,3 @@ if(NPACKD_ADMIN)
 else()
   target_compile_definitions(npackdg PRIVATE -D NPACKD_ADMIN=0)
 endif()
-
-install(TARGETS npackdg DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-if(MSVC)
-    set(QT5_BIN_DEBUG ${_qt5Core_install_prefix}/bin/Qt5Cored.dll ${_qt5Core_install_prefix}/bin/Qt5Cored.pdb ${_qt5Core_install_prefix}/bin/Qt5Xmld.dll ${_qt5Core_install_prefix}/bin/Qt5Xmld.pdb ${_qt5Core_install_prefix}/bin/Qt5Sqld.dll ${_qt5Core_install_prefix}/bin/Qt5Sqld.pdb ${_qt5Core_install_prefix}/bin/Qt5Widgetsd.dll ${_qt5Core_install_prefix}/bin/Qt5Widgetsd.pdb ${_qt5Core_install_prefix}/bin/Qt5Guid.dll ${_qt5Core_install_prefix}/bin/Qt5Guid.pdb)
-    set(QT5_BIN_RELEASE ${_qt5Core_install_prefix}/bin/Qt5Core.dll ${_qt5Core_install_prefix}/bin/Qt5Xml.dll ${_qt5Core_install_prefix}/bin/Qt5Sql.dll ${_qt5Core_install_prefix}/bin/Qt5Widgets.dll ${_qt5Core_install_prefix}/bin/Qt5Gui.dll)
-    install(FILES ${QT5_BIN_DEBUG} CONFIGURATIONS Debug DESTINATION ${CMAKE_INSTALL_PREFIX})
-    install(FILES ${QT5_BIN_RELEASE} CONFIGURATIONS Release DESTINATION ${CMAKE_INSTALL_PREFIX})
-endif()
-
-if(WIN32 AND NOT NPACKD_FORCE_STATIC)
-install(FILES ${CMAKE_CXX_COMPILER}/../libquazip1-qt5.dll 
-${CMAKE_CXX_COMPILER}/../libiconv-2.dll ${CMAKE_CXX_COMPILER}/../libzstd.dll 
-${CMAKE_CXX_COMPILER}/../libintl-8.dll ${CMAKE_CXX_COMPILER}/../libbrotlidec.dll ${CMAKE_CXX_COMPILER}/../libbrotlicommon.dll 
-${CMAKE_CXX_COMPILER}/../libfreetype-6.dll ${CMAKE_CXX_COMPILER}/../libgraphite2.dll 
-${CMAKE_CXX_COMPILER}/../libglib-2.0-0.dll ${CMAKE_CXX_COMPILER}/../libpng16-16.dll 
-${CMAKE_CXX_COMPILER}/../libicudt72.dll ${CMAKE_CXX_COMPILER}/../libharfbuzz-0.dll 
-${CMAKE_CXX_COMPILER}/../libmd4c.dll ${CMAKE_CXX_COMPILER}/../libbz2-1.dll 
-${CMAKE_CXX_COMPILER}/../zlib1.dll ${CMAKE_CXX_COMPILER}/../libpcre2-16-0.dll 
-${CMAKE_CXX_COMPILER}/../libpcre2-8-0.dll 
-${CMAKE_CXX_COMPILER}/../libdouble-conversion.dll 
-${CMAKE_CXX_COMPILER}/../libicuin72.dll 
-${CMAKE_CXX_COMPILER}/../libicuuc72.dll 
-${CMAKE_CXX_COMPILER}/../libsqlite3-0.dll 
-DESTINATION ${CMAKE_INSTALL_PREFIX})
-endif()
-
-file(TO_CMAKE_PATH "$ENV{EXEPROXY}" EXEPROXY)
-install(FILES ${EXEPROXY}/exeproxy.exe DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-if(WIN32 AND NOT NPACKD_FORCE_STATIC)
-    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --compiler-runtime --pdb \"${CMAKE_INSTALL_PREFIX}/npackdg.exe\" WORKING_DIRECTORY \"${_qt_bin_dir}\")")
-endif()
