@@ -18,11 +18,25 @@ set path=%mingw%\bin;C:\msys64\mingw64\bin\
 
 mkdir c:\builds
 
-if %static% equ ON (call :buildquazip)
-if %static% equ ON (set extra="-DQUAZIP_INCLUDE_DIRS=quazip" "-DQUAZIP_LIBRARIES=c:\builds\quazip\quazip\libquazip1-qt5.a")
-if %prg% equ npackdcl (call :buildnpackdcl)
-if %prg% equ clu (call :buildclu)
-if %prg% equ npackd (call :buildnpackd)
+if %static% equ ON (
+    call :buildquazip
+    if %errorlevel% neq 0 exit /b %errorlevel%
+)
+
+if %static% equ ON (set extra="-DQUAZIP_INCLUDE_DIRS=quazip\quazip" "-DQUAZIP_LIBRARIES=c:\builds\quazip\quazip\libquazip1-qt5.a")
+
+if %prg% equ npackdcl (
+    call :buildnpackdcl
+    if %errorlevel% neq 0 exit /b %errorlevel%
+)
+if %prg% equ clu (
+    call :buildclu
+    if %errorlevel% neq 0 exit /b %errorlevel%
+)
+if %prg% equ npackd (
+    call :buildnpackd
+    if %errorlevel% neq 0 exit /b %errorlevel%
+)
 
 goto :eof
 
