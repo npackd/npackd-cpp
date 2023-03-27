@@ -193,13 +193,13 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy npackdg\src\app.ico %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-set path=%initial_path%
-
 AdvancedInstaller.com /edit %where%\install\npackdg%bits%.aip /SetVersion %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 AdvancedInstaller.com /build %where%\install\npackdg%bits%.aip
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+set path=%initial_path%
 
 appveyor PushArtifact %where%\Npackd%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
