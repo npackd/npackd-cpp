@@ -2,7 +2,7 @@ echo on
 rem This script is used by AppVeyor to build the project.
 set initial_path=%path%
 set version=%APPVEYOR_BUILD_VERSION:~0,-5%
-SET NPACKD_CL=C:\Program Files\NpackdCL
+set NPACKD_CL=C:\Program Files\NpackdCL
 
 set onecmd="%npackd_cl%\ncl.exe" path -p com.advancedinstaller.AdvancedInstallerFreeware -r [10,100)
 for /f "usebackq delims=" %%x in (`%%onecmd%%`) do set ai=%%x
@@ -204,10 +204,10 @@ set path=%initial_path%
 appveyor PushArtifact %where%\Npackd%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact %where%\Npackd%bits%-%version%.msi
+appveyor PushArtifact %where%\Npackd%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact %where%\Npackd%bits%-debug-%version%.zip
+appveyor PushArtifact %where%\install\Npackd%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 exit /b
@@ -231,6 +231,12 @@ copy %where%\npackdcl.exe %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 "%EXEPROXY%\exeproxy.exe" exeproxy-copy %where%\install\ncl.exe npackdcl.exe
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy CrystalIcons_LICENSE.txt %where%\install
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+copy LICENSE.txt %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 C:\Windows\System32\xcopy.exe %where%\install %where%\install-debug /E /I /H /Y
@@ -263,16 +269,16 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 7z a %where%\NpackdCL%bits%-%version%.zip %where%\install -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 	   
-copy npackdcl\src\NpackdCL%bits%.aip %where%
+copy npackdcl\src\NpackdCL%bits%.aip %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-copy npackdcl\src\app.ico %where%\
+copy npackdcl\src\app.ico %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /edit %where%\NpackdCL%bits%.aip /SetVersion %version%
+AdvancedInstaller.com /edit %where%\install\NpackdCL%bits%.aip /SetVersion %version%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /build %where%\NpackdCL%bits%.aip
+AdvancedInstaller.com /build %where%\install\NpackdCL%bits%.aip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 set path=%initial_path%
@@ -280,10 +286,10 @@ set path=%initial_path%
 appveyor PushArtifact %where%\NpackdCL%bits%-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact %where%\NpackdCL%bits%-%version%.msi
+appveyor PushArtifact %where%\NpackdCL%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact %where%\NpackdCL%bits%-debug-%version%.zip
+appveyor PushArtifact %where%\install\NpackdCL%bits%-%version%.msi
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 exit /b
