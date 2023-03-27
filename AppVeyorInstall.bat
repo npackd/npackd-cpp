@@ -37,15 +37,13 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 if %bits% equ 64 (
     if %static% equ ON (
         call :install64static
-        if %errorlevel% neq 0 exit /b %errorlevel%
     ) else (
         call :install64dynamic
-        if %errorlevel% neq 0 exit /b %errorlevel%
     )
 ) else (
     call :install32
-    if %errorlevel% neq 0 exit /b %errorlevel%
 )
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 goto :eof
 
