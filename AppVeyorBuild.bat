@@ -181,11 +181,15 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy "%DRMINGW%\bin\symsrv.yes" %where%\install-debug
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-7z a %where\Npackd%bits%-debug-%version%.zip %where%\install-debug -mx9	
+pushd %where%\install-debug
+7z a %where%\Npackd%bits%-debug-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
+popd
 
-7z a %where%\Npackd%bits%-%version%.zip %where%\install-debug -mx9	
+pushd %where%\install-debug
+7z a %where%\Npackd%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
+popd
 
 copy npackdg\src\npackdg%bits%.aip %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -263,11 +267,15 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy "%DRMINGW%\bin\symsrv.yes" %where%\install-debug
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-7z a %where%\NpackdCL%bits%-debug-%version%.zip %where%\install-debug -mx9	
+pushd %where%\install-debug
+7z a %where%\NpackdCL%bits%-debug-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
+popd
 
-7z a %where%\NpackdCL%bits%-%version%.zip %where%\install -mx9	
+pushd %where%\install
+7z a %where%\NpackdCL%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
+popd
 	   
 copy npackdcl\src\NpackdCL%bits%.aip %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -309,8 +317,10 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 strip %where%\clu.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+pushd %where%
 7z a CLU%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
+popd
 	   
 set path=%initial_path%
 
