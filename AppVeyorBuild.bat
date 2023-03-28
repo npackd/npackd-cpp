@@ -85,7 +85,7 @@ copy LICENSE.txt %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if %static% neq ON (
-    "%mingw%\qt5-static\bin\windeployqt.exe" --libdir %where%\install --dir %where%\install --compiler-runtime --pdb %where%\install\npackdg.exe
+    "%mingw%\bin\windeployqt.exe" --libdir %where%\install --dir %where%\install --compiler-runtime --pdb %where%\install\npackdg.exe
 )
 if %errorlevel% neq 0 exit /b %errorlevel%
 
