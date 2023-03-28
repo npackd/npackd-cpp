@@ -52,7 +52,7 @@ exit /b
 
 rem ---------------------------------------------------------------------------
 :buildquazip
-cmake.exe -GNinja -S quazip -B c:\builds\quazip -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -DQUAZIP_BZIP2=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libbz2.a
+cmake.exe -GNinja -S quazip -B c:\builds\quazip -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -DQUAZIP_BZIP2=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake.exe --build c:\builds\quazip
@@ -84,7 +84,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy LICENSE.txt %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if %static% equ ON (
+if %static% neq ON (
     "%mingw%\qt5-static\bin\windeployqt.exe" --libdir %where%\install --dir %where%\install --compiler-runtime --pdb %where%\install\npackdg.exe
 )
 if %errorlevel% neq 0 exit /b %errorlevel%

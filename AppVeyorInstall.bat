@@ -75,7 +75,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 ncl add -p drmingw64 -v 0.7.7
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if "%prg%" equ "npackd" (call :installcoverity)
+rem if "%prg%" equ "npackd" (call :installcoverity)
 
 exit /b
 
