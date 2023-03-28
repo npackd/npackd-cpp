@@ -84,7 +84,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy LICENSE.txt %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if %static% neq ON (
+if %static% equ OFF (
     "%mingw%\bin\windeployqt.exe" --libdir %where%\install --dir %where%\install --compiler-runtime --pdb %where%\install\npackdg.exe
 )
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -92,7 +92,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy "%EXEPROXY%\exeproxy.exe" %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if %static% equ ON (
+if %static% equ OFF (
     copy %mingw%\bin\libquazip1-qt5.dll %where%\install
     if %errorlevel% neq 0 exit /b %errorlevel%
 
