@@ -186,7 +186,7 @@ pushd %where%\install-debug
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd
 
-pushd %where%\install-debug
+pushd %where%\install
 7z a %where%\Npackd%bits%-%version%.zip * -mx9	
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd
