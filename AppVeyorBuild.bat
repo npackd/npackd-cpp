@@ -197,10 +197,10 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy npackdg\src\app.ico %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /edit %where%\install\npackdg%bits%.aip /SetVersion %version%
+if %static% equ ON (AdvancedInstaller.com /edit %where%\install\npackdg%bits%.aip /SetVersion %version%)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /build %where%\install\npackdg%bits%.aip
+if %static% equ ON (AdvancedInstaller.com /build %where%\install\npackdg%bits%.aip)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 set path=%initial_path%
@@ -211,7 +211,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact %where%\Npackd%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact %where%\install\Npackd%bits%-%version%.msi
+if %static% equ ON (appveyor PushArtifact %where%\install\Npackd%bits%-%version%.msi)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 exit /b
@@ -283,10 +283,10 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 copy npackdcl\src\app.ico %where%\install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /edit %where%\install\NpackdCL%bits%.aip /SetVersion %version%
+if %static% equ ON (AdvancedInstaller.com /edit %where%\install\NpackdCL%bits%.aip /SetVersion %version%)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-AdvancedInstaller.com /build %where%\install\NpackdCL%bits%.aip
+if %static% equ ON (AdvancedInstaller.com /build %where%\install\NpackdCL%bits%.aip)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 set path=%initial_path%
@@ -297,7 +297,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 appveyor PushArtifact %where%\NpackdCL%bits%-debug-%version%.zip
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-appveyor PushArtifact %where%\install\NpackdCL%bits%-%version%.msi
+if %static% equ ON (appveyor PushArtifact %where%\install\NpackdCL%bits%-%version%.msi)
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 exit /b
