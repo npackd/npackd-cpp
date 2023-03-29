@@ -160,7 +160,7 @@ if %static% equ OFF (
 C:\Windows\System32\xcopy.exe %where%\install %where%\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip %where%\install\npackdg.exe
+%mingw%\bin\strip %where%\install\npackdg.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy %where%\npackdg.map %where%\install-debug
@@ -246,7 +246,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 C:\Windows\System32\xcopy.exe %where%\install %where%\install-debug /E /I /H /Y
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-strip %where%\install\npackdcl.exe
+%mingw%\bin\strip %where%\install\npackdcl.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 copy %where%\npackdcl.map %where%\install-debug
