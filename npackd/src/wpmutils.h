@@ -1,8 +1,6 @@
 #ifndef WPMUTILS_H
 #define WPMUTILS_H
 
-#define NPACKD_VERSION "1.27.0.0"
-
 #include <windows.h>
 #include <shlobj.h>
 #include <time.h>
