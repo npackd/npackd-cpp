@@ -19,6 +19,9 @@ project.setDefines({
     DNDEBUG: ""
 });
 
+// TODO:  -Wl,-Map,${PROJECT_NAME}.map
+// TODO: "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc"
+// TODO -Os
 project.setCFlags(["-g", "-Os", "-Wl,--subsystem," + project.getSubsystem() +
     ":6.1", "-Wall", "-Wwrite-strings",
     "-Wextra", "-Wno-unused-parameter", "-Wno-cast-function-type",
