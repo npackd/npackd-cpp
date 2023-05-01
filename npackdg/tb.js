@@ -9,15 +9,6 @@
 // TODO: ../CrystalIcons_LICENSE.txt ../LICENSE.txt 
 // TODO: npackdcl.manifest
 // TODO: src/npackdg.qrc
-/* TODO 
-src/mainwindow.ui
-    src/packageversionform.ui
-    src/licenseform.ui
-    src/messageframe.ui
-    src/settingsframe.ui
-    src/packageframe.ui
-    src/mainframe.ui
-    src/exportrepositoryframe.ui*/
 
 project.setName("npackdg");
 project.setType("program");
@@ -30,10 +21,20 @@ project.setDependencies(["npackd", "quazip1-qt5", "Qt5WinExtras", "Qt5Gui", "Qt5
     "oleaut32", "userenv", "winmm", "ole32",
     "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "taskschd"]);
 
-project.setQtMocFiles(["asyncdownloader.h", "exportrepositoryframe.h", "fileloader.h", "flowlayout.h",
+project.setQtMocFiles(["asyncdownloader.h", "exportrepositoryframe.h", "fileloader.h",
     "licenseform.h", "mainframe.h", "mainwindow.h", "messageframe.h", "packageframe.h",
     "packageitemmodel.h", "packageversionform.h", "progresstree2.h", "repositoriesitemmodel.h",
-    "visiblejobs.h"]);
+    "visiblejobs.h", "settingsframe.h"]);
+
+project.setQtUicFiles(["mainwindow.ui",
+    "packageversionform.ui",
+    "licenseform.ui",
+    "messageframe.ui",
+    "settingsframe.ui",
+    "packageframe.ui",
+    "mainframe.ui",
+    "exportrepositoryframe.ui"]);
+
 system.include("..\\tb_common.js");
 /* TODO
 src/npackdg_es.ts
