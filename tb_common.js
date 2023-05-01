@@ -8,6 +8,7 @@ version = version.split('{')[0];
 version = version + "0";
 version = version.trim();
 console.log(version);
+project.setVersion(version);
 project.setDefines({
     NPACKD_VERSION: "\"" + version + "\"",
     NOMINMAX: "",
