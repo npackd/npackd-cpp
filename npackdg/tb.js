@@ -7,7 +7,6 @@
 // TODO: qsqlite
 // TODO: qtpcre2 zstd z
 // TODO: ../CrystalIcons_LICENSE.txt ../LICENSE.txt 
-// TODO: npackdcl.manifest
 
 project.setName("npackdg");
 project.setType("program");
