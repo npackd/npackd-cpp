@@ -8,12 +8,10 @@
 // TODO: qtpcre2 zstd z
 // TODO: ../CrystalIcons_LICENSE.txt ../LICENSE.txt 
 // TODO: npackdcl.manifest
-// TODO: src/npackdg.qrc
 
 project.setName("npackdg");
 project.setType("program");
 project.setSubsystem("windows");
-// TODO: widgets LinguistTools
 // TODO: Qt5FontDatabaseSupport Qt5::QSvgIconPlugin Qt5::QSvgPlugin
 project.setDependencies(["npackd", "quazip1-qt5", "Qt5WinExtras", "Qt5Gui", "Qt5Svg",
     "Qt5Sql", "Qt5Xml", "Qt5Core",
@@ -25,15 +23,6 @@ project.setQtMocFiles(["asyncdownloader.h", "exportrepositoryframe.h", "fileload
     "licenseform.h", "mainframe.h", "mainwindow.h", "messageframe.h", "packageframe.h",
     "packageitemmodel.h", "packageversionform.h", "progresstree2.h", "repositoriesitemmodel.h",
     "visiblejobs.h", "settingsframe.h"]);
-
-project.setQtUicFiles(["mainwindow.ui",
-    "packageversionform.ui",
-    "licenseform.ui",
-    "messageframe.ui",
-    "settingsframe.ui",
-    "packageframe.ui",
-    "mainframe.ui",
-    "exportrepositoryframe.ui"]);
 
 system.include("..\\tb_common.js");
 /* TODO
