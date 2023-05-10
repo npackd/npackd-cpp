@@ -39,3 +39,4 @@ npackdstatic/
 /npackdg/.lock-waf_win32_build
 /npackd/build/
 /npackd/.vscode/
+/npackdg/.vscode/

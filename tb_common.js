@@ -20,10 +20,17 @@ project.setDefines({
     DNDEBUG: ""
 });
 
-// TODO:  -Wl,-Map,${PROJECT_NAME}.map
-// TODO: "${CMAKE_CXX_FLAGS} -static -static-libstdc++ -static-libgcc"
-project.setCFlags(["-g", "-Os", "-Wl,--subsystem," + project.getSubsystem() +
-    ":6.1", "-Wall", "-Wwrite-strings",
+var ldflags = ["-Wl,-Map," + project.getName() +
+    ".map", "-Wl,--subsystem," + project.getSubsystem() + ":6.1"];
+if (true) { // TODO parameter for static build
+    ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",
+        "-LC:\\msys64\\mingw64\\qt5-static\\lib", "-LC:\\builds\\quazip\\quazip", "-lzstd", "-lharfbuzz", "-lusp10", "-lgdi32", "-lrpcrt4",
+        "-lgraphite2", "-lpng", "-lz", "-lpcre2-16"]);
+}
+project.setLinkerFlags(ldflags);
+
+
+project.setCFlags(["-g", "-Os", "-Wall", "-Wwrite-strings",
     "-Wextra", "-Wno-unused-parameter", "-Wno-cast-function-type",
     "-Wduplicated-cond", "-Wduplicated-branches", "-Wlogical-op", "-Wno-error=cast-qual",
-    "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-Os", "-std=gnu++11"]);
+    "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11"]);

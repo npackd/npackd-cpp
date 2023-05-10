@@ -1,12 +1,8 @@
 // @ts-check
 /// <reference path="../../super/tb/install/builtins.js"/>
 
-// TODO: src/app.rc.in
-// TODO: src/app.ico
-// TODO: npackdcl.rc
 // TODO: qsqlite
 // TODO: qtpcre2 zstd z
-// TODO: ../CrystalIcons_LICENSE.txt ../LICENSE.txt 
 
 project.setName("npackdg");
 project.setType("program");
@@ -24,6 +20,7 @@ project.setQtMocFiles(["asyncdownloader.h", "exportrepositoryframe.h", "fileload
     "visiblejobs.h", "settingsframe.h"]);
 
 system.include("..\\tb_common.js");
+
 /* TODO
 src/npackdg_es.ts
     src/npackdg_ru.ts
