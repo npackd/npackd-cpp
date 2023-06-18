@@ -22,7 +22,7 @@ project.setDefines({
 
 var ldflags = ["-Wl,-Map," + project.getName() +
     ".map", "-Wl,--subsystem," + project.getSubsystem() + ":6.1"];
-if (true) { // TODO parameter for static build
+if (false) { // TODO parameter for static build
     project.setPkgConfigDirs(["C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig", "C:\\msys64/mingw64/lib/pkgconfig", "C:\\msys64/mingw64/share/pkgconfig"]);
     ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",
         "-LC:\\msys64\\mingw64\\qt5-static\\lib", "-LC:\\builds\\quazip\\quazip", "-lzstd", "-lharfbuzz", "-lusp10", "-lgdi32", "-lrpcrt4",
