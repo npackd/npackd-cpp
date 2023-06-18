@@ -41,3 +41,4 @@ npackdstatic/
 /npackd/.vscode/
 /npackdg/.vscode/
 /npackdcl_tests/build/
+/npackdcl_ftests/build/
