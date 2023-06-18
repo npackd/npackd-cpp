@@ -40,3 +40,4 @@ npackdstatic/
 /npackd/build/
 /npackd/.vscode/
 /npackdg/.vscode/
+/npackdcl_tests/build/
