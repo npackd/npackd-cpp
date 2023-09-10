@@ -20,8 +20,8 @@ project.setDefines({
     DNDEBUG: ""
 });
 
-var ldflags = ["-Wl,-Map," + project.getName() +
-    ".map", "-Wl,--subsystem," + project.getSubsystem() + ":6.1"];
+// "-Wl,-Map," + project.getName() +".map", 
+var ldflags = ["-Wl,--subsystem," + project.getSubsystem() + ":6.1"];
 if (false) { // TODO parameter for static build
     project.setPkgConfigDirs(["C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig", "C:\\msys64/mingw64/lib/pkgconfig", "C:\\msys64/mingw64/share/pkgconfig"]);
     ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",

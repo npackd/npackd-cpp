@@ -38,7 +38,6 @@ npackdstatic/
 /npackdg/waf3-*
 /npackdg/.lock-waf_win32_build
 /npackd/build/
-/npackd/.vscode/
-/npackdg/.vscode/
 /npackdcl_tests/build/
 /npackdcl_ftests/build/
+.vscode

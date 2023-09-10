@@ -8,3 +8,7 @@ project.setDependencies(["quazip1-qt5", "Qt5Sql", "Qt5Xml", "Qt5Core", "userenv"
 system.include("..\\tb_common.js");
 project.setQtMocFiles(["clprogress.h", "downloader.h", "installedpackages.h", "job.h"]);
 
+project.findPkgConfigLibrary("Qt5Sql", "Qt5Sql");
+project.findPkgConfigLibrary("Qt5Xml", "Qt5Xml");
+project.findPkgConfigLibrary("Qt5Core", "Qt5Core");
+project.findPkgConfigLibrary("quazip1-qt5", "quazip1-qt5");
