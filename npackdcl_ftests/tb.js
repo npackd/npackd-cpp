@@ -8,8 +8,8 @@ project.setDependencies(["npackd", "quazip1-qt5", "Qt5Sql", "Qt5Xml", "Qt5Test",
 project.setQtMocFiles(["app.h"]);
 system.include("..\\tb_common.js");
 
-project.findPkgConfigLibrary("Qt5Sql", "Qt5Sql");
-project.findPkgConfigLibrary("Qt5Xml", "Qt5Xml");
-project.findPkgConfigLibrary("Qt5Core", "Qt5Core");
-project.findPkgConfigLibrary("Qt5Test", "Qt5Test");
-project.findPkgConfigLibrary("quazip1-qt5", "quazip1-qt5");
+project.findPkgConfigLibrary("Qt5Sql");
+project.findPkgConfigLibrary("Qt5Xml");
+project.findPkgConfigLibrary("Qt5Core");
+project.findPkgConfigLibrary("Qt5Test");
+project.findPkgConfigLibrary("quazip1-qt5");

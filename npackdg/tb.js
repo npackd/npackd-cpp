@@ -28,10 +28,10 @@ src/npackdg_es.ts
     src/npackdg_de.ts
     */
 
-project.findPkgConfigLibrary("Qt5Sql", "Qt5Sql");
-project.findPkgConfigLibrary("Qt5Xml", "Qt5Xml");
-project.findPkgConfigLibrary("Qt5Core", "Qt5Core");
-project.findPkgConfigLibrary("Qt5WinExtras", "Qt5WinExtras");
-project.findPkgConfigLibrary("Qt5Gui", "Qt5Gui");
-project.findPkgConfigLibrary("Qt5Svg", "Qt5Svg");
-project.findPkgConfigLibrary("quazip1-qt5", "quazip1-qt5");    
+project.findPkgConfigLibrary("Qt5Sql");
+project.findPkgConfigLibrary("Qt5Xml");
+project.findPkgConfigLibrary("Qt5Core");
+project.findPkgConfigLibrary("Qt5WinExtras");
+project.findPkgConfigLibrary("Qt5Gui");
+project.findPkgConfigLibrary("Qt5Svg");
+project.findPkgConfigLibrary("quazip1-qt5");
