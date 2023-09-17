@@ -52,7 +52,7 @@ exit /b
 
 rem ---------------------------------------------------------------------------
 :buildquazip
-cmake.exe -GNinja -S quazip -B c:\builds\quazip -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -DQUAZIP_BZIP2=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a
+cmake.exe -GNinja -S quazip -B c:\builds\quazip -DCMAKE_BUILD_TYPE=Release -DQUAZIP_QT_MAJOR_VERSION=5 -DQUAZIP_FETCH_LIBS=OFF -DQUAZIP_BZIP2=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_LIBRARY_RELEASE=%mingw%\lib\libz.a -DCMAKE_PREFIX_PATH=C:\msys64\mingw64\qt5-static\lib\cmake
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 cmake.exe --build c:\builds\quazip
