@@ -339,6 +339,12 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
             found->package << found->version.getVersionString() <<
             found->directory << found->detectionInfo << detectionInfoPrefix;
 
+    // if "err" is not empty, we ignore the detected package version
+    QString err;
+
+    std::unique_ptr<PackageVersion> detectedPackageVersion;
+    detectedPackageVersion.reset(r->findPackageVersion_(found->package, found->version, &err));
+
     InstalledPackageVersion ipv(found->package,
             found->version, found->directory);
     ipv.detectionInfo = found->detectionInfo;
@@ -362,9 +368,6 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
         if (!qd.exists(d))
             d = "";
     }
-
-    // if "err" is not empty, we ignore the detected package version
-    QString err;
 
     // trying to find an existing "real" package name
     // instead of a generic "msi.xxx" or "control-panel.xxx"
@@ -489,6 +492,20 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     }
 
     PackageVersionFile* u = nullptr;
+
+    // when we change the package, we also change the "Uninstall.bat",
+    // which is wrong as the detected one is better
+    if (err.isEmpty()) {
+        if (pv->package != detectedPackageVersion->package) {
+            qDeleteAll(pv->files);
+            pv->files.clear();
+
+            for(auto&& pvf: detectedPackageVersion->files) {
+                pv->files.push_back(pvf->clone());
+            }
+        }
+    }
+
     if (err.isEmpty()) {
         // qCDebug(npackd) << "    1";
 
