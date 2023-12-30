@@ -38,10 +38,21 @@ function setCommonFlags() {
     }
     project.setLinkerFlags(ldflags);
 
-    project.setCFlags(["-g", "-Os", "-Wall", "-Wwrite-strings",
+    var cflags = ["-g", "-Os", "-Wall", "-Wwrite-strings",
         "-Wextra", "-Wno-unused-parameter", "-Wno-cast-function-type",
         "-Wduplicated-cond", "-Wduplicated-branches", "-Wlogical-op", "-Wno-error=cast-qual",
-        "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11", "-IC:\\msys64\\mingw64\\include\\QuaZip-Qt5-1.4\\quazip"]);
+        "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11", "-IC:\\msys64\\mingw64\\include\\QuaZip-Qt5-1.4\\quazip"];
+    if (project.getConfig() === "debug") {
+        // -O0 outputs no warnings about uninitialized variables
+        // GDB stops at wrong lines sometimes with -O2
+        cflags.push("-O1");
+
+        cflags.push("-g");
+        cflags.push("-fno-omit-frame-pointer");
+    } else {
+        cflags.push("-Os");
+    }
+    project.setCFlags(cflags);
 }
 
 setCommonFlags();

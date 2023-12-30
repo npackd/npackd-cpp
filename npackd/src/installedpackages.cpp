@@ -342,9 +342,6 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     // if "err" is not empty, we ignore the detected package version
     QString err;
 
-    std::unique_ptr<PackageVersion> detectedPackageVersion;
-    detectedPackageVersion.reset(r->findPackageVersion_(found->package, found->version, &err));
-
     InstalledPackageVersion ipv(found->package,
             found->version, found->directory);
     ipv.detectionInfo = found->detectionInfo;
@@ -496,14 +493,18 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     // when we change the package, we also change the "Uninstall.bat",
     // which is wrong as the detected one is better
     if (err.isEmpty()) {
-        if (pv->package != detectedPackageVersion->package) {
+        if (pv->package != found->package) {
             qDeleteAll(pv->files);
             pv->files.clear();
 
+            std::unique_ptr<PackageVersion> detectedPackageVersion;
+            detectedPackageVersion.reset(r->findPackageVersion_(found->package, found->version, &err));
+            if (detectedPackageVersion) {
             for(auto&& pvf: detectedPackageVersion->files) {
                 pv->files.push_back(pvf->clone());
             }
         }
+    }
     }
 
     if (err.isEmpty()) {
