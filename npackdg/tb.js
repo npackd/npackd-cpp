@@ -4,17 +4,17 @@
 // TODO: qsqlite
 // TODO: qtpcre2 zstd z
 
-project.setName("npackdg");
-project.setType("program");
-project.setSubsystem("windows");
+project.setVariable("NAME", "npackdg");
+project.setVariable("TYPE", "program");
+project.setVariable("SUBSYSTEM", "windows");
 // TODO: Qt5FontDatabaseSupport Qt5::QSvgIconPlugin Qt5::QSvgPlugin
-project.setDependencies(["npackd", "quazip1-qt5", "Qt5WinExtras", "Qt5Gui", "Qt5Svg",
+project.setVariable("DEPENDENCIES", ["npackd", "quazip1-qt5", "Qt5WinExtras", "Qt5Gui", "Qt5Svg",
     "Qt5Sql", "Qt5Xml", "Qt5Core",
     "imm32", "glu32", "mpr", "wtsapi32", "opengl32", "UxTheme", "Dwmapi",
     "oleaut32", "userenv", "winmm", "ole32",
     "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "taskschd"]);
 
-project.setQtMocFiles(["asyncdownloader.h", "exportrepositoryframe.h", "fileloader.h",
+project.setVariable("QT_MOC_FILES", ["asyncdownloader.h", "exportrepositoryframe.h", "fileloader.h",
     "licenseform.h", "mainframe.h", "mainwindow.h", "messageframe.h", "packageframe.h",
     "packageitemmodel.h", "packageversionform.h", "progresstree2.h", "repositoriesitemmodel.h",
     "visiblejobs.h", "settingsframe.h"]);
