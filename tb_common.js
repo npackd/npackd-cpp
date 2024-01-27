@@ -2,6 +2,8 @@
 /// <reference path="../super/tb/install/builtins.js"/>
 
 function setCommonFlags() {
+    project.findBinaries("C:\\msys64\\mingw64\\bin");
+
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
     version = version.split('\n')[0];
     version = version.split(':')[1];
@@ -9,25 +11,34 @@ function setCommonFlags() {
     version = version + "0";
     version = version.trim();
     console.log(version);
-    project.setVersion(version);
+    project.setVariable("VERSION", version);
 
-    var defines = project.getDefines();
-    defines.UNICODE = "";
-    defines._UNICODE = "";
-    defines.NOMINMAX = "";
-    defines.DNDEBUG = "";
-    defines.NPACKD_ADMIN = "1";
-    defines._WIN32_WINNT = "0x0601";
-    defines.NPACKD_VERSION = "\"" + version + "\"";
+    /** @type Array */
+    var defines;
+    
+    /**  @ts-ignore */
+    defines = project.getVariable("DEFINES");
+
+    if (defines === null)
+        defines = [];
+    
+    defines.push("UNICODE");
+    defines.push("_UNICODE");
+    defines.push("_WIN32_WINNT=0x0601");
+    defines.push("NOMINMAX");
+    defines.push("DNDEBUG");
+    defines.push("NPACKD_ADMIN=1");
+    defines.push("NPACKD_VERSION=\"" + version + "\"");
+
     if (project.getConfig() === "static") {
-        defines.QUAZIP_STATIC = "1";
+        defines.push("QUAZIP_STATIC=1");
     }
-    project.setDefines(defines);
+    project.setVariable("DEFINES", defines);
 
     // "-Wl,-Map," + project.getName() +".map", 
-    var ldflags = ["-Wl,--subsystem," + project.getSubsystem() + ":6.1"];
+    var ldflags = ["-Wl,--subsystem," + project.getVariable("SUBSYSTEM") + ":6.1"];
     if (project.getConfig() === "static") {
-        project.setPkgConfigDirs([
+        project.setVariable("PKG_CONFIG_PATH", [
             "C:\\msys64/mingw64/lib/pkgconfig",
             "C:\\msys64/mingw64/share/pkgconfig",
             "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig",
@@ -36,7 +47,7 @@ function setCommonFlags() {
             "-LC:\\msys64\\mingw64\\qt5-static\\lib", "-lzstd", "-lharfbuzz", "-lusp10", "-lgdi32", "-lrpcrt4",
             "-lgraphite2", "-lpng", "-lz", "-lpcre2-16"]);
     }
-    project.setLinkerFlags(ldflags);
+    project.setVariable("LDFLAGS", ldflags);
 
     var cflags = ["-g", "-Os", "-Wall", "-Wwrite-strings",
         "-Wextra", "-Wno-unused-parameter", "-Wno-cast-function-type",
@@ -52,7 +63,7 @@ function setCommonFlags() {
     } else {
         cflags.push("-Os");
     }
-    project.setCFlags(cflags);
+    project.setVariable("CFLAGS", cflags);
 }
 
 setCommonFlags();
