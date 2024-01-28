@@ -1,15 +1,11 @@
 // @ts-check
 /// <reference path="../../super/tb/install/builtins.js"/>
 
-// TODO: qsqlite
-// TODO: qtpcre2 zstd z
-
 var static = project.getConfig().indexOf("static") >= 0;
 
 project.setVariable("NAME", "npackdg");
 project.setVariable("TYPE", "program");
 project.setVariable("SUBSYSTEM", "windows");
-// TODO:  Qt5::QSvgIconPlugin Qt5::QSvgPlugin
 
 var deps = ["npackd", "quazip1-qt5", "Qt5WinExtras", "Qt5Gui", "Qt5Svg",
     "Qt5Sql", "Qt5Xml", "Qt5Core", "imm32", "glu32", "mpr", "wtsapi32", "opengl32", "UxTheme", "Dwmapi",
@@ -29,14 +25,6 @@ project.setVariable("QT_MOC_FILES", ["asyncdownloader.h", "exportrepositoryframe
 
 system.include("..\\tb_common.js");
 
-/* TODO
-src/npackdg_es.ts
-    src/npackdg_ru.ts
-    src/npackdg_fr.ts
-    src/npackdg_de.ts
-    */
-
-
 project.findPkgConfigLibrary("Qt5Sql", { static: static });
 project.findPkgConfigLibrary("Qt5Xml", { static: static });
 project.findPkgConfigLibrary("Qt5Core", { static: static });
@@ -47,22 +35,23 @@ project.findPkgConfigLibrary("quazip1-qt5", { static: static });
 
 if (static) {
     project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static });
-    //project.findPkgConfigLibrary("jpeg", { package: "libjpeg", static: static });
+    
+    var qt_plugins = "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\";
 
     project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");
-    project.setLibraryPath("qwindows", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\platforms\\libqwindows.a");
-    project.setLibraryPath("qwindowsvistastyle", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\styles\\libqwindowsvistastyle.a");
-    project.setLibraryPath("qminimal", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\platforms\\libqminimal.a");
-    project.setLibraryPath("qsqlite", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\sqldrivers\\libqsqlite.a");
-    project.setLibraryPath("qicns", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqicns.a");
-    project.setLibraryPath("qico", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqico.a");
-    project.setLibraryPath("qjpeg", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqjpeg.a");
-    project.setLibraryPath("qgif", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqgif.a");
-    project.setLibraryPath("qtga", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqtga.a");
-    project.setLibraryPath("qtiff", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqtiff.a");
-    project.setLibraryPath("qwbmp", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqwbmp.a");
-    project.setLibraryPath("qwebp", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqwebp.a");
-    project.setLibraryPath("qsvg", "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\imageformats\\libqsvg.a");
+    project.setLibraryPath("qwindows", qt_plugins + "platforms\\libqwindows.a");
+    project.setLibraryPath("qwindowsvistastyle", qt_plugins + "styles\\libqwindowsvistastyle.a");
+    project.setLibraryPath("qminimal", qt_plugins + "platforms\\libqminimal.a");
+    project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
+    project.setLibraryPath("qicns", qt_plugins + "imageformats\\libqicns.a");
+    project.setLibraryPath("qico", qt_plugins + "imageformats\\libqico.a");
+    project.setLibraryPath("qjpeg", qt_plugins + "imageformats\\libqjpeg.a");
+    project.setLibraryPath("qgif", qt_plugins + "imageformats\\libqgif.a");
+    project.setLibraryPath("qtga", qt_plugins + "imageformats\\libqtga.a");
+    project.setLibraryPath("qtiff", qt_plugins + "imageformats\\libqtiff.a");
+    project.setLibraryPath("qwbmp", qt_plugins + "imageformats\\libqwbmp.a");
+    project.setLibraryPath("qwebp", qt_plugins + "imageformats\\libqwebp.a");
+    project.setLibraryPath("qsvg", qt_plugins + "imageformats\\libqsvg.a");
     project.setLibraryPath("qtlibjpeg", "C:\\msys64\\mingw64\\qt5-static\\lib\\libqtlibjpeg.a");
     project.addLibraryDependency("Qt5FontDatabaseSupport", "freetype");
     project.addLibraryDependency("qwindows", "Qt5FontDatabaseSupport");
