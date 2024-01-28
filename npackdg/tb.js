@@ -7,8 +7,8 @@ project.setVariable("NAME", "npackdg");
 project.setVariable("TYPE", "program");
 project.setVariable("SUBSYSTEM", "windows");
 
-var deps = ["npackd", "quazip1-qt5", "Qt5WinExtras", "Qt5Gui", "Qt5Svg",
-    "Qt5Sql", "Qt5Xml", "Qt5Core", "imm32", "glu32", "mpr", "wtsapi32", "opengl32", "UxTheme", "Dwmapi",
+var deps = ["npackd", "quazip1-qt5", "Qt5Gui", "Qt5Svg",
+    "mpr", "wtsapi32", "opengl32", "UxTheme", "Dwmapi",
     "oleaut32", "userenv", "winmm", "ole32",
     "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "taskschd"];
 if (static) {
@@ -36,7 +36,8 @@ project.findPkgConfigLibrary("quazip1-qt5", { static: static });
 if (static) {
     project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static });
     
-    var qt_plugins = "C:\\msys64\\mingw64\\qt5-static\\share\\qt5\\plugins\\";
+    var qt = "C:\\msys64\\mingw64\\qt5-static\\";
+    var qt_plugins = qt + "share\\qt5\\plugins\\";
 
     project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");
     project.setLibraryPath("qwindows", qt_plugins + "platforms\\libqwindows.a");
@@ -52,7 +53,7 @@ if (static) {
     project.setLibraryPath("qwbmp", qt_plugins + "imageformats\\libqwbmp.a");
     project.setLibraryPath("qwebp", qt_plugins + "imageformats\\libqwebp.a");
     project.setLibraryPath("qsvg", qt_plugins + "imageformats\\libqsvg.a");
-    project.setLibraryPath("qtlibjpeg", "C:\\msys64\\mingw64\\qt5-static\\lib\\libqtlibjpeg.a");
+    project.setLibraryPath("qtlibjpeg", qt + "lib\\libqtlibjpeg.a");
     project.addLibraryDependency("Qt5FontDatabaseSupport", "freetype");
     project.addLibraryDependency("qwindows", "Qt5FontDatabaseSupport");
     project.addLibraryDependency("qwindows", "Qt5EventDispatcherSupport");
