@@ -28,18 +28,20 @@
 #include "packageutils.h"
 
 // These lines are necessary for a static build
-Q_IMPORT_PLUGIN (QWindowsIntegrationPlugin);
-Q_IMPORT_PLUGIN (QWindowsVistaStylePlugin);
-Q_IMPORT_PLUGIN (QSQLiteDriverPlugin);
-Q_IMPORT_PLUGIN (QICNSPlugin);
-Q_IMPORT_PLUGIN (QICOPlugin);
-Q_IMPORT_PLUGIN (QJpegPlugin);
-Q_IMPORT_PLUGIN (QGifPlugin);
-Q_IMPORT_PLUGIN (QTiffPlugin);
-Q_IMPORT_PLUGIN (QWbmpPlugin);
-Q_IMPORT_PLUGIN (QWebpPlugin);
-Q_IMPORT_PLUGIN (QSvgPlugin);
-Q_IMPORT_PLUGIN (QTgaPlugin);
+#ifdef NPACKD_STATIC
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+Q_IMPORT_PLUGIN(QICNSPlugin);
+Q_IMPORT_PLUGIN(QICOPlugin);
+Q_IMPORT_PLUGIN(QJpegPlugin);
+Q_IMPORT_PLUGIN(QGifPlugin);
+Q_IMPORT_PLUGINQTiffPlugin);
+Q_IMPORT_PLUGIN(QWbmpPlugin);
+Q_IMPORT_PLUGIN(QWebpPlugin);
+Q_IMPORT_PLUGIN(QSvgPlugin);
+Q_IMPORT_PLUGIN(QTgaPlugin);
+#endif
 
 // Modern and efficient C++ Thread Pool Library
 // https://github.com/vit-vit/CTPL

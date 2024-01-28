@@ -34,6 +34,7 @@ function setCommonFlags() {
 
     if (static) {
         defines.push("QUAZIP_STATIC=1");
+        defines.push("NPACKD_STATIC");
     }
     project.setVariable("DEFINES", defines);
 

@@ -7,10 +7,7 @@ project.setVariable("NAME", "npackdg");
 project.setVariable("TYPE", "program");
 project.setVariable("SUBSYSTEM", "windows");
 
-var deps = ["npackd", "quazip1-qt5", "Qt5Gui", "Qt5Svg",
-    "mpr", "wtsapi32", "opengl32", "UxTheme", "Dwmapi",
-    "oleaut32", "userenv", "winmm", "ole32",
-    "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "taskschd"];
+var deps = ["npackd", "quazip1-qt5", "Qt5Gui", "Qt5Svg"];
 if (static) {
     deps.push("qwindows");
     deps.push("qwindowsvistastyle");
@@ -63,3 +60,4 @@ if (static) {
     project.addLibraryDependency("qwindows", "Qt5WindowsUIAutomationSupport");
     project.addLibraryDependency("qjpeg", "qtlibjpeg");
 }
+
