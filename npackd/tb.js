@@ -12,5 +12,7 @@ project.findPkgConfigLibrary("Qt5Sql");
 project.findPkgConfigLibrary("Qt5Xml");
 project.findPkgConfigLibrary("Qt5Core");
 project.findPkgConfigLibrary("quazip1-qt5");
-if (project.getConfig() === "static")
+
+var static = project.getConfig().indexOf("static") >= 0;
+if (static)
     project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");

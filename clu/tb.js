@@ -13,9 +13,12 @@ project.setVariable("DEPENDENCIES",
     "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "taskschd"]);
 system.include("..\\tb_common.js");
 
-project.findPkgConfigLibrary("Qt5Sql", { static: true });
-project.findPkgConfigLibrary("Qt5Xml", { static: true });
-project.findPkgConfigLibrary("Qt5Core", { static: true });
+var static = project.getConfig().indexOf("static") >= 0;
+
+project.findPkgConfigLibrary("Qt5Sql", { static: static });
+project.findPkgConfigLibrary("Qt5Xml", { static: static });
+project.findPkgConfigLibrary("Qt5Core", { static: static });
 project.findPkgConfigLibrary("quazip1-qt5");
-if (project.getConfig() === "static")
+
+if (static)
     project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");

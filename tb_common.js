@@ -2,6 +2,8 @@
 /// <reference path="../super/tb/install/builtins.js"/>
 
 function setCommonFlags() {
+    var static = project.getConfig().indexOf("static") >= 0;
+
     project.findBinaries("C:\\msys64\\mingw64\\bin");
 
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
@@ -30,14 +32,14 @@ function setCommonFlags() {
     defines.push("NPACKD_ADMIN=1");
     defines.push("NPACKD_VERSION=\"" + version + "\"");
 
-    if (project.getConfig() === "static") {
+    if (static) {
         defines.push("QUAZIP_STATIC=1");
     }
     project.setVariable("DEFINES", defines);
 
     // "-Wl,-Map," + project.getName() +".map", 
     var ldflags = ["-Wl,--subsystem," + project.getVariable("SUBSYSTEM") + ":6.1"];
-    if (project.getConfig() === "static") {
+    if (static) {
         project.setVariable("PKG_CONFIG_PATH", [
             "C:\\msys64/mingw64/lib/pkgconfig",
             "C:\\msys64/mingw64/share/pkgconfig",
