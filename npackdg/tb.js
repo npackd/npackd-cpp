@@ -11,7 +11,6 @@ var deps = ["npackd", "quazip1-qt5", "Qt5Gui", "Qt5Svg"];
 if (static) {
     deps.push("qwindows");
     deps.push("qwindowsvistastyle");
-    deps.push("qminimal");
 }
 project.setVariable("DEPENDENCIES", deps);
 
@@ -39,7 +38,6 @@ if (static) {
     project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");
     project.setLibraryPath("qwindows", qt_plugins + "platforms\\libqwindows.a");
     project.setLibraryPath("qwindowsvistastyle", qt_plugins + "styles\\libqwindowsvistastyle.a");
-    project.setLibraryPath("qminimal", qt_plugins + "platforms\\libqminimal.a");
     project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
     project.setLibraryPath("qicns", qt_plugins + "imageformats\\libqicns.a");
     project.setLibraryPath("qico", qt_plugins + "imageformats\\libqico.a");
