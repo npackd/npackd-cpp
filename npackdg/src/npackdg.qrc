@@ -10,12 +10,4 @@
         <file>add.png</file>
         <file>broken.png</file>
     </qresource>
-    <!-- TODO: use again
-    <qresource prefix="/translations">
-        <file>npackdg_de.qm</file>
-        <file>npackdg_es.qm</file>
-        <file>npackdg_fr.qm</file>
-        <file>npackdg_ru.qm</file>
-    </qresource>
-    -->
 </RCC>

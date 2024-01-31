@@ -43,9 +43,6 @@ Q_IMPORT_PLUGIN(QSvgPlugin);
 Q_IMPORT_PLUGIN(QTgaPlugin);
 #endif
 
-// Modern and efficient C++ Thread Pool Library
-// https://github.com/vit-vit/CTPL
-
 int main(int argc, char *argv[])
 {
     //qCDebug(npackd) << QUrl("file:///C:/test").resolved(QUrl::fromLocalFile("abc.txt"));
