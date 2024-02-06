@@ -6,6 +6,8 @@ function setCommonFlags() {
 
     project.findBinaries("C:\\msys64\\mingw64\\bin");
 
+    project.setVariable("COMPANY", "Npackd");
+
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
     version = version.split('\n')[0];
     version = version.split(':')[1];

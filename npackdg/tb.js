@@ -4,6 +4,8 @@
 var static = project.getConfig().indexOf("static") >= 0;
 
 project.setVariable("NAME", "npackdg");
+project.setVariable("TITLE", "Npackd GUI client");
+project.setVariable("DESCRIPTION", "This is a Windows graphical user interface for the client to the Npackd package manager.");
 project.setVariable("TYPE", "program");
 project.setVariable("SUBSYSTEM", "windows");
 
