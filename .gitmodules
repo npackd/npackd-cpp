@@ -1,0 +1,4 @@
+[submodule "quazip/quazip"]
+	path = quazip/quazip
+	url = https://github.com/stachenov/quazip.git
+	branch = master
