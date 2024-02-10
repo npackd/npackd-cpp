@@ -12,8 +12,6 @@ function configure() {
     project.setVariable("TYPE", "program");
     project.setVariable("SUBSYSTEM", "windows");
     project.setVariable("MSI_UPGRADE_CODE", "EABC4270-7D7F-47BF-B388-AC63606E8DAC");
-    project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
-    project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
     var deps = ["npackd", "Qt5Gui", "Qt5Svg"];
     if (static) {
@@ -49,7 +47,6 @@ function configure() {
         var qt = "C:\\msys64\\mingw64\\qt5-static\\";
         var qt_plugins = qt + "share\\qt5\\plugins\\";
 
-        //project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");
         project.setLibraryPath("qwindows", qt_plugins + "platforms\\libqwindows.a");
         project.setLibraryPath("qwindowsvistastyle", qt_plugins + "styles\\libqwindowsvistastyle.a");
         project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");

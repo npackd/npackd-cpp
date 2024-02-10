@@ -7,6 +7,8 @@ function setCommonFlags() {
     project.findBinaries("C:\\msys64\\mingw64\\bin");
 
     project.setVariable("COMPANY", "Npackd");
+    project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
+    project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
     version = version.split('\n')[0];
@@ -46,8 +48,7 @@ function setCommonFlags() {
         project.setVariable("PKG_CONFIG_PATH", [
             "C:\\msys64/mingw64/lib/pkgconfig",
             "C:\\msys64/mingw64/share/pkgconfig",
-            "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig",
-            "C:\\builds\\quazip_install\\lib\\pkgconfig"]);
+            "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig"]);
         ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",
             "-LC:\\msys64\\mingw64\\qt5-static\\lib"]);
     }
