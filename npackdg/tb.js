@@ -15,10 +15,13 @@ function configure() {
     project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
     project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
-    var deps = ["npackd", "quazip1-qt5", "Qt5Gui", "Qt5Svg"];
+    var deps = ["npackd", "Qt5Gui", "Qt5Svg"];
     if (static) {
         deps.push("qwindows");
         deps.push("qwindowsvistastyle");
+        deps.push("quazip");
+    } else {
+        deps.push("quazip1-qt5");
     }
     project.setVariable("DEPENDENCIES", deps);
 
@@ -35,7 +38,9 @@ function configure() {
     project.findPkgConfigLibrary("Qt5WinExtras", { static: static });
     project.findPkgConfigLibrary("Qt5Gui", { static: static });
     project.findPkgConfigLibrary("Qt5Svg", { static: static });
-    project.findPkgConfigLibrary("quazip1-qt5", { static: static });
+
+    if (!static)
+        project.findPkgConfigLibrary("quazip1-qt5");
 
     if (static) {
         project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static });
@@ -43,7 +48,7 @@ function configure() {
         var qt = "C:\\msys64\\mingw64\\qt5-static\\";
         var qt_plugins = qt + "share\\qt5\\plugins\\";
 
-        project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");
+        //project.setLibraryPath("quazip1-qt5", "C:\\builds\\quazip_install\\lib\\libquazip1-qt5.a");
         project.setLibraryPath("qwindows", qt_plugins + "platforms\\libqwindows.a");
         project.setLibraryPath("qwindowsvistastyle", qt_plugins + "styles\\libqwindowsvistastyle.a");
         project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
