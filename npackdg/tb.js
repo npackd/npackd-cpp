@@ -38,6 +38,7 @@ function configure() {
     project.findPkgConfigLibrary("Qt5WinExtras", { static: static });
     project.findPkgConfigLibrary("Qt5Gui", { static: static });
     project.findPkgConfigLibrary("Qt5Svg", { static: static });
+    project.findPkgConfigLibrary("Qt5Widgets", { static: static });
 
     if (!static)
         project.findPkgConfigLibrary("quazip1-qt5");
@@ -62,7 +63,10 @@ function configure() {
         project.setLibraryPath("qwebp", qt_plugins + "imageformats\\libqwebp.a");
         project.setLibraryPath("qsvg", qt_plugins + "imageformats\\libqsvg.a");
         project.setLibraryPath("qtlibjpeg", qt + "lib\\libqtlibjpeg.a");
+
         project.addLibraryDependency("Qt5FontDatabaseSupport", "freetype");
+        project.addLibraryDependency("Qt5FontDatabaseSupport", "Qt5Gui");
+
         project.addLibraryDependency("qwindows", "Qt5FontDatabaseSupport");
         project.addLibraryDependency("qwindows", "Qt5EventDispatcherSupport");
         project.addLibraryDependency("qwindows", "Wtsapi32");

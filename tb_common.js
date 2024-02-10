@@ -49,8 +49,7 @@ function setCommonFlags() {
             "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig",
             "C:\\builds\\quazip_install\\lib\\pkgconfig"]);
         ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",
-            "-LC:\\msys64\\mingw64\\qt5-static\\lib", "-lzstd", "-lharfbuzz", "-lusp10", "-lgdi32", "-lrpcrt4",
-            "-lgraphite2", "-lpng", "-lz", "-lpcre2-16"]);
+            "-LC:\\msys64\\mingw64\\qt5-static\\lib"]);
     }
     project.setVariable("LDFLAGS", ldflags);
 
