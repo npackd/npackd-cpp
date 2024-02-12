@@ -6,6 +6,7 @@ function configure() {
     project.setVariable("TYPE", "library");
 
     var static = project.getConfig().indexOf("static") >= 0;
+
     var deps = ["Qt5Sql", "Qt5Xml", "Qt5Core", "userenv", "winmm", "ole32",
         "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "taskschd", "OleAut32"];
     if (static) {
@@ -25,3 +26,4 @@ function configure() {
     if (!static)
         project.findPkgConfigLibrary("quazip1-qt5");
 }
+
