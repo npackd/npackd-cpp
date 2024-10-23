@@ -19,11 +19,11 @@ function configure() {
     system.include("..\\tb_common.js");
     project.setVariable("QT_MOC_FILES", ["clprogress.h", "downloader.h", "installedpackages.h", "job.h"]);
 
-    project.findPkgConfigLibrary("Qt5Sql");
-    project.findPkgConfigLibrary("Qt5Xml");
-    project.findPkgConfigLibrary("Qt5Core");
+    project.findPkgConfigLibrary("Qt5Sql", { static: static });
+    project.findPkgConfigLibrary("Qt5Xml", { static: static });
+    project.findPkgConfigLibrary("Qt5Core", { static: static });
 
     if (!static)
-        project.findPkgConfigLibrary("quazip1-qt5");
+        project.findPkgConfigLibrary("quazip1-qt5", { static: static });
 }
 

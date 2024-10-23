@@ -17,9 +17,6 @@ function configure() {
     if (static) {
         deps.push("qwindows");
         deps.push("qwindowsvistastyle");
-        deps.push("quazip");
-    } else {
-        deps.push("quazip1-qt5");
     }
     project.setVariable("DEPENDENCIES", deps);
 

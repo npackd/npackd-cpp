@@ -4,7 +4,9 @@
 function setCommonFlags() {
     var static = project.getConfig().indexOf("static") >= 0;
 
-    project.findBinaries("C:\\msys64\\mingw64\\bin");
+    var mingw = "C:\\msys64\\mingw64";
+
+    project.findBinaries(mingw + "\\bin");
 
     project.setVariable("COMPANY", "Npackd");
     project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
@@ -42,24 +44,64 @@ function setCommonFlags() {
     }
     project.setVariable("DEFINES", defines);
 
+    /** @type Array */
+    var ldflags;
+
+    /**  @ts-ignore */
+    ldflags = project.getVariable("LDFLAGS") || [];
     // "-Wl,-Map," + project.getName() +".map", 
-    var ldflags = ["-Wl,--subsystem," + project.getVariable("SUBSYSTEM") + ":6.1"];
+    ldflags.push("-Wl,--subsystem," + project.getVariable("SUBSYSTEM") + ":6.1");
     if (static) {
-        project.setVariable("PKG_CONFIG_PATH", [
-            "C:\\msys64/mingw64/lib/pkgconfig",
-            "C:\\msys64/mingw64/share/pkgconfig",
-            "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig"]);
         ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",
-            "-LC:\\msys64\\mingw64\\qt5-static\\lib"]);
+            "-L" + mingw + "\\qt5-static\\lib"]);
     }
     project.setVariable("LDFLAGS", ldflags);
 
-    var cflags = ["-g", "-Os", "-Wall", "-Wwrite-strings",
+    if (static)
+        project.setVariable("PKG_CONFIG_PATH", [
+            "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig",
+            "C:\\msys64/mingw64/lib/pkgconfig",
+            "C:\\msys64/mingw64/share/pkgconfig"]);
+
+    /** @type Array */
+    var libs_cflags;
+
+    /**  @ts-ignore */
+    libs_cflags = project.getVariable("LIBS_CFLAGS") || [];
+    if (static) {
+        libs_cflags.push("-I" + project.getDirectory() + "\\..\\quazip\\quazip\\quazip");
+        // TODO ??? cflags.push("-L" + mingw + "\\include\\QtWidgets");
+
+        // pkg-config returns incomplete paths like "/mingw64/include/QtCore",
+        // which cannot used
+        /*libs_cflags.push("-I" + mingw + "\\qt5-static\\include\\QtCore", 
+            "-I" + mingw + "\\qt5-static\\include\\QtSql",
+            "-I" + mingw + "\\qt5-static\\include\\QtXml",
+            "-I" + mingw + "\\qt5-static\\include\\QtWinExtras",
+            "-I" + mingw + "\\qt5-static\\include\\QtSvg",
+            "-I" + mingw + "\\qt5-static\\include\\QtWidgets");*/
+    } else {
+        // pkg-config returns incomplete paths like "/mingw64/include/QtCore",
+        // which cannot used
+        /*libs_cflags.push("-I" + mingw + "\\include\\QtCore", 
+            "-I" + mingw + "\\include\\QtSql",
+            "-I" + mingw + "\\include\\QtXml",
+            "-I" + mingw + "\\include\\QtWinExtras",
+            "-I" + mingw + "\\include\\QtSvg",
+            "-I" + mingw + "\\include\\QtWidgets");*/
+    }
+    project.setVariable("LIBS_CFLAGS", libs_cflags);
+
+    /** @type Array */
+    var cflags;
+
+    /**  @ts-ignore */
+    cflags = project.getVariable("CFLAGS") || [];
+    cflags.push("-g", "-Os", "-Wall", "-Wwrite-strings",
         "-Wextra", "-Wno-unused-parameter", "-Wno-cast-function-type",
         "-Wduplicated-cond", "-Wduplicated-branches", "-Wlogical-op", "-Wno-error=cast-qual",
-        "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11"];
-    if (static)
-        cflags.push("-I" + project.getDirectory() + "\\..\\quazip\\quazip\\quazip");
+        "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11");
+
     if (project.getConfig() === "debug") {
         // -O0 outputs no warnings about uninitialized variables
         // GDB stops at wrong lines sometimes with -O2

@@ -7,18 +7,10 @@ function configure() {
 
     var static = project.getConfig().indexOf("static") >= 0;
 
-    var deps = ["npackd"];
-    // if (static) {
-    //     deps.push("quazip");
-    // } else {
-    //     deps.push("quazip1-qt5");
-    // }
-    project.setVariable("DEPENDENCIES", deps);
+    project.setVariable("DEPENDENCIES", ["npackd"]);
 
     project.setVariable("QT_MOC_FILES", ["app.h"]);
     system.include("..\\tb_common.js");
-
-    var static = project.getConfig().indexOf("static") >= 0;
 
     project.findPkgConfigLibrary("Qt5Sql", { static: static });
     project.findPkgConfigLibrary("Qt5Xml", { static: static });
