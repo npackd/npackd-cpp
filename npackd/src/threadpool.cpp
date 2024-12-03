@@ -54,6 +54,9 @@ void ThreadPool::addTask(std::function<void()> &&task)
 }
 
 void ThreadPool::process() {
+    // TODO: this should be an option probably
+    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+
     SetThreadPriority(GetCurrentThread(), priority);
 
     while (true) {
@@ -81,4 +84,6 @@ void ThreadPool::process() {
             runningTasks--;
         }
     }
+
+    CoUninitialize();
 }
