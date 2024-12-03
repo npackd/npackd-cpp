@@ -1107,8 +1107,8 @@ void MainWindow::updateActions()
 void MainWindow::updateInstallAction()
 {
     Selection* selection = Selection::findCurrent();
-    bool enabled = false;
-    if (selection) {
+    bool enabled = !reloadRepositoriesThreadRunning;
+    if (selection && enabled) {
         std::vector<void*> selected = selection->getSelected("PackageVersion");
         if (selected.size() > 0) {
             enabled = selected.size() > 0;
@@ -1281,8 +1281,8 @@ void MainWindow::updateUninstallAction()
 
     Selection* selection = Selection::findCurrent();
 
-    bool enabled = false;
-    if (selection) {
+    bool enabled = !reloadRepositoriesThreadRunning;
+    if (selection && enabled) {
         std::vector<void*> selected = selection->getSelected("PackageVersion");
         if (selected.size() > 0) {
             enabled = selected.size() > 0;
@@ -1326,8 +1326,8 @@ void MainWindow::updateUpdateAction()
 {
     Selection* selection = Selection::findCurrent();
 
-    bool enabled = false;
-    if (selection) {
+    bool enabled = !reloadRepositoriesThreadRunning;
+    if (selection && enabled) {
         std::vector<void*> selected = selection->getSelected("Package");
         if (selected.size() > 0) {
             enabled = true;
