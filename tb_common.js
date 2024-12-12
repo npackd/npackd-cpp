@@ -2,6 +2,8 @@
 /// <reference path="../super/tb/install/builtins.js"/>
 
 function setCommonFlags() {
+    project.setVariable("MODULES", ["qt", "msi"]);
+
     var static = project.getConfig().indexOf("static") >= 0;
 
     var mingw = "C:\\msys64\\mingw64";
