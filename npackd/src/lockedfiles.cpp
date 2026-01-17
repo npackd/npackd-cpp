@@ -600,8 +600,9 @@ std::vector<HANDLE> LockedFiles::getProcessHandlesLockingDirectory2(const QStrin
                     */
 
             // retrieving the name of a handle may hang for pipes
-            GetObjectNameThread t(dupHandle);
-            name = t.getName();
+            // Crashes
+            // GetObjectNameThread t(dupHandle);
+            // name = t.getName();
             ok = !name.isEmpty();
 
             // qCDebug(npackd) << "NtQueryObject end";
