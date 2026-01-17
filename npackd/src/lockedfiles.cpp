@@ -418,11 +418,13 @@ void GetObjectNameThread::run0()
     ULONG returnLength = 0;
 
     objectNameInfo = malloc(0x1000);
+    memset(objectNameInfo, 0, 0x1000);
     bool ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
             objectNameInfo, 0x1000, &returnLength));
-    if (!ok) {
+    if (!ok && returnLength > sizeof(UNICODE_STRING)) {
         /* Reallocate the buffer and try again. */
         objectNameInfo = realloc(objectNameInfo, returnLength);
+        memset(objectNameInfo, 0, returnLength);
         ok = NT_SUCCESS(NtQueryObject(h, ObjectNameInformation,
                 objectNameInfo, returnLength, NULL));
     }
