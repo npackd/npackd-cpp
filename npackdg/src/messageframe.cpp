@@ -39,7 +39,7 @@ MessageFrame::MessageFrame(QWidget *parent, const QString& msg,
             c = 0xd4edda;
     }
     QPalette pal;
-    pal.setColor(QPalette::Background, c);
+    pal.setColor(QPalette::Window, c);
     setPalette(pal);
 
     if (seconds > 0) {

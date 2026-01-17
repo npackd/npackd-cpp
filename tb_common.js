@@ -4,7 +4,7 @@
 function setCommonFlags() {
     project.setVariable("MODULES", ["qt", "msi"]);
 
-    var static = project.getConfig().indexOf("static") >= 0;
+    var static_ = project.getConfig().indexOf("static") >= 0;
 
     var mingw = "C:\\msys64\\mingw64";
 
@@ -23,7 +23,7 @@ function setCommonFlags() {
     console.log(version);
     project.setVariable("VERSION", version);
 
-    /** @type Array */
+    /** @type Array<String> */
     var defines;
     
     /**  @ts-ignore */
@@ -40,7 +40,7 @@ function setCommonFlags() {
     defines.push("NPACKD_ADMIN=1");
     defines.push("NPACKD_VERSION=\"" + version + "\"");
 
-    if (static) {
+    if (static_) {
         defines.push("QUAZIP_STATIC=1");
         defines.push("NPACKD_STATIC");
     }
@@ -53,24 +53,24 @@ function setCommonFlags() {
     ldflags = project.getVariable("LDFLAGS") || [];
     // "-Wl,-Map," + project.getName() +".map", 
     ldflags.push("-Wl,--subsystem," + project.getVariable("SUBSYSTEM") + ":6.1");
-    if (static) {
+    if (static_) {
         ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",
             "-L" + mingw + "\\qt5-static\\lib"]);
     }
     project.setVariable("LDFLAGS", ldflags);
 
-    if (static)
+    if (static_)
         project.setVariable("PKG_CONFIG_PATH", [
             "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig",
             "C:\\msys64/mingw64/lib/pkgconfig",
             "C:\\msys64/mingw64/share/pkgconfig"]);
 
-    /** @type Array */
+    /** @type Array<String> */
     var libs_cflags;
 
     /**  @ts-ignore */
     libs_cflags = project.getVariable("LIBS_CFLAGS") || [];
-    if (static) {
+    if (static_) {
         libs_cflags.push("-I" + project.getDirectory() + "\\..\\quazip\\quazip\\quazip");
         // TODO ??? cflags.push("-L" + mingw + "\\include\\QtWidgets");
 
@@ -94,7 +94,7 @@ function setCommonFlags() {
     }
     project.setVariable("LIBS_CFLAGS", libs_cflags);
 
-    /** @type Array */
+    /** @type Array<String> */
     var cflags;
 
     /**  @ts-ignore */

@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QMessageBox>
 #include <QBuffer>
-#include <qwinfunctions.h>
+//#include <qwinfunctions.h>
 #include <QPixmap>
 #include <QLabel>
 #include <QAbstractButton>

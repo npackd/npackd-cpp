@@ -4,7 +4,7 @@
 function configure() {
     // TODO: option(NPACKD_ADMIN "Force admin right on program" TRUE)
 
-    var static = project.getConfig().indexOf("static") >= 0;
+    var static_ = project.getConfig().indexOf("static") >= 0;
 
     project.setVariable("NAME", "npackdg");
     project.setVariable("TITLE", "Npackd");
@@ -14,9 +14,20 @@ function configure() {
     project.setVariable("MSI_UPGRADE_CODE", "EABC4270-7D7F-47BF-B388-AC63606E8DAC");
 
     var deps = ["npackd", "Qt5Gui", "Qt5Svg"];
-    if (static) {
+    if (static_) {
         deps.push("qwindows");
         deps.push("qwindowsvistastyle");
+        deps.push("qsqlite");
+        deps.push("qicns");
+        deps.push("qico");
+        deps.push("qjpeg");
+        deps.push("qgif");
+        deps.push("qtiff");
+        deps.push("qwbmp");
+        deps.push("qwebp");
+        deps.push("qsvg");
+        deps.push("qtlibjpeg");
+        deps.push("qtga");
     }
     project.setVariable("DEPENDENCIES", deps);
 
@@ -27,19 +38,19 @@ function configure() {
 
     system.include("..\\tb_common.js");
 
-    project.findPkgConfigLibrary("Qt5Sql", { static: static });
-    project.findPkgConfigLibrary("Qt5Xml", { static: static });
-    project.findPkgConfigLibrary("Qt5Core", { static: static });
-    project.findPkgConfigLibrary("Qt5WinExtras", { static: static });
-    project.findPkgConfigLibrary("Qt5Gui", { static: static });
-    project.findPkgConfigLibrary("Qt5Svg", { static: static });
-    project.findPkgConfigLibrary("Qt5Widgets", { static: static });
+    project.findPkgConfigLibrary("Qt5Sql", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Xml", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Core", { static: static_ });
+    project.findPkgConfigLibrary("Qt5WinExtras", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Gui", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Svg", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Widgets", { static: static_ });
 
-    if (!static)
+    if (!static_)
         project.findPkgConfigLibrary("quazip1-qt5");
 
-    if (static) {
-        project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static });
+    if (static_) {
+        project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static_ });
 
         var qt = "C:\\msys64\\mingw64\\qt5-static\\";
         var qt_plugins = qt + "share\\qt5\\plugins\\";
