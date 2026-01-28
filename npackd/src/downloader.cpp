@@ -69,10 +69,14 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
     if (job->shouldProceed()) {
         // change the timeout to 5 minutes
         DWORD rec_timeout = static_cast<DWORD>(request.timeout) * 1000;
+        InternetSetOption(internet, INTERNET_OPTION_CONNECT_TIMEOUT,
+                          &rec_timeout, sizeof(rec_timeout));
         InternetSetOption(internet, INTERNET_OPTION_RECEIVE_TIMEOUT,
-                &rec_timeout, sizeof(rec_timeout));
-        InternetSetOption(internet, INTERNET_OPTION_SEND_TIMEOUT,
-                &rec_timeout, sizeof(rec_timeout));
+                          &rec_timeout, sizeof(rec_timeout));
+        InternetSetOption(internet, INTERNET_OPTION_SEND_TIMEOUT, &rec_timeout,
+                          sizeof(rec_timeout));
+        InternetSetOption(internet, INTERNET_OPTION_DATA_RECEIVE_TIMEOUT, &rec_timeout,
+                          sizeof(rec_timeout));
 
         // enable automatic gzip decoding
 #ifndef INTERNET_OPTION_HTTP_DECODING
