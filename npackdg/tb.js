@@ -81,3 +81,4 @@ function configure() {
         project.addLibraryDependency("qjpeg", "qtlibjpeg");
     }
 }
+
