@@ -7,6 +7,7 @@ function setCommonFlags() {
     var static_ = project.getConfig().indexOf("static") >= 0;
 
     var mingw = "C:\\msys64\\mingw64";
+    var qt = mingw + "\\qt5-static";
 
     project.findBinaries(mingw + "\\bin");
 
@@ -14,9 +15,9 @@ function setCommonFlags() {
     project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
     project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
-    project.setVariable("QT_LRELEASE", mingw + "\\qt5-static\\bin\\lrelease.exe");
-    project.setVariable("QT_LUPDATE", mingw + "\\qt5-static\\bin\\lupdate.exe");
-    project.setVariable("QT_UIC", mingw + "\\qt5-static\\bin\\uic.exe");
+    project.setVariable("QT_LRELEASE", qt + "\\bin\\lrelease.exe");
+    project.setVariable("QT_LUPDATE", qt + "\\bin\\lupdate.exe");
+    project.setVariable("QT_UIC", qt + "\\bin\\uic.exe");
 
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
     version = version.split('\n')[0];
@@ -50,7 +51,7 @@ function setCommonFlags() {
     }
     project.setVariable("DEFINES", defines);
 
-    /** @type Array */
+    /** @type Array<String> */
     var ldflags;
 
     /**  @ts-ignore */
@@ -59,13 +60,13 @@ function setCommonFlags() {
     ldflags.push("-Wl,--subsystem," + project.getVariable("SUBSYSTEM") + ":6.1");
     if (static_) {
         ldflags = ldflags.concat(["-static", "-static-libstdc++", "-static-libgcc",
-            "-L" + mingw + "\\qt5-static\\lib"]);
+            "-L" + qt + "\\lib"]);
     }
     project.setVariable("LDFLAGS", ldflags);
 
     if (static_)
         project.setVariable("PKG_CONFIG_PATH", [
-            "C:\\msys64\\mingw64\\qt5-static\\lib\\pkgconfig",
+            qt + "\\lib\\pkgconfig",
             "C:\\msys64/mingw64/lib/pkgconfig",
             "C:\\msys64/mingw64/share/pkgconfig"]);
 
@@ -76,32 +77,13 @@ function setCommonFlags() {
     libs_cflags = project.getVariable("LIBS_CFLAGS") || [];
     if (static_) {
         libs_cflags.push("-I" + project.getDirectory() + "\\..\\quazip\\quazip\\quazip");
-        // TODO ??? cflags.push("-L" + mingw + "\\include\\QtWidgets");
-
-        // pkg-config returns incomplete paths like "/mingw64/include/QtCore",
-        // which cannot used
-        /*libs_cflags.push("-I" + mingw + "\\qt5-static\\include\\QtCore", 
-            "-I" + mingw + "\\qt5-static\\include\\QtSql",
-            "-I" + mingw + "\\qt5-static\\include\\QtXml",
-            "-I" + mingw + "\\qt5-static\\include\\QtWinExtras",
-            "-I" + mingw + "\\qt5-static\\include\\QtSvg",
-            "-I" + mingw + "\\qt5-static\\include\\QtWidgets");*/
-    } else {
-        // pkg-config returns incomplete paths like "/mingw64/include/QtCore",
-        // which cannot used
-        /*libs_cflags.push("-I" + mingw + "\\include\\QtCore", 
-            "-I" + mingw + "\\include\\QtSql",
-            "-I" + mingw + "\\include\\QtXml",
-            "-I" + mingw + "\\include\\QtWinExtras",
-            "-I" + mingw + "\\include\\QtSvg",
-            "-I" + mingw + "\\include\\QtWidgets");*/
     }
     project.setVariable("LIBS_CFLAGS", libs_cflags);
 
     /** @type Array<String> */
     var cflags;
 
-    /**  @ts-ignore */
+    /** @ts-ignore */
     cflags = project.getVariable("CFLAGS") || [];
     cflags.push("-g", "-Os", "-Wall", "-Wwrite-strings",
         "-Wextra", "-Wno-unused-parameter", "-Wno-cast-function-type",

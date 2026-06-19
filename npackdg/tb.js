@@ -2,8 +2,6 @@
 /// <reference path="../../super/tb/install/builtins.js"/>
 
 function configure() {
-    // TODO: option(NPACKD_ADMIN "Force admin right on program" TRUE)
-
     var static_ = project.getConfig().indexOf("static") >= 0;
 
     project.setVariable("NAME", "npackdg");
