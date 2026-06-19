@@ -14,6 +14,10 @@ function setCommonFlags() {
     project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
     project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
+    project.setVariable("QT_LRELEASE", mingw + "\\qt5-static\\bin\\lrelease.exe");
+    project.setVariable("QT_LUPDATE", mingw + "\\qt5-static\\bin\\lupdate.exe");
+    project.setVariable("QT_UIC", mingw + "\\qt5-static\\bin\\uic.exe");
+
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
     version = version.split('\n')[0];
     version = version.split(':')[1];
