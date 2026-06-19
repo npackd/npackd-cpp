@@ -7,14 +7,24 @@ function setCommonFlags() {
     var static_ = project.getConfig().indexOf("static") >= 0;
 
     var mingw = "C:\\msys64\\mingw64";
-    var qt = mingw + "\\qt5-static";
 
-    project.findBinaries(mingw + "\\bin");
+    var bin_dir = mingw + "\\bin";
+    project.setVariable("GCC_BIN_DIR", bin_dir);
+    project.setVariable("AR", bin_dir + "\\ar.exe");
+    project.setVariable("CC", bin_dir + "\\gcc.exe");
+    project.setVariable("CXX", bin_dir + "\\g++.exe");
+    project.setVariable("DEBUGGER", bin_dir + "\\gdb.exe");
+    project.setVariable("NTLDD", bin_dir + "\\ntldd.exe");
+    project.setVariable("PKG_CONFIG", bin_dir + "\\pkg-config.exe");
+    project.setVariable("WINDRES", bin_dir + "\\windres.exe");
 
     project.setVariable("COMPANY", "Npackd");
     project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
     project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
+    var qt = mingw + "\\qt5-static";
+    project.setVariable("QT_MOC", qt + "\\bin\\moc.exe");
+    project.setVariable("QT_RCC", qt + "\\bin\\rcc.exe");
     project.setVariable("QT_LRELEASE", qt + "\\bin\\lrelease.exe");
     project.setVariable("QT_LUPDATE", qt + "\\bin\\lupdate.exe");
     project.setVariable("QT_UIC", qt + "\\bin\\uic.exe");
