@@ -186,7 +186,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     p->categories.push_back(QObject::tr("Control panel software"));
 
     QString icon = k.get("DisplayIcon", &err);
-    if (err.isEmpty())
+    if (err.isEmpty() && WPMUtils::extractIconURL != nullptr)
         p->setIcon(WPMUtils::extractIconURL(icon));
 
     // Crystal Icons

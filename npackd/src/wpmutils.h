@@ -85,6 +85,16 @@ public:
     static const int STOP_SERVICES = 8;
     static const int CTRL_C = 16;
 
+    /**
+     * @brief extracts an icon from a file using the Windows API ExtractIcon()
+     * This function is NULL in a command line application.
+     * @param iconFile .ico, .exe, etc. Additionally to what is supported by
+     *     ExtractIcon() also ",0" and similar at the end of the path name is
+     *     supported to load different icons from the same file
+     * @return "data:..." or an empty string if the icon cannot be extracted
+     */
+    static QString (*extractIconURL)(const QString& iconFile);
+
     static const char* UCS2LE_BOM;
 
     static const char* CRLF;
@@ -219,15 +229,6 @@ public:
      * @param dir directory.
      */
     static bool isUnderOrEquals(const QString &file, const QString &dir);
-
-    /**
-     * @brief extracts an icon from a file using the Windows API ExtractIcon()
-     * @param iconFile .ico, .exe, etc. Additionally to what is supported by
-     *     ExtractIcon() also ",0" and similar at the end of the path name is
-     *     supported to load different icons from the same file
-     * @return "data:..." or an empty string if the icon cannot be extracted
-     */
-    static QString extractIconURL(const QString &iconFile);
 
     /**
      * Validates a GUID
