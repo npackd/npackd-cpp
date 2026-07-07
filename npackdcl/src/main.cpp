@@ -2,6 +2,7 @@
 #include <qstring.h>
 #include <QTimer>
 #include <QLoggingCategory>
+#include <QtPlugin>
 
 #include "repository.h"
 #include "commandline.h"
@@ -13,6 +14,11 @@
 #include "commandlinemessagehandler.h"
 
 #include "app.h"
+
+// These lines are necessary for a static build
+#ifdef NPACKD_STATIC
+Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
+#endif
 
 App app;
 

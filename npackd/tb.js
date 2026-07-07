@@ -11,7 +11,8 @@ function configure() {
         "uuid", "wininet", "psapi", "version", "shlwapi", "msi", "netapi32", "Ws2_32", "taskschd", "OleAut32"];
     if (static_) {
         deps.push("quazip");
-    } else {
+        deps.push("qsqlite");
+   } else {
         deps.push("quazip1-qt5");
     }
     project.setVariable("DEPENDENCIES", deps);
@@ -23,7 +24,12 @@ function configure() {
     project.findPkgConfigLibrary("Qt5Xml", { static: static_ });
     project.findPkgConfigLibrary("Qt5Core", { static: static_ });
 
-    if (!static_)
+    if (!static_) {
         project.findPkgConfigLibrary("quazip1-qt5", { static: static_ });
+
+        var qt = "C:\\msys64\\mingw64\\qt5-static\\";
+        var qt_plugins = qt + "share\\qt5\\plugins\\";
+        project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
+    }
 }
 
