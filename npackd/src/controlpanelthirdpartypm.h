@@ -19,12 +19,12 @@ class ControlPanelThirdPartyPM: public AbstractThirdPartyPM
     void detectOneControlPanelProgram(std::vector<InstalledPackageVersion*>* installed,
             Repository* rep,
             const QString &registryPath,
-            WindowsRegistry &k, const QString &keyName) const;
+            WindowsRegistry &k, const QString &keyName, bool bits64) const;
     void detectControlPanelProgramsFrom(
             std::vector<InstalledPackageVersion*>* installed,
             Repository* rep,
             HKEY root, const QString &path,
-            bool useWoWNode) const;
+            bool bits64) const;
 public:
     /**
      * should the entries from the MSI package manager be ignored? The default

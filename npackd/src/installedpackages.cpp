@@ -314,12 +314,10 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
 
             qCDebug(npackd) << "trying to replace" << p->name << p->title;
 
-            std::vector<QString> found = r->findBetterPackages(p->title, &err);
+            QString found = r->findBetterPackage(*p, &err);
 
-            if (err.isEmpty() && found.size() == 1) {
-                std::vector<Package*> replacements = r->findPackages(found);
-                result = replacements.at(0)->name;
-                qDeleteAll(replacements);
+            if (err.isEmpty() && !found.isEmpty()) {
+                result = found;
             }
 
             delete p;
@@ -445,20 +443,18 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
             for (auto v: all) {
                 // e.g. an MSI package and a package from the Control Panel
                 // "Software" have the same path
-                /* not yet ready
-                 *
-                 * It makes sense to only consider versions > 1.0 as "1.0" is
-                 * often used instead of an actual version number.
-                 *
-                 * if (WPMUtils::pathEquals(d, v->getDirectory()) &&
-                        //ipv.package == v->package &&
+                // We only handle updates to a higher version here.
+                if (WPMUtils::pathEquals(d, v->getDirectory()) &&
+                        ipv.package == v->package &&
                         (detectionInfoPrefix == "msi:" ||
-                         detectionInfoPrefix == "control-panel:")) {
+                         detectionInfoPrefix == "control-panel:") &&
+                        ipv.version.compare(v->version) > 0) {
                     qCDebug(npackd) << "Found update from" <<
-                            ipv.package << ipv.version.getVersionString() <<
-                            "to" << v->package << v->version.getVersionString();
-                    //setPackageVersionPath(v->package, v->version, "", false);
-                }*/
+                            v->package << v->version.getVersionString() <<
+                            "to" << ipv.package << ipv.version.getVersionString();
+                    setPackageVersionPath(v->package, v->version, "", false);
+                    continue;
+                }
 
                 if (WPMUtils::isUnderOrEquals(d, v->getDirectory())) {
                     err = "Cannot handle nested directories";
@@ -500,11 +496,11 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
             std::unique_ptr<PackageVersion> detectedPackageVersion;
             detectedPackageVersion.reset(r->findPackageVersion_(found->package, found->version, &err));
             if (detectedPackageVersion) {
-            for(auto&& pvf: detectedPackageVersion->files) {
-                pv->files.push_back(pvf->clone());
+                for(auto&& pvf: detectedPackageVersion->files) {
+                    pv->files.push_back(pvf->clone());
+                }
             }
         }
-    }
     }
 
     if (err.isEmpty()) {

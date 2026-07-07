@@ -140,6 +140,14 @@ public:
      * @param w output
      */
     void toJSON(QJsonObject &w) const;
+
+    /**
+     * @brief Checks whether the current process is 64-bit or 32-bit.
+     * 
+     * @return true 64 bit
+     * @return false 32 bit
+     */
+    bool is64Bit() const;
 };
 
 #endif // PACKAGE_H

@@ -57,8 +57,9 @@ DBRepository::DBRepository()
     insertInstalledQuery = nullptr;
 
     // please note that words shorter than 3 characters are removed later anyway
-    stopWords = WPMUtils::split(QString("version build edition remove only "
-            "bit sp1 sp2 sp3 deu enu update microsoft corporation mozilla "
+    stopWords = WPMUtils::split(QString("version build edition remove only user desktop "
+            "x64 amd64 x86_64 x86 i686 32 64 bit "
+            "sp1 sp2 sp3 deu enu update microsoft corporation mozilla "
             "setup package "
             "and are but for into not such that the their then there these "
             "they this was will with windows"), ' ');
@@ -557,39 +558,6 @@ std::vector<QString> DBRepository::tokenizeTitle(const QString& title)
 
     std::vector<QString> keywords = WPMUtils::split(txt, ' ', Qt::SkipEmptyParts);
 
-    // synonyms
-    for (int i = 0; i < static_cast<int>(keywords.size()); i++) {
-        const QString& p = keywords.at(i);
-        if (p == QStringLiteral("x64") || p == QStringLiteral("amd64") ) {
-            keywords[i] = QStringLiteral("x86_64");
-        } else if (p == QStringLiteral("x86")) {
-            keywords[i] = QStringLiteral("i686");
-        }
-    }
-
-    // "32 bit" and "64 bit"
-    for (int i = 0; i < static_cast<int>(keywords.size()) - 1; i++) {
-        const QString& p = keywords.at(i);
-        const QString& p2 = keywords.at(i + 1).toLower();
-        if (p == QStringLiteral("32") && p2 == QStringLiteral("bit")) {
-            keywords[i] = QStringLiteral("i686");
-            keywords.erase(keywords.begin() + i + 1);
-        } else if (p == QStringLiteral("64") && p2 == QStringLiteral("bit")) {
-            keywords[i] = QStringLiteral("x86_64");
-            keywords.erase(keywords.begin() + i + 1);
-        }
-    }
-
-    bool bits = false;
-    for (auto& k: keywords) {
-        if (k == QStringLiteral("x86_64") || k == QStringLiteral("i686")) {
-            bits = true;
-            break;
-        }
-    }
-    if (!bits)
-        keywords.push_back(QStringLiteral("i686"));
-
     // remove (X == a digit)
     //  - stop words
     //  - numbers
@@ -627,11 +595,11 @@ std::vector<QString> DBRepository::tokenizeTitle(const QString& title)
     return keywords;
 }
 
-std::vector<QString> DBRepository::findBetterPackages(const QString& title, QString* err)
+QString DBRepository::findBetterPackage(const Package &p, QString* err)
 {
-    std::vector<QString> packages;
+    QString res;
 
-    std::vector<QString> keywords = tokenizeTitle(title);
+    std::vector<QString> keywords = tokenizeTitle(p.title);
 
     if (keywords.size() > 0) {
         QString where = QStringLiteral("select name from package "
@@ -651,21 +619,34 @@ std::vector<QString> DBRepository::findBetterPackages(const QString& title, QStr
             }
         }
 
-        where.append(QStringLiteral(" LIMIT 2"));
+        // we only allow 2 results (x86 and x86_64) to be found, otherwise we don't know which one to choose
+        where.append(QStringLiteral(" LIMIT 3"));
 
-        packages = findPackagesWhere(where, params, err);
+        std::vector<QString> packages = findPackagesWhere(where, params, err);
+        if (err->isEmpty() && packages.size() > 0 && packages.size() < 3) {
+            std::vector<Package*> ps = findPackages(packages);
 
-        QString what;
-        if (packages.size() == 1)
-            what = packages.at(0);
-        else
-            what = QString("%1 packages").arg(packages.size());
+            bool bits64 = p.is64Bit();
 
-        qCDebug(npackd) << "searching for" << WPMUtils::join(keywords, ' ') <<
-                "found" << what;
+            for (auto p2: ps) {
+                if (p2->is64Bit() == bits64) {
+                    if (res.isEmpty())
+                        res = p2->name;
+                    else {
+                        res.clear();
+                        break;
+                    }
+                }
+            }
+
+            qDeleteAll(ps);
+        }
     }
 
-    return packages;
+    qCDebug(npackd) << "searching for" << WPMUtils::join(keywords, ' ') <<
+            "found" << res;
+
+    return res;
 }
 
 int DBRepository::getMaxStars(QString* err)

@@ -187,3 +187,24 @@ void Package::toJSON(QJsonObject& w) const
         w["installed"] = installed;
 }
 
+bool Package::is64Bit() const
+{
+    bool r = std::find(this->tags.begin(), this->tags.end(), "stable64") != this->tags.end();
+    
+    if (!r)
+        r = this->name.endsWith("64");
+    
+    if (!r) {
+        const QString s = this->title.toLower();
+        r = s.contains("x64") || s.contains("amd64") ||
+            s.contains("x86_64") || s.contains("x86-64") || s.contains("64 bit");
+    }
+
+    if (!r) {
+        const QString s = this->description.toLower();
+        r = s.contains("x64") || s.contains("amd64") ||
+            s.contains("x86_64") || s.contains("x86-64") || s.contains("64 bit");
+    }
+
+    return r;
+}

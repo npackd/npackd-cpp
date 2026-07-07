@@ -352,11 +352,11 @@ public:
 
     /**
      * @brief searches for better packages for detection
-     * @param title title of a package
+     * @param p a package
      * @param err error message will be stored here
-     * @return list of found packages.
+     * @return better package or an empty string
      */
-    std::vector<QString> findBetterPackages(const QString &title, QString *err);
+    QString findBetterPackage(const Package &p, QString *err);
 
     /**
      * @return maximum number of stars for a package

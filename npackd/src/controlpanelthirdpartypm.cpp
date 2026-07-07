@@ -16,7 +16,7 @@ void ControlPanelThirdPartyPM::scan(Job* job,
 {
     detectControlPanelProgramsFrom(installed, rep, HKEY_LOCAL_MACHINE,
             "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-            false
+            true
     );
     if (WPMUtils::is64BitWindows()) {
         detectControlPanelProgramsFrom(installed, rep, HKEY_LOCAL_MACHINE,
@@ -26,7 +26,7 @@ void ControlPanelThirdPartyPM::scan(Job* job,
     }
     detectControlPanelProgramsFrom(installed, rep, HKEY_CURRENT_USER,
             "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-            false
+            true
     );
     if (WPMUtils::is64BitWindows()) {
         detectControlPanelProgramsFrom(installed, rep, HKEY_CURRENT_USER,
@@ -43,10 +43,10 @@ void ControlPanelThirdPartyPM::
         detectControlPanelProgramsFrom(
         std::vector<InstalledPackageVersion*>* installed,
         Repository* rep, HKEY root,
-        const QString& path, bool useWoWNode) const {
+        const QString& path, bool bits64) const {
     WindowsRegistry wr;
     QString err;
-    err = wr.open(root, path, useWoWNode, KEY_READ);
+    err = wr.open(root, path, false, KEY_READ);
     if (err.isEmpty()) {
         QString fullPath;
         if (root == HKEY_CLASSES_ROOT)
@@ -73,7 +73,7 @@ void ControlPanelThirdPartyPM::
             err = k.open(wr, e, KEY_READ);
             if (err.isEmpty()) {
                 detectOneControlPanelProgram(installed, rep,
-                        fullPath + "\\" + e, k, e);
+                        fullPath + "\\" + e, k, e, bits64);
             }
         }
     }
@@ -84,7 +84,7 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
         Repository *rep,
         const QString& registryPath,
         WindowsRegistry& k,
-        const QString& keyName) const
+        const QString& keyName, bool bits64) const
 {
     // see http://msdn.microsoft.com/en-us/library/aa372105(v=vs.85).aspx
 
@@ -158,6 +158,11 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
             title = title.trimmed();
         }
     }
+
+    if (bits64)
+        title += " (64 bit)";
+    else
+        title += " (32 bit)";
 
     p->title = title;
 
