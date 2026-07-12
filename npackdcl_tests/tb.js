@@ -9,12 +9,12 @@ function configure() {
     project.setVariable("QT_MOC_FILES", ["app.h"]);
     system.include("..\\tb_common.js");
 
-    var static = project.getConfig().indexOf("static") >= 0;
-    project.findPkgConfigLibrary("Qt5Sql", { static: static });
-    project.findPkgConfigLibrary("Qt5Xml", { static: static });
-    project.findPkgConfigLibrary("Qt5Core", { static: static });
-    project.findPkgConfigLibrary("Qt5Test", { static: static });
+    var static_ = project.getConfig().indexOf("static") >= 0;
+    project.findPkgConfigLibrary("Qt5Sql", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Xml", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Core", { static: static_ });
+    project.findPkgConfigLibrary("Qt5Test", { static: static_ });
 
-    if (!static)
+    if (!static_)
         project.findPkgConfigLibrary("quazip1-qt5");
 }

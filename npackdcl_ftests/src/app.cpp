@@ -32,9 +32,7 @@ void App::init()
 
 QString App::captureNpackdCLOutput(const QString& params)
 {
-    QDir d(WPMUtils::getExeDir() + "\\..\\..\\install");
-    if (!d.exists("npackdcl.exe"))
-        d.cd(WPMUtils::getExeDir() + "\\..");
+    QDir d(WPMUtils::getExeDir() + "\\..\\..\\..\\..\\npackdcl\\build\\static_x86_64\\dist");
 
     QString where = d.absolutePath();
     QString npackdcl = where + "\\npackdcl.exe";
@@ -72,7 +70,7 @@ void App::pathIsFast()
     if (!admin)
         QSKIP("disabled");
 
-    QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
+    QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.41").
             contains("installed successfully"));
 
     HRTimer t(2);
@@ -88,10 +86,10 @@ void App::pathVersion()
     if (!admin)
         QSKIP("disabled");
 
-    QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.4").
+    QVERIFY(captureNpackdCLOutput("add -p io.mpv.mpv-64 -v 0.41").
             contains("installed successfully"));
 
-    QVERIFY(captureNpackdCLOutput("path -p io.mpv.mpv-64 -v 0.4").
+    QVERIFY(captureNpackdCLOutput("path -p io.mpv.mpv-64 -v 0.41").
             contains("mpv_64-bit"));
 }
 
@@ -318,11 +316,11 @@ void App::addDoesntProduceDetected()
     if (!admin)
         QSKIP("disabled");
 
-    captureNpackdCLOutput("rm -p net.poedit.POEdit -v 1.7.3.1");
+    captureNpackdCLOutput("rm -p net.poedit.POEdit -v 3.4.4");
 
     captureNpackdCLOutput("set-install-dir -f \"C:\\Program Files\"");
 
-    QVERIFY(captureNpackdCLOutput("add -p net.poedit.POEdit -v 1.7.3.1").
+    QVERIFY(captureNpackdCLOutput("add -p net.poedit.POEdit -v 3.4.4").
             contains("installed successfully"));
 
     QString s = captureNpackdCLOutput("info -p net.poedit.POEdit");
