@@ -248,7 +248,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
         err = QObject::tr("No repositories defined");
 
     if (err.isEmpty()) {
-        err = dbr->checkInstallationDirectory(getInstallationDirectory());
+        err = InstalledPackages::getDefault()->checkInstallationDirectory(getInstallationDirectory());
     }
 
     if (err.isEmpty()) {

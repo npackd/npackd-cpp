@@ -1308,3 +1308,24 @@ QString InstalledPackages::saveToRegistry(InstalledPackageVersion *ipv)
     return r;
 }
 
+QString InstalledPackages::checkInstallationDirectory(const QString &dir) const
+{
+    QString err;
+    if (err.isEmpty() && dir.isEmpty())
+        err = QObject::tr("The installation directory cannot be empty");
+
+    if (err.isEmpty() && !QDir(dir).exists())
+        err = QObject::tr("The installation directory does not exist");
+
+    if (err.isEmpty()) {
+        InstalledPackageVersion* ipv = findOwner(dir);
+        if (ipv) {
+            DBRepository* dbr = DBRepository::getDefault();
+            err = QObject::tr("Cannot change the installation directory to %1. %2 %3 is installed there").
+                    arg(dir, dbr->getPackageTitleAndName(ipv->package),
+                    ipv->version.getVersionString());
+            delete ipv;
+        }
+    }
+    return err;
+}

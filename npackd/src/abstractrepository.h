@@ -33,13 +33,6 @@ public:
     virtual ~AbstractRepository();
 
     /**
-     * @brief checks a value for the installation directory
-     * @param dir a directory
-     * @return error message or ""
-     */
-    QString checkInstallationDirectory(const QString& dir) const;
-
-    /**
      * @param package full or short package name
      * @param err error message will be stored here
      * @return [move] found package or 0. The returned value is

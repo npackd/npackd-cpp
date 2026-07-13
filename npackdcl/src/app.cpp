@@ -599,7 +599,7 @@ void App::setInstallPath(Job* job)
     }
 
     if (job->shouldProceed()) {
-        QString r = DBRepository::getDefault()->checkInstallationDirectory(file);
+        QString r = InstalledPackages::getDefault()->checkInstallationDirectory(file);
         if (!r.isEmpty())
             job->setErrorMessage(r);
     }

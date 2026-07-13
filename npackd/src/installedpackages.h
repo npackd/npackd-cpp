@@ -148,6 +148,13 @@ public:
     virtual ~InstalledPackages();
 
     /**
+     * @brief checks a value for the installation directory
+     * @param dir a directory
+     * @return error message or ""
+     */
+    QString checkInstallationDirectory(const QString& dir) const;
+
+    /**
      * Reads the package statuses from the registry.
      *
      * @return error message
