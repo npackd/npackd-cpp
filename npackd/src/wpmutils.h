@@ -43,6 +43,8 @@ private:
 
     static QString taskName;
 
+    static std::mutex installationScripts;
+
     WPMUtils();
 
     /**
@@ -100,6 +102,23 @@ public:
     static const char* CRLF;
 
     static HRTimer timer;
+
+    /**
+     * @brief acquire the lock for executing installation/uninstallation scripts.
+     * Only one script is allowed to be executed at any time.
+     *
+     * @param job job
+     * @return true = acquired
+     */
+    static bool lockInstallationScript(Job* job);
+
+    /**
+     * @brief release the lock for executing installation/uninstallation scripts.
+     * Only one script is allowed to be executed at any time.
+     *
+     * @param job job
+     */
+    static void unlockInstallationScript();
 
     /**
      * @return location of the Npackd log file

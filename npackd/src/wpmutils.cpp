@@ -51,6 +51,8 @@
 #include "lockedfiles.h"
 #include "comobject.h"
 
+std::mutex WPMUtils::installationScripts;
+
 QAtomicInt WPMUtils::nextNamePipeId;
 
 HANDLE WPMUtils::hEventLog = nullptr;
@@ -3635,5 +3637,35 @@ bool WPMUtils::hasAdminPrivileges()
     qCDebug(npackd) << "hasAdminPrivileges" << fReturn;
 
     return fReturn;
+}
+
+bool WPMUtils::lockInstallationScript(Job* job)
+{
+    bool r = false;
+
+    QString initialTitle = job->getTitle();
+    time_t start = time(nullptr);
+    while (!job->isCancelled()) {
+        bool installationScriptAcquired = installationScripts.try_lock();
+        if (installationScriptAcquired) {
+            job->setProgress(1);
+            r = true;
+            break;
+        }
+
+        time_t seconds = time(nullptr) - start;
+        job->setTitle(initialTitle + " / " + QObject::tr("%1 minutes").
+                arg(seconds / 60));
+    }
+    job->setTitle(initialTitle);
+
+    job->complete();
+
+    return r;
+}
+
+void WPMUtils::unlockInstallationScript()
+{
+    installationScripts.unlock();
 }
 

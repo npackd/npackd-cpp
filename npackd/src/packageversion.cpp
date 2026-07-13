@@ -427,11 +427,11 @@ void PackageVersion::uninstall(Job* job, bool printScriptOutput,
             */
 
             Job* sub2 = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
-            bool acquired = AbstractRepository::lockInstallationScript(sub2);
+            bool acquired = WPMUtils::lockInstallationScript(sub2);
             WPMUtils::executeBatchFile(sub, d.absolutePath(), usfn, WPMUtils::getMessagesLog(),
                     env, printScriptOutput, true, true);
             if (acquired)
-                AbstractRepository::unlockInstallationScript();
+                WPMUtils::unlockInstallationScript();
 
             if (ush != INVALID_HANDLE_VALUE) {
                 CloseHandle(ush);
@@ -1324,12 +1324,12 @@ void PackageVersion::install(Job* job, const QString& where,
             addDependencyVars(&env);
 
             Job* sub = job->newSubJob(0.01, QObject::tr("Acquire installation script lock"), true, true);
-            bool acquired = AbstractRepository::lockInstallationScript(sub);
+            bool acquired = WPMUtils::lockInstallationScript(sub);
             WPMUtils::executeBatchFile(exec, d.absolutePath(),
                     d.absolutePath() + "\\" + installationScript, WPMUtils::getMessagesLog(),
                     env, printScriptOutput, true, true);
             if (acquired)
-                AbstractRepository::unlockInstallationScript();
+                WPMUtils::unlockInstallationScript();
 
             if (exec->getErrorMessage().isEmpty()) {
                 QString path = d.absolutePath();
@@ -1760,14 +1760,14 @@ void PackageVersion::stop(Job* job, DWORD programCloseType,
         addDependencyVars(&env);
 
         Job* sub = job->newSubJob(0.01, QObject::tr("Acquire the installation script lock"), true, true);
-        bool acquired = AbstractRepository::lockInstallationScript(sub);
+        bool acquired = WPMUtils::lockInstallationScript(sub);
         if (job->shouldProceed())
             WPMUtils::executeBatchFile(exec, d.absolutePath(),
                     d.absolutePath() + "\\.Npackd\\Stop.bat",
                     WPMUtils::getMessagesLog(), env,
                     printScriptOutput, true, true);
         if (acquired)
-            AbstractRepository::unlockInstallationScript();
+            WPMUtils::unlockInstallationScript();
     } else {
         WPMUtils::closeProcessesThatUseDirectory(getPath(), programCloseType,
                 stoppedServices);
