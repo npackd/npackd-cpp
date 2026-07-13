@@ -1071,13 +1071,32 @@ bool MainWindow::isUpdateEnabled(const QString& package)
     return res;
 }
 
+PackageVersion* MainWindow::findNewestInstalledPackageVersion_(
+        const QString &name, QString *err) const
+{
+    *err = "";
+
+    PackageVersion* r = nullptr;
+
+    InstalledPackageVersion* ipv = InstalledPackages::getDefault()->
+            getNewestInstalled(name);
+
+    if (ipv) {
+        r = DBRepository::getDefault()->findPackageVersion_(name, ipv->version, err);
+    }
+
+    delete ipv;
+
+    return r;
+}
+
 bool MainWindow::isExportSettingsEnabled(const QString& package)
 {
     QString err;
 
     bool res = false;
     DBRepository* r = DBRepository::getDefault();
-    PackageVersion* newest = r->findNewestInstalledPackageVersion_(
+    PackageVersion* newest = findNewestInstalledPackageVersion_(
             package, &err);
     if (newest != nullptr) {
         res = newest->findFile(".Npackd\\ExportUserSettings.bat") != nullptr;
@@ -1496,7 +1515,7 @@ void MainWindow::updateRunAction()
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
-                PackageVersion* pv = r->findNewestInstalledPackageVersion_(
+                PackageVersion* pv = findNewestInstalledPackageVersion_(
                         p->name, &err);
                 if (!err.isEmpty()) {
                     err = QObject::tr("Error finding the newest installed version for %1: %2").
@@ -2179,7 +2198,7 @@ void MainWindow::on_actionUninstall_triggered()
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
-                PackageVersion* pv = r->findNewestInstalledPackageVersion_(
+                PackageVersion* pv = findNewestInstalledPackageVersion_(
                         p->name, &err);
                 if (!err.isEmpty())
                     addErrorMessage(err, err, true, QMessageBox::Critical);
@@ -2251,7 +2270,7 @@ void MainWindow::on_actionOpen_folder_triggered()
             Package* p = static_cast<Package*>(selected.at(i));
 
             QString err;
-            PackageVersion* pv = r->findNewestInstalledPackageVersion_(
+            PackageVersion* pv = findNewestInstalledPackageVersion_(
                     p->name, &err);
             if (!err.isEmpty())
                 addErrorMessage(err, err, true, QMessageBox::Critical);
@@ -2350,7 +2369,7 @@ void MainWindow::on_actionRun_triggered()
                 Package* p = static_cast<Package*>(selected.at(i));
 
                 QString err;
-                PackageVersion* pv = r->findNewestInstalledPackageVersion_(
+                PackageVersion* pv = findNewestInstalledPackageVersion_(
                         p->name, &err);
                 if (!err.isEmpty())
                     addErrorMessage(err, err, true, QMessageBox::Critical);

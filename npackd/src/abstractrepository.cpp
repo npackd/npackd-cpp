@@ -1202,25 +1202,6 @@ QString AbstractRepository::planUninstallation(InstalledPackages &installed,
     return res;
 }
 
-PackageVersion* AbstractRepository::findNewestInstalledPackageVersion_(
-        const QString &name, QString *err) const
-{
-    *err = "";
-
-    PackageVersion* r = nullptr;
-
-    InstalledPackageVersion* ipv = InstalledPackages::getDefault()->
-            getNewestInstalled(name);
-
-    if (ipv) {
-        r = this->findPackageVersion_(name, ipv->version, err);
-    }
-
-    delete ipv;
-
-    return r;
-}
-
 PackageVersion* AbstractRepository::findNewestInstallablePackageVersion_(
         const QString &package, QString* err) const
 {

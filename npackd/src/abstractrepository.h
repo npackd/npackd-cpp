@@ -106,16 +106,6 @@ public:
             const QString& package, QString* err) const = 0;
 
     /**
-     * Find the newest installed package version.
-     *
-     * @param name name of the package like "org.server.Word"
-     * @param err error message will be stored here
-     * @return [move] found package version or 0
-     */
-    PackageVersion *findNewestInstalledPackageVersion_(
-            const QString &name, QString* err) const;
-
-    /**
      * Find the newest installable package version.
      *
      * @param package name of the package like "org.server.Word"

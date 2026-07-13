@@ -62,6 +62,16 @@ private:
     /** Icon on the tray or zeros */
     NOTIFYICONDATAW nid;
 
+    /**
+     * Find the newest installed package version.
+     *
+     * @param name name of the package like "org.server.Word"
+     * @param err error message will be stored here
+     * @return [move] found package version or 0
+     */
+    PackageVersion *findNewestInstalledPackageVersion_(
+            const QString &name, QString* err) const;
+
     int findPackageTab(const QString& package) const;
     int findPackageVersionTab(const QString& package,
             const Version& version) const;
