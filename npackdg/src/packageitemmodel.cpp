@@ -82,7 +82,7 @@ PackageItemModel::Info* PackageItemModel::createInfo(
     r->title = p->title;
 
     // the error message is ignored
-    License* lic = rep->findLicense_(p->license, &err);
+    License* lic = rep->findLicense(p->license, &err);
     if (lic) {
         r->licenseTitle = lic->title;
         delete lic;

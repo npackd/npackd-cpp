@@ -41,7 +41,7 @@ void LicenseForm::reload()
     if (this->license) {
         DBRepository* r = DBRepository::getDefault();
         QString err;
-        License* newLicense = r->findLicense_(this->license->name, &err);
+        License* newLicense = r->findLicense(this->license->name, &err);
         if (err.isEmpty() && newLicense)
             this->fillForm(newLicense);
     }

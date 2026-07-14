@@ -135,7 +135,7 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
                         break;
                     }
                     if (!p->license.isEmpty()) {
-                        std::unique_ptr<License> lic(findLicense_(p->license, &err));
+                        std::unique_ptr<License> lic(findLicense(p->license, &err));
                         if (lic) {
                             err = rep->saveLicense(lic.get(), false);
                             if (!err.isEmpty()) {

@@ -318,7 +318,7 @@ PackageVersion *Repository::findPackageVersion(const QString &package,
     return pv;
 }
 
-License *Repository::findLicense_(const QString &name, QString* err)
+License *Repository::findLicense(const QString &name, QString* err)
 {
     *err = "";
     License* r = findLicense(name);

@@ -1718,7 +1718,7 @@ void MainWindow::openLicense(const QString& name, bool select)
         QString err;
         License* lic =
                 DBRepository::getDefault()->
-                findLicense_(name, &err);
+                findLicense(name, &err);
         if (err.isEmpty()) {
             LicenseForm* f = new LicenseForm(this->ui->tabWidget);
             f->fillForm(lic);

@@ -243,7 +243,7 @@ public:
      * @param err error message will be stored here
      * @return [move] found license or 0
      */
-    virtual License* findLicense_(const QString& name, QString* err) = 0;
+    virtual License* findLicense(const QString& name, QString* err) = 0;
 
     /**
      * @brief removes all package, version and license definitions

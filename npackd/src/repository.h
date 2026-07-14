@@ -141,7 +141,7 @@ public:
     PackageVersion* findPackageVersion(const QString& package,
             const Version& version, QString* err) const override;
 
-    License* findLicense_(const QString& name, QString *err) override;
+    License* findLicense(const QString& name, QString *err) override;
 
     QString clear() override;
 

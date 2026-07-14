@@ -85,7 +85,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     QString licenseTitle = QObject::tr("unknown");
     if (p) {
         QString err;
-        License* lic = r->findLicense_(p->license, &err);
+        License* lic = r->findLicense(p->license, &err);
         if (!err.isEmpty())
             MainWindow::getInstance()->addErrorMessage(err, err, true,
                     QMessageBox::Critical);
@@ -227,7 +227,7 @@ void PackageVersionForm::on_labelLicense_linkActivated(QString /*link*/)
     License* lic = nullptr;
     QString err;
     if (p) {
-        lic = r->findLicense_(p->license, &err);
+        lic = r->findLicense(p->license, &err);
         if (!err.isEmpty())
             MainWindow::getInstance()->addErrorMessage(err, err, true,
                     QMessageBox::Critical);

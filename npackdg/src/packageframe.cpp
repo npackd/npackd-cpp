@@ -116,7 +116,7 @@ void PackageFrame::fillForm(Package* p)
 
     QString licenseTitle = QObject::tr("unknown");
     QString err;
-    License* lic = dbr->findLicense_(p->license, &err);
+    License* lic = dbr->findLicense(p->license, &err);
     if (!err.isEmpty()) {
         MainWindow::getInstance()->addErrorMessage(err, err, true,
                 QMessageBox::Critical);

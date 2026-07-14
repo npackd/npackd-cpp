@@ -179,6 +179,20 @@ public:
 
     QString savePackage(Package *p, bool replace) override;
 
+    Package* findPackage(const QString& name) const override;
+
+    std::vector<PackageVersion *> getPackageVersions(const QString& package,
+            QString *err) const override;
+
+    PackageVersion* findPackageVersion(const QString& package,
+            const Version& version, QString *err) const override;
+
+    License* findLicense(const QString& name, QString* err) override;
+
+    QString clear() override;
+
+    std::vector<Package *> findPackagesByShortName(const QString &name) const override;
+
     /**
      * @brief opens the default database
      * @param databaseName name for the database
@@ -223,11 +237,6 @@ public:
      * @param job job
      */
     void updateStatusForInstalled(Job *job);
-
-    Package* findPackage(const QString& name) const override;
-
-    std::vector<PackageVersion *> getPackageVersions(const QString& package,
-            QString *err) const override;
 
     /**
      * @brief returns all package versions with a <cmd-file> entry with the
@@ -285,19 +294,10 @@ public:
      */
     void updateF5Runnable(Job* job, bool useCache);
 
-    PackageVersion* findPackageVersion(const QString& package,
-            const Version& version, QString *err) const override;
-
-    License* findLicense_(const QString& name, QString* err) override;
-
-    QString clear() override;
-
     /**
      * @brief clears the cache
      */
     void clearCache();
-
-    std::vector<Package *> findPackagesByShortName(const QString &name) const override;
 
     /**
      * @brief searches for packages that match the specified keywords. No filter

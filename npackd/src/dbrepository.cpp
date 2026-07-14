@@ -503,7 +503,7 @@ std::vector<PackageVersion *> DBRepository::findPackageVersionsWithCmdFile(
     return r;
 }
 
-License *DBRepository::findLicense_(const QString& name, QString *err)
+License *DBRepository::findLicense(const QString& name, QString *err)
 {
     std::lock_guard<std::recursive_mutex> ml(this->mutex);
 
