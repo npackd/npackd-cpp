@@ -205,7 +205,7 @@ void PackageFrame::fillForm(Package* p)
     t->setHorizontalHeaderItem(1, newItem);
 
     qDeleteAll(this->pvs);
-    pvs = dbr->getPackageVersions_(p->name, &err);
+    pvs = dbr->getPackageVersions(p->name, &err);
 
     if (!err.isEmpty()) {
         MainWindow::getInstance()->addErrorMessage(err,

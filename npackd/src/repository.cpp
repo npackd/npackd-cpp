@@ -48,7 +48,7 @@ std::vector<PackageVersion*> Repository::getPackageVersions(const QString& packa
     return ret;
 }
 
-std::vector<PackageVersion*> Repository::getPackageVersions_(const QString& package,
+std::vector<PackageVersion*> Repository::getPackageVersions(const QString& package,
         QString *err) const
 {
     *err = "";

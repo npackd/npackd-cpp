@@ -411,7 +411,7 @@ PackageVersion* DBRepository::findPackageVersion_(
     return r;
 }
 
-std::vector<PackageVersion*> DBRepository::getPackageVersions_(const QString& package,
+std::vector<PackageVersion*> DBRepository::getPackageVersions(const QString& package,
         QString *err) const
 {
     std::lock_guard<std::recursive_mutex> ml(this->mutex);
@@ -2180,7 +2180,7 @@ QString DBRepository::updateStatus(const QString& package)
 
     QString err;
 
-    std::vector<PackageVersion*> pvs = getPackageVersions_(package, &err);
+    std::vector<PackageVersion*> pvs = getPackageVersions(package, &err);
     PackageVersion* newestInstallable = nullptr;
     PackageVersion* newestInstalled = nullptr;
     if (err.isEmpty()) {

@@ -312,7 +312,7 @@ std::vector<PackageVersion *> AbstractRepository::findAllMatchesToInstall(
 {
     std::vector<PackageVersion*> res;
 
-    std::vector<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
+    std::vector<PackageVersion*> pvs = getPackageVersions(dep.package, err);
     if (err->isEmpty()) {
         for (auto pv: pvs) {
             if (dep.test(pv->version) &&
@@ -333,7 +333,7 @@ PackageVersion *AbstractRepository::findBestMatchToInstall(
 {
     PackageVersion* res = nullptr;
 
-    std::vector<PackageVersion*> pvs = getPackageVersions_(dep.package, err);
+    std::vector<PackageVersion*> pvs = getPackageVersions(dep.package, err);
     if (err->isEmpty()) {
         for (auto pv: pvs) {
             if (dep.test(pv->version) &&
@@ -1209,7 +1209,7 @@ PackageVersion* AbstractRepository::findNewestInstallablePackageVersion_(
 {
     PackageVersion* r = nullptr;
 
-    std::vector<PackageVersion*> pvs = this->getPackageVersions_(package, err);
+    std::vector<PackageVersion*> pvs = this->getPackageVersions(package, err);
     if (err->isEmpty()) {
         for (auto p: pvs) {
             if (r == nullptr || p->version.compare(r->version) > 0) {

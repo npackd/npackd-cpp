@@ -129,7 +129,7 @@ public:
      */
     void toXML(QXmlStreamWriter& w) const;
 
-    std::vector<PackageVersion*> getPackageVersions_(const QString& package,
+    std::vector<PackageVersion*> getPackageVersions(const QString& package,
             QString *err) const override;
 
     QString savePackage(Package* p, bool replace) override;

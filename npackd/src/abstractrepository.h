@@ -95,7 +95,7 @@ public:
      * @return [move] the list of package versions.
      *     The first returned object has the highest version number.
      */
-    virtual std::vector<PackageVersion*> getPackageVersions_(
+    virtual std::vector<PackageVersion*> getPackageVersions(
             const QString& package, QString* err) const = 0;
 
     /**

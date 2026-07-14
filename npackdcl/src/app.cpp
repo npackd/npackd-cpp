@@ -2338,7 +2338,7 @@ void App::info(Job* job)
 
             if (!pv) {
                 QString versions, r;
-                std::vector<PackageVersion*> pvs = rep->getPackageVersions_(
+                std::vector<PackageVersion*> pvs = rep->getPackageVersions(
                         p->name, &r);
                 if (r.isEmpty()) {
                     for (auto opv: pvs) {

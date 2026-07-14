@@ -39,7 +39,7 @@ PackageItemModel::Info* PackageItemModel::createInfo(
 
     // error is ignored here
     QString err;
-    std::vector<PackageVersion*> pvs = rep->getPackageVersions_(p->name, &err);
+    std::vector<PackageVersion*> pvs = rep->getPackageVersions(p->name, &err);
 
     PackageVersion* newestInstallable = nullptr;
     PackageVersion* newestInstalled = nullptr;
