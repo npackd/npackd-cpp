@@ -233,7 +233,7 @@ public:
      * @param err error message will be stored here
      * @return [move] found package version or 0
      */
-    virtual PackageVersion* findPackageVersion_(const QString& package,
+    virtual PackageVersion* findPackageVersion(const QString& package,
             const Version& version, QString* err) const = 0;
 
     /**

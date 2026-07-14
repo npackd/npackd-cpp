@@ -293,7 +293,7 @@ QString App::addNpackdCL(DBRepository* r)
 
     Version myVersion;
     (void) myVersion.setVersion(NPACKD_VERSION);
-    PackageVersion* pv = r->findPackageVersion_(
+    PackageVersion* pv = r->findPackageVersion(
             "com.googlecode.windows-package-manager.NpackdCL",
             myVersion, &err);
     if (!pv) {
@@ -1773,7 +1773,7 @@ void App::build(Job* job)
     std::unique_ptr<PackageVersion> pv;
     if (job->shouldProceed()) {
         QString err;
-        pv.reset(rep->findPackageVersion_(source->package, source->version,
+        pv.reset(rep->findPackageVersion(source->package, source->version,
                 &err));
         if (!err.isEmpty())
             job->setErrorMessage(err);
@@ -2239,7 +2239,7 @@ void App::info(Job* job)
     if (job->shouldProceed()) {
         if (!version.isNull()) {
             QString r;
-            pv = rep->findPackageVersion_(p->name, v, &r);
+            pv = rep->findPackageVersion(p->name, v, &r);
             if (!r.isEmpty())
                 job->setErrorMessage(r);
             else if (!pv) {
@@ -2412,7 +2412,7 @@ QString App::printDependencies(bool onlyInstalled, const QString parentPrefix,
         QString s;
         if (ipv) {
             pvd = rep->
-                    findPackageVersion_(ipv->package, ipv->version, &err);
+                    findPackageVersion(ipv->package, ipv->version, &err);
         } else {
             pvd = rep->findBestMatchToInstall(*d,
                     std::vector<PackageVersion*>(), &err);
@@ -2588,7 +2588,7 @@ void App::removeSCP(Job *job)
             // directory may be empty (unknown)
             if (ipv->package == found->name/* && ipv->installed()*/) {
                 QString err;
-                pv = rep.findPackageVersion_(
+                pv = rep.findPackageVersion(
                         ipv->package, ipv->version, &err);
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);

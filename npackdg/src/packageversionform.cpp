@@ -59,7 +59,7 @@ void PackageVersionForm::reload()
 {
     DBRepository* r = DBRepository::getDefault();
     QString err;
-    PackageVersion* newpv = r->findPackageVersion_(
+    PackageVersion* newpv = r->findPackageVersion(
             this->pv->package, this->pv->version, &err);
     if (err.isEmpty() && newpv)
         this->fillForm(newpv);

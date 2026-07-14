@@ -100,7 +100,7 @@ std::vector<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
                         InstalledPackageVersion* ipv =
                                 ip->findHighestInstalledMatch(v);
                         if (ipv) {
-                            pv = dbr.findPackageVersion_(ipv->package,
+                            pv = dbr.findPackageVersion(ipv->package,
                                     ipv->version, err);
                             if (err->isEmpty()) {
                                 if (!pv) {
@@ -138,7 +138,7 @@ std::vector<PackageVersion*> PackageUtils::getAddPackageVersionOptions(
                         *err = QObject::tr("Cannot parse version: %1").
                                 arg(version);
                     } else {
-                        pv = dbr.findPackageVersion_(p->name, v,
+                        pv = dbr.findPackageVersion(p->name, v,
                                 err);
                         if (err->isEmpty()) {
                             if (!pv) {

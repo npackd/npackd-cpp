@@ -1082,7 +1082,7 @@ PackageVersion* MainWindow::findNewestInstalledPackageVersion_(
             getNewestInstalled(name);
 
     if (ipv) {
-        r = DBRepository::getDefault()->findPackageVersion_(name, ipv->version, err);
+        r = DBRepository::getDefault()->findPackageVersion(name, ipv->version, err);
     }
 
     delete ipv;
@@ -1741,7 +1741,7 @@ void MainWindow::openPackageVersion(const QString& package,
         QString err;
         PackageVersion* pv_ =
                 DBRepository::getDefault()->
-                findPackageVersion_(package, version, &err);
+                findPackageVersion(package, version, &err);
         if (!err.isEmpty())
             addErrorMessage(err, err, true, QMessageBox::Critical);
         if (pv_) {
@@ -2077,7 +2077,7 @@ void MainWindow::on_actionReload_Repositories_triggered()
 
     if (!lockedPackage.isEmpty()) {
         QString err;
-        PackageVersion* locked = DBRepository::getDefault()->findPackageVersion_(lockedPackage, lockedVersion, &err);
+        PackageVersion* locked = DBRepository::getDefault()->findPackageVersion(lockedPackage, lockedVersion, &err);
         QString name;
         if (locked) {
             name = locked->toString();
@@ -2522,7 +2522,7 @@ void MainWindow::on_actionCheck_dependencies_triggered()
     int n = 0;
     for (auto ipv: all) {
         if (ipv->installed()) {
-            std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion_(
+            std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion(
                     ipv->package, ipv->version, &err));
             if (!err.isEmpty() || !(bool)pv)
                 break;

@@ -10,7 +10,7 @@ InstallOperation::InstallOperation(
 
 PackageVersion *InstallOperation::findPackageVersion(QString* err) const
 {
-    return DBRepository::getDefault()->findPackageVersion_(
+    return DBRepository::getDefault()->findPackageVersion(
             this->package, this->version, err);
 }
 

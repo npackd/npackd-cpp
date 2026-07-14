@@ -725,7 +725,7 @@ std::vector<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(cons
                                 "is installed: %3").arg(p->title, p->name,
                                 vns);
                     } else {
-                        pv = rep->findPackageVersion_(p->name,
+                        pv = rep->findPackageVersion(p->name,
                                 ipvs.at(0)->version, err);
                         if (err->isEmpty()) {
                             if (!pv) {
@@ -742,7 +742,7 @@ std::vector<PackageVersion*> PackageVersion::getRemovePackageVersionOptions(cons
                         *err = QObject::tr("Cannot parse version: %1").
                                 arg(version);
                     } else {
-                        pv = rep->findPackageVersion_(p->name, v,
+                        pv = rep->findPackageVersion(p->name, v,
                                 err);
                         if (err->isEmpty()) {
                             if (!pv) {

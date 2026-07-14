@@ -474,7 +474,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     std::unique_ptr<PackageVersion> pv;
 
     if (err.isEmpty()) {
-        pv.reset(r->findPackageVersion_(ipv.package, ipv.version, &err));
+        pv.reset(r->findPackageVersion(ipv.package, ipv.version, &err));
     }
 
     if (err.isEmpty()) {
@@ -494,7 +494,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
             pv->files.clear();
 
             std::unique_ptr<PackageVersion> detectedPackageVersion;
-            detectedPackageVersion.reset(r->findPackageVersion_(found->package, found->version, &err));
+            detectedPackageVersion.reset(r->findPackageVersion(found->package, found->version, &err));
             if (detectedPackageVersion) {
                 for(auto&& pvf: detectedPackageVersion->files) {
                     pv->files.push_back(pvf->clone());
@@ -761,7 +761,7 @@ InstalledPackageVersion*
         InstalledPackageVersion* ipv = it.second;
         if (ipv->installed()) {
             QString err;
-            std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion_(
+            std::unique_ptr<PackageVersion> pv(dbr->findPackageVersion(
                     ipv->package, ipv->version, &err));
 
             //if (!pv.data()) {

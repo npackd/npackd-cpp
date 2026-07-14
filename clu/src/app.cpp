@@ -238,7 +238,7 @@ int App::remove()
         for (auto ipv: installed) {
             if (ipv->package == found->name && ipv->installed()) {
                 QString err;
-                pv = rep.findPackageVersion_(
+                pv = rep.findPackageVersion(
                         ipv->package, ipv->version, &err);
                 if (!err.isEmpty()) {
                     job->setErrorMessage(err);

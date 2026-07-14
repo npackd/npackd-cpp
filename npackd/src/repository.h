@@ -138,7 +138,7 @@ public:
 
     QString saveLicense(License *p, bool replace) override;
 
-    PackageVersion* findPackageVersion_(const QString& package,
+    PackageVersion* findPackageVersion(const QString& package,
             const Version& version, QString* err) const override;
 
     License* findLicense_(const QString& name, QString *err) override;

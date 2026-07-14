@@ -285,7 +285,7 @@ public:
      */
     void updateF5Runnable(Job* job, bool useCache);
 
-    PackageVersion* findPackageVersion_(const QString& package,
+    PackageVersion* findPackageVersion(const QString& package,
             const Version& version, QString *err) const override;
 
     License* findLicense_(const QString& name, QString* err) override;

@@ -378,7 +378,7 @@ QString DBRepository::findCategory(int cat) const
     return r;
 }
 
-PackageVersion* DBRepository::findPackageVersion_(
+PackageVersion* DBRepository::findPackageVersion(
         const QString& package, const Version& version, QString* err) const
 {
     std::lock_guard<std::recursive_mutex> ml(this->mutex);

@@ -211,7 +211,7 @@ void SettingsFrame::on_buttonBox_clicked(QAbstractButton* /*button*/)
     Version lockedVersion;
     PackageVersion::findLockedPackageVersion(&lockedPackage, &lockedVersion);
     if (!lockedPackage.isEmpty()) {
-        PackageVersion* locked = dbr->findPackageVersion_(lockedPackage, lockedVersion, &err);
+        PackageVersion* locked = dbr->findPackageVersion(lockedPackage, lockedVersion, &err);
         QString name;
         if (locked) {
             name = locked->toString();

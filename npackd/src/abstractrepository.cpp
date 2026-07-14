@@ -26,7 +26,7 @@ bool AbstractRepository::includesRemoveItself(
     for (auto op: install_) {
         if (!op->install) {
             QString err;
-            PackageVersion* pv = this->findPackageVersion_(
+            PackageVersion* pv = this->findPackageVersion(
                     op->package, op->version, &err);
             if (err.isEmpty() && pv) {
                 QString path = pv->getPath();
@@ -198,7 +198,7 @@ void AbstractRepository::exportPackageSettingsCoInitializeAndFree(
 
             if (ipv && ipv->installed()) {
                 QString err;
-                std::unique_ptr<PackageVersion> pv(findPackageVersion_(ipv->package,
+                std::unique_ptr<PackageVersion> pv(findPackageVersion(ipv->package,
                     ipv->version, &err));
 
                 if (err.isEmpty()) {
@@ -758,7 +758,7 @@ std::vector<PackageVersion*> AbstractRepository::getInstalled_(QString *err)
     std::vector<InstalledPackageVersion*> ipvs =
             InstalledPackages::getDefault()->getAll();
     for (auto ipv: ipvs) {
-        PackageVersion* pv = this->findPackageVersion_(ipv->package,
+        PackageVersion* pv = this->findPackageVersion(ipv->package,
                 ipv->version, err);
         if (!err->isEmpty())
             break;
@@ -779,7 +779,7 @@ QString AbstractRepository::planAddMissingDeps(InstalledPackages &installed,
     std::vector<PackageVersion*> avoid;
     std::vector<InstalledPackageVersion*> all = installed.getAll();
     for (auto ipv: all) {
-        PackageVersion* pv = this->findPackageVersion_(ipv->package,
+        PackageVersion* pv = this->findPackageVersion(ipv->package,
                 ipv->version, &err);
         if (!err.isEmpty())
             break;
@@ -828,7 +828,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             InstalledPackageVersion* ib = installed.getNewestInstalled(p->name);
             PackageVersion* b = nullptr;
             if (ib) {
-                b = this->findPackageVersion_(p->name, ib->version, &err);
+                b = this->findPackageVersion(p->name, ib->version, &err);
                 delete ib;
             }
 
@@ -882,7 +882,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
             InstalledPackageVersion* ipv = installed.findHighestInstalledMatch(*d);
             PackageVersion* b = nullptr;
             if (ipv) {
-                b = findPackageVersion_(ipv->package, ipv->version, &err);
+                b = findPackageVersion(ipv->package, ipv->version, &err);
                 if (!err.isEmpty()) {
                     err = QString(QObject::tr("Cannot find the newest installed version for %1: %2")).
                             arg(p->title, err);

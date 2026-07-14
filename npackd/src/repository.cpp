@@ -307,7 +307,7 @@ QString Repository::savePackageVersion(PackageVersion *p, bool replace)
     return "";
 }
 
-PackageVersion *Repository::findPackageVersion_(const QString &package,
+PackageVersion *Repository::findPackageVersion(const QString &package,
         const Version &version, QString *err) const
 {
     *err = "";
