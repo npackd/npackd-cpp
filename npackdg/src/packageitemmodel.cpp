@@ -117,7 +117,7 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
     Info* cached = this->cache.object(p);
     bool insertIntoCache = false;
     if (!cached) {
-        Package* pk = rep->findPackage_(p);
+        Package* pk = rep->findPackage(p);
         cached = createInfo(pk);
         delete pk;
         insertIntoCache = true;

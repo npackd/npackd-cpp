@@ -315,7 +315,7 @@ void MainWindow::showDetails()
                 int index = this->findPackageTab(p->name);
                 if (index < 0) {
                     Package* p_ = DBRepository::getDefault()->
-                            findPackage_(p->name);
+                            findPackage(p->name);
                     if (p_) {
                         PackageFrame* pf = new PackageFrame(this->ui->tabWidget);
                         pf->fillForm(p_);
@@ -444,7 +444,7 @@ QIcon MainWindow::getPackageIcon(const QString& package)
 {
     MainWindow* mw = MainWindow::getInstance();
     DBRepository* r = DBRepository::getDefault();
-    Package* p = r->findPackage_(package);
+    Package* p = r->findPackage(package);
 
     QIcon icon = MainWindow::genericAppIcon;
     if (p) {
@@ -1452,7 +1452,7 @@ void MainWindow::updateShowChangelogAction()
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
 
-                Package* p = r->findPackage_(pv->package);
+                Package* p = r->findPackage(pv->package);
                 if (p) {
                     QUrl url(p->getChangeLog());
                     delete p;
@@ -1547,7 +1547,7 @@ void MainWindow::updateGotoPackageURLAction()
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
 
-                Package* p = r->findPackage_(pv->package);
+                Package* p = r->findPackage(pv->package);
                 if (p) {
                     QUrl url(p->url);
                     delete p;
@@ -1761,7 +1761,7 @@ void MainWindow::openPackage(const QString& package, bool select)
 {
     int index = this->findPackageTab(package);
     if (index < 0) {
-        Package* p_ = DBRepository::getDefault()->findPackage_(package);
+        Package* p_ = DBRepository::getDefault()->findPackage(package);
         if (p_) {
             PackageFrame* pf = new PackageFrame(this->ui->tabWidget);
             pf->fillForm(p_);
@@ -1805,7 +1805,7 @@ void MainWindow::on_actionGotoPackageURL_triggered()
             for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
-                std::unique_ptr<Package> p(r->findPackage_(pv->package));
+                std::unique_ptr<Package> p(r->findPackage(pv->package));
                 if (p) {
                     QUrl url(p->url);
                     if (url.isValid())
@@ -1879,7 +1879,7 @@ void MainWindow::on_actionUpdate_triggered()
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
                 if (used.count(pv->package) == 0) {
-                    Package* p = r->findPackage_(pv->package);
+                    Package* p = r->findPackage(pv->package);
 
                     if (p != nullptr) {
                         packages.push_back(p);
@@ -2324,7 +2324,7 @@ void MainWindow::on_actionShow_changelog_triggered()
             for (int i = 0; i < static_cast<int>(selected.size()); i++) {
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
-                std::unique_ptr<Package> p(r->findPackage_(pv->package));
+                std::unique_ptr<Package> p(r->findPackage(pv->package));
                 if (p) {
                     QUrl url(p->getChangeLog());
                     if (url.isValid())
@@ -2577,7 +2577,7 @@ void MainWindow::on_actionExport_settings_triggered()
                 PackageVersion* pv = static_cast<PackageVersion*>(
                         selected.at(i));
                 if (used.count(pv->package) == 0) {
-                    Package* p = r->findPackage_(pv->package);
+                    Package* p = r->findPackage(pv->package);
 
                     if (p != nullptr) {
                         packages.push_back(p);

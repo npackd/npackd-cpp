@@ -80,7 +80,7 @@ void PackageVersionForm::fillForm(PackageVersion* pv)
     this->ui->lineEditVersion->setText(v.getVersionString());
     this->ui->lineEditInternalName->setText(pv->package);
 
-    Package* p = r->findPackage_(pv->package);
+    Package* p = r->findPackage(pv->package);
 
     QString licenseTitle = QObject::tr("unknown");
     if (p) {
@@ -222,7 +222,7 @@ void PackageVersionForm::changeEvent(QEvent *e)
 void PackageVersionForm::on_labelLicense_linkActivated(QString /*link*/)
 {
     DBRepository* r = DBRepository::getDefault();
-    Package* p = r->findPackage_(pv->package);
+    Package* p = r->findPackage(pv->package);
 
     License* lic = nullptr;
     QString err;

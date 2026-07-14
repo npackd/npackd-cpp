@@ -224,7 +224,7 @@ public:
      */
     void updateStatusForInstalled(Job *job);
 
-    Package* findPackage_(const QString& name) const override;
+    Package* findPackage(const QString& name) const override;
 
     std::vector<PackageVersion *> getPackageVersions_(const QString& package,
             QString *err) const override;

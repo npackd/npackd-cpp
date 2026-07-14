@@ -127,7 +127,7 @@ void AbstractRepository::exportPackagesCoInitializeAndFree(Job *job,
                     break;
                 }
 
-                std::unique_ptr<Package> p(findPackage_(pv->package));
+                std::unique_ptr<Package> p(findPackage(pv->package));
                 if (p) {
                     err = rep->savePackage(p.get(), false);
                     if (!err.isEmpty()) {
@@ -274,7 +274,7 @@ void AbstractRepository::importPackageSettingsCoInitializeAndFree(
         QStringList entries = qd.entryList(QDir::Dirs | QDir::PermissionMask | QDir::AccessMask |
                 QDir::CaseSensitive | QDir::NoDotAndDotDot | QDir::NoSymLinks);
         for (const QString& packageName: entries) {
-            Package* p = findPackage_(packageName);
+            Package* p = findPackage(packageName);
             if (p) {
                 InstalledPackageVersion* ipv = InstalledPackages::getDefault()->
                         getNewestInstalled(p->name);
@@ -295,6 +295,8 @@ void AbstractRepository::importPackageSettingsCoInitializeAndFree(
                         sub->complete();
                     }
                 }
+
+                delete p;
             }
         }
     }
@@ -356,7 +358,7 @@ QString AbstractRepository::toString(const Dependency &dep,
 {
     QString res;
 
-    Package* p = findPackage_(dep.package);
+    Package* p = findPackage(dep.package);
     if (p)
         res.append(p->title);
     else
@@ -860,7 +862,7 @@ QString AbstractRepository::planUpdates(InstalledPackages& installed,
     // version ranges second
     if (err.isEmpty()) {
         for (auto d: ranges) {
-            std::unique_ptr<Package> p(findPackage_(d->package));
+            std::unique_ptr<Package> p(findPackage(d->package));
             if (!p.get()) {
                 err = QString(QObject::tr("Cannot find the package %1")).
                         arg(d->package);
@@ -1236,7 +1238,7 @@ AbstractRepository::~AbstractRepository()
 QString AbstractRepository::getPackageTitleAndName(const QString &name) const
 {
     QString res;
-    Package* p = findPackage_(name);
+    Package* p = findPackage(name);
     if (p)
         res = p->title + " (" + name + ")";
     else
@@ -1251,7 +1253,7 @@ Package* AbstractRepository::findOnePackage(
 {
     *err = "";
 
-    Package* p = findPackage_(package);
+    Package* p = findPackage(package);
 
     if (!p) {
         if (!package.contains('.')) {

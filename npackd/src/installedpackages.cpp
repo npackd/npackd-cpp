@@ -308,7 +308,7 @@ QString InstalledPackages::findBetterPackageName(DBRepository *r,
     if (package.startsWith("msi.") ||
             package.startsWith("control-panel.")) {
         // find another package with the same title
-        Package* p = r->findPackage_(package);
+        Package* p = r->findPackage(package);
         if (p) {
             QString err;
 
@@ -524,7 +524,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
     if (err.isEmpty() && d.isEmpty()) {
         // qCDebug(npackd) << "    2";
 
-        Package* p = r->findPackage_(ipv.package);
+        Package* p = r->findPackage(ipv.package);
 
         d = WPMUtils::normalizePath(
                 WPMUtils::getProgramFilesDir(),
@@ -537,6 +537,7 @@ void InstalledPackages::processOneInstalled3rdParty(DBRepository *r,
                     ipv.version.getVersionString(), "");
         }
         qd.mkpath(d);
+        
         delete p;
     }
 

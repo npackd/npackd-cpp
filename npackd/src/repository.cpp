@@ -99,7 +99,7 @@ License* Repository::findLicense(const QString& name)
     return nullptr;
 }
 
-Package* Repository::findPackage(const QString& name) const
+Package* Repository::findPackageInternal(const QString& name) const
 {
     for (auto p: this->packages) {
         if (p->name == name)
@@ -213,9 +213,9 @@ out:;
     return WPMUtils::join(parts, "/");
 }
 
-Package *Repository::findPackage_(const QString &name) const
+Package *Repository::findPackage(const QString &name) const
 {
-    Package* p = findPackage(name);
+    Package* p = findPackageInternal(name);
     if (p)
         p = new Package(*p);
     return p;
@@ -258,7 +258,7 @@ QString Repository::saveLicense(License *p, bool replace)
 
 QString Repository::savePackage(Package *p, bool replace)
 {
-    Package* fp = findPackage(p->name);
+    Package* fp = findPackageInternal(p->name);
     if (!fp || replace) {
         if (!fp) {
             fp = new Package(p->name, p->title);

@@ -349,7 +349,7 @@ void MainFrame::tableWidget_selectionChanged()
         QModelIndex index = m->index(sel.at(i).row(), 1);
         const QVariant v = index.data(Qt::UserRole);
         QString name = v.toString();
-        Package* p = r->findPackage_(name);
+        Package* p = r->findPackage(name);
         this->selectedPackages.push_back(p);
     }
 

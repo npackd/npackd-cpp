@@ -57,7 +57,7 @@ private:
      * @param name name of the package like "org.server.Word"
      * @return found package or 0
      */
-    Package* findPackage(const QString& name) const;
+    Package* findPackageInternal(const QString& name) const;
 
     /**
      * Find the newest available package version.
@@ -112,7 +112,7 @@ public:
 
     virtual ~Repository();
 
-    Package* findPackage_(const QString& name) const override;
+    Package* findPackage(const QString& name) const override;
 
     /**
      * Writes this repository to an XML file.

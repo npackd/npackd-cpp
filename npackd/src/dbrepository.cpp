@@ -203,7 +203,7 @@ QString DBRepository::saveLicense(License* p, bool replace)
     return err;
 }
 
-Package *DBRepository::findPackage_(const QString &name) const
+Package *DBRepository::findPackage(const QString &name) const
 {
     std::lock_guard<std::recursive_mutex> ml(this->mutex);
 

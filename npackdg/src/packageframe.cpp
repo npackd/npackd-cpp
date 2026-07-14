@@ -58,7 +58,7 @@ void PackageFrame::reload()
 {
     if (this->p) {
         DBRepository* r = DBRepository::getDefault();
-        Package* newp = r->findPackage_(p->name);
+        Package* newp = r->findPackage(p->name);
         if (newp)
             this->fillForm(newp);
     }

@@ -501,7 +501,7 @@ void App::which(Job* job)
         InstalledPackageVersion* f = ip->findOwner(fi.absoluteFilePath());
         if (f) {
             DBRepository* rep = DBRepository::getDefault();
-            Package* p = rep->findPackage_(f->package);
+            Package* p = rep->findPackage(f->package);
             QString title = p ? p->title : "?";
 
             if (json) {
@@ -1238,7 +1238,7 @@ void App::place(Job* job)
         InstalledPackageVersion* f = ip->findOwner(fi.absoluteFilePath());
         if (f) {
             DBRepository* rep = DBRepository::getDefault();
-            Package* p = rep->findPackage_(f->package);
+            Package* p = rep->findPackage(f->package);
             QString title = p ? p->title : "?";
             job->setErrorMessage(QString(
                     "%1 %2 (%3) is installed in \"%4\"").

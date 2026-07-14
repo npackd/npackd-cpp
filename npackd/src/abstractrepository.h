@@ -85,7 +85,7 @@ public:
      * @param name full package name
      * @return [move] found package or 0.
      */
-    virtual Package* findPackage_(const QString& name) const = 0;
+    virtual Package* findPackage(const QString& name) const = 0;
 
     /**
      * Finds all package versions.

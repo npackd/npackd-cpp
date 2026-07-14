@@ -656,7 +656,7 @@ QString PackageVersion::getPackageTitle(
     DBRepository* rep = DBRepository::getDefault();
 
     QString pn;
-    Package* p= rep->findPackage_(this->package);
+    Package* p= rep->findPackage(this->package);
     if (p)
         pn = p->title;
     else
@@ -950,7 +950,7 @@ bool PackageVersion::createShortcuts(const QString& dir, QString *errMsg)
     QString packageTitle = this->getPackageTitle();
 
     QDir d(dir);
-    Package* p = DBRepository::getDefault()->findPackage_(this->package);
+    Package* p = DBRepository::getDefault()->findPackage(this->package);
     for (int i = 0; i < static_cast<int>(this->importantFiles.size()); i++) {
         QString ifile = this->importantFiles.at(i);
         QString ift = this->importantFilesTitles.at(i);
