@@ -16,7 +16,6 @@
 #include "license.h"
 #include "abstractrepository.h"
 #include "mysqlquery.h"
-#include "installedpackageversion.h"
 
 /**
  * @brief A repository stored in an SQLite database.
