@@ -13,16 +13,42 @@ function configure() {
 function build() {
     console.log("Building Npackd C++................");
 
-    var all = ["clu", "npackd", "npackdcl", "npackdcl_ftests", "npackdcl_tests", "npackdg"];
+    var name = "clu";
+    console.log("We are building " + name + "................");
+    var p = new Project(project.getDirectory() + "\\" + name);
+    p.setConfig(project.getConfig());
+    p.build("all");
 
-    for (var i = 0; i < all.length; i++) {
-        var name = all[i];
-        console.log("We are building " + name + "................");
-        var p = new Project(project.getDirectory() + "\\" + name);
-        p.setConfig(project.getConfig());
-        p.build("all");
-    }
+    var name = "npackd";
+    console.log("We are building " + name + "................");
+    var p = new Project(project.getDirectory() + "\\" + name);
+    p.setConfig(project.getConfig());
+    p.build("all");
 
+    var name = "npackdcl";
+    console.log("We are building " + name + "................");
+    var p = new Project(project.getDirectory() + "\\" + name);
+    p.setConfig(project.getConfig());
+    p.build("msi");
+
+    var name = "npackdcl_ftests";
+    console.log("We are building " + name + "................");
+    var p = new Project(project.getDirectory() + "\\" + name);
+    p.setConfig(project.getConfig());
+    p.build("all");
+    
+    var name = "npackdcl_tests";
+    console.log("We are building " + name + "................");
+    var p = new Project(project.getDirectory() + "\\" + name);
+    p.setConfig(project.getConfig());
+    p.build("all");
+    
+    var name = "npackdg";
+    console.log("We are building " + name + "................");
+    var p = new Project(project.getDirectory() + "\\" + name);
+    p.setConfig(project.getConfig());
+    p.build("msi");
+    
     // TODO: exeproxy.exe, exchndl.dll, mgwhelp.dll, dbghelp.dll, symsrv.dll, symsrv.yes, xxx.map
     // TODO: create a zip file
     // TODO: create .msi

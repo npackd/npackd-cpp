@@ -4,6 +4,9 @@
 function configure() {
     project.setVariable("NAME", "npackdcl");
     project.setVariable("TYPE", "program");
+    project.setVariable("TITLE", "NpackdCL");
+    project.setVariable("DESCRIPTION", "This is a Windows command line Npackd package manager client.");
+    project.setVariable("MSI_UPGRADE_CODE", "B57EADCE-24E8-4D80-8611-25F58745FA25");
 
     var static_ = project.getConfig().indexOf("static") >= 0;
 
