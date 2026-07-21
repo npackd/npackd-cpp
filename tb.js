@@ -2,8 +2,6 @@
 /// <reference path="../super/tb/install/builtins.js"/>
 
 function configure() {
-    var static_ = project.getConfig().indexOf("static") >= 0;
-
     project.setVariable("NAME", "npackd-cpp");
     project.setVariable("TITLE", "Npackd C++");
     project.setVariable("DESCRIPTION", "All the C++ Npackd programs.");
@@ -13,11 +11,26 @@ function configure() {
 function build() {
     console.log("Building Npackd C++................");
 
+    var version = system.readTextFile(project.getDirectory() + "\\appveyor.yml");
+    version = version.split('\n')[0];
+    version = version.split(':')[1];
+    version = version.split('{')[0];
+    version = version + "0";
+    version = version.trim();
+    console.log(version);
+
+    var config = project.getConfig();
+    var d = project.getDirectory() + "\\build\\" + config + "\\dist";
+    fs.mkdirSync(d, { recursive: true });
+
     var name = "clu";
     console.log("We are building " + name + "................");
     var p = new Project(project.getDirectory() + "\\" + name);
     p.setConfig(project.getConfig());
     p.build("all");
+    fs.mkdirSync(p.getDirectory() + "\\build\\" + config + "\\installer", { recursive: true });
+    system.zip(p.getDirectory() + "\\build\\" + config + "\\dist", 
+        d + "\\CLU-" + version + ".zip");
 
     var name = "npackd";
     console.log("We are building " + name + "................");
@@ -30,6 +43,9 @@ function build() {
     var p = new Project(project.getDirectory() + "\\" + name);
     p.setConfig(project.getConfig());
     p.build("msi");
+    fs.mkdirSync(p.getDirectory() + "\\build\\" + config + "\\installer", { recursive: true });
+    system.zip(p.getDirectory() + "\\build\\" + config + "\\dist", 
+        d + "\\NpackdCL-" + version + ".zip");
 
     var name = "npackdcl_ftests";
     console.log("We are building " + name + "................");
@@ -48,10 +64,11 @@ function build() {
     var p = new Project(project.getDirectory() + "\\" + name);
     p.setConfig(project.getConfig());
     p.build("msi");
+    fs.mkdirSync(p.getDirectory() + "\\build\\" + config + "\\installer", { recursive: true });
+    system.zip(p.getDirectory() + "\\build\\" + config + "\\dist", 
+        d + "\\Npackd-" + version + ".zip");
     
-    // TODO: exeproxy.exe, exchndl.dll, mgwhelp.dll, dbghelp.dll, symsrv.dll, symsrv.yes, xxx.map
-    // TODO: create a zip file
-    // TODO: create .msi
+    // TODO: exchndl.dll, mgwhelp.dll, dbghelp.dll, symsrv.dll, symsrv.yes, xxx.map
     // TODO: release on Github
 
     // TODO: Coverity
