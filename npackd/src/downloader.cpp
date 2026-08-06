@@ -192,7 +192,7 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
             // both calls to InternetErrorDlg should be enclosed by one
             // mutex, so that only one dialog will be shown
-            loginDialogMutex.lock();
+            // we do not show dialogs anymore: loginDialogMutex.lock();
 
             void* p = nullptr;
 
@@ -203,15 +203,15 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
 
                     DWORD flags = FLAGS_ERROR_UI_FILTER_FOR_ERRORS |
                             FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS |
-                            FLAGS_ERROR_UI_FLAGS_GENERATE_DATA;
-                    if (!interactive || parentWindow == 0)
-                        flags |= FLAGS_ERROR_UI_FLAGS_NO_UI;
+                            FLAGS_ERROR_UI_FLAGS_GENERATE_DATA | 
+                            FLAGS_ERROR_UI_FLAGS_NO_UI;
                     sendRequestError = InternetErrorDlg(parentWindow,
                            hResourceHandle, sendRequestError,
                            flags, &p);
                 }
             }
 
+            /* an average user cannot decide what to do with these errors
             if (job->shouldProceed()) {
                 switch (sendRequestError) {
                     case ERROR_HTTP_REDIRECT_NEEDS_CONFIRMATION:
@@ -241,9 +241,9 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
                                flags, &p);
                     }
                 }
-            }
+            } */
 
-            loginDialogMutex.unlock();
+            // we do not show dialogs anymore: loginDialogMutex.unlock();
 
             if (job->shouldProceed()) {
                 if (sendRequestError == ERROR_SUCCESS) {
