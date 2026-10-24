@@ -77,6 +77,8 @@ function configure() {
         project.addLibraryDependency("qwindows", "Qt5VulkanSupport");
         project.addLibraryDependency("qwindows", "Qt5WindowsUIAutomationSupport");
         project.addLibraryDependency("qjpeg", "qtlibjpeg");
+        project.addLibraryDependency("qsvg", "Qt5Svg");
+        project.addLibraryDependency("qsqlite", "Qt5Sql");
     }
 }
 
