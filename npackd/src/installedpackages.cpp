@@ -884,9 +884,11 @@ void InstalledPackages::refresh(DBRepository *rep, Job *job)
             tpms.push_back(new ControlPanelThirdPartyPM());
             replace.push_back(true);
 
+            /* detection is too slow
             jobTitles.push_back(QObject::tr("Detecting Windows Update packages"));
             tpms.push_back(new WUAThirdPartyPM());
             replace.push_back(true);
+             */
         }
 
         std::vector<Repository*> repositories;

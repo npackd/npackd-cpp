@@ -2778,7 +2778,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Detecting Windows Update packages</source>
-        <translation>Ermittle die Windows-Update-Pakete</translation>
+        <translation type="vanished">Ermittle die Windows-Update-Pakete</translation>
     </message>
     <message>
         <source>Too many retries</source>

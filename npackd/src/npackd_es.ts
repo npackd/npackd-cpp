@@ -3242,10 +3242,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Detecting Windows Update packages</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Too many retries</source>
         <translation type="unfinished"></translation>
     </message>
