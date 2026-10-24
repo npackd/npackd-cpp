@@ -11,7 +11,7 @@ function configure() {
     project.setVariable("SUBSYSTEM", "windows");
     project.setVariable("MSI_UPGRADE_CODE", "EABC4270-7D7F-47BF-B388-AC63606E8DAC");
 
-    var deps = ["npackd", "Qt5Gui", "Qt5Svg"];
+    var deps = ["npackd", "Qt5Gui", "Qt5Svg", "gdi32"];
     if (static_) {
         deps.push("qwindows");
         deps.push("qwindowsvistastyle");

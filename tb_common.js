@@ -100,7 +100,7 @@ function setCommonFlags() {
         "-Wduplicated-cond", "-Wduplicated-branches", "-Wlogical-op", "-Wno-error=cast-qual",
         "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11");
 
-    if (project.getConfig() === "debug") {
+    if (project.getConfig().indexOf("debug") >= 0) {
         // -O0 outputs no warnings about uninitialized variables
         // GDB stops at wrong lines sometimes with -O2
         cflags.push("-O1");
