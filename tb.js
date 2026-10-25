@@ -28,6 +28,17 @@ function buildSubProject(name) {
         {cwd: project.getDirectory() + "\\" + name});
 }
 
+/**
+ * Builds a sub-project.
+ * 
+ * @param {String} name project name
+ * @param {String} target target
+ */
+function buildSubProjectTarget(name, target) {
+    child_process.execFileSync("tb.exe", ["-c", project.getConfig(), "-t", target], 
+        {cwd: project.getDirectory() + "\\" + name});
+}
+
 function build() {
     console.log("Building Npackd C++................");
 
@@ -79,7 +90,11 @@ function build() {
     buildSubProject(name);
     system.zip(myDir + "\\" + name + "\\build\\" + config + "\\dist", 
         d + "\\Npackd-" + version + ".zip");
-    
+    buildSubProjectTarget(name, "msi");
+    fs.mkdirSync(myDir + "\\" + name + "\\build\\" + config + "\\installer", { recursive: true });
+    fs.copyFileSync(myDir + "\\" + name + "\\build\\" + config + "\\installer\\Npackd.msi", 
+        myDir + "\\" + name + "\\build\\" + config + "\\installer\\Npackd.msi");
+
     // TODO: exchndl.dll, mgwhelp.dll, dbghelp.dll, symsrv.dll, symsrv.yes, xxx.map
     // TODO: release on Github
 
