@@ -24,6 +24,9 @@ void WellKnownProgramsThirdPartyPM::scanDotNet(
     if (err.isEmpty()) {
         std::vector<QString> entries = wr.list(&err);
         if (err.isEmpty()) {
+            // this should make the search more deterministic
+            std::sort(entries.begin(), entries.end());
+
             for (auto& v_: entries) {
                 Version v;
                 if (v_.startsWith("v") && v.setVersion(
@@ -234,6 +237,10 @@ void WellKnownProgramsThirdPartyPM::detectJRE(
             "Software\\JavaSoft\\Java Runtime Environment", !w64bit, KEY_READ);
     if (err.isEmpty()) {
         std::vector<QString> entries = jreWR.list(&err);
+
+        // this should make the search more deterministic
+        std::sort(entries.begin(), entries.end());
+
         for (auto& v_: entries) {
             v_ = v_.replace('_', '.');
             Version v;
@@ -284,6 +291,10 @@ void WellKnownProgramsThirdPartyPM::detectPython(std::vector<InstalledPackageVer
             "Software\\Python\\PythonCore", !w64bit, KEY_READ);
     if (err.isEmpty()) {
         std::vector<QString> entries = pythonWR.list(&err);
+
+        // this should make the search more deterministic
+        std::sort(entries.begin(), entries.end());
+
         for (auto& v_: entries) {
             if (v_.endsWith("-32")) {
                 if (w64bit)
@@ -343,6 +354,10 @@ void WellKnownProgramsThirdPartyPM::detectJDK(std::vector<InstalledPackageVersio
             !w64bit, KEY_READ);
     if (err.isEmpty()) {
         std::vector<QString> entries = wr.list(&err);
+
+        // this should make the search more deterministic
+        std::sort(entries.begin(), entries.end());
+
         if (err.isEmpty()) {
             for (auto& v_: entries) {
                 WindowsRegistry r;

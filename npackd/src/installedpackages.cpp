@@ -1108,6 +1108,10 @@ QString InstalledPackages::readRegistryDatabase()
         err = "";
     } else if (err.isEmpty()) {
         std::vector<QString> entries = packagesWR.list(&err);
+
+        // this should make the search more deterministic
+        std::sort(entries.begin(), entries.end());
+
         for (auto& name: entries) {
             int pos = name.lastIndexOf("-");
             if (pos <= 0)
@@ -1212,6 +1216,10 @@ QString InstalledPackages::findPath_npackdcl(const Dependency& dep)
         Version found = Version::EMPTY;
 
         std::vector<QString> entries = packagesWR.list(&err);
+
+        // this should make the search more deterministic
+        std::sort(entries.begin(), entries.end());
+
         for (auto& name: entries) {
             int pos = name.lastIndexOf("-");
             if (pos <= 0)

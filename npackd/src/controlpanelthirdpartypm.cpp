@@ -68,6 +68,10 @@ void ControlPanelThirdPartyPM::
         fullPath += "\\" + path;
 
         std::vector<QString> entries = wr.list(&err);
+
+        // this should make the search more deterministic
+        std::sort(entries.begin(), entries.end());
+
         for (auto& e: entries) {
             WindowsRegistry k;
             err = k.open(wr, e, KEY_READ);
