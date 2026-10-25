@@ -51,7 +51,7 @@ function setCommonFlags() {
     defines.push("_UNICODE");
     defines.push("_WIN32_WINNT=0x0601");
     defines.push("NOMINMAX");
-    defines.push("DNDEBUG");
+    defines.push("NDEBUG");
     defines.push("NPACKD_ADMIN=1");
     defines.push("NPACKD_VERSION=\"" + version + "\"");
 

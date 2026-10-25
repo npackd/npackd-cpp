@@ -8,6 +8,26 @@ function configure() {
     project.setVariable("TYPE", "generic");
 }
 
+/**
+ * Cleans a sub-project.
+ * 
+ * @param {String} name project name
+ */
+function cleanSubProject(name) {
+    child_process.execFileSync("tb.exe", ["--clean", "-c", project.getConfig()], 
+        {cwd: project.getDirectory() + "\\" + name});
+}
+
+/**
+ * Builds a sub-project.
+ * 
+ * @param {String} name project name
+ */
+function buildSubProject(name) {
+    child_process.execFileSync("tb.exe", ["-c", project.getConfig(), "-t", "all"], 
+        {cwd: project.getDirectory() + "\\" + name});
+}
+
 function build() {
     console.log("Building Npackd C++................");
 
@@ -20,52 +40,44 @@ function build() {
     console.log(version);
 
     var config = project.getConfig();
-    var d = project.getDirectory() + "\\build\\" + config + "\\dist";
+    var myDir = project.getDirectory();
+    var d = myDir + "\\build\\" + config + "\\dist";
     fs.mkdirSync(d, { recursive: true });
 
     var name = "clu";
     console.log("We are building " + name + "................");
-    var p = new Project(project.getDirectory() + "\\" + name);
-    p.setConfig(project.getConfig());
-    p.build("all");
-    fs.mkdirSync(p.getDirectory() + "\\build\\" + config + "\\installer", { recursive: true });
-    system.zip(p.getDirectory() + "\\build\\" + config + "\\dist", 
+    cleanSubProject(name);
+    buildSubProject(name);
+    system.zip(myDir + "\\" + name + "\\build\\" + config + "\\dist", 
         d + "\\CLU-" + version + ".zip");
 
     var name = "npackd";
     console.log("We are building " + name + "................");
-    var p = new Project(project.getDirectory() + "\\" + name);
-    p.setConfig(project.getConfig());
-    p.build("all");
+    cleanSubProject(name);
+    buildSubProject(name);
 
     var name = "npackdcl";
     console.log("We are building " + name + "................");
-    var p = new Project(project.getDirectory() + "\\" + name);
-    p.setConfig(project.getConfig());
-    p.build("msi");
-    fs.mkdirSync(p.getDirectory() + "\\build\\" + config + "\\installer", { recursive: true });
-    system.zip(p.getDirectory() + "\\build\\" + config + "\\dist", 
+    cleanSubProject(name);
+    buildSubProject(name);
+    system.zip(myDir + "\\" + name + "\\build\\" + config + "\\dist", 
         d + "\\NpackdCL-" + version + ".zip");
 
     var name = "npackdcl_ftests";
     console.log("We are building " + name + "................");
-    var p = new Project(project.getDirectory() + "\\" + name);
-    p.setConfig(project.getConfig());
-    p.build("all");
+    cleanSubProject(name);
+    buildSubProject(name);
     
     var name = "npackdcl_tests";
     console.log("We are building " + name + "................");
-    var p = new Project(project.getDirectory() + "\\" + name);
-    p.setConfig(project.getConfig());
-    p.build("all");
+    cleanSubProject(name);
+    buildSubProject(name);
     
     var name = "npackdg";
     console.log("We are building " + name + "................");
-    var p = new Project(project.getDirectory() + "\\" + name);
-    p.setConfig(project.getConfig());
-    p.build("msi");
-    fs.mkdirSync(p.getDirectory() + "\\build\\" + config + "\\installer", { recursive: true });
-    system.zip(p.getDirectory() + "\\build\\" + config + "\\dist", 
+    cleanSubProject(name);
+    buildSubProject(name);
+    system.zip(myDir + "\\" + name + "\\build\\" + config + "\\dist", 
         d + "\\Npackd-" + version + ".zip");
     
     // TODO: exchndl.dll, mgwhelp.dll, dbghelp.dll, symsrv.dll, symsrv.yes, xxx.map
