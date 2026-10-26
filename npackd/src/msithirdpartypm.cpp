@@ -15,6 +15,13 @@ MSIThirdPartyPM::MSIThirdPartyPM()
     detectionPrefix = "msi:";
 }
 
+bool MSIThirdPartyPM::is64Bit(const QString& guid) {
+    WindowsRegistry k;
+    return !k.open(HKEY_LOCAL_MACHINE,
+                "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" +
+                guid, false, KEY_READ).isEmpty();
+}
+
 void MSIThirdPartyPM::scan(Job* job,
         std::vector<InstalledPackageVersion *> *installed,
         Repository *rep) const
@@ -97,7 +104,7 @@ void MSIThirdPartyPM::scan(Job* job,
 
         Package* p = new Package(pv->package, title);
         p->description = p->title;
-
+        
         QString publisher = WPMUtils::getMSIProductAttribute(guid,
                 INSTALLPROPERTY_PUBLISHER, &err);
         if (err.isEmpty() && !publisher.isEmpty())
@@ -191,6 +198,9 @@ void MSIThirdPartyPM::scan(Job* job,
                         arg(guid);
             }
         }
+
+        if (!p->is64Bit() && is64Bit(guid))
+            p->title += " (64 bit)";
 
         rep->savePackage(p, true);
         delete p;

@@ -10,6 +10,7 @@
  */
 class MSIThirdPartyPM: public AbstractThirdPartyPM
 {
+    static bool is64Bit(const QString& guid);
 public:
     /**
      * @brief -
