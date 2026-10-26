@@ -92,6 +92,12 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
 {
     // see http://msdn.microsoft.com/en-us/library/aa372105(v=vs.85).aspx
 
+    // some entries are missing "DisplayName". Most of them can be ignored.
+    QString err;
+    QString title = k.get("DisplayName", &err);
+    if (!err.isEmpty() || title.isEmpty())
+        return;
+
     // find the package name
     QString package = keyName;
     package.replace('.', '_');
@@ -101,7 +107,6 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     // find the version number
     bool versionFound = false;
     Version version;
-    QString err;
     QString version_ = k.get("DisplayVersion", &err);
     if (err.isEmpty()) {
         if (version.setVersion(version_)) {
@@ -151,10 +156,6 @@ void ControlPanelThirdPartyPM::detectOneControlPanelProgram(
     }
 
     std::unique_ptr<Package> p(new Package(package, package));
-
-    QString title = k.get("DisplayName", &err);
-    if (!err.isEmpty() || title.isEmpty())
-        title = keyName;
 
     if (this->cleanPackageTitles) {
         if (title.endsWith(version.getVersionString())) {
