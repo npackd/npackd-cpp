@@ -9,21 +9,13 @@ function configure() {
 }
 
 /**
- * Cleans a sub-project.
+ * Re-build a sub-project.
  * 
  * @param {String} name project name
  */
-function cleanSubProject(name) {
-    child_process.execFileSync("tb.exe", ["--clean", "-c", project.getConfig()], 
+function rebuildSubProject(name) {
+    child_process.execFileSync("tb.exe", ["--configure", "-c", project.getConfig()], 
         {cwd: project.getDirectory() + "\\" + name});
-}
-
-/**
- * Builds a sub-project.
- * 
- * @param {String} name project name
- */
-function buildSubProject(name) {
     child_process.execFileSync("tb.exe", ["-c", project.getConfig(), "-t", "all"], 
         {cwd: project.getDirectory() + "\\" + name});
 }
@@ -50,50 +42,53 @@ function build() {
     version = version.trim();
     console.log(version);
 
+    var mingw = "C:\\msys64\\mingw64";
+
     var config = project.getConfig();
     var myDir = project.getDirectory();
     var d = myDir + "\\build\\" + config + "\\dist";
     fs.mkdirSync(d, { recursive: true });
 
     var name = "clu";
+    var dist = myDir + "\\" + name + "\\build\\" + config + "\\dist";
     console.log("We are building " + name + "................");
-    cleanSubProject(name);
-    buildSubProject(name);
-    system.zip(myDir + "\\" + name + "\\build\\" + config + "\\dist", 
-        d + "\\CLU-" + version + ".zip");
+    rebuildSubProject(name);
+    system.zip(dist, d + "\\CLU-debug-" + version + ".zip");
+    child_process.execFileSync(mingw + "\\bin\\strip.exe", [dist + "\\clu.exe"]);
+    system.zip(dist, d + "\\CLU-" + version + ".zip");
 
     var name = "npackd";
     console.log("We are building " + name + "................");
-    cleanSubProject(name);
-    buildSubProject(name);
+    rebuildSubProject(name);
 
     var name = "npackdcl";
+    dist = myDir + "\\" + name + "\\build\\" + config + "\\dist";
     console.log("We are building " + name + "................");
-    cleanSubProject(name);
-    buildSubProject(name);
-    system.zip(myDir + "\\" + name + "\\build\\" + config + "\\dist", 
-        d + "\\NpackdCL-" + version + ".zip");
+    rebuildSubProject(name);
+    system.zip(dist, 
+        d + "\\NpackdCL-debug-" + version + ".zip");
+    child_process.execFileSync(mingw + "\\bin\\strip.exe", [dist + "\\npackdcl.exe"]);
+    system.zip(dist, d + "\\NpackdCL-" + version + ".zip");
 
     var name = "npackdcl_ftests";
     console.log("We are building " + name + "................");
-    cleanSubProject(name);
-    buildSubProject(name);
+    rebuildSubProject(name);
     
     var name = "npackdcl_tests";
     console.log("We are building " + name + "................");
-    cleanSubProject(name);
-    buildSubProject(name);
+    rebuildSubProject(name);
     
     var name = "npackdg";
+    dist = myDir + "\\" + name + "\\build\\" + config + "\\dist";
     console.log("We are building " + name + "................");
-    cleanSubProject(name);
-    buildSubProject(name);
-    system.zip(myDir + "\\" + name + "\\build\\" + config + "\\dist", 
-        d + "\\Npackd-" + version + ".zip");
+    rebuildSubProject(name);
+    system.zip(dist, d + "\\Npackd-debug-" + version + ".zip");
+    child_process.execFileSync(mingw + "\\bin\\strip.exe", [dist + "\\npackdg.exe"]);
+    system.zip(dist, d + "\\Npackd-" + version + ".zip");
     buildSubProjectTarget(name, "msi");
     fs.mkdirSync(myDir + "\\" + name + "\\build\\" + config + "\\installer", { recursive: true });
-    fs.copyFileSync(myDir + "\\" + name + "\\build\\" + config + "\\installer\\Npackd.msi", 
-        myDir + "\\" + name + "\\build\\" + config + "\\installer\\Npackd.msi");
+    fs.copyFileSync(myDir + "\\" + name + "\\build\\" + config + "\\installer\\npackdg.msi", 
+        d + "\\Npackd.msi");
 
     // TODO: exchndl.dll, mgwhelp.dll, dbghelp.dll, symsrv.dll, symsrv.yes, xxx.map
     // TODO: release on Github
