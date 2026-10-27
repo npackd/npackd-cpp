@@ -2,7 +2,7 @@
 
 #include <QLoggingCategory>
 
-#include "wuapi.h"
+#include <wuapi.h>
 #include "wpmutils.h"
 #include "comobject.h"
 
