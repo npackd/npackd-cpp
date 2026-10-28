@@ -1,6 +1,8 @@
 // @ts-check
 /// <reference path="../../super/tb/install/builtins.js"/>
 
+system.include("..\\tb_common.js");
+
 function configure() {
     project.setVariable("NAME", "npackdcl");
     project.setVariable("TYPE", "program");
@@ -10,5 +12,5 @@ function configure() {
     project.setVariable("DEPENDENCIES", ["npackd"]);
     project.setVariable("QT_MOC_FILES", ["app.h"]);
 
-    system.include("..\\tb_common.js");
+    setCommonFlags();
 }

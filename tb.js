@@ -75,8 +75,10 @@ function build() {
     rebuildSubProject(name);
     
     var name = "npackdcl_tests";
+    dist = myDir + "\\" + name + "\\build\\" + config + "\\dist";
     console.log("We are building " + name + "................");
     rebuildSubProject(name);
+    //child_process.execFileSync(dist + "\\npackdcl_tests.exe");
     
     var name = "npackdg";
     dist = myDir + "\\" + name + "\\build\\" + config + "\\dist";

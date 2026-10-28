@@ -160,5 +160,3 @@ function setCommonFlags() {
         project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
     }
 }
-
-setCommonFlags();

@@ -1,6 +1,8 @@
 // @ts-check
 /// <reference path="../../super/tb/install/builtins.js"/>
 
+system.include("..\\tb_common.js");
+
 function configure() {
     var static_ = project.getConfig().indexOf("static") >= 0;
 
@@ -34,5 +36,5 @@ function configure() {
         "packageitemmodel.h", "packageversionform.h", "progresstree2.h", "repositoriesitemmodel.h",
         "visiblejobs.h", "settingsframe.h"]);
 
-    system.include("..\\tb_common.js");
+    setCommonFlags();
 }
