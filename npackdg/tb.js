@@ -1,5 +1,6 @@
 // @ts-check
 /// <reference path="../../super/tb/install/builtins.js"/>
+/// <reference path="../tb_common.js"/>
 
 system.include("..\\tb_common.js");
 
