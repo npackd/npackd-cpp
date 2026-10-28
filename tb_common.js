@@ -1,12 +1,13 @@
 // @ts-check
 /// <reference path="../super/tb/install/builtins.js"/>
 
+var mingw = "C:\\msys64\\ucrt64";
+var qt_version = 6;
+
 function setCommonFlags() {
     project.setVariable("MODULES", ["qt", "msi"]);
 
     var static_ = project.getConfig().indexOf("static") >= 0;
-
-    var mingw = "C:\\msys64\\mingw64";
 
     var bin_dir = mingw + "\\bin";
     project.setVariable("GCC_BIN_DIR", bin_dir);
@@ -22,7 +23,7 @@ function setCommonFlags() {
     project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
     project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
-    var qt = mingw + "\\qt5-static";
+    var qt = mingw + "\\qt" + qt_version + "-static";
     project.setVariable("QT_MOC", qt + "\\bin\\moc.exe");
     project.setVariable("QT_RCC", qt + "\\bin\\rcc.exe");
     project.setVariable("QT_LRELEASE", qt + "\\bin\\lrelease.exe");
@@ -77,8 +78,8 @@ function setCommonFlags() {
     if (static_)
         project.setVariable("PKG_CONFIG_PATH", [
             qt + "\\lib\\pkgconfig",
-            "C:\\msys64/mingw64/lib/pkgconfig",
-            "C:\\msys64/mingw64/share/pkgconfig"]);
+            mingw + "/lib/pkgconfig",
+            mingw + "/share/pkgconfig"]);
 
     /** @type Array<String> */
     var libs_cflags;
@@ -111,21 +112,20 @@ function setCommonFlags() {
     }
     project.setVariable("CFLAGS", cflags);
 
-    /** @type Array<String> */
-    var libs = project.getLibraries();
-
-    project.findPkgConfigLibrary("Qt5WinExtras", { static: static_ });
-    project.findPkgConfigLibrary("Qt5Gui", { static: static_ });
-    project.findPkgConfigLibrary("Qt5Svg", { static: static_ });
-    project.findPkgConfigLibrary("Qt5Widgets", { static: static_ });
-    project.findPkgConfigLibrary("Qt5Sql", { static: static_ });
-    project.findPkgConfigLibrary("Qt5Xml", { static: static_ });
-    project.findPkgConfigLibrary("Qt5Core", { static: static_ });
-    project.findPkgConfigLibrary("Qt5Test", { static: static_ });
+    if (qt_version <= 5) {
+        project.findPkgConfigLibrary("Qt" + qt_version + "WinExtras", { static: static_ });
+        project.findPkgConfigLibrary("Qt" + qt_version + "Gui", { static: static_ });
+        project.findPkgConfigLibrary("Qt" + qt_version + "Svg", { static: static_ });
+        project.findPkgConfigLibrary("Qt" + qt_version + "Widgets", { static: static_ });
+        project.findPkgConfigLibrary("Qt" + qt_version + "Sql", { static: static_ });
+        project.findPkgConfigLibrary("Qt" + qt_version + "Xml", { static: static_ });
+        project.findPkgConfigLibrary("Qt" + qt_version + "Core", { static: static_ });
+        project.findPkgConfigLibrary("Qt" + qt_version + "Test", { static: static_ });
+    }
     if (static_) {
         project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static_ });
 
-        var qt_plugins = qt + "\\share\\qt5\\plugins\\";
+        var qt_plugins = qt + "\\share\\qt" + qt_version + "\\plugins\\";
 
         project.setLibraryPath("qwindows", qt_plugins + "platforms\\libqwindows.a");
         project.setLibraryPath("qwindowsvistastyle", qt_plugins + "styles\\libqwindowsvistastyle.a");
@@ -141,22 +141,22 @@ function setCommonFlags() {
         project.setLibraryPath("qsvg", qt_plugins + "imageformats\\libqsvg.a");
         project.setLibraryPath("qtlibjpeg", qt + "\\lib\\libqtlibjpeg.a");
 
-        project.addLibraryDependency("Qt5FontDatabaseSupport", "freetype");
-        project.addLibraryDependency("Qt5FontDatabaseSupport", "Qt5Gui");
+        project.addLibraryDependency("Qt" + qt_version + "FontDatabaseSupport", "freetype");
+        project.addLibraryDependency("Qt" + qt_version + "FontDatabaseSupport", "Qt" + qt_version + "Gui");
 
-        project.addLibraryDependency("qwindows", "Qt5FontDatabaseSupport");
-        project.addLibraryDependency("qwindows", "Qt5EventDispatcherSupport");
+        project.addLibraryDependency("qwindows", "Qt" + qt_version + "FontDatabaseSupport");
+        project.addLibraryDependency("qwindows", "Qt" + qt_version + "EventDispatcherSupport");
         project.addLibraryDependency("qwindows", "Wtsapi32");
-        project.addLibraryDependency("qwindows", "Qt5ThemeSupport");
-        project.addLibraryDependency("qwindows", "Qt5VulkanSupport");
-        project.addLibraryDependency("qwindows", "Qt5WindowsUIAutomationSupport");
+        project.addLibraryDependency("qwindows", "Qt" + qt_version + "ThemeSupport");
+        project.addLibraryDependency("qwindows", "Qt" + qt_version + "VulkanSupport");
+        project.addLibraryDependency("qwindows", "Qt" + qt_version + "WindowsUIAutomationSupport");
         project.addLibraryDependency("qjpeg", "qtlibjpeg");
-        project.addLibraryDependency("qsvg", "Qt5Svg");
-        project.addLibraryDependency("qsqlite", "Qt5Sql");
+        project.addLibraryDependency("qsvg", "Qt" + qt_version + "Svg");
+        project.addLibraryDependency("qsqlite", "Qt" + qt_version + "Sql");
     } else {
-        project.findPkgConfigLibrary("quazip1-qt5", { static: static_ });
+        project.findPkgConfigLibrary("quazip1-qt" + qt_version + "", { static: static_ });
 
-        var qt_plugins = qt + "\\share\\qt5\\plugins\\";
+        var qt_plugins = qt + "\\share\\qt" + qt_version + "\\plugins\\";
         project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
     }
 }
