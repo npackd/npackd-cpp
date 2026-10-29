@@ -1,7 +1,10 @@
 // @ts-check
 /// <reference path="../../super/tb/install/builtins.js"/>
+/// <reference path="../tb_common.js"/>
 
-var cmake = "C:\\msys64\\mingw64\\bin\\cmake.exe";
+system.include("..\\tb_common.js");
+
+var cmake = mingw + "\\bin\\cmake.exe";
 var configDir = project.getDirectory() + "\\build\\" + project.getConfig();
 
 function configure() {
@@ -9,26 +12,28 @@ function configure() {
     project.setVariable("NAME", "quazip");
     child_process.execFileSync(cmake, ["-GNinja", "-S", project.getDirectory() + "\\quazip",
         "-B", configDir,
-        "-DCMAKE_MAKE_PROGRAM=C:/msys64/mingw64/bin/ninja.exe",
-        "-DCMAKE_C_COMPILER=C:/msys64/mingw64/bin/gcc.exe",
-        "-DCMAKE_CXX_COMPILER=C:/msys64/mingw64/bin/g++.exe",
+        "-DCMAKE_MAKE_PROGRAM=" + mingw + "/bin/ninja.exe",
+        "-DCMAKE_C_COMPILER=" + mingw + "/bin/gcc.exe",
+        "-DCMAKE_CXX_COMPILER=" + mingw + "/bin/g++.exe",
         "-DCMAKE_BUILD_TYPE=Release",
-        "-DQUAZIP_QT_MAJOR_VERSION=5",
+        "-DQUAZIP_QT_MAJOR_VERSION=" + qt_version,
         "-DQUAZIP_FETCH_LIBS=OFF",
         "-DQUAZIP_BZIP2=OFF",
         "-DBUILD_SHARED_LIBS:BOOL=OFF",
-        "-DZLIB_LIBRARY_RELEASE=C:/msys64/mingw64/lib/libz.a",
-        "-DCMAKE_PREFIX_PATH=C:/msys64/mingw64/qt5-static/lib/cmake"],
+        "-DQUAZIP_ENABLE_QTEXTCODEC:BOOL=OFF",
+        //"-DQUAZIP_USE_QT_ZLIB:BOOL=ON",
+        //"-DZLIB_LIBRARY_RELEASE=" + mingw + "/lib/libz.a",
+        "-DCMAKE_PREFIX_PATH=" + mingw + "/qt" + qt_version + "-static/lib/cmake"],
         {
             env: {
-                PATH: "C:/msys64/mingw64/bin;C:\\windows\\system32;C:\\windows", TEMP: "C:/Users2\\timle\\AppData\\Local\\Temp",
+                PATH: mingw + "/bin;C:\\windows\\system32;C:\\windows", TEMP: "C:/Users2\\timle\\AppData\\Local\\Temp",
                 // Please note that it should be C:/ and not C:\. CMake (or gcc) fails otherwise.
                 TMP: "C:/Users\\timle\\AppData\\Local\\Temp",
                 HOMEDRIVE: "C:"
             }
         });
 
-    project.setVariable("DEPENDENCIES", ["z", "Qt5Core"])
+    project.setVariable("DEPENDENCIES", ["z", "Qt" + qt_version + "Core"])
 }
 
 function build() {
@@ -36,14 +41,14 @@ function build() {
     child_process.execFileSync(cmake, ["--build", configDir],
         {
             env: {
-                PATH: "C:/msys64/mingw64/bin;C:\\windows\\system32;C:\\windows", TEMP: "C:/Users2\\timle\\AppData\\Local\\Temp",
+                PATH: mingw + "/bin;C:\\windows\\system32;C:\\windows", TEMP: "C:/Users2\\timle\\AppData\\Local\\Temp",
                 // Please note that it should be C:/ and not C:\. CMake (or gcc) fails otherwise.
                 TMP: "C:/Users\\timle\\AppData\\Local\\Temp",
                 HOMEDRIVE: "C:"
             }
         });
 
-    var src = configDir + "\\quazip\\libquazip1-qt5.a";
+    var src = configDir + "\\quazip\\libquazip1-qt" + qt_version + ".a";
     console.log("Copying " + src);
     fs.copyFileSync(src, configDir + "\\libquazip.a");
 }

@@ -154,6 +154,10 @@ function setCommonFlags() {
         project.addLibraryDependency("qjpeg", "qtlibjpeg");
         project.addLibraryDependency("qsvg", "Qt" + qt_version + "Svg");
         project.addLibraryDependency("qsqlite", "Qt" + qt_version + "Sql");
+
+        // this is kinda strange. Qt should have its own libz and QuaZIP should depend on it,
+        // but somehow the linker find missing references to libz from Qt6Core.
+        project.addLibraryDependency("Qt" + qt_version + "Core", "z");
     } else {
         project.findPkgConfigLibrary("quazip1-qt" + qt_version + "", { static: static_ });
 

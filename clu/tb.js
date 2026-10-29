@@ -10,11 +10,11 @@ function configure() {
 
     var static_ = project.getConfig().indexOf("static") >= 0;
 
-    var deps = ["npackd", "Qt5Core"];
+    var deps = ["npackd", "Qt" + qt_version + "Core"];
     if (static_) {
         deps.push("quazip");
     } else {
-        deps.push("quazip1-qt5");
+        deps.push("quazip1-qt" + qt_version);
     }
     project.setVariable("DEPENDENCIES", deps);
 
