@@ -1464,7 +1464,9 @@ QString PackageVersion::saveFiles(const QDir& d)
         if (d.mkpath(fullDir)) {
             QFile file(fullPath);
             if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-                file.write(f->content.toUtf8());
+                if (file.write(f->content.toUtf8()) == -1)
+                    res = QString(QObject::tr("Writing to %1 failed")).arg(
+                            fullPath);
                 file.close();
             } else {
                 res = QString(QObject::tr("Could not create file %1")).arg(

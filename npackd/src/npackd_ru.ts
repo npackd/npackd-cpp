@@ -2482,32 +2482,32 @@ p, li { white-space: pre-wrap; }
         <translation>%L1 файлы</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1470"/>
+        <location filename="packageversion.cpp" line="1472"/>
         <source>Could not create file %1</source>
         <translation>Невозможно создать файл %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1475"/>
+        <location filename="packageversion.cpp" line="1477"/>
         <source>Could not create directory %1</source>
         <translation>Невозможно создать директорию %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1491"/>
+        <location filename="packageversion.cpp" line="1493"/>
         <source>installed</source>
         <translation>уставлено</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1495"/>
+        <location filename="packageversion.cpp" line="1497"/>
         <source>updateable</source>
         <translation>доступна свежая версия</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1497"/>
+        <location filename="packageversion.cpp" line="1499"/>
         <source>obsolete</source>
         <translation>устаревший</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1505"/>
+        <location filename="packageversion.cpp" line="1507"/>
         <source>locked</source>
         <translation>заблокированный</translation>
     </message>
@@ -2594,7 +2594,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Неверный MSI GUID для %1: %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1749"/>
+        <location filename="packageversion.cpp" line="1751"/>
         <source>Executing the stop script</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3223,7 +3223,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1586"/>
+        <location filename="packageversion.cpp" line="1468"/>
+        <source>Writing to %1 failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="packageversion.cpp" line="1588"/>
         <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3436,7 +3441,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1531"/>
+        <location filename="packageversion.cpp" line="1533"/>
         <source>%1 is missing or is not a directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3577,7 +3582,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1760"/>
+        <location filename="packageversion.cpp" line="1762"/>
         <source>Acquire the installation script lock</source>
         <translation type="unfinished"></translation>
     </message>
