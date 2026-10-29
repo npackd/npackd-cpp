@@ -3,8 +3,6 @@
 #include <msi.h>
 
 #include <QTemporaryFile>
-#include <QXmlSimpleReader>
-#include <QXmlInputSource>
 
 #include "downloader.h"
 #include "repository.h"

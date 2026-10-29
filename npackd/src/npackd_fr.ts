@@ -1922,32 +1922,32 @@ p, li { white-space: pre-wrap; }
         <translation>%L1 fichiers</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1472"/>
+        <location filename="packageversion.cpp" line="1470"/>
         <source>Could not create file %1</source>
         <translation>Impossible de créer le fichier %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1477"/>
+        <location filename="packageversion.cpp" line="1475"/>
         <source>Could not create directory %1</source>
         <translation>Impossible de créer le dossier %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1493"/>
+        <location filename="packageversion.cpp" line="1491"/>
         <source>installed</source>
         <translation>installé</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1497"/>
+        <location filename="packageversion.cpp" line="1495"/>
         <source>updateable</source>
         <translation>pouvant être mis à jour</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1499"/>
+        <location filename="packageversion.cpp" line="1497"/>
         <source>obsolete</source>
         <translation>obsolète</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1507"/>
+        <location filename="packageversion.cpp" line="1505"/>
         <source>locked</source>
         <translation>bloqué</translation>
     </message>
@@ -2034,7 +2034,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Le GUID MSI pour %1 est invalide : %2</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1751"/>
+        <location filename="packageversion.cpp" line="1749"/>
         <source>Executing the stop script</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2102,29 +2102,29 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Analyse du contenu</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="170"/>
+        <location filename="repository.cpp" line="168"/>
         <source>Invalid repository specification version: %1</source>
         <translation>La version de spécification du dépôt est invalide : %1</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="175"/>
+        <location filename="repository.cpp" line="173"/>
         <source>Incompatible repository specification version: %1.</source>
         <translation>La version de spécification du dépôt est incompatible : %1.</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="176"/>
+        <location filename="repository.cpp" line="174"/>
         <source>Please download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
         <oldsource>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</oldsource>
         <translation type="unfinished">Veuillez télécharger une version plus récente depuis http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="190"/>
-        <location filename="repository.cpp" line="197"/>
+        <location filename="repository.cpp" line="188"/>
+        <location filename="repository.cpp" line="195"/>
         <source>Empty category tag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="205"/>
+        <location filename="repository.cpp" line="203"/>
         <source>Empty sub-category</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2513,7 +2513,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1588"/>
+        <location filename="packageversion.cpp" line="1586"/>
         <source>Expected one package version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2973,7 +2973,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1533"/>
+        <location filename="packageversion.cpp" line="1531"/>
         <source>%1 is missing or is not a directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3119,7 +3119,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1762"/>
+        <location filename="packageversion.cpp" line="1760"/>
         <source>Acquire the installation script lock</source>
         <translation type="unfinished"></translation>
     </message>

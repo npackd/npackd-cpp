@@ -868,7 +868,7 @@ void WPMUtils::normalizePath2(QString* path, bool lowerCase)
 
     if (path->endsWith('\\'))
         path->chop(1);
-    if (path != QStringLiteral("..") && path->endsWith('.'))
+    if (*path != QStringLiteral("..") && path->endsWith('.'))
         path->chop(1);
 }
 

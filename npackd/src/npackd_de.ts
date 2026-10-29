@@ -1669,7 +1669,7 @@ p, li { white-space: pre-wrap; }
         <translation>%1. Gesamte Ausgabe wurde in %2 gespeichert</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1751"/>
+        <location filename="packageversion.cpp" line="1749"/>
         <source>Executing the stop script</source>
         <translation>Führe das Skript zum Stoppen aus</translation>
     </message>
@@ -1857,32 +1857,32 @@ p, li { white-space: pre-wrap; }
         <translation>%L1 Dateien</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1472"/>
+        <location filename="packageversion.cpp" line="1470"/>
         <source>Could not create file %1</source>
         <translation>Kann Datei %1 nicht erstellen</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1477"/>
+        <location filename="packageversion.cpp" line="1475"/>
         <source>Could not create directory %1</source>
         <translation>Kann Verzeichnis %1 nicht erstellen</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1493"/>
+        <location filename="packageversion.cpp" line="1491"/>
         <source>installed</source>
         <translation>installiert</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1497"/>
+        <location filename="packageversion.cpp" line="1495"/>
         <source>updateable</source>
         <translation>aktualisierbar</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1499"/>
+        <location filename="packageversion.cpp" line="1497"/>
         <source>obsolete</source>
         <translation>veraltet</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1507"/>
+        <location filename="packageversion.cpp" line="1505"/>
         <source>locked</source>
         <translation>gesperrt</translation>
     </message>
@@ -2062,7 +2062,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Analysiere den Inhalt</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="170"/>
+        <location filename="repository.cpp" line="168"/>
         <source>Invalid repository specification version: %1</source>
         <translation>Ungültige Repository-Spezifikationsversion: %1</translation>
     </message>
@@ -2072,24 +2072,24 @@ p, li { white-space: pre-wrap; }
         <translation>Fehler in dem Kategorie-Tag für %1: %2</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="175"/>
+        <location filename="repository.cpp" line="173"/>
         <source>Incompatible repository specification version: %1.</source>
         <translation>Inkompatible Repository-Spezifikationsversion: %1.</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="176"/>
+        <location filename="repository.cpp" line="174"/>
         <source>Please download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
         <oldsource>Plese download a newer version of Npackd from https://github.com/tim-lebedkov/npackd/wiki/Downloads</oldsource>
         <translation>Bitte laden Sie eine neuere Version von Npackd von https://github.com/tim-lebedkov/npackd/wiki/Downloads herunter</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="190"/>
-        <location filename="repository.cpp" line="197"/>
+        <location filename="repository.cpp" line="188"/>
+        <location filename="repository.cpp" line="195"/>
         <source>Empty category tag</source>
         <translation>Leerer Kategorie-Tag</translation>
     </message>
     <message>
-        <location filename="repository.cpp" line="205"/>
+        <location filename="repository.cpp" line="203"/>
         <source>Empty sub-category</source>
         <translation>Leere Unterkategorie</translation>
     </message>
@@ -2716,7 +2716,7 @@ p, li { white-space: pre-wrap; }
         <translation>Lösche das Verzeichnis %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1588"/>
+        <location filename="packageversion.cpp" line="1586"/>
         <source>Expected one package version</source>
         <translation>Eine Paketversion wurde erwartet</translation>
     </message>
@@ -2935,7 +2935,7 @@ p, li { white-space: pre-wrap; }
         <translation>Sende das Startsignal an den Dienst %1</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1533"/>
+        <location filename="packageversion.cpp" line="1531"/>
         <source>%1 is missing or is not a directory</source>
         <translation>%1 fehlt oder ist kein Verzeichnis</translation>
     </message>
@@ -3148,7 +3148,7 @@ p, li { white-space: pre-wrap; }
         <translation>Erlange den Installationsskript-Lock</translation>
     </message>
     <message>
-        <location filename="packageversion.cpp" line="1762"/>
+        <location filename="packageversion.cpp" line="1760"/>
         <source>Acquire the installation script lock</source>
         <translation>Erlange den Installationsskript-Lock</translation>
     </message>

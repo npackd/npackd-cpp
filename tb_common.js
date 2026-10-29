@@ -10,6 +10,9 @@ function setCommonFlags() {
     var static_ = project.getConfig().indexOf("static") >= 0;
 
     var bin_dir = mingw + "\\bin";
+
+    project.vars.LIBRARY_PATH = [mingw + "\\qt" + qt_version + "-static\\lib"];
+
     project.setVariable("GCC_BIN_DIR", bin_dir);
     project.setVariable("AR", bin_dir + "\\ar.exe");
     project.setVariable("CC", bin_dir + "\\gcc.exe");
@@ -24,11 +27,12 @@ function setCommonFlags() {
     project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
     var qt = mingw + "\\qt" + qt_version + "-static";
-    project.setVariable("QT_MOC", qt + "\\bin\\moc.exe");
-    project.setVariable("QT_RCC", qt + "\\bin\\rcc.exe");
+    project.setVariable("QMAKE", qt + "\\bin\\qmake.exe");
+    project.setVariable("QT_MOC", qt + "\\share\\qt" + qt_version + "\\bin\\moc.exe");
+    project.setVariable("QT_RCC", qt + "\\share\\qt" + qt_version + "\\bin\\rcc.exe");
     project.setVariable("QT_LRELEASE", qt + "\\bin\\lrelease.exe");
     project.setVariable("QT_LUPDATE", qt + "\\bin\\lupdate.exe");
-    project.setVariable("QT_UIC", qt + "\\bin\\uic.exe");
+    project.setVariable("QT_UIC", qt + "\\share\\qt" + qt_version + "\\bin\\uic.exe");
 
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
     version = version.split('\n')[0];
@@ -99,7 +103,7 @@ function setCommonFlags() {
     cflags.push("-g", "-Os", "-Wall", "-Wwrite-strings",
         "-Wextra", "-Wno-unused-parameter", "-Wno-cast-function-type",
         "-Wduplicated-cond", "-Wduplicated-branches", "-Wlogical-op", "-Wno-error=cast-qual",
-        "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++11");
+        "-Wno-unused-local-typedefs", "-Wno-unused-variable", "-std=gnu++17");
 
     if (project.getConfig().indexOf("debug") >= 0) {
         // -O0 outputs no warnings about uninitialized variables
@@ -112,16 +116,13 @@ function setCommonFlags() {
     }
     project.setVariable("CFLAGS", cflags);
 
-    if (qt_version <= 5) {
-        project.findPkgConfigLibrary("Qt" + qt_version + "WinExtras", { static: static_ });
-        project.findPkgConfigLibrary("Qt" + qt_version + "Gui", { static: static_ });
-        project.findPkgConfigLibrary("Qt" + qt_version + "Svg", { static: static_ });
-        project.findPkgConfigLibrary("Qt" + qt_version + "Widgets", { static: static_ });
-        project.findPkgConfigLibrary("Qt" + qt_version + "Sql", { static: static_ });
-        project.findPkgConfigLibrary("Qt" + qt_version + "Xml", { static: static_ });
-        project.findPkgConfigLibrary("Qt" + qt_version + "Core", { static: static_ });
-        project.findPkgConfigLibrary("Qt" + qt_version + "Test", { static: static_ });
-    }
+    project.findPrlLibrary("Qt" + qt_version + "Core", { static: static_ });
+    project.addLibraryInclude("Qt" + qt_version + "Core", qt + "\\include\\qt" + qt_version);
+    project.addLibraryInclude("Qt" + qt_version + "Core", qt + "\\include\\qt" + qt_version + "\\QtCore");
+
+    project.addLibraryInclude("Qt" + qt_version + "Xml", qt + "\\include\\qt" + qt_version + "\\QtXml");
+    project.addLibraryInclude("Qt" + qt_version + "Sql", qt + "\\include\\qt" + qt_version + "\\QtSql");
+
     if (static_) {
         project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static_ });
 

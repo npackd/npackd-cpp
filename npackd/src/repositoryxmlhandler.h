@@ -1,9 +1,7 @@
 #ifndef REPOSITORYXMLHANDLER_H
 #define REPOSITORYXMLHANDLER_H
 
-#include <QXmlDefaultHandler>
 #include <QString>
-#include <QXmlAttributes>
 #include <QXmlStreamReader>
 
 #include "license.h"
