@@ -1,7 +1,6 @@
 #include <limits>
 #include <memory>
 
-#include <QRegExp>
 #include <QProcess>
 
 #include "app.h"
