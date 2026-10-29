@@ -371,10 +371,8 @@ void UIUtils::processWithSelfUpdate(Job* job,
 
             // qCDebug(npackd) << "batch" << file.fileName();
 
-            QTextStream stream(&file);
-            stream.setCodec("UTF-8");
-            stream << WPMUtils::join(batch, "\r\n");
-            if (stream.status() != QTextStream::Ok)
+            
+            if (file.write(WPMUtils::join(batch, "\r\n").toUtf8()) == -1)
                 job->setErrorMessage("Error writing the .bat file");
             file.close();
 

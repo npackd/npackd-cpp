@@ -4,6 +4,7 @@
 <context>
     <name>AsyncDownloader</name>
     <message>
+        <location filename="asyncdownloader.cpp" line="43"/>
         <source>Connecting</source>
         <translation type="unfinished">Connexion</translation>
     </message>
@@ -11,38 +12,47 @@
 <context>
     <name>ExportRepositoryFrame</name>
     <message>
+        <location filename="exportrepositoryframe.ui" line="14"/>
         <source>Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="66"/>
         <source>Choose...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="59"/>
         <source>a non-existing directory where a new repository will be created</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="73"/>
         <source>Output directory:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="112"/>
         <source>What should be exported:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="131"/>
         <source>only the super package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="141"/>
         <source>only the selected packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="148"/>
         <source>super package and selected packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.ui" line="155"/>
         <source>super package, selected packages and binaries</source>
         <translation type="unfinished"></translation>
     </message>
@@ -50,22 +60,27 @@
 <context>
     <name>LicenseForm</name>
     <message>
+        <location filename="licenseform.ui" line="14"/>
         <source>Form</source>
         <translation>Licence</translation>
     </message>
     <message>
+        <location filename="licenseform.ui" line="56"/>
         <source>Title:</source>
         <translation>Nom :</translation>
     </message>
     <message>
+        <location filename="licenseform.ui" line="66"/>
         <source>web address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="licenseform.ui" line="69"/>
         <source>URL:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="licenseform.ui" line="112"/>
         <source>internal name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -74,15 +89,18 @@
         <translation type="vanished">URL de téléchargement :</translation>
     </message>
     <message>
+        <location filename="licenseform.ui" line="76"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
         <translation type="unfinished">Nom interne :</translation>
     </message>
     <message>
+        <location filename="licenseform.ui" line="86"/>
         <source>title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="licenseform.ui" line="99"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
@@ -90,10 +108,12 @@
 <context>
     <name>MainFrame</name>
     <message>
+        <location filename="mainframe.ui" line="14"/>
         <source>Frame</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="63"/>
         <source>S&amp;earch:</source>
         <translation>&amp;Rechercher :</translation>
     </message>
@@ -110,50 +130,62 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Saisissez ici votre recherche. Vous pouvez entrer plusieurs mots si un paquet les contient tous. La recherche est insensible à la casse. Les caractères spéciaux ne sont pas spécifiquement traités.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="99"/>
         <source>&amp;Status</source>
         <translation>&amp;Statut</translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="111"/>
         <source>show all packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="114"/>
         <source>&amp;All</source>
         <translation>&amp;Tous</translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="124"/>
         <source>show only packages with at least one version installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="127"/>
         <source>&amp;Installed</source>
         <translation>&amp;Installé</translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="134"/>
         <source>show only packages where the newest available version can be updated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="137"/>
         <source>&amp;Updateable</source>
         <translation>&amp;Mises à jour disponibles</translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="147"/>
         <source>Category:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="160"/>
         <source>package category filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="167"/>
         <source>Sub-category:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="180"/>
         <source>package sub-category filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.ui" line="85"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -165,122 +197,153 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
+        <location filename="mainwindow.ui" line="14"/>
         <source>MainWindow</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="62"/>
         <source>Package</source>
         <translation>Paquet</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="90"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="97"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="109"/>
         <source>Main toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="147"/>
         <source>&amp;Exit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="150"/>
         <source>Exits the application</source>
         <translation>Quitte l&apos;application</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="159"/>
         <source>&amp;Install</source>
         <translation>&amp;Installer</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="162"/>
         <source>Installs the selected version of a package or the newest is none is selected</source>
         <translation>Installe la version du paquet séléctionnée ou la dernière si aucune n&apos;a été vonlontairement choisie</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="165"/>
         <source>Ctrl+I</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="174"/>
         <source>U&amp;ninstall</source>
         <translation>&amp;Désinstaller</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="177"/>
         <source>Uninstalls the currently selected version of a package or the newest if none is selected</source>
         <translation>Désinstalle la version du paquet sélectionné ou la dernière si aucune n&apos;a été volontairement choisie</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="180"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="189"/>
         <source>&amp;Open web site</source>
         <translation>&amp;Ouvrir le site web</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="192"/>
         <source>Open the package web site in browser</source>
         <translation>Ouvre le site web du paquet dans le navigateur par défaut</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="195"/>
         <source>Ctrl+G</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="200"/>
         <source>&amp;Settings</source>
         <translation>&amp;Paramètres</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="203"/>
         <source>Shows program settings</source>
         <translation>Affiche les paramètres de l&apos;application</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="206"/>
         <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="215"/>
         <source>&amp;Update</source>
         <translation>&amp;Mettre à jour</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="218"/>
         <source>Updates the currently selected package to the newest available version</source>
         <translation>Met à jour la version du paquet séléctionnée vers la dernière version disponible</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="221"/>
         <source>Ctrl+U</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="226"/>
         <source>&amp;Test download site</source>
         <translation>&amp;Tester le site de téléchargement</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="229"/>
         <source>Test download site for malicious software</source>
         <translation>Teste le site de téléchargement contre les programmes malveillants</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="232"/>
         <source>Ctrl+T</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="237"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="240"/>
         <source>About the program</source>
         <translation>A propos de ce logiciel</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="243"/>
         <source>F1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="248"/>
+        <location filename="mainwindow.ui" line="251"/>
         <source>Show details</source>
         <translation>Détails</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="254"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
@@ -289,134 +352,169 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Scanner les disques locaux</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="259"/>
         <source>Reload repositories</source>
         <translation>Recharcher les dépôts</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="262"/>
         <source>Reloads the contents of all repositories</source>
         <translation>Recharge le contenu de tous les dépots</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="265"/>
         <source>F5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="270"/>
+        <location filename="mainwindow.ui" line="273"/>
         <source>Close tab</source>
         <translation>Fermer l&apos;onglet</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="276"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+F4</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="285"/>
         <source>Feedback</source>
         <translation>Retour d&apos;expérience</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="288"/>
         <source>Found a bug? Wish a new feature to be added? Your favourite program is not available? File an issue!</source>
         <translation>Vous avez trouvé un bug ? Souhaiteriez une nouvelle fonctionnalité ? Votre paquet favori n&apos;est pas disponible ? Ouvrez un ticket !</translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="291"/>
         <source>F3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="300"/>
         <source>Add package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="303"/>
         <source>Create a new package in one of the default repositories (Google account is required)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="308"/>
         <source>Open folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="311"/>
         <source>Show the content of the program folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="314"/>
         <source>Ctrl+E</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="319"/>
         <source>Choose columns...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="322"/>
         <source>choose the columns for the table with the packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="325"/>
         <source>Ctrl+M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="330"/>
         <source>Show changelog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="333"/>
         <source>opens the web page that contains the recent changes in the selected package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="336"/>
         <source>Ctrl+L</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="344"/>
         <source>Toggle toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="347"/>
         <source>shows or hides the toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="352"/>
         <source>Run</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="355"/>
         <source>executes the currently selected application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="358"/>
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="363"/>
         <source>Export...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="366"/>
         <source>exports the selected packages as a repository</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="371"/>
         <source>Check dependencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="374"/>
         <source>Checks installed packages for missing dependencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="382"/>
         <source>export user settings for the selected packages to a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="390"/>
         <source>import packages settings from a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2608"/>
+        <location filename="mainwindow.cpp" line="2635"/>
         <source>Npackd package settings (*.nps);;All Files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="379"/>
         <source>Export package settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="387"/>
         <source>Import package settings...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -424,18 +522,22 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MessageFrame</name>
     <message>
+        <location filename="messageframe.ui" line="14"/>
         <source>Frame</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="messageframe.ui" line="32"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="messageframe.ui" line="45"/>
         <source>Details</source>
         <translation>Détails</translation>
     </message>
     <message>
+        <location filename="messageframe.ui" line="52"/>
         <source>Dismiss</source>
         <translation>Fermer</translation>
     </message>
@@ -443,60 +545,79 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>PackageFrame</name>
     <message>
+        <location filename="packageframe.ui" line="14"/>
         <source>Frame</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="62"/>
         <source>Icon:</source>
         <translation>Icône :</translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="76"/>
         <source>Title:</source>
         <translation>Nom :</translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="89"/>
         <source>package title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="122"/>
         <source>Description:</source>
         <translation>Description :</translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="138"/>
         <source>package description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="151"/>
         <source>License:</source>
         <translation>Licence :</translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="161"/>
         <source>license</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="164"/>
+        <location filename="packageframe.ui" line="339"/>
+        <location filename="packageframe.ui" line="362"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="174"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
         <translation type="unfinished">Nom interne :</translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="184"/>
         <source>internal package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="194"/>
         <source>Package home page:</source>
         <oldsource>Package Home Page:</oldsource>
         <translation type="unfinished">Site officiel :</translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="207"/>
         <source>home page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="210"/>
+        <location filename="packageframe.ui" line="243"/>
+        <location filename="packageframe.ui" line="276"/>
+        <location filename="packageframe.ui" line="309"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -505,54 +626,67 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="293"/>
         <source>Category:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="306"/>
         <source>package category</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="372"/>
         <source>Versions:</source>
         <translation>Versions :</translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="388"/>
         <source>available versions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="227"/>
         <source>Change log:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="240"/>
         <source>change log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="99"/>
         <source>Screen shots:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="326"/>
         <source>Tags:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="336"/>
         <source>tags assigned to this package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="349"/>
         <source>Stars:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="359"/>
         <source>number of stars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="260"/>
         <source>Issue tracker:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.ui" line="273"/>
         <source>issue tracker</source>
         <translation type="unfinished"></translation>
     </message>
@@ -560,103 +694,128 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>PackageVersionForm</name>
     <message>
+        <location filename="packageversionform.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="53"/>
         <source>Icon:</source>
         <translation>Icône :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="67"/>
         <source>Title:</source>
         <translation>Nom :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="77"/>
         <source>package title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="87"/>
         <source>Version:</source>
         <translation>Version :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="97"/>
         <source>version number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="107"/>
         <source>Description:</source>
         <translation>Description :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="117"/>
         <source>package description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="140"/>
         <source>license</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="163"/>
         <source>installation path on disk or empty if this package version is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="183"/>
         <source>detection info or empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="193"/>
         <source>Internal name:</source>
         <oldsource>Internal Name:</oldsource>
         <translation type="unfinished">Nom interne :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="203"/>
         <source>internal package name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="213"/>
         <source>Status:</source>
         <translation>Statut :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="223"/>
         <source>status of this package version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="233"/>
         <source>Download URL:</source>
         <translation>URL de téléchargement :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="243"/>
         <source>direct download link for the package binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="263"/>
         <source>Type:</source>
         <translation>Type :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="273"/>
         <source>one-file or zip</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="283"/>
         <source>Hash sum:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="293"/>
         <source>cryptographic hash sum of the binary (either SHA-1 or SHA-256)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="333"/>
         <source>Text files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="349"/>
         <source>text files with their contents that will be created in the package directory additionally to the files provided by the downloaded binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="356"/>
         <source>Tab 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="361"/>
         <source>Tab 2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -665,23 +824,28 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">SHA1 :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="303"/>
         <source>Important files:</source>
         <oldsource>Important Files:</oldsource>
         <translation type="unfinished">Fichiers importants :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="313"/>
         <source>an entry in the start menu will be created for each important file mentioned here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="326"/>
         <source>Dependencies:</source>
         <translation>Dépendances :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="130"/>
         <source>License:</source>
         <translation>Licence :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="246"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -690,10 +854,12 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="143"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="153"/>
         <source>Installation path:</source>
         <oldsource>Installation Path:</oldsource>
         <translation type="unfinished">Chemin d&apos;installation :</translation>
@@ -703,15 +869,18 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Site officiel :</translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="173"/>
         <source>Detection info:</source>
         <oldsource>Detection Info:</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="380"/>
         <source>Command line tools:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.ui" line="390"/>
         <source>an entry in the directory %allusersprofile%NpackdCommands will be created for each command line tool mentioned here</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1706,10 +1875,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Impossible de trouver la version %2 du paquet %1</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="137"/>
         <source>Installing %1</source>
         <translation>Installation de %1</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="140"/>
         <source>Uninstalling %1</source>
         <translation>Désinstallation de %1</translation>
     </message>
@@ -1874,39 +2045,49 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Effacement des informations relatives aux versions de paquets installées dans des répertoires imbriqués</translation>
     </message>
     <message>
+        <location filename="main.cpp" line="249"/>
         <source>The 32 bit version of Npackd requires a 32 bit operating system.</source>
         <translation>La version 32-bit de Npackd requiert un système d&apos;exploitation 32-bit.</translation>
     </message>
     <message>
+        <location filename="main.cpp" line="250"/>
         <source>Please download the 64 bit version from https://github.com/tim-lebedkov/npackd/wiki/Downloads</source>
         <oldsource>Please download the 64 bit version from http://code.google.com/p/windows-package-manager/</oldsource>
         <translation type="unfinished">Veuillez télécharger la version 64-bit depuis http://code.google.com/p/windows-package-manager/</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="212"/>
         <source>Packages</source>
         <translation>Paquets</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="515"/>
+        <location filename="mainwindow.cpp" line="1039"/>
         <source>Cannot exit while jobs are running</source>
         <translation>Impossible de quitter lorsque des tâches sont en cours</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="591"/>
         <source>0 Jobs</source>
         <translation>0 Tâches</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="593"/>
         <source>1 Job (%1%, %2)</source>
         <translation>1 Tâche (%1, %2)</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="597"/>
         <source>%1 Jobs (%2%, %3)</source>
         <translation>%1 Tâches (%2, %3)</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="48"/>
         <source>Cannot find the package version %1: %2</source>
         <translation>Impossible de trouver la version de paquet %1 : %2</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="59"/>
         <source>The package %1 is locked by a currently running installation/removal.</source>
         <translation>Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
@@ -1927,14 +2108,18 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Le paquet %1 va être désinstallé. Le dossier correspondant %2 va être totalement supprimé. Il n&apos;y a aucun moyen de restaurer les fichiers.</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="144"/>
+        <location filename="uiutils.cpp" line="172"/>
         <source>Uninstall</source>
         <translation>Désinstaller</translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="308"/>
         <source>Invalid package name: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="156"/>
         <source>Installing %1 packages</source>
         <translation>Installation de %1 paquets</translation>
     </message>
@@ -1943,10 +2128,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Installation de %1 paquet(s) : %2</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="158"/>
         <source>Install</source>
         <translation>Installer</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="170"/>
         <source>Uninstalling %1 packages</source>
         <translation>Désinstallation de %1 paquets</translation>
     </message>
@@ -1963,10 +2150,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Désinstallation de %1 paquet(s) : %2 (les dossiers correspondants vont etre totalement supprimés; il n&apos;y a aucun moyen de restaurer les fichiers) et installation de %3 paquets : %4.</translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="204"/>
         <source>Install/Uninstall</source>
         <translation>Installer/Désinstaller</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="1521"/>
         <source>Error finding the newest installed version for %1: %2</source>
         <translation>Erreur lors de la recherche de la dernière version installée pour %1 : %2</translation>
     </message>
@@ -1975,10 +2164,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Initialisation</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="1856"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="1971"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
@@ -1987,18 +2178,24 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">&lt;html&gt;&lt;body&gt;Npackd %1 - gestionnaire de paquets pour Windows (R)&lt;br&gt;&lt;a href=&apos;http://code.google.com/p/windows-package-manager&apos;&gt;http://code.google.com/p/windows-package-manager&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="424"/>
+        <location filename="mainwindow.cpp" line="957"/>
         <source>Chosen changes require an update of this Npackd instance. Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="425"/>
+        <location filename="mainwindow.cpp" line="958"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="1598"/>
         <source>Reloading repositories and detecting installed software</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2032"/>
         <source>Jobs</source>
         <translation>Tâches</translation>
     </message>
@@ -2007,18 +2204,23 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Impossible de démarrer le scan. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2089"/>
         <source>Cannot reload the repositories now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Impossible de recharger les dépôts. Le paquet %1 est bloqué par une installation/désinstallation actuellement en cours.</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2251"/>
         <source>Cannot open the URL %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="messageframe.cpp" line="19"/>
         <source>Dismiss</source>
         <translation>Fermer</translation>
     </message>
     <message>
+        <location filename="messageframe.cpp" line="22"/>
+        <location filename="messageframe.cpp" line="75"/>
         <source>Dismiss (%1 seconds)</source>
         <translation>Fermer (%1 seconde(s))</translation>
     </message>
@@ -2027,34 +2229,44 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Base de données MSI</translation>
     </message>
     <message>
+        <location filename="packageframe.cpp" line="117"/>
+        <location filename="packageframe.cpp" line="136"/>
+        <location filename="packageversionform.cpp" line="85"/>
         <source>unknown</source>
         <translation>inconnu</translation>
     </message>
     <message>
+        <location filename="packageframe.cpp" line="204"/>
         <source>Installation path</source>
         <translation>Chemin d&apos;installation</translation>
     </message>
     <message>
+        <location filename="packageframe.cpp" line="212"/>
         <source>Error fetching package versions: %1</source>
         <translation>Erreur lors de la récupération des versions de paquets : %1</translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="255"/>
         <source>Icon</source>
         <translation>Icône</translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="258"/>
         <source>Title</source>
         <translation>Nom</translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="264"/>
         <source>Available</source>
         <translation>Disponible</translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="267"/>
         <source>Installed</source>
         <translation>Installé</translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="270"/>
         <source>License</source>
         <translation>Licence</translation>
     </message>
@@ -2327,10 +2539,18 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Le GUID MSI pour %1 est invalide : %2</translation>
     </message>
     <message>
+        <location filename="packageframe.cpp" line="152"/>
+        <location filename="packageframe.cpp" line="162"/>
+        <location filename="packageversionform.cpp" line="108"/>
+        <location filename="packageversionform.cpp" line="118"/>
         <source>n/a</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="455"/>
+        <location filename="clprocessor.cpp" line="554"/>
+        <location filename="clprocessor.cpp" line="580"/>
+        <location filename="clprocessor.cpp" line="586"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
@@ -2355,6 +2575,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Erreur lors du chargement du dépôt %1 : %2</translation>
     </message>
     <message>
+        <location filename="settingsframe.cpp" line="248"/>
         <source>No repositories defined</source>
         <translation>Aucun dépôt défini</translation>
     </message>
@@ -2416,6 +2637,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Il est impossible de modifier les paramètres lors du scan des disques locaux.</translation>
     </message>
     <message>
+        <location filename="settingsframe.cpp" line="284"/>
         <source>Cannot change settings now. The repositories download is running.</source>
         <translation>Il est impossible de modifier les paramètres lors du téléchargement des dépôts.</translation>
     </message>
@@ -2424,6 +2646,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Impossible de trouver les versions de paquets bloquées : %1</translation>
     </message>
     <message>
+        <location filename="settingsframe.cpp" line="223"/>
         <source>Cannot change settings now. The package %1 is locked by a currently running installation/removal.</source>
         <translation>Il est impossible de modifier les paramètres car le paquet %1 est bloqué par une installation/désinstallation en cours.</translation>
     </message>
@@ -2436,6 +2659,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Le dossier d&apos;installation n&apos;existe pas</translation>
     </message>
     <message>
+        <location filename="settingsframe.cpp" line="258"/>
         <source>%1 is not a valid repository address</source>
         <translation>%1 n&apos;est pas une adresse de dépôt valide</translation>
     </message>
@@ -2644,238 +2868,314 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Impossible de supprimer le dossier : %1</translation>
     </message>
     <message>
+        <location filename="fileloader.cpp" line="347"/>
+        <location filename="packageframe.cpp" line="306"/>
         <source>Cannot open the file %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="progresstree2.cpp" line="134"/>
         <source>Cancel</source>
         <translation type="unfinished">Annuler</translation>
     </message>
     <message>
+        <location filename="packageversionform.cpp" line="252"/>
         <source>Invalid dependency link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageversionform.cpp" line="181"/>
         <source>Show the package for this dependency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="139"/>
         <source>Newer Npackd GUI was not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="172"/>
         <source>Error starting %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="301"/>
         <source>Missing option: --package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="343"/>
         <source>Planning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="532"/>
         <source>internal package name (e.g. com.example.Editor or just Editor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="533"/>
         <source>package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="534"/>
         <source>versions range (e.g. [1.5,2))</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="535"/>
         <source>range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="536"/>
         <source>version number (e.g. 1.5.12)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="537"/>
         <source>version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="539"/>
         <source>list of ways to close running applications (c=close, k=kill). The default value is &apos;c&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="540"/>
         <source>[c][k]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="552"/>
         <source>Error parsing the command line: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="577"/>
         <source>Wrong command: %1. Try npackdg help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="584"/>
         <source>Unexpected argument: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.cpp" line="142"/>
         <source>Uncategorized</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.cpp" line="150"/>
+        <location filename="mainframe.cpp" line="161"/>
         <source>All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.cpp" line="196"/>
         <source>Found in %1 ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainframe.cpp" line="244"/>
         <source>Choose columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.cpp" line="202"/>
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageframe.cpp" line="301"/>
         <source>Error downloading the file %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="160"/>
         <source>computing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="261"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="273"/>
         <source>Download size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="progresstree2.cpp" line="51"/>
         <source>Task / Step</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="progresstree2.cpp" line="52"/>
         <source>Elapsed time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="progresstree2.cpp" line="53"/>
         <source>Remaining time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="progresstree2.cpp" line="54"/>
         <source>Progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="progresstree2.cpp" line="55"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="uiutils.cpp" line="146"/>
+        <location filename="uiutils.cpp" line="152"/>
         <source>The package %1 will be uninstalled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="149"/>
         <source>The corresponding directory %1 will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="160"/>
+        <location filename="uiutils.cpp" line="165"/>
         <source>%1 package(s) will be installed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="174"/>
+        <location filename="uiutils.cpp" line="182"/>
+        <location filename="uiutils.cpp" line="221"/>
+        <location filename="uiutils.cpp" line="228"/>
         <source>%1 package(s) will be uninstalled:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="179"/>
+        <location filename="uiutils.cpp" line="246"/>
         <source>The corresponding directories will be completely deleted. There is no way to restore the files. The processes locking the files will be closed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="208"/>
+        <location filename="uiutils.cpp" line="215"/>
         <source>%3 package(s) will be updated:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="234"/>
+        <location filename="uiutils.cpp" line="241"/>
         <source>%3 package(s) will be installed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2452"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.cpp" line="49"/>
         <source>Choose export directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2471"/>
         <source>Export packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="1972"/>
         <source>&lt;html&gt;&lt;body&gt;Npackd %1 - software package manager for Windows (R)&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://www.npackd.org/&apos;&gt;Home page (https://www.npackd.org)&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki/ChangeLog&apos;&gt;Changelog&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/tim-lebedkov/npackd/wiki&apos;&gt;Documentation&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Author: &lt;a href=&apos;https://github.com/tim-lebedkov&apos;&gt;Tim Lebedkov&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;Contributors:&lt;ul&gt;&lt;li&gt;&lt;a href=&apos;https://github.com/OgreTransporter&apos;&gt;OgreTransporter&lt;/a&gt;: Visual C++ support, CMake integration, group policy configuration, non-admin installations&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.cpp" line="329"/>
         <source>Choose installation directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="exportrepositoryframe.cpp" line="67"/>
         <source>Cannot export to an existing non-empty directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2554"/>
         <source>All dependencies are installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="189"/>
         <source>installing %1 packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="193"/>
         <source>uninstalling %1 packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="197"/>
         <source>updating %1 packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="uiutils.cpp" line="202"/>
         <source>Process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="276"/>
         <source>Category</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="279"/>
         <source>Tags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="packageitemmodel.cpp" line="282"/>
         <source>Stars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="clprocessor.cpp" line="245"/>
         <source>Cannot load the list of repositories: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="repositoriesitemmodel.cpp" line="94"/>
         <source>Enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="repositoriesitemmodel.cpp" line="97"/>
         <source>URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="repositoriesitemmodel.cpp" line="100"/>
         <source>Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2634"/>
+        <location filename="mainwindow.cpp" line="2638"/>
         <source>Import package settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2607"/>
+        <location filename="mainwindow.cpp" line="2611"/>
         <source>Export package settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2883,10 +3183,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>SettingsFrame</name>
     <message>
+        <location filename="settingsframe.ui" line="14"/>
         <source>Frame</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="47"/>
         <source>Repositories:</source>
         <translation>Dépôts :</translation>
     </message>
@@ -2895,10 +3197,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Dossier d&apos;installation :</translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="185"/>
         <source>Installation directory:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="195"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -2919,22 +3223,27 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Vous pouvez changer cette valeur n&apos;importe quand. Cette option n&apos;affecte pas les paquets déjà installés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="238"/>
         <source>How to close running applications:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="244"/>
         <source>closes the top application windows as you would do with Alt+F4 or the cross in the top right window corner</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="247"/>
         <source>Close windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="261"/>
         <source>forcefully terminates the process. All unsaved data will be lost.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="264"/>
         <source>Terminate the process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2984,62 +3293,77 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="254"/>
         <source>Disconnect users from file shares</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="271"/>
         <source>terminates Windows services, if necessary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="274"/>
         <source>Stop services</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.cpp" line="80"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="219"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="281"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;emulates the user pressing Ctrl+C for command line programs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="284"/>
         <source>Send Ctrl+C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="228"/>
         <source>enables daily search and notification about existing updates. The time will be chosen at random. The notifications are only shown to the current user.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="231"/>
         <source>Update notifications</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="312"/>
         <source>Configure proxy settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="120"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="127"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="134"/>
         <source>Move up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="141"/>
         <source>Move down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="78"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -3055,6 +3379,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="settingsframe.ui" line="167"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can find the list of available repositories and explanations about how to create your custom repositories at &lt;a href=&quot;https://github.com/npackd/npackd&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/npackd/npackd&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
