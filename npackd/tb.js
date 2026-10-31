@@ -17,6 +17,7 @@ function configure() {
         deps.push("qsqlite");
    } else {
         deps.push("quazip1-qt" + qt_version);
+        deps.push("Qt6Core5Compat"); // QTextCodec
     }
     project.setVariable("DEPENDENCIES", deps);
     project.vars.QT_MOC_FILES = ["clprogress.h", "downloader.h", "installedpackages.h", "job.h"];

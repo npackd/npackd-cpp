@@ -11,13 +11,6 @@ function setCommonFlags() {
 
     var bin_dir = mingw + "\\bin";
 
-    project.vars.LIBRARY_PATH = [
-        mingw + "\\qt" + qt_version + "-static\\lib",
-        mingw + "\\qt" + qt_version + "-static\\share\\qt6\\plugins\\imageformats",
-        mingw + "\\qt" + qt_version + "-static\\share\\qt6\\plugins\\platforms",
-        mingw + "\\qt" + qt_version + "-static\\share\\qt6\\plugins\\styles"
-    ];
-
     project.setVariable("GCC_BIN_DIR", bin_dir);
     project.setVariable("AR", bin_dir + "\\ar.exe");
     project.setVariable("CC", bin_dir + "\\gcc.exe");
@@ -31,7 +24,11 @@ function setCommonFlags() {
     project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
     project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
-    var qt = mingw + "\\qt" + qt_version + "-static";
+    var qt;
+    if (static_) 
+        qt = mingw + "\\qt" + qt_version + "-static";
+    else
+        qt = mingw;
     project.setVariable("QMAKE", qt + "\\bin\\qmake.exe");
     project.setVariable("QT_MOC", qt + "\\share\\qt" + qt_version + "\\bin\\moc.exe");
     project.setVariable("QT_RCC", qt + "\\share\\qt" + qt_version + "\\bin\\rcc.exe");
@@ -121,7 +118,6 @@ function setCommonFlags() {
     }
     project.setVariable("CFLAGS", cflags);
 
-    project.findPrlLibrary("Qt" + qt_version + "Core", { static: static_ });
     project.addLibraryInclude("Qt" + qt_version + "Core", qt + "\\include\\qt" + qt_version);
     project.addLibraryInclude("Qt" + qt_version + "Core", qt + "\\include\\qt" + qt_version + "\\QtCore");
 
@@ -130,34 +126,17 @@ function setCommonFlags() {
     project.addLibraryInclude("Qt" + qt_version + "Gui", qt + "\\include\\qt" + qt_version + "\\QtGui");
     project.addLibraryInclude("Qt" + qt_version + "Widgets", qt + "\\include\\qt" + qt_version + "\\QtWidgets");
 
-    if (static_) {
-        var qt_plugins = qt + "\\share\\qt" + qt_version + "\\plugins\\";
+    project.addLibraryInclude("Qt6Core5Compat", qt + "\\include\\qt" + qt_version + "\\QtCore5Compat");
 
-        project.findPkgConfigLibrary("freetype", { package: "freetype2", static: static_ });
-
-        project.findPrlLibrary("qgif", { static: static_ });
-        project.findPrlLibrary("qicns", { static: static_ });
-        project.findPrlLibrary("qico", { static: static_ });
-        project.findPrlLibrary("qjpeg", { static: static_ });
-        project.findPrlLibrary("qsvg", { static: static_ });
-        project.findPrlLibrary("qtga", { static: static_ });
-        project.findPrlLibrary("qtiff", { static: static_ });
-        project.findPrlLibrary("qwbmp", { static: static_ });
-        project.findPrlLibrary("qwebp", { static: static_ });
-        project.findPrlLibrary("qwindows", { static: static_ });
-        project.findPrlLibrary("qmodernwindowsstyle", { static: static_ });
-        project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
-
-        project.addLibraryDependency("qwindows", "Wtsapi32");
-        project.addLibraryDependency("qsqlite", "Qt" + qt_version + "Sql");
-
-        // this is kinda strange. Qt should have its own libz and QuaZIP should depend on it,
-        // but somehow the linker finds missing references to libz from Qt6Core.
-        project.addLibraryDependency("Qt" + qt_version + "Core", "z");
-    } else {
+    if (!static_) {
         project.findPkgConfigLibrary("quazip1-qt" + qt_version + "", { static: static_ });
 
         var qt_plugins = qt + "\\share\\qt" + qt_version + "\\plugins\\";
         project.setLibraryPath("qsqlite", qt_plugins + "sqldrivers\\libqsqlite.a");
     }
+
+    if (static_)
+        project.findLibraries(qt);
+    else
+        project.findLibraries(qt + "\\lib");
 }
