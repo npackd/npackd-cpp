@@ -1638,10 +1638,7 @@ void App::processInstallOperations(Job *job,
 
                 // qCDebug(npackd) << "batch" << file.fileName();
 
-                QTextStream stream(&file);
-                stream.setCodec("UTF-8");
-                stream << WPMUtils::join(batch, "\r\n");
-                if (stream.status() != QTextStream::Ok)
+                if (file.write(WPMUtils::join(batch, "\r\n").toUtf8()) == -1)
                     job->setErrorMessage("Error writing the .bat file");
                 file.close();
 
@@ -2539,13 +2536,13 @@ void App::removeSCP(Job *job)
         if (title.startsWith('/')) {
             title = title.mid(1);
 
-            Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+            QRegularExpression::PatternOptions cs = QRegularExpression::CaseInsensitiveOption;
             if (title.endsWith('/')) {
                 title = title.left(title.length() - 1);
-                cs = Qt::CaseSensitive;
+                cs = QRegularExpression::NoPatternOption;
             } else if (title.endsWith("/i")) {
                 title = title.left(title.length() - 2);
-                cs = Qt::CaseInsensitive;
+                cs = QRegularExpression::CaseInsensitiveOption;
             } else {
                 job->setErrorMessage("Invalid regular expression: " +
                         cl.get("title"));
@@ -2554,10 +2551,10 @@ void App::removeSCP(Job *job)
             if (job->shouldProceed()) {
                 qCDebug(npackd) << "regular expression" << title;
 
-                QRegExp re(title, cs);
+                QRegularExpression re(title, cs);
                 for (auto p: rep.packages) {
                     qCDebug(npackd) << p->title;
-                    if (re.indexIn(p->title) >= 0) {
+                    if (re.match(p->title).hasMatch()) {
                         found = p;
                         break;
                     }

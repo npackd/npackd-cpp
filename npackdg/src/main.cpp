@@ -31,7 +31,7 @@
 // These lines are necessary for a static build
 #ifdef NPACKD_STATIC
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin);
+Q_IMPORT_PLUGIN(QModernWindowsStylePlugin);
 Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
 Q_IMPORT_PLUGIN(QICNSPlugin);
 Q_IMPORT_PLUGIN(QICOPlugin);

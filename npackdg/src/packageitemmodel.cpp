@@ -231,10 +231,10 @@ QVariant PackageItemModel::data(const QModelIndex &index, int role) const
         switch (index.column()) {
             case 6:
             case 9:
-                r = Qt::AlignRight + Qt::AlignVCenter;
+                r = (unsigned)(Qt::AlignRight | Qt::AlignVCenter);
                 break;
             default:
-                r = Qt::AlignLeft + Qt::AlignVCenter;
+                r = (unsigned)(Qt::AlignLeft | Qt::AlignVCenter);
         }
     }
 

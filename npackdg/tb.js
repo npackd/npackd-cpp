@@ -14,10 +14,10 @@ function configure() {
     project.setVariable("SUBSYSTEM", "windows");
     project.setVariable("MSI_UPGRADE_CODE", "EABC4270-7D7F-47BF-B388-AC63606E8DAC");
 
-    var deps = ["npackd", "Qt5Gui", "Qt5Svg", "gdi32"];
+    var deps = ["npackd", "Qt" + qt_version + "Gui", "Qt" + qt_version + "Widgets", "Qt" + qt_version + "Svg", "gdi32"];
     if (static_) {
         deps.push("qwindows");
-        deps.push("qwindowsvistastyle");
+        deps.push("qmodernwindowsstyle");
         deps.push("qsqlite");
         deps.push("qicns");
         deps.push("qico");
@@ -27,7 +27,6 @@ function configure() {
         deps.push("qwbmp");
         deps.push("qwebp");
         deps.push("qsvg");
-        deps.push("qtlibjpeg");
         deps.push("qtga");
     }
     project.setVariable("DEPENDENCIES", deps);
@@ -38,4 +37,7 @@ function configure() {
         "visiblejobs.h", "settingsframe.h"]);
 
     setCommonFlags();
+
+    // TODO: copy imageformats, iconengines?, platforms, sqldrivers and styles directories
+    // for the build with shared libraries
 }

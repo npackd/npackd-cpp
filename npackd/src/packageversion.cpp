@@ -252,7 +252,7 @@ bool PackageVersion::isDirectoryLocked()
         QDir d(getPath());
         QDateTime now = QDateTime::currentDateTime();
         QString newName = QString("%1-%2").arg(d.absolutePath()).arg(
-                now.toTime_t());
+                now.toSecsSinceEpoch());
 
         if (!d.rename(d.absolutePath(), newName)) {
             return true;
@@ -1464,9 +1464,9 @@ QString PackageVersion::saveFiles(const QDir& d)
         if (d.mkpath(fullDir)) {
             QFile file(fullPath);
             if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-                QTextStream stream(&file);
-                stream.setCodec("UTF-8");
-                stream << f->content;
+                if (file.write(f->content.toUtf8()) == -1)
+                    res = QString(QObject::tr("Writing to %1 failed")).arg(
+                            fullPath);
                 file.close();
             } else {
                 res = QString(QObject::tr("Could not create file %1")).arg(

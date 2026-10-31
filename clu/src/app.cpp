@@ -2,6 +2,7 @@
 
 #include <QTemporaryFile>
 #include <QDirIterator>
+#include <QRegularExpression>
 
 #include <windows.h>
 #include <msi.h>
@@ -221,9 +222,9 @@ int App::remove()
 
     Package* found = nullptr;
     if (job->shouldProceed()) {
-        QRegExp re(title, Qt::CaseInsensitive);
+        QRegularExpression re(title, QRegularExpression::CaseInsensitiveOption);
         for (auto p: rep.packages) {
-            if (re.indexIn(p->title) >= 0) {
+            if (re.match(p->title).hasMatch()) {
                 found = p;
                 break;
             }
