@@ -78,13 +78,15 @@ int64_t Downloader::downloadWin(Job* job, const Request& request,
         InternetSetOption(internet, INTERNET_OPTION_DATA_RECEIVE_TIMEOUT, &rec_timeout,
                           sizeof(rec_timeout));
 
+        // this option is not handled correctly by WinINet sometimes which leads to 
+        // the error ERROR_INTERNET_DECODING_FAILED 
         // enable automatic gzip decoding
-#ifndef INTERNET_OPTION_HTTP_DECODING
-        const DWORD INTERNET_OPTION_HTTP_DECODING = 65;
-#endif
-        BOOL b = TRUE;
-        InternetSetOption(internet, INTERNET_OPTION_HTTP_DECODING,
-                &b, sizeof(b));
+// #ifndef INTERNET_OPTION_HTTP_DECODING
+//         const DWORD INTERNET_OPTION_HTTP_DECODING = 65;
+// #endif
+//         BOOL b = TRUE;
+//         InternetSetOption(internet, INTERNET_OPTION_HTTP_DECODING,
+//                 &b, sizeof(b));
 
         job->setProgress(0.01);
     }
