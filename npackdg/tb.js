@@ -37,4 +37,7 @@ function configure() {
         "visiblejobs.h", "settingsframe.h"]);
 
     setCommonFlags();
+
+    // TODO: copy imageformats, iconengines?, platforms, sqldrivers and styles directories
+    // for the build with shared libraries
 }

@@ -6,35 +6,23 @@ var qt_version = 6;
 
 function setCommonFlags() {
     project.setVariable("MODULES", ["qt", "msi"]);
+    project.setVariable("COMPANY", "Npackd");
 
     var static_ = project.getConfig().indexOf("static") >= 0;
-
-    var bin_dir = mingw + "\\bin";
-
-    project.setVariable("GCC_BIN_DIR", bin_dir);
-    project.setVariable("AR", bin_dir + "\\ar.exe");
-    project.setVariable("CC", bin_dir + "\\gcc.exe");
-    project.setVariable("CXX", bin_dir + "\\g++.exe");
-    project.setVariable("DEBUGGER", bin_dir + "\\gdb.exe");
-    project.setVariable("NTLDD", bin_dir + "\\ntldd.exe");
-    project.setVariable("PKG_CONFIG", bin_dir + "\\pkg-config.exe");
-    project.setVariable("WINDRES", bin_dir + "\\windres.exe");
-
-    project.setVariable("COMPANY", "Npackd");
-    project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
-    project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
 
     var qt;
     if (static_) 
         qt = mingw + "\\qt" + qt_version + "-static";
     else
         qt = mingw;
-    project.setVariable("QMAKE", qt + "\\bin\\qmake.exe");
-    project.setVariable("QT_MOC", qt + "\\share\\qt" + qt_version + "\\bin\\moc.exe");
-    project.setVariable("QT_RCC", qt + "\\share\\qt" + qt_version + "\\bin\\rcc.exe");
-    project.setVariable("QT_LRELEASE", qt + "\\bin\\lrelease.exe");
-    project.setVariable("QT_LUPDATE", qt + "\\bin\\lupdate.exe");
-    project.setVariable("QT_UIC", qt + "\\share\\qt" + qt_version + "\\bin\\uic.exe");
+
+    project.setVariable("GCC_BIN_DIR", mingw + "\\bin");
+
+    project.setVariable("WIX_LIGHT", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\light.exe");
+    project.setVariable("WIX_CANDLE", "C:\\Program Files (x86)\\WiX Toolset v3.11\\bin\\candle.exe");
+    project.findBinaries(qt + "\\share\\qt" + qt_version + "\\bin");
+    project.findBinaries(qt + "\\bin");
+    project.findBinaries(mingw + "\\bin");
 
     var version = system.readTextFile(project.getDirectory() + "\\..\\appveyor.yml");
     version = version.split('\n')[0];
